@@ -1,0 +1,59 @@
+---
+title: Popover
+description: Displays a popup element that appears near a trigger.
+component: true
+source: https://github.com/aidan-neel/ui/tree/main/src/lib/registry/default/ui/toast
+---
+
+<script>
+    import { ComponentPreview, CodeBlock, CodeSnippet, ExportItem } from '$lib/components/docs';
+    import { Button } from '$lib/ui/components/button';
+    import * as Popover from '$lib/ui/components/Popover';
+</script>
+
+<h1 class="py-2">
+    Import
+</h1>
+
+<p class="py-2">
+    Popover exports 3 components
+</p>
+
+<ExportItem title="Root">The root component that manages the popover.</ExportItem>
+<ExportItem title="Trigger">The element that opens the popover when interacted with.</ExportItem>
+<ExportItem title="Content">The content container that appears within the popover.</ExportItem>
+
+<h1 class="py-6">
+    Example
+</h1>
+
+<ComponentPreview code={`<Button onclick={() => {
+    toast({
+        title: 'Avatar updated',
+        description: 'Your profiles avatar has been successfully updated.',
+        duration: 4000,
+        type: 'success',
+        actions: [
+            {
+                label: 'Undo',
+                callback: () => {}
+            },
+            {
+                label: 'View Profile',
+                callback: () => {}
+            }
+        ],
+        persistent: false,
+        exitable: true
+    });
+}}>Update Avatar</Button`}>
+<Popover.Root>
+    <Popover.Trigger variant="outlined">Popover</Popover.Trigger>
+    <Popover.Content>
+        <Popover.Title>
+            Title of the popover
+        </Popover.Title>
+        <p>Any content you want here</p>
+    </Popover.Content>
+</Popover.Root>
+</ComponentPreview>

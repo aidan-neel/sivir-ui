@@ -1,0 +1,61 @@
+/* Uses Geist as the default font for body and heading. Change it to whatever you'd like. */
+@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&family=Geist:wght@100..900&display=swap');
+
+@import './themes/default.css';
+@layer theme, base, components, utilities;
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/preflight.css' layer(base);
+@import 'tailwindcss/utilities.css' layer(utilities);
+
+.floating {
+	width: max-content;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+@layer base {
+	* {
+		@apply border-border rounded-lg;
+	}
+
+	body {
+		@apply bg-background text-foreground;
+	}
+}
+
+/* Typography */
+h1 {
+	@apply text-2xl font-semibold;
+}
+
+h2 {
+	@apply text-xl font-medium;
+}
+
+::-webkit-scrollbar {
+	width: 5px;
+	height: 5px;
+}
+
+::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+	background: var(--color-secondary);
+	border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: var(--color-secondary-hovered);
+}
+
+.hide-scrollbar {
+	-ms-overflow-style: none; /* Hides scrollbar in IE and Edge */
+	scrollbar-width: none; /* Hides scrollbar in Firefox */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+	display: none; /* Hides scrollbar in Webkit browsers like Chrome and Safari */
+}

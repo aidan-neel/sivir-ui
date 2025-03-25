@@ -1,0 +1,16 @@
+@layer theme, base, components, utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap');
+
+@font-face {
+	font-family: 'Cal Sans';
+	src: url('/fonts/CalSans.otf') format('opentype');
+}
+
+.border-transpar {
+	border-color: transparent !important;
+}
+
+pre {
+	background-color: transparent !important;
+}

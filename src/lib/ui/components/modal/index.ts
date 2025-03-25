@@ -1,0 +1,12 @@
+import Root from './modal.svelte';
+import Trigger from './modal-trigger.svelte';
+import Content from './modal-content.svelte';
+import Title from './modal-title.svelte';
+import Description from './modal-description.svelte';
+import Footer from './modal-footer.svelte';
+import Exit from './modal-exit.svelte';
+import Confirm from './modal-confirm.svelte';
+import Header from './modal-header.svelte';
+import Container from './modal-container.svelte';
+
+export { Root, Trigger, Content, Title, Description, Exit, Footer, Confirm, Header, Container };

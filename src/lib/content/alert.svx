@@ -1,0 +1,42 @@
+---
+title: Alert
+description: Displays a callout for user attention.
+component: true
+source: https://github.com/aidan-neel/ui/tree/main/src/lib/registry/default/ui/alert
+---
+
+<script>
+    import { ComponentPreview, CodeBlock, CodeSnippet, ExportItem } from '$lib/components/docs';
+    import * as Alert from '$lib/ui/components/alert';
+    import { toast } from '$lib/ui/components/toast';
+</script>
+
+<h1 class="py-2">
+    Import
+</h1>
+
+<p class="py-2">
+    Alert exports 3 components
+</p>
+
+<ExportItem title="Root">The main component that contains the alert structure.</ExportItem>
+<ExportItem title="Title">The title of the alert, displayed prominently.</ExportItem>
+<ExportItem title="Description">The content or message of the alert.</ExportItem>
+
+<h1 class="py-6">
+    Example
+</h1>
+
+<ComponentPreview code={`<Alert.Root variant="info">
+    <Alert.Title>Verify Email</Alert.Title>
+    <Alert.Description>
+        Please verify your email address to continue using our services.
+    </Alert.Description>
+</Alert.Root>`}>
+    <Alert.Root variant="info">
+        <Alert.Title>Verify Email</Alert.Title>
+        <Alert.Description>
+            Please verify your email address to continue using our services.
+        </Alert.Description>
+    </Alert.Root>
+</ComponentPreview>

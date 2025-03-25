@@ -1,0 +1,47 @@
+---
+title: Button
+description: Displays a button or a component that looks like a button.
+component: true
+source: https://github.com/aidan-neel/ui/tree/main/src/lib/registry/default/ui/button
+---
+
+<script>
+    import { ComponentPreview, CodeBlock, ExportItem } from '$lib/components/docs';
+    import { Button } from '$lib/ui/components/button';
+</script>
+
+<h1 class="py-2">
+    Import
+</h1>
+
+<p class="py-2">
+    Button only exports 1 component
+</p>
+
+<ExportItem title="Button">The main component for displaying a button.</ExportItem>
+
+<h1 class="py-6">
+    Example
+</h1>
+
+<ComponentPreview code={`<script>
+    import { Button } from '$lib/ui/components/button';
+</script>\n
+<Button>Primary</Button>
+<Button variant="flat">Flat</Button>
+<Button variant="outlined">Outlined</Button>
+<Button variant="secondary">Secondary</Button>
+<Button variant="ghost">Ghost</Button>
+<Button variant="alternate">Alternate</Button>
+<Button variant="destructive">Destructive</Button>
+`}>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 my-4 auto-rows-min">
+        <Button class="w-auto">Primary</Button>
+        <Button class="w-auto" variant="flat">Flat</Button>
+        <Button class="w-auto" variant="outlined">Outlined</Button>
+        <Button class="w-auto" variant="secondary">Secondary</Button>
+        <Button class="w-auto" variant="ghost">Ghost</Button>
+        <Button class="w-auto" variant="alternate">Alternate</Button>
+        <Button class="w-auto" variant="destructive">Destructive</Button>
+    </div>
+</ComponentPreview>
