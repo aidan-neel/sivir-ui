@@ -8,7 +8,7 @@
 }
 
 .border-transpar {
-	border-color: transparent !important;
+	border-r: transparent !important;
 }
 
 pre {

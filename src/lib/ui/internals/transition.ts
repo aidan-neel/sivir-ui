@@ -9,6 +9,20 @@ type FlyAndScaleParams = {
 	blur?: number;
 };
 
+let minBlur = 1.5;
+let maxBlur = 3.5;
+let minDuration = 100;
+let maxDuration = 300;
+
+function calculateBlur(duration: number) {
+	duration = Math.max(minDuration, Math.min(duration, maxDuration));
+
+	let blur =
+		maxBlur - ((duration - minDuration) * (maxBlur - minBlur)) / (maxDuration - minDuration);
+
+	return blur;
+}
+
 export const flyAndScale = (
 	node: Element,
 	params: FlyAndScaleParams = { y: -12, x: 0, start: 0.8, duration: 500, blur: 0 }

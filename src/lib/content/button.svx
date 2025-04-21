@@ -6,7 +6,7 @@ source: https://github.com/aidan-neel/ui/tree/main/src/lib/registry/default/ui/b
 ---
 
 <script>
-    import { ComponentPreview, CodeBlock, ExportItem } from '$lib/components/docs';
+    import { ComponentPreview, CodeBlock, ExportItem, APIReference } from '$lib/components/docs';
     import { Button } from '$lib/ui/components/button';
 </script>
 
@@ -45,3 +45,49 @@ source: https://github.com/aidan-neel/ui/tree/main/src/lib/registry/default/ui/b
         <Button class="w-auto" variant="destructive">Destructive</Button>
     </div>
 </ComponentPreview>
+
+<h1 class="py-6">
+    API Reference
+</h1>
+
+<div class="flex flex-col gap-10">
+	<APIReference 
+		title="Button" 
+		component="Root" 
+		description="A flexible button component supporting multiple variants and optional link behavior." 
+		items={[
+			{
+				property: "variant",
+				type: `"primary" | "flat" | "outlined" | "secondary" | "ghost" | "alternate" | "destructive"`,
+				description: "Controls the visual style of the button.",
+				defaults: `"primary"`
+			},
+			{
+				property: "children",
+				type: "Snippet",
+				description: "The content to render inside the button."
+			},
+			{
+				property: "class",
+				type: "string",
+				description: "Additional CSS classes to apply to the button."
+			},
+			{
+				property: "href",
+				type: "string",
+				description: "If set, renders the button as an anchor tag instead of a button element."
+			},
+			{
+				property: "element",
+				type: `"HTMLButtonElement | HTMLAnchorElement | undefined"`,
+				description: "A bindable reference to the button or anchor element."
+			},
+			{
+				property: "...rest",
+				type: "HTMLButtonAttributes",
+				description: "Additional attributes passed to the element.",
+				defaults: "{}"
+			}
+		]} 
+	/>
+</div>

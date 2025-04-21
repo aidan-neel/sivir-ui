@@ -6,7 +6,7 @@ source: https://github.com/aidan-neel/ui/tree/main/src/lib/registry/default/ui/b
 ---
 
 <script>
-    import { ComponentPreview, CodeBlock, CodeSnippet, ExportItem } from '$lib/components/docs';
+    import { ComponentPreview, CodeBlock, CodeSnippet, ExportItem, APIReference } from '$lib/components/docs';
     import { Badge } from '$lib/ui/components/badge';
 </script>
 
@@ -29,3 +29,42 @@ source: https://github.com/aidan-neel/ui/tree/main/src/lib/registry/default/ui/b
 </Badge>`}>
     <Badge>Primary</Badge>
 </ComponentPreview>
+
+<h1 class="py-6">
+    API Reference
+</h1>
+
+<APIReference 
+	title="Badge" 
+	component="Root" 
+	description="A stylable label component for highlighting statuses or metadata." 
+	items={[
+		{
+			property: "variant",
+			type: `"primary" | "flat" | "outlined" | "secondary" | "ghost" | "alternate" | "destructive"`,
+			description: "Sets the visual style of the badge.",
+			defaults: `"primary"`
+		},
+		{
+			property: "children",
+			type: "Snippet",
+			description: "The content to display inside the badge."
+		},
+		{
+			property: "class",
+			type: "string",
+			description: "Additional CSS classes to apply to the badge."
+		},
+		{
+			property: "href",
+			type: "string",
+			description: "If provided, renders the badge as an anchor element."
+		},
+		{
+			property: "...rest",
+			type: "HTMLButtonAttributes",
+			description: "Additional attributes passed to the badge element.",
+			defaults: "{}"
+		}
+	]} 
+/>

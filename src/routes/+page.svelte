@@ -23,7 +23,7 @@
 			in:fly={{ duration: 800, y: 20, easing: cubicOut }}
 			class="text-[72px] font-display font-bold leading-20"
 		>
-			A better way to<br />build UI with Svelte
+			A better way to<br />build UI with Svelte 5
 		</p>
 		<p
 			in:fly={{ duration: 800, y: 20, easing: cubicOut }}
