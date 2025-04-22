@@ -6,7 +6,7 @@ source: https://github.com/aidan-neel/ui/tree/main/src/lib/registry/default/ui/t
 ---
 
 <script>
-    import { ComponentPreview, CodeBlock, CodeSnippet, ExportItem } from '$lib/components/docs';
+    import { ComponentPreview, CodeBlock, CodeSnippet, ExportItem, APIReference } from '$lib/components/docs';
     import { Button } from '$lib/ui/components/button';
     import * as Popover from '$lib/ui/components/Popover';
 </script>
@@ -57,3 +57,124 @@ source: https://github.com/aidan-neel/ui/tree/main/src/lib/registry/default/ui/t
     </Popover.Content>
 </Popover.Root>
 </ComponentPreview>
+
+<h1 class="py-6">
+    API Reference
+</h1>
+
+<div class="flex flex-col gap-10">
+	<APIReference 
+		title="Popover" 
+		component="Root" 
+		description="The root container that manages the state and placement of the popover." 
+		items={[
+			{
+				property: "open",
+				type: "boolean",
+				description: "Controls whether the popover is initially open.",
+				defaults: "false"
+			},
+			{
+				property: "stateName",
+				type: "string",
+				description: "A unique state key identifier for managing popover instances.",
+				defaults: `"popover"`
+			},
+			{
+				property: "placement",
+				type: `"top" | "left" | "bottom" | "right"`,
+				description: "Defines where the popover appears relative to the trigger.",
+				defaults: `"bottom"`
+			},
+			{
+				property: "children",
+				type: "Snippet",
+				description: "The elements to render inside the popover system."
+			},
+			{
+				property: "class",
+				type: "string",
+				description: "Additional CSS classes to apply to the root container."
+			},
+			{
+				property: "...rest",
+				type: "HTMLDivAttributes",
+				description: "Additional attributes passed to the root container.",
+				defaults: "{}"
+			}
+		]} 
+	/>
+
+	<APIReference 
+		title="Popover" 
+		component="Trigger" 
+		description="A button that toggles the popover open or closed." 
+		items={[
+			{
+				property: "class",
+				type: "string",
+				description: "Additional CSS classes to apply to the trigger button."
+			},
+			{
+				property: "...rest",
+				type: "HTMLButtonAttributes",
+				description: "Additional HTML button attributes passed to the trigger.",
+				defaults: "{}"
+			}
+		]} 
+	/>
+
+	<APIReference 
+		title="Popover" 
+		component="Title" 
+		description="The title of the popover, typically used for headers or headings." 
+		items={[
+			{
+				property: "children",
+				type: "Snippet",
+				description: "The content to render as the title."
+			},
+			{
+				property: "class",
+				type: "string",
+				description: "Additional CSS classes to apply to the title."
+			},
+			{
+				property: "...rest",
+				type: "HTMLParagraphAttributes",
+				description: "Additional attributes passed to the title element.",
+				defaults: "{}"
+			}
+		]} 
+	/>
+
+	<APIReference 
+		title="Popover" 
+		component="Content" 
+		description="The actual popover content that appears when triggered." 
+		items={[
+			{
+				property: "allowClickOutside",
+				type: "boolean",
+				description: "Determines whether clicking outside closes the popover.",
+				defaults: "true"
+			},
+			{
+				property: "children",
+				type: "Snippet",
+				description: "The content to render inside the popover."
+			},
+			{
+				property: "class",
+				type: "string",
+				description: "Additional CSS classes to apply to the content container."
+			},
+			{
+				property: "...rest",
+				type: "HTMLDivAttributes",
+				description: "Additional attributes passed to the content wrapper.",
+				defaults: "{}"
+			}
+		]} 
+	/>
+</div>

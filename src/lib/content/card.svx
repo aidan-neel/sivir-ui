@@ -6,7 +6,7 @@ source: https://github.com/aidan-neel/ui/tree/main/src/lib/registry/default/ui/c
 ---
 
 <script>
-    import { ComponentPreview, CodeBlock, CodeSnippet, ExportItem } from '$lib/components/docs';
+    import { ComponentPreview, CodeBlock, CodeSnippet, ExportItem, APIReference } from '$lib/components/docs';
     import { Input } from '$lib/ui/components/input';
     import { Button } from '$lib/ui/components/button';
     import * as Card from '$lib/ui/components/card';
@@ -78,3 +78,153 @@ source: https://github.com/aidan-neel/ui/tree/main/src/lib/registry/default/ui/c
 		</Card.Footer>
 	</Card.Root>
 </ComponentPreview>
+
+<h1 class="py-6">
+    API Reference
+</h1>
+
+<div class="flex flex-col gap-10">
+	<APIReference 
+		title="Card" 
+		component="Root" 
+		description="The root container of the card with rounded corners, background, and padding." 
+		items={[
+			{
+				property: "children",
+				type: "Snippet",
+				description: "The content to render inside the card."
+			},
+			{
+				property: "class",
+				type: "string",
+				description: "Additional CSS classes to apply to the card root."
+			},
+			{
+				property: "...rest",
+				type: "HTMLDivAttributes",
+				description: "Additional attributes passed to the card root.",
+				defaults: "{}"
+			}
+		]} 
+	/>
+
+	<APIReference 
+		title="Card" 
+		component="Title" 
+		description="The title of the card, typically rendered in bold text." 
+		items={[
+			{
+				property: "children",
+				type: "Snippet",
+				description: "The title content to render."
+			},
+			{
+				property: "class",
+				type: "string",
+				description: "Additional CSS classes to apply to the title."
+			},
+			{
+				property: "...rest",
+				type: "HTMLParagraphAttributes",
+				description: "Additional attributes passed to the title element.",
+				defaults: "{}"
+			}
+		]} 
+	/>
+
+	<APIReference 
+		title="Card" 
+		component="Header" 
+		description="A container for the top section of the card, often includes title and description." 
+		items={[
+			{
+				property: "children",
+				type: "Snippet",
+				description: "Elements to render inside the card header."
+			},
+			{
+				property: "class",
+				type: "string",
+				description: "Additional CSS classes to apply to the header."
+			},
+			{
+				property: "...rest",
+				type: "HTMLDivAttributes",
+				description: "Additional attributes passed to the header container.",
+				defaults: "{}"
+			}
+		]} 
+	/>
+
+	<APIReference 
+		title="Card" 
+		component="Footer" 
+		description="A container for card actions or footer content." 
+		items={[
+			{
+				property: "children",
+				type: "Snippet",
+				description: "The content to render inside the footer."
+			},
+			{
+				property: "class",
+				type: "string",
+				description: "Additional CSS classes to apply to the footer."
+			},
+			{
+				property: "...rest",
+				type: "HTMLDivAttributes",
+				description: "Additional attributes passed to the footer container.",
+				defaults: "{}"
+			}
+		]} 
+	/>
+
+	<APIReference 
+		title="Card" 
+		component="Description" 
+		description="A description or supporting text within the card." 
+		items={[
+			{
+				property: "children",
+				type: "Snippet",
+				description: "Text or elements to display as the description."
+			},
+			{
+				property: "class",
+				type: "string",
+				description: "Additional CSS classes to apply to the description."
+			},
+			{
+				property: "...rest",
+				type: "HTMLParagraphAttributes",
+				description: "Additional attributes passed to the description element.",
+				defaults: "{}"
+			}
+		]} 
+	/>
+
+	<APIReference 
+		title="Card" 
+		component="Content" 
+		description="The flexible content area inside the card." 
+		items={[
+			{
+				property: "children",
+				type: "Snippet",
+				description: "The content to render inside the card."
+			},
+			{
+				property: "class",
+				type: "string",
+				description: "Additional CSS classes to apply to the content container."
+			},
+			{
+				property: "...rest",
+				type: "HTMLDivAttributes",
+				description: "Additional attributes passed to the content container.",
+				defaults: "{}"
+			}
+		]} 
+	/>
+</div>

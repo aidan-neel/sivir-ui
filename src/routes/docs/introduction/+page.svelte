@@ -2,7 +2,7 @@
 </script>
 
 <main class="flex flex-col w-full h-screen">
-	<header class="flex flex-col gap-1 pb-6 border-b">
+	<header class="flex flex-col gap-1 pb-6 border-b rounded-none">
 		<p class="text-4xl font-bold">Introduction</p>
 		<p class="text-lg text-foreground-muted">A better way to build UI with Svelte</p>
 	</header>
@@ -30,6 +30,8 @@
 		project or simply copy and paste the code. The code is fully yours to customize and use.
 		<br /><br />
 
-		You can also use this collection as a reference to build your own component libraries.
+		You can also use this collection as a reference to build your own component libraries. And yes,
+		this library is heavily inspired by
+		<a href="https://ui.shadcn.com" class="font-medium underline">shadcn/ui.</a>
 	</p>
 </main>

@@ -21,6 +21,20 @@
 	>
 		Introduction
 	</Button>
+	<Button
+		variant={pageName.split('/')[2] === 'changelog' ? 'secondary' : 'ghost'}
+		href={`/docs/changelog`}
+		class="duration-100 w-full p-2 rounded-lg font-semibold text-left flex items-start justify-start"
+	>
+		Changelog
+	</Button>
+	<Button
+		variant={pageName.split('/')[2] === 'styling' ? 'secondary' : 'ghost'}
+		href={`/docs/styling`}
+		class="duration-100 w-full p-2 rounded-lg font-semibold text-left flex items-start justify-start"
+	>
+		Styling
+	</Button>
 	<h3 class="font-semibold text-sm ml-2 text-foreground-muted pt-6 pb-2">Components</h3>
 	{#each components as component}
 		<Button

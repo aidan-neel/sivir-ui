@@ -4,11 +4,21 @@
 	import { cubicOut } from 'svelte/easing';
 	import { fly } from 'svelte/transition';
 
+	import * as Card from '$lib/ui/components/card';
+	import { Input } from '$lib/ui/components/input';
+	import * as Alert from '$lib/ui/components/alert';
+	import * as AlertDialog from '$lib/ui/components/alert-dialog';
+	import { Checkbox } from '$lib/ui/components/checkbox';
+
 	let ready = $state(false);
 	$effect(() => {
 		ready = true;
 	});
 </script>
+
+<div
+	class="absolute inset-0 -z-10 h-full w-full bg-transparent bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]"
+></div>
 
 {#if ready}
 	<div
@@ -23,7 +33,7 @@
 			in:fly={{ duration: 800, y: 20, easing: cubicOut }}
 			class="text-[72px] font-display font-bold leading-20"
 		>
-			A better way to<br />build UI with Svelte
+			A better way to<br />build UI with Svelte 5
 		</p>
 		<p
 			in:fly={{ duration: 800, y: 20, easing: cubicOut }}
@@ -41,7 +51,53 @@
 
 		<div
 			in:fly={{ duration: 800, y: 20, easing: cubicOut }}
-			class="w-1/2 h-[45rem] mt-40 border rounded-lg"
-		></div>
+			class="w-1/2 hidden h-[45rem] mt-40 border
+            p-8 rounded-lg"
+		>
+			<Card.Root class="max-w-[25rem] text-left">
+				<Card.Header>
+					<Card.Title>Username and password</Card.Title>
+					<Card.Description
+						>Change your username and password to secure your account</Card.Description
+					>
+				</Card.Header>
+				<Card.Content class="gap-4">
+					<Input variant="outlined" type="text" placeholder="Username" label="Username" />
+					<Input variant="outlined" type="text" placeholder="Password" label="Password" />
+				</Card.Content>
+				<Card.Footer>
+					<Button>Save Changes</Button>
+				</Card.Footer>
+			</Card.Root>
+
+			<Card.Root class="max-w-[25rem] text-left">
+				<Card.Header>
+					<Card.Title>Delete Account</Card.Title>
+					<Card.Description>This action is irreversible. Proceed with caution.</Card.Description>
+				</Card.Header>
+				<Card.Content class="gap-4 flex flex-row justify-between">
+					<Button variant="outlined">Cancel</Button>
+					<AlertDialog.Root>
+						<AlertDialog.Trigger
+							class="bg-destructive hover:bg-destructive-hovered active:bg-destructive-active disabled:bg-destructive-disabled"
+							>Delete Account</AlertDialog.Trigger
+						>
+						<AlertDialog.Content>
+							<AlertDialog.Title>Are you sure?</AlertDialog.Title>
+							<AlertDialog.Description>
+								Are you absolutely sure you want to delete your account? You can not recover it.
+							</AlertDialog.Description>
+							<AlertDialog.Footer>
+								<AlertDialog.Exit>Cancel</AlertDialog.Exit>
+								<AlertDialog.Confirm
+									class="bg-destructive hover:bg-destructive-hovered active:bg-destructive-active disabled:bg-destructive-disabled"
+									>Delete</AlertDialog.Confirm
+								>
+							</AlertDialog.Footer>
+						</AlertDialog.Content>
+					</AlertDialog.Root>
+				</Card.Content>
+			</Card.Root>
+		</div>
 	</div>
 {/if}

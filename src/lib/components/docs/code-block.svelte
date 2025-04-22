@@ -6,20 +6,25 @@
 
 	const theme = JSON.parse(themeRaw);
 
-	let { code, class: classProp, ...rest }: { code: string; class?: string } = $props();
+	let {
+		code,
+		class: classProp,
+		lang = 'svelte',
+		...rest
+	}: { code: string; class?: string; lang?: string } = $props();
 	let html = $state('');
 	let loaded = $state(false);
 
 	$effect(async () => {
 		const highlighter = await createHighlighter({
 			themes: [theme],
-			langs: ['svelte']
+			langs: [lang]
 		});
 
 		await highlighter.loadTheme(theme);
 
 		html = await highlighter.codeToHtml(code, {
-			lang: 'svelte',
+			lang: lang,
 			theme: 'ui-light'
 		});
 

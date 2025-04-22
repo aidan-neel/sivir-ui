@@ -6,7 +6,7 @@ source: https://github.com/aidan-neel/ui/tree/main/src/lib/registry/default/ui/t
 ---
 
 <script>
-    import { ComponentPreview, CodeBlock, CodeSnippet, ExportItem } from '$lib/components/docs';
+    import { ComponentPreview, CodeBlock, CodeSnippet, ExportItem, APIReference } from '$lib/components/docs';
     import { Button } from '$lib/ui/components/button';
     import { toast } from '$lib/ui/components/toast';
 </script>
@@ -117,3 +117,34 @@ toast({
     persistent: false,
     exitable: true
 });`}></CodeBlock>
+
+<h1 class="py-6">
+    API Reference
+</h1>
+
+<div class="flex flex-col gap-10">
+	<APIReference 
+		title="Toast" 
+		component="Root" 
+		description="The visual toast notification component rendered with dynamic content and positioning." 
+		items={[
+			{
+				property: "toast",
+				type: "Toast",
+				description: "The toast object containing display data like title, description, and type."
+			},
+			{
+				property: "index",
+				type: "number",
+				description: "The toast's position in the stack, used for vertical offset."
+			}
+		]} 
+	/>
+
+	<APIReference 
+		title="Toast" 
+		component="Toaster" 
+		description="The container component that manages and renders all active toasts." 
+		items={[]} 
+	/>
+</div>

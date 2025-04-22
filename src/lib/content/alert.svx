@@ -6,7 +6,7 @@ source: https://github.com/aidan-neel/ui/tree/main/src/lib/registry/default/ui/a
 ---
 
 <script>
-    import { ComponentPreview, CodeBlock, CodeSnippet, ExportItem } from '$lib/components/docs';
+    import { ComponentPreview, CodeBlock, CodeSnippet, ExportItem, APIReference } from '$lib/components/docs';
     import * as Alert from '$lib/ui/components/alert';
     import { toast } from '$lib/ui/components/toast';
 </script>
@@ -40,3 +40,87 @@ source: https://github.com/aidan-neel/ui/tree/main/src/lib/registry/default/ui/a
         </Alert.Description>
     </Alert.Root>
 </ComponentPreview>
+
+<h1 class="py-6">
+    API Reference
+</h1>
+
+<div class="flex flex-col gap-10">
+	<APIReference 
+		title="Alert" 
+		component="Root" 
+		description="A styled alert container component with variant icons and content." 
+		items={[
+			{
+				property: "variant",
+				type: `"info" | "error" | "success" | "warning"`,
+				description: "Determines the alert style and icon to render.",
+				defaults: `"info"`
+			},
+			{
+				property: "children",
+				type: "Snippet",
+				description: "The elements to render inside the alert."
+			},
+			{
+				property: "class",
+				type: "string",
+				description: "Additional CSS classes to apply to the alert container."
+			},
+			{
+				property: "...rest",
+				type: "HTMLDivAttributes",
+				description: "Additional HTML div attributes passed to the alert root.",
+				defaults: "{}"
+			}
+		]} 
+	/>
+
+	<APIReference 
+		title="Alert" 
+		component="Title" 
+		description="The main title text of the alert." 
+		items={[
+			{
+				property: "children",
+				type: "Snippet",
+				description: "The text or elements to render as the title."
+			},
+			{
+				property: "class",
+				type: "string",
+				description: "Additional CSS classes to apply to the title."
+			},
+			{
+				property: "...rest",
+				type: "HTMLParagraphAttributes",
+				description: "Additional paragraph attributes applied to the title element.",
+				defaults: "{}"
+			}
+		]} 
+	/>
+
+	<APIReference 
+		title="Alert" 
+		component="Description" 
+		description="The descriptive content of the alert." 
+		items={[
+			{
+				property: "children",
+				type: "Snippet",
+				description: "The text or elements to render as the description."
+			},
+			{
+				property: "class",
+				type: "string",
+				description: "Additional CSS classes to apply to the description."
+			},
+			{
+				property: "...rest",
+				type: "HTMLParagraphAttributes",
+				description: "Additional paragraph attributes applied to the description element.",
+				defaults: "{}"
+			}
+		]} 
+	/>
+</div>

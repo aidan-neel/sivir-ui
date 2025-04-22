@@ -8,7 +8,7 @@
 	} from './lib.svelte';
 
 	const state: UIState<AlertDialogUIState> = setAlertDialogUIState();
-	const { children, open = $bindable(state.data.open) }: { children: Snippet; open: boolean } =
+	const { children, open = $bindable(state.data.open) }: { children: Snippet; open?: boolean } =
 		$props();
 </script>
 
