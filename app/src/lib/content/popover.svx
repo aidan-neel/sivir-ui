@@ -8,7 +8,7 @@ source: https://github.com/aidan-neel/ui/tree/main/src/lib/registry/default/ui/t
 <script>
     import { ComponentPreview, CodeBlock, CodeSnippet, ExportItem, APIReference } from '$lib/components/docs';
     import { Button } from '$lib/ui/components/button';
-    import * as Popover from '$lib/ui/components/Popover';
+    import * as Popover from '$lib/ui/components/popover';
 </script>
 
 <h1 class="py-2">
