@@ -1,0 +1,22 @@
+{
+    "name": "@aidan-neel/ui",
+    "version": "1.0.0",
+    "main": "src/index.js",
+    "type": "module",
+    "bin": {
+        "@aidan-neel/ui": "./src/index.js"
+    },
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "description": "",
+    "dependencies": {
+        "commander": "^13.1.0",
+        "inquirer": "^12.5.2",
+        "kleur": "^4.1.5",
+        "listr2": "^8.3.2"
+    }
+}

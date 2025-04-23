@@ -1,0 +1,70 @@
+/* Import Google Fonts for default typography (Geist and Geist Mono) */
+@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&family=Geist:wght@100..900&display=swap');
+
+/* Import the default theme (can be replaced or extended) */
+@import './themes/default.css';
+
+/* Declare Tailwind layers for better control and overrides */
+@layer theme, base, components, utilities;
+
+/* Import Tailwind layers individually so they can be overridden if needed */
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/preflight.css' layer(base);
+@import 'tailwindcss/utilities.css' layer(utilities);
+
+/* Floating utility - positions element absolutely in the top-left corner */
+.floating {
+	width: max-content;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+/* Base styling applied across all elements and the body */
+@layer base {
+	* {
+		@apply border-border rounded-lg; /* Applies border and border radius globally */
+	}
+
+	body {
+		@apply bg-background text-foreground; /* Applies theme background and text color */
+	}
+}
+
+/* Headings typography */
+h1 {
+	@apply text-2xl font-semibold;
+}
+
+h2 {
+	@apply text-xl font-medium;
+}
+
+/* Custom scrollbar styling for WebKit-based browsers */
+::-webkit-scrollbar {
+	width: 5px;
+	height: 5px;
+}
+
+::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+	background: var(--color-secondary); /* Use theme's secondary color */
+	border-radius: 999px; /* Fully rounded thumb */
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: var(--color-secondary-hovered); /* Darker hover state */
+}
+
+/* Utility class to hide scrollbars across browsers */
+.hide-scrollbar {
+	-ms-overflow-style: none; /* IE and Edge */
+	scrollbar-width: none; /* Firefox */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+	display: none; /* Chrome, Safari */
+}

@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "@floating-ui/dom": "^1.6.13",
+    "@lucide/svelte": "^0.479.0",
+    "tailwind-merge": "^3.0.2",
+    "tailwind-variants": "^0.2.1",
+    "tailwindcss": "^4.0.0"
+  }
+}
