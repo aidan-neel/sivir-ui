@@ -1,0 +1,47 @@
+basePath: /
+definitions:
+  models.Theme:
+    properties:
+      created_at:
+        type: string
+      css:
+        type: string
+      deleted_at:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      updated_at:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: This is the API for publishing themes.
+  title: '@aidan-neel/ui Themes API'
+  version: "1.0"
+paths:
+  /themes/publish:
+    post:
+      consumes:
+      - application/json
+      description: Uploads a new CSS theme
+      parameters:
+      - description: Theme object
+        in: body
+        name: theme
+        required: true
+        schema:
+          $ref: '#/definitions/models.Theme'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+      summary: Publish a theme
+      tags:
+      - themes
+swagger: "2.0"

@@ -16,6 +16,11 @@
 	$effect(() => {
 		const path = $page.url.pathname;
 
+        if (path === "/") {
+            isActive = href === "/";
+            return;
+        }
+
 		if (!path.startsWith('/docs')) {
 			isActive = false;
 			return;

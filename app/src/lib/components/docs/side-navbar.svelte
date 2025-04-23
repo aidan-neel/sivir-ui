@@ -12,44 +12,45 @@
 </script>
 
 <div
-	class="{classProp} w-1/5 xl:w-1/5 2xl:w-1/8 border-r p-4 mr-2 bg-background fixed left-0 flex-shrink-0 h-full"
+	class="{classProp} w-1/5 rounded-none xl:w-1/5 2xl:w-1/8 border-r p-4 mr-2 bg-background fixed left-0 flex-shrink-0 h-full"
 >
-	<Button
-		variant={pageName.split('/')[2] === 'introduction' ? 'secondary' : 'ghost'}
-		href={`/docs/introduction`}
-		class="duration-100 w-full p-2 rounded-lg font-semibold  text-left flex items-start justify-start"
-	>
-		Introduction
-	</Button>
+    <h3 class="font-semibold text-sm ml-2 pb-4 pt-1">Getting Started</h3>
+    <Button
+        variant={pageName.split('/')[2] === 'introduction' ? 'secondary' : 'ghost'}
+        href={`/docs/introduction`}
+        class="duration-100 w-full p-2 rounded-lg text-left right-2 flex items-start justify-start {pageName.split('/')[2] === 'introduction' ? 'font-semibold text-foreground' : 'text-foreground-muted/70 hover:text-foreground'}"
+    >
+        Introduction
+    </Button>
     <Button
         variant={pageName.split('/')[2] === 'installation' ? 'secondary' : 'ghost'}
         href={`/docs/installation`}
-        class="duration-100 w-full p-2 rounded-lg font-semibold text-left flex items-start justify-start"
+        class="duration-100 w-full p-2 rounded-lg text-left right-2 flex items-start justify-start {pageName.split('/')[2] === 'installation' ? 'font-semibold text-foreground' : 'text-foreground-muted/70 hover:text-foreground'}"
     >
         Installation
-    </Button>	
+    </Button>
     <Button
         variant={pageName.split('/')[2] === 'styling' ? 'secondary' : 'ghost'}
         href={`/docs/styling`}
-        class="duration-100 w-full p-2 rounded-lg font-semibold text-left flex items-start justify-start"
+        class="duration-100 w-full p-2 rounded-lg text-left right-2 flex items-start justify-start {pageName.split('/')[2] === 'styling' ? 'font-semibold text-foreground' : 'text-foreground-muted/70 hover:text-foreground'}"
     >
         Styling
     </Button>
     <Button
         variant={pageName.split('/')[2] === 'themes' ? 'secondary' : 'ghost'}
         href={`/docs/themes`}
-        class="duration-100 w-full p-2 rounded-lg font-semibold text-left flex items-start justify-start"
+        class="duration-100 w-full p-2 rounded-lg text-left right-2 flex items-start justify-start {pageName.split('/')[2] === 'themes' ? 'font-semibold text-foreground' : 'text-foreground-muted/70 hover:text-foreground'}"
     >
         Themes
     </Button>
-	<Button
-		variant={pageName.split('/')[2] === 'changelog' ? 'secondary' : 'ghost'}
-		href={`/docs/changelog`}
-		class="duration-100 w-full p-2 rounded-lg font-semibold text-left flex items-start justify-start"
-	>
-		Changelog
-	</Button>
-	<h3 class="font-semibold text-sm ml-2 text-foreground-muted pt-6 pb-2">Components</h3>
+    <Button
+        variant={pageName.split('/')[2] === 'changelog' ? 'secondary' : 'ghost'}
+        href={`/docs/changelog`}
+        class="duration-100 w-full p-2 rounded-lg text-left right-2 flex items-start justify-start {pageName.split('/')[2] === 'changelog' ? 'font-semibold text-foreground' : 'text-foreground-muted/70 hover:text-foreground'}"
+    >
+        Changelog
+    </Button>
+	<h3 class="font-semibold text-sm ml-2 py-4 pt-6">Components</h3>
 	{#each components as component}
 		<Button
 			variant={pageName.split('/')[3] === component ? 'secondary' : 'ghost'}

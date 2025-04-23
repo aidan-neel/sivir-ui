@@ -5,7 +5,7 @@
 	const { children }: { children: Snippet } = $props();
 </script>
 
-<main class="h-screen pt-16 w-screen flex flex-col">
+<main class="h-screen pt-14 w-screen flex flex-col">
 	<div class="flex-1 justify-center h-full w-full flex-row flex">
 		<SideNavbar class="lg:visible invisible flex-shrink-0" />
 		<div
