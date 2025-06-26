@@ -49,7 +49,7 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/alert-dia
 </AlertDialog.Root>`}>
     <AlertDialog.Root>
         <AlertDialog.Trigger>Alert Dialog</AlertDialog.Trigger>
-        <AlertDialog.Content>
+        <AlertDialog.Content class="max-w-[30rem]">
             <AlertDialog.Title>Are you sure?</AlertDialog.Title>
             <AlertDialog.Description>
                 Are you absolutely sure you want to delete this table? You can not recover it.

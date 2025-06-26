@@ -12,29 +12,6 @@
 	];
 
 	let isActive = $state(false);
-
-	$effect(() => {
-		const path = $page.url.pathname;
-
-        if (path === "/") {
-            isActive = href === "/";
-            return;
-        }
-
-		if (!path.startsWith('/docs')) {
-			isActive = false;
-			return;
-		}
-
-		const isLanding = docLanding.includes(path);
-
-		if (isLanding) {
-			isActive = href === '/docs/introduction';
-			return;
-		}
-
-		isActive = href.startsWith('/docs/components');
-	});
 </script>
 
 <Button

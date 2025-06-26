@@ -2,22 +2,20 @@ import type { Snippet } from 'svelte';
 import { tv } from 'tailwind-variants';
 
 export const button = tv({
-	base: 'font-medium btn text-sm text-foreground-opposite hover:cursor-default duration-150 py-1.5 px-4 flex items-center justify-center rounded-lg disabled:bg-primary-disabled disabled:cursor-not-allowed disabled:opacity-50',
+	base: 'font-medium text-sm text-foreground-btn duration-150 flex items-center justify-center rounded-lg hover:cursor-default h-9 px-3 gap-1.5 whitespace-nowrap transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*="size-"])]:size-4 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive hover:bg-primary/90',
 	variants: {
 		variant: {
-			primary:
-				'bg-primary active:bg-primary-active text-foreground-opposite border-btn hover:bg-primary-hovered focus-visible:bg-primary-hovered disabled:bg-primary-disabled disabled:cursor-not-allowed disabled:opacity-50 duration-150',
-			secondary:
-				'bg-secondary active:bg-secondary-active text-foreground hover:bg-secondary-hovered focus-visible:bg-secondary-hovered disabled:bg-secondary-disabled',
-			flat: 'bg-primary/30 active:bg-primary/10 text-primary/80 hover:text-primary/40 focus-visible:text-primary-hovered hover:bg-primary/20 focus-visible:bg-flat-hovered disabled:bg-flat-disabled disabled:text-flat-foreground-disabled',
-			outlined:
-				'bg-background text-foreground active:bg-outlined-active border border-border hover:bg-outlined-hovered focus-visible:bg-outlined-hovered disabled:bg-background-disabled disabled:border-border-disabled disabled:-disabled',
-			ghost:
-				'hover:bg-ghost-hovered active:bg-ghost-active text-foreground focus-visible:bg-ghost-hovered  bg-transparent disabled:-disabled disabled:hover:bg-transparent disabled:focus-visible:bg-transparent',
-			alternate:
-				'bg-alternate active:bg-alternate-active text-primary-alternate hover:bg-alternate-hovered focus-visible:bg-alternate-hovered disabled:bg-alternate-disabled disabled:text-primary-alternate-disabled',
+			primary: 'bg-primary active:bg-primary/80 hover:bg-primary/80',
+			secondary: 'bg-secondary active:bg-secondary/50 text-foreground hover:bg-secondary/60',
+			flat: 'bg-primary/20 shadow-none active:bg-primary/30 text-primary/90 hover:bg-primary/10',
+			outlined: 'bg-background text-foreground border border-border hover:bg-secondary',
+			ghost: 'bg-transparent shadow-none active:bg-secondary/60 text-foreground hover:bg-secondary',
+			alternate: 'bg-alternate active:bg-alternate text-primary hover:bg-alternate/90',
 			destructive:
-				'bg-destructive active:bg-destructive-active font-medium text-foreground-opposite hover:bg-destructive-hovered focus-visible:bg-destructive-hovered disabled:bg-destructive-disabled disabled:-disabled'
+				'bg-destructive active:bg-destructive text-foreground-btn dark:text-foreground hover:bg-destructive/80'
+		},
+		size: {
+			icon: 'h-9 w-9 p-0'
 		}
 	},
 	defaultVariants: {

@@ -13,6 +13,9 @@
 </script>
 
 <div
+    role="alert"
+    aria-live="polite"
+    aria-atomic="true"
 	transition:flyAndScale
 	class={cn(
 		'border p-4 bg-background gap-3 flex flex-row shadow-sm fixed rounded-lg z-[999]',

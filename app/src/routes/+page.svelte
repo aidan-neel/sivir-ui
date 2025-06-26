@@ -9,16 +9,13 @@
 	import * as Alert from '$lib/ui/components/alert';
 	import * as AlertDialog from '$lib/ui/components/alert-dialog';
 	import { Checkbox } from '$lib/ui/components/checkbox';
+	import { mode } from "mode-watcher";
 
 	let ready = $state(false);
 	$effect(() => {
 		ready = true;
 	});
 </script>
-
-<div
-	class="absolute inset-0 -z-10 h-full w-full bg-transparent bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]"
-></div>
 
 {#if ready}
 	<div
@@ -27,23 +24,23 @@
 		<a
 			in:fly={{ duration: 800, y: 20, easing: cubicOut }}
 			href="/docs/changelog"
-			class="rounded-lg-full border shadow-sm px-4 py-1 text-sm font-medium">🎉 New 1.0 Release!</a
+			class="rounded-btn border shadow-sm px-5 py-1 text-sm font-medium">🎉 New 1.0 Release!</a
 		>
 		<p
 			in:fly={{ duration: 800, y: 20, easing: cubicOut }}
-			class="text-[72px] font-display font-bold leading-20"
+                class="text-[48px] w-full max-w-[42rem] font-display font-semibold leading-14"
 		>
-			A better way to<br />build UI with Svelte 5
+			Build cleaner with Svelte 5
 		</p>
 		<p
 			in:fly={{ duration: 800, y: 20, easing: cubicOut }}
-			class="text-[18px] text-foreground-muted"
+			class="text-[18px] w-full max-w-[42rem]"
 		>
-			A flexible component library for Svelte, designed for<br /> developers who want full control over
-			their UI.
+            A flexible, accessible component library and distribution platform for Svelte.
+            Built for developers who want complete control over their UI.
 		</p>
 		<div in:fly={{ duration: 800, y: 20, easing: cubicOut }} class="flex flex-row gap-5">
-			<Button href={'/docs/components/alert'} class="text-sm">Browse Components</Button>
+			<Button href={'/docs/components/alert'} class="text-sm">Get Started</Button>
 			<Button href={'https://github.com/aidan-neel/ui'} class="text-sm" variant="outlined"
 				>View on GitHub</Button
 			>

@@ -3,7 +3,7 @@
 
 <main class="flex flex-col w-full h-screen">
 	<header class="flex flex-col gap-1 pb-6 border-b rounded-none">
-		<p class="text-4xl font-bold">Changelog</p>
+		<h1 class="text-4xl font-bold">Changelog</h1>
 		<p class="text-lg text-foreground-muted">A log of the latest updates</p>
 	</header>
 
@@ -12,7 +12,7 @@
 	</header>
 
 	<div class="py-4">
-		<p class="text-xl font-semibold">v1.0.0 - Release</p>
+		<h2 class="text-xl font-semibold">v1.0.0 - Release</h2>
 		<p class="text-base pt-2">
 			aidan-neel/ui has been released! Over the next couple months, I will be adding components,
 			polishing, and updating aidan-neel/ui as much as possible without getting burnt out.

@@ -4,7 +4,7 @@
 
 <main class="flex flex-col w-full h-screen">
 	<header class="flex flex-col gap-1 pb-6 border-b rounded-none">
-		<p class="text-4xl font-bold">Installation</p>
+		<h1 class="text-4xl font-bold">Installation</h1>
 		<p class="text-lg text-foreground-muted">How to initialize and install @aidan-neel/ui</p>
 	</header>
 

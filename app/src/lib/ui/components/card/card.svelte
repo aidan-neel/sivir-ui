@@ -12,6 +12,6 @@
 	} = $props();
 </script>
 
-<div {...rest} class={cn(classProp, `shadow-sm p-6 bg-background rounded-lg border flex flex-col`)}>
+<div {...rest} class={cn(classProp, `p-6 bg-background rounded-lg border flex flex-col`)}>
 	{@render children?.()}
 </div>

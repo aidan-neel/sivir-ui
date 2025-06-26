@@ -28,7 +28,7 @@ export const flyAndScale = (
 	params: FlyAndScaleParams = { y: -12, x: 0, start: 0.8, duration: 500, blur: 0 }
 ): TransitionConfig => {
 	params.duration = 250;
-	params.blur = 4;
+	params.blur = 0;
 
 	const style = getComputedStyle(node);
 	const transform = style.transform === 'none' ? '' : style.transform;

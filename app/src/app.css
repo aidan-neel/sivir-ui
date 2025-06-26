@@ -1,11 +1,9 @@
 @layer theme, base, components, utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap');
-
-@font-face {
-	font-family: 'Cal Sans';
-	src: url('/fonts/CalSans.otf') format('opentype');
-}
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300..900;1,300..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cal+Sans&display=swap');
 
 .border-transpar {
 	border-r: transparent !important;

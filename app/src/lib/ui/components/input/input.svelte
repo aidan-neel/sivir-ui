@@ -34,7 +34,7 @@
 
 <label class="flex flex-col gap-1">
 	{#if label}
-		<span class="text-text text-sm font-medium font-sans">{label}</span>
+		<span class="text-foreground text-sm font-medium font-sans">{label}</span>
 	{/if}
 
 	{#if type === 'file'}

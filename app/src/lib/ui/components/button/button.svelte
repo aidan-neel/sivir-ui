@@ -9,11 +9,13 @@
 		variant = 'primary',
 		children,
 		class: classProp,
+        size = 'default',
 		element = $bindable(),
 		...rest
 	}: HTMLButtonAttributes & {
 		href?: string;
 		variant?: 'primary' | 'flat' | 'outlined' | 'secondary' | 'ghost' | 'alternate' | 'destructive';
+        size?: 'icon' | 'default'
 		children?: Snippet;
 		element?: HTMLButtonElement | HTMLAnchorElement | undefined;
 	} = $props();
@@ -24,7 +26,7 @@
 		bind:this={element}
 		onclick={() => {}}
 		{href}
-		class={cn(classProp, button({ variant: variant }))}
+		class={cn(classProp, button({ variant: variant, size: size }))}
 		{...rest}
 	>
 		{@render children?.()}
@@ -33,7 +35,7 @@
 	<button
 		bind:this={element}
 		onclick={() => {}}
-		class={cn(classProp, button({ variant: variant }))}
+		class={cn(classProp, button({ variant: variant, size: size }))}
 		{...rest}
 	>
 		{@render children?.()}

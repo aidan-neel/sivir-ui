@@ -4,7 +4,7 @@
 
 <main class="flex flex-col w-full h-screen pb-12">
 	<header class="flex flex-col gap-1 pb-6 border-b rounded-none">
-		<p class="text-4xl font-bold">Styling</p>
+		<h1 class="text-4xl font-bold">Styling</h1>
 		<p class="text-lg text-foreground-muted">Learn how to style @aidan-neel/ui</p>
 	</header>
 
@@ -26,71 +26,67 @@
 
 	<CodeBlock
 		lang="css"
-		class="mb-6 p-3 max-h-[25rem]"
-		code={`@theme {
-    /* Fonts */
-    --font-sans: 'Geist';
-    --font-mono: 'Geist Mono';
+		class="mb-6 p-3 max-h-[35rem]"
+		code={`@layer base {
+	:root {
+		/* Fonts */
+		--font-sans: 'Geist';
+		--font-mono: 'Geist Mono';
 
-    /* Colors */
-    --color-background: #ffffff;
-    --color-border: #dedede;
-    --color-primary: #2685d9;
-    --color-primary-alternate: #0077e0;
-    --color-primary-hovered: #0061b5;
-    --color-flat: #b7d4f0;
-    --color-flat-foreground: #3c99e0;
-    --color-flat-hovered: #99c3ea;
-    --color-foreground-opposite: #ffffff;
-    --color-foreground: #171717;
-    --color-foreground-muted: #525252;
-    --color-secondary: #f2f2f2;
-    --color-secondary-hovered: #f7f7f7;
-    --color-ghost-hovered: #f7f7f7;
-    --color-accent: #0d1a40;
-    --color-alternate: #2c2c2c;
-    --color-alternate-hovered: #1a1a1a;
-    --color-outlined-hovered: #dedede;
-    --color-success: #46ab61;
-    --color-warning: #ff9800;
-    --color-error: #ef5350;
-    --color-destructive: #fa4234;
-    --color-destructive-hovered: #781d17;
-    --color-primary-active: #004c8a;
-    --color-flat-active: #80afd5;
-    --color-secondary-active: #e6e6e6;
-    --color-ghost-active: #e6e6e6;
-    --color-alternate-active: #0f0f0f;
-    --color-outlined-active: #bfbfbf;
-    --color-destructive-active: #5c1612;
+		/* Colors */
+		--color-background: #ffffff;
+		--color-border: #dedede;
+		--color-primary: #2685d9;
+		--color-foreground-opposite: #ffffff;
+		--color-foreground: #171717;
+		--color-foreground-muted: #525252;
+		--color-foreground-btn: #ffffff;
+		--color-secondary: #e9e9e9;
+		--color-accent: #0d1a40;
+		--color-alternate: #2c2c2c;
+		--color-success: #46ab61;
+		--color-warning: #ff9800;
+		--color-error: #ef5350;
+		--color-destructive: #fa4234;
 
-    /* Disabled Colors */
-    --color-primary-disabled: #bbdcff;
-    --color-primary-alternate-disabled: #a8d5ff;
-    --color-primary-hovered-disabled: #8ea6c4;
-    --color-flat-disabled: #ddeaf7;
-    --color-flat-foreground-disabled: #89b6de;
-    --color-flat-hovered-disabled: #c8e0f5;
-    --color-secondary-disabled: #f0f0f0;
-    --color-secondary-hovered-disabled: #d1d1d1;
-    --color-ghost-hovered-disabled: #e0e0e0;
-    --color-alternate-disabled: #737373;
-    --color-alternate-hovered-disabled: #4d4d4d;
-    --color-outlined-hovered-disabled: #e1e1e1;
-    --color-border-disabled: #e1e1e1;
-    --color-text-disabled: #a3a3a3;
-    --color-background-disabled: #f5f5f5;
-    --color-destructive-disabled: #541511;
+		/* Border radius */
+		--radius-sm: 0.2rem;
+		--radius-md: 0.3rem;
+		--radius-lg: 0.5rem;
+		--radius-xl: 0.7rem;
+	}
 
-    /* Border radius */
-    --radius-sm: 0.2rem;
-    --radius-md: 0.3rem;
-    --radius-lg: 0.5rem;
-    --radius-xl: 0.7rem;
+	.dark {
+		/* Fonts */
+		--font-sans: 'Geist' !important;
+		--font-mono: 'Geist Mono' !important;
 
-    /* Sizes */
-    --height-btn: 2.25rem;
-    --padding-x-btn: 1rem;
+		/* Colors */
+		--color-background: #0a0a0a !important;
+		--color-border: #1c1c1c !important;
+		--color-primary: #0b7bde !important;
+		--color-foreground-opposite: #0d0d0d !important;
+		--color-foreground: #ffffff !important;
+		--color-foreground-muted: #9c9c9c !important;
+		--color-foreground-btn: #ffffff !important;
+		--color-secondary: #171717 !important;
+		--color-accent: #0d1a40 !important;
+		--color-alternate: #2c2c2c !important;
+		--color-success: #46ab61 !important;
+		--color-warning: #ff9800 !important;
+		--color-error: #ef5350 !important;
+		--color-destructive: #b50003 !important;
+
+		/* Border radius */
+		--radius-sm: 0.2rem !important;
+		--radius-md: 0.3rem !important;
+		--radius-lg: 0.5rem !important;
+		--radius-xl: 0.7rem !important;
+
+		/* Sizes */
+		--height-btn: 2.25rem !important;
+		--padding-x-btn: 1rem !important;
+	}
 }
 `}
 	/>

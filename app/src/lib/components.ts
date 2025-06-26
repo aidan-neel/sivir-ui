@@ -7,9 +7,7 @@ export const components = [
 	'badge',
 	'card',
 	'input',
-	'checkbox',
-	'modal',
-	'skeleton'
+	'checkbox'
 ].sort((a, b) => a.localeCompare(b));
 
 export const sanitizeComponent = (name: string) => {

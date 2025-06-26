@@ -1,10 +1,14 @@
 <script lang="ts">
 	import { codeToHtml, createHighlighter } from 'shiki';
-	import themeRaw from '$lib/themes/light.json?raw';
+	import themeLightRaw from '$lib/themes/light.json?raw';
+	import themeDarkRaw from '$lib/themes/dark.json?raw'; // Assuming the dark theme is available
 	import { fade } from 'svelte/transition';
 	import { cn } from '$lib/ui/utils';
-
-	const theme = JSON.parse(themeRaw);
+	import { mode } from "mode-watcher";
+    
+	// Parse the themes
+	const themeLight = JSON.parse(themeLightRaw);
+	const themeDark = JSON.parse(themeDarkRaw);
 
 	let {
 		code,
@@ -16,6 +20,11 @@
 	let loaded = $state(false);
 
 	$effect(async () => {
+		// Determine whether the dark mode is active
+		const isDarkMode = mode.current === "dark";
+		const theme = isDarkMode ? themeDark : themeLight;
+
+		// Create a highlighter with the selected theme
 		const highlighter = await createHighlighter({
 			themes: [theme],
 			langs: [lang]
@@ -25,14 +34,14 @@
 
 		html = await highlighter.codeToHtml(code, {
 			lang: lang,
-			theme: 'ui-light'
+			theme: isDarkMode ? 'ui-dark' : 'ui-light'
 		});
 
 		loaded = true;
 	});
 </script>
 
-<div {...rest} class={cn(classProp, 'border rounded-lg w-full p-4 h-fit text-sm overflow-auto ')}>
+<div {...rest} class={cn(classProp, 'rounded-lg w-full p-4 h-fit text-sm overflow-auto')}>
 	{#if loaded}
 		<code transition:fade={{ duration: 100 }} class="font-mono w-full">{@html html}</code>
 	{:else}

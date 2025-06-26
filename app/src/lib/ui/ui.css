@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&family=Geist:wght@100..900&display=swap');
+
 @import 'tailwindcss';
+@custom-variant dark (&:where(.dark, .dark *));
 
 /* Chosen Theme */
 @import './themes/default.css';
@@ -12,30 +14,46 @@
 	left: 0;
 }
 
-/* Base styling applied across all elements and the body */
+html,
+body {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	width: 100%;
+}
+
 @layer base {
+	h1 {
+		@apply text-2xl font-medium font-header;
+	}
+
+	h2 {
+		font-family: var(--font-sans), sans-serif;
+		@apply text-xl font-medium;
+	}
+
 	* {
-		@apply border-border rounded-lg; /* Applies border and border radius globally */
+		border-color: var(--color-border);
 	}
 
 	body {
-		@apply bg-background text-foreground; /* Applies theme background and text color */
+		background-color: var(--color-background);
+		color: var(--color-foreground);
 	}
 }
 
-/* Headings typography */
-h1 {
-	@apply text-2xl font-semibold;
+.rounded-btn {
+	border-radius: var(--radius-btn);
 }
 
-h2 {
-	@apply text-xl font-medium;
+.rounded-lg {
+	border-radius: var(--radius-lg) !important;
 }
 
 /* Custom scrollbar styling for WebKit-based browsers */
 ::-webkit-scrollbar {
-	width: 5px;
-	height: 5px;
+	width: 0px;
+	height: 0px;
 }
 
 ::-webkit-scrollbar-track {

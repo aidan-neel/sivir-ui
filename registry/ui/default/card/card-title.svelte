@@ -14,7 +14,7 @@
 
 <p
 	{...rest}
-	class={cn(classProp, `text-text text-lg text-foreground font-semibold tracking-tighter`)}
+	class={cn(classProp, `text-text text-lg text-foreground font-semibold`)}
 >
 	{@render children?.()}
 </p>

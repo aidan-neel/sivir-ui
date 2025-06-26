@@ -1,8 +1,7 @@
 <script lang="ts">
-	import BackgroundBlur from '../internals/background-blur.svelte';
 	import { onDestroy, onMount, type Snippet } from 'svelte';
 	import { popoverUIState, getPopoverUIState, type PopoverUIState, STATE_KEY } from './lib.svelte';
-	import type { UIState } from '$lib/ui/internals/dataState.svelte';
+	import type { UIState } from '$lib/ui/internals/state.svelte';
 	import { clickOutside, cn } from '$lib/ui/utils';
 	import { flyAndScale } from '$lib/ui/internals/transition';
 	import { computePosition } from '@floating-ui/dom';
@@ -50,6 +49,10 @@
 	{...rest}
 	class={cn(classProp, 'flex items-center py-2 justify-center floating')}
 	bind:this={popover}
+    role="dialog"
+    id={`${String(STATE_KEY)}-content`}
+    aria-modal="false"
+    aria-labelledby={`${String(STATE_KEY)}-title`}
 >
 	{#if dataState.data?.open}
 		<div

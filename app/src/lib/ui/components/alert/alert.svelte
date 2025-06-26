@@ -20,7 +20,7 @@
 	} = $props();
 </script>
 
-<div class={cn(classProp, alert({ variant: variant }))}>
+<div role="alert" class={cn(classProp, alert({ variant: variant }))}>
 	{#if variant == 'info'}
 		<Info size="18" class="mt-1 text-foreground" />
 	{/if}

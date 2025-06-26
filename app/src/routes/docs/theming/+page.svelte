@@ -4,7 +4,7 @@
 
 <main class="flex flex-col w-full h-screen">
 	<header class="flex flex-col gap-1 pb-6 border-b rounded-none">
-		<p class="text-4xl font-bold">Custom Themes</p>
+		<h1 class="text-4xl font-bold">Custom Theming</h1>
 		<p class="text-lg text-foreground-muted">Create and install custom themes from the registry</p>
 	</header>
 
@@ -14,75 +14,66 @@
             Customize a theme to your liking using Tailwind. See more <a href="https://tailwindcss.com/docs/theme" class="underline font-medium">here.</a>
             Below is an example theme called 'Neon'.
         </p>
-        <CodeBlock code={`@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
-
-@theme {
+        <CodeBlock code={`@theme {
 	/* Fonts */
-	--header-font: 'Inter';
-	--body-font: 'Inter';
-	--mono-font: 'JetBrains Mono';
-
-	--font-sans: 'Inter';
-	--font-mono: 'JetBrains Mono';
+	--font-sans: 'Geist';
+	--font-mono: 'Geist Mono';
 
 	/* Colors */
-	--color-background: #121212;
-	--color-border: #1e1e1e;
-	--color-primary: #00e5ff;
-	--color-primary-alternate: #00bcd4;
-	--color-primary-hovered: #008ba3;
-	--color-flat: #00acc1;
-	--color-flat-foreground: #00e5ff;
-	--color-flat-hovered: #0097a7;
-	--color-foreground-opposite: #000000;
-	--color-foreground: #e0e0e0;
-	--color-foreground-muted: #a0a0a0;
-	--color-secondary: #1c1c1c;
-	--color-secondary-hovered: #242424;
-	--color-ghost-hovered: #2a2a2a;
-	--color-accent: #ff4081;
-	--color-alternate: #303030;
-	--color-alternate-hovered: #3a3a3a;
-	--color-outlined-hovered: #474747;
-	--color-success: #00c853;
-	--color-warning: #ffab00;
-	--color-error: #d50000;
-	--color-destructive: #ff1744;
-	--color-destructive-hovered: #b2102f;
-	--color-primary-active: #006064;
-	--color-flat-active: #007c91;
-	--color-secondary-active: #333333;
-	--color-ghost-active: #3a3a3a;
-	--color-alternate-active: #4a4a4a;
-	--color-outlined-active: #5a5a5a;
-	--color-destructive-active: #8e0000;
-
-	/* Disabled Colors */
-	--color-primary-disabled: #004d5a;
-	--color-primary-alternate-disabled: #00474f;
-	--color-primary-hovered-disabled: #003e44;
-	--color-flat-disabled: #004349;
-	--color-flat-foreground-disabled: #005a6e;
-	--color-flat-hovered-disabled: #003940;
-	--color-secondary-disabled: #2e2e2e;
-	--color-secondary-hovered-disabled: #262626;
-	--color-ghost-hovered-disabled: #1e1e1e;
-	--color-alternate-disabled: #545454;
-	--color-alternate-hovered-disabled: #424242;
-	--color-outlined-hovered-disabled: #383838;
-	--color-border-disabled: #404040;
-	--color-text-disabled: #666666;
-	--color-background-disabled: #191919;
-	--color-destructive-disabled: #5a1a1a;
+	--color-background: #ffffff;
+	--color-border: #dedede;
+	--color-primary: #2685d9;
+	--color-foreground-opposite: #ffffff;
+	--color-foreground: #171717;
+	--color-foreground-muted: #525252;
+	--color-foreground-btn: #ffffff;
+	--color-secondary: #e9e9e9;
+	--color-accent: #0d1a40;
+	--color-alternate: #2c2c2c;
+	--color-success: #46ab61;
+	--color-warning: #ff9800;
+	--color-error: #ef5350;
+	--color-destructive: #fa4234;
 
 	/* Border radius */
-	--radius: 0.5rem;
+	--radius-sm: 0.2rem;
+	--radius-md: 0.3rem;
+	--radius-lg: 0.5rem;
+	--radius-xl: 0.7rem;
+}
+
+.dark {
+	/* Fonts */
+	--font-sans: 'Geist' !important;
+	--font-mono: 'Geist Mono' !important;
+
+	/* Colors */
+	--color-background: #0a0a0a !important;
+	--color-border: #1c1c1c !important;
+	--color-primary: #0b7bde !important;
+	--color-foreground-opposite: #0d0d0d !important;
+	--color-foreground: #ffffff !important;
+	--color-foreground-muted: #9c9c9c !important;
+	--color-foreground-btn: #ffffff !important;
+	--color-secondary: #171717 !important;
+	--color-accent: #0d1a40 !important;
+	--color-alternate: #2c2c2c !important;
+	--color-success: #46ab61 !important;
+	--color-warning: #ff9800 !important;
+	--color-error: #ef5350 !important;
+	--color-destructive: #b50003 !important;
+
+	/* Border radius */
+	--radius-sm: 0.2rem !important;
+	--radius-md: 0.3rem !important;
+	--radius-lg: 0.5rem !important;
+	--radius-xl: 0.7rem !important;
 
 	/* Sizes */
-	--height-btn: 2.5rem;
-	--padding-x-btn: 1.25rem;
+	--height-btn: 2.25rem !important;
+	--padding-x-btn: 1rem !important;
 }
-`} class="p-3 max-h-[25rem]" lang="css" />
+`} class="p-3 max-h-[35rem]" lang="css" />
 	</section>
 
 	<section class="flex flex-col gap-1 mt-6">

@@ -24,10 +24,26 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/badge
     Example
 </h1>
 
-<ComponentPreview code={`<Badge>
-    Primary
-</Badge>`}>
-    <Badge>Primary</Badge>
+<ComponentPreview code={`<script>
+    import { Badge } from '$lib/ui/components/badge';
+</script>\n
+<Badge>Primary</Badge>
+<Badge variant="flat">Flat</Badge>
+<Badge variant="outlined">Outlined</Badge>
+<Badge variant="secondary">Secondary</Badge>
+<Badge variant="ghost">Ghost</Badge>
+<Badge variant="alternate">Alternate</Badge>
+<Badge variant="destructive">Destructive</Badge>
+`}>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 my-4 auto-rows-min">
+        <Badge class="w-auto max-w-[6rem]">Primary</Badge>
+        <Badge class="w-auto max-w-[6rem]" variant="flat">Flat</Badge>
+        <Badge class="w-auto max-w-[6rem]" variant="outlined">Outlined</Badge>
+        <Badge class="w-auto max-w-[6rem]" variant="secondary">Secondary</Badge>
+        <Badge class="w-auto max-w-[6rem]" variant="ghost">Ghost</Badge>
+        <Badge class="w-auto max-w-[6rem]" variant="alternate">Alternate</Badge>
+        <Badge class="w-auto max-w-[6rem]" variant="destructive">Destructive</Badge>
+    </div>
 </ComponentPreview>
 
 <h1 class="py-6">

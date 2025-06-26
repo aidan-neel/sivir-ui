@@ -7,7 +7,6 @@
 		type PopoverUIState
 	} from './lib.svelte';
 	import { clickOutside, cn } from '$lib/ui/utils';
-	import BackgroundBlur from '../internals/background-blur.svelte';
 	import type { UIState } from '$lib/ui/internals/state.svelte';
 
 	const {

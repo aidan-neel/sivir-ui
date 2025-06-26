@@ -31,7 +31,7 @@
 	});
 </script>
 
-<Button id={`${String(STATE_KEY)}-controls`} bind:element {...rest} class={classProp}>
+<Button aria-haspopup="dialog" aria-expanded="true" aria-controls={`${String(STATE_KEY)}-content`} id={`${String(STATE_KEY)}-controls`} bind:element {...rest} class={classProp}>
 	{#if children}
 		{@render children?.()}
 	{/if}

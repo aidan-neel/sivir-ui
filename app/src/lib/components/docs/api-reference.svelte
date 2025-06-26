@@ -21,7 +21,7 @@
 
 <div class="w-full flex flex-col gap-6">
 	<header class="flex flex-col gap-4">
-		<p class="bg-secondary w-fit p-1 px-3 rounded-lg-md font-mono">
+		<p class="bg-secondary w-fit p-1 text-lg px-3 rounded-lg font-mono">
 			<span class="text-foreground-muted">
 				{title}
 			</span>.<span class="font-semibold">
@@ -46,7 +46,7 @@
 				{#each items as { property, type, description, defaults }}
 					<tr class="border-t">
 						<td class="p-3 font-mono w-1/3">
-							<span class="bg-secondary px-2 p-1 rounded-lg-md font-medium text-sm">
+							<span class="bg-secondary px-2 p-1 rounded-lg font-medium text-sm">
 								{property}
 							</span>
 						</td>

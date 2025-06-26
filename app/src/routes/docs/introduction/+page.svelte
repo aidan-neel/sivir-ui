@@ -3,7 +3,7 @@
 
 <main class="flex flex-col w-full h-screen">
 	<header class="flex flex-col gap-1 pb-6 border-b rounded-none">
-		<p class="text-4xl font-bold">Introduction</p>
+		<h1 class="text-4xl font-bold">Introduction</h1>
 		<p class="text-lg text-foreground-muted">A better way to build UI with Svelte</p>
 	</header>
 

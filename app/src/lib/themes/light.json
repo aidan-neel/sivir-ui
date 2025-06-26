@@ -377,14 +377,14 @@
 			"name": "Component Text",
 			"scope": ["string.quoted", "string.unquoted", "markup.inline", "meta.embedded.block"],
 			"settings": {
-				"foreground": "#3267ed"
+				"foreground": "#000000"
 			}
 		},
 		{
 			"name": "Component Prefix",
 			"scope": ["support.class.component", "entity.name.type.component"],
 			"settings": {
-				"foreground": "#3267ed"
+				"foreground": "#000000"
 			}
 		},
 		{
@@ -398,7 +398,7 @@
 				"entity.name.tag"
 			],
 			"settings": {
-				"foreground": "#3267ed"
+				"foreground": "#000000"
 			}
 		}
 	]

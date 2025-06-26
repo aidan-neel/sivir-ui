@@ -13,6 +13,6 @@
 	} = $props();
 </script>
 
-<p id={`${String(STATE_KEY)}-desc`} {...rest} class={cn(classProp, `text-foreground-muted`)}>
+<p id={`${String(STATE_KEY)}-desc`} {...rest} class={cn(classProp, `text-foreground-muted text-sm`)}>
 	{@render children?.()}
 </p>

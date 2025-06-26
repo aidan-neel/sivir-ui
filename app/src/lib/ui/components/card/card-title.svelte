@@ -12,9 +12,9 @@
 	} = $props();
 </script>
 
-<p
+<h1
 	{...rest}
-	class={cn(classProp, `text-text text-lg text-foreground font-semibold tracking-tighter`)}
+	class={cn(classProp, `font-medium text-base text-foreground`)}
 >
 	{@render children?.()}
-</p>
+</h1>

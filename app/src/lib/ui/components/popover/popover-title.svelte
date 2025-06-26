@@ -12,6 +12,6 @@
 	} = $props();
 </script>
 
-<p {...rest} class={cn(classProp, `text-text text-foreground font-semibold`)}>
+<p id={`${String(STATE_KEY)}-title`} {...rest} class={cn(classProp, `text-text text-foreground font-semibold`)}>
 	{@render children?.()}
 </p>

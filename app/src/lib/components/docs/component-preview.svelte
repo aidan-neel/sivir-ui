@@ -33,7 +33,7 @@
 	{...rest}
 	class={cn(classProp, 'w-full border rounded-lg flex flex-col overflow-auto max-w-full gap-4')}
 >
-	<div class="h-full bg-secondary/50 min-h-[18rem] border-b py-12 flex items-center justify-center">
+	<div class="h-full bg-secondary min-h-[18rem] border-b py-12 flex items-center justify-center">
 		<div class="w-fit flex items-center justify-center">
 			{@render children?.()}
 		</div>
