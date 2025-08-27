@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { onDestroy, onMount, type Snippet } from 'svelte';
-	import { popoverUIState, getPopoverUIState, type PopoverUIState, STATE_KEY } from './lib.svelte';
-	import type { UIState } from '$lib/ui/internals/state.svelte';
+	import { states } from '$lib/ui/internals/state.svelte';
 	import { clickOutside, cn } from '$lib/ui/utils';
 	import { flyAndScale } from '$lib/ui/internals/transition';
-	import { computePosition } from '@floating-ui/dom';
+    import { getContext } from 'svelte';
+	import { computePosition, flip } from '@floating-ui/dom';
 
 	const {
 		children,
@@ -17,48 +17,82 @@
 		allowClickOutside?: boolean;
 	} = $props();
 
-	const dataState: UIState<PopoverUIState> = getPopoverUIState();
+    const key = getContext("key") as string;
+    console.log(key);
+    const uiState = states[key];
 
 	let popover: HTMLDivElement;
-	let popoverHeight = 0;
 
 	function handleKeydown(event: KeyboardEvent) {
 		if (event.key === 'Escape') {
-			dataState.data.open = false;
+			uiState.data.open = false;
 		}
 	}
 
-	$effect(() => {
+    function handleScroll() {
+        if (uiState.data) {
+            computePosition(uiState.data.buttonRef, popover, {
+                placement: uiState.data.placement,
+                middleware: [flip()]
+            }).then(({ x, y }) => {
+                Object.assign(popover.style, {
+                    left: `${x}px`,
+                    top: `${y}px`
+                });
+            });
+        }
+    }
+
+	onMount(() => {
 		document.addEventListener('keydown', handleKeydown);
+        document.addEventListener('scroll', handleScroll);
 
-		onDestroy(() => {
-			document.removeEventListener('keydown', handleKeydown);
-		});
-
-		dataState.data.popoverRef = popover;
+		uiState.data.popoverRef = popover;
 
 		if (allowClickOutside) {
 			clickOutside(popover, () => {
-				dataState.data.open = false;
+				uiState.data.open = false;
 			});
 		}
+
+        onDestroy(() => {
+            document.removeEventListener('keydown', handleKeydown);
+            document.removeEventListener('scroll', handleScroll);
+        });
 	});
+
+    function cancelClose() {
+		if (uiState.data?.closeTimeout) {
+			if (uiState.data?.hoverable) {
+                clearTimeout(uiState.data.closeTimeout);
+                uiState.data.closeTimeout = null;
+            }
+		}
+	}
 </script>
 
 <div
 	{...rest}
-	class={cn(classProp, 'flex items-center py-2 justify-center floating')}
+	class={cn('flex items-center py-2 justify-center floating')}
 	bind:this={popover}
     role="dialog"
-    id={`${String(STATE_KEY)}-content`}
+    id={`${String(key)}-content`}
     aria-modal="false"
-    aria-labelledby={`${String(STATE_KEY)}-title`}
+    aria-labelledby={`${String(key)}-title`}
+    onmouseenter={cancelClose}
+	onmouseleave={() => {
+        if (uiState.data) {
+            if (uiState.data.hoverable) {
+                uiState.data.open = false;
+            }
+        }
+    }}
 >
-	{#if dataState.data?.open}
+	{#if uiState.data?.open}
 		<div
 			{...rest}
 			transition:flyAndScale={{ duration: 200 }}
-			class={cn(classProp, `p-3 text-sm rounded-lg border m-auto shadow-sm bg-background`)}
+			class={cn(classProp, `p-4 text-sm rounded-xl border m-auto shadow-sm bg-popover`)}
 		>
 			{@render children?.()}
 		</div>

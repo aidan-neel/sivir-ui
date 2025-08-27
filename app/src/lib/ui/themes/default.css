@@ -6,13 +6,15 @@
 
 	/* Colors */
 	--color-background: #ffffff;
-	--color-border: #dedede;
+	--color-border: #e2e2e2;
 	--color-primary: #2685d9;
 	--color-foreground-opposite: #ffffff;
 	--color-foreground: #171717;
+	--color-muted: #e4e4e4;
+	--color-popover: #ffffff;
 	--color-foreground-muted: #5c5c5c;
 	--color-foreground-btn: #ffffff;
-	--color-secondary: #f3f3f3;
+	--color-secondary: #f0f0f0;
 	--color-card: #f3f3f3;
 	--color-accent: #0d1a40;
 	--color-alternate: #2c2c2c;
@@ -47,7 +49,9 @@
 	--color-border: #1c1c1c;
 	--color-primary: #0b7bde;
 	--color-foreground-opposite: #0d0d0d;
-	--color-foreground: #ffffff;
+	--color-foreground: #e8e9eb;
+	--color-muted: #292929;
+	--color-popover: #0f0f0f;
 	--color-foreground-muted: #9c9c9c;
 	--color-foreground-btn: #ffffff;
 	--color-secondary: #171717;

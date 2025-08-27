@@ -31,7 +31,6 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/input
     label="Username"
 />`}>
     <Input
-        variant="outlined"
         type="text"
         placeholder="Username"
         label="Username"

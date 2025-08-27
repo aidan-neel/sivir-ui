@@ -24,8 +24,19 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/checkbox
     Example
 </h1>
 
-<ComponentPreview code={`<Checkbox label="Agree to terms and service" />`}>
-    <Checkbox label="Agree to terms and service" />
+<ComponentPreview code={`<script lang="ts">
+    import { Checkbox } from "$lib/ui/components/checkbox";
+</script>\n
+<Checkbox label="Agree to terms and service" />
+<Checkbox label="Agree to terms and service" description="By clicking this checkbox, you agree to the terms and conditions." />
+<Checkbox label="Enable notifications" disabled={true} />
+<Checkbox variant="primary" label="Agree to terms and service" description="By clicking this checkbox, you agree to the terms and conditions." />`}>
+    <div class="flex flex-col gap-6 items-start">
+        <Checkbox label="Agree to terms and service" />
+        <Checkbox label="Agree to terms and service" description="By clicking this checkbox, you agree to the terms and conditions." />
+        <Checkbox label="Enable notifications" disabled={true} />
+        <Checkbox variant="primary" label="Agree to terms and service" description="By clicking this checkbox, you agree to the terms and conditions." />
+    </div>
 </ComponentPreview>
 
 <h1 class="py-6">
@@ -44,10 +55,27 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/checkbox
 				description: "The current checked state of the checkbox. Bindable.",
 				defaults: "false"
 			},
+            {
+				property: "disabled",
+				type: "boolean",
+				description: "Whether or not the checkbox is disabled",
+				defaults: "false"
+			},
+            {
+				property: "variant",
+				type: "'default' | 'primary'",
+				description: "The variant of the checkbox.",
+				defaults: "'default'"
+			},
 			{
 				property: "label",
 				type: "string",
 				description: "Text label displayed next to the checkbox."
+			},
+            {
+				property: "description",
+				type: "string",
+				description: "Description of the checkbox's label."
 			},
 			{
 				property: "class",

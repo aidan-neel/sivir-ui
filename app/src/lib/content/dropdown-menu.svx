@@ -1,0 +1,221 @@
+---
+title: dropdown-menu
+description: Displays a menu to the user, such as a set of actions or functions.
+component: true
+source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/dropdown-menu
+---
+
+<script>
+import { ComponentPreview, CodeBlock, ExportItem, APIReference } from '$lib/components/docs';
+import { Button } from '$lib/ui/components/button';
+import * as DropdownMenu from '$lib/ui/components/dropdown-menu';
+</script>
+
+<h1 class="py-2">Import</h1>
+<p class="py-2">DropdownMenu exports multiple components for building structured popovers.</p>
+
+<ExportItem title="Root">Manages dropdown state and placement.</ExportItem>
+<ExportItem title="Trigger">Button that toggles the dropdown.</ExportItem>
+<ExportItem title="Content">Container for dropdown items.</ExportItem>
+<ExportItem title="Item">Clickable menu item with optional callback or shortcut.</ExportItem>
+<ExportItem title="Label">Text header inside the dropdown.</ExportItem>
+<ExportItem title="Separator">Visual divider between items.</ExportItem>
+<ExportItem title="Shortcut">Keyboard shortcut binding for an item.</ExportItem>
+<ExportItem title="Sub">Wrapper for nested submenu.</ExportItem>
+<ExportItem title="SubContent">Container for items inside a Sub.</ExportItem>
+
+<h1 class="py-6">Example</h1>
+
+<ComponentPreview code={`<script lang="ts">
+    import * as DropdownMenu from "$lib/ui/components/dropdown-menu"
+</script>\n
+<DropdownMenu.Root>
+    <DropdownMenu.Trigger variant="outlined">Open</DropdownMenu.Trigger>
+    <DropdownMenu.Content class="w-[225px]">
+        <DropdownMenu.Label>My Account</DropdownMenu.Label>
+        <DropdownMenu.Item>
+            Profile
+            <DropdownMenu.Shortcut shortcut="Ctrl+P">Ctrl+P</DropdownMenu.Shortcut>
+        </DropdownMenu.Item>
+        <DropdownMenu.Item>
+            Billing
+            <DropdownMenu.Shortcut shortcut="Ctrl+B">Ctrl+B</DropdownMenu.Shortcut>
+        </DropdownMenu.Item>
+        <DropdownMenu.Item>
+            Notifications
+            <DropdownMenu.Shortcut shortcut="Ctrl+N">Ctrl+N</DropdownMenu.Shortcut>
+        </DropdownMenu.Item>
+        <DropdownMenu.Item>
+            Settings
+            <DropdownMenu.Shortcut shortcut="Ctrl+S">Ctrl+S</DropdownMenu.Shortcut>
+        </DropdownMenu.Item>
+        <DropdownMenu.Separator />
+        <DropdownMenu.Item>GitHub</DropdownMenu.Item>
+        <DropdownMenu.Item>Support</DropdownMenu.Item>
+        <DropdownMenu.Item>API</DropdownMenu.Item>
+        <DropdownMenu.Separator />
+
+        <DropdownMenu.Sub>
+            Invite Users
+            <DropdownMenu.SubContent class="w-[150px]">
+                <DropdownMenu.Item>Email</DropdownMenu.Item>
+                <DropdownMenu.Item>Message</DropdownMenu.Item>
+            </DropdownMenu.SubContent>
+        </DropdownMenu.Sub>
+
+        <DropdownMenu.Item>
+            Log Out
+            <DropdownMenu.Shortcut shortcut="Shift+Ctrl+Q">⇧+Ctrl+Q</DropdownMenu.Shortcut>
+        </DropdownMenu.Item>
+    </DropdownMenu.Content>
+</DropdownMenu.Root>`}>
+    <DropdownMenu.Root>
+        <DropdownMenu.Trigger variant="outlined">Open</DropdownMenu.Trigger>
+        <DropdownMenu.Content class="w-[225px]">
+            <DropdownMenu.Label>My Account</DropdownMenu.Label>
+            <DropdownMenu.Item>
+                Profile
+                <DropdownMenu.Shortcut shortcut="Ctrl+P">Ctrl+P</DropdownMenu.Shortcut>
+            </DropdownMenu.Item>
+            <DropdownMenu.Item>
+                Billing
+                <DropdownMenu.Shortcut shortcut="Ctrl+B">Ctrl+B</DropdownMenu.Shortcut>
+            </DropdownMenu.Item>
+            <DropdownMenu.Item>
+                Notifications
+                <DropdownMenu.Shortcut shortcut="Ctrl+N">Ctrl+N</DropdownMenu.Shortcut>
+            </DropdownMenu.Item>
+            <DropdownMenu.Item>
+                Settings
+                <DropdownMenu.Shortcut shortcut="Ctrl+S">Ctrl+S</DropdownMenu.Shortcut>
+            </DropdownMenu.Item>
+            <DropdownMenu.Separator />
+            <DropdownMenu.Item>GitHub</DropdownMenu.Item>
+            <DropdownMenu.Item>Support</DropdownMenu.Item>
+            <DropdownMenu.Item>API</DropdownMenu.Item>
+            <DropdownMenu.Separator />
+
+            <DropdownMenu.Sub>
+                Invite Users
+                <DropdownMenu.SubContent class="w-[150px]">
+                    <DropdownMenu.Item>Email</DropdownMenu.Item>
+                    <DropdownMenu.Item>Message</DropdownMenu.Item>
+                </DropdownMenu.SubContent>
+            </DropdownMenu.Sub>
+
+            <DropdownMenu.Item>
+                Log Out
+                <DropdownMenu.Shortcut shortcut="Shift+Ctrl+Q">⇧+Ctrl+Q</DropdownMenu.Shortcut>
+            </DropdownMenu.Item>
+        </DropdownMenu.Content>
+    </DropdownMenu.Root>
+</ComponentPreview>
+
+<h1 class="py-6">API Reference</h1>
+
+<div class="flex flex-col gap-10">
+  <APIReference
+    title="DropdownMenu"
+    component="Root"
+    description="Manages dropdown state and placement."
+    items={[
+      { property: "open", type: "boolean", description: "Initial visibility.", defaults: "false" },
+      { property: "placement", type: `"top" | "left" | "bottom" | "right"`, description: "Dropdown position.", defaults: `"bottom"` },
+      { property: "children", type: "Snippet", description: "Rendered elements inside dropdown." },
+      { property: "class", type: "string", description: "CSS classes for root container." },
+      { property: "...rest", type: "HTMLDivAttributes", description: "Extra attributes.", defaults: "{}" }
+    ]}
+  />
+
+  <APIReference
+    title="DropdownMenu"
+    component="Trigger"
+    description="Button that toggles the dropdown."
+    items={[
+      { property: "children", type: "Snippet", description: "Trigger content." },
+      { property: "class", type: "string", description: "CSS classes." },
+      { property: "variant", type: `"ghost" | "outlined" | "primary"`, description: "Button style variant." },
+      { property: "...rest", type: "HTMLAttributes<HTMLElement>", description: "Extra attributes.", defaults: "{}" }
+    ]}
+  />
+
+  <APIReference
+    title="DropdownMenu"
+    component="Content"
+    description="Container for dropdown items."
+    items={[
+      { property: "children", type: "Snippet", description: "Dropdown content." },
+      { property: "class", type: "string", description: "CSS classes for content container." },
+      { property: "allowClickOutside", type: "boolean", description: "Close when clicking outside.", defaults: "true" },
+      { property: "...rest", type: "HTMLDivAttributes", description: "Extra attributes.", defaults: "{}" }
+    ]}
+  />
+
+  <APIReference
+    title="DropdownMenu"
+    component="Item"
+    description="Clickable menu item."
+    items={[
+      { property: "children", type: "Snippet", description: "Item content." },
+      { property: "callback", type: "() => void", description: "Function called on click or shortcut." },
+      { property: "class", type: "string", description: "CSS classes." },
+      { property: "...rest", type: "HTMLButtonAttributes", description: "Extra attributes.", defaults: "{}" }
+    ]}
+  />
+
+  <APIReference
+    title="DropdownMenu"
+    component="Label"
+    description="Text header inside dropdown."
+    items={[
+      { property: "children", type: "Snippet", description: "Label content." },
+      { property: "class", type: "string", description: "CSS classes." },
+      { property: "...rest", type: "HTMLAttributes<HTMLElement>", description: "Extra attributes.", defaults: "{}" }
+    ]}
+  />
+
+  <APIReference
+    title="DropdownMenu"
+    component="Separator"
+    description="Divider between items."
+    items={[
+      { property: "children", type: "Snippet", description: "Optional content." },
+      { property: "class", type: "string", description: "CSS classes." },
+      { property: "...rest", type: "HTMLAttributes<HTMLElement>", description: "Extra attributes.", defaults: "{}" }
+    ]}
+  />
+
+  <APIReference
+    title="DropdownMenu"
+    component="Shortcut"
+    description="Keyboard shortcut for an item."
+    items={[
+      { property: "shortcut", type: "string", description: "Key combination (e.g., 'Ctrl+S')." },
+      { property: "children", type: "Snippet", description: "Displayed label." },
+      { property: "class", type: "string", description: "CSS classes." },
+      { property: "...rest", type: "HTMLAttributes<HTMLElement>", description: "Extra attributes.", defaults: "{}" }
+    ]}
+  />
+
+  <APIReference
+    title="DropdownMenu"
+    component="Sub"
+    description="Wrapper for nested submenu trigger."
+    items={[
+      { property: "children", type: "Snippet", description: "Trigger content and SubContent." },
+      { property: "class", type: "string", description: "CSS classes." },
+      { property: "...rest", type: "HTMLAttributes<HTMLElement>", description: "Extra attributes.", defaults: "{}" }
+    ]}
+  />
+
+  <APIReference
+    title="DropdownMenu"
+    component="SubContent"
+    description="Container for items inside a Sub."
+    items={[
+      { property: "children", type: "Snippet", description: "Submenu items." },
+      { property: "class", type: "string", description: "CSS classes." },
+      { property: "...rest", type: "HTMLDivAttributes", description: "Extra attributes.", defaults: "{}" }
+    ]}
+  />
+</div>

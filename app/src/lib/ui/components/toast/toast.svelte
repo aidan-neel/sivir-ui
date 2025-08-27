@@ -6,25 +6,27 @@
 	import Warning from '@lucide/svelte/icons/triangle-alert';
 	import Info from '@lucide/svelte/icons/info';
 	import type { Toast } from './lib.svelte';
+	import Button from '$lib/ui/components/button';
 
 	const { toast, index }: { toast: Toast; index: number } = $props();
 
-	// Set position based on toast preference
+    function getToastScale(index: number, maxIndex = 10, minScale = 0.93, maxScale = 1) {
+        if (index >= maxIndex) return maxScale;
+        const scaleStep = (maxScale - minScale) / maxIndex;
+        return minScale + scaleStep * index;
+    }
 </script>
 
 <div
     role="alert"
     aria-live="polite"
     aria-atomic="true"
-	transition:flyAndScale
+	in:flyAndScale={{ y: -40 }}
+    out:flyAndScale={{ y: 40 }}
 	class={cn(
-		'border p-4 bg-background gap-3 flex flex-row shadow-sm fixed rounded-lg z-[999]',
-		toast.vertical === 'top' ? 'top-12' : 'bottom-12',
-		toast.horizontal === 'left' ? 'left-8' : 'right-8'
+		'border p-4 bg-popover max-w-[500px] gap-3 flex flex-row items-center shadow-xs fixed rounded-lg z-[999] left-1/2 -translate-x-1/2',
 	)}
-	style={toast.vertical === 'top'
-		? `top: ${24 + index * 2}px; z-index: ${index + 50};`
-		: `bottom: ${24 + index * 2}px; z-index: ${index + 50};`}
+	style={`top: ${16 + index * 6}px; transform: scale(${getToastScale(index, 5, 0.9, 1)})`}
 >
 	{#if toast.exitable}
 		<button
@@ -39,32 +41,33 @@
 		</button>
 	{/if}
 	{#if toast.type == 'success'}
-		<Check size="22" class="mt-1 text-success" />
+		<Check size="20" class="mt-1 text-primary" />
 	{/if}
 	{#if toast.type == 'error'}
-		<X size="22" class="mt-1 text-error" />
+		<X size="20" class="mt-1 text-error" />
 	{/if}
 	{#if toast.type == 'warning'}
-		<Warning size="22" class="mt-1 text-warning" />
+		<Warning size="20" class="mt-1 text-warning" />
 	{/if}
-	<header class="flex flex-col gap-2">
-		<p class="font-medium text-foreground tracking-tight">
+	<header class="flex flex-col gap-0">
+		<p class="font-medium text-sm text-foreground tracking-tight">
 			{toast.title}
 		</p>
 		<p class="text-sm text-foreground-muted">
 			{toast.description}
 		</p>
-		{#if toast.actions}
-			<div class="flex flex-row gap-4">
-				{#each toast.actions as action}
-					<button
-						class="text-sm text-foreground hover:text-foreground-muted"
-						onclick={action.callback}
-					>
-						{action.label}
-					</button>
-				{/each}
-			</div>
-		{/if}
 	</header>
+    {#if toast.actions}
+        <div class="flex flex-row gap-4 ml-1">
+            {#each toast.actions as action}
+                <Button
+                    variant="primary"
+                    class="text-[13.75px] h-7 rounded-lg"
+                    onclick={action.callback}
+                >
+                    {action.label}
+                </Button>
+            {/each}
+        </div>
+    {/if}
 </div>

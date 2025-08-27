@@ -12,6 +12,6 @@
 	} = $props();
 </script>
 
-<p {...rest} class={cn(classProp, `font-semibold text tracking-tight`)}>
+<p {...rest} class={cn(classProp, `font-semibold text`)}>
 	{@render children?.()}
 </p>

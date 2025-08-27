@@ -14,7 +14,7 @@
 
 <h1
 	{...rest}
-	class={cn(classProp, `font-medium text-base text-foreground`)}
+	class={cn(classProp, `font-semibold py-1 text-base text-foreground`)}
 >
 	{@render children?.()}
 </h1>

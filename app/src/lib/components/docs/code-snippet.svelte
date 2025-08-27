@@ -16,7 +16,7 @@
 	{...rest}
 	class={cn(
 		classProp,
-		`bg-secondary border font-mono text-foreground/90 text-xs rounded-lg p-0.5 px-1`
+		`bg-secondary font-semibold font-mono text-foreground/90 text-xs rounded-md p-1 px-2`
 	)}
 >
 	{@render children?.()}

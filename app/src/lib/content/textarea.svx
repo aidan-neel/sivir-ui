@@ -1,0 +1,86 @@
+---
+title: Textarea
+description: Allows the user to enter multi-line text or data.
+component: true
+source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/textarea
+---
+
+<script>
+    import { ComponentPreview, CodeBlock, CodeSnippet, ExportItem, APIReference } from '$lib/components/docs';
+    import { Textarea } from '$lib/ui/components/textarea';
+</script>
+
+<h1 class="py-2">
+    Import
+</h1>
+
+<p class="py-2">
+    Textarea only exports 1 component
+</p>
+
+<ExportItem title="Textarea">The main component for displaying a multi-line input.</ExportItem>
+
+<h1 class="py-6">
+    Example
+</h1>
+
+<ComponentPreview code={`<script>
+	import { Textarea } from '$lib/ui/components/textarea';
+</script>\n
+<Textarea placeholder="What's on your mind?"/>`}>
+    <Textarea
+        class="w-[30rem] h-24 min-h-[8ch] max-h-[20rem]"
+        placeholder="What's on your mind?"
+    />
+</ComponentPreview>
+
+<h1 class="py-6">
+    API Reference
+</h1>
+
+<div class="flex flex-col gap-10">
+	<APIReference 
+		title="Textarea" 
+		component="Root" 
+		description="A flexible textarea component that supports multi-line input and various styling variants." 
+		items={[
+			{
+				property: "variant",
+				type: `"primary" | "outlined" | "secondary"`,
+				description: "Controls the visual style of the textarea.",
+				defaults: `"primary"`
+			},
+			{
+				property: "label",
+				type: "string",
+				description: "Optional label displayed above the textarea."
+			},
+			{
+				property: "placeholder",
+				type: "string",
+				description: "Placeholder text for the textarea."
+			},
+			{
+				property: "value",
+				type: `"string | undefined"`,
+				description: "The bound value of the textarea. Bindable."
+			},
+			{
+				property: "element",
+				type: `"HTMLTextAreaElement | undefined"`,
+				description: "A bindable reference to the textarea element."
+			},
+			{
+				property: "class",
+				type: "string",
+				description: "Additional CSS classes to apply to the textarea."
+			},
+			{
+				property: "...rest",
+				type: "TextareaHTMLAttributes",
+				description: "Additional HTML textarea attributes passed to the element.",
+				defaults: "{}"
+			}
+		]} 
+	/>
+</div>

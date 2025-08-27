@@ -2,12 +2,13 @@
 title: Popover
 description: Displays a popup element that appears near a trigger.
 component: true
-source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/toast
+source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/popover
 ---
 
 <script>
     import { ComponentPreview, CodeBlock, CodeSnippet, ExportItem, APIReference } from '$lib/components/docs';
     import { Button } from '$lib/ui/components/button';
+    import { Input } from '$lib/ui/components/input';
     import * as Popover from '$lib/ui/components/popover';
 </script>
 
@@ -27,33 +28,63 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/toast
     Example
 </h1>
 
-<ComponentPreview code={`<Button onclick={() => {
-    toast({
-        title: 'Avatar updated',
-        description: 'Your profiles avatar has been successfully updated.',
-        duration: 4000,
-        type: 'success',
-        actions: [
-            {
-                label: 'Undo',
-                callback: () => {}
-            },
-            {
-                label: 'View Profile',
-                callback: () => {}
-            }
-        ],
-        persistent: false,
-        exitable: true
-    });
-}}>Update Avatar</Button`}>
+<ComponentPreview code={`<script lang="ts">
+    import * as Popover from "$lib/ui/components/popover";
+</script>\n
 <Popover.Root>
     <Popover.Trigger variant="outlined">Popover</Popover.Trigger>
     <Popover.Content>
         <Popover.Title>
-            Title of the popover
+            Dimensions
         </Popover.Title>
-        <p>Any content you want here</p>
+        <p class="text-foreground-muted">Set the dimensions for the layer</p>
+
+        <div class="flex flex-col mt-4 gap-2">
+            <div class="flex flex-row items-center justify-between gap-4">
+                <p class="font-medium w-24 text-left">Width</p>
+                <Input class="" placeholder="Width" value="100px" />
+            </div>
+            <div class="flex flex-row items-center justify-between gap-4">
+                <p class="font-medium w-24 text-left">Max Width</p>
+                <Input class="" placeholder="Max Width" value="300px" />
+            </div>
+            <div class="flex flex-row items-center justify-between gap-4">
+                <p class="font-medium w-24 text-left">Height</p>
+                <Input class="" placeholder="Height" value="25px" />
+            </div>
+            <div class="flex flex-row items-center justify-between gap-4">
+                <p class="font-medium w-24 text-left">Max Height</p>
+                <Input class="" placeholder="Max Height" value="None" />
+            </div>
+        </div>
+    </Popover.Content>
+</Popover.Root>`}>
+<Popover.Root>
+    <Popover.Trigger variant="outlined">Popover</Popover.Trigger>
+    <Popover.Content>
+        <Popover.Title>
+            Dimensions
+        </Popover.Title>
+        <p class="text-foreground-muted">Set the dimensions for the layer</p>
+
+        <div class="flex flex-col mt-4 gap-2">
+            <div class="flex flex-row items-center justify-between gap-4">
+                <p class="font-medium w-24 text-left">Width</p>
+                <Input class="" placeholder="Width" value="100px" />
+            </div>
+            <div class="flex flex-row items-center justify-between gap-4">
+                <p class="font-medium w-24 text-left">Max Width</p>
+                <Input class="" placeholder="Max Width" value="300px" />
+            </div>
+            <div class="flex flex-row items-center justify-between gap-4">
+                <p class="font-medium w-24 text-left">Height</p>
+                <Input class="" placeholder="Height" value="25px" />
+            </div>
+            <div class="flex flex-row items-center justify-between gap-4">
+                <p class="font-medium w-24 text-left">Max Height</p>
+                <Input class="" placeholder="Max Height" value="None" />
+            </div>
+        </div>
     </Popover.Content>
 </Popover.Root>
 </ComponentPreview>
@@ -73,6 +104,16 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/toast
 				type: "boolean",
 				description: "Controls whether the popover is initially open.",
 				defaults: "false"
+			},
+            {
+				property: "hoverable",
+				type: "boolean",
+				description: "If the popover should trigger on hover."
+			},
+            {
+				property: "delay",
+				type: "number",
+				description: "A millisecond delay for the popover opening."
 			},
 			{
 				property: "stateName",

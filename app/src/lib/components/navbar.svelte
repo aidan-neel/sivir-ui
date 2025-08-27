@@ -23,10 +23,10 @@
 	</div>
 
 	<div class="flex flex-row gap-2 items-center">
-		<Input variant="outlined" class="w-80" placeholder="Search docs..." />
+		<Input variant="secondary" class="w-80" placeholder="Search docs..." />
         <Button onclick={() => {
             toggleMode();
-        }} size="icon" variant="outlined">
+        }} size="icon" variant="ghost">
             {#if mode.current === "dark"}
                 <Moon size="16" />
             {:else}

@@ -18,12 +18,11 @@ interface Toast {
 	title: string;
 	duration: number;
 	description?: string;
-	horizontal?: 'left' | 'right';
-	vertical?: 'top' | 'bottom';
 	type?: 'success' | 'error' | 'warning' | 'info';
 	actions?: ToastAction[];
 	id?: number;
 	persistent?: boolean;
+	max?: number;
 	exitable?: boolean;
 	exit?: () => any;
 }
@@ -38,6 +37,15 @@ function toast(toastData: Toast) {
 	if (toastUIState.data) {
 		const toastId = Math.floor(Math.random() * 10623962836);
 		toastData.id = toastId;
+
+		if (toastData.max === undefined) {
+			toastData.max = 5;
+		}
+
+		if (toastUIState.data.toasts.length >= toastData.max) {
+			toastUIState.data.toasts = toastUIState.data.toasts.slice(1);
+		}
+
 		toastUIState.data.toasts = [...toastUIState.data.toasts, toastData];
 
 		toastData.exit = () => {

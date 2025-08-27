@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { cn } from '$lib/ui/utils';
+	import { mode } from 'mode-watcher';
 	import { type Snippet } from 'svelte';
 
 	let {
@@ -35,18 +36,24 @@
 
 <div
 	{...rest}
-	class={cn(classProp, `skeleton rounded-lg`)}
+	class={cn(classProp, `${mode.current === 'light' ? 'skeleton' : 'skeleton-dark'} rounded-lg`)}
 	style={`height: ${height}${unit}; width: ${width}${unit};`}
 >
 	{@render children?.()}
 </div>
 
 <style>
-	.skeleton {
-		background: linear-gradient(90deg, var(--color-secondary) 25%, var(--color-secondary) 100%, var(--color-secondary) 75%);
-		background-size: 200% 100%;
-		animation: skeleton-loading 2.5s infinite linear;
-	}
+    .skeleton {
+        background: linear-gradient(90deg, #E9E9E9 25%, rgb(241 241 241) 50%, #E9E9E9 75%);
+        background-size: 200% 100%;
+        animation: skeleton-loading 2s infinite ease-in-out;
+    }
+
+    .skeleton-dark {
+        background: linear-gradient(90deg, rgb(32 32 32) 25%, rgb(45 45 45) 50%, rgb(32 32 32) 75%);
+        background-size: 200% 100%;
+        animation: skeleton-loading 2s infinite ease-in-out;
+    }
 
 	@keyframes skeleton-loading {
 		0% {

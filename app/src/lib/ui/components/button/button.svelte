@@ -1,42 +1,44 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { button } from './variants';
-	import type { HTMLButtonAttributes } from 'svelte/elements';
+	import type { HTMLAnchorAttributes, HTMLButtonAttributes } from 'svelte/elements';
 	import { cn } from '$lib/ui/utils';
+	import type { ButtonProps } from '.';
 
 	let {
 		href,
 		variant = 'primary',
 		children,
 		class: classProp,
-        size = 'default',
+        size,
 		element = $bindable(),
+        onhover,
+        onhoverend,
 		...rest
-	}: HTMLButtonAttributes & {
-		href?: string;
-		variant?: 'primary' | 'flat' | 'outlined' | 'secondary' | 'ghost' | 'alternate' | 'destructive';
-        size?: 'icon' | 'default'
-		children?: Snippet;
-		element?: HTMLButtonElement | HTMLAnchorElement | undefined;
-	} = $props();
+	}: ButtonProps = $props();
+
+    const buttonProps: HTMLButtonAttributes = rest as HTMLButtonAttributes;
+	const anchorProps: HTMLAnchorAttributes = rest as HTMLAnchorAttributes;
 </script>
 
 {#if href}
 	<a
-		bind:this={element}
-		onclick={() => {}}
-		{href}
-		class={cn(classProp, button({ variant: variant, size: size }))}
-		{...rest}
+		bind:this={element as HTMLAnchorElement}
+		href={href}
+		class={cn(classProp, button({ variant }))}
+		onmouseenter={() => onhover?.()}
+        onmouseleave={() => onhoverend?.()}
+		{...anchorProps}
 	>
 		{@render children?.()}
 	</a>
 {:else}
 	<button
-		bind:this={element}
-		onclick={() => {}}
-		class={cn(classProp, button({ variant: variant, size: size }))}
-		{...rest}
+		bind:this={element as HTMLButtonElement}
+		class={cn(classProp, button({ variant }))}
+		onmouseenter={() => onhover?.()}
+		onmouseleave={() => onhoverend?.()}
+		{...buttonProps}
 	>
 		{@render children?.()}
 	</button>

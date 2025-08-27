@@ -29,17 +29,27 @@
 	}
 </script>
 
-<div
-	{...rest}
-	class={cn(classProp, 'w-full border rounded-lg flex flex-col overflow-auto max-w-full gap-4')}
->
-	<div class="h-full bg-secondary min-h-[18rem] border-b py-12 flex items-center justify-center">
-		<div class="w-fit flex items-center justify-center">
-			{@render children?.()}
-		</div>
-	</div>
-
-	<CodeBlock {code} class="border-none rounded-lg-none rounded-lg-b py-0 px-4 pb-4" />
+<div class="flex flex-col w-[102%] mx-[-1%]">
+    <div class="pb-3 flex flex-row gap-4 px-[1%]">
+        <button onclick={() => selectedTab = 1} class="{selectedTab === 1 ? 'text-foreground' : 'text-foreground-muted'} font-medium duration-200">
+            Preview
+        </button>
+        <button onclick={() => selectedTab = 2} class="{selectedTab === 2 ? 'text-foreground' : 'text-foreground-muted'} font-medium duration-200">
+            Code
+        </button>
+    </div>
+    <div
+        {...rest}
+        class={cn(classProp, `w-full ${selectedTab === 1 ? 'border items-center justify-center min-h-[22rem] py-24' : 'bg-secondary items-start justify-start'} rounded-xl flex flex-col overflow-auto max-w-full`)}
+    >   
+        <div class={cn(classProp, "w-fit flex items-center justify-center")}>
+            {#if selectedTab === 1}
+                {@render children?.()}
+            {:else}
+                <CodeBlock code={code} />
+            {/if}
+        </div>
+    </div>
 </div>
 
 <!--<div {...rest} class={cn(classProp, 'w-full flex flex-col overflow-auto max-w-full gap-4')}>

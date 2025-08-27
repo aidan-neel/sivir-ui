@@ -14,6 +14,10 @@
 	left: 0;
 }
 
+.focus-visible {
+	@apply focus-visible:ring-foreground/30 focus-visible:ring-2 focus:outline-none;
+}
+
 html,
 body {
 	margin: 0;

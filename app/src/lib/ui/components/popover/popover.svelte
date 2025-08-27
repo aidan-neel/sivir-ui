@@ -1,13 +1,6 @@
 <script lang="ts">
-	import { onDestroy, onMount } from 'svelte';
-	import {
-		STATE_KEY,
-		getPopoverUIState,
-		setPopoverUIState,
-		type PopoverUIState
-	} from './lib.svelte';
-	import { clickOutside, cn } from '$lib/ui/utils';
-	import type { UIState } from '$lib/ui/internals/state.svelte';
+	import { onDestroy, onMount, setContext } from 'svelte';
+    import { getState, states } from '$lib/ui/internals/state.svelte';
 
 	const {
 		class: classProp,
@@ -15,6 +8,10 @@
 		stateName = 'popover',
 		placement = 'bottom',
 		children,
+        state_key,
+        hoverable,
+        delay = 0,
+        closeDelay = 150,
 		...rest
 	}: {
 		class?: string;
@@ -22,15 +19,34 @@
 		stateName?: string;
 		placement?: 'top' | 'left' | 'bottom' | 'right';
 		children: any;
+        state_key?: string;
+        hoverable?: boolean;
+        delay?: number;
+        closeDelay?: number;
 	} = $props();
 
-	// State handling with the new system
-	const state: UIState<PopoverUIState> = setPopoverUIState();
+    const key = state_key ?? Math.random().toString(36).substring(2);
+    setContext("key", key)
 
-	// Handle keyboard events to close on Escape key
+    const uiState = getState(key, {
+        open: false,
+		trigger: null,
+		focusedElement: null,
+		buttonRef: null,
+		popoverRef: null,
+		placement: 'bottom',
+		onclick: undefined,
+        closeTimeout: undefined,
+        hoverable: hoverable ?? false,
+        delay: delay,
+        closeDelay: closeDelay,
+    })
+
 	function handleKeydown(event: KeyboardEvent) {
 		if (event.key === 'Escape') {
-			state.data.open = false;
+			if (uiState.data) {
+                uiState.data.open = false;
+            }
 		}
 	}
 
@@ -41,8 +57,14 @@
 			document.removeEventListener('keydown', handleKeydown);
 		});
 
-		state.data.placement = placement;
+		if (uiState.data) {
+            uiState.data.placement = placement;
+        }
 	});
+
+    onDestroy(() => {
+        delete states[key];
+    })
 </script>
 
 {@render children?.()}

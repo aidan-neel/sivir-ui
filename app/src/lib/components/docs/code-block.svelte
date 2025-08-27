@@ -26,7 +26,7 @@
 
 		// Create a highlighter with the selected theme
 		const highlighter = await createHighlighter({
-			themes: [theme],
+			themes: [theme, 'github-light', 'github-dark'],
 			langs: [lang]
 		});
 
@@ -41,9 +41,9 @@
 	});
 </script>
 
-<div {...rest} class={cn(classProp, 'rounded-lg w-full p-4 h-fit text-sm overflow-auto')}>
+<div {...rest} class={cn(classProp, 'rounded-lg bg-secondary/60 w-full p-4 h-fit text-sm overflow-auto')}>
 	{#if loaded}
-		<code transition:fade={{ duration: 100 }} class="font-mono w-full">{@html html}</code>
+		<code class="font-mono w-full">{@html html}</code>
 	{:else}
 		<pre class="font-mono w-full opacity-0">{code}</pre>
 	{/if}

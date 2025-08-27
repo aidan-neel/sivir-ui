@@ -37,11 +37,11 @@
 		{Description}
 	</p>
 	<div class="flex flex-row gap-2 mt-2">
-		<Badge href={Source} variant="secondary" class="rounded-lg gap-1"
+		<Badge href={Source} variant="secondary" class="rounded-lg font-semibold gap-1"
 			>Component Source <ExternalLink size={12} /></Badge
 		>
 		{#each Dependencies as dependency}
-			<Badge href={dependency.url} variant="secondary" class="rounded-lg gap-1">
+			<Badge href={dependency.url} variant="secondary" class="rounded-lg font-semibold gap-1">
 				{dependency.name}
 				<ExternalLink size={12} />
 			</Badge>
@@ -51,7 +51,9 @@
 
 <div class="py-6 flex flex-col gap-4">
 	<h1>Installation</h1>
-	<CodeBlock lang="shell" code={`npx @aidan-neel/ui add ${Title.toLowerCase()}`} class="p-3 bg-secondary" />
+	{#key Title}
+        <CodeBlock lang="shell" code={`npx @aidan-neel/ui add ${Title.toLowerCase()}`} class="p-3" />
+    {/key}
 </div>
 
 <div class="flex-grow w-full pb-16">

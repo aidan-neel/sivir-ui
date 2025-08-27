@@ -19,7 +19,7 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/toast
     Toast exports 2 components and 1 function
 </p>
 
-<ExportItem title="toast">A function to display a toast notification.</ExportItem>
+<ExportItem title="toast()">A function to display a toast notification.</ExportItem>
 <ExportItem title="Toast">The individual toast notification component.</ExportItem>
 <ExportItem title="Toaster">The container that manages active toast notifications.</ExportItem>
 
@@ -36,15 +36,13 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/toast
         actions: [
             {
                 label: 'Undo',
-                callback: () => {}
-            },
-            {
-                label: 'View Profile',
+                variant: 'primary',
                 callback: () => {}
             }
         ],
         persistent: false,
-        exitable: true
+        max: 5,
+        exitable: false
     });
 }}>Update Avatar</Button`}>
     <Button
@@ -54,22 +52,16 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/toast
 				description: 'Your profiles avatar has been successfully updated.',
 				duration: 4000,
 				type: 'success',
-				actions: [
-					{
-						label: 'Undo',
-						callback: () => {
-							console.log('Undo');
-						}
-					},
-					{
-						label: 'View Profile',
-						callback: () => {
-							console.log('View Profile');
-						}
-					}
-				],
+                actions: [
+                    {
+                        label: 'Undo',
+                        variant: 'primary',
+                        callback: () => {}
+                    }
+                ],
 				persistent: false,
-				exitable: true
+                max: 5,
+				exitable: false
 			});
 		}}>Update Avatar</Button
 	>
@@ -137,6 +129,59 @@ toast({
 				property: "index",
 				type: "number",
 				description: "The toast's position in the stack, used for vertical offset."
+			}
+		]} 
+	/>
+
+    <APIReference 
+		title="toast()" 
+		component="Function" 
+		description="Programmatically create and display a toast notification." 
+		items={[
+			{
+				property: "title",
+				type: "string",
+				description: "The main message or heading displayed in the toast."
+			},
+			{
+				property: "duration",
+				type: "number",
+				description: "Time in milliseconds before the toast automatically disappears."
+			},
+			{
+				property: "description",
+				type: "string | undefined",
+				description: "Optional secondary message providing additional information."
+			},
+			{
+				property: "type",
+				type: "'success' | 'error' | 'warning' | 'info' | undefined",
+				description: "Visual style of the toast, indicating purpose or severity."
+			},
+			{
+				property: "actions",
+				type: "ToastAction[] | undefined",
+				description: "Optional array of action buttons with labels and callbacks."
+			},
+			{
+				property: "id",
+				type: "number | undefined",
+				description: "Unique identifier for internal tracking of the toast."
+			},
+			{
+				property: "persistent",
+				type: "boolean | undefined",
+				description: "If true, the toast does not auto-dismiss after duration."
+			},
+			{
+				property: "exitable",
+				type: "boolean | undefined",
+				description: "If true, the toast can be manually dismissed by the user."
+			},
+			{
+				property: "exit",
+				type: "() => any | undefined",
+				description: "Function that removes the toast from the state programmatically."
 			}
 		]} 
 	/>

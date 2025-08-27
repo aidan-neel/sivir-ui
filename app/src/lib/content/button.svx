@@ -27,7 +27,7 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/button
 <ComponentPreview code={`<script>
     import { Button } from '$lib/ui/components/button';
 </script>\n
-<Button>Primary</Button>
+<Button>Button</Button>
 <Button variant="flat">Flat</Button>
 <Button variant="outlined">Outlined</Button>
 <Button variant="secondary">Secondary</Button>
@@ -35,8 +35,8 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/button
 <Button variant="alternate">Alternate</Button>
 <Button variant="destructive">Destructive</Button>
 `}>
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 my-4 auto-rows-min">
-        <Button class="w-auto">Primary</Button>
+    <div class="flex flex-row flex-wrap gap-3 px-12">
+        <Button class="w-auto">Button</Button>
         <Button class="w-auto" variant="flat">Flat</Button>
         <Button class="w-auto" variant="outlined">Outlined</Button>
         <Button class="w-auto" variant="secondary">Secondary</Button>

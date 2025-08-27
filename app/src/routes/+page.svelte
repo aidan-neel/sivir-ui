@@ -24,11 +24,11 @@
 		<a
 			in:fly={{ duration: 800, y: 20, easing: cubicOut }}
 			href="/docs/changelog"
-			class="rounded-btn border shadow-sm px-5 py-1 text-sm font-medium">🎉 New 1.0 Release!</a
+			class="rounded-full border px-4 bg-secondary py-1 text-sm font-medium">🎉 New 1.0 Release!</a
 		>
 		<p
 			in:fly={{ duration: 800, y: 20, easing: cubicOut }}
-                class="text-[48px] w-full max-w-[42rem] font-display font-semibold leading-14"
+                class="text-[64px] w-full max-w-[56rem] font-display font-semibold leading-14"
 		>
 			Build cleaner with Svelte 5
 		</p>
@@ -41,7 +41,7 @@
 		</p>
 		<div in:fly={{ duration: 800, y: 20, easing: cubicOut }} class="flex flex-row gap-5">
 			<Button href={'/docs/components/alert'} class="text-sm">Get Started</Button>
-			<Button href={'https://github.com/aidan-neel/ui'} class="text-sm" variant="outlined"
+			<Button href={'https://github.com/aidan-neel/ui'} class="text-sm" variant="secondary"
 				>View on GitHub</Button
 			>
 		</div>
