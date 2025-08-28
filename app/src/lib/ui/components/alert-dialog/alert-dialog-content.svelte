@@ -41,12 +41,12 @@
 </script>
 
 {#if state.data?.open}
-    <div transition:fade={{ duration: 150, easing: cubicOut }} class="fixed inset-0 z-40 bg-black/80 backdrop-blur-[8px]"></div>
+    <div transition:fade={{ duration: 150, easing: cubicOut }} class="backdrop"></div>
     <div
         transition:flyAndScale={{ duration: 300 }}
         class={cn(
             classProp,
-            `p-6 rounded-xl border fixed top-1/2 left-1/2 z-50 -translate-x-1/2 -translate-y-1/2 m-auto shadow-sm bg-background min-w-[20rem] max-w-[35rem] min-h-[5rem] max-h-[30rem]`
+            `p-4 rounded-xl border-3 bg-popover fixed top-1/2 left-1/2 z-50 -translate-x-1/2 -translate-y-1/2 m-auto shadow-sm min-w-[20rem] max-w-[35rem] min-h-[5rem] max-h-[30rem]`
         )}
         use:clickOutside={() => {
             if (allowClickOutside) {

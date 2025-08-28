@@ -19,7 +19,12 @@ export type ButtonProps = {
 	element?: HTMLButtonElement | HTMLAnchorElement | undefined;
 	onhover?: () => void;
 	onhoverend?: () => void;
+	onclick?: () => void;
 } & Partial<HTMLButtonAttributes | HTMLAnchorAttributes>;
+
+export type ButtonState = {
+	onclick?: () => void;
+};
 
 export { Button };
 export default Button;

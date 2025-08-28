@@ -21,8 +21,5 @@
 </script>
 
 <Popover.Root state_key={key} hoverable={true} placement="right">
-    <Popover.Trigger {...rest} class={cn(className, "w-full h-9 duration-100 rounded-lg hover:cursor-default px-3 hover:bg-muted/50 items-center justify-between text-left")} variant={"ghost"}>
-        {@render children?.()}
-        <ChevronRight class="text-foreground-muted" size={20} />
-    </Popover.Trigger>
-</Popover.Root>
+    {@render children?.()}
+</Popover.Root> 

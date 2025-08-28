@@ -1,6 +1,4 @@
-interface DefaultState {
-	open: boolean;
-}
+interface DefaultState {}
 
 export class UIState<T extends DefaultState> {
 	data = $state<T>();

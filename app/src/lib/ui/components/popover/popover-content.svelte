@@ -18,10 +18,9 @@
 	} = $props();
 
     const key = getContext("key") as string;
-    console.log(key);
     const uiState = states[key];
 
-	let popover: HTMLDivElement;
+	let popover = $state<HTMLElement | undefined>();
 
 	function handleKeydown(event: KeyboardEvent) {
 		if (event.key === 'Escape') {
@@ -30,12 +29,12 @@
 	}
 
     function handleScroll() {
-        if (uiState.data) {
+        if (uiState.data && popover) {
             computePosition(uiState.data.buttonRef, popover, {
                 placement: uiState.data.placement,
                 middleware: [flip()]
             }).then(({ x, y }) => {
-                Object.assign(popover.style, {
+                Object.assign(popover!.style, {
                     left: `${x}px`,
                     top: `${y}px`
                 });
@@ -46,10 +45,19 @@
 	onMount(() => {
 		document.addEventListener('keydown', handleKeydown);
         document.addEventListener('scroll', handleScroll);
-
+        
 		uiState.data.popoverRef = popover;
 
-		if (allowClickOutside) {
+        if (uiState.data.open && popover) {
+            computePosition(uiState.data.buttonRef, popover, {
+                placement: uiState.data.placement,
+                middleware: [flip()]
+            }).then(({ x, y }) => {
+                Object.assign(popover!.style, { left: `${x}px`, top: `${y}px` });
+            });
+        }
+
+		if (allowClickOutside && popover) {
 			clickOutside(popover, () => {
 				uiState.data.open = false;
 			});
@@ -69,22 +77,39 @@
             }
 		}
 	}
+
+    onDestroy(() => {
+        console.log("destroying content")
+    })
+
+    $effect(() => {
+        if(document) {
+            if (popover && popover.contains(document.activeElement)) {
+                return;
+            }
+            if (!uiState.data.hovering) {
+                return;
+            }
+            cancelClose();
+        }
+    })
 </script>
 
 <div
 	{...rest}
 	class={cn('flex items-center py-2 justify-center floating')}
-	bind:this={popover}
+	bind:this={popover as HTMLElement}
     role="dialog"
     id={`${String(key)}-content`}
     aria-modal="false"
     aria-labelledby={`${String(key)}-title`}
     onmouseenter={cancelClose}
-	onmouseleave={() => {
-        if (uiState.data) {
-            if (uiState.data.hoverable) {
-                uiState.data.open = false;
+    onmouseleave={() => {
+        if (uiState.data?.hoverable) {
+            if (popover && popover.contains(document.activeElement)) {
+                return;
             }
+            uiState.data.open = false;
         }
     }}
 >

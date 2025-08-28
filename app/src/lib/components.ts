@@ -12,7 +12,9 @@ export const components = [
 	'select',
 	'dropdown-menu',
 	'skeleton',
-	'tooltip'
+	'tooltip',
+	'command',
+	'shortcut'
 ].sort((a, b) => a.localeCompare(b));
 
 export const sanitizeComponent = (name: string) => {

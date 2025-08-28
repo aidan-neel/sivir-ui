@@ -24,24 +24,22 @@
 
 <label
 	{...rest}
-	class={cn(classProp, `${disabled ? 'opacity-60' : ''} ${variant === 'primary' ? 'p-4 rounded-xl border hover:bg-secondary' : ''} duration-200 ${variant === 'primary' && checked === true ? 'bg-primary/10 border-primary/30 hover:bg-primary/20' : ''} flex flex-row items-start gap-3`)}
+	class={cn(classProp, `${disabled ? 'opacity-60' : ''} group ${variant === 'primary' ? 'p-4 rounded-xl border focus-within:bg-secondary hover:bg-secondary' : ''} duration-200 ${variant === 'primary' && checked === true ? 'bg-primary/10 border-primary/30 focus-within:bg-primary/20 hover:bg-primary/20' : ''} flex flex-row items-start gap-3`)}
 	id={`${String(STATE_KEY)}-controls`}
 >
 	{#if disabled}
         <input
             type="checkbox"
-            class="peer hidden"
+            class="peer absolute opacity-0"
             disabled
-            role="checkbox"
             aria-checked={checked}
             aria-labelledby={`${String(STATE_KEY)}-controls-label`}
         />
     {:else}
         <input
             type="checkbox"
-            class="peer hidden"
+            class="peer absolute opacity-0"
             bind:checked
-            role="checkbox"
             aria-checked={checked}
             aria-labelledby={`${String(STATE_KEY)}-controls-label`}
         />
@@ -49,14 +47,14 @@
 	{#if checked}
 		<div
 			in:scaleFade={{ duration: 200 }}
-			class="bg-primary p-0 h-4 w-4 flex items-center justify-center rounded-md"
+			class="bg-primary p-0 h-4 w-4 flex peer-focus:ring-primary/30 peer-focus-visible:ring-2 ring-offset-1 focus:outline-none items-center justify-center rounded-md"
 		>
 			<Check size="12" class="text-foreground-btn" />
 		</div>
 	{:else}
 		<div
 			in:scaleFade={{ duration: 200 }}
-			class="bg-popover border p-0 flex items-center justify-center h-4 w-4 rounded-md"
+			class="bg-popover border peer-hover:bg-secondary peer-focus-visible:bg-secondary duration-200 p-0 flex items-center justify-center h-4 w-4 rounded-md"
 		></div>
 	{/if}
     {#if label}

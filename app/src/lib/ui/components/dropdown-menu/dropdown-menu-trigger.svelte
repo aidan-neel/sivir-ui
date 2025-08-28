@@ -5,7 +5,7 @@
     import { ChevronDown } from '@lucide/svelte';
     import { states } from '$lib/ui/internals/state.svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
-	import type { ButtonVariant } from '$lib/ui/components/button';
+	import type { ButtonProps, ButtonVariant } from '$lib/ui/components/button';
 
     const key = getContext('key') as string;
     const uiState = states[key];
@@ -14,7 +14,7 @@
         children: Snippet;
         class: string;
         variant?: ButtonVariant;
-    } & HTMLAttributes<HTMLElement>
+    } & ButtonProps
 
     let { children, class: className, variant, ...rest }: Props = $props();
 </script>

@@ -8,6 +8,7 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/dropdown-
 <script>
 import { ComponentPreview, CodeBlock, ExportItem, APIReference } from '$lib/components/docs';
 import { Button } from '$lib/ui/components/button';
+import Shortcut from '$lib/ui/components/shortcut';
 import * as DropdownMenu from '$lib/ui/components/dropdown-menu';
 </script>
 
@@ -35,19 +36,19 @@ import * as DropdownMenu from '$lib/ui/components/dropdown-menu';
         <DropdownMenu.Label>My Account</DropdownMenu.Label>
         <DropdownMenu.Item>
             Profile
-            <DropdownMenu.Shortcut shortcut="Ctrl+P">Ctrl+P</DropdownMenu.Shortcut>
+            <Shortcut shortcut="Ctrl+P">Ctrl+P</Shortcut>
         </DropdownMenu.Item>
         <DropdownMenu.Item>
             Billing
-            <DropdownMenu.Shortcut shortcut="Ctrl+B">Ctrl+B</DropdownMenu.Shortcut>
+            <Shortcut shortcut="Ctrl+B">Ctrl+B</Shortcut>
         </DropdownMenu.Item>
         <DropdownMenu.Item>
             Notifications
-            <DropdownMenu.Shortcut shortcut="Ctrl+N">Ctrl+N</DropdownMenu.Shortcut>
+            <Shortcut shortcut="Ctrl+N">Ctrl+N</Shortcut>
         </DropdownMenu.Item>
         <DropdownMenu.Item>
             Settings
-            <DropdownMenu.Shortcut shortcut="Ctrl+S">Ctrl+S</DropdownMenu.Shortcut>
+            <Shortcut shortcut="Ctrl+S">Ctrl+S</Shortcut>
         </DropdownMenu.Item>
         <DropdownMenu.Separator />
         <DropdownMenu.Item>GitHub</DropdownMenu.Item>
@@ -65,7 +66,7 @@ import * as DropdownMenu from '$lib/ui/components/dropdown-menu';
 
         <DropdownMenu.Item>
             Log Out
-            <DropdownMenu.Shortcut shortcut="Shift+Ctrl+Q">⇧+Ctrl+Q</DropdownMenu.Shortcut>
+            <Shortcut shortcut="Shift+Ctrl+Q">⇧+Ctrl+Q</Shortcut>
         </DropdownMenu.Item>
     </DropdownMenu.Content>
 </DropdownMenu.Root>`}>
@@ -75,19 +76,19 @@ import * as DropdownMenu from '$lib/ui/components/dropdown-menu';
             <DropdownMenu.Label>My Account</DropdownMenu.Label>
             <DropdownMenu.Item>
                 Profile
-                <DropdownMenu.Shortcut shortcut="Ctrl+P">Ctrl+P</DropdownMenu.Shortcut>
+                <Shortcut shortcut="Ctrl+P">Ctrl+P</Shortcut>
             </DropdownMenu.Item>
             <DropdownMenu.Item>
                 Billing
-                <DropdownMenu.Shortcut shortcut="Ctrl+B">Ctrl+B</DropdownMenu.Shortcut>
+                <Shortcut shortcut="Ctrl+B">Ctrl+B</Shortcut>
             </DropdownMenu.Item>
             <DropdownMenu.Item>
                 Notifications
-                <DropdownMenu.Shortcut shortcut="Ctrl+N">Ctrl+N</DropdownMenu.Shortcut>
+                <Shortcut shortcut="Ctrl+N">Ctrl+N</Shortcut>
             </DropdownMenu.Item>
             <DropdownMenu.Item>
                 Settings
-                <DropdownMenu.Shortcut shortcut="Ctrl+S">Ctrl+S</DropdownMenu.Shortcut>
+                <Shortcut shortcut="Ctrl+S">Ctrl+S</Shortcut>
             </DropdownMenu.Item>
             <DropdownMenu.Separator />
             <DropdownMenu.Item>GitHub</DropdownMenu.Item>
@@ -96,7 +97,9 @@ import * as DropdownMenu from '$lib/ui/components/dropdown-menu';
             <DropdownMenu.Separator />
 
             <DropdownMenu.Sub>
-                Invite Users
+                <DropdownMenu.SubTrigger>
+                    Invite Users
+                </DropdownMenu.SubTrigger>
                 <DropdownMenu.SubContent class="w-[150px]">
                     <DropdownMenu.Item>Email</DropdownMenu.Item>
                     <DropdownMenu.Item>Message</DropdownMenu.Item>
@@ -105,7 +108,7 @@ import * as DropdownMenu from '$lib/ui/components/dropdown-menu';
 
             <DropdownMenu.Item>
                 Log Out
-                <DropdownMenu.Shortcut shortcut="Shift+Ctrl+Q">⇧+Ctrl+Q</DropdownMenu.Shortcut>
+                <Shortcut shortcut="Shift+Ctrl+Q">⇧+Ctrl+Q</Shortcut>
             </DropdownMenu.Item>
         </DropdownMenu.Content>
     </DropdownMenu.Root>

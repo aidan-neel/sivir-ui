@@ -45,6 +45,7 @@
 		"@lucide/svelte": "^0.479.0",
 		"@prisma/client": "^6.6.0",
 		"clsx": "^2.1.1",
+		"fuse.js": "^7.1.0",
 		"mode-watcher": "^1.0.2",
 		"svelte-persisted-state": "^1.0.0",
 		"tailwind-merge": "^3.0.2",
