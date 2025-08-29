@@ -1,5 +1,11 @@
 import { type ClassValue, clsx } from 'clsx';
+import type { Snippet } from 'svelte';
 import { twMerge } from 'tailwind-merge';
+
+export type DefaultProps = {
+	class?: string;
+	children?: Snippet;
+};
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs.reverse()));

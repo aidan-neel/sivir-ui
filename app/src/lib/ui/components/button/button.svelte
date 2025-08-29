@@ -4,7 +4,9 @@
 	import type { HTMLAnchorAttributes, HTMLButtonAttributes } from 'svelte/elements';
 	import { cn } from '$lib/ui/utils';
 	import type { ButtonProps } from '.';
-	import { getState } from '$lib/ui/internals/state.svelte';
+	import { useState } from '$lib/ui/internals/state.svelte';
+
+    let btn = $state<HTMLElement>();
 
 	let {
 		href,
@@ -25,9 +27,9 @@
     const key = Math.random().toString(36).substring(2);
     setContext("key", key)
 
-    const uiState = getState(key, {
+    const uiState = useState({
         onclick: onclick
-    })
+    }, key)
 </script>
 
 {#if href}
@@ -38,6 +40,12 @@
 		onmouseenter={() => onhover?.()}
         onmouseleave={() => onhoverend?.()}
         onclick={() => onclick?.()}
+        onkeydown={(e) => {
+        if ((e.code === 'Space' || e.key === ' ') && e.currentTarget.matches(':focus-visible')) {
+            e.preventDefault();
+            onclick?.();
+        }
+        }}
 		{...anchorProps}
 	>
 		{@render children?.()}
@@ -49,6 +57,12 @@
 		onmouseenter={() => onhover?.()}
 		onmouseleave={() => onhoverend?.()}
         onclick={() => onclick?.()}
+        onkeydown={(e) => {
+        if ((e.code === 'Space' || e.key === ' ') && e.currentTarget.matches(':focus-visible')) {
+            e.preventDefault();
+            onclick?.();
+        }
+        }}
 		{...buttonProps}
 	>
 		{@render children?.()}

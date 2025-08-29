@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onDestroy, onMount, setContext, type Snippet } from 'svelte';
-    import { getState, states } from '$lib/ui/internals/state.svelte';
+    import { useState, states } from '$lib/ui/internals/state.svelte';
 	import type { CommandState } from '.';
 
 	const {
@@ -19,12 +19,12 @@
     const key = stateKey ?? Math.random().toString(36).substring(2);
     setContext("key", key)
 
-    const uiState = getState(key, {
+    const uiState = useState<CommandState>({
         open: false,
         items: new Set(),
         results: new Set(),
         searchContent: "",
-    } as CommandState)
+    } as CommandState, key)
 
 	function handleKeydown(event: KeyboardEvent) {
 		if (event.key === 'Escape') {

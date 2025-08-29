@@ -1,20 +1,26 @@
 interface DefaultState {}
 
 export class UIState<T extends DefaultState> {
-	data = $state<T>();
+	data = $state<T>({} as T);
+	key = $state<string>('');
 
-	constructor(defaultValue: T) {
+	constructor(defaultValue: T, key: string) {
 		this.data = defaultValue;
+		this.key = key;
 	}
 
 	destroy() {
-		this.data = undefined;
+		delete states[this.key];
+		this.data = undefined as unknown as T;
 	}
 }
 
-export function getState<T extends DefaultState>(key: string, defaultValue: T) {
+export function useState<T extends DefaultState>(
+	defaultValue: T,
+	key: string = Math.random().toString(36).substring(2)
+) {
 	if (!states[key]) {
-		states[key] = new UIState(defaultValue);
+		states[key] = new UIState(defaultValue, key);
 	}
 	return states[key] as UIState<T>;
 }

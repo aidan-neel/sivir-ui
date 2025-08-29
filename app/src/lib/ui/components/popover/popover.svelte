@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onDestroy, onMount, setContext } from 'svelte';
-    import { getState, states } from '$lib/ui/internals/state.svelte';
+    import { useState, states } from '$lib/ui/internals/state.svelte';
 
 	const {
 		class: classProp,
@@ -28,7 +28,7 @@
     const key = state_key ?? Math.random().toString(36).substring(2);
     setContext("key", key)
 
-    const uiState = getState(key, {
+    const uiState = useState({
         open: false,
 		trigger: null,
 		focusedElement: null,
@@ -40,7 +40,7 @@
         hoverable: hoverable ?? false,
         delay: delay,
         closeDelay: closeDelay,
-    })
+    }, key)
 
 	function handleKeydown(event: KeyboardEvent) {
 		if (event.key === 'Escape') {

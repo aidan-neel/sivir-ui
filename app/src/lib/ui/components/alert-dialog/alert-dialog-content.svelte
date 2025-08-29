@@ -1,64 +1,42 @@
 <script lang="ts">
-	import { onDestroy, onMount, type Snippet } from 'svelte';
-	import {
-		alertDialogUIState,
-		getAlertDialogUIState,
-		type AlertDialogUIState,
-		STATE_KEY
-	} from './lib.svelte';
-	import type { UIState } from '$lib/ui/internals/state.svelte';
-    import { cubicOut } from 'svelte/easing';
-	import { clickOutside, cn } from '$lib/ui/utils';
-	import { flyAndScale } from '$lib/ui/internals/transition';
-	import { fade } from 'svelte/transition';
+	import { flyAndScale } from "$lib/ui/internals/transition";
+	import { clickOutside, type DefaultProps, cn } from "$lib/ui/utils";
+	import { cubicOut } from "svelte/easing";
+	import { fade } from "svelte/transition";
+	import type { AlertDialogState } from ".";
+    import { getContext, onMount } from "svelte";
+	import { states, UIState } from "$lib/ui/internals/state.svelte";
 
-	const {
-		children,
-		class: classProp,
-		allowClickOutside = false,
-		...rest
-	}: {
-		children: Snippet;
-		class?: string;
-		allowClickOutside?: boolean;
-	} = $props();
+    type Props = {
+        allowClickOutside?: boolean;
+    } & DefaultProps;
 
-	const state: UIState<AlertDialogUIState> = getAlertDialogUIState();
+    let { class: className, allowClickOutside = true, children, ...rest }: Props = $props();
 
-	function handleKeydown(event: KeyboardEvent) {
-		if (event.key === 'Escape') {
-			state.data.open = false;
-		}
-	}
-
-	onMount(() => {
-		document.addEventListener('keydown', handleKeydown);
-
-		onDestroy(() => {
-			document.removeEventListener('keydown', handleKeydown);
-		});
-	});
+    const key = getContext<string>('key');
+    const uiState = states[key] as UIState<AlertDialogState>;
 </script>
 
-{#if state.data?.open}
+{#if uiState.data.open}
     <div transition:fade={{ duration: 150, easing: cubicOut }} class="backdrop"></div>
     <div
-        transition:flyAndScale={{ duration: 300 }}
+        transition:flyAndScale
         class={cn(
-            classProp,
-            `p-4 rounded-xl border-3 bg-popover fixed top-1/2 left-1/2 z-50 -translate-x-1/2 -translate-y-1/2 m-auto shadow-sm min-w-[20rem] max-w-[35rem] min-h-[5rem] max-h-[30rem]`
+            className,
+            `p-5 rounded-xl border-3 duration-200 transition-all fixed top-1/2 left-1/2 z-50 overflow-y-auto -translate-x-1/2 -translate-y-1/2 m-auto shadow-sm bg-popover w-full max-w-[35rem] min-h-[5rem] max-h-[20rem]`
         )}
         use:clickOutside={() => {
             if (allowClickOutside) {
-                state.data.open = false;
+                uiState.data.open = false;
             }
         }}
         role="alertdialog"
-        aria-labelledby={`${String(STATE_KEY)}-title`}
-        aria-describedby={`${String(STATE_KEY)}-desc`}
-        aria-controls={`${String(STATE_KEY)}-controls`}
         aria-modal="true"
-    >
+        aria-labelledby={uiState.key + '-title'}
+        aria-describedby={uiState.key + '-desc'}
+        tabindex="-1"
+        {...rest}
+        >
         {@render children?.()}
     </div>
 {/if}

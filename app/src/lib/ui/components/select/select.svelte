@@ -1,10 +1,10 @@
 <script lang="ts">
     import * as Popover from '$lib/ui/components/popover';
-	import { getState } from '$lib/ui/internals/state.svelte';
+	import { useState } from '$lib/ui/internals/state.svelte';
 	import type { Snippet } from 'svelte';
 
     const key = Math.random().toString(36).substring(2);
-    const uiState = getState(key, {
+    const uiState = useState({
         open: false,
 		trigger: null,
 		focusedElement: null,
@@ -14,7 +14,7 @@
 		onclick: undefined,
         values: new Set<string>(),
         value: '',
-    });
+    }, key);
     
     type Props = {
         children: Snippet;

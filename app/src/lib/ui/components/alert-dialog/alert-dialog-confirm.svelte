@@ -1,39 +1,30 @@
 <script lang="ts">
-	import { cn } from '$lib/ui/utils';
-	import { type Snippet } from 'svelte';
-	import { Button } from '$lib/ui/components/button';
-	import { getAlertDialogUIState, type AlertDialogUIState } from './lib.svelte';
-	import type { UIState } from '$lib/ui/internals/state.svelte';
+	import { states, UIState, useState } from "$lib/ui/internals/state.svelte";
+	import { getContext, onMount, setContext } from "svelte";
+	import type { AlertDialogState } from ".";
+    import { Button, type ButtonProps } from "$lib/ui/components/button";
+    import { cn, type DefaultProps } from "$lib/ui/utils";
 
-	let {
-		children,
-		class: classProp,
-		variant,
-		closeOnConfirm = true,
-		callback,
-		...rest
-	}: {
-		children: Snippet;
-		class?: string;
-		variant?: any;
-		closeOnConfirm?: boolean;
-		callback?: () => any;
-	} = $props();
+    type Props = {
+        onclick: () => any;
+    } & DefaultProps & ButtonProps;
 
-	const uiState: UIState<AlertDialogUIState> = getAlertDialogUIState();
+    let { class: className, children, onclick, ...rest }: Props = $props();
+
+    let btn = $state<HTMLButtonElement | HTMLAnchorElement | undefined>(undefined);
+    const key = getContext<string>('key');
+    const uiState = states[key].data as AlertDialogState;
+
+    onMount(() => {
+        if (btn) {
+            btn.focus();
+        }
+    })
 </script>
 
-<Button
-	onclick={() => {
-		callback?.();
-		if (closeOnConfirm) {
-			uiState.data.open = false;
-		}
-	}}
-	{...rest}
-	role="button"
-	variant={variant || 'primary'}
-	class={cn(classProp, ``)}
->
-	{@render children?.()}
+<Button bind:element={btn} onclick={() => {
+    uiState.open = false;
+    onclick?.();
+}} {...rest} class={cn(className, `flex flex-row gap-2 justify-end items-center`)}>
+    {@render children?.()}
 </Button>

@@ -14,9 +14,9 @@
 	} = $props();
 </script>
 
-<p {...rest} class={cn(classProp, ``)}>
-	<span class="text-foreground-muted px-3 text-lg">•</span><span
-		class="text-foreground font-semibold">{title}:</span
+<p {...rest} class={cn(classProp, `text-foreground-muted`)}>
+	<span class="text-foreground px-3">•</span><span
+		class="text-foreground font-medium">{title} -</span
 	>
 	{@render children?.()}
 </p>

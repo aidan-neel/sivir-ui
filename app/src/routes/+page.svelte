@@ -14,11 +14,11 @@
             <ArrowRight class="size-4 text-foreground-muted" />
         </a>
         <h1 class="text-[48px] w-full text-balance tracking-tighter max-w-[56rem] font-medium leading-14">
-            Fast, clean Svelte 5 components for effortless development.
+            Fast, clean Svelte 5 components for effortless development
         </h1>   
         <p class="text-[18px] text-foreground-muted w-full max-w-[42rem]">
             A flexible, accessible component library and distribution platform for Svelte.
-            Built for developers who want complete control over their UI.
+            Built for developers who want complete control over their UI
         </p>
         <div class="flex flex-row gap-2">
 			<Button href={'/docs/components/alert'} class="text-sm">Get Started</Button>

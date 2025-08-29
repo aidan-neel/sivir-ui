@@ -10,10 +10,9 @@
 
 	const { toast, index }: { toast: Toast; index: number } = $props();
 
-    function getToastScale(index: number, maxIndex = 10, minScale = 0.93, maxScale = 1) {
-        if (index >= maxIndex) return maxScale;
-        const scaleStep = (maxScale - minScale) / maxIndex;
-        return minScale + scaleStep * index;
+    function getToastScale(index: number, total = 1, minScale = 0.9, maxScale = 1) {
+        if (total === 1) return maxScale;
+        return Math.max(maxScale - ((total - 1 - index) * (maxScale - minScale) / (total - 1)), minScale);
     }
 </script>
 

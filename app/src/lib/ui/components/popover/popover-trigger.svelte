@@ -27,11 +27,6 @@
 		const button = element;
 		const popover = uiState.data.popoverRef;
 
-        
-        if (popover) {
-            console.log('popoverref is undefined')
-        }
-
         if (button && popover) {
 			computePosition(button, popover, {
 				placement: uiState.data.placement,

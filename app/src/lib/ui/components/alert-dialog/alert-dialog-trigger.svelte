@@ -1,24 +1,20 @@
 <script lang="ts">
-	import type { HTMLButtonAttributes } from 'svelte/elements';
-	import { Button } from '$lib/ui/components/button';
-	import { bindTriggerToButton } from '$lib/ui/internals/trigger';
-	import { getAlertDialogUIState, STATE_KEY } from './lib.svelte';
+	import { states, UIState, useState } from "$lib/ui/internals/state.svelte";
+	import { getContext, setContext } from "svelte";
+	import type { AlertDialogState } from ".";
+    import { Button, type ButtonProps } from "$lib/ui/components/button";
+    import { cn, type DefaultProps } from "$lib/ui/utils";
 
-	let element: HTMLButtonElement | undefined = $state();
-	let bound = false;
-	const { children, class: classProp, ...rest }: HTMLButtonAttributes = $props();
-	const uiState = getAlertDialogUIState();
+    type Props = {} & DefaultProps & ButtonProps;
 
-	$effect(() => {
-		if (element && !bound) {
-			bindTriggerToButton(element, uiState, () => {});
-			bound = true;
-		}
-	});
+    let { class: className, children, ...rest }: Props = $props();
+
+    const key = getContext<string>('key');
+    const uiState = states[key].data as AlertDialogState;
 </script>
 
-<Button id={`${String(STATE_KEY)}-controls`} bind:element {...rest} class={classProp}>
-	{#if children}
-		{@render children?.()}
-	{/if}
+<Button onclick={() => {
+    uiState.open = true;
+}} class={cn(className, ``)} {...rest}>
+    {@render children?.()}
 </Button>

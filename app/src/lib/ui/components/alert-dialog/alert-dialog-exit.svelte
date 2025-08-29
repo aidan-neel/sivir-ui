@@ -1,44 +1,23 @@
 <script lang="ts">
-	import { cn } from '$lib/ui/utils';
-	import { type Snippet } from 'svelte';
-	import { Button } from '$lib/ui/components/button';
-	import type { AlertDialogUIState } from './lib.svelte';
-	import { getAlertDialogUIState } from './lib.svelte';
-	import type { UIState } from '$lib/ui/internals/state.svelte';
+	import { states, UIState, useState } from "$lib/ui/internals/state.svelte";
+	import { getContext, setContext } from "svelte";
+	import type { AlertDialogState } from ".";
+    import { Button, type ButtonProps } from "$lib/ui/components/button";
+    import { cn, type DefaultProps } from "$lib/ui/utils";
 
-	let {
-		children,
-		class: classProp,
-		...rest
-	}: {
-		children: Snippet;
-		class?: string;
-	} = $props();
+    type Props = {
+        onclick: () => any;
+    } & DefaultProps & ButtonProps;
 
-	const uiState: UIState<AlertDialogUIState> = getAlertDialogUIState();
+    let { class: className, children, onclick, ...rest }: Props = $props();
 
-	let element = $state<HTMLButtonElement>();
-
-	$effect(() => {
-		if (uiState.data.open) {
-			uiState.data.focusedElement = element;
-			element?.focus();
-		}
-	});
+    const key = getContext<string>('key');
+    const uiState = states[key].data as AlertDialogState;
 </script>
 
-<Button
-	bind:element
-	tabindex={0}
-	onclick={() => {
-		if (uiState.data) {
-			uiState.data.open = false;
-		}
-	}}
-	{...rest}
-	role="button"
-	variant="outlined"
-	class={cn(classProp, ``)}
->
-	{@render children?.()}
+<Button onclick={() => {
+    uiState.open = false;
+    onclick?.();
+}} variant="outlined" {...rest} class={cn(className, `flex flex-row gap-2 justify-end items-center`)}>
+    {@render children?.()}
 </Button>

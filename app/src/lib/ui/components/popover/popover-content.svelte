@@ -78,10 +78,6 @@
 		}
 	}
 
-    onDestroy(() => {
-        console.log("destroying content")
-    })
-
     $effect(() => {
         if(document) {
             if (popover && popover.contains(document.activeElement)) {

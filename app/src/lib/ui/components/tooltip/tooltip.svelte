@@ -1,6 +1,6 @@
 <script lang="ts">
     import * as Popover from '$lib/ui/components/popover';
-	import { getState } from '$lib/ui/internals/state.svelte';
+	import { useState } from '$lib/ui/internals/state.svelte';
 	import type { Snippet } from 'svelte';
 
     const key = Math.random().toString(36).substring(2);

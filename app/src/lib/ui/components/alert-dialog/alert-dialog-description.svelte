@@ -1,18 +1,18 @@
 <script lang="ts">
-	import { cn } from '$lib/ui/utils';
-	import { type Snippet } from 'svelte';
-	import { STATE_KEY } from './lib.svelte';
+	import { states, UIState, useState } from "$lib/ui/internals/state.svelte";
+	import { getContext, setContext } from "svelte";
+	import type { AlertDialogState } from ".";
+    import { Button, type ButtonProps } from "$lib/ui/components/button";
+    import { cn, type DefaultProps } from "$lib/ui/utils";
 
-	let {
-		children,
-		class: classProp,
-		...rest
-	}: {
-		children: Snippet;
-		class?: string;
-	} = $props();
+    type Props = {} & DefaultProps;
+
+    let { class: className, children, ...rest }: Props = $props();
+
+    const key = getContext<string>('key');
+    const uiState = states[key] as UIState<AlertDialogState>;
 </script>
 
-<p id={`${String(STATE_KEY)}-desc`} {...rest} class={cn(classProp, `text-foreground-muted text-sm`)}>
-	{@render children?.()}
+<p {...rest} id={uiState.key + '-desc'} class={cn(className, `text-sm text-foreground-muted py-1`)}>
+    {@render children?.()}
 </p>

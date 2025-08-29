@@ -14,7 +14,8 @@ export const components = [
 	'skeleton',
 	'tooltip',
 	'command',
-	'shortcut'
+	'shortcut',
+	'switch'
 ].sort((a, b) => a.localeCompare(b));
 
 export const sanitizeComponent = (name: string) => {

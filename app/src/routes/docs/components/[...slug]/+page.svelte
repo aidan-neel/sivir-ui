@@ -32,18 +32,18 @@
 </script>
 
 <header class="flex flex-col gap-1 pb-4">
-	<h1 class="text-4xl font-semibold">{sanitizeComponent(Title)}</h1>
+	<h1 class="text-4xl font-medium tracking-tighter">{sanitizeComponent(Title)}</h1>
 	<p class="mt-2 text-foreground-muted">
 		{Description}
 	</p>
 	<div class="flex flex-row gap-2 mt-2">
-		<Badge href={Source} variant="secondary" class="rounded-lg font-semibold gap-1"
-			>Component Source <ExternalLink size={12} /></Badge
+		<Badge href={Source} variant="secondary" class="rounded-lg font-semibold text-foreground-muted gap-1"
+			>Component Source <ExternalLink size={10} /></Badge
 		>
 		{#each Dependencies as dependency}
-			<Badge href={dependency.url} variant="secondary" class="rounded-lg font-semibold gap-1">
+			<Badge href={dependency.url} variant="secondary" class="rounded-lg font-semibold text-foreground-muted gap-1">
 				{dependency.name}
-				<ExternalLink size={12} />
+				<ExternalLink size={10} />
 			</Badge>
 		{/each}
 	</div>

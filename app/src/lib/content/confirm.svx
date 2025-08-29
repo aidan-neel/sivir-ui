@@ -48,7 +48,7 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/alert-dia
     </AlertDialog.Content>
 </AlertDialog.Root>`}>
     <AlertDialog.Root>
-        <AlertDialog.Trigger variant="outlined">Show Dialog</AlertDialog.Trigger>
+        <AlertDialog.Trigger>Alert Dialog</AlertDialog.Trigger>
         <AlertDialog.Content class="max-w-[30rem]">
             <AlertDialog.Title>Are you sure?</AlertDialog.Title>
             <AlertDialog.Description>

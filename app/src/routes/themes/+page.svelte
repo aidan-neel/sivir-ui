@@ -7,7 +7,7 @@
 	import * as Card from '$lib/ui/components/card';
 	import { Input } from '$lib/ui/components/input';
 	import * as Alert from '$lib/ui/components/alert';
-	import * as AlertDialog from '$lib/ui/components/alert-dialog';
+	import * as AlertDialog from '$lib/ui/components/confirm';
 	import { Checkbox } from '$lib/ui/components/checkbox';
 	import { mode } from "mode-watcher";
 	import ThemeCard from '$lib/components/theme-card.svelte';
