@@ -15,7 +15,17 @@ export const components = [
 	'tooltip',
 	'command',
 	'shortcut',
-	'switch'
+	'switch',
+	'combobox',
+	'breadcrumb',
+	'avatar',
+	'context-menu',
+	'dialog',
+	'menubar',
+	'progress',
+	'toggle',
+	'sheet',
+	'slider'
 ].sort((a, b) => a.localeCompare(b));
 
 export const sanitizeComponent = (name: string) => {

@@ -22,7 +22,6 @@ export function clickOutside(node: Node, callback: () => any, exclude: Node[] = 
 		}
 	};
 
-	// Delay adding the event listener to prevent it from firing immediately on open
 	setTimeout(() => {
 		document.addEventListener('click', handleClick, true);
 	}, 0);

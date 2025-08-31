@@ -10,6 +10,7 @@ import Group from './command-group.svelte';
 export type CommandItem = {
 	name: string;
 	callback: () => void;
+	ref: HTMLButtonElement | HTMLAnchorElement | undefined;
 };
 
 export type CommandState = {

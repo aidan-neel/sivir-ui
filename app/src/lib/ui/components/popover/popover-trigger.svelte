@@ -4,12 +4,13 @@
 	import { computePosition, flip } from '@floating-ui/dom';
 	import { getContext, onMount, tick } from 'svelte';
 	import { states } from '$lib/ui/internals/state.svelte';
+	import type { PopoverTriggerProps } from '.';
     
 	const key = getContext("key") as string;
 	const uiState = states[key];
 
 	let element = $state<HTMLButtonElement | undefined>();
-	const { children, class: classProp, onclick, ...rest }: ButtonProps = $props();
+	const { children, class: classProp, onclick, ...rest }: PopoverTriggerProps = $props();
 
 	onMount(() => {
 		uiState.data.buttonRef = element;
@@ -95,8 +96,8 @@
 	onblur={handleLeave}
 	aria-haspopup="dialog"
 	aria-expanded={uiState.data?.open ? 'true' : 'false'}
-	aria-controls={`${String(key)}-content`}
-	id={`${String(key)}-controls`}
+	aria-controls={`popover-${String(key)}-content`}
+	id={`popover-${String(key)}-controls`}
 >
 	{@render children?.()}
 </Button>

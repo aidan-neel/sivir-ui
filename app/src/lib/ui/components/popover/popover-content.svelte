@@ -4,32 +4,36 @@
 	import { clickOutside, cn } from '$lib/ui/utils';
 	import { flyAndScale } from '$lib/ui/internals/transition';
     import { getContext } from 'svelte';
-	import { computePosition, flip } from '@floating-ui/dom';
-	import type { PopoverContentProps } from '.';
+	import { computePosition, flip, type ReferenceElement } from '@floating-ui/dom';
+	import type { PopoverContentProps, PopoverState } from '.';
+    import { page } from '$app/state';
 
 	const {
 		children,
 		class: classProp,
 		allowClickOutside = true,
-        portal = false,
+        portal = true,
 		...rest
 	}: PopoverContentProps = $props();
 
     const key = getContext("key") as string;
-    const uiState = states[key];
+    const uiState = states[key].data as PopoverState;
 
 	let popover = $state<HTMLElement | undefined>();
+    let lastOpen = $state<boolean>();
+    let scrollY = $state<number>();
+    let lastPath = $state<string>(page.url.pathname);
 
 	function handleKeydown(event: KeyboardEvent) {
 		if (event.key === 'Escape') {
-			uiState.data.open = false;
+			uiState.open = false;
 		}
 	}
 
-    function handleScroll() {
-        if (uiState.data && popover) {
-            computePosition(uiState.data.buttonRef, popover, {
-                placement: uiState.data.placement,
+    function updatePosition() {
+        if (uiState && popover && uiState.buttonRef) {
+            computePosition(uiState.buttonRef as ReferenceElement, popover, {
+                placement: uiState.placement,
                 middleware: [flip()]
             }).then(({ x, y }) => {
                 Object.assign(popover!.style, {
@@ -42,56 +46,92 @@
 
 	onMount(() => {
 		document.addEventListener('keydown', handleKeydown);
-        document.addEventListener('scroll', handleScroll);
+        document.addEventListener('scroll', updatePosition);
+
+        window.addEventListener("resize", updatePosition);
+        window.addEventListener("scroll", updatePosition, true);
         
-		uiState.data.popoverRef = popover;
+		uiState.popoverRef = popover;
 
         if (portal && document && popover) {
             document.body.appendChild(popover);
-            return () => popover!.remove();
-        }
-
-        if (uiState.data.open && popover) {
-            computePosition(uiState.data.buttonRef, popover, {
-                placement: uiState.data.placement,
-                middleware: [flip()]
-            }).then(({ x, y }) => {
-                Object.assign(popover!.style, { left: `${x}px`, top: `${y}px` });
-            });
         }
 
 		if (allowClickOutside && popover) {
 			clickOutside(popover, () => {
-				uiState.data.open = false;
+				uiState.open = false;
 			});
 		}
+        
+        const ro = new ResizeObserver(updatePosition);
+        if (uiState?.buttonRef) ro.observe(uiState.buttonRef);
+        if (popover) ro.observe(popover);
+
+        const handleFocusIn = (e: FocusEvent) => {
+            const target = e.target as HTMLElement;
+            if (!target) return;
+
+            const openPopovers = Array.from(document.body.children).filter(
+                el => el.id.startsWith('popover-') && !el.id.includes('controls')
+            );
+            uiState.focusedInside = openPopovers.some(el => el.contains(target));
+        };
+
+        const handleFocusOut = () => {
+            uiState.focusedInside = false;
+        };
+
+        document.addEventListener('focusin', handleFocusIn);
+        document.addEventListener('focusout', handleFocusOut);
 
         onDestroy(() => {
             document.removeEventListener('keydown', handleKeydown);
-            document.removeEventListener('scroll', handleScroll);
+            document.removeEventListener('scroll', updatePosition);
+            window.removeEventListener("resize", updatePosition);
+            window.removeEventListener("scroll", updatePosition, true);
+            document.removeEventListener('focusin', handleFocusIn);
+            document.removeEventListener('focusout', handleFocusOut);
+            ro.disconnect();
+
+            uiState.open = false;
+            uiState.popoverRef?.remove();
+            popover?.remove();
         });
 	});
 
     function cancelClose() {
-		if (uiState.data?.closeTimeout) {
-			if (uiState.data?.hoverable) {
-                clearTimeout(uiState.data.closeTimeout);
-                uiState.data.closeTimeout = null;
+		if (uiState?.closeTimeout) {
+			if (uiState?.hoverable) {
+                clearTimeout(uiState.closeTimeout);
+                uiState.closeTimeout = undefined;
             }
 		}
 	}
 
     $effect(() => {
-        if(document) {
-            if (popover && popover.contains(document.activeElement)) {
-                return;
+        if (!document) return;
+
+        const bodyChildren = Array.from(document.body.children) as HTMLElement[];
+
+        // Pointer-events lock
+        if (uiState.open) {
+            document.body.style.overflow = 'hidden';
+            for (const el of bodyChildren) {
+                if (!el.id.startsWith('popover-') || el.id.includes('controls')) {
+                    el.classList.add('pointer-events-none');
+                }
             }
-            if (!uiState.data.hovering) {
-                return;
+        } else {
+            document.body.style.overflow = '';
+            for (const el of bodyChildren) {
+                el.classList.remove('pointer-events-none');
             }
+        }
+
+        if (!uiState.hovering && !uiState.focusedInside) {
             cancelClose();
         }
-    })
+    });
 </script>
 
 <div
@@ -99,20 +139,20 @@
 	class={cn('flex items-center py-2 justify-center floating')}
 	bind:this={popover as HTMLElement}
     role="dialog"
-    id={`${String(key)}-content`}
+    id={`popover-${String(key)}-content`}
     aria-modal="false"
-    aria-labelledby={`${String(key)}-title`}
+    aria-labelledby={`popover-${String(key)}-title`}
     onmouseenter={cancelClose}
     onmouseleave={() => {
-        if (uiState.data?.hoverable) {
+        if (uiState?.hoverable) {
             if (popover && popover.contains(document.activeElement)) {
                 return;
             }
-            uiState.data.open = false;
+            uiState.open = false;
         }
     }}
 >
-	{#if uiState.data?.open}
+	{#if uiState?.open}
 		<div
 			{...rest}
 			transition:flyAndScale={{ duration: 200 }}

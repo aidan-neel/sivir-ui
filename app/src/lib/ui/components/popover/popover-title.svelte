@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { cn } from '$lib/ui/utils';
 	import { getContext, type Snippet } from 'svelte';
+	import type { PopoverTitleProps } from '.';
 
     const key = getContext("key") as string;
 
@@ -8,12 +9,9 @@
 		children,
 		class: classProp,
 		...rest
-	}: {
-		children: Snippet;
-		class?: string;
-	} = $props();
+	}: PopoverTitleProps = $props();
 </script>
 
-<p id={`${String(key)}-title`} {...rest} class={cn(classProp, `text-text text-lg text-foreground font-semibold`)}>
+<p id={`$popover-{String(key)}-title`} {...rest} class={cn(classProp, `text-text text-lg text-foreground font-semibold`)}>
 	{@render children?.()}
 </p>

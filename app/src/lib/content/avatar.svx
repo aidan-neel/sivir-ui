@@ -1,0 +1,62 @@
+---
+title: Avatar
+description: Brief description of the component.
+component: true
+source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/componentname
+---
+
+<script>
+    import { ComponentPreview, ExportItem, APIReference } from '$lib/components/docs';
+    import * as Combobox from '$lib/ui/components/combobox';
+</script>
+
+<h1 class="py-2">Import</h1>
+<p class="py-2">ComponentName exports its subcomponents.</p>
+
+<ExportItem title="Root">Main container for the component.</ExportItem>
+<ExportItem title="SubComponent1">Description of SubComponent1.</ExportItem>
+<ExportItem title="SubComponent2">Description of SubComponent2.</ExportItem>
+
+<h1 class="py-6">Example</h1>
+
+<ComponentPreview code={`<ComponentName.Root>
+    <ComponentName.SubComponent1>Content here</ComponentName.SubComponent1>
+    <ComponentName.SubComponent2>Content here</ComponentName.SubComponent2>
+</ComponentName.Root>`}>
+
+</ComponentPreview>
+
+<h1 class="py-6">API Reference</h1>
+
+<div class="flex flex-col gap-10">
+    <APIReference
+        title="ComponentName"
+        component="Root"
+        description="Main container component."
+        items={[
+            { property: "children", type: "Snippet", description: "Elements rendered inside the root." },
+            { property: "class", type: "string", description: "CSS classes for the root container." },
+            { property: "...rest", type: "HTMLDivAttributes", description: "Extra attributes.", defaults: "{}" }
+        ]}
+    />
+    <APIReference
+        title="ComponentName"
+        component="SubComponent1"
+        description="Subcomponent of ComponentName."
+        items={[
+            { property: "children", type: "Snippet", description: "Content for this subcomponent." },
+            { property: "class", type: "string", description: "CSS classes for this subcomponent." },
+            { property: "...rest", type: "HTMLAttributes<HTMLElement>", description: "Extra attributes.", defaults: "{}" }
+        ]}
+    />
+    <APIReference
+        title="ComponentName"
+        component="SubComponent2"
+        description="Another subcomponent."
+        items={[
+            { property: "children", type: "Snippet", description: "Content for this subcomponent." },
+            { property: "class", type: "string", description: "CSS classes for this subcomponent." },
+            { property: "...rest", type: "HTMLAttributes<HTMLElement>", description: "Extra attributes.", defaults: "{}" }
+        ]}
+    />
+</div>

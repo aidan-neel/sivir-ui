@@ -12,47 +12,47 @@
 </script>
 
 <div
-	class="{classProp} w-1/5 rounded-none flex-col gap-0.5 flex xl:w-1/5 2xl:w-1/8 p-4 mr-2 bg-background fixed left-0 flex-shrink-0 h-full"
+	class="{classProp} w-1/5 rounded-none flex-col overflow-y-auto z-10 gap-0.5 flex xl:w-1/5 2xl:w-1/8 p-4 mr-2 bg-background fixed left-0 h-[calc(100vh-3.5rem)]"
 >
-    <h3 class="font-semibold text-[0.85rem] ml-2 pb-2 pt-1">Getting Started</h3>
+    <h3 class="font-semibold text-[0.8rem] text-foreground-muted/70 ml-2 pb-2 pt-1">Getting Started</h3>
     <Button
         variant={pageName.split('/')[2] === 'introduction' ? 'secondary' : 'ghost'}
         href={`/docs/introduction`}
-        class="duration-100 w-fit px-2 rounded-lg text-left text-[0.85rem] right-2 flex items-center justify-center {pageName.split('/')[2] === 'introduction' ? 'font-semibold text-foreground' : 'text-foreground-muted/70 hover:text-foreground'}"
+        class="duration-100 w-fit px-2 flex-shrink-0 h-8 rounded-lg text-left text-[0.8rem] right-2 flex items-center justify-center {pageName.split('/')[2] === 'introduction' ? 'font-semibold text-foreground' : 'text-foreground hover:text-foreground'}"
     >
         Introduction
     </Button>
     <Button
         variant={pageName.split('/')[2] === 'installation' ? 'secondary' : 'ghost'}
         href={`/docs/installation`}
-        class="duration-100 w-fit px-2 rounded-lg text-left text-[0.85rem] right-2 flex items-center justify-center {pageName.split('/')[2] === 'installation' ? 'font-semibold text-foreground' : 'text-foreground-muted/70 hover:text-foreground'}"
+        class="duration-100 w-fit px-2 flex-shrink-0 h-8 rounded-lg text-left text-[0.8rem] right-2 flex items-center justify-center {pageName.split('/')[2] === 'installation' ? 'font-semibold text-foreground' : 'text-foreground hover:text-foreground'}"
     >
         Installation
     </Button>
     <Button
         variant={pageName.split('/')[2] === 'theming' ? 'secondary' : 'ghost'}
         href={`/docs/theming`}
-        class="duration-100 w-fit px-2 rounded-lg text-left text-[0.85rem] right-2 flex items-center justify-center {pageName.split('/')[2] === 'theming' ? 'font-semibold text-foreground' : 'text-foreground-muted/70 hover:text-foreground'}"
+        class="duration-100 w-fit px-2 flex-shrink-0 h-8 rounded-lg text-left text-[0.8rem] right-2 flex items-center justify-center {pageName.split('/')[2] === 'theming' ? 'font-semibold text-foreground' : 'text-foreground hover:text-foreground'}"
     >
         Theming
     </Button>
     <Button
         variant={pageName.split('/')[2] === 'changelog' ? 'secondary' : 'ghost'}
         href={`/docs/changelog`}
-        class="duration-100 w-fit px-2 rounded-lg text-left text-[0.85rem] right-2 flex items-center justify-center {pageName.split('/')[2] === 'changelog' ? 'font-semibold text-foreground' : 'text-foreground-muted/70 hover:text-foreground'}"
+        class="duration-100 w-fit px-2 flex-shrink-0 h-8 rounded-lg text-left text-[0.8rem] right-2 flex items-center justify-center {pageName.split('/')[2] === 'changelog' ? 'font-semibold text-foreground' : 'text-foreground hover:text-foreground'}"
     >
         Changelog
     </Button>
-    <h3 class="font-semibold text-[0.85rem] ml-2 pt-4 pb-2">Components</h3>
+    <h3 class="font-semibold text-[0.8rem] text-foreground-muted/70 ml-2 pt-4 pb-2">Components</h3>
 	{#each components as component}
 		<Button
 			variant={pageName.split('/')[3] === component ? 'secondary' : 'ghost'}
 			href={`/docs/components/${component}`}
-			class="duration-100 px-2 rounded-lg w-fit text-left text-[0.85rem] right-2 flex items-center justify-center {pageName.split(
+			class="duration-100 px-2 flex-shrink-0 h-8 rounded-lg w-fit text-left text-[0.8rem] right-2 flex items-center justify-center {pageName.split(
 				'/'
 			)[3] === component
 				? 'font-semibold text-foreground'
-				: 'text-foreground-muted/70 hover:text-foreground'}"
+				: 'text-foreground hover:text-foreground'}"
 		>
 			{sanitizeComponent(component)}
 		</Button>

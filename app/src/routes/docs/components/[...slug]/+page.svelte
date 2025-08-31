@@ -61,6 +61,7 @@
 
 	{#key Title}
 		<div
+            tabindex="-1"
 			class="mt-8 flex flex-row w-full items-center"
 			class:justify-between={prevComponent && nextComponent}
 			class:justify-end={!prevComponent && nextComponent}

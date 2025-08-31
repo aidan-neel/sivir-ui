@@ -23,7 +23,7 @@
         transition:flyAndScale
         class={cn(
             className,
-            `p-5 rounded-xl border-3 duration-200 transition-all fixed top-1/2 left-1/2 z-50 overflow-y-auto -translate-x-1/2 -translate-y-1/2 m-auto shadow-sm bg-popover w-full max-w-[35rem] min-h-[5rem] max-h-[20rem]`
+            `p-5 rounded-xl border duration-200 transition-all fixed top-1/2 left-1/2 z-50 overflow-y-auto -translate-x-1/2 -translate-y-1/2 m-auto shadow-sm bg-popover w-full max-w-[35rem] min-h-[5rem] max-h-[20rem]`
         )}
         use:clickOutside={() => {
             if (allowClickOutside) {

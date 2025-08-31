@@ -59,34 +59,34 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/popover
         </div>
     </Popover.Content>
 </Popover.Root>`}>
-<Popover.Root>
-    <Popover.Trigger variant="outlined">Popover</Popover.Trigger>
-    <Popover.Content>
-        <Popover.Title>
-            Dimensions
-        </Popover.Title>
-        <p class="text-foreground-muted">Set the dimensions for the layer</p>
+    <Popover.Root>
+        <Popover.Trigger variant="outlined">Popover</Popover.Trigger>
+        <Popover.Content>
+            <Popover.Title>
+                Dimensions
+            </Popover.Title>
+            <p class="text-foreground-muted">Set the dimensions for the layer</p>
 
-        <div class="flex flex-col mt-4 gap-2">
-            <div class="flex flex-row items-center justify-between gap-4">
-                <p class="font-medium w-24 text-left">Width</p>
-                <Input class="" placeholder="Width" value="100px" />
+            <div class="flex flex-col mt-4 gap-2">
+                <div class="flex flex-row items-center justify-between gap-4">
+                    <p class="font-medium w-24 text-left">Width</p>
+                    <Input class="" placeholder="Width" value="100px" />
+                </div>
+                <div class="flex flex-row items-center justify-between gap-4">
+                    <p class="font-medium w-24 text-left">Max Width</p>
+                    <Input class="" placeholder="Max Width" value="300px" />
+                </div>
+                <div class="flex flex-row items-center justify-between gap-4">
+                    <p class="font-medium w-24 text-left">Height</p>
+                    <Input class="" placeholder="Height" value="25px" />
+                </div>
+                <div class="flex flex-row items-center justify-between gap-4">
+                    <p class="font-medium w-24 text-left">Max Height</p>
+                    <Input class="" placeholder="Max Height" value="None" />
+                </div>
             </div>
-            <div class="flex flex-row items-center justify-between gap-4">
-                <p class="font-medium w-24 text-left">Max Width</p>
-                <Input class="" placeholder="Max Width" value="300px" />
-            </div>
-            <div class="flex flex-row items-center justify-between gap-4">
-                <p class="font-medium w-24 text-left">Height</p>
-                <Input class="" placeholder="Height" value="25px" />
-            </div>
-            <div class="flex flex-row items-center justify-between gap-4">
-                <p class="font-medium w-24 text-left">Max Height</p>
-                <Input class="" placeholder="Max Height" value="None" />
-            </div>
-        </div>
-    </Popover.Content>
-</Popover.Root>
+        </Popover.Content>
+    </Popover.Root>
 </ComponentPreview>
 
 <h1 class="py-6">

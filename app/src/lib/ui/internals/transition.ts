@@ -63,6 +63,7 @@ export const flyAndScale = (
 		easing: cubicOut
 	};
 };
+
 type ScaleFadeParams = {
 	startScale?: number;
 	duration?: number;

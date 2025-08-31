@@ -1,10 +1,12 @@
 <script lang="ts">
-	import { codeToHtml, createHighlighter } from 'shiki';
+	import { type BundledLanguage, codeToHtml, createHighlighter, type HighlighterGeneric, type BundledTheme } from 'shiki';
 	import themeLightRaw from '$lib/themes/light.json?raw';
 	import themeDarkRaw from '$lib/themes/dark.json?raw'; // Assuming the dark theme is available
 	import { fade } from 'svelte/transition';
 	import { cn } from '$lib/ui/utils';
 	import { mode } from "mode-watcher";
+	import { onDestroy } from 'svelte';
+    import { highlighter } from '$lib/highlighter'
     
 	// Parse the themes
 	const themeLight = JSON.parse(themeLightRaw);
@@ -20,21 +22,9 @@
 	let loaded = $state(false);
 
 	$effect(async () => {
-		// Determine whether the dark mode is active
-		const isDarkMode = mode.current === "dark";
-		const theme = isDarkMode ? themeDark : themeLight;
-
-		// Create a highlighter with the selected theme
-		const highlighter = await createHighlighter({
-			themes: [theme, 'github-light', 'github-dark'],
-			langs: [lang]
-		});
-
-		await highlighter.loadTheme(theme);
-
 		html = await highlighter.codeToHtml(code, {
 			lang: lang,
-			theme: isDarkMode ? 'github-dark' : 'github-light'
+			theme: mode.current === 'dark' ? 'github-dark' : 'github-light'
 		});
 
 		loaded = true;

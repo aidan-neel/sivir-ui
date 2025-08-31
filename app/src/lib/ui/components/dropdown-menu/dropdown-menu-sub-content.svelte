@@ -13,6 +13,6 @@
     let props: Props = $props();
 </script>
 
-<Popover.Content class={cn(props.class, "p-1")}>
+<Popover.Content portal={false} class={cn(props.class, "p-1")}>
     {@render props.children?.()}
 </Popover.Content>

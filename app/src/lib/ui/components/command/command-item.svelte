@@ -2,7 +2,7 @@
     import { Button, type ButtonProps } from "$lib/ui/components/button";
 	import { states } from "$lib/ui/internals/state.svelte";
 	import { cn } from "$lib/ui/utils";
-	import { getContext, onDestroy, setContext, type Snippet } from 'svelte';
+	import { getContext, onDestroy, onMount, setContext, type Snippet } from 'svelte';
 	import type { HTMLAttributes } from "svelte/elements";
     import Check from "@lucide/svelte/icons/check";
 	import { flyAndScale } from "$lib/ui/internals/transition";
@@ -20,18 +20,22 @@
     } & ButtonProps;
 
     let { children, name, class: className, callback, ...rest }: Props = $props();
-    let item: CommandItem = {
+    let el = $state<HTMLButtonElement | HTMLAnchorElement | undefined>();
+    let item: CommandItem = $derived({
         name: name,
         callback: callback,
-    } as CommandItem
+        ref: el
+    }) as CommandItem
 
-    if (!uiState.items.has(item)) {
-        uiState.items.add(item)
-    }
+    onMount(() => {
+        if (!uiState.items.has(item)) {
+            uiState.items.add(item)
+        }
+    })
 </script>
 
 {#if uiState.searchContent === ''}
-    <Button {...rest} onclick={() => {
+    <Button bind:element={el} {...rest} onclick={() => {
         uiState.open = false;
         uiState.searchContent = '';
         callback?.();
@@ -40,6 +44,7 @@
     </Button>
 {:else}
     <Button
+        bind:element={el}
         {...rest}
         onclick={() => {
             uiState.open = false;

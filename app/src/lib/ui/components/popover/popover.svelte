@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onDestroy, onMount, setContext } from 'svelte';
-    import { useState, states } from '$lib/ui/internals/state.svelte';
+    import { useState, states, UIState } from '$lib/ui/internals/state.svelte';
+	import type { PopoverProps, PopoverState } from '.';
 
 	const {
 		class: classProp,
@@ -9,26 +10,18 @@
 		placement = 'bottom',
 		children,
         state_key,
+        state,
         hoverable,
         delay = 0,
         closeDelay = 150,
 		...rest
-	}: {
-		class?: string;
-		open?: boolean;
-		stateName?: string;
-		placement?: 'top' | 'left' | 'bottom' | 'right';
-		children: any;
-        state_key?: string;
-        hoverable?: boolean;
-        delay?: number;
-        closeDelay?: number;
-	} = $props();
+	}: PopoverProps = $props();
 
-    const key = state_key ?? Math.random().toString(36).substring(2);
+    let key = state_key ?? Math.random().toString(36).substring(2);
+    key = state ? state.key : key;
     setContext("key", key)
 
-    const uiState = useState({
+    const uiState = state ? state : useState<PopoverState>({
         open: false,
 		trigger: null,
 		focusedElement: null,
@@ -40,7 +33,7 @@
         hoverable: hoverable ?? false,
         delay: delay,
         closeDelay: closeDelay,
-    }, key)
+    } as PopoverState, key)
 
 	function handleKeydown(event: KeyboardEvent) {
 		if (event.key === 'Escape') {
