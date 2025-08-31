@@ -7,7 +7,7 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/component
 
 <script>
     import { ComponentPreview, ExportItem, APIReference } from '$lib/components/docs';
-    import * as Combobox from '$lib/ui/components/combobox';
+    import * as Breadcrumb from '$lib/ui/components/breadcrumb';
 </script>
 
 <h1 class="py-2">Import</h1>
@@ -23,7 +23,13 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/component
     <ComponentName.SubComponent1>Content here</ComponentName.SubComponent1>
     <ComponentName.SubComponent2>Content here</ComponentName.SubComponent2>
 </ComponentName.Root>`}>
-
+    <Breadcrumb.Root>
+        <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
+        <Breadcrumb.Separator />
+        <Breadcrumb.Item href="/docs/components">Components</Breadcrumb.Item>
+        <Breadcrumb.Separator />
+        <Breadcrumb.Item href="/docs/components/breadcrumb">Breadcrumb</Breadcrumb.Item>
+    </Breadcrumb.Root>
 </ComponentPreview>
 
 <h1 class="py-6">API Reference</h1>

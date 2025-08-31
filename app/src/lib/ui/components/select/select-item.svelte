@@ -21,7 +21,10 @@
 
 <Button onclick={() => {
     uiState.data.value = props.value;
-}} {...props} class={cn(props.class, "w-full hover:cursor-default h-8 duration-100 px-2 hover:bg-muted/50 items-center justify-between text-left")} variant={"ghost"}>
+    setTimeout(() => {
+        uiState.data.open = false;
+    }, 1)
+}} {...props} class={cn(props.class, "w-full hover:cursor-default font-normal h-8 duration-100 px-2 hover:bg-muted/50 items-center justify-between text-left")} variant={"ghost"}>
     {@render props.children?.()}
 
     {#if uiState.data.value === props.value}

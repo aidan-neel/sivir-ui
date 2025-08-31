@@ -7,7 +7,8 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/component
 
 <script>
     import { ComponentPreview, ExportItem, APIReference } from '$lib/components/docs';
-    import * as Combobox from '$lib/ui/components/combobox';
+    import * as ContextMenu from '$lib/ui/components/context-menu';
+    import { Shortcut } from '$lib/ui/components/shortcut';
 </script>
 
 <h1 class="py-2">Import</h1>
@@ -23,7 +24,34 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/component
     <ComponentName.SubComponent1>Content here</ComponentName.SubComponent1>
     <ComponentName.SubComponent2>Content here</ComponentName.SubComponent2>
 </ComponentName.Root>`}>
-
+    <ContextMenu.Root>
+        <ContextMenu.Trigger class="p-20 px-28 rounded-lg font-medium text-foreground-muted bg-secondary">
+            Right click here
+        </ContextMenu.Trigger>
+        <ContextMenu.Content class="w-[210px]">
+            <ContextMenu.Item inset>Cut <Shortcut shortcut="Ctrl+K">Ctrl+K</Shortcut> </ContextMenu.Item>
+            <ContextMenu.Item inset>Copy <Shortcut shortcut="Ctrl+C">Ctrl+C</Shortcut> </ContextMenu.Item>
+            <ContextMenu.Item inset>Paste <Shortcut shortcut="Ctrl+V">Ctrl+V</Shortcut> </ContextMenu.Item>
+            <ContextMenu.Item inset>Duplicate Layer <Shortcut shortcut="Ctrl+D">Ctrl+D</Shortcut> </ContextMenu.Item>
+            <ContextMenu.Separator />
+            <ContextMenu.Item inset>Convert</ContextMenu.Item>
+            <ContextMenu.Item inset>Rasterize Layer</ContextMenu.Item>
+            <ContextMenu.Sub>
+                <ContextMenu.SubTrigger inset>
+                    Quick Actions
+                </ContextMenu.SubTrigger>
+                <ContextMenu.SubContent class="w-[150px]">
+                    <ContextMenu.Item>Merge Visible</ContextMenu.Item>
+                    <ContextMenu.Item>Flatten Layer</ContextMenu.Item>
+                    <ContextMenu.Separator />
+                    <ContextMenu.Item class="hover:bg-red-500/10 text-red-500">Delete</ContextMenu.Item>
+                </ContextMenu.SubContent>
+            </ContextMenu.Sub>
+            <ContextMenu.Separator />
+            <ContextMenu.CheckboxItem value="lock-pixels" inset>Lock Pixels</ContextMenu.CheckboxItem>
+            <ContextMenu.CheckboxItem value="clip-layer" inset>Clip Layer</ContextMenu.CheckboxItem>
+        </ContextMenu.Content>
+    </ContextMenu.Root>
 </ComponentPreview>
 
 <h1 class="py-6">API Reference</h1>

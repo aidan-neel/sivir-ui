@@ -13,6 +13,7 @@
 		class: classProp,
 		allowClickOutside = true,
         portal = true,
+        refElement,
 		...rest
 	}: PopoverContentProps = $props();
 
@@ -31,9 +32,9 @@
 	}
 
     function updatePosition() {
-        if (uiState && popover && uiState.buttonRef) {
-            computePosition(uiState.buttonRef as ReferenceElement, popover, {
-                placement: uiState.placement,
+        if (uiState && popover) {
+            computePosition(refElement ?? uiState.buttonRef as ReferenceElement, popover, {
+                placement: refElement ? 'right-start' : uiState.placement,
                 middleware: [flip()]
             }).then(({ x, y }) => {
                 Object.assign(popover!.style, {

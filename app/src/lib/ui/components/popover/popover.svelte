@@ -34,7 +34,7 @@
         delay: delay,
         closeDelay: closeDelay,
     } as PopoverState, key)
-
+    
 	function handleKeydown(event: KeyboardEvent) {
 		if (event.key === 'Escape') {
 			if (uiState.data) {

@@ -45,7 +45,7 @@
 </script>
 
 {#if uiState.searchContent === ''}
-    <Button bind:element={el} {...rest} onclick={close} class={cn(className, "w-full h-8 duration-100 rounded-lg gap-1 hover:cursor-default px-2 hover:bg-muted/50 items-center justify-start text-left")} variant={"ghost"}>
+    <Button bind:element={el} {...rest} onclick={close} class={cn(className, "w-full font-normal h-8 duration-100 rounded-lg gap-1 hover:cursor-default px-2 hover:bg-muted/50 items-center justify-start text-left")} variant={"ghost"}>
         <div class="size-3">
             {#if uiState.selected}
                 {#if uiState.selected.value === item.value}

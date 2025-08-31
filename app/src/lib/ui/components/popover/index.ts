@@ -7,12 +7,14 @@ import type { DefaultProps } from '$lib/ui/utils';
 import type { Snippet } from 'svelte';
 import type { UIState } from '$lib/ui/internals/state.svelte';
 import type { ButtonProps } from '$lib/ui/components/button';
+import type { VirtualElement } from '@floating-ui/dom';
 
 export type PopoverContentProps = {
 	children: Snippet;
 	class?: string;
 	allowClickOutside?: boolean;
 	portal?: boolean;
+	refElement?: VirtualElement;
 } & DefaultProps;
 
 export type PopoverProps = {
