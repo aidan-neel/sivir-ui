@@ -10,7 +10,7 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/button
     import { Button } from '$lib/ui/components/button';
 </script>
 
-<h1 class="py-2">
+<h1 class="py-2 h1">
     Import
 </h1>
 
@@ -20,7 +20,7 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/button
 
 <ExportItem title="Button">The main component for displaying a button.</ExportItem>
 
-<h1 class="py-6">
+<h1 class="py-6 h1">
     Example
 </h1>
 
@@ -46,7 +46,7 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/button
     </div>
 </ComponentPreview>
 
-<h1 class="py-6">
+<h1 class="py-6 h1">
     API Reference
 </h1>
 

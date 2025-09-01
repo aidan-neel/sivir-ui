@@ -13,6 +13,6 @@
     let { children, class: className, ...rest }: Props = $props();
 </script>
 
-<div {...rest} class={cn(className, "h-[1px] bg-border my-1 mx-[-4px]")}>
+<div {...rest} class={cn(className, "h-[1px] bg-input my-1 mx-[-4px]")}>
     {@render children?.()}
 </div>

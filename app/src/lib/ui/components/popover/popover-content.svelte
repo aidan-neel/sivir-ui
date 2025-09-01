@@ -157,7 +157,7 @@
 		<div
 			{...rest}
 			transition:flyAndScale={{ duration: 200 }}
-			class={cn(classProp, `p-4 text-sm rounded-xl border m-auto shadow-sm bg-popover`)}
+			class={cn(classProp, `p-4 text-sm rounded-xl border border-input m-auto shadow-sm bg-popover`)}
 		>
 			{@render children?.()}
 		</div>

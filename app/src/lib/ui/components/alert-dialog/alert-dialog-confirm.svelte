@@ -25,6 +25,6 @@
 <Button bind:element={btn} onclick={() => {
     uiState.open = false;
     onclick?.();
-}} {...rest} class={cn(className, `flex flex-row gap-2 justify-end items-center`)}>
+}} {...rest} class={cn(className, `flex sm:w-fit w-full flex-row gap-2 justify-center items-center`)}>
     {@render children?.()}
 </Button>

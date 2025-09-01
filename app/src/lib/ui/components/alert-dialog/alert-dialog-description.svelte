@@ -13,6 +13,6 @@
     const uiState = states[key] as UIState<AlertDialogState>;
 </script>
 
-<p {...rest} id={uiState.key + '-desc'} class={cn(className, `text-sm text-foreground-muted py-1`)}>
+<p {...rest} id={uiState.key + '-desc'} class={cn(className, `text-sm text-center sm:text-left text-foreground-muted py-1`)}>
     {@render children?.()}
 </p>

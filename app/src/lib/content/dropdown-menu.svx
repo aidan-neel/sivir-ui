@@ -12,7 +12,7 @@ import Shortcut from '$lib/ui/components/shortcut';
 import * as DropdownMenu from '$lib/ui/components/dropdown-menu';
 </script>
 
-<h1 class="py-2">Import</h1>
+<h1 class="py-2 h1">Import</h1>
 <p class="py-2">DropdownMenu exports multiple components for building structured popovers.</p>
 
 <ExportItem title="Root">Manages dropdown state and placement.</ExportItem>
@@ -25,7 +25,7 @@ import * as DropdownMenu from '$lib/ui/components/dropdown-menu';
 <ExportItem title="Sub">Wrapper for nested submenu.</ExportItem>
 <ExportItem title="SubContent">Container for items inside a Sub.</ExportItem>
 
-<h1 class="py-6">Example</h1>
+<h1 class="py-6 h1">Example</h1>
 
 <ComponentPreview code={`<script lang="ts">
     import * as DropdownMenu from "$lib/ui/components/dropdown-menu"
@@ -114,7 +114,7 @@ import * as DropdownMenu from '$lib/ui/components/dropdown-menu';
     </DropdownMenu.Root>
 </ComponentPreview>
 
-<h1 class="py-6">API Reference</h1>
+<h1 class="py-6 h1">API Reference</h1>
 
 <div class="flex flex-col gap-10">
   <APIReference

@@ -17,7 +17,7 @@
 </script>
 
 {#if uiState.searchContent === ''}
-    <div {...rest} class={cn(className, "h-[1px] my-1 bg-border")}>
+    <div {...rest} class={cn(className, "h-[1px] my-1 bg-input")}>
         {@render children?.()}
     </div>
 {/if}

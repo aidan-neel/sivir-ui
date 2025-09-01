@@ -13,7 +13,7 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/card
     import * as Card from '$lib/ui/components/card';
 </script>
 
-<h1 class="py-2">
+<h1 class="py-2 h1">
     Import
 </h1>
 
@@ -28,7 +28,7 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/card
 <ExportItem title="Description">The description or summary content of the card.</ExportItem>
 <ExportItem title="Content">The main content of the card.</ExportItem>
 
-<h1 class="py-6">
+<h1 class="py-6 h1">
     Example
 </h1>
 
@@ -79,7 +79,7 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/card
 	</Card.Root>
 </ComponentPreview>
 
-<h1 class="py-6">
+<h1 class="py-6 h1">
     API Reference
 </h1>
 

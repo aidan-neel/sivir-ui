@@ -1,3 +1,5 @@
+@import 'tailwindcss';
+
 @theme {
 	/* Fonts */
 	--font-sans: 'Geist';
@@ -7,6 +9,7 @@
 	/* Colors */
 	--color-background: #ffffff;
 	--color-border: #dfdfdf;
+	--color-input: #dfdfdf;
 	--color-primary: #2685d9;
 	--color-foreground-opposite: #ffffff;
 	--color-foreground: #171717;
@@ -16,7 +19,7 @@
 	--color-foreground-btn: #ffffff;
 	--color-secondary: #f5f5f5;
 	--color-card: #f3f3f3;
-	--color-accent: #0d1a40;
+	--color-accent: #ffffff;
 	--color-alternate: #2c2c2c;
 	--color-success: #46ab61;
 	--color-warning: #ff9800;
@@ -47,15 +50,16 @@
 	/* Colors */
 	--color-background: #0a0a0a;
 	--color-border: #1c1c1c;
+	--color-input: #3b3c3c;
 	--color-primary: #0b7bde;
 	--color-foreground-opposite: #0d0d0d;
 	--color-foreground: #e8e9eb;
 	--color-muted: #292929;
-	--color-popover: #0f0f0f;
+	--color-popover: #262626;
 	--color-foreground-muted: #9c9c9c;
 	--color-foreground-btn: #ffffff;
 	--color-secondary: #171717;
-	--color-accent: #0d1a40;
+	--color-accent: #424242;
 	--color-alternate: #2c2c2c;
 	--color-success: #46ab61;
 	--color-warning: #ff9800;

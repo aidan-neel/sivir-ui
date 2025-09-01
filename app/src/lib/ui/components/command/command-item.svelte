@@ -39,7 +39,7 @@
         uiState.open = false;
         uiState.searchContent = '';
         callback?.();
-    }} class={cn(className, "w-full h-10 duration-100 rounded-lg gap-2 hover:cursor-default px-3 hover:bg-muted/50 items-center justify-start text-left")} variant={"ghost"}>
+    }} class={cn(className, "w-full h-10 duration-100 rounded-lg gap-2 hover:cursor-default px-3 items-center justify-start text-left")} variant={"ghost"}>
         {@render children?.()}
     </Button>
 {:else}
@@ -53,7 +53,7 @@
         }}
         class={cn(
             className,
-            "w-full h-10 duration-100 rounded-lg gap-2 hover:cursor-default px-3 hover:bg-muted/50 items-center justify-start text-left",
+            "w-full h-10 duration-100 rounded-lg gap-2 hover:cursor-default px-3 items-center justify-start text-left",
             uiState.searchContent !== '' && !Array.from(uiState.results).some(r => r.name === item.name) && "hidden"
         )}
         variant="ghost"

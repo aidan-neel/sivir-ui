@@ -23,6 +23,47 @@ function calculateBlur(duration: number) {
 	return blur;
 }
 
+type FlyNoOpacityParams = {
+	y?: number;
+	x?: number;
+	duration?: number;
+};
+
+export const flyNoOpacity = (
+	node: Element,
+	params: FlyNoOpacityParams = { y: -8, x: 0, duration: 200 }
+): TransitionConfig => {
+	const style = getComputedStyle(node);
+	const transform = style.transform === 'none' ? '' : style.transform;
+
+	const scaleConversion = (valueA: number, from: [number, number], to: [number, number]) => {
+		const [minA, maxA] = from;
+		const [minB, maxB] = to;
+		const percentage = (valueA - minA) / (maxA - minA);
+		return percentage * (maxB - minB) + minB;
+	};
+
+	const styleToString = (style: Record<string, number | string | undefined>): string => {
+		return Object.keys(style).reduce((str, key) => {
+			if (style[key] === undefined) return str;
+			return str + `${key}:${style[key]};`;
+		}, '');
+	};
+
+	return {
+		duration: params.duration ?? 200,
+		delay: 0,
+		easing: cubicOut,
+		css: (t) => {
+			const y = scaleConversion(t, [0, 1], [params.y ?? 5, 0]);
+			const x = scaleConversion(t, [0, 1], [params.x ?? 0, 0]);
+			return styleToString({
+				transform: `${transform} translate3d(${x}px, ${y}px, 0)`
+			});
+		}
+	};
+};
+
 export const flyAndScale = (
 	node: Element,
 	params: FlyAndScaleParams = { y: -8, x: 0, start: 0.95, duration: 150 }

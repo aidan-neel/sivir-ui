@@ -5,9 +5,9 @@ export const input = tv({
 	variants: {
 		variant: {
 			primary:
-				'dark:bg-secondary bg-popover text-foreground placeholder:text-foreground/40 disabled:bg-secondary-disabled',
+				'dark:bg-secondary bg-accent text-foreground border-input/80 placeholder:text-foreground/40 disabled:bg-secondary-disabled',
 			outlined:
-				'bg-popover text-foreground border border-border placeholder:text-outlined disabled:bg-background-disabled disabled:border-border-disabled disabled:text-foreground-disabled',
+				'bg-popover text-foreground border border-input/80 placeholder:text-outlined disabled:bg-background-disabled disabled:border-border-disabled disabled:text-foreground-disabled',
 			secondary:
 				'bg-secondary text-foreground placeholder:text-muted-foreground border-none disabled:bg-secondary-disabled disabled:text-foreground-disabled'
 		}

@@ -15,7 +15,7 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/select
     let t = $state('');
 </script>
 
-<h1 class="py-2">
+<h1 class="py-2 h1">
     Import
 </h1>
 
@@ -29,7 +29,7 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/select
 <ExportItem title="Item">An option that can be chosen</ExportItem>
 <ExportItem title="Label">A non-selectable text divider for grouping options</ExportItem>
 
-<h1 class="py-6">
+<h1 class="py-6 h1">
     Example
 </h1>
 
@@ -62,7 +62,7 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/select
     </Select.Root>
 </ComponentPreview>
 
-<h1 class="py-6">
+<h1 class="py-6 h1">
     API Reference
 </h1>
 

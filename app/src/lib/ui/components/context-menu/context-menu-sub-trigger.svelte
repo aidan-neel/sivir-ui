@@ -9,7 +9,7 @@
 
 <Popover.Trigger
     {...rest}
-    class={cn(className, `px-2 ${inset ? 'pl-8' : ''} w-full h-9 duration-100 rounded-lg font-normal hover:cursor-default hover:bg-muted/50 items-center justify-between text-left`)}
+    class={cn(className, `px-2 ${inset ? 'pl-8' : ''} w-full h-9 duration-100 rounded-lg font-normal hover:cursor-default items-center justify-between text-left`)}
     variant="ghost"
 >
     {@render children?.()}

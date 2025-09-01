@@ -43,7 +43,7 @@
     }
 </script>
 
-<div class="flex items-center border-b p-3 gap-2 w-full">
+<div class="flex items-center border-b border-input p-3 gap-2 w-full">
     <Search size={18} class="text-foreground-muted mt-0.5" />
     <input onkeydown={(e) => {
         if (e.key === "Enter") {

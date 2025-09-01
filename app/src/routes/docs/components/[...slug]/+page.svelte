@@ -50,7 +50,7 @@
 </header>
 
 <div class="py-6 flex flex-col gap-4">
-	<h1>Installation</h1>
+	<h1 class="h1">Installation</h1>
 	{#key Title}
         <CodeBlock lang="shell" code={`npx @aidan-neel/ui add ${Title.toLowerCase()}`} class="p-3" />
     {/key}

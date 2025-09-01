@@ -38,31 +38,15 @@ body {
 }
 
 @layer base {
-	h1 {
-		@apply text-2xl font-medium font-header;
-	}
-
-	h2 {
-		font-family: var(--font-sans), sans-serif;
-		@apply text-xl font-medium;
-	}
-
 	* {
 		border-color: var(--color-border);
+		@apply selection:bg-primary;
 	}
 
 	body {
 		background-color: var(--color-background);
 		color: var(--color-foreground);
 	}
-}
-
-.rounded-btn {
-	border-radius: var(--radius-btn);
-}
-
-.rounded-lg {
-	border-radius: var(--radius-lg) !important;
 }
 
 /* Custom scrollbar styling for WebKit-based browsers */

@@ -23,7 +23,7 @@
 	in:flyAndScale={{ y: -40 }}
     out:flyAndScale={{ y: 40 }}
 	class={cn(
-		'border p-4 bg-popover max-w-[500px] gap-3 flex flex-row items-center shadow-xs fixed rounded-lg z-[999] left-1/2 -translate-x-1/2',
+		'border p-4 dark:bg-secondary bg-accent text-foreground border-input/80 max-w-[500px] gap-3 flex flex-row items-center shadow-xs fixed rounded-lg z-[999] left-1/2 -translate-x-1/2',
 	)}
 	style={`top: ${16 + index * 6}px; transform: scale(${getToastScale(index, 5, 0.9, 1)})`}
 >

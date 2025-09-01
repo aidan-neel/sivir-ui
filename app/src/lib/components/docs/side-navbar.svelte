@@ -14,7 +14,7 @@
 <div
 	class="{classProp} w-1/5 rounded-none flex-col overflow-y-auto z-10 gap-0.5 flex xl:w-1/5 2xl:w-1/8 p-4 mr-2 bg-background fixed left-0 h-[calc(100vh-3.5rem)]"
 >
-    <h3 class="font-semibold text-[0.8rem] text-foreground-muted/70 ml-2 pb-2 pt-1">Getting Started</h3>
+    <h3 class="font-medium text-[0.8rem] text-foreground-muted/70 ml-2 pb-2 pt-1">Getting Started</h3>
     <Button
         variant={pageName.split('/')[2] === 'introduction' ? 'secondary' : 'ghost'}
         href={`/docs/introduction`}
@@ -43,7 +43,7 @@
     >
         Changelog
     </Button>
-    <h3 class="font-semibold text-[0.8rem] text-foreground-muted/70 ml-2 pt-4 pb-2">Components</h3>
+    <h3 class="font-medium text-[0.8rem] text-foreground-muted/70 ml-2 pt-4 pb-2">Components</h3>
 	{#each components as component}
 		<Button
 			variant={pageName.split('/')[3] === component ? 'secondary' : 'ghost'}

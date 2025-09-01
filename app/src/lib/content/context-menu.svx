@@ -11,14 +11,14 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/component
     import { Shortcut } from '$lib/ui/components/shortcut';
 </script>
 
-<h1 class="py-2">Import</h1>
+<h1 class="py-2 h1">Import</h1>
 <p class="py-2">ComponentName exports its subcomponents.</p>
 
 <ExportItem title="Root">Main container for the component.</ExportItem>
 <ExportItem title="SubComponent1">Description of SubComponent1.</ExportItem>
 <ExportItem title="SubComponent2">Description of SubComponent2.</ExportItem>
 
-<h1 class="py-6">Example</h1>
+<h1 class="py-6 h1">Example</h1>
 
 <ComponentPreview code={`<ComponentName.Root>
     <ComponentName.SubComponent1>Content here</ComponentName.SubComponent1>
@@ -44,7 +44,7 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/component
                     <ContextMenu.Item>Merge Visible</ContextMenu.Item>
                     <ContextMenu.Item>Flatten Layer</ContextMenu.Item>
                     <ContextMenu.Separator />
-                    <ContextMenu.Item class="hover:bg-red-500/10 text-red-500">Delete</ContextMenu.Item>
+                    <ContextMenu.Item class="">Delete</ContextMenu.Item>
                 </ContextMenu.SubContent>
             </ContextMenu.Sub>
             <ContextMenu.Separator />
@@ -54,7 +54,7 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/component
     </ContextMenu.Root>
 </ComponentPreview>
 
-<h1 class="py-6">API Reference</h1>
+<h1 class="py-6 h1">API Reference</h1>
 
 <div class="flex flex-col gap-10">
     <APIReference

@@ -44,7 +44,7 @@
         transition:flyAndScale
         class={cn(
             className,
-            `${uiState.searchContent === '' ? 'pb-1' : 'pb-1'} rounded-xl border duration-200 transition-all fixed top-1/2 left-1/2 z-50 overflow-y-auto -translate-x-1/2 -translate-y-1/2 m-auto shadow-sm bg-popover w-full max-w-[35rem] min-h-[5rem] max-h-[20rem]`
+            `${uiState.searchContent === '' ? 'pb-1' : 'pb-1'} rounded-xl border border-input duration-200 transition-all fixed top-1/2 left-1/2 z-50 overflow-y-auto -translate-x-1/2 -translate-y-1/2 m-auto shadow-sm bg-popover md:w-full w-[calc(100%-1.5rem)] max-w-[35rem] min-h-[5rem] max-h-[30rem]`
         )}
         use:clickOutside={() => {
             if (allowClickOutside) {

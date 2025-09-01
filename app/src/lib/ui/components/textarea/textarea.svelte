@@ -35,7 +35,7 @@
     <textarea
         bind:this={element}
         bind:value
-        class={cn(classProp, "p-3 focus-visible focus:outline-none bg-popover border rounded-lg")}
+        class={cn(classProp, "p-3 focus-visible focus:outline-none dark:bg-secondary bg-accent text-foreground border-input/80 border rounded-lg")}
         {placeholder}
     ></textarea>
 </label>

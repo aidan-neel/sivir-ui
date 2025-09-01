@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { flyAndScale } from "$lib/ui/internals/transition";
-	import { clickOutside, type DefaultProps, cn } from "$lib/ui/utils";
+	import { clickOutside, type DefaultProps, cn, trapFocus } from "$lib/ui/utils";
 	import { cubicOut } from "svelte/easing";
 	import { fade } from "svelte/transition";
 	import type { AlertDialogState } from ".";
@@ -11,19 +11,40 @@
         allowClickOutside?: boolean;
     } & DefaultProps;
 
-    let { class: className, allowClickOutside = true, children, ...rest }: Props = $props();
+    let { class: className, allowClickOutside = false, children, ...rest }: Props = $props();
 
     const key = getContext<string>('key');
     const uiState = states[key] as UIState<AlertDialogState>;
+    let element = $state<HTMLElement>();
+
+    let cleanup: (() => void) | undefined;
+
+    $effect(() => {
+        if (!document) return;
+
+        if (uiState.data.open) {
+            cleanup = trapFocus(element as HTMLElement);
+            document.body.style.overflow = 'hidden';
+            const focusable = element!.querySelector<HTMLElement>(
+                'input, select, textarea, button, [tabindex]:not([tabindex="-1"])'
+            );
+            focusable?.focus();
+        } else {
+            document.body.style.overflow = '';
+            cleanup?.();
+            cleanup = undefined;
+        }
+    })
 </script>
 
 {#if uiState.data.open}
     <div transition:fade={{ duration: 150, easing: cubicOut }} class="backdrop"></div>
     <div
+        bind:this={element}
         transition:flyAndScale
         class={cn(
             className,
-            `p-5 rounded-xl border duration-200 transition-all fixed top-1/2 left-1/2 z-50 overflow-y-auto -translate-x-1/2 -translate-y-1/2 m-auto shadow-sm bg-popover w-full max-w-[35rem] min-h-[5rem] max-h-[20rem]`
+            `p-5 rounded-xl border duration-200 transition-all flex flex-col fixed top-1/2 left-1/2 z-50 overflow-y-auto -translate-x-1/2 -translate-y-1/2 m-auto shadow-sm bg-background md:w-full w-[calc(100%-1.5rem)] max-w-[35rem] min-h-[5rem] max-h-[30rem]`
         )}
         use:clickOutside={() => {
             if (allowClickOutside) {
@@ -32,8 +53,9 @@
         }}
         role="alertdialog"
         aria-modal="true"
-        aria-labelledby={uiState.key + '-title'}
-        aria-describedby={uiState.key + '-desc'}
+        id={'alert-dialog-' + uiState.key}
+        aria-labelledby={'alert-dialog-' + uiState.key + '-title'}
+        aria-describedby={'alert-dialog-' + uiState.key + '-desc'}
         tabindex="-1"
         {...rest}
         >

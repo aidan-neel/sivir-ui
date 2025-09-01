@@ -13,6 +13,6 @@
     const uiState = states[key] as UIState<AlertDialogState>;
 </script>
 
-<h1 {...rest} id={uiState.key + '-title'} class={cn(className, `text-lg font-medium tracking-tight`)}>
+<h1 {...rest} id={uiState.key + '-title'} class={cn(className, `text-lg text-center sm:text-left font-medium tracking-tight`)}>
     {@render children?.()}
 </h1>

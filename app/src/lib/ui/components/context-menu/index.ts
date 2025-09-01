@@ -15,11 +15,13 @@ import type { ButtonProps } from '../button';
 
 export type ContextMenuProps = {} & DefaultProps;
 export type ContextMenuContentProps = {} & DefaultProps;
+
 export type ContextMenuItemProps = {
 	callback?: () => any;
 	inset?: boolean;
 } & DefaultProps &
 	ButtonProps;
+
 export type ContextMenuCheckboxItemProps = {
 	callback?: () => any;
 	value: string;
@@ -27,11 +29,14 @@ export type ContextMenuCheckboxItemProps = {
 	checked?: boolean;
 } & DefaultProps &
 	ButtonProps;
+
 export type ContextMenuSeparatorProps = {} & DefaultProps;
 export type ContextMenuSubContentProps = {} & DefaultProps;
+
 export type ContextMenuSubTriggerProps = {
 	inset?: boolean;
 } & DefaultProps;
+
 export type ContextMenuSubProps = {} & DefaultProps;
 export type ContextMenuTriggerProps = {} & DefaultProps;
 

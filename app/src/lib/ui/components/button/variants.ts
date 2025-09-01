@@ -6,12 +6,13 @@ export const button = tv({
 	variants: {
 		variant: {
 			primary: 'bg-primary hover:bg-primary/80 focus-visible focus-visible:bg-primary/80',
-			secondary: 'bg-secondary text-foreground hover:bg-muted focus-visible focus-visible:bg-muted',
+			secondary:
+				'bg-secondary text-foreground hover:bg-muted/80 focus-visible focus-visible:bg-muted',
 			flat: 'bg-primary/20 shadow-none text-primary/90 hover:bg-primary/10 focus-visible focus-visible:bg-primary/10',
 			outlined:
-				'bg-popover dark:bg-secondary dark:hover:bg-secondary/50 dark:focus-visible:bg-secondary/50 text-foreground border border-border hover:bg-secondary focus-visible focus-visible:bg-secondary',
+				'bg-popover dark:bg-secondary dark:hover:bg-accent/30 dark:focus-visible:bg-secondary/50 text-foreground border border-input/80 hover:bg-muted/60 focus-visible focus-visible:bg-secondary',
 			ghost:
-				'bg-transparent shadow-none text-foreground hover:bg-secondary focus-visible focus-visible:bg-secondary',
+				'bg-transparent shadow-none text-foreground hover:bg-muted/50 dark:hover:bg-accent/50 focus-visible focus-visible:bg-secondary',
 			alternate:
 				'bg-alternate text-primary hover:bg-alternate/90 focus-visible focus-visible:bg-alternate/90',
 			destructive:

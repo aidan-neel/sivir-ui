@@ -11,7 +11,7 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/toast
     import { toast } from '$lib/ui/components/toast';
 </script>
 
-<h1 class="py-2">
+<h1 class="py-2 h1">
     Import
 </h1>
 
@@ -23,7 +23,7 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/toast
 <ExportItem title="Toast">The individual toast notification component.</ExportItem>
 <ExportItem title="Toaster">The container that manages active toast notifications.</ExportItem>
 
-<h1 class="py-6">
+<h1 class="py-6 h1">
     Example
 </h1>
 
@@ -67,7 +67,7 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/toast
 	>
 </ComponentPreview>
 
-<h1 class="py-6">
+<h1 class="py-6 h1">
     Usage
 </h1>
 
@@ -110,7 +110,7 @@ toast({
     exitable: true
 });`}></CodeBlock>
 
-<h1 class="py-6">
+<h1 class="py-6 h1">
     API Reference
 </h1>
 

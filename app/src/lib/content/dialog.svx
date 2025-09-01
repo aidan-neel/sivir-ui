@@ -7,26 +7,49 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/component
 
 <script>
     import { ComponentPreview, ExportItem, APIReference } from '$lib/components/docs';
-    import * as Combobox from '$lib/ui/components/combobox';
+    import * as Dialog from '$lib/ui/components/dialog';
+    import { Input } from '$lib/ui/components/input';
 </script>
 
-<h1 class="py-2">Import</h1>
+<h1 class="py-2 h1">Import</h1>
 <p class="py-2">ComponentName exports its subcomponents.</p>
 
 <ExportItem title="Root">Main container for the component.</ExportItem>
 <ExportItem title="SubComponent1">Description of SubComponent1.</ExportItem>
 <ExportItem title="SubComponent2">Description of SubComponent2.</ExportItem>
 
-<h1 class="py-6">Example</h1>
+<h1 class="py-6 h1">Example</h1>
 
 <ComponentPreview code={`<ComponentName.Root>
     <ComponentName.SubComponent1>Content here</ComponentName.SubComponent1>
     <ComponentName.SubComponent2>Content here</ComponentName.SubComponent2>
 </ComponentName.Root>`}>
-
+    <Dialog.Root>
+        <Dialog.Trigger variant="outlined">Show Dialog</Dialog.Trigger>
+        <Dialog.Content class="max-w-[28rem]">
+            <Dialog.Header>
+                <Dialog.Title>Are you sure?</Dialog.Title>
+                <Dialog.Description>
+                    Are you absolutely sure you want to delete this table? You can not recover it.
+                </Dialog.Description>
+            </Dialog.Header>
+            <div class="grid flex-1 auto-rows-min gap-4">
+                <div class="grid gap-3">
+                    <Input label="Name" id="name" value="Pedro Duarte" />
+                </div>
+                <div class="grid gap-3">
+                    <Input label="Username" id="username" value="@peduarte" />
+                </div>
+            </div>
+            <Dialog.Footer>
+                <Dialog.Exit>Cancel</Dialog.Exit>
+                <Dialog.Confirm>Save changes</Dialog.Confirm>
+            </Dialog.Footer>
+        </Dialog.Content>
+    </Dialog.Root>
 </ComponentPreview>
 
-<h1 class="py-6">API Reference</h1>
+<h1 class="py-6 h1">API Reference</h1>
 
 <div class="flex flex-col gap-10">
     <APIReference

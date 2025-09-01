@@ -10,7 +10,7 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/alert-dia
 	import * as AlertDialog from '$lib/ui/components/alert-dialog';
 </script>
 
-<h1 class="py-2">
+<h1 class="py-2 h1">
     Import
 </h1>
 
@@ -27,7 +27,7 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/alert-dia
 <ExportItem title="Exit">The button to close the alert dialog.</ExportItem>
 <ExportItem title="Confirm">The button to confirm an action within the alert dialog.</ExportItem>
 
-<h1 class="py-6">
+<h1 class="py-6 h1">
     Example
 </h1>
 
@@ -50,9 +50,9 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/alert-dia
     <AlertDialog.Root>
         <AlertDialog.Trigger variant="outlined">Show Dialog</AlertDialog.Trigger>
         <AlertDialog.Content class="max-w-[30rem]">
-            <AlertDialog.Title>Are you sure?</AlertDialog.Title>
+            <AlertDialog.Title>Are you absolutely sure?</AlertDialog.Title>
             <AlertDialog.Description>
-                Are you absolutely sure you want to delete this table? You can not recover it.
+                This action cannot be undone. This will permanently delete your account and remove your data from our servers.
             </AlertDialog.Description>
             <AlertDialog.Footer>
                 <AlertDialog.Exit>Cancel</AlertDialog.Exit>
@@ -62,7 +62,7 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/alert-dia
     </AlertDialog.Root>
 </ComponentPreview>
 
-<h1 class="py-6">
+<h1 class="py-6 h1">
     API Reference
 </h1>
 

@@ -12,3 +12,14 @@
 pre {
 	background-color: transparent !important;
 }
+
+.h1 {
+	font-size: 1.5rem; /* equivalent to text-2xl */
+	font-weight: 500; /* equivalent to font-medium */
+}
+
+.h2 {
+	font-size: 1.25rem; /* equivalent to text-xl */
+	font-weight: 500; /* equivalent to font-medium */
+	font-family: var(--font-sans), sans-serif;
+}

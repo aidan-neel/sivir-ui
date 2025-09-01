@@ -13,7 +13,7 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/modal
     let val = $state(100);
 </script>
 
-<h1 class="py-2">
+<h1 class="py-2 h1">
     Import
 </h1>
 
@@ -31,7 +31,7 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/modal
 <ExportItem title="Exit">The button to close the modal.</ExportItem>
 <ExportItem title="Confirm">The button to confirm an action within the modal.</ExportItem>
 
-<h1 class="py-6">
+<h1 class="py-6 h1">
     Example
 </h1>
 
@@ -81,7 +81,7 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/modal
     </Modal.Root>
 </ComponentPreview>
 
-<h1 class="py-6">
+<h1 class="py-6 h1">
     API Reference
 </h1>
 

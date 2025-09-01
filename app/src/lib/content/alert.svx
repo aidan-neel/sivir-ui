@@ -11,7 +11,7 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/alert
     import { toast } from '$lib/ui/components/toast';
 </script>
 
-<h1 class="py-2">
+<h1 class="py-2 h1">
     Import
 </h1>
 
@@ -23,7 +23,7 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/alert
 <ExportItem title="Title">The title of the alert, displayed prominently.</ExportItem>
 <ExportItem title="Description">The content or message of the alert.</ExportItem>
 
-<h1 class="py-6">
+<h1 class="py-6 h1">
     Example
 </h1>
 
@@ -41,7 +41,7 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/alert
     </Alert.Root>
 </ComponentPreview>
 
-<h1 class="py-6">
+<h1 class="py-6 h1">
     API Reference
 </h1>
 

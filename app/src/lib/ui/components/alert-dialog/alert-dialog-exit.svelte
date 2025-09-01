@@ -18,6 +18,6 @@
 <Button onclick={() => {
     uiState.open = false;
     onclick?.();
-}} variant="outlined" {...rest} class={cn(className, `flex flex-row gap-2 justify-end items-center`)}>
+}} variant="outlined" {...rest} class={cn(className, `flex sm:w-fit w-full flex-row gap-2 justify-center items-center`)}>
     {@render children?.()}
 </Button>
