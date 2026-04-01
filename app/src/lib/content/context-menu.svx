@@ -67,14 +67,14 @@
 			<Shortcut shortcut="S">S</Shortcut>
 		</ContextMenu.Item>
 		<ContextMenu.Separator />
-		<ContextMenu.Sub>
-			<ContextMenu.SubTrigger inset>Move to</ContextMenu.SubTrigger>
-			<ContextMenu.SubContent>
-				<ContextMenu.Item inset>Design</ContextMenu.Item>
-				<ContextMenu.Item inset>Marketing</ContextMenu.Item>
-				<ContextMenu.Item inset>Archive</ContextMenu.Item>
-			</ContextMenu.SubContent>
-		</ContextMenu.Sub>
+			<ContextMenu.Sub>
+				<ContextMenu.SubTrigger inset>Move to</ContextMenu.SubTrigger>
+				<ContextMenu.SubContent class="min-w-[11rem]">
+					<ContextMenu.Item>Design</ContextMenu.Item>
+					<ContextMenu.Item>Marketing</ContextMenu.Item>
+					<ContextMenu.Item>Archive</ContextMenu.Item>
+				</ContextMenu.SubContent>
+			</ContextMenu.Sub>
 		<ContextMenu.Separator />
 		<ContextMenu.Item inset class="text-error">
 			Delete project
@@ -118,10 +118,10 @@
 			<ContextMenu.Separator />
 			<ContextMenu.Sub>
 				<ContextMenu.SubTrigger inset>Move to</ContextMenu.SubTrigger>
-				<ContextMenu.SubContent>
-					<ContextMenu.Item inset>Design</ContextMenu.Item>
-					<ContextMenu.Item inset>Marketing</ContextMenu.Item>
-					<ContextMenu.Item inset>Archive</ContextMenu.Item>
+				<ContextMenu.SubContent class="min-w-[11rem]">
+					<ContextMenu.Item>Design</ContextMenu.Item>
+					<ContextMenu.Item>Marketing</ContextMenu.Item>
+					<ContextMenu.Item>Archive</ContextMenu.Item>
 				</ContextMenu.SubContent>
 			</ContextMenu.Sub>
 			<ContextMenu.Separator />

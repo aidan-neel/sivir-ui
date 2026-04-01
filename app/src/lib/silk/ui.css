@@ -37,8 +37,8 @@
 	--color-surface-elevated: var(--color-card);
 	--color-panel: var(--color-popover);
 	--color-panel-foreground: var(--color-foreground);
-	--color-tooltip: color-mix(in srgb, var(--color-popover) 96%, white);
-	--color-tooltip-foreground: var(--color-foreground);
+	--color-tooltip: color-mix(in srgb, var(--color-foreground) 90%, black);
+	--color-tooltip-foreground: var(--color-foreground-opposite);
 	--color-field: var(--color-accent);
 	--color-field-hover: var(--color-secondary);
 	--color-field-focus: var(--color-popover);
@@ -54,6 +54,14 @@
 	--radius-control: var(--radius-lg);
 	--radius-panel: var(--radius-lg);
 	--radius-pill: 999px;
+	--motion-duration-hover: 240ms;
+	--motion-duration-menu: 150ms;
+	--motion-duration-panel: 240ms;
+	--motion-duration-sheet: 320ms;
+	--motion-duration-overlay: 150ms;
+	--motion-duration-tooltip: 140ms;
+	--motion-duration-toast-in: 440ms;
+	--motion-duration-toast-out: 340ms;
 
 	--border-size: 1px;
 
@@ -126,9 +134,7 @@
 	--button-outlined-border: color-mix(in srgb, var(--color-input) 80%, transparent);
 	--button-outlined-foreground: var(--color-foreground);
 	--button-outlined-hover-bg: color-mix(in srgb, var(--color-secondary) 85%, transparent);
-	--button-outlined-shadow:
-		0 0.5px 3px rgba(0, 0, 100, 0),
-		inset 0 -1px 2px rgba(0, 0, 255, 0.03);
+	--button-outlined-shadow: 0 0.5px 3px rgba(0, 0, 100, 0), inset 0 -1px 2px rgba(0, 0, 255, 0.03);
 
 	--button-ghost-bg: transparent;
 	--button-ghost-border: transparent;
@@ -156,9 +162,7 @@
 	--field-border: color-mix(in srgb, var(--color-input) 94%, transparent);
 	--field-focus-border: color-mix(in srgb, var(--color-primary) 28%, var(--color-border-strong));
 	--field-disabled-opacity: 0.55;
-	--field-outlined-shadow:
-		0 0.5px 3px rgba(0, 0, 100, 0),
-		inset 0 -1px 2px rgba(0, 0, 255, 0.03);
+	--field-outlined-shadow: 0 0.5px 3px rgba(0, 0, 100, 0), inset 0 -1px 2px rgba(0, 0, 255, 0.03);
 
 	--panel-radius: var(--radius-panel);
 	--panel-padding: var(--space-panel);
@@ -175,6 +179,8 @@
 	--tooltip-radius: calc(var(--radius-md) - 0.02rem);
 	--tooltip-padding-y: 0.22rem;
 	--tooltip-padding-x: 0.46rem;
+	--tooltip-border: color-mix(in srgb, var(--color-foreground) 28%, transparent);
+	--tooltip-shadow: 0 10px 22px rgb(16 24 40 / 0.18);
 
 	--menu-item-height: 2rem;
 	--menu-item-radius: calc(var(--radius-control) - 0.05rem);
@@ -202,6 +208,8 @@
 	--toast-bg: var(--color-surface);
 	--toast-border: var(--panel-border);
 	--toast-shadow: 0 10px 24px rgb(16 24 40 / 0.08);
+	--skeleton-base: color-mix(in srgb, var(--color-secondary) 92%, var(--color-border));
+	--skeleton-highlight: color-mix(in srgb, white 78%, var(--color-secondary));
 }
 
 .dark {
@@ -238,8 +246,8 @@
 	--color-surface-elevated: var(--color-card);
 	--color-panel: var(--color-popover);
 	--color-panel-foreground: var(--color-foreground);
-	--color-tooltip: color-mix(in srgb, var(--color-popover) 94%, black);
-	--color-tooltip-foreground: var(--color-foreground);
+	--color-tooltip: color-mix(in srgb, white 92%, var(--color-background));
+	--color-tooltip-foreground: #0f1720;
 	--color-field: var(--color-secondary);
 	--color-field-hover: color-mix(in srgb, var(--color-accent) 65%, var(--color-secondary));
 	--color-field-focus: color-mix(in srgb, var(--color-accent) 85%, var(--color-popover));
@@ -270,8 +278,7 @@
 	--button-flat-foreground: color-mix(in srgb, var(--color-primary) 86%, white);
 	--button-outlined-hover-bg: color-mix(in srgb, var(--color-secondary) 78%, var(--color-accent));
 	--button-outlined-shadow:
-		0 0.5px 3px rgba(0, 0, 0, 0),
-		inset 0 1px 0 rgba(255, 255, 255, 0.03),
+		0 0.5px 3px rgba(0, 0, 0, 0), inset 0 1px 0 rgba(255, 255, 255, 0.03),
 		inset 0 -1px 2px rgba(0, 0, 0, 0.2);
 	--button-ghost-hover-bg: color-mix(in srgb, var(--color-accent) 58%, transparent);
 	--menu-item-hover-bg: color-mix(in srgb, var(--color-secondary) 42%, transparent);
@@ -280,10 +287,13 @@
 	--button-destructive-foreground: var(--color-foreground);
 	--switch-thumb-bg: var(--color-foreground-opposite);
 	--field-outlined-shadow:
-		0 0.5px 3px rgba(0, 0, 0, 0),
-		inset 0 1px 0 rgba(255, 255, 255, 0.03),
+		0 0.5px 3px rgba(0, 0, 0, 0), inset 0 1px 0 rgba(255, 255, 255, 0.03),
 		inset 0 -1px 2px rgba(0, 0, 0, 0.2);
 	--toast-shadow: 0 14px 28px rgb(0 0 0 / 0.22);
+	--tooltip-border: color-mix(in srgb, white 72%, transparent);
+	--tooltip-shadow: 0 14px 28px rgb(0 0 0 / 0.22);
+	--skeleton-base: color-mix(in srgb, var(--color-secondary) 86%, var(--color-border-strong));
+	--skeleton-highlight: color-mix(in srgb, var(--color-accent) 68%, var(--color-foreground) 14%);
 }
 
 @layer base {
@@ -293,6 +303,22 @@
 
 	.border {
 		border-width: var(--border-size) !important;
+	}
+
+	[data-ui='button'],
+	[data-ui='input'],
+	[data-ui='textarea'],
+	[data-ui='switch'],
+	[data-ui='switch'] > div[aria-hidden='true'] {
+		transition-duration: var(--motion-duration-hover) !important;
+	}
+
+	[data-ui='dialog-content'],
+	[data-ui='alert-dialog-content'],
+	[data-ui='command-content'],
+	[data-ui='sheet-content'],
+	[data-ui='popover-content'] {
+		transition-duration: var(--motion-duration-panel) !important;
 	}
 }
 

@@ -6,6 +6,7 @@ type FlyAndScaleParams = {
 	x?: number;
 	start?: number;
 	duration?: number;
+	durationVar?: string;
 	blur?: number;
 };
 
@@ -27,7 +28,17 @@ type FlyNoOpacityParams = {
 	y?: number;
 	x?: number;
 	duration?: number;
+	durationVar?: string;
 };
+
+export function getCssDuration(node: Element, variableName: string, fallback: number) {
+	const raw = getComputedStyle(node).getPropertyValue(variableName).trim();
+	if (!raw) return fallback;
+	if (raw.endsWith('ms')) return Number.parseFloat(raw) || fallback;
+	if (raw.endsWith('s')) return (Number.parseFloat(raw) || fallback / 1000) * 1000;
+	const parsed = Number.parseFloat(raw);
+	return Number.isFinite(parsed) ? parsed : fallback;
+}
 
 export const flyNoOpacity = (
 	node: Element,
@@ -35,6 +46,8 @@ export const flyNoOpacity = (
 ): TransitionConfig => {
 	const style = getComputedStyle(node);
 	const transform = style.transform === 'none' ? '' : style.transform;
+	const duration =
+		params.duration ?? getCssDuration(node, params.durationVar ?? '--motion-duration-panel', 240);
 
 	const scaleConversion = (valueA: number, from: [number, number], to: [number, number]) => {
 		const [minA, maxA] = from;
@@ -51,7 +64,7 @@ export const flyNoOpacity = (
 	};
 
 	return {
-		duration: params.duration ?? 240,
+		duration,
 		delay: 0,
 		easing: quintOut,
 		css: (t) => {
@@ -70,6 +83,8 @@ export const flyAndScale = (
 ): TransitionConfig => {
 	const style = getComputedStyle(node);
 	const transform = style.transform === 'none' ? '' : style.transform;
+	const duration =
+		params.duration ?? getCssDuration(node, params.durationVar ?? '--motion-duration-panel', 240);
 
 	const scaleConversion = (valueA: number, scaleA: [number, number], scaleB: [number, number]) => {
 		const [minA, maxA] = scaleA;
@@ -89,7 +104,7 @@ export const flyAndScale = (
 	};
 
 	return {
-		duration: params.duration ?? 240,
+		duration,
 		delay: 0,
 		css: (t) => {
 			const y = scaleConversion(t, [0, 1], [params.y ?? 5, 0]);

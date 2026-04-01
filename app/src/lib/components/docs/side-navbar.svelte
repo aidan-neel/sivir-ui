@@ -8,7 +8,7 @@
 	import History from '@lucide/svelte/icons/history';
 
 	let pageName = $state($page.url.pathname);
-	let { class: classProp } = $props();
+	let { class: classProp = '', onNavigate }: { class?: string; onNavigate?: () => void } = $props();
 
 	const gettingStartedItems = [
 		{ slug: 'introduction', label: 'Introduction', icon: BookOpen },
@@ -29,7 +29,9 @@
 <aside class={`${classProp} flex flex-col overflow-y-auto pb-8`}>
 	<div class="flex flex-col gap-5">
 		<section class="flex flex-col gap-1.5">
-			<h3 class="px-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-foreground-muted/70">
+			<h3
+				class="px-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-foreground-muted/70"
+			>
 				Getting Started
 			</h3>
 			<div class="flex flex-col gap-0.5">
@@ -38,6 +40,7 @@
 					<Button
 						variant="ghost"
 						href={`/docs/${item.slug}`}
+						onclick={onNavigate}
 						class={`h-9 w-full justify-start gap-2 rounded-lg px-3 text-left text-sm transition-[background-color,color] ${
 							active
 								? 'bg-secondary/85 font-medium text-foreground'
@@ -64,6 +67,7 @@
 					<Button
 						variant="ghost"
 						href={`/docs/components/${component}`}
+						onclick={onNavigate}
 						class={`h-8.5 w-full justify-start rounded-lg px-3 text-left text-sm transition-[background-color,color] ${
 							active
 								? 'bg-secondary/85 font-medium text-foreground'

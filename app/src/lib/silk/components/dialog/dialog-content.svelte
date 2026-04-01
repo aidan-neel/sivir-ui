@@ -1,42 +1,50 @@
 <script lang="ts">
 	import { flyAndScale } from '$lib/silk/internals/transition';
 	import { clickOutside, type DefaultProps, cn, trapFocus } from '$lib/silk/utils';
-	import { cubicOut } from "svelte/easing";
-	import { fade } from "svelte/transition";
-	import type { DialogContentProps, DialogState } from ".";
-    import { getContext, onDestroy, onMount } from "svelte";
+	import { cubicOut } from 'svelte/easing';
+	import { fade } from 'svelte/transition';
+	import type { DialogContentProps, DialogState } from '.';
+	import { getContext, onDestroy, onMount } from 'svelte';
 	import { states, UIState } from '$lib/silk/internals/state.svelte.ts';
 
-	let { class: className, allowClickOutside = true, children, ...rest }: DialogContentProps = $props();
+	let {
+		class: className,
+		allowClickOutside = true,
+		children,
+		...rest
+	}: DialogContentProps = $props();
 
-    const key = getContext<string>('key');
-    const uiState = states[key] as UIState<DialogState>;
-    let element = $state<HTMLElement>();
+	const key = getContext<string>('key');
+	const uiState = states[key] as UIState<DialogState>;
+	let element = $state<HTMLElement>();
 
-    let cleanup: (() => void) | undefined;
+	let cleanup: (() => void) | undefined;
 
-    $effect(() => {
-        if (!document) return;
+	$effect(() => {
+		if (!document) return;
 
-        if (uiState.data.open) {
-            cleanup = trapFocus(element as HTMLElement);
-            document.body.style.overflow = 'hidden';
-            const focusable = element!.querySelector<HTMLElement>(
-                'input, select, textarea, button, [tabindex]:not([tabindex="-1"])'
-            );
-            focusable?.focus();
-        } else {
-            document.body.style.overflow = '';
-            cleanup?.();
-            cleanup = undefined;
-        }
-    })
+		if (uiState.data.open) {
+			cleanup = trapFocus(element as HTMLElement);
+			document.body.style.overflow = 'hidden';
+			const focusable = element!.querySelector<HTMLElement>(
+				'input, select, textarea, button, [tabindex]:not([tabindex="-1"])'
+			);
+			focusable?.focus();
+		} else {
+			document.body.style.overflow = '';
+			cleanup?.();
+			cleanup = undefined;
+		}
+	});
 </script>
 
 {#if uiState.data.open}
-	<div transition:fade={{ duration: 150, easing: cubicOut }} class="fixed inset-0 z-40 bg-[var(--color-overlay)] backdrop-blur-[2px]"></div>
 	<div
-		transition:flyAndScale
+		transition:fade={{ duration: 150, easing: cubicOut }}
+		class="fixed inset-0 z-40 bg-[var(--color-overlay)] backdrop-blur-[2px]"
+	></div>
+	<div
+		transition:flyAndScale={{ durationVar: '--motion-duration-panel' }}
 		data-ui="dialog-content"
 		bind:this={element}
 		class={cn(

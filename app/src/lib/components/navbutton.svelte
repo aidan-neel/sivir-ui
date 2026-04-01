@@ -27,11 +27,11 @@
 	variant="ghost"
 	class={($page.url.pathname === href || (href === '/docs/introduction' && docLanding.includes($page.url.pathname)))
 		? mobile
-			? 'h-10 w-full justify-start rounded-lg bg-secondary/85 px-3 font-semibold text-foreground'
-			: 'rounded-lg bg-secondary/72 px-4 font-semibold text-foreground'
+			? 'h-10 w-full justify-start rounded-lg bg-secondary/85 duration-200 px-3 font-semibold text-foreground'
+			: 'rounded-lg px-4 font-semibold text-foreground duration-200'
 		: mobile
-			? 'h-10 w-full justify-start rounded-lg px-3 text-foreground-muted hover:bg-secondary/55 hover:text-foreground'
-			: 'rounded-lg px-4 text-foreground-muted hover:bg-secondary/50 hover:text-foreground'}
+			? 'h-10 w-full justify-start rounded-lg px-3 text-foreground-muted hover:bg-secondary/55 duration-200 hover:text-foreground'
+			: 'rounded-lg px-4 text-foreground-muted hover:bg-secondary/50 hover:text-foreground duration-200'}
 	aria-current={($page.url.pathname === href ||
 		(href === '/docs/introduction' && docLanding.includes($page.url.pathname)))
 		? 'page'

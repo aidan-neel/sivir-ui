@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { getContext, onMount, type Snippet } from 'svelte';
+	import type { HTMLInputAttributes } from 'svelte/elements';
 	import { states } from '$lib/silk/internals/state.svelte.ts';
 	import type { CommandItem, CommandState } from '.';
 	import Search from '@lucide/svelte/icons/search';
@@ -14,7 +15,7 @@
 		children?: Snippet;
 		class?: string;
 		threshold?: number;
-	};
+	} & HTMLInputAttributes;
 
 	const { children, class: classProp, threshold = 0.5, ...rest }: Props = $props();
 

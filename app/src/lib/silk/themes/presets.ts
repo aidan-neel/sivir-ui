@@ -22,6 +22,20 @@ export type ThemePalette = {
 	ring: string;
 };
 
+export type ThemeDurationPreset = {
+	slug: 'default' | 'snappy' | 'instant' | 'smooth';
+	name: string;
+	description: string;
+	hover: string;
+	menu: string;
+	panel: string;
+	sheet: string;
+	overlay: string;
+	tooltip: string;
+	toastIn: string;
+	toastOut: string;
+};
+
 export type ThemeDraft = {
 	slug: string;
 	name: string;
@@ -36,9 +50,65 @@ export type ThemeDraft = {
 	radiusLg: string;
 	radiusXl: string;
 	primaryButtonOutline: boolean;
+	durationPreset: ThemeDurationPreset['slug'];
 	light: ThemePalette;
 	dark: ThemePalette;
 };
+
+export const durationPresets: ThemeDurationPreset[] = [
+	{
+		slug: 'default',
+		name: 'Balanced',
+		description: 'Matches the current Silk feel with polished but unhurried motion.',
+		hover: '240ms',
+		menu: '150ms',
+		panel: '240ms',
+		sheet: '320ms',
+		overlay: '150ms',
+		tooltip: '140ms',
+		toastIn: '440ms',
+		toastOut: '340ms'
+	},
+	{
+		slug: 'snappy',
+		name: 'Snappy',
+		description: 'A little quicker across hovers, menus, and modal surfaces.',
+		hover: '190ms',
+		menu: '120ms',
+		panel: '210ms',
+		sheet: '260ms',
+		overlay: '120ms',
+		tooltip: '110ms',
+		toastIn: '360ms',
+		toastOut: '280ms'
+	},
+	{
+		slug: 'instant',
+		name: 'Instant',
+		description: 'Very tight feedback for utility-first interfaces and fast workflows.',
+		hover: '120ms',
+		menu: '90ms',
+		panel: '170ms',
+		sheet: '210ms',
+		overlay: '100ms',
+		tooltip: '90ms',
+		toastIn: '280ms',
+		toastOut: '220ms'
+	},
+	{
+		slug: 'smooth',
+		name: 'Smooth',
+		description: 'Softer, slower transitions for editorial or premium-feeling themes.',
+		hover: '280ms',
+		menu: '180ms',
+		panel: '300ms',
+		sheet: '380ms',
+		overlay: '180ms',
+		tooltip: '160ms',
+		toastIn: '500ms',
+		toastOut: '380ms'
+	}
+];
 
 function roundRadius(value: number) {
 	return `${Math.round(value * 1000) / 1000}rem`;
@@ -99,6 +169,7 @@ export const themePresets: ThemeDraft[] = [
 		radiusLg: '0.55rem',
 		radiusXl: '0.67rem',
 		primaryButtonOutline: true,
+		durationPreset: 'default',
 		light: palette({
 			background: '#fcfcfd',
 			border: '#dde2ea',
@@ -148,6 +219,7 @@ export const themePresets: ThemeDraft[] = [
 		radiusLg: '0.58rem',
 		radiusXl: '0.8rem',
 		primaryButtonOutline: true,
+		durationPreset: 'smooth',
 		light: palette({
 			background: '#fbf7f0',
 			border: '#ded4c7',
@@ -197,6 +269,7 @@ export const themePresets: ThemeDraft[] = [
 		radiusLg: '0.56rem',
 		radiusXl: '0.8rem',
 		primaryButtonOutline: true,
+		durationPreset: 'snappy',
 		light: palette({
 			background: '#f5f8f3',
 			border: '#d8e2d3',
@@ -246,6 +319,7 @@ export const themePresets: ThemeDraft[] = [
 		radiusLg: '0.5rem',
 		radiusXl: '0.68rem',
 		primaryButtonOutline: false,
+		durationPreset: 'instant',
 		light: palette({
 			background: '#f6fbf8',
 			border: '#d3e7da',
@@ -282,55 +356,6 @@ export const themePresets: ThemeDraft[] = [
 		})
 	},
 	{
-		slug: 'claude',
-		name: 'Claude',
-		description: 'Soft parchment neutrals with warmer browns and a quieter editorial feel.',
-		publisher: 'Silk UI',
-		fontSans: '"DM Sans", sans-serif',
-		fontMono: '"IBM Plex Mono", monospace',
-		fontHeader: 'Lora, serif',
-		radiusBase: '0.46rem',
-		radiusSm: '0.22rem',
-		radiusMd: '0.46rem',
-		radiusLg: '0.58rem',
-		radiusXl: '0.74rem',
-		primaryButtonOutline: true,
-		light: palette({
-			background: '#f8f5ef',
-			border: '#e0d6c8',
-			borderStrong: '#d0c2b0',
-			input: '#d5c8b7',
-			primary: '#c26a3d',
-			foreground: '#221a15',
-			foregroundButton: '#fff6ef',
-			muted: '#efe7db',
-			popover: '#fdfaf4',
-			foregroundMuted: '#79695b',
-			secondary: '#f2eadf',
-			card: '#fcf8f2',
-			accent: '#f7efe3',
-			overlay: 'rgb(28 18 10 / 0.18)',
-			ring: 'rgb(194 106 61 / 0.18)'
-		}),
-		dark: palette({
-			background: '#110f0d',
-			border: '#26201b',
-			borderStrong: '#352c25',
-			input: '#322922',
-			primary: '#e29a6b',
-			foreground: '#f5ede5',
-			foregroundButton: '#fff3ea',
-			muted: '#171310',
-			popover: '#14110e',
-			foregroundMuted: '#a39082',
-			secondary: '#191511',
-			card: '#15110e',
-			accent: '#201915',
-			overlay: 'rgb(0 0 0 / 0.7)',
-			ring: 'rgb(226 154 107 / 0.18)'
-		})
-	},
-	{
 		slug: 'shadcn-ui',
 		name: 'shadcn/ui',
 		description: 'Utility-first grayscale with blue focus accents and tight neutral contrast.',
@@ -344,6 +369,7 @@ export const themePresets: ThemeDraft[] = [
 		radiusLg: '0.62rem',
 		radiusXl: '0.8rem',
 		primaryButtonOutline: false,
+		durationPreset: 'instant',
 		light: palette({
 			background: '#ffffff',
 			border: '#e5e7eb',
@@ -392,6 +418,10 @@ export function slugifyThemeName(name: string) {
 		.replace(/^-+|-+$/g, '');
 }
 
+export function getDurationPreset(slug: ThemeDurationPreset['slug']) {
+	return durationPresets.find((preset) => preset.slug === slug) ?? durationPresets[0];
+}
+
 function paletteToCss(palette: ThemePalette) {
 	return `\t--color-background: ${palette.background};
 \t--color-border: ${palette.border};
@@ -418,6 +448,7 @@ function paletteToCss(palette: ThemePalette) {
 
 export function themeToCss(theme: ThemeDraft) {
 	const radii = radiiFromBase(theme.radiusBase || theme.radiusMd);
+	const durations = getDurationPreset(theme.durationPreset);
 	return `@theme {
 \t--font-sans: ${theme.fontSans};
 \t--font-mono: ${theme.fontMono};
@@ -427,6 +458,14 @@ export function themeToCss(theme: ThemeDraft) {
 \t--radius-lg: ${radii.lg};
 \t--radius-xl: ${radii.xl};
 \t--radius-btn: var(--radius-lg);
+\t--motion-duration-hover: ${durations.hover};
+\t--motion-duration-menu: ${durations.menu};
+\t--motion-duration-panel: ${durations.panel};
+\t--motion-duration-sheet: ${durations.sheet};
+\t--motion-duration-overlay: ${durations.overlay};
+\t--motion-duration-tooltip: ${durations.tooltip};
+\t--motion-duration-toast-in: ${durations.toastIn};
+\t--motion-duration-toast-out: ${durations.toastOut};
 \t--button-primary-border: ${theme.primaryButtonOutline ? `color-mix(in srgb, ${theme.light.primary} 76%, #1237b9)` : 'transparent'};
 \t--text-xs: 12px;
 \t--text-sm: 14px;
@@ -441,6 +480,14 @@ ${paletteToCss(theme.light)}
 \t--radius-md: ${radii.md};
 \t--radius-lg: ${radii.lg};
 \t--radius-xl: ${radii.xl};
+\t--motion-duration-hover: ${durations.hover};
+\t--motion-duration-menu: ${durations.menu};
+\t--motion-duration-panel: ${durations.panel};
+\t--motion-duration-sheet: ${durations.sheet};
+\t--motion-duration-overlay: ${durations.overlay};
+\t--motion-duration-tooltip: ${durations.tooltip};
+\t--motion-duration-toast-in: ${durations.toastIn};
+\t--motion-duration-toast-out: ${durations.toastOut};
 \t--button-primary-border: ${theme.primaryButtonOutline ? `color-mix(in srgb, ${theme.dark.primary} 76%, #7aa2ff)` : 'transparent'};
 ${paletteToCss(theme.dark)}
 }`;

@@ -11,14 +11,14 @@
 		children,
 		class: classProp,
 		allowClickOutside = true,
-        portal = true,
-        refElement,
-        lockBody = false,
+		portal = true,
+		refElement,
+		lockBody = false,
 		...rest
 	}: PopoverContentProps = $props();
 
-	const key = getContext("key") as string;
-    const uiState = states[key].data as PopoverState;
+	const key = getContext('key') as string;
+	const uiState = states[key].data as PopoverState;
 
 	let popover = $state<HTMLElement | undefined>();
 
@@ -28,32 +28,32 @@
 		}
 	}
 
-    function updatePosition() {
-        if (uiState && popover) {
-            computePosition(refElement ?? uiState.buttonRef as ReferenceElement, popover, {
-                placement: refElement ? 'right-start' : uiState.placement,
-                middleware: [flip()]
-            }).then(({ x, y }) => {
-                Object.assign(popover!.style, {
-                    left: `${x}px`,
-                    top: `${y}px`
-                });
-            });
-        }
-    }
+	function updatePosition() {
+		if (uiState && popover) {
+			computePosition(refElement ?? (uiState.buttonRef as ReferenceElement), popover, {
+				placement: refElement ? 'right-start' : uiState.placement,
+				middleware: [flip()]
+			}).then(({ x, y }) => {
+				Object.assign(popover!.style, {
+					left: `${x}px`,
+					top: `${y}px`
+				});
+			});
+		}
+	}
 
 	onMount(() => {
 		document.addEventListener('keydown', handleKeydown);
-        document.addEventListener('scroll', updatePosition);
+		document.addEventListener('scroll', updatePosition);
 
-        window.addEventListener("resize", updatePosition);
-        window.addEventListener("scroll", updatePosition, true);
+		window.addEventListener('resize', updatePosition);
+		window.addEventListener('scroll', updatePosition, true);
 
 		uiState.popoverRef = popover;
 
-        if (portal && document && popover) {
-            document.body.appendChild(popover);
-        }
+		if (portal && document && popover) {
+			document.body.appendChild(popover);
+		}
 
 		if (allowClickOutside && popover) {
 			clickOutside(popover, () => {
@@ -61,74 +61,74 @@
 			});
 		}
 
-        const ro = new ResizeObserver(updatePosition);
-        if (uiState?.buttonRef) ro.observe(uiState.buttonRef);
-        if (popover) ro.observe(popover);
+		const ro = new ResizeObserver(updatePosition);
+		if (uiState?.buttonRef) ro.observe(uiState.buttonRef);
+		if (popover) ro.observe(popover);
 
-        const handleFocusIn = (e: FocusEvent) => {
-            const target = e.target as HTMLElement;
-            if (!target) return;
+		const handleFocusIn = (e: FocusEvent) => {
+			const target = e.target as HTMLElement;
+			if (!target) return;
 
-            const openPopovers = Array.from(document.body.children).filter(
-                el => el.id.startsWith('popover-') && !el.id.includes('controls')
-            );
-            uiState.focusedInside = openPopovers.some(el => el.contains(target));
-        };
+			const openPopovers = Array.from(document.body.children).filter(
+				(el) => el.id.startsWith('popover-') && !el.id.includes('controls')
+			);
+			uiState.focusedInside = openPopovers.some((el) => el.contains(target));
+		};
 
-        const handleFocusOut = () => {
-            uiState.focusedInside = false;
-        };
+		const handleFocusOut = () => {
+			uiState.focusedInside = false;
+		};
 
-        document.addEventListener('focusin', handleFocusIn);
-        document.addEventListener('focusout', handleFocusOut);
+		document.addEventListener('focusin', handleFocusIn);
+		document.addEventListener('focusout', handleFocusOut);
 
-        onDestroy(() => {
-            document.removeEventListener('keydown', handleKeydown);
-            document.removeEventListener('scroll', updatePosition);
-            window.removeEventListener("resize", updatePosition);
-            window.removeEventListener("scroll", updatePosition, true);
-            document.removeEventListener('focusin', handleFocusIn);
-            document.removeEventListener('focusout', handleFocusOut);
-            ro.disconnect();
+		onDestroy(() => {
+			document.removeEventListener('keydown', handleKeydown);
+			document.removeEventListener('scroll', updatePosition);
+			window.removeEventListener('resize', updatePosition);
+			window.removeEventListener('scroll', updatePosition, true);
+			document.removeEventListener('focusin', handleFocusIn);
+			document.removeEventListener('focusout', handleFocusOut);
+			ro.disconnect();
 
-            uiState.open = false;
-            uiState.popoverRef?.remove();
-            popover?.remove();
-        });
+			uiState.open = false;
+			uiState.popoverRef?.remove();
+			popover?.remove();
+		});
 	});
 
-    function cancelClose() {
+	function cancelClose() {
 		if (uiState?.closeTimeout) {
 			if (uiState?.hoverable) {
-                clearTimeout(uiState.closeTimeout);
-                uiState.closeTimeout = undefined;
-            }
+				clearTimeout(uiState.closeTimeout);
+				uiState.closeTimeout = undefined;
+			}
 		}
 	}
 
-    $effect(() => {
-        if (!document) return;
+	$effect(() => {
+		if (!document) return;
 
-        const bodyChildren = Array.from(document.body.children) as HTMLElement[];
+		const bodyChildren = Array.from(document.body.children) as HTMLElement[];
 
-        if (lockBody && uiState.open) {
-            document.body.style.overflow = 'hidden';
-            for (const el of bodyChildren) {
-                if (!el.id.startsWith('popover-') || el.id.includes('controls')) {
-                    el.classList.add('pointer-events-none');
-                }
-            }
-        } else {
-            document.body.style.overflow = '';
-            for (const el of bodyChildren) {
-                el.classList.remove('pointer-events-none');
-            }
-        }
+		if (lockBody && uiState.open) {
+			document.body.style.overflow = 'hidden';
+			for (const el of bodyChildren) {
+				if (!el.id.startsWith('popover-') || el.id.includes('controls')) {
+					el.classList.add('pointer-events-none');
+				}
+			}
+		} else {
+			document.body.style.overflow = '';
+			for (const el of bodyChildren) {
+				el.classList.remove('pointer-events-none');
+			}
+		}
 
-        if (!uiState.hovering && !uiState.focusedInside) {
-            cancelClose();
-        }
-    });
+		if (!uiState.hovering && !uiState.focusedInside) {
+			cancelClose();
+		}
+	});
 </script>
 
 <div
@@ -152,9 +152,12 @@
 	{#if uiState?.open}
 		<div
 			{...rest}
-			transition:flyAndScale={{ duration: 200 }}
+			transition:flyAndScale={{ durationVar: '--motion-duration-panel' }}
 			data-ui="popover-content"
-			class={cn(classProp, `bg-[var(--color-panel)] text-[var(--color-panel-foreground)] border border-[var(--panel-border)] rounded-[var(--panel-radius)] shadow-[inset_0_1px_0_var(--panel-highlight),var(--panel-shadow)] p-[var(--panel-padding)] text-sm m-auto`)}
+			class={cn(
+				classProp,
+				`bg-[var(--color-panel)] text-[var(--color-panel-foreground)] border border-[var(--panel-border)] rounded-[var(--panel-radius)] shadow-[inset_0_1px_0_var(--panel-highlight),var(--panel-shadow)] p-[var(--panel-padding)] text-sm m-auto`
+			)}
 		>
 			{@render children?.()}
 		</div>

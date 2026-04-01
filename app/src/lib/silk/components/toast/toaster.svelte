@@ -4,6 +4,7 @@
 	import Toast from './toast.svelte';
 	import { cubicOut, quartOut } from 'svelte/easing';
 	import type { TransitionConfig } from 'svelte/transition';
+	import { getCssDuration } from '$lib/silk/internals/transition';
 
 	const toastState: UIState<ToastUIState> = setToastUIState();
 
@@ -53,9 +54,10 @@
 		return newestHeight + (Math.min(n, MAX_VISIBLE) - 1) * COLLAPSED_OFFSET;
 	});
 
-	function toastIn(_node: Element): TransitionConfig {
+	function toastIn(node: Element): TransitionConfig {
+		const duration = getCssDuration(node, '--motion-duration-toast-in', 440);
 		return {
-			duration: 440,
+			duration,
 			easing: quartOut,
 			css: (t: number) => `
 				opacity: ${t};
@@ -64,9 +66,10 @@
 		};
 	}
 
-	function toastOut(_node: Element): TransitionConfig {
+	function toastOut(node: Element): TransitionConfig {
+		const duration = getCssDuration(node, '--motion-duration-toast-out', 340);
 		return {
-			duration: 340,
+			duration,
 			easing: cubicOut,
 			css: (t: number) => `
 				opacity: ${t};
@@ -76,7 +79,7 @@
 	}
 </script>
 
-{#if toastState.data && reversedToasts.length > 0}
+{#if toastState.data}
 	<div class="pointer-events-none fixed inset-x-0 bottom-0 z-200 flex justify-end p-4 sm:p-6">
 		<div
 			role="region"
@@ -107,7 +110,7 @@
 						Enter slides up + fade. Exit slides right + fade.
 						Completely independent of the stacking layer above.
 					-->
-					<div in:toastIn out:toastOut>
+					<div in:toastIn|global out:toastOut|global>
 						<Toast {toast} />
 					</div>
 				</div>

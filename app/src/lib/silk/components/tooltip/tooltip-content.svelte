@@ -100,10 +100,10 @@
 		<div
 			id={tooltipState.id}
 			role="tooltip"
-			transition:flyAndScale={{ duration: 140 }}
+			transition:flyAndScale={{ durationVar: '--motion-duration-tooltip' }}
 			class={cn(
 				className,
-				'bg-[var(--color-tooltip)] text-[var(--color-tooltip-foreground)] rounded-[var(--tooltip-radius)] px-[var(--tooltip-padding-x)] py-[var(--tooltip-padding-y)] shadow-[var(--shadow-sm)] pointer-events-auto max-w-[18rem] rounded-md border border-border/70 px-[var(--tooltip-padding-x)] py-[var(--tooltip-padding-y)] text-[0.72rem] font-medium shadow-sm'
+				'bg-[var(--color-tooltip)] text-[var(--color-tooltip-foreground)] pointer-events-auto max-w-[18rem] rounded-md border border-[var(--tooltip-border)] px-[var(--tooltip-padding-x)] py-[var(--tooltip-padding-y)] text-[0.72rem] font-medium shadow-[var(--tooltip-shadow,var(--shadow-sm))]'
 			)}
 		>
 			{@render children?.()}

@@ -18,6 +18,8 @@
 	import { toast } from '$lib/silk/components/toast';
 	import { applyLiveThemeCss } from '$lib/silk/themes/live';
 	import {
+		durationPresets,
+		getDurationPreset,
 		themePresets,
 		themeToCss,
 		type ThemeDraft,
@@ -64,7 +66,11 @@
 		{ label: 'Instrument Sans', value: '"Instrument Sans", sans-serif', category: 'Sans Serif' },
 		{ label: 'Manrope', value: 'Manrope, sans-serif', category: 'Sans Serif' },
 		{ label: 'DM Sans', value: '"DM Sans", sans-serif', category: 'Sans Serif' },
-		{ label: 'Plus Jakarta Sans', value: '"Plus Jakarta Sans", sans-serif', category: 'Sans Serif' },
+		{
+			label: 'Plus Jakarta Sans',
+			value: '"Plus Jakarta Sans", sans-serif',
+			category: 'Sans Serif'
+		},
 		{ label: 'Outfit', value: 'Outfit, sans-serif', category: 'Sans Serif' },
 		{ label: 'Space Grotesk', value: '"Space Grotesk", sans-serif', category: 'Sans Serif' },
 		{ label: 'Sora', value: 'Sora, sans-serif', category: 'Sans Serif' },
@@ -80,14 +86,65 @@
 	const fontCategories: FontOption['category'][] = ['Sans Serif', 'Serif', 'Mono'];
 
 	const colorSwatches: Partial<Record<keyof ThemeDraft['light'], string[]>> = {
-		primary: ['#155eef', '#2f7a54', '#a44a2f', '#1f9d62', '#c26a3d', '#18181b', '#7c3aed', '#d97706'],
-		background: ['#fcfcfd', '#fbf7f0', '#f5f8f3', '#f6fbf8', '#f8f5ef', '#ffffff', '#090b0f', '#080809'],
+		primary: [
+			'#155eef',
+			'#2f7a54',
+			'#a44a2f',
+			'#1f9d62',
+			'#c26a3d',
+			'#18181b',
+			'#7c3aed',
+			'#d97706'
+		],
+		background: [
+			'#fcfcfd',
+			'#fbf7f0',
+			'#f5f8f3',
+			'#f6fbf8',
+			'#f8f5ef',
+			'#ffffff',
+			'#090b0f',
+			'#080809'
+		],
 		card: ['#ffffff', '#fffaf4', '#f9fcf7', '#fafdfa', '#fcf8f2', '#ffffff', '#0f1318', '#0c0c0f'],
-		border: ['#dde2ea', '#ded4c7', '#d8e2d3', '#d3e7da', '#e0d6c8', '#e5e7eb', '#1b2028', '#232326'],
+		border: [
+			'#dde2ea',
+			'#ded4c7',
+			'#d8e2d3',
+			'#d3e7da',
+			'#e0d6c8',
+			'#e5e7eb',
+			'#1b2028',
+			'#232326'
+		],
 		input: ['#c9d1dc', '#d8cbbb', '#c7d5c1', '#c4dccd', '#d5c8b7', '#d1d5db', '#262d38', '#242428'],
-		foreground: ['#101828', '#271d19', '#18261d', '#122018', '#221a15', '#09090b', '#eef2f8', '#fafafa'],
-		foregroundMuted: ['#667085', '#7f6d62', '#67776d', '#65776c', '#79695b', '#71717a', '#8a94a2', '#a1a1aa'],
-		ring: ['rgb(21 94 239 / 0.18)', 'rgb(47 122 84 / 0.18)', 'rgb(31 157 98 / 0.18)', 'rgb(194 106 61 / 0.18)', 'rgb(59 130 246 / 0.18)']
+		foreground: [
+			'#101828',
+			'#271d19',
+			'#18261d',
+			'#122018',
+			'#221a15',
+			'#09090b',
+			'#eef2f8',
+			'#fafafa'
+		],
+		foregroundMuted: [
+			'#667085',
+			'#7f6d62',
+			'#67776d',
+			'#65776c',
+			'#79695b',
+			'#71717a',
+			'#8a94a2',
+			'#a1a1aa'
+		],
+		ring: [
+			'rgb(21 94 239 / 0.18)',
+			'rgb(47 122 84 / 0.18)',
+			'rgb(31 157 98 / 0.18)',
+			'rgb(194 106 61 / 0.18)',
+			'rgb(59 130 246 / 0.18)'
+		]
 	};
 
 	let selectedPresetSlug = $state(themePresets[0].slug);
@@ -105,7 +162,10 @@
 		})
 	);
 
-	const activePreset = $derived(themePresets.find((theme) => theme.slug === selectedPresetSlug) ?? themePresets[0]);
+	const activePreset = $derived(
+		themePresets.find((theme) => theme.slug === selectedPresetSlug) ?? themePresets[0]
+	);
+	const activeDuration = $derived(getDurationPreset(editorTheme.durationPreset));
 
 	onMount(() => {
 		syncFontSelections();
@@ -147,10 +207,16 @@
 
 	function syncFontSelections() {
 		headerFontSelection =
-			fontOptions.find((font) => font.value === editorTheme.fontHeader)?.label ?? fontOptions[0].label;
+			fontOptions.find((font) => font.value === editorTheme.fontHeader)?.label ??
+			fontOptions[0].label;
 		bodyFontSelection =
-			fontOptions.find((font) => font.value === editorTheme.fontSans)?.label ?? fontOptions[0].label;
-		editorTheme.fontMono = resolveMonoFont(editorTheme.fontHeader, editorTheme.fontSans, editorTheme.fontMono);
+			fontOptions.find((font) => font.value === editorTheme.fontSans)?.label ??
+			fontOptions[0].label;
+		editorTheme.fontMono = resolveMonoFont(
+			editorTheme.fontHeader,
+			editorTheme.fontSans,
+			editorTheme.fontMono
+		);
 	}
 
 	function isMonoFont(fontValue: string) {
@@ -167,7 +233,11 @@
 	function loadPreset(theme: ThemeDraft) {
 		selectedPresetSlug = theme.slug;
 		editorTheme = cloneTheme(theme);
-		editorTheme.fontMono = resolveMonoFont(editorTheme.fontHeader, editorTheme.fontSans, editorTheme.fontMono);
+		editorTheme.fontMono = resolveMonoFont(
+			editorTheme.fontHeader,
+			editorTheme.fontSans,
+			editorTheme.fontMono
+		);
 		editorName = theme.name;
 		if (!editorTheme.radiusBase) editorTheme.radiusBase = editorTheme.radiusMd;
 		syncFontSelections();
@@ -221,7 +291,7 @@
 	<title>Silk UI Themes</title>
 	<meta
 		name="description"
-		content="Explore six Silk UI presets, edit theme tokens live, and generate custom theme CSS."
+		content="Explore five Silk UI presets, adjust motion and theme tokens live, and generate custom theme CSS."
 	/>
 </svelte:head>
 
@@ -249,24 +319,26 @@
 		<section class="relative z-[1] grid gap-8 xl:grid-cols-[1.2fr_0.8fr] xl:items-end">
 			<div class="flex flex-col gap-5">
 				<div class="space-y-4">
-					<p class="text-sm font-medium uppercase tracking-[0.18em] text-foreground-muted">Theme Studio</p>
+					<p class="text-sm font-medium uppercase tracking-[0.18em] text-foreground-muted">
+						Theme Studio
+					</p>
 					<h1
 						class="max-w-[16ch] text-[clamp(2.4rem,4vw,3.75rem)] font-semibold leading-[0.97] tracking-[-0.05em]"
 						style="font-family: var(--font-header);"
 					>
-						Six stronger presets and a cleaner way to shape them.
+						Five stronger presets and a cleaner way to shape them.
 					</h1>
 					<p class="max-w-[56rem] text-[1rem] leading-8 text-foreground-muted">
-						Choose a preset, refine typography and color, and keep the result applied across the
-						app while you test real components instead of tiny token swatches.
+						Choose a preset, refine typography and color, and keep the result applied across the app
+						while you test real components instead of tiny token swatches.
 					</p>
 				</div>
 
 				<div class="grid gap-4 sm:grid-cols-3">
 					<div class="border-t border-border-strong/65 pt-4">
-						<p class="text-sm font-semibold text-foreground">6 distinct presets</p>
+						<p class="text-sm font-semibold text-foreground">5 distinct presets</p>
 						<p class="mt-2 text-sm leading-6 text-foreground-muted">
-							Each preset now has a clearer personality instead of slight variations on the same palette.
+							Each preset now has a clearer personality, with the closest warm duplicate removed.
 						</p>
 					</div>
 					<div class="border-t border-border-strong/65 pt-4">
@@ -284,16 +356,23 @@
 				</div>
 			</div>
 
-			<div class="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-[var(--card-radius)] shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)] flex flex-col gap-5 rounded-2xl p-6">
+			<div
+				class="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-[var(--card-radius)] shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)] flex flex-col gap-5 rounded-2xl p-6"
+			>
 				<div class="flex items-start justify-between gap-4">
 					<div class="space-y-2">
 						<p class="text-sm font-medium text-foreground-muted">Currently loaded</p>
-						<h2 class="text-2xl font-semibold tracking-[-0.03em]" style={`font-family:${editorTheme.fontHeader};`}>
+						<h2
+							class="text-2xl font-semibold tracking-[-0.03em]"
+							style={`font-family:${editorTheme.fontHeader};`}
+						>
 							{editorName}
 						</h2>
 						<p class="text-sm leading-7 text-foreground-muted">{activePreset.description}</p>
 					</div>
-					<div class="flex items-center gap-2 rounded-lg bg-secondary/50 px-3 py-2 text-sm text-foreground-muted">
+					<div
+						class="flex items-center gap-2 rounded-lg bg-secondary/50 px-3 py-2 text-sm text-foreground-muted"
+					>
 						<Palette size={14} />
 						Site-wide
 					</div>
@@ -306,17 +385,32 @@
 				</div>
 
 				<div class="grid gap-4 sm:grid-cols-2">
-								<div class="rounded-xl bg-secondary/28 p-4">
-									<p class="text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-foreground-muted">Header / Body</p>
-									<p class="mt-2 text-base font-semibold text-foreground">{cleanFontName(editorTheme.fontHeader)}</p>
-									<p class="text-sm text-foreground-muted">{cleanFontName(editorTheme.fontSans)}</p>
-									<p class="mt-2 text-xs text-foreground-muted">Mono usage follows header/body automatically.</p>
-								</div>
 					<div class="rounded-xl bg-secondary/28 p-4">
-						<p class="text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-foreground-muted">Shape / Button</p>
-						<p class="mt-2 text-base font-semibold text-foreground">{editorTheme.radiusBase} base radius</p>
-						<p class="text-sm text-foreground-muted">
-							Primary stroke {editorTheme.primaryButtonOutline ? 'enabled' : 'disabled'}
+						<p
+							class="text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-foreground-muted"
+						>
+							Header / Body
+						</p>
+						<p class="mt-2 text-base font-semibold text-foreground">
+							{cleanFontName(editorTheme.fontHeader)}
+						</p>
+						<p class="text-sm text-foreground-muted">{cleanFontName(editorTheme.fontSans)}</p>
+						<p class="mt-2 text-xs text-foreground-muted">
+							Mono usage follows header/body automatically.
+						</p>
+					</div>
+					<div class="rounded-xl bg-secondary/28 p-4">
+						<p
+							class="text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-foreground-muted"
+						>
+							Shape / Motion
+						</p>
+						<p class="mt-2 text-base font-semibold text-foreground">
+							{editorTheme.radiusBase} base radius
+						</p>
+						<p class="text-sm text-foreground-muted">{activeDuration.name} timings</p>
+						<p class="mt-2 text-xs text-foreground-muted">
+							Hover {activeDuration.hover} / Panel {activeDuration.panel}
 						</p>
 					</div>
 				</div>
@@ -325,11 +419,13 @@
 
 		<section class="relative z-[1] grid gap-6 xl:grid-cols-[320px_minmax(0,1fr)]">
 			<aside class="xl:sticky xl:top-28 xl:self-start">
-				<div class="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-[var(--card-radius)] shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)] rounded-2xl p-4">
+				<div
+					class="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-[var(--card-radius)] shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)] rounded-2xl p-4"
+				>
 					<div class="mb-4 space-y-1 px-1">
 						<p class="text-sm font-semibold text-foreground">Preset library</p>
 						<p class="text-sm leading-6 text-foreground-muted">
-							Six stronger starting points with clearer type, contrast, and tone.
+							Five stronger starting points with clearer type, contrast, tone, and motion.
 						</p>
 					</div>
 
@@ -363,9 +459,11 @@
 									<div class="h-8 rounded-md" style={`background:${preset.dark.card};`}></div>
 								</div>
 
-								<div class="flex items-center justify-between gap-3 text-[0.72rem] text-foreground-muted">
+								<div
+									class="flex items-center justify-between gap-3 text-[0.72rem] text-foreground-muted"
+								>
 									<span>{cleanFontName(preset.fontHeader)}</span>
-									<span>{cleanFontName(preset.fontSans)}</span>
+									<span>{getDurationPreset(preset.durationPreset).name}</span>
 								</div>
 							</button>
 						{/each}
@@ -394,22 +492,34 @@
 						<div class="grid gap-4 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
 							<div class="grid gap-4 md:grid-cols-2">
 								<div class="flex flex-col gap-2 md:col-span-2">
-									<span class="text-[length:var(--text-sm)] font-medium text-foreground [font-family:var(--font-sans),sans-serif]">Theme name</span>
+									<span
+										class="text-[length:var(--text-sm)] font-medium text-foreground [font-family:var(--font-sans),sans-serif]"
+										>Theme name</span
+									>
 									<Input variant="outlined" bind:value={editorName} placeholder="Midnight Loom" />
 								</div>
 
 								<div class="flex flex-col gap-2">
-									<span class="text-[length:var(--text-sm)] font-medium text-foreground [font-family:var(--font-sans),sans-serif]">Header font</span>
+									<span
+										class="text-[length:var(--text-sm)] font-medium text-foreground [font-family:var(--font-sans),sans-serif]"
+										>Header font</span
+									>
 									{#key `header-${headerFontSelection}`}
 										<Combobox.Root>
-											<Combobox.Trigger variant="outlined" class="w-full">{headerFontSelection}</Combobox.Trigger>
+											<Combobox.Trigger variant="outlined" class="w-full"
+												>{headerFontSelection}</Combobox.Trigger
+											>
 											<Combobox.Content class="w-[15rem]">
 												<Combobox.Search placeholder="Search fonts..." />
 												<Combobox.Results>
 													{#each fontCategories as category}
 														<Combobox.Label>{category}</Combobox.Label>
 														{#each fontOptions.filter((font) => font.category === category) as font}
-															<Combobox.Item value={`${category.toLowerCase()} ${font.label.toLowerCase()}`} label={font.label} callback={() => updateHeaderFont(font.label)} />
+															<Combobox.Item
+																value={`${category.toLowerCase()} ${font.label.toLowerCase()}`}
+																label={font.label}
+																callback={() => updateHeaderFont(font.label)}
+															/>
 														{/each}
 													{/each}
 												</Combobox.Results>
@@ -419,17 +529,26 @@
 								</div>
 
 								<div class="flex flex-col gap-2">
-									<span class="text-[length:var(--text-sm)] font-medium text-foreground [font-family:var(--font-sans),sans-serif]">Body font</span>
+									<span
+										class="text-[length:var(--text-sm)] font-medium text-foreground [font-family:var(--font-sans),sans-serif]"
+										>Body font</span
+									>
 									{#key `body-${bodyFontSelection}`}
 										<Combobox.Root>
-											<Combobox.Trigger variant="outlined" class="w-full">{bodyFontSelection}</Combobox.Trigger>
+											<Combobox.Trigger variant="outlined" class="w-full"
+												>{bodyFontSelection}</Combobox.Trigger
+											>
 											<Combobox.Content class="w-[15rem]">
 												<Combobox.Search placeholder="Search fonts..." />
 												<Combobox.Results>
 													{#each fontCategories as category}
 														<Combobox.Label>{category}</Combobox.Label>
 														{#each fontOptions.filter((font) => font.category === category) as font}
-															<Combobox.Item value={`${category.toLowerCase()} ${font.label.toLowerCase()}`} label={font.label} callback={() => updateBodyFont(font.label)} />
+															<Combobox.Item
+																value={`${category.toLowerCase()} ${font.label.toLowerCase()}`}
+																label={font.label}
+																callback={() => updateBodyFont(font.label)}
+															/>
 														{/each}
 													{/each}
 												</Combobox.Results>
@@ -439,13 +558,54 @@
 								</div>
 
 								<div class="flex flex-col gap-2">
-									<span class="text-[length:var(--text-sm)] font-medium text-foreground [font-family:var(--font-sans),sans-serif]">Base radius</span>
-									<Input variant="outlined" bind:value={editorTheme.radiusBase} placeholder="0.5rem" />
+									<span
+										class="text-[length:var(--text-sm)] font-medium text-foreground [font-family:var(--font-sans),sans-serif]"
+										>Base radius</span
+									>
+									<Input
+										variant="outlined"
+										bind:value={editorTheme.radiusBase}
+										placeholder="0.5rem"
+									/>
+								</div>
+
+								<div class="flex flex-col gap-2 md:col-span-2">
+									<span
+										class="text-[length:var(--text-sm)] font-medium text-foreground [font-family:var(--font-sans),sans-serif]"
+										>Motion preset</span
+									>
+									<div class="grid gap-2 sm:grid-cols-2">
+										{#each durationPresets as preset}
+											<button
+												type="button"
+												class={`rounded-xl border px-4 py-3 text-left transition-[background-color,border-color,transform] duration-200 ${
+													editorTheme.durationPreset === preset.slug
+														? 'border-border-strong/70 bg-secondary/45'
+														: 'border-border/60 hover:border-border-strong/70 hover:bg-secondary/20'
+												}`}
+												onclick={() => {
+													editorTheme.durationPreset = preset.slug;
+												}}
+											>
+												<p class="text-sm font-semibold text-foreground">{preset.name}</p>
+												<p class="mt-1 text-xs leading-5 text-foreground-muted">
+													{preset.description}
+												</p>
+												<p
+													class="mt-2 text-[11px] uppercase tracking-[0.14em] text-foreground-muted"
+												>
+													Hover {preset.hover} / Panel {preset.panel}
+												</p>
+											</button>
+										{/each}
+									</div>
 								</div>
 							</div>
 
 							<div class="grid gap-4">
-								<div class="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-[var(--card-radius)] shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)] rounded-xl p-4">
+								<div
+									class="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-[var(--card-radius)] shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)] rounded-xl p-4"
+								>
 									<p class="text-sm font-semibold text-foreground">Typography preview</p>
 									<p
 										class="mt-3 text-2xl font-semibold tracking-[-0.04em] text-foreground"
@@ -453,15 +613,23 @@
 									>
 										Calm structure, softer contrast.
 									</p>
-									<p class="mt-2 text-sm leading-7 text-foreground-muted" style={`font-family:${editorTheme.fontSans};`}>
+									<p
+										class="mt-2 text-sm leading-7 text-foreground-muted"
+										style={`font-family:${editorTheme.fontSans};`}
+									>
 										Use the header font for emphasis and the body font for day-to-day readability.
 									</p>
-									<p class="mt-3 text-xs text-foreground-muted" style={`font-family:${editorTheme.fontMono};`}>
+									<p
+										class="mt-3 text-xs text-foreground-muted"
+										style={`font-family:${editorTheme.fontMono};`}
+									>
 										token.radius = {editorTheme.radiusBase}
 									</p>
 								</div>
 
-								<div class="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-[var(--card-radius)] shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)] flex items-center justify-between gap-4 rounded-xl p-4">
+								<div
+									class="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-[var(--card-radius)] shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)] flex items-center justify-between gap-4 rounded-xl p-4"
+								>
 									<div class="space-y-1">
 										<p class="text-sm font-semibold text-foreground">Primary button stroke</p>
 										<p class="text-xs leading-5 text-foreground-muted">
@@ -521,7 +689,8 @@
 							<div class="space-y-2">
 								<Card.Title class="text-xl">Live component gallery</Card.Title>
 								<Card.Description class="leading-7">
-									Check buttons, forms, surfaces, badges, toggles, alerts, and toast behavior in one place.
+									Check buttons, forms, surfaces, badges, toggles, alerts, and toast behavior in one
+									place.
 								</Card.Description>
 							</div>
 							<Button variant="secondary" onclick={showPreviewToast}>Fire toast</Button>
@@ -557,12 +726,18 @@
 											</div>
 
 											<div class="grid gap-3">
-												<Input variant="outlined" placeholder="Search surfaces, color, and contrast" />
+												<Input
+													variant="outlined"
+													placeholder="Search surfaces, color, and contrast"
+												/>
 												<div class="grid gap-3 md:grid-cols-2">
 													<Input variant="outlined" value={editorName} />
 													<Button variant="flat" class="justify-start">Save current variant</Button>
 												</div>
-												<Textarea class="min-h-28" placeholder="Longer notes for testing textarea contrast, borders, and comfortable reading color." />
+												<Textarea
+													class="min-h-28"
+													placeholder="Longer notes for testing textarea contrast, borders, and comfortable reading color."
+												/>
 											</div>
 										</div>
 									</div>
@@ -573,35 +748,53 @@
 										<div class="flex items-start justify-between gap-4">
 											<div class="space-y-1">
 												<p class="text-sm font-semibold text-foreground">Preferences</p>
-												<p class="text-sm leading-6 text-foreground-muted">Quick checks for fields, toggles, and quiet surfaces.</p>
+												<p class="text-sm leading-6 text-foreground-muted">
+													Quick checks for fields, toggles, and quiet surfaces.
+												</p>
 											</div>
 											<Switch switched={true} />
 										</div>
 										<div class="mt-4 flex flex-col gap-3">
-											<Checkbox variant="default" checked={true} label="Preserve semantic tokens" description="Keep the system easy to extend and remix later." />
-											<Checkbox variant="default" checked={false} label="Export component token overrides" />
+											<Checkbox
+												variant="default"
+												checked={true}
+												label="Preserve semantic tokens"
+												description="Keep the system easy to extend and remix later."
+											/>
+											<Checkbox
+												variant="default"
+												checked={false}
+												label="Export component token overrides"
+											/>
 										</div>
 									</div>
 
 									<Alert.Root variant="info">
 										<Alert.Title>Contrast check</Alert.Title>
 										<Alert.Description>
-											Muted text should stay readable, borders should separate quietly, and cards should not disappear into the page.
+											Muted text should stay readable, borders should separate quietly, and cards
+											should not disappear into the page.
 										</Alert.Description>
 									</Alert.Root>
 
 									<div class="grid gap-3 sm:grid-cols-3">
 										<div class="rounded-xl bg-card/88 p-4">
 											<p class="text-sm font-semibold text-foreground">Light surfaces</p>
-											<p class="mt-1 text-sm leading-6 text-foreground-muted">Should feel clean, not washed out.</p>
+											<p class="mt-1 text-sm leading-6 text-foreground-muted">
+												Should feel clean, not washed out.
+											</p>
 										</div>
 										<div class="rounded-xl bg-card/88 p-4">
 											<p class="text-sm font-semibold text-foreground">Dark surfaces</p>
-											<p class="mt-1 text-sm leading-6 text-foreground-muted">Should be deep and calm, not overly saturated.</p>
+											<p class="mt-1 text-sm leading-6 text-foreground-muted">
+												Should be deep and calm, not overly saturated.
+											</p>
 										</div>
 										<div class="rounded-xl bg-card/88 p-4">
 											<p class="text-sm font-semibold text-foreground">Accent balance</p>
-											<p class="mt-1 text-sm leading-6 text-foreground-muted">Primary should lead without overpowering the page.</p>
+											<p class="mt-1 text-sm leading-6 text-foreground-muted">
+												Primary should lead without overpowering the page.
+											</p>
 										</div>
 									</div>
 								</div>
@@ -615,7 +808,9 @@
 						<div class="flex items-center justify-between gap-4">
 							<div class="space-y-2">
 								<Card.Title class="text-xl">Generated CSS</Card.Title>
-								<Card.Description>The exact CSS generated from the current editor state.</Card.Description>
+								<Card.Description
+									>The exact CSS generated from the current editor state.</Card.Description
+								>
 							</div>
 							<Tooltip.Root placement="top" delay={0}>
 								<Tooltip.Trigger>
@@ -636,7 +831,11 @@
 						</div>
 					</Card.Header>
 					<Card.Content>
-						<Textarea class="min-h-[22rem] font-mono text-xs leading-6" readonly value={generatedCss} />
+						<Textarea
+							class="min-h-[22rem] font-mono text-xs leading-6"
+							readonly
+							value={generatedCss}
+						/>
 					</Card.Content>
 				</Card.Root>
 			</div>

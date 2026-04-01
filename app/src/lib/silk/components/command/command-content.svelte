@@ -49,10 +49,13 @@
 </script>
 
 {#if uiState.open}
-	<div transition:fade={{ duration: 150, easing: cubicOut }} class="fixed inset-0 z-40 bg-[var(--color-overlay)] backdrop-blur-[2px]"></div>
+	<div
+		transition:fade={{ duration: 150, easing: cubicOut }}
+		class="fixed inset-0 z-40 bg-[var(--color-overlay)] backdrop-blur-[2px]"
+	></div>
 	<div
 		bind:this={element}
-		transition:flyAndScale
+		transition:flyAndScale={{ durationVar: '--motion-duration-panel' }}
 		id={`${String(key)}-content`}
 		data-ui="command-content"
 		role="dialog"
