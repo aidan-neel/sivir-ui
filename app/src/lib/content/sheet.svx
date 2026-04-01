@@ -1,88 +1,82 @@
----
-title: Sheet
-description: Brief description of the component.
-component: true
-source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/componentname
----
+<script module lang="ts">
+	export const metadata = {
+	  "title": "Sheet",
+	  "description": "Slides in a side panel for secondary tasks and detail views.",
+	  "component": true,
+	  "source": "https://github.com/aidan-neel/silk/tree/main/registry/silk/default/sheet"
+};
+</script>
 
 <script>
-    import { ComponentPreview, ExportItem, APIReference } from '$lib/components/docs';
-    import * as Sheet from '$lib/ui/components/sheet';
-    import { Input } from '$lib/ui/components/input';
-    import { Button } from '$lib/ui/components/button';
+	import { ComponentPreview, ExportItem, APIReference } from '$lib/components/docs';
+	import * as Sheet from '$lib/silk/components/sheet';
+	import { Input } from '$lib/silk/components/input';
 </script>
 
 <h1 class="py-2 h1">Import</h1>
-<p class="py-2">ComponentName exports its subcomponents.</p>
+<p class="py-2">Sheet exports 8 components.</p>
 
-<ExportItem title="Root">Main container for the component.</ExportItem>
-<ExportItem title="SubComponent1">Description of SubComponent1.</ExportItem>
-<ExportItem title="SubComponent2">Description of SubComponent2.</ExportItem>
+<ExportItem title="Root">Owns the sheet open state.</ExportItem>
+<ExportItem title="Trigger">Button that opens the sheet.</ExportItem>
+<ExportItem title="Content">Sliding panel container.</ExportItem>
+<ExportItem title="Header">Top section for title and description.</ExportItem>
+<ExportItem title="Title">Sheet heading.</ExportItem>
+<ExportItem title="Description">Sheet supporting copy.</ExportItem>
+<ExportItem title="Footer">Action row inside the sheet.</ExportItem>
+<ExportItem title="Close">Button that closes the sheet.</ExportItem>
 
 <h1 class="py-6 h1">Example</h1>
 
-<ComponentPreview code={`<ComponentName.Root>
-    <ComponentName.SubComponent1>Content here</ComponentName.SubComponent1>
-    <ComponentName.SubComponent2>Content here</ComponentName.SubComponent2>
-</ComponentName.Root>`}>
-    <Sheet.Root>
-        <Sheet.Trigger variant="outlined">
-            Open
-        </Sheet.Trigger>
-        <Sheet.Content side="right">
-            <Sheet.Header>
-                <Sheet.Title>Edit profile</Sheet.Title>
-                <Sheet.Description>
-                    Make changes to your profile here. Click save when you're done.
-                </Sheet.Description>
-            </Sheet.Header>
-            <div class="grid flex-1 auto-rows-min gap-6">
-                <div class="grid gap-3">
-                    <Input label="Name" id="name" value="Pedro Duarte" />
-                </div>
-                <div class="grid gap-3">
-                    <Input label="Username" id="username" value="@peduarte" />
-                </div>
-            </div>
-            <Sheet.Footer>
-                <Button type="submit" class="w-full">Save changes</Button>
-                <Sheet.Close class="w-full">Close</Sheet.Close>
-            </Sheet.Footer>
-        </Sheet.Content>
-    </Sheet.Root>
+<ComponentPreview code={`<script>
+	import * as Sheet from '$lib/silk/components/sheet';
+	import { Input } from '$lib/silk/components/input';
+</script>
+
+<Sheet.Root>
+	<Sheet.Trigger variant="outlined">Open</Sheet.Trigger>
+	<Sheet.Content side="right">
+		<Sheet.Header>
+			<Sheet.Title>Edit profile</Sheet.Title>
+			<Sheet.Description>Make changes to your profile here.</Sheet.Description>
+		</Sheet.Header>
+		<div class="grid gap-4">
+			<Input label="Name" value="Pedro Duarte" />
+			<Input label="Username" value="@peduarte" />
+		</div>
+		<Sheet.Footer>
+			<Sheet.Close>Done</Sheet.Close>
+		</Sheet.Footer>
+	</Sheet.Content>
+</Sheet.Root>`}>
+	<Sheet.Root>
+		<Sheet.Trigger variant="outlined">Open</Sheet.Trigger>
+		<Sheet.Content side="right">
+			<Sheet.Header>
+				<Sheet.Title>Edit profile</Sheet.Title>
+				<Sheet.Description>Make changes to your profile here.</Sheet.Description>
+			</Sheet.Header>
+			<div class="grid gap-4">
+				<Input label="Name" value="Pedro Duarte" />
+				<Input label="Username" value="@peduarte" />
+			</div>
+			<Sheet.Footer>
+				<Sheet.Close>Done</Sheet.Close>
+			</Sheet.Footer>
+		</Sheet.Content>
+	</Sheet.Root>
 </ComponentPreview>
 
 <h1 class="py-6 h1">API Reference</h1>
 
 <div class="flex flex-col gap-10">
-    <APIReference
-        title="ComponentName"
-        component="Root"
-        description="Main container component."
-        items={[
-            { property: "children", type: "Snippet", description: "Elements rendered inside the root." },
-            { property: "class", type: "string", description: "CSS classes for the root container." },
-            { property: "...rest", type: "HTMLDivAttributes", description: "Extra attributes.", defaults: "{}" }
-        ]}
-    />
-    <APIReference
-        title="ComponentName"
-        component="SubComponent1"
-        description="Subcomponent of ComponentName."
-        items={[
-            { property: "children", type: "Snippet", description: "Content for this subcomponent." },
-            { property: "class", type: "string", description: "CSS classes for this subcomponent." },
-            { property: "...rest", type: "HTMLAttributes<HTMLElement>", description: "Extra attributes.", defaults: "{}" }
-        ]}
-    />
-    <APIReference
-        title="ComponentName"
-        component="SubComponent2"
-        description="Another subcomponent."
-        items={[
-            { property: "children", type: "Snippet", description: "Content for this subcomponent." },
-            { property: "class", type: "string", description: "CSS classes for this subcomponent." },
-            { property: "...rest", type: "HTMLAttributes<HTMLElement>", description: "Extra attributes.", defaults: "{}" }
-        ]}
-    />
+	<APIReference title="Sheet" component="Root" description="Controls sheet visibility." items={[
+		{ property: "open", type: "boolean", description: "Optional bound state for the sheet." },
+		{ property: "children", type: "Snippet", description: "Trigger and content." }
+	]} />
+
+	<APIReference title="Sheet" component="Content" description="Sliding panel surface." items={[
+		{ property: "side", type: "'left' | 'right'", description: "Side of the viewport the sheet enters from." },
+		{ property: "allowClickOutside", type: "boolean", description: "Whether outside clicks close the sheet." },
+		{ property: "class", type: "string", description: "Additional classes for the panel." }
+	]} />
 </div>

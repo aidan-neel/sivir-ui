@@ -1,14 +1,66 @@
----
-title: Toast
-description: Displays a brief notification to the user that automatically disappears after a short duration.
-component: true
-source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/toast
----
+<script module lang="ts">
+	export const metadata = {
+	  "title": "Toast",
+	  "description": "Smooth, Sonner-inspired toast notifications with stacking, promises, and rich types.",
+	  "component": true,
+	  "source": "https://github.com/aidan-neel/silk/tree/main/registry/silk/default/toast"
+};
+</script>
 
 <script>
     import { ComponentPreview, CodeBlock, CodeSnippet, ExportItem, APIReference } from '$lib/components/docs';
-    import { Button } from '$lib/ui/components/button';
-    import { toast } from '$lib/ui/components/toast';
+    import { Button } from '$lib/silk/components/button';
+    import { toast } from '$lib/silk/components/toast';
+
+    const toastUsageCode = `import { toast } from '$lib/silk/components/toast';
+
+// Basic
+toast({ title: 'Done', description: 'Operation completed.' });
+
+// Shorthands
+toast.success('Saved');
+toast.error('Something went wrong');
+toast.warning('Low disk space');
+toast.info('Update available');
+
+// Promise - shows loading -> success/error automatically
+toast.promise(fetch('/api/save'), {
+    loading: 'Saving...',
+    success: 'Saved successfully',
+    error: (err) => 'Failed: ' + err.message,
+});
+
+// With action buttons
+toast({
+    title: 'File deleted',
+    type: 'error',
+    actions: [
+        {
+            label: 'Undo',
+            variant: 'warning',
+            callback: () => restoreFile(),
+        },
+        {
+            label: 'Dismiss',
+            variant: 'ghost',
+            callback: () => restoreFile(),
+        },
+    ],
+});
+
+// Persistent (won't auto-dismiss)
+const t = toast({ title: 'Processing...', type: 'loading', persistent: true });
+// Later:
+t.update({ title: 'Done!', type: 'success', persistent: false, duration: 4000 });
+t.exit();`;
+
+    function fakeUpload() {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                Math.random() > 0.3 ? resolve('file.png') : reject(new Error('Upload failed'));
+            }, 2000);
+        });
+    }
 </script>
 
 <h1 class="py-2 h1">
@@ -16,55 +68,125 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/toast
 </h1>
 
 <p class="py-2">
-    Toast exports 2 components and 1 function
+    Toast exports 2 components and 1 function.
 </p>
 
-<ExportItem title="toast()">A function to display a toast notification.</ExportItem>
+<ExportItem title="toast()">A function to display a toast notification. Also has shorthand methods: <CodeSnippet>toast.success()</CodeSnippet>, <CodeSnippet>toast.error()</CodeSnippet>, <CodeSnippet>toast.warning()</CodeSnippet>, <CodeSnippet>toast.info()</CodeSnippet>, <CodeSnippet>toast.promise()</CodeSnippet>.</ExportItem>
 <ExportItem title="Toast">The individual toast notification component.</ExportItem>
-<ExportItem title="Toaster">The container that manages active toast notifications.</ExportItem>
+<ExportItem title="Toaster">The container that manages and renders active toasts.</ExportItem>
 
 <h1 class="py-6 h1">
     Example
 </h1>
 
-<ComponentPreview code={`<Button onclick={() => {
-    toast({
+<ComponentPreview code={`<script>
+    import { toast } from '$lib/silk/components/toast';
+
+    function fakeUpload() {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                Math.random() > 0.3
+                    ? resolve('file.png')
+                    : reject(new Error('Upload failed'));
+            }, 2000);
+        });
+    }
+<\/script>
+
+<div class="flex flex-wrap gap-2">
+    <Button variant="secondary" onclick={() => toast({ title: 'Notification', description: 'Something happened.' })}>
+        Default
+    </Button>
+    <Button variant="success" onclick={() => toast.success('Profile updated', { description: 'Your changes have been saved.' })}>
+        Success
+    </Button>
+    <Button variant="error" onclick={() => toast.error('Request failed', { description: 'Could not connect to the server.' })}>
+        Error
+    </Button>
+    <Button variant="warning" onclick={() => toast.warning('Storage almost full', { description: 'You have 200 MB remaining.' })}>
+        Warning
+    </Button>
+    <Button variant="outlined" onclick={() => toast.info('New version available', { description: 'Refresh to get the latest update.' })}>
+        Info
+    </Button>
+    <Button variant="flat" onclick={() => toast.promise(fakeUpload(), {
+        loading: 'Uploading file...',
+        success: (name) => \`\${name} uploaded successfully\`,
+        error: (err) => err.message,
+    })}>
+        Promise
+    </Button>
+    <Button variant="alternate" onclick={() => toast({
         title: 'Avatar updated',
-        description: 'Your profiles avatar has been successfully updated.',
-        duration: 4000,
+        description: 'Your profile photo has been changed.',
         type: 'success',
         actions: [
-            {
-                label: 'Undo',
-                variant: 'primary',
-                callback: () => {}
-            }
+            { label: 'View', variant: 'success', callback: () => {} },
+            { label: 'Undo', variant: 'warning', callback: () => {} },
+            { label: 'Dismiss', variant: 'ghost', callback: () => {} },
         ],
-        persistent: false,
-        max: 5,
-        exitable: false
-    });
-}}>Update Avatar</Button`}>
-    <Button
-		onclick={() => {
-			toast({
-				title: 'Avatar updated',
-				description: 'Your profiles avatar has been successfully updated.',
-				duration: 4000,
-				type: 'success',
-                actions: [
-                    {
-                        label: 'Undo',
-                        variant: 'primary',
-                        callback: () => {}
-                    }
-                ],
-				persistent: false,
-                max: 5,
-				exitable: false
-			});
-		}}>Update Avatar</Button
-	>
+    })}>
+        With Action
+    </Button>
+    <Button variant="destructive" onclick={() => toast({
+        title: 'Danger zone',
+        description: 'This action cannot be undone once confirmed.',
+        type: 'error',
+        actions: [
+            { label: 'Delete', variant: 'error', callback: () => {} },
+            { label: 'Cancel', variant: 'secondary', callback: () => {} },
+        ],
+    })}>
+        Action Variants
+    </Button>
+</div>`}>
+    <div class="flex flex-wrap gap-2 justify-center">
+        <Button variant="secondary" onclick={() => toast({ title: 'Notification', description: 'Something happened.' })}>
+            Default
+        </Button>
+        <Button variant="success" onclick={() => toast.success('Profile updated', { description: 'Your changes have been saved.' })}>
+            Success
+        </Button>
+        <Button variant="error" onclick={() => toast.error('Request failed', { description: 'Could not connect to the server.' })}>
+            Error
+        </Button>
+        <Button variant="warning" onclick={() => toast.warning('Storage almost full', { description: 'You have 200 MB remaining.' })}>
+            Warning
+        </Button>
+        <Button variant="outlined" onclick={() => toast.info('New version available', { description: 'Refresh to get the latest update.' })}>
+            Info
+        </Button>
+        <Button variant="flat" onclick={() => toast.promise(fakeUpload(), {
+            loading: 'Uploading file...',
+            success: (name) => name + ' uploaded successfully',
+            error: (err) => err.message,
+        })}>
+            Promise
+        </Button>
+        <Button variant="alternate" onclick={() => toast({
+            title: 'Avatar updated',
+            description: 'Your profile photo has been changed.',
+            type: 'success',
+            actions: [
+                { label: 'View', variant: 'success', callback: () => {} },
+                { label: 'Undo', variant: 'warning', callback: () => {} },
+                { label: 'Dismiss', variant: 'ghost', callback: () => {} },
+            ],
+        })}>
+            With Action
+        </Button>
+        <Button variant="destructive" onclick={() => toast({
+            title: 'Danger zone',
+            description: 'This action cannot be undone once confirmed.',
+            type: 'error',
+            actions: [
+                { label: 'Delete', variant: 'error', callback: () => {} },
+                { label: 'Cancel', variant: 'secondary', callback: () => {} },
+            ],
+        })}>
+            Action Variants
+        </Button>
+    </div>
 </ComponentPreview>
 
 <h1 class="py-6 h1">
@@ -72,124 +194,116 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/toast
 </h1>
 
 <p class="pb-4">
-    Add the <CodeSnippet>Toaster</CodeSnippet> component to your <CodeSnippet>+layout.svelte</CodeSnippet> file.
+    Add the <CodeSnippet>Toaster</CodeSnippet> component to your <CodeSnippet>+layout.svelte</CodeSnippet>.
 </p>
 
 <CodeBlock code={`<script>
-	import { Toaster } from '$lib/ui/components/toast';
-</script>\n
+    import { Toaster } from '$lib/silk/components/toast';
+<\/script>
+
 <Toaster />`}></CodeBlock>
 
 <p class="py-4">
-    Then use the <CodeSnippet>toast</CodeSnippet> function to display a toast.
+    Then call <CodeSnippet>toast()</CodeSnippet> anywhere to show a notification.
 </p>
 
-<CodeBlock code={`<script>
-    import { toast } from '$lib/ui/components/toast';
-</script>\n
-toast({
-    title: 'Avatar updated',
-    description: 'Your profiles avatar has been successfully updated.',
-    duration: 4000,
-    type: 'success',
-    actions: [
-        {
-            label: 'Undo',
-            callback: () => {
-                console.log('Undo');
-            }
-        },
-        {
-            label: 'View Profile',
-            callback: () => {
-                console.log('View Profile');
-            }
-        }
-    ],
-    persistent: false,
-    exitable: true
-});`}></CodeBlock>
+<CodeBlock code={toastUsageCode}></CodeBlock>
 
 <h1 class="py-6 h1">
     API Reference
 </h1>
 
 <div class="flex flex-col gap-10">
-	<APIReference 
-		title="Toast" 
-		component="Root" 
-		description="The visual toast notification component rendered with dynamic content and positioning." 
-		items={[
-			{
-				property: "toast",
-				type: "Toast",
-				description: "The toast object containing display data like title, description, and type."
-			},
-			{
-				property: "index",
-				type: "number",
-				description: "The toast's position in the stack, used for vertical offset."
-			}
-		]} 
-	/>
+    <APIReference
+        title="toast()"
+        component="Function"
+        description="Creates and displays a toast notification. Also callable as toast.success(), toast.error(), toast.warning(), toast.info(), toast.loading(), and toast.promise()."
+        items={[
+            {
+                property: "title",
+                type: "string",
+                description: "The primary message displayed in the toast."
+            },
+            {
+                property: "description",
+                type: "string | undefined",
+                description: "Optional secondary text below the title."
+            },
+            {
+                property: "type",
+                type: "'success' | 'error' | 'warning' | 'info' | 'loading' | 'default'",
+                description: "Visual variant controlling icon and progress bar color."
+            },
+            {
+                property: "duration",
+                type: "number",
+                description: "Auto-dismiss delay in milliseconds. Defaults to 5600."
+            },
+            {
+                property: "actions",
+                type: "ToastAction[] | undefined",
+                description: "Optional action buttons rendered below the message. Each action can use button variants like primary, success, warning, error, secondary, ghost, or outlined."
+            },
+            {
+                property: "persistent",
+                type: "boolean | undefined",
+                description: "If true, the toast never auto-dismisses."
+            },
+            {
+                property: "exitable",
+                type: "boolean | undefined",
+                description: "Shows a dismiss button on hover. Defaults to true."
+            }
+        ]}
+    />
 
-    <APIReference 
-		title="toast()" 
-		component="Function" 
-		description="Programmatically create and display a toast notification." 
-		items={[
-			{
-				property: "title",
-				type: "string",
-				description: "The main message or heading displayed in the toast."
-			},
-			{
-				property: "duration",
-				type: "number",
-				description: "Time in milliseconds before the toast automatically disappears."
-			},
-			{
-				property: "description",
-				type: "string | undefined",
-				description: "Optional secondary message providing additional information."
-			},
-			{
-				property: "type",
-				type: "'success' | 'error' | 'warning' | 'info' | undefined",
-				description: "Visual style of the toast, indicating purpose or severity."
-			},
-			{
-				property: "actions",
-				type: "ToastAction[] | undefined",
-				description: "Optional array of action buttons with labels and callbacks."
-			},
-			{
-				property: "id",
-				type: "number | undefined",
-				description: "Unique identifier for internal tracking of the toast."
-			},
-			{
-				property: "persistent",
-				type: "boolean | undefined",
-				description: "If true, the toast does not auto-dismiss after duration."
-			},
-			{
-				property: "exitable",
-				type: "boolean | undefined",
-				description: "If true, the toast can be manually dismissed by the user."
-			},
-			{
-				property: "exit",
-				type: "() => any | undefined",
-				description: "Function that removes the toast from the state programmatically."
-			}
-		]} 
-	/>
+    <APIReference
+        title="toast.promise()"
+        component="Function"
+        description="Tracks a Promise and transitions through loading → success/error states automatically."
+        items={[
+            {
+                property: "promise",
+                type: "Promise<T>",
+                description: "The promise to track."
+            },
+            {
+                property: "loading",
+                type: "string",
+                description: "Title shown while the promise is pending."
+            },
+            {
+                property: "success",
+                type: "string | ((data: T) => string)",
+                description: "Title (or factory) shown when the promise resolves."
+            },
+            {
+                property: "error",
+                type: "string | ((err: any) => string)",
+                description: "Title (or factory) shown when the promise rejects."
+            },
+            {
+                property: "loadingDescription",
+                type: "string | undefined",
+                description: "Optional description shown during loading."
+            },
+            {
+                property: "successDescription",
+                type: "string | ((data: T) => string) | undefined",
+                description: "Optional description shown on success."
+            },
+            {
+                property: "errorDescription",
+                type: "string | ((err: any) => string) | undefined",
+                description: "Optional description shown on error."
+            }
+        ]}
+    />
 
-	<APIReference 
-		title="Toast" 
-		component="Toaster" 
-		description="The container component that manages and renders all active toasts." 
-		items={[]} 
-	/>
+    <APIReference
+        title="Toast"
+        component="Toaster"
+        description="Fixed container that stacks and animates active toasts. Hover to expand the stack. Place once in your root layout."
+        items={[]}
+    />
 </div>

@@ -1,13 +1,15 @@
----
-title: Textarea
-description: Allows the user to enter multi-line text or data.
-component: true
-source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/textarea
----
+<script module lang="ts">
+	export const metadata = {
+	  "title": "Textarea",
+	  "description": "Allows the user to enter multi-line text or data.",
+	  "component": true,
+	  "source": "https://github.com/aidan-neel/silk/tree/main/registry/silk/default/textarea"
+};
+</script>
 
 <script>
     import { ComponentPreview, CodeBlock, CodeSnippet, ExportItem, APIReference } from '$lib/components/docs';
-    import { Textarea } from '$lib/ui/components/textarea';
+    import { Textarea } from '$lib/silk/components/textarea';
 </script>
 
 <h1 class="py-2 h1">
@@ -25,7 +27,7 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/textarea
 </h1>
 
 <ComponentPreview code={`<script>
-	import { Textarea } from '$lib/ui/components/textarea';
+	import { Textarea } from '$lib/silk/components/textarea';
 </script>\n
 <Textarea placeholder="What's on your mind?"/>`}>
     <Textarea
@@ -39,16 +41,16 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/textarea
 </h1>
 
 <div class="flex flex-col gap-10">
-	<APIReference 
-		title="Textarea" 
-		component="Root" 
-		description="A flexible textarea component that supports multi-line input and various styling variants." 
+	<APIReference
+		title="Textarea"
+		component="Root"
+		description="A flexible textarea component that supports multi-line input and various styling variants."
 		items={[
 			{
 				property: "variant",
 				type: `"primary" | "outlined" | "secondary"`,
 				description: "Controls the visual style of the textarea.",
-				defaults: `"primary"`
+				defaults: `"outlined"`
 			},
 			{
 				property: "label",
@@ -81,6 +83,6 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/textarea
 				description: "Additional HTML textarea attributes passed to the element.",
 				defaults: "{}"
 			}
-		]} 
+		]}
 	/>
 </div>

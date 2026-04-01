@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Button from "$lib/ui/components/button";
+	import Button from "$lib/silk/components/button";
     import Copy from '@lucide/svelte/icons/copy'
     import { mode } from "mode-watcher";
 
@@ -58,7 +58,7 @@
 </script>
 
 <button class="flex p-4 border relative rounded-lg flex-col gap-3">
-	<h3 class="text-lg text-left font-semibold">{name}</h3>
+	<h3 class="text-left text-lg font-medium tracking-[-0.02em] [font-family:var(--font-header),sans-serif]">{name}</h3>
 	<div class="flex flex-row gap-2">
         <div class={`h-8 w-full rounded-lg border`} style={`background:${primary}; border-color:${border};`}></div>
         <div class={`h-8 w-full rounded-lg border`} style={`background:${foreground}; border-color:${border};`}></div>

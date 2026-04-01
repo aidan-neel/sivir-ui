@@ -1,11 +1,9 @@
 <script lang="ts">
+	import PageHeader from '$lib/components/docs/page-header.svelte';
 </script>
 
-<main class="flex flex-col w-full h-screen">
-	<header class="flex flex-col gap-1 pb-6 border-b rounded-none">
-		<h1 class="text-4xl font-bold">Changelog</h1>
-		<p class="text-lg text-foreground-muted">A log of the latest updates</p>
-	</header>
+<main class="flex w-full flex-col pb-12">
+	<PageHeader title="Changelog" description="A log of the latest updates" compact={true} />
 
 	<header class="flex flex-col gap-1 py-6 border-b">
 		<p class="text-2xl font-semibold">April 2025</p>

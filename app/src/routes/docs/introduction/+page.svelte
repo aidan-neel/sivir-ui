@@ -1,11 +1,9 @@
 <script lang="ts">
+	import PageHeader from '$lib/components/docs/page-header.svelte';
 </script>
 
-<main class="flex flex-col w-full h-screen">
-	<header class="flex flex-col gap-1 pb-6 border-b rounded-none">
-		<h1 class="text-4xl font-bold">Introduction</h1>
-		<p class="text-lg text-foreground-muted">A better way to build UI with Svelte</p>
-	</header>
+<main class="flex w-full flex-col pb-12">
+	<PageHeader title="Introduction" description="A better way to build UI with Svelte" compact={true} />
 
 	<p class="text-base pt-6">
 		A collection of reusable components designed for Tailwind v4 and Svelte 5. These components are
@@ -19,7 +17,7 @@
 		you can easily copy and paste or add to your apps using the CLI.
 		<br /><br />
 
-		<span class="font-bold"> What do you mean not a typical component library? </span>
+		<span class="font-semibold"> What do you mean not a typical component library? </span>
 		<br /><br />
 
 		This is not something you install as a dependency. It’s not available through npm, however,

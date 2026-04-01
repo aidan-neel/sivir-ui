@@ -1,16 +1,18 @@
----
-title: Select
-description: Displays a list of options for a user to pick from triggered by a button.
-component: true
-source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/select
----
+<script module lang="ts">
+	export const metadata = {
+	  "title": "Select",
+	  "description": "Displays a list of options for a user to pick from triggered by a button.",
+	  "component": true,
+	  "source": "https://github.com/aidan-neel/silk/tree/main/registry/silk/default/select"
+};
+</script>
 
 <script>
     import { ComponentPreview, CodeBlock, CodeSnippet, ExportItem, APIReference } from '$lib/components/docs';
-    import { Button } from '$lib/ui/components/button';
-    import { Input } from '$lib/ui/components/input';
-    import * as Popover from '$lib/ui/components/popover';
-    import * as Select from '$lib/ui/components/select';
+    import { Button } from '$lib/silk/components/button';
+    import { Input } from '$lib/silk/components/input';
+    import * as Popover from '$lib/silk/components/popover';
+    import * as Select from '$lib/silk/components/select';
 
     let t = $state('');
 </script>
@@ -34,12 +36,12 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/select
 </h1>
 
 <ComponentPreview code={`<script lang="ts">
-    import * as Select from "$lib/ui/components/select"
-    
+    import * as Select from "$lib/silk/components/select"
+
     let selected = $state<string>('');
 </script>\n
 <Select.Root bind:value={selected}>
-    <Select.Trigger class="w-[180px]" variant="outlined">Select</Select.Trigger>
+            <Select.Trigger class="w-[180px]" variant="outlined">Select a fruit</Select.Trigger>
     <Select.Content class="w-[180px]">
         <Select.Label>Fruits</Select.Label>
         <Select.Item value="apple">Apple</Select.Item>
@@ -50,7 +52,7 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/select
     </Select.Content>
 </Select.Root>`}>
     <Select.Root bind:value={t}>
-        <Select.Trigger class="w-[180px]" variant="outlined">Select</Select.Trigger>
+        <Select.Trigger class="w-[180px]" variant="outlined">Select a fruit</Select.Trigger>
         <Select.Content class="w-[180px]">
             <Select.Label>Fruits</Select.Label>
             <Select.Item value="apple">Apple</Select.Item>
@@ -67,15 +69,15 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/select
 </h1>
 
 <div class="flex flex-col gap-10">
-	<APIReference 
-		title="Select" 
-		component="Root" 
-		description="The root container that manages the state and behavior of the select component." 
+	<APIReference
+		title="Select"
+		component="Root"
+		description="The root container that manages the state and behavior of the select component."
 		items={[
 			{
 				property: "value",
 				type: "string",
-				description: "The current selected value.",
+				description: "The current selected value. Bindable.",
 				defaults: "\"\""
 			},
 			{
@@ -94,13 +96,13 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/select
 				description: "Additional attributes passed to the root container.",
 				defaults: "{}"
 			}
-		]} 
+		]}
 	/>
 
-	<APIReference 
-		title="Select" 
-		component="Trigger" 
-		description="The button that toggles the select list open or closed." 
+	<APIReference
+		title="Select"
+		component="Trigger"
+		description="The button that toggles the select list open or closed."
 		items={[
 			{
 				property: "children",
@@ -109,8 +111,8 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/select
 			},
 			{
 				property: "variant",
-				type: "string",
-				description: "Optional variant styling for the trigger button."
+				type: "ButtonVariant",
+				description: "Optional button variant styling for the trigger."
 			},
 			{
 				property: "class",
@@ -119,17 +121,17 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/select
 			},
 			{
 				property: "...rest",
-				type: "HTMLButtonAttributes",
+				type: "HTMLButtonAttributes | HTMLAnchorAttributes",
 				description: "Additional HTML button attributes passed to the trigger.",
 				defaults: "{}"
 			}
-		]} 
+		]}
 	/>
 
-	<APIReference 
-		title="Select" 
-		component="Label" 
-		description="A non-selectable text label used to group or divide items in the list." 
+	<APIReference
+		title="Select"
+		component="Label"
+		description="A non-selectable text label used to group or divide items in the list."
 		items={[
 			{
 				property: "children",
@@ -147,13 +149,13 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/select
 				description: "Additional attributes passed to the label element.",
 				defaults: "{}"
 			}
-		]} 
+		]}
 	/>
 
-	<APIReference 
-		title="Select" 
-		component="Item" 
-		description="An individual option that can be selected." 
+	<APIReference
+		title="Select"
+		component="Item"
+		description="An individual option that can be selected."
 		items={[
 			{
 				property: "value",
@@ -172,17 +174,17 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/select
 			},
 			{
 				property: "...rest",
-				type: "ButtonAttributes",
+				type: "ButtonProps",
 				description: "Additional attributes passed to the item button.",
 				defaults: "{}"
 			}
-		]} 
+		]}
 	/>
 
-	<APIReference 
-		title="Select" 
-		component="Content" 
-		description="The container that holds and displays the list of selectable items." 
+	<APIReference
+		title="Select"
+		component="Content"
+		description="The container that holds and displays the list of selectable items."
 		items={[
 			{
 				property: "children",
@@ -200,6 +202,6 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/select
 				description: "Additional attributes passed to the content wrapper.",
 				defaults: "{}"
 			}
-		]} 
+		]}
 	/>
 </div>

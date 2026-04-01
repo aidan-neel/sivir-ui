@@ -1,109 +1,132 @@
 <script lang="ts">
-    import CodeBlock from "$lib/components/docs/code-block.svelte";
+	import CodeBlock from '$lib/components/docs/code-block.svelte';
+	import ColorPicker from '$lib/components/themes/color-picker.svelte';
+	import PageHeader from '$lib/components/docs/page-header.svelte';
+
+	let previewColor = $state('#155eef');
 </script>
 
-<main class="flex flex-col w-full h-screen">
-	<header class="flex flex-col gap-1 pb-6 border-b rounded-none">
-		<h1 class="text-4xl font-bold">Custom Theming</h1>
-		<p class="text-lg text-foreground-muted">Create and install custom themes from the registry</p>
-	</header>
+<main class="flex w-full flex-col pb-12">
+	<PageHeader title="Custom Theming" description="Build themes that scale past just color swaps" compact={true} />
 
-    <section class="flex flex-col gap-1 mt-6">
-		<p class="text-2xl font-semibold">Create a theme</p>
-        <p class="text-base py-4">
-            Customize a theme to your liking using Tailwind. See more <a href="https://tailwindcss.com/docs/theme" class="underline font-medium">here.</a>
-            Below is an example theme called 'Neon'.
-        </p>
-        <CodeBlock code={`@theme {
-	/* Fonts */
+	<section class="flex flex-col gap-1 mt-6">
+		<p class="text-2xl font-semibold">1. Start with semantic tokens</p>
+		<p class="text-base py-4">
+			Define your brand colors, surfaces, radii, and ring values with `@theme`. Those feed the
+			entire component system automatically.
+		</p>
+		<CodeBlock
+			code={`@theme {
 	--font-sans: 'Geist';
-	--font-mono: 'Geist Mono';
-
-	/* Colors */
 	--color-background: #ffffff;
 	--color-border: #dedede;
+	--color-input: #d9d9d9;
 	--color-primary: #2685d9;
-	--color-foreground-opposite: #ffffff;
 	--color-foreground: #171717;
-	--color-foreground-muted: #525252;
 	--color-foreground-btn: #ffffff;
-	--color-secondary: #e9e9e9;
-	--color-accent: #0d1a40;
-	--color-alternate: #2c2c2c;
-	--color-success: #46ab61;
-	--color-warning: #ff9800;
-	--color-error: #ef5350;
-	--color-destructive: #fa4234;
-
-	/* Border radius */
-	--radius-sm: 0.2rem;
-	--radius-md: 0.3rem;
-	--radius-lg: 0.5rem;
-	--radius-xl: 0.7rem;
+	--color-secondary: #ececec;
+	--color-popover: #ffffff;
+	--color-card: #f6f6f6;
+	--radius-lg: 0.75rem;
+	--color-ring: rgb(38 133 217 / 0.24);
 }
 
 .dark {
-	/* Fonts */
-	--font-sans: 'Geist' !important;
-	--font-mono: 'Geist Mono' !important;
+	--color-background: #0f0f10;
+	--color-border: #222224;
+	--color-input: #2f2f33;
+	--color-primary: #4da3f0;
+	--color-foreground: #f2f2f2;
+	--color-foreground-btn: #071018;
+	--color-secondary: #18181b;
+	--color-popover: #151518;
+	--color-card: #131316;
+	--color-ring: rgb(77 163 240 / 0.3);
+}`}
+			class="p-3 max-h-[35rem]"
+			lang="css"
+		/>
+	</section>
 
-	/* Colors */
-	--color-background: #0a0a0a !important;
-	--color-border: #1c1c1c !important;
-	--color-primary: #0b7bde !important;
-	--color-foreground-opposite: #0d0d0d !important;
-	--color-foreground: #ffffff !important;
-	--color-foreground-muted: #9c9c9c !important;
-	--color-foreground-btn: #ffffff !important;
-	--color-secondary: #171717 !important;
-	--color-accent: #0d1a40 !important;
-	--color-alternate: #2c2c2c !important;
-	--color-success: #46ab61 !important;
-	--color-warning: #ff9800 !important;
-	--color-error: #ef5350 !important;
-	--color-destructive: #b50003 !important;
+	<section class="flex flex-col gap-1 mt-6">
+		<p class="text-2xl font-semibold">2. Override component tokens when needed</p>
+		<p class="text-base py-4">
+			You can go deeper without forking components by overriding tokens like
+			`--button-primary-bg`, `--field-height`, `--panel-radius`, or `--toast-shadow`.
+		</p>
+		<CodeBlock
+			code={`:root {
+	--button-radius: 999px;
+	--button-height: 2.6rem;
+	--button-primary-bg: #101828;
+	--button-primary-hover-bg: #1d2939;
 
-	/* Border radius */
-	--radius-sm: 0.2rem !important;
-	--radius-md: 0.3rem !important;
-	--radius-lg: 0.5rem !important;
-	--radius-xl: 0.7rem !important;
+	--field-radius: 1rem;
+	--field-height: 3rem;
 
-	/* Sizes */
-	--height-btn: 2.25rem !important;
-	--padding-x-btn: 1rem !important;
+	--panel-radius: 1.25rem;
+	--panel-shadow: 0 24px 80px rgb(0 0 0 / 0.16);
+
+	--toast-radius: 1rem;
+}`}
+			class="p-3 max-h-[25rem]"
+			lang="css"
+		/>
+	</section>
+
+	<section class="flex flex-col gap-1 mt-6">
+		<p class="text-2xl font-semibold">3. Target individual primitives</p>
+		<p class="text-base py-4">
+			Major components render `data-ui` hooks so one-off adjustments stay local and explicit.
+		</p>
+		<CodeBlock
+			code={`[data-ui='button'][data-variant='primary'] {
+	text-transform: uppercase;
 }
-`} class="p-3 max-h-[35rem]" lang="css" />
+
+[data-ui='dialog-content'] {
+	--panel-radius: 1.5rem;
+}
+
+[data-ui='switch'] {
+	--switch-track-active-bg: #111827;
+}`}
+			class="p-3 max-h-[20rem]"
+			lang="css"
+		/>
+	</section>
+
+	<section class="flex flex-col gap-3 mt-8">
+		<p class="text-2xl font-semibold">4. Use the theme editor primitives</p>
+		<p class="text-base py-1">
+			The same color picker used on the Themes page is available for editor-style tooling and
+			internal theme controls.
+		</p>
+		<div class="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-[var(--card-radius)] shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)] rounded-xl p-4">
+			<ColorPicker
+				label="Primary"
+				value={previewColor}
+				onValueChange={(value) => {
+					previewColor = value;
+				}}
+			/>
+		</div>
 	</section>
 
 	<section class="flex flex-col gap-1 mt-6">
 		<p class="text-2xl font-semibold">Install a theme</p>
-        <p class="text-base py-4">
-            Use the CLI to install a theme to your project. A list of themes with previews are available <a href="/themes" class="underline font-medium">here.</a>
-        </p>
-        <CodeBlock code={"npx @aidan-neel/ui theme install [name]"} class="p-3" lang="shell" />
-        <p class="text-base py-4">
-            After installing, make sure to import your chosen theme in the main css file.
-        </p>
-        <CodeBlock code={`/* Chosen Theme */
-@import './themes/default.css';
-`} class="p-3" lang="css" />
-        <p class="text-base py-4">
-            Alternatively, use the themes URL to use it without having to download it.
-        </p>
-        <CodeBlock code={`/* Chosen Theme */
-@import 'https://ui.aidan-neel.com/themes/default.css';
-`} class="p-3" lang="css" />
-	</section>
-
-    <section class="flex flex-col gap-1 mt-6">
-		<p class="text-2xl font-semibold">Publish a theme</p>
-        <p class="text-base py-4">
-            Use the CLI to publish a theme to the registry.
-        </p>
-        <CodeBlock code={"npx @aidan-neel/ui theme publish [name].css"} class="p-3" lang="shell" />
-        <p class="text-base py-4">
-            Assuming a theme by the same name does not already exist, it will take the CSS file name and publish the theme.
-        </p>
+		<p class="text-base py-4">
+			Use the CLI to install a theme to your project. A list of themes with previews is available
+			<a href="/themes" class="underline font-medium">here</a>.
+		</p>
+		<CodeBlock code={'npx @aidan-neel/ui theme install [name]'} lang="shell" />
+		<p class="text-base py-4">
+			After installing, import your chosen theme in the main CSS file.
+		</p>
+		<CodeBlock
+			code={`/* Chosen Theme */
+@import './themes/default.css';`}
+			lang="css"
+		/>
 	</section>
 </main>

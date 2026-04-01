@@ -1,13 +1,15 @@
----
-title: Skeleton
-description: Displays a skeleton loading state
-component: true
-source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/skeleton
----
+<script module lang="ts">
+	export const metadata = {
+	  "title": "Skeleton",
+	  "description": "Displays a skeleton loading state",
+	  "component": true,
+	  "source": "https://github.com/aidan-neel/silk/tree/main/registry/silk/default/skeleton"
+};
+</script>
 
 <script>
     import { ComponentPreview, CodeBlock, CodeSnippet, ExportItem, APIReference } from '$lib/components/docs';
-    import { Skeleton } from '$lib/ui/components/skeleton';
+    import { Skeleton } from '$lib/silk/components/skeleton';
 </script>
 
 <h1 class="py-2 h1">
@@ -25,7 +27,7 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/skeleton
 </h1>
 
 <ComponentPreview code={`<script>
-    import { Skeleton } from '$lib/ui/components/skeleton';
+    import { Skeleton } from '$lib/silk/components/skeleton';
 </script>\n
 <Skeleton w={128} h={32} />`}>
     <div class="flex flex-row gap-2">
@@ -42,10 +44,10 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/skeleton
 </h1>
 
 <div class="flex flex-col gap-10">
-    <APIReference 
-        title="Skeleton" 
-        component="Skeleton" 
-        description="The main component for displaying a skeleton." 
+    <APIReference
+        title="Skeleton"
+        component="Skeleton"
+        description="The main component for displaying a skeleton."
         items={[
             {
                 property: "children",
@@ -73,6 +75,6 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/skeleton
                 description: "The unit to use for width and height.",
                 defaults: "'px'"
             }
-        ]} 
+        ]}
     />
 </div>

@@ -1,74 +1,49 @@
----
-title: Shortcut
-description: Brief description of the component.
-component: true
-source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/componentname
----
+<script module lang="ts">
+	export const metadata = {
+	  "title": "Shortcut",
+	  "description": "Displays a keyboard shortcut hint and can bind that shortcut to the parent button.",
+	  "component": true,
+	  "source": "https://github.com/aidan-neel/silk/tree/main/registry/silk/default/shortcut"
+};
+</script>
 
 <script>
-    import { ComponentPreview, ExportItem, APIReference } from '$lib/components/docs';
-    import { Button } from "$lib/ui/components/button";
-    import { Shortcut } from "$lib/ui/components/shortcut";
+	import { ComponentPreview, ExportItem, APIReference } from '$lib/components/docs';
+	import { Button } from '$lib/silk/components/button';
+	import { Shortcut } from '$lib/silk/components/shortcut';
 </script>
 
 <h1 class="py-2 h1">Import</h1>
-<p class="py-2">ComponentName exports its subcomponents.</p>
+<p class="py-2">Shortcut exports a single component.</p>
 
-<ExportItem title="Root">Main container for the component.</ExportItem>
-<ExportItem title="SubComponent1">Description of SubComponent1.</ExportItem>
-<ExportItem title="SubComponent2">Description of SubComponent2.</ExportItem>
+<ExportItem title="Shortcut">Renders shortcut text and listens for the matching key combination.</ExportItem>
 
 <h1 class="py-6 h1">Example</h1>
 
-<ComponentPreview code={`<script lang="ts">
-    import { Button } from "$lib/ui/components/button";
-    import { Shortcut } from "$lib/ui/components/shortcut";
-</script>\n
-<Button onclick={() => { console.log('Hello, World!')}} variant="outlined" class="max-w-full w-[200px] flex justify-between items-center px-3">
-    Console Log
-    <Shortcut shortcut="Ctrl+B">
-        Ctrl+B
-    </Shortcut>
+<ComponentPreview code={`<script>
+	import { Button } from '$lib/silk/components/button';
+	import { Shortcut } from '$lib/silk/components/shortcut';
+</script>
+
+<Button variant="outlined" class="flex w-[200px] items-center justify-between px-3" onclick={() => console.log('Hello, World!')}>
+	Console Log
+	<Shortcut shortcut="Ctrl+B">Ctrl+B</Shortcut>
 </Button>`}>
-    <Button onclick={() => { console.log('Hello, World!')}} variant="outlined" class="max-w-full w-[200px] flex justify-between items-center px-3">
-        Console Log
-        <Shortcut shortcut="Ctrl+B">
-            Ctrl+B
-        </Shortcut>
-    </Button>
+	<Button variant="outlined" class="flex w-[200px] items-center justify-between px-3" onclick={() => console.log('Hello, World!')}>
+		Console Log
+		<Shortcut shortcut="Ctrl+B">Ctrl+B</Shortcut>
+	</Button>
 </ComponentPreview>
 
 <h1 class="py-6 h1">API Reference</h1>
 
-<div class="flex flex-col gap-10">
-    <APIReference
-        title="ComponentName"
-        component="Root"
-        description="Main container component."
-        items={[
-            { property: "children", type: "Snippet", description: "Elements rendered inside the root." },
-            { property: "class", type: "string", description: "CSS classes for the root container." },
-            { property: "...rest", type: "HTMLDivAttributes", description: "Extra attributes.", defaults: "{}" }
-        ]}
-    />
-    <APIReference
-        title="ComponentName"
-        component="SubComponent1"
-        description="Subcomponent of ComponentName."
-        items={[
-            { property: "children", type: "Snippet", description: "Content for this subcomponent." },
-            { property: "class", type: "string", description: "CSS classes for this subcomponent." },
-            { property: "...rest", type: "HTMLAttributes<HTMLElement>", description: "Extra attributes.", defaults: "{}" }
-        ]}
-    />
-    <APIReference
-        title="ComponentName"
-        component="SubComponent2"
-        description="Another subcomponent."
-        items={[
-            { property: "children", type: "Snippet", description: "Content for this subcomponent." },
-            { property: "class", type: "string", description: "CSS classes for this subcomponent." },
-            { property: "...rest", type: "HTMLAttributes<HTMLElement>", description: "Extra attributes.", defaults: "{}" }
-        ]}
-    />
-</div>
+<APIReference
+	title="Shortcut"
+	component="Shortcut"
+	description="Keyboard shortcut hint attached to a button."
+	items={[
+		{ property: "shortcut", type: "string", description: "Shortcut string such as `Ctrl+K` or `Cmd+Shift+P`." },
+		{ property: "children", type: "Snippet", description: "Visible label shown inside the shortcut element." },
+		{ property: "class", type: "string", description: "Additional classes for the shortcut label." }
+	]}
+/>

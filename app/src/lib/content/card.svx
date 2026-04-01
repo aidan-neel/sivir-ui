@@ -1,16 +1,18 @@
----
-title: Card
-description: Displays content in a structured, flexible layout.
-component: true
-source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/card
----
+<script module lang="ts">
+	export const metadata = {
+	  "title": "Card",
+	  "description": "Displays content in a structured, flexible layout.",
+	  "component": true,
+	  "source": "https://github.com/aidan-neel/silk/tree/main/registry/silk/default/card"
+};
+</script>
 
 <script>
     import { ComponentPreview, CodeBlock, CodeSnippet, ExportItem, APIReference } from '$lib/components/docs';
-    import { Input } from '$lib/ui/components/input';
-    import { Checkbox } from '$lib/ui/components/checkbox';
-    import { Button } from '$lib/ui/components/button';
-    import * as Card from '$lib/ui/components/card';
+    import { Input } from '$lib/silk/components/input';
+    import { Checkbox } from '$lib/silk/components/checkbox';
+    import { Button } from '$lib/silk/components/button';
+    import * as Card from '$lib/silk/components/card';
 </script>
 
 <h1 class="py-2 h1">
@@ -84,10 +86,10 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/card
 </h1>
 
 <div class="flex flex-col gap-10">
-	<APIReference 
-		title="Card" 
-		component="Root" 
-		description="The root container of the card with rounded corners, background, and padding." 
+	<APIReference
+		title="Card"
+		component="Root"
+		description="The root container of the card with rounded corners, background, and padding."
 		items={[
 			{
 				property: "children",
@@ -105,13 +107,13 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/card
 				description: "Additional attributes passed to the card root.",
 				defaults: "{}"
 			}
-		]} 
+		]}
 	/>
 
-	<APIReference 
-		title="Card" 
-		component="Title" 
-		description="The title of the card, typically rendered in bold text." 
+	<APIReference
+		title="Card"
+		component="Title"
+		description="The title of the card, typically rendered in bold text."
 		items={[
 			{
 				property: "children",
@@ -129,13 +131,13 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/card
 				description: "Additional attributes passed to the title element.",
 				defaults: "{}"
 			}
-		]} 
+		]}
 	/>
 
-	<APIReference 
-		title="Card" 
-		component="Header" 
-		description="A container for the top section of the card, often includes title and description." 
+	<APIReference
+		title="Card"
+		component="Header"
+		description="A container for the top section of the card, often includes title and description."
 		items={[
 			{
 				property: "children",
@@ -153,13 +155,13 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/card
 				description: "Additional attributes passed to the header container.",
 				defaults: "{}"
 			}
-		]} 
+		]}
 	/>
 
-	<APIReference 
-		title="Card" 
-		component="Footer" 
-		description="A container for card actions or footer content." 
+	<APIReference
+		title="Card"
+		component="Footer"
+		description="A container for card actions or footer content."
 		items={[
 			{
 				property: "children",
@@ -177,13 +179,13 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/card
 				description: "Additional attributes passed to the footer container.",
 				defaults: "{}"
 			}
-		]} 
+		]}
 	/>
 
-	<APIReference 
-		title="Card" 
-		component="Description" 
-		description="A description or supporting text within the card." 
+	<APIReference
+		title="Card"
+		component="Description"
+		description="A description or supporting text within the card."
 		items={[
 			{
 				property: "children",
@@ -201,13 +203,13 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/card
 				description: "Additional attributes passed to the description element.",
 				defaults: "{}"
 			}
-		]} 
+		]}
 	/>
 
-	<APIReference 
-		title="Card" 
-		component="Content" 
-		description="The flexible content area inside the card." 
+	<APIReference
+		title="Card"
+		component="Content"
+		description="The flexible content area inside the card."
 		items={[
 			{
 				property: "children",
@@ -225,6 +227,6 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/card
 				description: "Additional attributes passed to the content container.",
 				defaults: "{}"
 			}
-		]} 
+		]}
 	/>
 </div>

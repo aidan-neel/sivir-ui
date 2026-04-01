@@ -1,0 +1,28 @@
+<script lang="ts">
+    import { Button, type ButtonProps } from "$lib/silk/components/button";
+    import { cn } from "$lib/silk/utils";
+    import { getContext, setContext, type Snippet } from 'svelte';
+    import { ChevronRight } from "@lucide/svelte";
+    import * as Popover from "$lib/silk/components/popover";
+
+    const key = Math.random().toString(36).substring(2);
+    setContext('parent', getContext('key'));
+
+    type SubTriggerProps = {
+        class?: string;
+        children?: Snippet;
+    } & ButtonProps;
+
+    let { class: className, children, ...rest }: SubTriggerProps = $props();
+</script>
+
+<Popover.Trigger
+    {...rest}
+    class={cn(className, "min-h-[var(--menu-item-height)] px-[var(--menu-item-padding-x)] rounded-[var(--menu-item-radius)] text-[var(--menu-item-foreground)] border border-transparent transition-[background-color,border-color,color,box-shadow] duration-150 hover:bg-[var(--menu-item-hover-bg)] hover:border-[var(--menu-item-hover-border)] hover:shadow-[inset_0_1px_0_color-mix(in_srgb,var(--panel-highlight)_44%,transparent)] data-[active=true]:bg-[var(--menu-item-hover-bg)] data-[active=true]:border-[var(--menu-item-hover-border)] data-[active=true]:shadow-[inset_0_1px_0_color-mix(in_srgb,var(--panel-highlight)_44%,transparent)] data-[selected=true]:bg-[var(--menu-item-active-bg)] flex w-full items-center justify-between px-2 text-left text-[14px] duration-50 hover:cursor-default")}
+    variant="ghost"
+>
+    <span class="min-w-0 flex-1 text-left">
+        {@render children?.()}
+    </span>
+    <ChevronRight class="ml-2 shrink-0 text-foreground-muted" size={18} />
+</Popover.Trigger>

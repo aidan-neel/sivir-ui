@@ -1,60 +1,79 @@
 <script lang="ts">
-	import { components, sanitizeComponent } from '$lib/components';
-	import { Button } from '$lib/ui/components/button';
 	import { page } from '$app/stores';
+	import { components, sanitizeComponent } from '$lib/components';
+	import { Button } from '$lib/silk/components/button';
+	import BookOpen from '@lucide/svelte/icons/book-open';
+	import Download from '@lucide/svelte/icons/download';
+	import Palette from '@lucide/svelte/icons/palette';
+	import History from '@lucide/svelte/icons/history';
 
 	let pageName = $state($page.url.pathname);
 	let { class: classProp } = $props();
 
+	const gettingStartedItems = [
+		{ slug: 'introduction', label: 'Introduction', icon: BookOpen },
+		{ slug: 'installation', label: 'Installation', icon: Download },
+		{ slug: 'theming', label: 'Theming', icon: Palette },
+		{ slug: 'changelog', label: 'Changelog', icon: History }
+	];
+
 	$effect(() => {
 		pageName = $page.url.pathname;
 	});
+
+	function isActive(path: string) {
+		return pageName === path;
+	}
 </script>
 
-<div
-	class="{classProp} flex flex-col overflow-y-auto gap-0.5"
->
-    <h3 class="font-medium text-sm text-foreground-muted/70 ml-2 pb-2 pt-1">Getting Started</h3>
-    <Button
-        variant={pageName.split('/')[2] === 'introduction' ? 'secondary' : 'ghost'}
-        href={`/docs/introduction`}
-        class="duration-100 w-fit px-2 flex-shrink-0 h-8 rounded-lg text-left text-sm right-2 flex items-center justify-center {pageName.split('/')[2] === 'introduction' ? 'font-semibold text-foreground' : 'text-foreground hover:text-foreground'}"
-    >
-        Introduction
-    </Button>
-    <Button
-        variant={pageName.split('/')[2] === 'installation' ? 'secondary' : 'ghost'}
-        href={`/docs/installation`}
-        class="duration-100 w-fit px-2 flex-shrink-0 h-8 rounded-lg text-left text-sm right-2 flex items-center justify-center {pageName.split('/')[2] === 'installation' ? 'font-semibold text-foreground' : 'text-foreground hover:text-foreground'}"
-    >
-        Installation
-    </Button>
-    <Button
-        variant={pageName.split('/')[2] === 'theming' ? 'secondary' : 'ghost'}
-        href={`/docs/theming`}
-        class="duration-100 w-fit px-2 flex-shrink-0 h-8 rounded-lg text-left text-sm right-2 flex items-center justify-center {pageName.split('/')[2] === 'theming' ? 'font-semibold text-foreground' : 'text-foreground hover:text-foreground'}"
-    >
-        Theming
-    </Button>
-    <Button
-        variant={pageName.split('/')[2] === 'changelog' ? 'secondary' : 'ghost'}
-        href={`/docs/changelog`}
-        class="duration-100 w-fit px-2 flex-shrink-0 h-8 rounded-lg text-left text-sm right-2 flex items-center justify-center {pageName.split('/')[2] === 'changelog' ? 'font-semibold text-foreground' : 'text-foreground hover:text-foreground'}"
-    >
-        Changelog
-    </Button>
-    <h3 class="font-medium text-sm text-foreground-muted/70 ml-2 pt-4 pb-2">Components</h3>
-	{#each components as component}
-		<Button
-			variant={pageName.split('/')[3] === component ? 'secondary' : 'ghost'}
-			href={`/docs/components/${component}`}
-			class="duration-100 px-2 flex-shrink-0 h-8 rounded-lg w-fit text-left text-sm right-2 flex items-center justify-center {pageName.split(
-				'/'
-			)[3] === component
-				? 'font-semibold text-foreground'
-				: 'text-foreground hover:text-foreground'}"
-		>
-			{sanitizeComponent(component)}
-		</Button>
-	{/each}
-</div>
+<aside class={`${classProp} flex flex-col overflow-y-auto pb-8`}>
+	<div class="flex flex-col gap-5">
+		<section class="flex flex-col gap-1.5">
+			<h3 class="px-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-foreground-muted/70">
+				Getting Started
+			</h3>
+			<div class="flex flex-col gap-0.5">
+				{#each gettingStartedItems as item}
+					{@const active = isActive(`/docs/${item.slug}`)}
+					<Button
+						variant="ghost"
+						href={`/docs/${item.slug}`}
+						class={`h-9 w-full justify-start gap-2 rounded-lg px-3 text-left text-sm transition-[background-color,color] ${
+							active
+								? 'bg-secondary/85 font-medium text-foreground'
+								: 'text-foreground-muted hover:bg-secondary/55 hover:text-foreground'
+						}`}
+					>
+						<item.icon size={14} class={active ? 'text-foreground' : 'text-foreground-muted'} />
+						{item.label}
+					</Button>
+				{/each}
+			</div>
+		</section>
+
+		<section class="flex flex-col gap-1.5">
+			<div class="flex items-center justify-between px-2">
+				<h3 class="text-[11px] font-semibold uppercase tracking-[0.14em] text-foreground-muted/70">
+					Components
+				</h3>
+				<span class="text-[11px] text-foreground-muted/70">{components.length}</span>
+			</div>
+			<div class="flex flex-col gap-0.5">
+				{#each components as component}
+					{@const active = pageName === `/docs/components/${component}`}
+					<Button
+						variant="ghost"
+						href={`/docs/components/${component}`}
+						class={`h-8.5 w-full justify-start rounded-lg px-3 text-left text-sm transition-[background-color,color] ${
+							active
+								? 'bg-secondary/85 font-medium text-foreground'
+								: 'text-foreground-muted hover:bg-secondary/55 hover:text-foreground'
+						}`}
+					>
+						{sanitizeComponent(component)}
+					</Button>
+				{/each}
+			</div>
+		</section>
+	</div>
+</aside>

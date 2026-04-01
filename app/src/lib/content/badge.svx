@@ -1,13 +1,15 @@
----
-title: Badge
-description: Displays a badge or a component that looks like a badge.
-component: true
-source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/badge
----
+<script module lang="ts">
+	export const metadata = {
+	  "title": "Badge",
+	  "description": "Displays a badge or a component that looks like a badge.",
+	  "component": true,
+	  "source": "https://github.com/aidan-neel/silk/tree/main/registry/silk/default/badge"
+};
+</script>
 
 <script>
     import { ComponentPreview, CodeBlock, CodeSnippet, ExportItem, APIReference } from '$lib/components/docs';
-    import { Badge } from '$lib/ui/components/badge';
+    import { Badge } from '$lib/silk/components/badge';
 </script>
 
 <h1 class="py-2 h1">
@@ -25,7 +27,7 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/badge
 </h1>
 
 <ComponentPreview code={`<script>
-    import { Badge } from '$lib/ui/components/badge';
+    import { Badge } from '$lib/silk/components/badge';
 </script>\n
 <Badge>Primary</Badge>
 <Badge variant="flat">Flat</Badge>
@@ -50,10 +52,10 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/badge
     API Reference
 </h1>
 
-<APIReference 
-	title="Badge" 
-	component="Root" 
-	description="A stylable label component for highlighting statuses or metadata." 
+<APIReference
+	title="Badge"
+	component="Badge"
+	description="A stylable label component for highlighting statuses or metadata."
 	items={[
 		{
 			property: "variant",
@@ -71,16 +73,16 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/badge
 			type: "string",
 			description: "Additional CSS classes to apply to the badge."
 		},
-		{
-			property: "href",
-			type: "string",
-			description: "If provided, renders the badge as an anchor element."
-		},
-		{
-			property: "...rest",
-			type: "HTMLButtonAttributes",
-			description: "Additional attributes passed to the badge element.",
-			defaults: "{}"
-		}
-	]} 
+			{
+				property: "href",
+				type: "string",
+				description: "If provided, renders the badge as an anchor element."
+			},
+			{
+				property: "...rest",
+				type: "HTMLAttributes<HTMLElement>",
+				description: "Additional attributes passed to the badge element or link.",
+				defaults: "{}"
+			}
+		]}
 />

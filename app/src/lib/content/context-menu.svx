@@ -1,90 +1,181 @@
----
-title: context-menu
-description: Brief description of the component.
-component: true
-source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/componentname
----
+<script module lang="ts">
+	export const metadata = {
+	  "title": "Context Menu",
+	  "description": "Displays a right-click menu with actions, nested sections, and checkbox items.",
+	  "component": true,
+	  "source": "https://github.com/aidan-neel/silk/tree/main/registry/silk/default/context-menu"
+};
+</script>
 
 <script>
-    import { ComponentPreview, ExportItem, APIReference } from '$lib/components/docs';
-    import * as ContextMenu from '$lib/ui/components/context-menu';
-    import { Shortcut } from '$lib/ui/components/shortcut';
+	import { ComponentPreview, ExportItem, APIReference } from '$lib/components/docs';
+	import * as ContextMenu from '$lib/silk/components/context-menu';
+	import { Shortcut } from '$lib/silk/components/shortcut';
 </script>
 
 <h1 class="py-2 h1">Import</h1>
-<p class="py-2">ComponentName exports its subcomponents.</p>
+<p class="py-2">Context Menu exports 9 components.</p>
 
-<ExportItem title="Root">Main container for the component.</ExportItem>
-<ExportItem title="SubComponent1">Description of SubComponent1.</ExportItem>
-<ExportItem title="SubComponent2">Description of SubComponent2.</ExportItem>
+<ExportItem title="Root">Sets up the context menu state.</ExportItem>
+<ExportItem title="Trigger">Area that listens for the context menu interaction.</ExportItem>
+<ExportItem title="Content">Menu surface containing items.</ExportItem>
+<ExportItem title="Item">Standard clickable menu row.</ExportItem>
+<ExportItem title="CheckboxItem">Menu row with checked state.</ExportItem>
+<ExportItem title="Separator">Visual divider.</ExportItem>
+<ExportItem title="Sub">Nested submenu wrapper.</ExportItem>
+<ExportItem title="SubTrigger">Row that opens a submenu.</ExportItem>
+<ExportItem title="SubContent">Submenu surface.</ExportItem>
 
 <h1 class="py-6 h1">Example</h1>
 
-<ComponentPreview code={`<ComponentName.Root>
-    <ComponentName.SubComponent1>Content here</ComponentName.SubComponent1>
-    <ComponentName.SubComponent2>Content here</ComponentName.SubComponent2>
-</ComponentName.Root>`}>
-    <ContextMenu.Root>
-        <ContextMenu.Trigger class="p-20 px-28 rounded-lg font-medium text-foreground-muted bg-secondary">
-            Right click here
-        </ContextMenu.Trigger>
-        <ContextMenu.Content class="w-[210px]">
-            <ContextMenu.Item inset>Cut <Shortcut shortcut="Ctrl+K">Ctrl+K</Shortcut> </ContextMenu.Item>
-            <ContextMenu.Item inset>Copy <Shortcut shortcut="Ctrl+C">Ctrl+C</Shortcut> </ContextMenu.Item>
-            <ContextMenu.Item inset>Paste <Shortcut shortcut="Ctrl+V">Ctrl+V</Shortcut> </ContextMenu.Item>
-            <ContextMenu.Item inset>Duplicate Layer <Shortcut shortcut="Ctrl+D">Ctrl+D</Shortcut> </ContextMenu.Item>
-            <ContextMenu.Separator />
-            <ContextMenu.Item inset>Convert</ContextMenu.Item>
-            <ContextMenu.Item inset>Rasterize Layer</ContextMenu.Item>
-            <ContextMenu.Sub>
-                <ContextMenu.SubTrigger inset>
-                    Quick Actions
-                </ContextMenu.SubTrigger>
-                <ContextMenu.SubContent class="w-[150px]">
-                    <ContextMenu.Item>Merge Visible</ContextMenu.Item>
-                    <ContextMenu.Item>Flatten Layer</ContextMenu.Item>
-                    <ContextMenu.Separator />
-                    <ContextMenu.Item class="">Delete</ContextMenu.Item>
-                </ContextMenu.SubContent>
-            </ContextMenu.Sub>
-            <ContextMenu.Separator />
-            <ContextMenu.CheckboxItem value="lock-pixels" inset>Lock Pixels</ContextMenu.CheckboxItem>
-            <ContextMenu.CheckboxItem value="clip-layer" inset>Clip Layer</ContextMenu.CheckboxItem>
-        </ContextMenu.Content>
-    </ContextMenu.Root>
+<ComponentPreview code={`<script>
+	import * as ContextMenu from '$lib/silk/components/context-menu';
+	import { Shortcut } from '$lib/silk/components/shortcut';
+</script>
+
+<ContextMenu.Root>
+	<ContextMenu.Trigger class="rounded-xl border border-border/70 bg-secondary/40 px-10 py-14 text-center font-medium text-foreground-muted">
+		Right click this project card
+	</ContextMenu.Trigger>
+	<ContextMenu.Content class="w-[248px]">
+		<ContextMenu.Item inset>
+			Open project
+			<Shortcut shortcut="Enter">Enter</Shortcut>
+		</ContextMenu.Item>
+		<ContextMenu.Item inset>
+			Rename
+			<Shortcut shortcut="R">R</Shortcut>
+		</ContextMenu.Item>
+		<ContextMenu.Item inset>
+			Duplicate
+			<Shortcut shortcut="⌘D">⌘D</Shortcut>
+		</ContextMenu.Item>
+		<ContextMenu.Separator />
+		<ContextMenu.CheckboxItem inset value="favorite" checked={true}>
+			Pin to favorites
+		</ContextMenu.CheckboxItem>
+		<ContextMenu.CheckboxItem inset value="watchers" checked={false}>
+			Watch activity
+		</ContextMenu.CheckboxItem>
+		<ContextMenu.Separator />
+		<ContextMenu.Item inset>
+			Copy link
+			<Shortcut shortcut="⌘C">⌘C</Shortcut>
+		</ContextMenu.Item>
+		<ContextMenu.Item inset>
+			Share
+			<Shortcut shortcut="S">S</Shortcut>
+		</ContextMenu.Item>
+		<ContextMenu.Separator />
+		<ContextMenu.Sub>
+			<ContextMenu.SubTrigger inset>Move to</ContextMenu.SubTrigger>
+			<ContextMenu.SubContent>
+				<ContextMenu.Item inset>Design</ContextMenu.Item>
+				<ContextMenu.Item inset>Marketing</ContextMenu.Item>
+				<ContextMenu.Item inset>Archive</ContextMenu.Item>
+			</ContextMenu.SubContent>
+		</ContextMenu.Sub>
+		<ContextMenu.Separator />
+		<ContextMenu.Item inset class="text-error">
+			Delete project
+			<Shortcut shortcut="⌫">⌫</Shortcut>
+		</ContextMenu.Item>
+	</ContextMenu.Content>
+</ContextMenu.Root>`}>
+	<ContextMenu.Root>
+		<ContextMenu.Trigger class="rounded-xl border border-border/70 bg-secondary/40 px-10 py-14 text-center font-medium text-foreground-muted">
+			Right click this project card
+		</ContextMenu.Trigger>
+		<ContextMenu.Content class="w-[248px]">
+			<ContextMenu.Item inset>
+				Open project
+				<Shortcut shortcut="Enter">Enter</Shortcut>
+			</ContextMenu.Item>
+			<ContextMenu.Item inset>
+				Rename
+				<Shortcut shortcut="R">R</Shortcut>
+			</ContextMenu.Item>
+			<ContextMenu.Item inset>
+				Duplicate
+				<Shortcut shortcut="⌘D">⌘D</Shortcut>
+			</ContextMenu.Item>
+			<ContextMenu.Separator />
+			<ContextMenu.CheckboxItem inset value="favorite" checked={true}>
+				Pin to favorites
+			</ContextMenu.CheckboxItem>
+			<ContextMenu.CheckboxItem inset value="watchers" checked={false}>
+				Watch activity
+			</ContextMenu.CheckboxItem>
+			<ContextMenu.Separator />
+			<ContextMenu.Item inset>
+				Copy link
+				<Shortcut shortcut="⌘C">⌘C</Shortcut>
+			</ContextMenu.Item>
+			<ContextMenu.Item inset>
+				Share
+				<Shortcut shortcut="S">S</Shortcut>
+			</ContextMenu.Item>
+			<ContextMenu.Separator />
+			<ContextMenu.Sub>
+				<ContextMenu.SubTrigger inset>Move to</ContextMenu.SubTrigger>
+				<ContextMenu.SubContent>
+					<ContextMenu.Item inset>Design</ContextMenu.Item>
+					<ContextMenu.Item inset>Marketing</ContextMenu.Item>
+					<ContextMenu.Item inset>Archive</ContextMenu.Item>
+				</ContextMenu.SubContent>
+			</ContextMenu.Sub>
+			<ContextMenu.Separator />
+			<ContextMenu.Item inset class="text-error">
+				Delete project
+				<Shortcut shortcut="⌫">⌫</Shortcut>
+			</ContextMenu.Item>
+		</ContextMenu.Content>
+	</ContextMenu.Root>
 </ComponentPreview>
 
 <h1 class="py-6 h1">API Reference</h1>
 
 <div class="flex flex-col gap-10">
-    <APIReference
-        title="ComponentName"
-        component="Root"
-        description="Main container component."
-        items={[
-            { property: "children", type: "Snippet", description: "Elements rendered inside the root." },
-            { property: "class", type: "string", description: "CSS classes for the root container." },
-            { property: "...rest", type: "HTMLDivAttributes", description: "Extra attributes.", defaults: "{}" }
-        ]}
-    />
-    <APIReference
-        title="ComponentName"
-        component="SubComponent1"
-        description="Subcomponent of ComponentName."
-        items={[
-            { property: "children", type: "Snippet", description: "Content for this subcomponent." },
-            { property: "class", type: "string", description: "CSS classes for this subcomponent." },
-            { property: "...rest", type: "HTMLAttributes<HTMLElement>", description: "Extra attributes.", defaults: "{}" }
-        ]}
-    />
-    <APIReference
-        title="ComponentName"
-        component="SubComponent2"
-        description="Another subcomponent."
-        items={[
-            { property: "children", type: "Snippet", description: "Content for this subcomponent." },
-            { property: "class", type: "string", description: "CSS classes for this subcomponent." },
-            { property: "...rest", type: "HTMLAttributes<HTMLElement>", description: "Extra attributes.", defaults: "{}" }
-        ]}
-    />
+	<APIReference
+		title="ContextMenu"
+		component="Root"
+		description="Sets up the right-click context menu state."
+		items={[
+			{ property: "children", type: "Snippet", description: "Trigger and content." },
+			{ property: "class", type: "string", description: "Additional wrapper classes." }
+		]}
+	/>
+
+	<APIReference
+		title="ContextMenu"
+		component="Item"
+		description="Standard action row."
+		items={[
+			{ property: "callback", type: "() => void", description: "Optional click callback." },
+			{ property: "inset", type: "boolean", description: "Adds left inset spacing for alignment." },
+			{ property: "children", type: "Snippet", description: "Item content such as labels and shortcuts." }
+		]}
+	/>
+
+	<APIReference
+		title="ContextMenu"
+		component="CheckboxItem"
+		description="Action row with checked state."
+		items={[
+			{ property: "value", type: "string", description: "Stable identifier for the checkbox item." },
+			{ property: "checked", type: "boolean", description: "Initial checked state for the item." },
+			{ property: "callback", type: "() => void", description: "Optional callback fired when toggled." },
+			{ property: "inset", type: "boolean", description: "Adds left inset spacing for alignment." }
+		]}
+	/>
+
+	<APIReference
+		title="ContextMenu"
+		component="SubTrigger"
+		description="Row that opens a nested submenu."
+		items={[
+			{ property: "inset", type: "boolean", description: "Adds left inset spacing for alignment." },
+			{ property: "children", type: "Snippet", description: "Visible submenu label." }
+		]}
+	/>
 </div>

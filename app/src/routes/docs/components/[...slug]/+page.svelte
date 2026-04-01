@@ -1,17 +1,14 @@
 <script lang="ts">
-	import { flyAndScale } from '$lib/ui/internals/transition';
 	import { sanitizeComponent } from '$lib/components';
 	import type { PageData } from './$types';
-	import { Badge } from '$lib/ui/components/badge';
+	import { Badge } from '$lib/silk/components/badge';
 	import { components } from '$lib/components';
-	import { goto } from '$app/navigation';
 	import ExternalLink from '@lucide/svelte/icons/external-link';
-	import ChevRight from '@lucide/svelte/icons/chevron-right';
-	import ChevLeft from '@lucide/svelte/icons/chevron-left';
-	import { Button } from '$lib/ui/components/button';
+	import { Button } from '$lib/silk/components/button';
 	import ChevronRight from '@lucide/svelte/icons/chevron-right';
 	import ChevronLeft from '@lucide/svelte/icons/chevron-left';
 	import CodeBlock from '$lib/components/docs/code-block.svelte';
+	import PageHeader from '$lib/components/docs/page-header.svelte';
 
 	const {
 		data
@@ -22,37 +19,39 @@
 	const Markdown = $derived(data.content) as unknown as ConstructorOfATypedSvelteComponent;
 	const Title = $derived(data.metadata.title);
 	const Description = $derived(data.metadata.description);
-	const Component = $derived(data.metadata.component);
 	const Source = $derived(data.metadata.source);
-	const Dependencies = $derived(data.metadata.dependencies)!;
+	const Dependencies = $derived(data.metadata.dependencies ?? []);
 
 	let curIndex = $derived(components.indexOf(Title.toLowerCase()));
 	let nextComponent = $derived(components[curIndex + 1]);
 	let prevComponent = $derived(components[curIndex - 1]);
 </script>
 
-<header class="flex flex-col gap-1 pb-4">
-	<h1 class="text-4xl font-semibold">{sanitizeComponent(Title)}</h1>
-	<p class="mt-2 text-foreground-muted">
-		{Description}
-	</p>
-	<div class="flex flex-row gap-2 mt-2">
-		<Badge href={Source} variant="secondary" class="rounded-lg font-semibold text-foreground-muted gap-1"
-			>Component Source <ExternalLink size={10} /></Badge
-		>
-		{#each Dependencies as dependency}
-			<Badge href={dependency.url} variant="secondary" class="rounded-lg font-semibold text-foreground-muted gap-1">
-				{dependency.name}
-				<ExternalLink size={10} />
-			</Badge>
-		{/each}
-	</div>
-</header>
+<PageHeader
+	title={sanitizeComponent(Title)}
+	description={Description}
+	compact={true}
+/>
 
-<div class="py-6 flex flex-col gap-4">
+<div class="flex flex-wrap gap-2.5 pt-4">
+	{#if Source && !Source.endsWith('/componentname')}
+		<Badge href={Source} variant="secondary" class="rounded-lg gap-1 font-semibold text-foreground-muted">
+			Component Source
+			<ExternalLink size={10} />
+		</Badge>
+	{/if}
+	{#each Dependencies as dependency}
+		<Badge href={dependency.url} variant="secondary" class="rounded-lg gap-1 font-semibold text-foreground-muted">
+			{dependency.name}
+			<ExternalLink size={10} />
+		</Badge>
+	{/each}
+</div>
+
+<div class="flex flex-col gap-4 py-8">
 	<h1 class="h1">Installation</h1>
 	{#key Title}
-        <CodeBlock lang="shell" code={`npx @aidan-neel/ui add ${Title.toLowerCase()}`} class="p-3" />
+        <CodeBlock lang="shell" code={`bunx @aidan-neel/ui add ${Title.toLowerCase()}`} />
     {/key}
 </div>
 
@@ -79,7 +78,7 @@
 					</Button>
 				{/if}
 				{#if prevComponent && nextComponent}
-					<div class="border-t w-full mx-4 rounded-full"></div>
+					<div class="border-t w-full mx-4 rounded-lg"></div>
 				{/if}
 				{#if nextComponent}
 					<Button

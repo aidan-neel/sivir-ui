@@ -1,16 +1,7 @@
 <script lang="ts">
-	import { type BundledLanguage, codeToHtml, createHighlighter, type HighlighterGeneric, type BundledTheme } from 'shiki';
-	import themeLightRaw from '$lib/themes/light.json?raw';
-	import themeDarkRaw from '$lib/themes/dark.json?raw'; // Assuming the dark theme is available
-	import { fade } from 'svelte/transition';
-	import { cn } from '$lib/ui/utils';
-	import { mode } from "mode-watcher";
-	import { onDestroy } from 'svelte';
-    import { highlighter } from '$lib/highlighter'
-    
-	// Parse the themes
-	const themeLight = JSON.parse(themeLightRaw);
-	const themeDark = JSON.parse(themeDarkRaw);
+	import { cn } from '$lib/silk/utils';
+	import { mode } from 'mode-watcher';
+	import { highlighter } from '$lib/highlighter';
 
 	let {
 		code,
@@ -21,20 +12,41 @@
 	let html = $state('');
 	let loaded = $state(false);
 
-	$effect(async () => {
-		html = await highlighter.codeToHtml(code, {
-			lang: lang,
-			theme: mode.current === 'dark' ? 'github-dark' : 'github-light'
-		});
+	$effect(() => {
+		let active = true;
 
-		loaded = true;
+		void (async () => {
+			const renderedHtml = await highlighter.codeToHtml(code, {
+				lang,
+				theme: mode.current === 'dark' ? 'ui-dark' : 'ui-light'
+			});
+
+			if (!active) {
+				return;
+			}
+
+			html = renderedHtml;
+			loaded = true;
+		})();
+
+		return () => {
+			active = false;
+		};
 	});
 </script>
 
-<div {...rest} class={cn(classProp, 'rounded-lg bg-secondary w-full p-4 h-fit text-[14px] overflow-auto')}>
+<div
+	{...rest}
+	class={cn(
+		classProp,
+		'bg-[var(--card-bg)] border border-[var(--card-border)] rounded-[var(--card-radius)] shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)] h-fit w-full overflow-hidden rounded-xl border border-border/65 bg-card/82 p-0 text-[14px]',
+		'[&_pre]:!m-0 [&_pre]:min-w-full [&_pre]:overflow-x-auto [&_pre]:rounded-[inherit] [&_pre]:border-0 [&_pre]:bg-transparent [&_pre]:px-3 [&_pre]:py-2.5 [&_pre]:text-[12.5px] [&_pre]:leading-[1.2]',
+		'[&_code]:font-[var(--font-mono)] [&_.line]:block [&_.line]:px-0 [&_.line.highlighted]:-mx-1.5 [&_.line.highlighted]:rounded-md [&_.line.highlighted]:bg-primary/6 [&_.line]:transition-colors'
+	)}
+>
 	{#if loaded}
-		<code class="font-mono w-full">{@html html}</code>
+		<div class="w-full overflow-x-auto">{@html html}</div>
 	{:else}
-		<pre class="font-mono w-full opacity-0">{code}</pre>
+		<pre class="w-full px-3 py-0 font-mono opacity-0">{code}</pre>
 	{/if}
 </div>

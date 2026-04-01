@@ -1,13 +1,15 @@
----
-title: Input
-description: Allows the user to enter text or data.
-component: true
-source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/input
----
+<script module lang="ts">
+	export const metadata = {
+	  "title": "Input",
+	  "description": "Allows the user to enter text or data.",
+	  "component": true,
+	  "source": "https://github.com/aidan-neel/silk/tree/main/registry/silk/default/input"
+};
+</script>
 
 <script>
     import { ComponentPreview, CodeBlock, CodeSnippet, ExportItem, APIReference } from '$lib/components/docs';
-    import { Input } from '$lib/ui/components/input';
+    import { Input } from '$lib/silk/components/input';
 </script>
 
 <h1 class="py-2 h1">
@@ -42,10 +44,10 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/input
 </h1>
 
 <div class="flex flex-col gap-10">
-	<APIReference 
-		title="Input" 
-		component="Root" 
-		description="A flexible input component that supports various input types and styling variants." 
+	<APIReference
+		title="Input"
+		component="Root"
+		description="A flexible input component that supports various input types and styling variants."
 		items={[
 			{
 				property: "type",
@@ -110,6 +112,6 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/input
 				description: "Additional HTML input attributes passed to the element.",
 				defaults: "{}"
 			}
-		]} 
+		]}
 	/>
 </div>

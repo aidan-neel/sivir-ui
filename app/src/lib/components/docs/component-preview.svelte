@@ -1,15 +1,11 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import CodeBlock from '$lib/components/docs/code-block.svelte';
-	import { fade } from 'svelte/transition';
-	import { cn } from '$lib/ui/utils';
-	import { Tween } from 'svelte/motion';
-	import { cubicOut } from 'svelte/easing';
-    import * as Tooltip from '$lib/ui/components/tooltip';
-    import Button from '$lib/ui/components/button';
+	import { cn } from '$lib/silk/utils';
+    import * as Tooltip from '$lib/silk/components/tooltip';
     import Copy from "@lucide/svelte/icons/copy";
     import Check from "@lucide/svelte/icons/check";
-	import { flyAndScale } from '$lib/ui/internals/transition';
+	import { flyAndScale } from '$lib/silk/internals/transition';
 
 	let {
 		children,
@@ -24,96 +20,77 @@
 		class?: string;
 	} = $props();
 
-	// Smooth tab indicator motion
-	let indicatorX = new Tween(0, { duration: 50, easing: cubicOut });
-	let indicatorRef = $state(null);
-
-	function selectTab(tab: number, index: number) {
-		selectedTab = tab;
-		indicatorX.target = index * 112; // Assuming each tab button is w-28 (112px)
-	}
-
     let copying = $state<boolean>(false);
 </script>
 
-<div class="flex flex-col w-[102%] mx-[-1%]">
-    <div class="pb-3 flex flex-row gap-4 px-[1%]">
-        <button onclick={() => selectedTab = 1} class="{selectedTab === 1 ? 'text-foreground' : 'text-foreground-muted'} font-medium duration-200">
-            Preview
-        </button>
-        <button onclick={() => selectedTab = 2} class="{selectedTab === 2 ? 'text-foreground' : 'text-foreground-muted'} font-medium duration-200">
-            Code
-        </button>
-    </div>
-    <div
-        {...rest}
-        class={cn(classProp, `w-full ${selectedTab === 1 ? 'border items-center justify-center min-h-[22rem] py-24' : 'items-start justify-start'} rounded-xl flex flex-col overflow-auto max-w-full`)}
-    >   
-        <div class={cn(classProp, "w-full relative flex items-center justify-center")}>
-            {#if selectedTab === 1}
-                {@render children?.()}
-            {:else}
-                <Tooltip.Root placement={'top'} delay={0}>
-                    <Tooltip.Trigger onclick={() => {
-                        copying = true;
-                        console.log('n')
-                        navigator.clipboard.writeText(code)
-                        setTimeout(() => {
-                            copying = false;
-                        }, 3000);
-                    }} variant="ghost" class="size-8 z-50 absolute top-4 right-4">
-                        {#if copying}
-                            <div in:flyAndScale={{ duration: 400 }}>
-                                <Check size={20} class="text-foreground-muted" />
-                            </div>
-                        {:else}
-                            <div in:flyAndScale={{ duration: 400 }}>
-                                <Copy size={20} class="text-foreground-muted" />
-                            </div>
-                        {/if}
-                    </Tooltip.Trigger>  
-                    <Tooltip.Content>
-                        {#if copying}
-                            <div in:flyAndScale={{ duration: 400 }}>
-                                Copied
-                            </div>
-                        {:else}
-                            <div in:flyAndScale={{ duration: 400 }}>
-                                Copy to clipboard
-                            </div>
-                        {/if}
-                    </Tooltip.Content>
-                </Tooltip.Root>
-                <CodeBlock code={code} />
-            {/if}
-        </div>
-    </div>
-</div>
-
-<!--<div {...rest} class={cn(classProp, 'w-full flex flex-col overflow-auto max-w-full gap-4')}>
-	<div class="relative w-full flex flex-row">
-		<button onclick={() => selectTab(1, 0)} class="p-3 w-28 text-center"> Preview </button>
-		<button onclick={() => selectTab(2, 1)} class="p-3 w-28 text-center"> Code </button>
-
-		<div
-			bind:this={indicatorRef}
-			class="absolute bottom-0 h-0.5 w-28 bg-black rounded-lg-full"
-			style="transform: translateX({indicatorX.current}px); transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);"
-		></div>
+<div class="flex flex-col gap-3">
+	<div class="flex flex-row gap-4 px-1">
+		<button
+			onclick={() => (selectedTab = 1)}
+			class="{selectedTab === 1
+				? 'text-foreground'
+				: 'text-foreground-muted'} text-sm font-medium duration-200"
+		>
+			Preview
+		</button>
+		<button
+			onclick={() => (selectedTab = 2)}
+			class="{selectedTab === 2
+				? 'text-foreground'
+				: 'text-foreground-muted'} text-sm font-medium duration-200"
+		>
+			Code
+		</button>
 	</div>
-
 	<div
-		class="flex items-center justify-center overflow-auto {selectedTab === 1
-			? 'min-h-[18rem] py-16 border rounded-lg '
-			: ''}"
+		{...rest}
+		class={cn(
+			classProp,
+			`bg-[var(--card-bg)] border border-[var(--card-border)] rounded-[var(--card-radius)] shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)] w-full rounded-xl border border-border/65 flex flex-col overflow-hidden max-w-full ${
+				selectedTab === 1
+					? 'items-center justify-center min-h-[20rem] px-6 py-16 md:px-10 md:py-20 bg-card/82'
+					: 'items-start justify-start bg-card/82'
+			}`
+		)}
 	>
-		{#if selectedTab === 1}
-			<div in:fade={{ duration: 100 }}>
+		<div class={cn(classProp, 'w-full relative flex items-center justify-center')}>
+			{#if selectedTab === 1}
 				{@render children?.()}
-			</div>
-		{:else if selectedTab === 2}
-			<CodeBlock {code} />
-		{/if}
+			{:else}
+				<Tooltip.Root placement={'top'} delay={0}>
+					<Tooltip.Trigger class="z-50 absolute top-3 right-3">
+						<button
+							type="button"
+							class="inline-flex size-8 items-center justify-center rounded-lg border border-transparent bg-[var(--button-ghost-bg)] text-[var(--button-ghost-foreground)] transition-[background-color,border-color,color,box-shadow,transform] duration-240 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-[var(--button-ghost-hover-bg)] focus-visible:translate-y-px focus-visible:outline-none focus-visible:ring-0 focus-visible:shadow-[0_0_0_3px_var(--color-ring)]"
+							onclick={() => {
+								copying = true;
+								navigator.clipboard.writeText(code);
+								setTimeout(() => {
+									copying = false;
+								}, 3000);
+							}}
+						>
+							{#if copying}
+								<div in:flyAndScale={{ duration: 400 }}>
+									<Check size={18} class="text-foreground-muted" />
+								</div>
+							{:else}
+								<div in:flyAndScale={{ duration: 400 }}>
+									<Copy size={18} class="text-foreground-muted" />
+								</div>
+							{/if}
+						</button>
+					</Tooltip.Trigger>
+					<Tooltip.Content>
+						{#if copying}
+							<div in:flyAndScale={{ duration: 400 }}>Copied</div>
+						{:else}
+							<div in:flyAndScale={{ duration: 400 }}>Copy to clipboard</div>
+						{/if}
+					</Tooltip.Content>
+				</Tooltip.Root>
+				<CodeBlock {code} />
+			{/if}
+		</div>
 	</div>
 </div>
--->

@@ -1,13 +1,15 @@
----
-title: Button
-description: Displays a button or a component that looks like a button.
-component: true
-source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/button
----
+<script module lang="ts">
+	export const metadata = {
+	  "title": "Button",
+	  "description": "Displays a button or a component that looks like a button.",
+	  "component": true,
+	  "source": "https://github.com/aidan-neel/silk/tree/main/registry/silk/default/button"
+};
+</script>
 
 <script>
     import { ComponentPreview, CodeBlock, ExportItem, APIReference } from '$lib/components/docs';
-    import { Button } from '$lib/ui/components/button';
+    import { Button } from '$lib/silk/components/button';
 </script>
 
 <h1 class="py-2 h1">
@@ -25,7 +27,7 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/button
 </h1>
 
 <ComponentPreview code={`<script>
-    import { Button } from '$lib/ui/components/button';
+    import { Button } from '$lib/silk/components/button';
 </script>\n
 <Button>Button</Button>
 <Button variant="flat">Flat</Button>
@@ -51,16 +53,22 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/button
 </h1>
 
 <div class="flex flex-col gap-10">
-	<APIReference 
-		title="Button" 
-		component="Root" 
-		description="A flexible button component supporting multiple variants and optional link behavior." 
+	<APIReference
+		title="Button"
+		component="Root"
+		description="A flexible button component supporting multiple variants and optional link behavior."
 		items={[
 			{
 				property: "variant",
 				type: `"primary" | "flat" | "outlined" | "secondary" | "ghost" | "alternate" | "destructive"`,
 				description: "Controls the visual style of the button.",
 				defaults: `"primary"`
+			},
+			{
+				property: "size",
+				type: `"default" | "icon"`,
+				description: "Optional size preset for standard or icon-only buttons.",
+				defaults: `"default"`
 			},
 			{
 				property: "children",
@@ -83,11 +91,26 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/button
 				description: "A bindable reference to the button or anchor element."
 			},
 			{
+				property: "onclick",
+				type: "() => void",
+				description: "Click handler passed to the underlying button or anchor."
+			},
+			{
+				property: "onhover",
+				type: "() => void",
+				description: "Optional hover start callback."
+			},
+			{
+				property: "onhoverend",
+				type: "() => void",
+				description: "Optional hover end callback."
+			},
+			{
 				property: "...rest",
-				type: "HTMLButtonAttributes",
+				type: "HTMLButtonAttributes | HTMLAnchorAttributes",
 				description: "Additional attributes passed to the element.",
 				defaults: "{}"
 			}
-		]} 
+		]}
 	/>
 </div>

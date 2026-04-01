@@ -1,93 +1,121 @@
 <script lang="ts">
 	import CodeBlock from '$lib/components/docs/code-block.svelte';
+	import PageHeader from '$lib/components/docs/page-header.svelte';
 </script>
 
-<main class="flex flex-col w-full h-screen pb-12">
-	<header class="flex flex-col gap-1 pb-6 border-b rounded-none">
-		<h1 class="text-4xl font-bold">Styling</h1>
-		<p class="text-lg text-foreground-muted">Learn how to style @aidan-neel/ui</p>
-	</header>
+<main class="flex w-full flex-col pb-12">
+	<PageHeader title="Styling" description="Tokens first, component overrides second" compact={true} />
 
-	<p class="text-base pt-6">
-		Styling for each component is designed to be as straight forward and customizable as possible
-		with a basic css file. Themes are located in the <span
-			class="bg-secondary p-0.5 text-sm border px-2 font-mono">ui/themes</span
-		>
-		directory.
-		<br /><br />
-		To create a new theme, create a new CSS file and place it into the
-		<span class="bg-secondary p-0.5 text-sm border px-2 font-mono">ui/themes</span>
-		directory. Then, import it in
-		<span class="bg-secondary p-0.5 text-sm border px-2 font-mono">ui/ui.css</span>.
-	</p>
+	<section class="flex flex-col gap-2 pt-6">
+		<p class="text-base">
+			The styling system is built around three layers:
+		</p>
+		<p class="text-base">
+			1. Core semantic tokens like `--color-background`, `--color-primary`, and `--radius-lg`
+		</p>
+		<p class="text-base">
+			2. Component tokens like `--button-primary-bg`, `--panel-radius`, and `--field-height`
+		</p>
+		<p class="text-base">
+			3. Slot hooks via `data-ui` and `data-variant` attributes on the rendered components
+		</p>
+	</section>
 
-	<p class="text-xl font-semibold pt-5 rounded-none">Default theme</p>
-	<p class="pt-1 pb-5 text-base">Use this as a base for customizing your own theme.</p>
+	<section class="flex flex-col gap-2 pt-8">
+		<p class="text-2xl font-semibold">Theme File</p>
+		<p class="text-base">
+			The fastest way to customize the whole system is to override the semantic tokens in a theme
+			file under <span class="bg-secondary p-0.5 text-sm border px-2 font-mono">ui/themes</span>.
+		</p>
 
-	<CodeBlock
-		lang="css"
-		class="mb-6 p-3 max-h-[35rem]"
-		code={`@layer base {
-	:root {
-		/* Fonts */
-		--font-sans: 'Geist';
-		--font-mono: 'Geist Mono';
-
-		/* Colors */
-		--color-background: #ffffff;
-		--color-border: #dedede;
-		--color-primary: #2685d9;
-		--color-foreground-opposite: #ffffff;
-		--color-foreground: #171717;
-		--color-foreground-muted: #525252;
-		--color-foreground-btn: #ffffff;
-		--color-secondary: #e9e9e9;
-		--color-accent: #0d1a40;
-		--color-alternate: #2c2c2c;
-		--color-success: #46ab61;
-		--color-warning: #ff9800;
-		--color-error: #ef5350;
-		--color-destructive: #fa4234;
-
-		/* Border radius */
-		--radius-sm: 0.2rem;
-		--radius-md: 0.3rem;
-		--radius-lg: 0.5rem;
-		--radius-xl: 0.7rem;
-	}
-
-	.dark {
-		/* Fonts */
-		--font-sans: 'Geist' !important;
-		--font-mono: 'Geist Mono' !important;
-
-		/* Colors */
-		--color-background: #0a0a0a !important;
-		--color-border: #1c1c1c !important;
-		--color-primary: #0b7bde !important;
-		--color-foreground-opposite: #0d0d0d !important;
-		--color-foreground: #ffffff !important;
-		--color-foreground-muted: #9c9c9c !important;
-		--color-foreground-btn: #ffffff !important;
-		--color-secondary: #171717 !important;
-		--color-accent: #0d1a40 !important;
-		--color-alternate: #2c2c2c !important;
-		--color-success: #46ab61 !important;
-		--color-warning: #ff9800 !important;
-		--color-error: #ef5350 !important;
-		--color-destructive: #b50003 !important;
-
-		/* Border radius */
-		--radius-sm: 0.2rem !important;
-		--radius-md: 0.3rem !important;
-		--radius-lg: 0.5rem !important;
-		--radius-xl: 0.7rem !important;
-
-		/* Sizes */
-		--height-btn: 2.25rem !important;
-		--padding-x-btn: 1rem !important;
-	}
+		<CodeBlock
+			lang="css"
+			class="mt-3 p-3 max-h-[30rem]"
+			code={`@theme {
+	--font-sans: 'Geist';
+	--color-background: #fbfaf6;
+	--color-border: #ddd8cf;
+	--color-input: #d7d0c3;
+	--color-primary: #8f3d2e;
+	--color-foreground: #211c18;
+	--color-foreground-btn: #fffaf3;
+	--color-secondary: #efe8dc;
+	--color-popover: #fffdf8;
+	--color-card: #f7f1e7;
+	--radius-lg: 0.8rem;
+	--color-ring: rgb(143 61 46 / 0.24);
 }
-`}
-	/>
+
+.dark {
+	--color-background: #171311;
+	--color-border: #2b2421;
+	--color-input: #342d29;
+	--color-primary: #f08d69;
+	--color-foreground: #f4ece6;
+	--color-foreground-btn: #1a1613;
+	--color-secondary: #201a18;
+	--color-popover: #1e1816;
+	--color-card: #1b1614;
+	--color-ring: rgb(240 141 105 / 0.3);
+}`}
+		/>
+	</section>
+
+	<section class="flex flex-col gap-2 pt-8">
+		<p class="text-2xl font-semibold">Component Tokens</p>
+		<p class="text-base">
+			When you need more control, override component variables instead of rewriting the component.
+			These live in <span class="bg-secondary p-0.5 text-sm border px-2 font-mono">ui/ui.css</span>.
+		</p>
+
+		<CodeBlock
+			lang="css"
+			class="mt-3 p-3 max-h-[30rem]"
+			code={`:root {
+	--button-radius: 999px;
+	--button-height: 2.75rem;
+	--button-primary-bg: #111827;
+	--button-primary-hover-bg: #1f2937;
+
+	--field-radius: 1rem;
+	--field-height: 3rem;
+
+	--panel-radius: 1.25rem;
+	--panel-shadow: 0 24px 80px rgb(15 23 42 / 0.16);
+
+	--menu-item-radius: 0.85rem;
+	--toast-radius: 1rem;
+}`}
+		/>
+	</section>
+
+	<section class="flex flex-col gap-2 pt-8">
+		<p class="text-2xl font-semibold">Per-Component Overrides</p>
+		<p class="text-base">
+			Every major primitive exposes `data-ui`, and many controls also expose `data-variant` and
+			`data-size`. That gives you a clean way to target one family of components without
+			forking the library.
+		</p>
+
+		<CodeBlock
+			lang="css"
+			class="mt-3 p-3 max-h-[30rem]"
+			code={`[data-ui='button'][data-variant='primary'] {
+	letter-spacing: 0.01em;
+}
+
+[data-ui='dialog-content'] {
+	--panel-radius: 1.5rem;
+	--panel-padding-lg: 1.75rem;
+}
+
+[data-ui='toast'] {
+	--toast-border: color-mix(in srgb, var(--color-primary) 22%, var(--color-border));
+}
+
+[data-ui='badge'][data-variant='secondary'] {
+	text-transform: uppercase;
+}`}
+		/>
+	</section>
 </main>

@@ -21,14 +21,14 @@
 
 <div class="w-full flex flex-col gap-6">
 	<header class="flex flex-col gap-4">
-		<p class="bg-secondary w-fit p-1 text-lg px-3 rounded-lg font-mono">
+		<p class="bg-secondary w-fit rounded-lg px-3 py-1 text-lg font-mono">
 			<span class="text-foreground-muted">
 				{title}
 			</span>.<span class="font-semibold">
 				{component}
 			</span>
 		</p>
-		<p>
+		<p class="text-[0.98rem] leading-7 text-foreground-muted">
 			{description}
 		</p>
 	</header>

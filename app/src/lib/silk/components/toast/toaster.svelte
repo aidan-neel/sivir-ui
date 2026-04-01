@@ -1,0 +1,117 @@
+<script lang="ts">
+	import { setToastUIState, type ToastUIState } from './lib.svelte';
+	import type { UIState } from '$lib/silk/internals/state.svelte.ts';
+	import Toast from './toast.svelte';
+	import { cubicOut, quartOut } from 'svelte/easing';
+	import type { TransitionConfig } from 'svelte/transition';
+
+	const toastState: UIState<ToastUIState> = setToastUIState();
+
+	let expanded = $state(false);
+	let heights = $state<Record<number, number>>({} as Record<number, number>);
+
+	const COLLAPSED_OFFSET = 14;
+	const COLLAPSED_SCALE_STEP = 0.05;
+	const COLLAPSED_OPACITY_STEP = 0.16;
+	const MAX_VISIBLE = 3;
+	const EXPANDED_GAP = 10;
+
+	const reversedToasts = $derived([...toastState.data.toasts].reverse());
+
+	function getExpandedY(index: number): number {
+		let y = 0;
+		for (let i = 0; i < index; i++) {
+			const t = reversedToasts[i];
+			y += (t?.id !== undefined ? (heights[t.id] ?? 72) : 72) + EXPANDED_GAP;
+		}
+		return y;
+	}
+
+	function getTransform(index: number): string {
+		const y = expanded ? getExpandedY(index) : index * COLLAPSED_OFFSET;
+		const scale = expanded ? 1 : Math.max(1 - index * COLLAPSED_SCALE_STEP, 0.8);
+		return `translateY(-${y}px) scale(${scale})`;
+	}
+
+	function getOpacity(index: number): number {
+		if (expanded) return 1;
+		if (index >= MAX_VISIBLE) return 0;
+		return Math.max(1 - index * COLLAPSED_OPACITY_STEP, 0);
+	}
+
+	const containerHeight = $derived.by(() => {
+		const n = reversedToasts.length;
+		if (n === 0) return 0;
+		if (expanded) {
+			return reversedToasts.reduce((sum, t, i) => {
+				const h = t?.id !== undefined ? (heights[t.id] ?? 72) : 72;
+				return sum + h + (i < n - 1 ? EXPANDED_GAP : 0);
+			}, 0);
+		}
+		const newestId = reversedToasts[0]?.id;
+		const newestHeight = newestId !== undefined ? (heights[newestId] ?? 72) : 72;
+		return newestHeight + (Math.min(n, MAX_VISIBLE) - 1) * COLLAPSED_OFFSET;
+	});
+
+	function toastIn(_node: Element): TransitionConfig {
+		return {
+			duration: 440,
+			easing: quartOut,
+			css: (t: number) => `
+				opacity: ${t};
+				transform: translateY(${(1 - t) * 16}px) scale(${0.985 + t * 0.015});
+			`
+		};
+	}
+
+	function toastOut(_node: Element): TransitionConfig {
+		return {
+			duration: 340,
+			easing: cubicOut,
+			css: (t: number) => `
+				opacity: ${t};
+				transform: translateY(${(1 - t) * 12}px) scale(${0.985 + t * 0.015});
+			`
+		};
+	}
+</script>
+
+{#if toastState.data && reversedToasts.length > 0}
+	<div class="pointer-events-none fixed inset-x-0 bottom-0 z-200 flex justify-end p-4 sm:p-6">
+		<div
+			role="region"
+			aria-label="Notifications"
+			class="pointer-events-auto relative w-full max-w-90"
+			style="height: {containerHeight}px; transition: height 0.46s cubic-bezier(0.22, 1, 0.36, 1);"
+			onmouseenter={() => (expanded = true)}
+			onmouseleave={() => (expanded = false)}
+		>
+			{#each reversedToasts as toast, i (toast.id)}
+				<!--
+					Stacking wrapper: only CSS transitions, NO Svelte in/out.
+					Owns the position/scale/opacity for the stack effect.
+				-->
+				<div
+					class="absolute bottom-0 w-full will-change-transform"
+					style="
+						transform: {getTransform(i)};
+						opacity: {getOpacity(i)};
+						z-index: {reversedToasts.length - i};
+						transition: transform 0.46s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.34s ease;
+						pointer-events: {i < MAX_VISIBLE || expanded ? 'auto' : 'none'};
+					"
+					bind:clientHeight={heights[toast.id!]}
+				>
+					<!--
+						Transition wrapper: only Svelte in/out, NO CSS transform transitions.
+						Enter slides up + fade. Exit slides right + fade.
+						Completely independent of the stacking layer above.
+					-->
+					<div in:toastIn out:toastOut>
+						<Toast {toast} />
+					</div>
+				</div>
+			{/each}
+		</div>
+	</div>
+{/if}

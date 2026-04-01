@@ -1,13 +1,15 @@
----
-title: Checkbox
-description: Displays a selectable option for user input.
-component: true
-source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/checkbox
----
+<script module lang="ts">
+	export const metadata = {
+	  "title": "Checkbox",
+	  "description": "Displays a selectable option for user input.",
+	  "component": true,
+	  "source": "https://github.com/aidan-neel/silk/tree/main/registry/silk/default/checkbox"
+};
+</script>
 
 <script>
     import { ComponentPreview, CodeBlock, CodeSnippet, ExportItem, APIReference } from '$lib/components/docs';
-    import { Checkbox } from '$lib/ui/components/checkbox';
+    import { Checkbox } from '$lib/silk/components/checkbox';
 </script>
 
 <h1 class="py-2 h1">
@@ -25,7 +27,7 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/checkbox
 </h1>
 
 <ComponentPreview code={`<script lang="ts">
-    import { Checkbox } from "$lib/ui/components/checkbox";
+    import { Checkbox } from "$lib/silk/components/checkbox";
 </script>\n
 <Checkbox label="Agree to terms and service" />
 <Checkbox label="Agree to terms and service" description="By clicking this checkbox, you agree to the terms and conditions." />
@@ -44,10 +46,10 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/checkbox
 </h1>
 
 <div class="flex flex-col gap-10">
-	<APIReference 
-		title="Checkbox" 
-		component="Root" 
-		description="A custom checkbox component with animated check icon and optional label." 
+	<APIReference
+		title="Checkbox"
+		component="Root"
+		description="A custom checkbox component with animated check icon and optional label."
 		items={[
 			{
 				property: "checked",
@@ -88,6 +90,6 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/checkbox
 				description: "Additional attributes passed to the label container.",
 				defaults: "{}"
 			}
-		]} 
+		]}
 	/>
 </div>

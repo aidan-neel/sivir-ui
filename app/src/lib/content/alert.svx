@@ -1,14 +1,16 @@
----
-title: Alert
-description: Displays a callout for user attention.
-component: true
-source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/alert
----
+<script module lang="ts">
+	export const metadata = {
+	  "title": "Alert",
+	  "description": "Displays a callout for user attention.",
+	  "component": true,
+	  "source": "https://github.com/aidan-neel/silk/tree/main/registry/silk/default/alert"
+};
+</script>
 
 <script>
     import { ComponentPreview, CodeBlock, CodeSnippet, ExportItem, APIReference } from '$lib/components/docs';
-    import * as Alert from '$lib/ui/components/alert';
-    import { toast } from '$lib/ui/components/toast';
+    import * as Alert from '$lib/silk/components/alert';
+    import { toast } from '$lib/silk/components/toast';
 </script>
 
 <h1 class="py-2 h1">
@@ -46,10 +48,10 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/alert
 </h1>
 
 <div class="flex flex-col gap-10">
-	<APIReference 
-		title="Alert" 
-		component="Root" 
-		description="A styled alert container component with variant icons and content." 
+	<APIReference
+		title="Alert"
+		component="Root"
+		description="A styled alert container component with variant icons and content."
 		items={[
 			{
 				property: "variant",
@@ -73,13 +75,13 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/alert
 				description: "Additional HTML div attributes passed to the alert root.",
 				defaults: "{}"
 			}
-		]} 
+		]}
 	/>
 
-	<APIReference 
-		title="Alert" 
-		component="Title" 
-		description="The main title text of the alert." 
+	<APIReference
+		title="Alert"
+		component="Title"
+		description="The main title text of the alert."
 		items={[
 			{
 				property: "children",
@@ -97,13 +99,13 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/alert
 				description: "Additional paragraph attributes applied to the title element.",
 				defaults: "{}"
 			}
-		]} 
+		]}
 	/>
 
-	<APIReference 
-		title="Alert" 
-		component="Description" 
-		description="The descriptive content of the alert." 
+	<APIReference
+		title="Alert"
+		component="Description"
+		description="The descriptive content of the alert."
 		items={[
 			{
 				property: "children",
@@ -121,6 +123,6 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/alert
 				description: "Additional paragraph attributes applied to the description element.",
 				defaults: "{}"
 			}
-		]} 
+		]}
 	/>
 </div>

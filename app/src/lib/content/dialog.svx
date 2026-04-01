@@ -1,85 +1,88 @@
----
-title: Dialog
-description: Brief description of the component.
-component: true
-source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/componentname
----
+<script module lang="ts">
+	export const metadata = {
+	  "title": "Dialog",
+	  "description": "Displays modal content that requires a focused decision or form interaction.",
+	  "component": true,
+	  "source": "https://github.com/aidan-neel/silk/tree/main/registry/silk/default/dialog"
+};
+</script>
 
 <script>
-    import { ComponentPreview, ExportItem, APIReference } from '$lib/components/docs';
-    import * as Dialog from '$lib/ui/components/dialog';
-    import { Input } from '$lib/ui/components/input';
+	import { ComponentPreview, ExportItem, APIReference } from '$lib/components/docs';
+	import * as Dialog from '$lib/silk/components/dialog';
+	import { Input } from '$lib/silk/components/input';
 </script>
 
 <h1 class="py-2 h1">Import</h1>
-<p class="py-2">ComponentName exports its subcomponents.</p>
+<p class="py-2">Dialog exports 8 components.</p>
 
-<ExportItem title="Root">Main container for the component.</ExportItem>
-<ExportItem title="SubComponent1">Description of SubComponent1.</ExportItem>
-<ExportItem title="SubComponent2">Description of SubComponent2.</ExportItem>
+<ExportItem title="Root">Owns the open state for the dialog.</ExportItem>
+<ExportItem title="Trigger">Button that opens the dialog.</ExportItem>
+<ExportItem title="Content">Dialog surface rendered in the modal layer.</ExportItem>
+<ExportItem title="Header">Layout wrapper for title and description.</ExportItem>
+<ExportItem title="Title">Primary dialog heading.</ExportItem>
+<ExportItem title="Description">Supporting copy under the title.</ExportItem>
+<ExportItem title="Footer">Action row for confirm and exit buttons.</ExportItem>
+<ExportItem title="Exit / Confirm">Convenience action buttons that close the dialog.</ExportItem>
 
 <h1 class="py-6 h1">Example</h1>
 
-<ComponentPreview code={`<ComponentName.Root>
-    <ComponentName.SubComponent1>Content here</ComponentName.SubComponent1>
-    <ComponentName.SubComponent2>Content here</ComponentName.SubComponent2>
-</ComponentName.Root>`}>
-    <Dialog.Root>
-        <Dialog.Trigger variant="outlined">Show Dialog</Dialog.Trigger>
-        <Dialog.Content class="max-w-[28rem]">
-            <Dialog.Header>
-                <Dialog.Title>Are you sure?</Dialog.Title>
-                <Dialog.Description>
-                    Are you absolutely sure you want to delete this table? You can not recover it.
-                </Dialog.Description>
-            </Dialog.Header>
-            <div class="grid flex-1 auto-rows-min gap-4">
-                <div class="grid gap-3">
-                    <Input label="Name" id="name" value="Pedro Duarte" />
-                </div>
-                <div class="grid gap-3">
-                    <Input label="Username" id="username" value="@peduarte" />
-                </div>
-            </div>
-            <Dialog.Footer>
-                <Dialog.Exit>Cancel</Dialog.Exit>
-                <Dialog.Confirm>Save changes</Dialog.Confirm>
-            </Dialog.Footer>
-        </Dialog.Content>
-    </Dialog.Root>
+<ComponentPreview code={`<script>
+	import * as Dialog from '$lib/silk/components/dialog';
+	import { Input } from '$lib/silk/components/input';
+</script>
+
+<Dialog.Root>
+	<Dialog.Trigger variant="outlined">Show Dialog</Dialog.Trigger>
+	<Dialog.Content class="max-w-[28rem]">
+		<Dialog.Header>
+			<Dialog.Title>Edit profile</Dialog.Title>
+			<Dialog.Description>Update your profile details below.</Dialog.Description>
+		</Dialog.Header>
+		<div class="grid gap-4">
+			<Input label="Name" value="Pedro Duarte" />
+			<Input label="Username" value="@peduarte" />
+		</div>
+		<Dialog.Footer>
+			<Dialog.Exit>Cancel</Dialog.Exit>
+			<Dialog.Confirm>Save changes</Dialog.Confirm>
+		</Dialog.Footer>
+	</Dialog.Content>
+</Dialog.Root>`}>
+	<Dialog.Root>
+		<Dialog.Trigger variant="outlined">Show Dialog</Dialog.Trigger>
+		<Dialog.Content class="max-w-[28rem]">
+			<Dialog.Header>
+				<Dialog.Title>Edit profile</Dialog.Title>
+				<Dialog.Description>Update your profile details below.</Dialog.Description>
+			</Dialog.Header>
+			<div class="grid gap-4">
+				<Input label="Name" value="Pedro Duarte" />
+				<Input label="Username" value="@peduarte" />
+			</div>
+			<Dialog.Footer>
+				<Dialog.Exit>Cancel</Dialog.Exit>
+				<Dialog.Confirm>Save changes</Dialog.Confirm>
+			</Dialog.Footer>
+		</Dialog.Content>
+	</Dialog.Root>
 </ComponentPreview>
 
 <h1 class="py-6 h1">API Reference</h1>
 
 <div class="flex flex-col gap-10">
-    <APIReference
-        title="ComponentName"
-        component="Root"
-        description="Main container component."
-        items={[
-            { property: "children", type: "Snippet", description: "Elements rendered inside the root." },
-            { property: "class", type: "string", description: "CSS classes for the root container." },
-            { property: "...rest", type: "HTMLDivAttributes", description: "Extra attributes.", defaults: "{}" }
-        ]}
-    />
-    <APIReference
-        title="ComponentName"
-        component="SubComponent1"
-        description="Subcomponent of ComponentName."
-        items={[
-            { property: "children", type: "Snippet", description: "Content for this subcomponent." },
-            { property: "class", type: "string", description: "CSS classes for this subcomponent." },
-            { property: "...rest", type: "HTMLAttributes<HTMLElement>", description: "Extra attributes.", defaults: "{}" }
-        ]}
-    />
-    <APIReference
-        title="ComponentName"
-        component="SubComponent2"
-        description="Another subcomponent."
-        items={[
-            { property: "children", type: "Snippet", description: "Content for this subcomponent." },
-            { property: "class", type: "string", description: "CSS classes for this subcomponent." },
-            { property: "...rest", type: "HTMLAttributes<HTMLElement>", description: "Extra attributes.", defaults: "{}" }
-        ]}
-    />
+	<APIReference title="Dialog" component="Root" description="Controls dialog visibility." items={[
+		{ property: "open", type: "boolean", description: "Bound open state for the dialog." },
+		{ property: "children", type: "Snippet", description: "Trigger and content." }
+	]} />
+
+	<APIReference title="Dialog" component="Trigger" description="Button used to open the dialog." items={[
+		{ property: "variant", type: "ButtonVariant", description: "Button variant passed through to the trigger." },
+		{ property: "children", type: "Snippet", description: "Trigger label or custom content." }
+	]} />
+
+	<APIReference title="Dialog" component="Content" description="Modal panel body." items={[
+		{ property: "allowClickOutside", type: "boolean", description: "Whether outside clicks should dismiss the dialog." },
+		{ property: "class", type: "string", description: "Additional classes for the dialog surface." }
+	]} />
 </div>

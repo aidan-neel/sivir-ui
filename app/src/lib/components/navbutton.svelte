@@ -1,25 +1,41 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { Button } from '$lib/ui/components/button';
+	import { Button } from '$lib/silk/components/button';
+	import type { Snippet } from 'svelte';
 
-	let { href, children } = $props();
+	type Props = {
+		href: string;
+		children: Snippet;
+		mobile?: boolean;
+		onclick?: () => void;
+	};
+
+	let { href, children, mobile = false, onclick }: Props = $props();
 	const docLanding = [
 		'/docs/introduction',
 		'/docs/installation',
 		'/docs/styling',
-		'/docs/themes',
+		'/docs/theming',
+		'/docs/components',
 		'/docs/changelog'
 	];
-
-	let isActive = $state(false);
 </script>
 
 <Button
 	{href}
+	{onclick}
 	variant="ghost"
-	class={isActive
-		? 'bg-secondary rounded-lg-full px-4 font-semibold'
-		: 'rounded-lg-full px-4'}
+	class={($page.url.pathname === href || (href === '/docs/introduction' && docLanding.includes($page.url.pathname)))
+		? mobile
+			? 'h-10 w-full justify-start rounded-lg bg-secondary/85 px-3 font-semibold text-foreground'
+			: 'rounded-lg bg-secondary/72 px-4 font-semibold text-foreground'
+		: mobile
+			? 'h-10 w-full justify-start rounded-lg px-3 text-foreground-muted hover:bg-secondary/55 hover:text-foreground'
+			: 'rounded-lg px-4 text-foreground-muted hover:bg-secondary/50 hover:text-foreground'}
+	aria-current={($page.url.pathname === href ||
+		(href === '/docs/introduction' && docLanding.includes($page.url.pathname)))
+		? 'page'
+		: undefined}
 >
 	{@render children?.()}
 </Button>

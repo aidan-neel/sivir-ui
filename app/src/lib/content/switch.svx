@@ -1,62 +1,122 @@
----
-title: Switch
-description: Brief description of the component.
-component: true
-source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/componentname
----
+<script module lang="ts">
+	export const metadata = {
+	  "title": "Switch",
+	  "description": "Toggle a setting on or off with a smooth, accessible control.",
+	  "component": true,
+	  "source": "https://github.com/aidan-neel/silk/tree/main/registry/silk/default/switch"
+};
+</script>
 
 <script>
-import { ComponentPreview, ExportItem, APIReference } from '$lib/components/docs';
-    import { Switch } from "$lib/ui/components/switch";
+	import { ComponentPreview, ExportItem, APIReference } from '$lib/components/docs';
+	import { Switch } from '$lib/silk/components/switch';
+
+	let notifications = $state(true);
+	let marketing = $state(false);
 </script>
 
 <h1 class="py-2 h1">Import</h1>
-<p class="py-2">ComponentName exports its subcomponents.</p>
 
-<ExportItem title="Root">Main container for the component.</ExportItem>
-<ExportItem title="SubComponent1">Description of SubComponent1.</ExportItem>
-<ExportItem title="SubComponent2">Description of SubComponent2.</ExportItem>
+<p class="py-2">
+	Switch exports a single component for binary toggles with optional supporting copy.
+</p>
+
+<ExportItem title="Switch">A button-based switch control for on/off settings.</ExportItem>
 
 <h1 class="py-6 h1">Example</h1>
 
-<ComponentPreview code={`<ComponentName.Root>
-    <ComponentName.SubComponent1>Content here</ComponentName.SubComponent1>
-    <ComponentName.SubComponent2>Content here</ComponentName.SubComponent2>
-</ComponentName.Root>`}>
-    <Switch label="Airplane Mode" />
+<ComponentPreview
+	code={`<script lang="ts">
+	import { Switch } from '$lib/silk/components/switch';
+
+	let notifications = true;
+</script>
+
+<Switch
+	bind:switched={notifications}
+	label="Push notifications"
+	description="Receive alerts for mentions, replies, and account updates."
+/>
+
+<Switch
+	label="Marketing emails"
+	description="Get occasional product updates and release notes."
+	bind:switched={marketing}
+/>
+
+<Switch
+	switched={true}
+	label="Read-only setting"
+	description="Disabled switches keep their current value."
+	disabled
+/>`}
+>
+	<div class="flex w-full max-w-xl flex-col gap-6">
+		<Switch
+			bind:switched={notifications}
+			label="Push notifications"
+			description="Receive alerts for mentions, replies, and account updates."
+		/>
+		<Switch
+			bind:switched={marketing}
+			label="Marketing emails"
+			description="Get occasional product updates and release notes."
+		/>
+		<Switch
+			switched={true}
+			label="Read-only setting"
+			description="Disabled switches keep their current value."
+			disabled
+		/>
+	</div>
 </ComponentPreview>
 
 <h1 class="py-6 h1">API Reference</h1>
 
 <div class="flex flex-col gap-10">
-    <APIReference
-        title="ComponentName"
-        component="Root"
-        description="Main container component."
-        items={[
-            { property: "children", type: "Snippet", description: "Elements rendered inside the root." },
-            { property: "class", type: "string", description: "CSS classes for the root container." },
-            { property: "...rest", type: "HTMLDivAttributes", description: "Extra attributes.", defaults: "{}" }
-        ]}
-    />
-    <APIReference
-        title="ComponentName"
-        component="SubComponent1"
-        description="Subcomponent of ComponentName."
-        items={[
-            { property: "children", type: "Snippet", description: "Content for this subcomponent." },
-            { property: "class", type: "string", description: "CSS classes for this subcomponent." },
-            { property: "...rest", type: "HTMLAttributes<HTMLElement>", description: "Extra attributes.", defaults: "{}" }
-        ]}
-    />
-    <APIReference
-        title="ComponentName"
-        component="SubComponent2"
-        description="Another subcomponent."
-        items={[
-            { property: "children", type: "Snippet", description: "Content for this subcomponent." },
-            { property: "class", type: "string", description: "CSS classes for this subcomponent." },
-            { property: "...rest", type: "HTMLAttributes<HTMLElement>", description: "Extra attributes.", defaults: "{}" }
-        ]}
-    />
+	<APIReference
+		title="Switch"
+		component="Root"
+		description="A smooth, accessible toggle control built on a native button."
+		items={[
+			{
+				property: 'switched',
+				type: 'boolean',
+				description: 'The current checked state of the switch. Bindable.',
+				defaults: 'false'
+			},
+			{
+				property: 'label',
+				type: 'string',
+				description: 'Optional text label announced alongside the switch.'
+			},
+			{
+				property: 'description',
+				type: 'string',
+				description: 'Optional supporting copy rendered below the label.'
+			},
+			{
+				property: 'disabled',
+				type: 'boolean',
+				description: 'Prevents interaction while preserving the current state.',
+				defaults: 'false'
+			},
+			{
+				property: 'element',
+				type: 'HTMLButtonElement | undefined',
+				description: 'A bindable reference to the underlying button element.'
+			},
+			{
+				property: 'class',
+				type: 'string',
+				description: 'Additional classes applied to the switch track.'
+			},
+			{
+				property: '...rest',
+				type: 'HTMLButtonAttributes',
+				description: 'Additional button attributes passed to the control.',
+				defaults: '{}'
+			}
+		]}
+	/>
 </div>

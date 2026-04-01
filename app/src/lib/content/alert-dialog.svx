@@ -1,13 +1,15 @@
----
-title: alert-dialog
-description: A pop-up that stops what you're doing to show an important message and get a response
-component: true
-source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/alert-dialog
----
+<script module lang="ts">
+	export const metadata = {
+	  "title": "Alert Dialog",
+	  "description": "A pop-up that stops what you're doing to show an important message and get a response",
+	  "component": true,
+	  "source": "https://github.com/aidan-neel/silk/tree/main/registry/silk/default/alert-dialog"
+};
+</script>
 
 <script>
     import { ComponentPreview, CodeBlock, ExportItem, APIReference } from '$lib/components/docs';
-	import * as AlertDialog from '$lib/ui/components/alert-dialog';
+	import * as AlertDialog from '$lib/silk/components/alert-dialog';
 </script>
 
 <h1 class="py-2 h1">
@@ -32,7 +34,7 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/alert-dia
 </h1>
 
 <ComponentPreview code={`<script>
-	import * as AlertDialog from '$lib/ui/components/alert-dialog';
+	import * as AlertDialog from '$lib/silk/components/alert-dialog';
 </script>\n
 <AlertDialog.Root>
     <AlertDialog.Trigger>Alert Dialog</AlertDialog.Trigger>
@@ -67,10 +69,10 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/alert-dia
 </h1>
 
 <div class="flex flex-col gap-10">
-    <APIReference 
-        title="AlertDialog" 
-        component="Root" 
-        description="The root component which manages states of the alert dialog." 
+    <APIReference
+        title="AlertDialog"
+        component="Root"
+        description="The root component which manages states of the alert dialog."
         items={[
             {
                 property: "children",
@@ -83,13 +85,13 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/alert-dia
                 description: "Controls whether the alert dialog is open or closed.",
                 defaults: "false"
             }
-        ]} 
+        ]}
     />
 
-    <APIReference 
-        title="AlertDialog" 
-        component="Trigger" 
-        description="A button that triggers the opening of the alert dialog." 
+    <APIReference
+        title="AlertDialog"
+        component="Trigger"
+        description="A button that triggers the opening of the alert dialog."
         items={[
             {
                 property: "children",
@@ -107,13 +109,13 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/alert-dia
                 description: "Additional HTML button attributes passed to the trigger.",
                 defaults: "{}"
             }
-        ]} 
+        ]}
     />
 
-    <APIReference 
-        title="AlertDialog" 
-        component="Title" 
-        description="The title of the alert dialog." 
+    <APIReference
+        title="AlertDialog"
+        component="Title"
+        description="The title of the alert dialog."
         items={[
             {
                 property: "children",
@@ -125,13 +127,13 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/alert-dia
                 type: "string",
                 description: "Additional CSS classes to apply to the title."
             }
-        ]} 
+        ]}
     />
 
-    <APIReference 
-        title="AlertDialog" 
-        component="Footer" 
-        description="A footer container for alert dialog actions." 
+    <APIReference
+        title="AlertDialog"
+        component="Footer"
+        description="A footer container for alert dialog actions."
         items={[
             {
                 property: "children",
@@ -143,13 +145,13 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/alert-dia
                 type: "string",
                 description: "Additional CSS classes to apply to the footer."
             }
-        ]} 
+        ]}
     />
 
-    <APIReference 
-        title="AlertDialog" 
-        component="Exit" 
-        description="A button that closes the alert dialog when clicked." 
+    <APIReference
+        title="AlertDialog"
+        component="Exit"
+        description="A button that closes the alert dialog when clicked."
         items={[
             {
                 property: "children",
@@ -161,13 +163,13 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/alert-dia
                 type: "string",
                 description: "Additional CSS classes to apply to the button."
             }
-        ]} 
+        ]}
     />
 
-    <APIReference 
-        title="AlertDialog" 
-        component="Description" 
-        description="A description for the alert dialog." 
+    <APIReference
+        title="AlertDialog"
+        component="Description"
+        description="A description for the alert dialog."
         items={[
             {
                 property: "children",
@@ -179,13 +181,13 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/alert-dia
                 type: "string",
                 description: "Additional CSS classes to apply to the description."
             }
-        ]} 
+        ]}
     />
 
-    <APIReference 
-        title="AlertDialog" 
-        component="Content" 
-        description="The main content container for the alert dialog." 
+    <APIReference
+        title="AlertDialog"
+        component="Content"
+        description="The main content container for the alert dialog."
         items={[
             {
                 property: "children",
@@ -203,13 +205,13 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/alert-dia
                 description: "Whether clicking outside the dialog should close it.",
                 defaults: "false"
             }
-        ]} 
+        ]}
     />
 
-    <APIReference 
-        title="AlertDialog" 
-        component="Confirm" 
-        description="A button for confirming actions within the alert dialog." 
+    <APIReference
+        title="AlertDialog"
+        component="Confirm"
+        description="A button for confirming actions within the alert dialog."
         items={[
             {
                 property: "children",
@@ -232,7 +234,7 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/alert-dia
                 description: "Whether clicking the button should close the dialog.",
                 defaults: "true"
             }
-        ]} 
+        ]}
     />
 
 </div>

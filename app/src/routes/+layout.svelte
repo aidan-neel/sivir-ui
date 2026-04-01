@@ -1,25 +1,29 @@
 <script lang="ts">
-	import { Toaster } from '$lib/ui/components/toast';
+	import { onMount } from 'svelte';
+	import { Toaster } from '$lib/silk/components/toast';
 	import Navbar from '$lib/components/navbar.svelte';
-    import { ModeWatcher } from "mode-watcher";
-	import '$lib/ui/ui.css';
+	import { ModeWatcher } from 'mode-watcher';
+	import { hydrateLiveThemeCss } from '$lib/silk/themes/live';
+	import '$lib/silk/ui.css';
 	import '../app.css';
 	import type { Snippet } from 'svelte';
-    import { dev } from '$app/environment';
+	import { dev } from '$app/environment';
 
 	const { children }: { children: Snippet } = $props();
+
+	onMount(() => {
+		hydrateLiveThemeCss();
+	});
 </script>
 
 <svelte:head>
-    <title>
-		{dev ? 'Neel UI - Dev' : 'Neel UI'}
-    </title>
+	<title>{dev ? 'Silk UI - Dev' : 'Silk UI'}</title>
 </svelte:head>
 
 <ModeWatcher />
 <Toaster />
-<main class="w-screen flex flex-row justify-center">
-    <Navbar />
+<main class="flex w-full flex-row justify-center">
+	<Navbar />
 </main>
 
 {@render children?.()}

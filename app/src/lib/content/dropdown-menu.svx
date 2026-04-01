@@ -1,15 +1,17 @@
----
-title: dropdown-menu
-description: Displays a menu to the user, such as a set of actions or functions.
-component: true
-source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/dropdown-menu
----
+<script module lang="ts">
+	export const metadata = {
+	  "title": "Dropdown Menu",
+	  "description": "Displays a menu to the user, such as a set of actions or functions.",
+	  "component": true,
+	  "source": "https://github.com/aidan-neel/silk/tree/main/registry/silk/default/dropdown-menu"
+};
+</script>
 
 <script>
 import { ComponentPreview, CodeBlock, ExportItem, APIReference } from '$lib/components/docs';
-import { Button } from '$lib/ui/components/button';
-import Shortcut from '$lib/ui/components/shortcut';
-import * as DropdownMenu from '$lib/ui/components/dropdown-menu';
+import { Button } from '$lib/silk/components/button';
+import Shortcut from '$lib/silk/components/shortcut';
+import * as DropdownMenu from '$lib/silk/components/dropdown-menu';
 </script>
 
 <h1 class="py-2 h1">Import</h1>
@@ -21,14 +23,14 @@ import * as DropdownMenu from '$lib/ui/components/dropdown-menu';
 <ExportItem title="Item">Clickable menu item with optional callback or shortcut.</ExportItem>
 <ExportItem title="Label">Text header inside the dropdown.</ExportItem>
 <ExportItem title="Separator">Visual divider between items.</ExportItem>
-<ExportItem title="Shortcut">Keyboard shortcut binding for an item.</ExportItem>
 <ExportItem title="Sub">Wrapper for nested submenu.</ExportItem>
+<ExportItem title="SubTrigger">Row that opens a nested submenu.</ExportItem>
 <ExportItem title="SubContent">Container for items inside a Sub.</ExportItem>
 
 <h1 class="py-6 h1">Example</h1>
 
 <ComponentPreview code={`<script lang="ts">
-    import * as DropdownMenu from "$lib/ui/components/dropdown-menu"
+    import * as DropdownMenu from "$lib/silk/components/dropdown-menu"
 </script>\n
 <DropdownMenu.Root>
     <DropdownMenu.Trigger variant="outlined">Open</DropdownMenu.Trigger>
@@ -190,11 +192,10 @@ import * as DropdownMenu from '$lib/ui/components/dropdown-menu';
 
   <APIReference
     title="DropdownMenu"
-    component="Shortcut"
-    description="Keyboard shortcut for an item."
+    component="Sub"
+    description="Wrapper for nested submenu trigger and content."
     items={[
-      { property: "shortcut", type: "string", description: "Key combination (e.g., 'Ctrl+S')." },
-      { property: "children", type: "Snippet", description: "Displayed label." },
+      { property: "children", type: "Snippet", description: "SubTrigger and SubContent." },
       { property: "class", type: "string", description: "CSS classes." },
       { property: "...rest", type: "HTMLAttributes<HTMLElement>", description: "Extra attributes.", defaults: "{}" }
     ]}
@@ -202,12 +203,12 @@ import * as DropdownMenu from '$lib/ui/components/dropdown-menu';
 
   <APIReference
     title="DropdownMenu"
-    component="Sub"
-    description="Wrapper for nested submenu trigger."
+    component="SubTrigger"
+    description="Trigger row that opens a submenu."
     items={[
-      { property: "children", type: "Snippet", description: "Trigger content and SubContent." },
+      { property: "children", type: "Snippet", description: "Visible label for the submenu trigger." },
       { property: "class", type: "string", description: "CSS classes." },
-      { property: "...rest", type: "HTMLAttributes<HTMLElement>", description: "Extra attributes.", defaults: "{}" }
+      { property: "...rest", type: "ButtonProps", description: "Extra button props." }
     ]}
   />
 

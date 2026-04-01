@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { cn } from '$lib/ui/utils';
+	import { cn } from '$lib/silk/utils';
 	import { type Snippet } from 'svelte';
 
 	let {

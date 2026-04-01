@@ -1,15 +1,17 @@
----
-title: Popover
-description: Displays a popup element that appears near a trigger.
-component: true
-source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/popover
----
+<script module lang="ts">
+	export const metadata = {
+	  "title": "Popover",
+	  "description": "Displays a popup element that appears near a trigger.",
+	  "component": true,
+	  "source": "https://github.com/aidan-neel/silk/tree/main/registry/silk/default/popover"
+};
+</script>
 
 <script>
     import { ComponentPreview, CodeBlock, CodeSnippet, ExportItem, APIReference } from '$lib/components/docs';
-    import { Button } from '$lib/ui/components/button';
-    import { Input } from '$lib/ui/components/input';
-    import * as Popover from '$lib/ui/components/popover';
+    import { Button } from '$lib/silk/components/button';
+    import { Input } from '$lib/silk/components/input';
+    import * as Popover from '$lib/silk/components/popover';
 </script>
 
 <h1 class="py-2 h1">
@@ -17,19 +19,20 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/popover
 </h1>
 
 <p class="py-2">
-    Popover exports 3 components
+    Popover exports 4 components
 </p>
 
 <ExportItem title="Root">The root component that manages the popover.</ExportItem>
 <ExportItem title="Trigger">The element that opens the popover when interacted with.</ExportItem>
 <ExportItem title="Content">The content container that appears within the popover.</ExportItem>
+<ExportItem title="Title">An optional heading inside the popover surface.</ExportItem>
 
 <h1 class="py-6 h1">
     Example
 </h1>
 
 <ComponentPreview code={`<script lang="ts">
-    import * as Popover from "$lib/ui/components/popover";
+    import * as Popover from "$lib/silk/components/popover";
 </script>\n
 <Popover.Root>
     <Popover.Trigger variant="outlined">Popover</Popover.Trigger>
@@ -94,31 +97,37 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/popover
 </h1>
 
 <div class="flex flex-col gap-10">
-	<APIReference 
-		title="Popover" 
-		component="Root" 
-		description="The root container that manages the state and placement of the popover." 
+	<APIReference
+		title="Popover"
+		component="Root"
+		description="The root container that manages the state and placement of the popover."
 		items={[
 			{
 				property: "open",
 				type: "boolean",
-				description: "Controls whether the popover is initially open.",
+				description: "Controls whether the popover is open.",
 				defaults: "false"
 			},
             {
 				property: "hoverable",
 				type: "boolean",
-				description: "If the popover should trigger on hover."
-			},
+				description: "Whether the popover opens from hover and focus interactions."
+            },
             {
 				property: "delay",
 				type: "number",
-				description: "A millisecond delay for the popover opening."
+				description: "A millisecond delay before opening a hoverable popover."
+			},
+            {
+				property: "closeDelay",
+				type: "number",
+				description: "Delay before closing after hover leaves the trigger or panel.",
+				defaults: "150"
 			},
 			{
 				property: "stateName",
 				type: "string",
-				description: "A unique state key identifier for managing popover instances.",
+				description: "Optional state label for internal popover bookkeeping.",
 				defaults: `"popover"`
 			},
 			{
@@ -135,7 +144,7 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/popover
 			{
 				property: "class",
 				type: "string",
-				description: "Additional CSS classes to apply to the root container."
+				description: "Additional CSS classes forwarded through the popover system."
 			},
 			{
 				property: "...rest",
@@ -143,14 +152,29 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/popover
 				description: "Additional attributes passed to the root container.",
 				defaults: "{}"
 			}
-		]} 
+		]}
 	/>
 
-	<APIReference 
-		title="Popover" 
-		component="Trigger" 
-		description="A button that toggles the popover open or closed." 
+	<APIReference
+		title="Popover"
+		component="Trigger"
+		description="A button that toggles the popover open or closed."
 		items={[
+			{
+				property: "children",
+				type: "Snippet",
+				description: "Button content rendered inside the trigger."
+			},
+			{
+				property: "variant",
+				type: "ButtonVariant",
+				description: "Button variant passed to the underlying trigger button."
+			},
+			{
+				property: "icon",
+				type: "boolean",
+				description: "Optional trigger flag used by icon-style trigger layouts."
+			},
 			{
 				property: "class",
 				type: "string",
@@ -162,13 +186,13 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/popover
 				description: "Additional HTML button attributes passed to the trigger.",
 				defaults: "{}"
 			}
-		]} 
+		]}
 	/>
 
-	<APIReference 
-		title="Popover" 
-		component="Title" 
-		description="The title of the popover, typically used for headers or headings." 
+	<APIReference
+		title="Popover"
+		component="Title"
+		description="The title of the popover, typically used for headers or headings."
 		items={[
 			{
 				property: "children",
@@ -186,19 +210,31 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/popover
 				description: "Additional attributes passed to the title element.",
 				defaults: "{}"
 			}
-		]} 
+		]}
 	/>
 
-	<APIReference 
-		title="Popover" 
-		component="Content" 
-		description="The actual popover content that appears when triggered." 
+	<APIReference
+		title="Popover"
+		component="Content"
+		description="The actual popover content that appears when triggered."
 		items={[
 			{
 				property: "allowClickOutside",
 				type: "boolean",
 				description: "Determines whether clicking outside closes the popover.",
 				defaults: "true"
+			},
+			{
+				property: "portal",
+				type: "boolean",
+				description: "Whether the content should be portaled to document.body.",
+				defaults: "true"
+			},
+			{
+				property: "lockBody",
+				type: "boolean",
+				description: "Temporarily disables body scrolling and outside pointer events while open.",
+				defaults: "false"
 			},
 			{
 				property: "children",
@@ -216,6 +252,6 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/popover
 				description: "Additional attributes passed to the content wrapper.",
 				defaults: "{}"
 			}
-		]} 
+		]}
 	/>
 </div>

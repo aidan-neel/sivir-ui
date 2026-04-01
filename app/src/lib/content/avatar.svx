@@ -1,13 +1,15 @@
----
-title: Avatar
-description: Brief description of the component.
-component: true
-source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/componentname
----
+<script module lang="ts">
+	export const metadata = {
+	  "title": "Avatar",
+	  "description": "Brief description of the component.",
+	  "component": true,
+	  "source": "https://github.com/aidan-neel/silk/tree/main/registry/silk/default/componentname"
+};
+</script>
 
 <script>
     import { ComponentPreview, ExportItem, APIReference } from '$lib/components/docs';
-    import * as Combobox from '$lib/ui/components/combobox';
+    import * as Combobox from '$lib/silk/components/combobox';
 </script>
 
 <h1 class="py-2 h1">Import</h1>

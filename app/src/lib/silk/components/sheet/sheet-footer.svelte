@@ -1,0 +1,17 @@
+<script lang="ts">
+	import { cn } from "$lib/silk/utils";
+	import type { SheetHeaderProps, SheetState } from ".";
+	import Button from "$lib/silk/components/button";
+    import X from "@lucide/svelte/icons/x"
+	import { states } from '$lib/silk/internals/state.svelte.ts';
+	import { getContext } from 'svelte';
+
+    let { class: className, children, ...rest }: SheetHeaderProps = $props();
+
+    const key = getContext<string>('key');
+    const uiState = states[key].data as SheetState;
+</script>
+
+<div {...rest} class={cn(className, `flex flex-col gap-2 mt-auto`)}>
+	{@render children?.()}
+</div>

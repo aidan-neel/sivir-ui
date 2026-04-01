@@ -1,12 +1,39 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Instrument+Sans:wght@400;500;600;700&family=Lora:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,400;500;600&family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Sora:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
 @layer theme, base, components, utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300..900;1,300..900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Cal+Sans&display=swap');
+@font-face {
+	font-family: 'SF Mono';
+	src: url('/fonts/SFMono-Light.otf') format('opentype');
+	font-weight: normal;
+	font-style: normal;
+}
 
-.border-transpar {
-	border-r: transparent !important;
+html,
+body {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	width: 100%;
+}
+
+@layer base {
+	body {
+		background-color: var(--color-background);
+		background-image:
+			radial-gradient(circle at 12% 0%, color-mix(in srgb, var(--color-primary) 14%, transparent) 0%, transparent 36%),
+			radial-gradient(circle at 88% 8%, color-mix(in srgb, var(--color-primary) 8%, transparent) 0%, transparent 28%),
+			linear-gradient(180deg, color-mix(in srgb, var(--color-background) 94%, var(--color-primary) 4%) 0%, var(--color-background) 62%);
+		background-attachment: fixed;
+		color: var(--color-foreground);
+		font-family: var(--font-sans), sans-serif;
+		font-synthesis-weight: none;
+		text-rendering: optimizeLegibility;
+	}
+}
+
+::selection {
+	background-color: color-mix(in srgb, var(--color-primary) 32%, transparent);
 }
 
 pre {
@@ -14,12 +41,35 @@ pre {
 }
 
 .h1 {
-	font-size: 1.5rem; /* equivalent to text-2xl */
-	font-weight: 500; /* equivalent to font-medium */
+	font-size: 1.5rem;
+	font-weight: 500;
+	font-family: var(--font-header), sans-serif;
+	letter-spacing: -0.03em;
+	line-height: 1.05;
 }
 
 .h2 {
-	font-size: 1.25rem; /* equivalent to text-xl */
-	font-weight: 500; /* equivalent to font-medium */
-	font-family: var(--font-sans), sans-serif;
+	font-size: 1.25rem;
+	font-weight: 500;
+	font-family: var(--font-header), sans-serif;
+	letter-spacing: -0.02em;
+	line-height: 1.1;
+}
+
+::-webkit-scrollbar {
+	width: 0;
+	height: 0;
+}
+
+::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+	background: var(--color-secondary);
+	border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: var(--color-border-strong);
 }
