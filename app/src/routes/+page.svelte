@@ -1,346 +1,887 @@
-<script lang="ts">
-	import type { Action } from 'svelte/action';
-	import ArrowRight from '@lucide/svelte/icons/arrow-right';
-	import Check from '@lucide/svelte/icons/check';
-	import Layers from '@lucide/svelte/icons/layers-3';
-	import SwatchBook from '@lucide/svelte/icons/swatch-book';
-	import { Badge } from '$lib/silk/components/badge';
-	import { Button } from '$lib/silk/components/button';
-
-	const heroHeadline =
-		'Design-forward Svelte components with calmer defaults and room to make them yours.';
-	const heroWords = heroHeadline.split(' ');
-
-	type RevealParams = {
-		delay?: number;
-		threshold?: number;
-		rootMargin?: string;
-		once?: boolean;
-	};
-
-	const revealOnScroll: Action<HTMLElement, RevealParams> = (node, params = {}) => {
-		let observer: IntersectionObserver | undefined;
-
-		const applyConfig = (config: RevealParams) => {
-			node.style.setProperty('--reveal-delay', `${config.delay ?? 0}ms`);
-
-			if (typeof window === 'undefined') return;
-
-			if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-				node.dataset.revealed = 'true';
-				return;
-			}
-
-			if (typeof IntersectionObserver === 'undefined') {
-				node.dataset.revealed = 'true';
-				return;
-			}
-
-			observer?.disconnect();
-			observer = new IntersectionObserver(
-				([entry]) => {
-					if (entry?.isIntersecting) {
-						node.dataset.revealed = 'true';
-
-						if (config.once !== false) {
-							observer?.disconnect();
-						}
-					} else if (config.once === false) {
-						node.dataset.revealed = 'false';
-					}
-				},
-				{
-					threshold: config.threshold ?? 0.2,
-					rootMargin: config.rootMargin ?? '0px 0px -10% 0px'
-				}
-			);
-			observer.observe(node);
-		};
-
-		applyConfig(params);
-
-		return {
-			update(nextParams) {
-				applyConfig(nextParams ?? {});
-			},
-			destroy() {
-				observer?.disconnect();
-			}
-		};
-	};
-</script>
-
 <svelte:head>
-	<title>Silk UI</title>
+	<title>Silk UI - Component Library</title>
 	<meta
 		name="description"
 		content="Beautiful, customizable Svelte 5 components with a polished theming system and docs experience."
 	/>
 </svelte:head>
 
-<div
-	class="relative min-h-[calc(100vh-3.5rem)] overflow-clip pb-16 pt-[6.5rem] max-md:pt-[5.75rem]"
->
-	<div
-		class="pointer-events-none absolute left-[-6rem] top-[5rem] h-[18rem] w-[18rem] rounded-[999px] bg-[rgb(21_94_239_/_0.12)] opacity-80 blur-[70px]"
-	></div>
-	<div
-		class="pointer-events-none absolute right-[-5rem] top-[10rem] h-[22rem] w-[22rem] rounded-[999px] bg-[rgb(45_212_191_/_0.08)] opacity-80 blur-[70px]"
-	></div>
-	<div
-		class="pointer-events-none absolute inset-0 [background-image:linear-gradient(rgb(16_24_40_/_0.03)_1px,transparent_1px),linear-gradient(90deg,rgb(16_24_40_/_0.03)_1px,transparent_1px)] [background-size:44px_44px] [mask-image:linear-gradient(180deg,rgb(0_0_0_/_0.55),transparent_82%)]"
-	></div>
+<div class="win2k-page">
+	<!-- Marquee banner -->
+	<div class="win2k-marquee-bar">
+		<marquee behavior="scroll" direction="left" scrollamount="3">
+			🌟 NEW RELEASE: Silk UI v2.0 — Bun-ready, tokenized, and cleaner than ever! &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+			✅ Now featuring 40+ components &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+			💾 Download now and get started for FREE! &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+			🔥 Best Svelte component library of 2000! &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+			📧 Join our mailing list for updates! &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+		</marquee>
+	</div>
 
-	<section class="relative z-[1] mx-auto flex w-full max-w-[1400px] justify-start px-4 md:px-8">
-		<div
-			class="flex max-w-[82rem] flex-col items-start gap-8 pt-[4.25rem] text-left max-[1100px]:pt-8"
-		>
-			<div class="fade-up" use:revealOnScroll={{ delay: 80, threshold: 0.9 }}>
-				<Badge href="/docs/changelog" variant="outlined" class="w-fit gap-2 px-3 text-[0.82rem]">
-					New release
-					<span class="text-foreground-muted">Bun-ready, tokenized, and cleaner than ever</span>
-					<ArrowRight size={14} />
-				</Badge>
-			</div>
-
-			<div class="flex flex-col gap-4">
-				<h1
-					class="hero-title fade-up m-0 max-w-[28ch] text-balance text-[clamp(3.2rem,5vw,4.4rem)] font-medium leading-[0.95] tracking-[-0.05em] [font-family:var(--font-header),sans-serif] max-[1100px]:max-w-[25ch] max-md:max-w-none max-md:text-[clamp(2.7rem,11vw,4rem)]"
-					use:revealOnScroll={{ delay: 120, threshold: 0.85 }}
-				>
-					{#each heroWords as word, index}
-						<span class="hero-word" style={`--word-delay:${index * 55}ms`}>
-							{word}{index < heroWords.length - 1 ? '\u00A0' : ''}
-						</span>
-					{/each}
-				</h1>
-				<p
-					class="fade-up m-0 max-w-[58rem] text-balance text-[1.05rem] leading-7 text-foreground-muted"
-					use:revealOnScroll={{ delay: 240, threshold: 0.85 }}
-				>
-					Silk UI gives you customizable Svelte 5 primitives, elegant defaults, and a styling system
-					designed to be remixed instead of fought. Fast to adopt, easy to extend, and pleasant to
-					live in.
-				</p>
-			</div>
-
-			<div class="fade-up flex flex-wrap gap-3" use:revealOnScroll={{ delay: 320, threshold: 0.8 }}>
-				<Button href="/docs/components/alert" class="text-sm">Browse Components</Button>
-				<Button href="/themes" variant="outlined" class="text-sm">Explore Themes</Button>
-				<Button href="https://github.com/aidan-neel/ui" variant="ghost" class="text-sm">
-					View on GitHub
-				</Button>
-			</div>
-
-			<div class="grid w-full max-w-[60rem] grid-cols-3 gap-[0.9rem] max-md:grid-cols-1">
-				<div
-					class="fade-up flex flex-col gap-[0.3rem] border-t border-border-strong/70 pr-4 pt-4"
-					use:revealOnScroll={{ delay: 380, threshold: 0.7 }}
-				>
-					<span class="text-[0.95rem] font-semibold">Svelte 5</span>
-					<span class="text-[0.88rem] leading-[1.55] text-foreground-muted"
-						>Modern primitives and patterns</span
-					>
+	<!-- Main content area -->
+	<div class="win2k-content">
+		<!-- Left sidebar -->
+		<div class="win2k-sidebar">
+			<div class="win2k-window">
+				<div class="win2k-titlebar">
+					<span class="win2k-titlebar-text">📁 Navigation</span>
+					<div class="win2k-titlebar-buttons">
+						<button class="win2k-btn-min">_</button>
+						<button class="win2k-btn-max">□</button>
+						<button class="win2k-btn-close">✕</button>
+					</div>
 				</div>
-				<div
-					class="fade-up flex flex-col gap-[0.3rem] border-t border-border-strong/70 pr-4 pt-4"
-					use:revealOnScroll={{ delay: 460, threshold: 0.7 }}
-				>
-					<span class="text-[0.95rem] font-semibold">Token-first</span>
-					<span class="text-[0.88rem] leading-[1.55] text-foreground-muted"
-						>Theme deeply without rewrites</span
-					>
+				<div class="win2k-window-body">
+					<ul class="win2k-navlist">
+						<li><a href="/docs/introduction">📄 Getting Started</a></li>
+						<li><a href="/docs/components/alert">🧩 Components</a></li>
+						<li><a href="/themes">🎨 Themes</a></li>
+						<li><a href="/docs/changelog">📋 Changelog</a></li>
+						<li><a href="https://github.com/aidan-neel/ui">🐙 GitHub</a></li>
+					</ul>
 				</div>
-				<div
-					class="fade-up flex flex-col gap-[0.3rem] border-t border-border-strong/70 pr-4 pt-4"
-					use:revealOnScroll={{ delay: 540, threshold: 0.7 }}
-				>
-					<span class="text-[0.95rem] font-semibold">Accessible</span>
-					<span class="text-[0.88rem] leading-[1.55] text-foreground-muted"
-						>Sharper focus and interaction states</span
-					>
+			</div>
+
+			<div class="win2k-window win2k-window-info">
+				<div class="win2k-titlebar">
+					<span class="win2k-titlebar-text">ℹ️ System Info</span>
+					<div class="win2k-titlebar-buttons">
+						<button class="win2k-btn-min">_</button>
+						<button class="win2k-btn-close">✕</button>
+					</div>
+				</div>
+				<div class="win2k-window-body win2k-sysinfo">
+					<p>⚙️ Version: 2.0.0</p>
+					<p>📦 Package: silk-ui</p>
+					<p>🟢 Status: Online</p>
+					<p>🔧 Runtime: Svelte 5</p>
+					<hr class="win2k-hr" />
+					<p class="win2k-small">Last updated: 04/01/2000</p>
+				</div>
+			</div>
+
+			<div class="win2k-window win2k-counter-window">
+				<div class="win2k-titlebar">
+					<span class="win2k-titlebar-text">📊 Visitors</span>
+					<div class="win2k-titlebar-buttons">
+						<button class="win2k-btn-close">✕</button>
+					</div>
+				</div>
+				<div class="win2k-window-body win2k-counter-body">
+					<img
+						src="https://www.counters-free.net/count/count.gif"
+						alt="visitor counter"
+						class="win2k-counter-img"
+						onerror="this.style.display='none'; this.nextElementSibling.style.display='block'"
+					/>
+					<div class="win2k-counter-fallback">
+						<span class="win2k-counter-digits">007,312</span>
+					</div>
+					<p class="win2k-small" style="text-align:center; margin-top: 4px;">visitors since Jan 1, 2000</p>
 				</div>
 			</div>
 		</div>
-	</section>
 
-	<section class="relative z-[1] mx-auto mt-[9.5rem] w-full max-w-[1400px] px-4 md:px-8">
-		<div class="flex max-w-[42rem] flex-col gap-[0.85rem]">
-			<span
-				class="fade-up text-[0.8rem] font-medium uppercase tracking-[0.12em] text-foreground-muted"
-				use:revealOnScroll={{ delay: 40 }}>What makes it distinct</span
-			>
-			<h2
-				class="fade-up m-0 text-balance text-[clamp(1.6rem,2.35vw,2rem)] font-medium leading-[1.08] tracking-[-0.04em] [font-family:var(--font-header),sans-serif]"
-				use:revealOnScroll={{ delay: 120 }}
-			>
-				A calmer UI foundation that stays flexible as your product gets more specific.
-			</h2>
-		</div>
-
-		<div class="mt-6 grid grid-cols-3 gap-4 max-md:grid-cols-1">
-			<article
-				class="fade-up bg-[var(--card-bg)] border border-[var(--card-border)] rounded-[var(--card-radius)] shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)] p-[1.35rem]"
-				use:revealOnScroll={{ delay: 140, threshold: 0.3 }}
-			>
-				<div
-					class="mb-[0.95rem] grid h-[2.3rem] w-[2.3rem] place-items-center rounded-[0.9rem] bg-primary/10 text-primary"
-				>
-					<Layers size={18} />
+		<!-- Main body -->
+		<div class="win2k-main">
+			<!-- Hero window -->
+			<div class="win2k-window">
+				<div class="win2k-titlebar win2k-titlebar-gradient">
+					<span class="win2k-titlebar-text">🌐 Welcome to Silk UI — Svelte Component Library</span>
+					<div class="win2k-titlebar-buttons">
+						<button class="win2k-btn-min">_</button>
+						<button class="win2k-btn-max">□</button>
+						<button class="win2k-btn-close">✕</button>
+					</div>
 				</div>
-				<h3 class="m-0 text-[1rem]">Composable by default</h3>
-				<p class="mt-[0.55rem] m-0 leading-[1.7] text-foreground-muted">
-					Use the pieces as simple drop-ins or reshape them into product-specific patterns without
-					rewriting the entire stack.
-				</p>
-			</article>
-
-			<article
-				class="fade-up bg-[var(--card-bg)] border border-[var(--card-border)] rounded-[var(--card-radius)] shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)] p-[1.35rem]"
-				use:revealOnScroll={{ delay: 220, threshold: 0.3 }}
-			>
-				<div
-					class="mb-[0.95rem] grid h-[2.3rem] w-[2.3rem] place-items-center rounded-[0.9rem] bg-primary/10 text-primary"
-				>
-					<SwatchBook size={18} />
+				<div class="win2k-window-body win2k-hero-body">
+					<table class="win2k-hero-table">
+						<tr>
+							<td class="win2k-hero-left">
+								<div class="win2k-badge-strip">
+									<img src="https://img.shields.io/badge/NEW-Release-red?style=flat" alt="new release badge" />
+									<img src="https://img.shields.io/badge/Bun-Ready-yellow?style=flat" alt="bun ready" />
+									<img src="https://img.shields.io/badge/Svelte-5-orange?style=flat" alt="svelte 5" />
+								</div>
+								<h1 class="win2k-hero-title">
+									Design-forward Svelte components with calmer defaults and room to make them yours.
+								</h1>
+								<p class="win2k-hero-desc">
+									Silk UI gives you customizable Svelte 5 primitives, elegant defaults, and a styling
+									system designed to be remixed instead of fought. Fast to adopt, easy to extend,
+									and pleasant to live in.
+								</p>
+								<div class="win2k-btn-row">
+									<a href="/docs/components/alert" class="win2k-button win2k-button-primary">
+										Browse Components
+									</a>
+									<a href="/themes" class="win2k-button">
+										Explore Themes
+									</a>
+									<a href="https://github.com/aidan-neel/ui" class="win2k-button">
+										View on GitHub
+									</a>
+								</div>
+								<div class="win2k-feature-strip">
+									<div class="win2k-feature-item">
+										<span class="win2k-checkmark">✔</span>
+										<span><b>Svelte 5</b> — Modern primitives</span>
+									</div>
+									<div class="win2k-feature-item">
+										<span class="win2k-checkmark">✔</span>
+										<span><b>Token-first</b> — Theme deeply</span>
+									</div>
+									<div class="win2k-feature-item">
+										<span class="win2k-checkmark">✔</span>
+										<span><b>Accessible</b> — Sharper states</span>
+									</div>
+								</div>
+							</td>
+							<td class="win2k-hero-right">
+								<div class="win2k-inset-panel">
+									<div class="win2k-inner-titlebar">
+										<span>🖥️ Component Preview</span>
+									</div>
+									<div class="win2k-preview-body">
+										<div class="win2k-preview-btn-row">
+											<button class="win2k-button">Normal</button>
+											<button class="win2k-button win2k-button-primary">Primary</button>
+											<button class="win2k-button" disabled>Disabled</button>
+										</div>
+										<div class="win2k-progress-container">
+											<label class="win2k-label">Loading components...</label>
+											<div class="win2k-progress-bar">
+												<div class="win2k-progress-fill"></div>
+											</div>
+										</div>
+										<div class="win2k-status-bar-mini">
+											<span>🟢 40 components loaded</span>
+										</div>
+									</div>
+								</div>
+							</td>
+						</tr>
+					</table>
 				</div>
-				<h3 class="m-0 text-[1rem]">Real theming system</h3>
-				<p class="mt-[0.55rem] m-0 leading-[1.7] text-foreground-muted">
-					Semantic tokens, cleaner presets, and enough hooks to make the library feel like your own
-					design language.
-				</p>
-			</article>
-
-			<article
-				class="fade-up bg-[var(--card-bg)] border border-[var(--card-border)] rounded-[var(--card-radius)] shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)] p-[1.35rem]"
-				use:revealOnScroll={{ delay: 300, threshold: 0.3 }}
-			>
-				<div
-					class="mb-[0.95rem] grid h-[2.3rem] w-[2.3rem] place-items-center rounded-[0.9rem] bg-primary/10 text-primary"
-				>
-					<Check size={18} />
-				</div>
-				<h3 class="m-0 text-[1rem]">Polished interaction states</h3>
-				<p class="mt-[0.55rem] m-0 leading-[1.7] text-foreground-muted">
-					Focus, motion, borders, and surfaces are tuned to feel quiet and intentional instead of
-					flashy or unfinished.
-				</p>
-			</article>
-		</div>
-	</section>
-
-	<section class="relative z-[1] mx-auto mt-[5.75rem] w-full max-w-[1400px] px-4 md:px-8">
-		<div
-			class="fade-up bg-[var(--card-bg)] border border-[var(--card-border)] rounded-[var(--card-radius)] shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)] flex items-center justify-between gap-4 bg-surface/72 p-6 shadow-none max-md:flex-col max-md:items-start"
-			use:revealOnScroll={{ delay: 120, threshold: 0.25 }}
-		>
-			<div>
-				<span class="text-[0.8rem] font-medium uppercase tracking-[0.12em] text-foreground-muted"
-					>Start here</span
-				>
-				<h2
-					class="m-0 mt-[0.35rem] text-balance text-[clamp(1.6rem,2.35vw,2rem)] font-medium leading-[1.08] tracking-[-0.04em] [font-family:var(--font-header),sans-serif]"
-				>
-					Start from a stronger baseline.
-				</h2>
-				<p class="m-0 mt-[0.55rem] leading-[1.7] text-foreground-muted">
-					Open the docs, copy a component, and customize from a better default baseline.
-				</p>
 			</div>
-			<div class="flex flex-wrap gap-3">
-				<Button href="/docs/introduction">Read the Docs</Button>
-				<Button href="/docs/components/alert-dialog" variant="outlined"
-					>See Component Examples</Button
-				>
+
+			<!-- Features section -->
+			<div class="win2k-window win2k-window-features">
+				<div class="win2k-titlebar">
+					<span class="win2k-titlebar-text">💡 What Makes It Distinct</span>
+					<div class="win2k-titlebar-buttons">
+						<button class="win2k-btn-min">_</button>
+						<button class="win2k-btn-max">□</button>
+						<button class="win2k-btn-close">✕</button>
+					</div>
+				</div>
+				<div class="win2k-window-body">
+					<p class="win2k-section-intro">
+						A calmer UI foundation that stays flexible as your product gets more specific.
+					</p>
+					<table class="win2k-features-table">
+						<tr>
+							<td class="win2k-feature-card">
+								<div class="win2k-feature-icon">🗂️</div>
+								<h3>Composable by default</h3>
+								<p>
+									Use the pieces as simple drop-ins or reshape them into product-specific patterns
+									without rewriting the entire stack.
+								</p>
+							</td>
+							<td class="win2k-feature-card">
+								<div class="win2k-feature-icon">🎨</div>
+								<h3>Real theming system</h3>
+								<p>
+									Semantic tokens, cleaner presets, and enough hooks to make the library feel like
+									your own design language.
+								</p>
+							</td>
+							<td class="win2k-feature-card">
+								<div class="win2k-feature-icon">✅</div>
+								<h3>Polished interaction states</h3>
+								<p>
+									Focus, motion, borders, and surfaces are tuned to feel quiet and intentional
+									instead of flashy or unfinished.
+								</p>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+
+			<!-- CTA Section -->
+			<div class="win2k-window">
+				<div class="win2k-titlebar win2k-titlebar-teal">
+					<span class="win2k-titlebar-text">🚀 Start From A Stronger Baseline</span>
+					<div class="win2k-titlebar-buttons">
+						<button class="win2k-btn-min">_</button>
+						<button class="win2k-btn-max">□</button>
+						<button class="win2k-btn-close">✕</button>
+					</div>
+				</div>
+				<div class="win2k-window-body win2k-cta-body">
+					<table class="win2k-cta-table">
+						<tr>
+							<td class="win2k-cta-left">
+								<p class="win2k-label" style="color: #666; text-transform: uppercase; font-size: 10px; letter-spacing: 1px;">START HERE</p>
+								<h2 class="win2k-cta-title">Start from a stronger baseline.</h2>
+								<p>Open the docs, copy a component, and customize from a better default baseline.</p>
+							</td>
+							<td class="win2k-cta-right">
+								<a href="/docs/introduction" class="win2k-button win2k-button-primary win2k-button-large">
+									📖 Read the Docs
+								</a>
+								<br />
+								<a href="/docs/components/alert-dialog" class="win2k-button win2k-button-large" style="margin-top: 8px; display: inline-block;">
+									🧩 See Component Examples
+								</a>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+
+			<!-- Footer -->
+			<div class="win2k-footer">
+				<div class="win2k-footer-inner">
+					<hr class="win2k-hr" />
+					<table class="win2k-footer-table">
+						<tr>
+							<td class="win2k-footer-left">
+								<b>Silk UI</b><br />
+								<span class="win2k-small">Calmer defaults for teams that still want control.</span>
+							</td>
+							<td class="win2k-footer-links">
+								<a href="/docs/introduction">Docs</a> |
+								<a href="/docs/components">Components</a> |
+								<a href="/themes">Themes</a> |
+								<a href="https://github.com/aidan-neel/ui">GitHub</a>
+							</td>
+						</tr>
+					</table>
+					<p class="win2k-small" style="text-align: center; color: #666; margin-top: 8px;">
+						© 2000 Silk UI. Best viewed in Internet Explorer 5.5 at 800×600 resolution.
+						&nbsp;|&nbsp; 🔒 This site is SSL secured.
+					</p>
+				</div>
 			</div>
 		</div>
-	</section>
+	</div>
 
-	<footer
-		class="fade-up relative z-[1] mx-auto mt-24 flex w-full max-w-[1400px] items-center justify-between gap-4 border-t border-border-strong/60 px-4 pt-5 md:px-8 max-md:flex-col max-md:items-start"
-		use:revealOnScroll={{ delay: 80, threshold: 0.2 }}
-	>
-		<div>
-			<p class="m-0 font-semibold">Silk UI</p>
-			<p class="mt-[0.35rem] text-[0.92rem] text-foreground-muted">
-				Calmer defaults for teams that still want control.
-			</p>
-		</div>
-
-		<div class="flex flex-wrap gap-4">
-			<a
-				href="/docs/introduction"
-				class="text-[0.92rem] text-foreground-muted no-underline transition-colors duration-200 hover:text-foreground"
-				>Docs</a
-			>
-			<a
-				href="/docs/components"
-				class="text-[0.92rem] text-foreground-muted no-underline transition-colors duration-200 hover:text-foreground"
-				>Components</a
-			>
-			<a
-				href="/themes"
-				class="text-[0.92rem] text-foreground-muted no-underline transition-colors duration-200 hover:text-foreground"
-				>Themes</a
-			>
-			<a
-				href="https://github.com/aidan-neel/ui"
-				class="text-[0.92rem] text-foreground-muted no-underline transition-colors duration-200 hover:text-foreground"
-				>GitHub</a
-			>
-		</div>
-	</footer>
+	<!-- Windows taskbar-style status bar -->
+	<div class="win2k-statusbar">
+		<span class="win2k-status-item">🖥️ Silk UI v2.0</span>
+		<span class="win2k-status-sep">|</span>
+		<span class="win2k-status-item">📁 40 Components</span>
+		<span class="win2k-status-sep">|</span>
+		<span class="win2k-status-item">🟢 Online</span>
+		<span class="win2k-status-sep">|</span>
+		<span class="win2k-status-item win2k-status-right">🕐 04/01/2000 12:00 PM</span>
+	</div>
 </div>
 
 <style>
-	.fade-up {
-		opacity: 0;
-		transform: translate3d(0, 26px, 0);
-		filter: blur(8px);
-		transition:
-			opacity 1160ms cubic-bezier(0.16, 1, 0.3, 1),
-			transform 1160ms cubic-bezier(0.16, 1, 0.3, 1),
-			filter 1160ms cubic-bezier(0.16, 1, 0.3, 1);
-		transition-delay: var(--reveal-delay, 0ms);
-		will-change: opacity, transform, filter;
+	/* ===================== WIN2K BASE ===================== */
+	:global(body) {
+		background-color: #008080 !important;
+		background-image: none !important;
+		font-family: 'Tahoma', 'Verdana', 'Arial', sans-serif !important;
+		font-size: 12px !important;
 	}
 
-	:global(.fade-up[data-revealed='true']) {
-		opacity: 1;
-		transform: translate3d(0, 0, 0);
-		filter: blur(0);
+	/* Hide the existing navbar */
+	:global(main > nav),
+	:global(header),
+	:global(nav) {
+		display: none !important;
 	}
 
-	.hero-title {
-		filter: none;
+	.win2k-page {
+		font-family: 'Tahoma', 'Verdana', 'Arial', sans-serif;
+		font-size: 12px;
+		color: #000000;
+		min-height: 100vh;
+		display: flex;
+		flex-direction: column;
+		background: #008080;
+		padding: 8px;
+		padding-bottom: 0;
+		gap: 4px;
 	}
 
-	.hero-word {
+	/* ===================== MARQUEE BAR ===================== */
+	.win2k-marquee-bar {
+		background: linear-gradient(to right, #000080, #1084d0);
+		color: #ffffff;
+		font-size: 11px;
+		font-weight: bold;
+		padding: 3px 6px;
+		border: 2px solid;
+		border-color: #ffffff #808080 #808080 #ffffff;
+	}
+
+	/* ===================== LAYOUT ===================== */
+	.win2k-content {
+		display: flex;
+		flex-direction: row;
+		gap: 6px;
+		flex: 1;
+		align-items: flex-start;
+	}
+
+	/* ===================== SIDEBAR ===================== */
+	.win2k-sidebar {
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+		width: 180px;
+		flex-shrink: 0;
+	}
+
+	/* ===================== MAIN AREA ===================== */
+	.win2k-main {
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+		flex: 1;
+		min-width: 0;
+	}
+
+	/* ===================== WINDOW ===================== */
+	.win2k-window {
+		background: #d4d0c8;
+		border: 2px solid;
+		border-color: #ffffff #808080 #808080 #ffffff;
+		box-shadow: inset 1px 1px 0 #dfdfdf, 1px 1px 2px rgba(0,0,0,0.4);
+	}
+
+	/* ===================== TITLE BAR ===================== */
+	.win2k-titlebar {
+		background: linear-gradient(to right, #000080 0%, #1084d0 100%);
+		color: #ffffff;
+		font-size: 11px;
+		font-weight: bold;
+		padding: 3px 4px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		user-select: none;
+	}
+
+	.win2k-titlebar-gradient {
+		background: linear-gradient(to right, #000080 0%, #3a6ea5 100%);
+	}
+
+	.win2k-titlebar-teal {
+		background: linear-gradient(to right, #006060 0%, #008080 100%);
+	}
+
+	.win2k-titlebar-text {
+		font-size: 11px;
+		font-weight: bold;
+	}
+
+	.win2k-titlebar-buttons {
+		display: flex;
+		gap: 2px;
+	}
+
+	.win2k-btn-min,
+	.win2k-btn-max,
+	.win2k-btn-close {
+		width: 16px;
+		height: 14px;
+		font-size: 9px;
+		font-weight: bold;
+		background: #d4d0c8;
+		color: #000000;
+		border: 1px solid;
+		border-color: #ffffff #808080 #808080 #ffffff;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 0;
+		line-height: 1;
+	}
+
+	.win2k-btn-close {
+		background: #d4d0c8;
+	}
+
+	.win2k-btn-min:active,
+	.win2k-btn-max:active,
+	.win2k-btn-close:active {
+		border-color: #808080 #ffffff #ffffff #808080;
+	}
+
+	/* ===================== WINDOW BODY ===================== */
+	.win2k-window-body {
+		padding: 8px;
+		background: #d4d0c8;
+	}
+
+	/* ===================== NAV LIST ===================== */
+	.win2k-navlist {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.win2k-navlist li {
+		border-bottom: 1px solid #a0a0a0;
+	}
+
+	.win2k-navlist li:last-child {
+		border-bottom: none;
+	}
+
+	.win2k-navlist a {
+		display: block;
+		padding: 4px 6px;
+		color: #000080;
+		text-decoration: none;
+		font-size: 11px;
+	}
+
+	.win2k-navlist a:hover {
+		background: #000080;
+		color: #ffffff;
+		text-decoration: none;
+	}
+
+	/* ===================== SYSTEM INFO ===================== */
+	.win2k-sysinfo {
+		font-size: 10px;
+		line-height: 1.8;
+	}
+
+	.win2k-sysinfo p {
+		margin: 0;
+	}
+
+	.win2k-hr {
+		border: none;
+		border-top: 1px solid #808080;
+		border-bottom: 1px solid #ffffff;
+		margin: 4px 0;
+	}
+
+	.win2k-small {
+		font-size: 10px;
+		color: #444;
+	}
+
+	/* ===================== COUNTER ===================== */
+	.win2k-counter-body {
+		text-align: center;
+	}
+
+	.win2k-counter-img {
+		max-width: 100%;
+	}
+
+	.win2k-counter-fallback {
+		display: none;
+	}
+
+	.win2k-counter-digits {
+		font-family: 'Courier New', monospace;
+		font-size: 18px;
+		font-weight: bold;
+		color: #000;
+		background: #000;
+		color: #00ff00;
+		padding: 2px 6px;
+		letter-spacing: 2px;
+		border: 2px inset #808080;
 		display: inline-block;
-		opacity: 0;
-		transform: translate3d(0, 1.2rem, 0);
-		filter: blur(4px);
-		transition:
-			opacity 1160ms cubic-bezier(0.16, 1, 0.3, 1),
-			transform 1160ms cubic-bezier(0.16, 1, 0.3, 1),
-			filter 1160ms cubic-bezier(0.16, 1, 0.3, 1);
-		transition-delay: calc(var(--reveal-delay, 0ms) + var(--word-delay, 0ms) + 255ms);
-		will-change: opacity, transform, filter;
 	}
 
-	:global(.hero-title[data-revealed='true'] .hero-word) {
-		opacity: 1;
-		transform: translate3d(0, 0, 0);
-		filter: blur(0);
+	/* Show fallback counter always */
+	.win2k-counter-fallback {
+		display: block;
 	}
 
-	@media (prefers-reduced-motion: reduce) {
-		.fade-up,
-		.hero-word {
-			opacity: 1;
-			transform: none;
-			filter: none;
-			transition: none;
+	/* ===================== HERO ===================== */
+	.win2k-hero-body {
+		padding: 10px;
+	}
+
+	.win2k-hero-table {
+		width: 100%;
+		border-collapse: collapse;
+	}
+
+	.win2k-hero-table td {
+		vertical-align: top;
+		padding: 4px;
+	}
+
+	.win2k-hero-left {
+		width: 60%;
+	}
+
+	.win2k-hero-right {
+		width: 40%;
+	}
+
+	.win2k-badge-strip {
+		display: flex;
+		gap: 4px;
+		flex-wrap: wrap;
+		margin-bottom: 8px;
+	}
+
+	.win2k-badge-strip img {
+		height: 18px;
+	}
+
+	.win2k-hero-title {
+		font-size: 18px;
+		font-weight: bold;
+		color: #000080;
+		margin: 0 0 8px 0;
+		line-height: 1.3;
+		font-family: 'Tahoma', 'Verdana', sans-serif;
+	}
+
+	.win2k-hero-desc {
+		font-size: 11px;
+		line-height: 1.6;
+		margin: 0 0 10px 0;
+		color: #222;
+	}
+
+	.win2k-btn-row {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 4px;
+		margin-bottom: 12px;
+	}
+
+	.win2k-feature-strip {
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+		border-top: 1px solid #a0a0a0;
+		border-bottom: 1px solid #ffffff;
+		padding: 6px 0;
+	}
+
+	.win2k-feature-item {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		font-size: 11px;
+	}
+
+	.win2k-checkmark {
+		color: #008000;
+		font-weight: bold;
+		font-size: 12px;
+	}
+
+	/* ===================== INSET PANEL ===================== */
+	.win2k-inset-panel {
+		border: 2px solid;
+		border-color: #808080 #ffffff #ffffff #808080;
+		background: #d4d0c8;
+	}
+
+	.win2k-inner-titlebar {
+		background: #c0c0c0;
+		border-bottom: 1px solid #808080;
+		padding: 2px 4px;
+		font-size: 10px;
+		font-weight: bold;
+	}
+
+	.win2k-preview-body {
+		padding: 8px;
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+
+	.win2k-preview-btn-row {
+		display: flex;
+		gap: 4px;
+		flex-wrap: wrap;
+	}
+
+	/* ===================== PROGRESS BAR ===================== */
+	.win2k-progress-container {
+		display: flex;
+		flex-direction: column;
+		gap: 3px;
+	}
+
+	.win2k-label {
+		font-size: 11px;
+		font-weight: bold;
+	}
+
+	.win2k-progress-bar {
+		height: 16px;
+		background: #ffffff;
+		border: 2px solid;
+		border-color: #808080 #ffffff #ffffff #808080;
+		overflow: hidden;
+	}
+
+	.win2k-progress-fill {
+		height: 100%;
+		width: 72%;
+		background: repeating-linear-gradient(
+			90deg,
+			#000080 0px,
+			#000080 8px,
+			#ffffff 8px,
+			#ffffff 10px
+		);
+		animation: win2k-progress 2s ease-in-out infinite;
+	}
+
+	@keyframes win2k-progress {
+		0% { width: 20%; }
+		50% { width: 85%; }
+		100% { width: 20%; }
+	}
+
+	.win2k-status-bar-mini {
+		background: #c0c0c0;
+		border: 1px solid;
+		border-color: #808080 #ffffff #ffffff #808080;
+		padding: 2px 4px;
+		font-size: 10px;
+	}
+
+	/* ===================== BUTTONS ===================== */
+	.win2k-button {
+		display: inline-block;
+		background: #d4d0c8;
+		color: #000000;
+		border: 2px solid;
+		border-color: #ffffff #808080 #808080 #ffffff;
+		padding: 3px 10px;
+		font-family: 'Tahoma', 'Verdana', sans-serif;
+		font-size: 11px;
+		font-weight: bold;
+		text-decoration: none;
+		cursor: pointer;
+		box-shadow: 1px 1px 0 #000000;
+		outline: 1px dotted transparent;
+		user-select: none;
+	}
+
+	.win2k-button:hover {
+		background: #e4e0d8;
+		text-decoration: none;
+		color: #000000;
+	}
+
+	.win2k-button:active {
+		border-color: #808080 #ffffff #ffffff #808080;
+		box-shadow: none;
+		padding: 4px 9px 2px 11px;
+	}
+
+	.win2k-button:focus {
+		outline: 1px dotted #000000;
+	}
+
+	.win2k-button:disabled {
+		color: #808080;
+		text-shadow: 1px 1px 0 #ffffff;
+	}
+
+	.win2k-button-primary {
+		background: linear-gradient(to bottom, #1084d0 0%, #000080 100%);
+		color: #ffffff;
+		border-color: #6ab0e0 #00005a #00005a #6ab0e0;
+	}
+
+	.win2k-button-primary:hover {
+		background: linear-gradient(to bottom, #3094e0 0%, #0000a0 100%);
+		color: #ffffff;
+	}
+
+	.win2k-button-large {
+		padding: 5px 14px;
+		font-size: 12px;
+	}
+
+	/* ===================== FEATURES SECTION ===================== */
+	.win2k-section-intro {
+		font-size: 12px;
+		font-weight: bold;
+		color: #000080;
+		margin: 0 0 8px 0;
+		border-bottom: 2px solid #000080;
+		padding-bottom: 4px;
+	}
+
+	.win2k-features-table {
+		width: 100%;
+		border-collapse: separate;
+		border-spacing: 6px;
+	}
+
+	.win2k-feature-card {
+		vertical-align: top;
+		background: #ffffff;
+		border: 2px solid;
+		border-color: #808080 #ffffff #ffffff #808080;
+		padding: 8px;
+		width: 33%;
+	}
+
+	.win2k-feature-icon {
+		font-size: 24px;
+		margin-bottom: 4px;
+	}
+
+	.win2k-feature-card h3 {
+		font-size: 11px;
+		font-weight: bold;
+		color: #000080;
+		margin: 0 0 4px 0;
+	}
+
+	.win2k-feature-card p {
+		font-size: 11px;
+		line-height: 1.5;
+		margin: 0;
+		color: #333;
+	}
+
+	/* ===================== CTA SECTION ===================== */
+	.win2k-cta-body {
+		padding: 12px;
+	}
+
+	.win2k-cta-table {
+		width: 100%;
+		border-collapse: collapse;
+	}
+
+	.win2k-cta-table td {
+		padding: 4px 8px;
+		vertical-align: middle;
+	}
+
+	.win2k-cta-left {
+		width: 65%;
+	}
+
+	.win2k-cta-right {
+		width: 35%;
+		text-align: right;
+	}
+
+	.win2k-cta-title {
+		font-size: 16px;
+		font-weight: bold;
+		color: #000080;
+		margin: 4px 0;
+	}
+
+	/* ===================== FOOTER ===================== */
+	.win2k-footer {
+		background: #d4d0c8;
+		border: 2px solid;
+		border-color: #ffffff #808080 #808080 #ffffff;
+	}
+
+	.win2k-footer-inner {
+		padding: 8px;
+	}
+
+	.win2k-footer-table {
+		width: 100%;
+		border-collapse: collapse;
+	}
+
+	.win2k-footer-table td {
+		padding: 2px 4px;
+		vertical-align: middle;
+	}
+
+	.win2k-footer-left {
+		width: 50%;
+	}
+
+	.win2k-footer-links {
+		text-align: right;
+	}
+
+	.win2k-footer-links a {
+		color: #000080;
+		text-decoration: underline;
+		font-size: 11px;
+		padding: 0 2px;
+	}
+
+	.win2k-footer-links a:hover {
+		color: #ff0000;
+	}
+
+	/* ===================== STATUSBAR ===================== */
+	.win2k-statusbar {
+		position: sticky;
+		bottom: 0;
+		background: #d4d0c8;
+		border-top: 2px solid #ffffff;
+		padding: 3px 8px;
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		font-size: 11px;
+		margin: 4px -8px -4px;
+	}
+
+	.win2k-status-sep {
+		color: #808080;
+	}
+
+	.win2k-status-right {
+		margin-left: auto;
+	}
+
+	.win2k-window-info {}
+	.win2k-window-features {}
+	.win2k-counter-window {}
+
+	/* ===================== RESPONSIVE ===================== */
+	@media (max-width: 768px) {
+		.win2k-content {
+			flex-direction: column;
+		}
+		.win2k-sidebar {
+			width: 100%;
+		}
+		.win2k-hero-table,
+		.win2k-hero-table tr,
+		.win2k-hero-table td {
+			display: block;
+			width: 100%;
+		}
+		.win2k-features-table,
+		.win2k-features-table tr,
+		.win2k-feature-card {
+			display: block;
+			width: 100%;
+		}
+		.win2k-cta-table,
+		.win2k-cta-table tr,
+		.win2k-cta-table td {
+			display: block;
+			width: 100%;
+		}
+		.win2k-cta-right {
+			text-align: left;
 		}
 	}
 </style>
