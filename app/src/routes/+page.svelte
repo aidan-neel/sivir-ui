@@ -105,7 +105,7 @@
 
 			<div class="flex flex-col gap-4">
 				<h1
-					class="hero-title fade-up m-0 max-w-[28ch] text-balance text-[clamp(3.2rem,5vw,4.4rem)] font-medium leading-[0.95] tracking-[-0.05em] [font-family:var(--font-header),sans-serif] max-[1100px]:max-w-[25ch] max-md:max-w-none max-md:text-[clamp(2.7rem,11vw,4rem)]"
+					class="hero-title fade-up m-0 max-w-[70%] text-balance text-[clamp(3.2rem,5vw,4.4rem)] font-medium leading-[0.95] tracking-[-0.05em] [font-family:var(--font-header),sans-serif] max-[1100px]:max-w-[25ch] max-md:max-w-none max-md:text-[clamp(2.7rem,11vw,4rem)]"
 					use:revealOnScroll={{ delay: 120, threshold: 0.85 }}
 				>
 					{#each heroWords as word, index}
