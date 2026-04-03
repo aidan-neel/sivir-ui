@@ -1,0 +1,4 @@
+[alias]
+"@lib" = "./src/lib"
+"@root" = "./"
+"@src" = "./src"

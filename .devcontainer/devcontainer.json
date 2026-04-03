@@ -1,23 +1,31 @@
 {
-	"name": "silk-bun",
-	"build": {
-		"dockerfile": "Dockerfile",
-		"context": ".."
-	},
-	"workspaceFolder": "/workspaces/silk",
-	"forwardPorts": [5173],
-	"postCreateCommand": ".devcontainer/post-create.sh",
-	"customizations": {
-		"vscode": {
-			"extensions": [
-				"svelte.svelte-vscode",
-				"bradlc.vscode-tailwindcss",
-				"esbenp.prettier-vscode",
-				"dbaeumer.vscode-eslint"
-			],
-			"settings": {
-				"terminal.integrated.defaultProfile.linux": "bash"
-			}
-		}
-	}
+  "name": "silk-bun",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".."
+  },
+  "workspaceFolder": "/workspaces/silk",
+  "forwardPorts": [5173],
+  "postCreateCommand": ".devcontainer/post-create.sh",
+  "mounts": [
+    "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
+  ],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "svelte.svelte-vscode",
+        "bradlc.vscode-tailwindcss",
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint"
+      ],
+      "settings": {
+        "terminal.integrated.profiles.linux": {
+          "zsh": {
+            "path": "/usr/bin/zsh"
+          }
+        },
+        "terminal.integrated.defaultProfile.linux": "zsh"
+      }
+    }
+  }
 }

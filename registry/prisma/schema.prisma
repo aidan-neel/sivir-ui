@@ -1,0 +1,44 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "./generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum ThemeDurationPresetSlug {
+  default
+  snappy
+  instant
+  smooth
+}
+
+model Theme {
+  id                    String                  @id @default(cuid())
+  slug                  String                  @unique
+  name                  String
+  description           String
+  publisher             String?
+  fontSans              String
+  fontMono              String
+  fontHeader            String
+  radiusBase            String
+  radiusSm              String
+  radiusMd              String
+  radiusLg              String
+  radiusXl              String
+  primaryButtonOutline  Boolean                 @default(false)
+  invertedPanels        Boolean                 @default(false)
+  durationPreset        ThemeDurationPresetSlug @default(default)
+  motion                Json
+  light                 Json
+  dark                  Json
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
+}
