@@ -1,16 +1,15 @@
 import { Elysia } from 'elysia';
 import { openapi, fromTypes } from '@elysiajs/openapi';
 
-import { themes } from './services/themes';
+import { themesController } from './services/themes';
 
 const app = new Elysia()
 	.use(
 		openapi({
-			references: fromTypes(),
 			path: '/openapi'
 		})
 	)
-	.use(themes)
+	.use(themesController)
 	.get('/', () => 'Hello Elysia')
 	.listen(3000);
 

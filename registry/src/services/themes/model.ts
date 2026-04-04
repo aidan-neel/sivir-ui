@@ -68,7 +68,36 @@ export const ThemesModel = {
 		message: t.Literal('Successfully published theme!')
 	}),
 
-	nameTaken: t.Literal('A theme with this name already exists, try another one.')
+	getBySlugBody: t.Object({
+		slug: t.String()
+	}),
+
+	getBySlugResponse: t.Object({
+		id: t.String(),
+		slug: t.String(),
+		name: t.String(),
+		description: t.String(),
+		publisher: t.Optional(t.String()),
+		fontSans: t.String(),
+		fontMono: t.String(),
+		fontHeader: t.String(),
+		radiusBase: t.String(),
+		radiusSm: t.String(),
+		radiusMd: t.String(),
+		radiusLg: t.String(),
+		radiusXl: t.String(),
+		primaryButtonOutline: t.Boolean(),
+		invertedPanels: t.Boolean(),
+		durationPreset: ThemeDurationPresetSlug,
+		motion: ThemeMotion,
+		light: ThemePalette,
+		dark: ThemePalette,
+		createdAt: t.String(),
+		updatedAt: t.String()
+	}),
+
+	slugTaken: t.Literal('A theme with this slug already exists, try another one.'),
+	doesntExist: t.Literal('A theme with this slug does not exist.')
 };
 
 export type ThemesModel = {

@@ -3,6 +3,24 @@ import { prisma } from '@lib/prisma';
 import type { ThemesModel } from './model';
 
 export abstract class Themes {
+	static async getAll() {
+		return await prisma.theme.findMany();
+	}
+
+	static async getBySlug(body: ThemesModel['getBySlugBody']) {
+		const theme = await prisma.theme.findUnique({
+			where: { slug: body.slug }
+		});
+
+		if (!theme)
+			throw status(
+				404,
+				'A theme with this slug does not exist.' satisfies ThemesModel['doesntExist']
+			);
+
+		return theme;
+	}
+
 	static async publish(body: ThemesModel['publishBody']) {
 		const existingTheme = await prisma.theme.findUnique({
 			where: {
@@ -16,7 +34,7 @@ export abstract class Themes {
 		if (existingTheme)
 			throw status(
 				409,
-				'A theme with this name already exists, try another one.' satisfies ThemesModel['nameTaken']
+				'A theme with this slug already exists, try another one.' satisfies ThemesModel['slugTaken']
 			);
 
 		await prisma.theme.create({

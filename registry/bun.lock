@@ -14,7 +14,6 @@
         "pg": "^8.20.0",
         "prettier": "^3.8.1",
         "prisma": "^7.6.0",
-        "typescript": "^6.0.2",
         "zod": "^4.3.6",
       },
       "devDependencies": {
