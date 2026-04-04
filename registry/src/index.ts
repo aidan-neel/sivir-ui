@@ -1,5 +1,5 @@
 import { Elysia } from 'elysia';
-import { openapi, fromTypes } from '@elysiajs/openapi';
+import { openapi } from '@elysiajs/openapi';
 
 import { themesController } from './services/themes';
 

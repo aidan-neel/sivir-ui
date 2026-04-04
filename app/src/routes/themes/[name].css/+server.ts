@@ -1,17 +1,23 @@
-import { themePresetMap } from '$lib/silk/themes/presets';
+import { themeToCss } from '$lib/silk/themes/presets';
+import { RegistryRequestError, getRegistryThemeBySlug } from '$lib/server/theme-registry';
 import { error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
-const themes = themePresetMap;
-
-export const GET: RequestHandler = ({ params }) => {
-	const theme = themes[params.name as keyof typeof themes];
-
+export const GET: RequestHandler = async ({ fetch, params }) => {
+	let theme = null;
+	try {
+		theme = await getRegistryThemeBySlug(fetch, params.name);
+	} catch (requestError) {
+		if (requestError instanceof RegistryRequestError) {
+			error(requestError.status, requestError.message);
+		}
+		error(500, 'Unable to fetch theme.');
+	}
 	if (!theme) {
-		error(404, 'Theme not found');
+		error(500, 'Unable to fetch theme.');
 	}
 
-	return new Response(theme, {
+	return new Response(themeToCss(theme), {
 		headers: {
 			'content-type': 'text/css; charset=utf-8',
 			'cache-control': 'public, max-age=3600'

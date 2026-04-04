@@ -1,9 +1,12 @@
 <script lang="ts">
 	import type { Action } from 'svelte/action';
+	import type { PageData } from './$types';
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
 	import { Badge } from '$lib/silk/components/badge';
 	import { Button } from '$lib/silk/components/button';
-	import { themePresets } from '$lib/silk/themes/presets';
+
+	const { data }: { data: PageData } = $props();
+	const themes = $derived(data.themes);
 
 	const heroHeadline = 'Ultimate theme control, from presets to full-system customization.';
 	const heroWords = heroHeadline.split(' ');
@@ -63,7 +66,7 @@
 	<title>Silk UI Themes</title>
 	<meta
 		name="description"
-		content="Browse Silk UI presets, preview the overall direction, and open the dedicated Theme Studio workspace."
+		content="Browse the Silk UI theme catalog, preview each direction, and open the dedicated Theme Studio workspace."
 	/>
 </svelte:head>
 
@@ -162,7 +165,7 @@
 				class="fade-up text-[0.8rem] font-medium uppercase tracking-[0.12em] text-foreground-muted"
 				use:revealOnScroll={{ delay: 60 }}
 			>
-				Preset library
+				Theme catalog
 			</span>
 			<h2
 				class="fade-up m-0 text-balance text-[clamp(1.7rem,2.6vw,2.3rem)] font-medium leading-[1.06] tracking-[-0.04em] [font-family:var(--font-header),sans-serif]"
@@ -173,7 +176,7 @@
 		</div>
 
 		<div class="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-			{#each themePresets as preset, index}
+			{#each themes as preset, index}
 				<article
 					class="fade-up rounded-lg border border-[var(--card-border)] bg-[var(--card-bg)] p-5 shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)]"
 					use:revealOnScroll={{ delay: 150 + index * 50, threshold: 0.22 }}
@@ -231,6 +234,9 @@
 							<p class="mt-2 text-sm font-medium text-foreground">{preset.durationPreset}</p>
 						</div>
 					</div>
+					<p class="mt-4 text-xs text-foreground-muted">
+						by {preset.publisher || 'Community'}
+					</p>
 				</article>
 			{/each}
 		</div>

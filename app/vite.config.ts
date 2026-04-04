@@ -15,5 +15,11 @@ function customHmr(): Plugin {
 }
 
 export default defineConfig({
-	plugins: [sveltekit(), tailwindcss(), customHmr()]
+	plugins: [sveltekit(), tailwindcss(), customHmr()],
+	server: {
+		host: '0.0.0.0'
+	},
+	preview: {
+		host: '0.0.0.0'
+	}
 });
