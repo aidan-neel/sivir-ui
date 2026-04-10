@@ -22,19 +22,19 @@
 	});
 
 	const iconColorClass = $derived.by(() => {
-		if (toast.type === 'success') return 'text-emerald-500 bg-emerald-500/10';
-		if (toast.type === 'error') return 'text-red-500 bg-red-500/10';
-		if (toast.type === 'warning') return 'text-amber-500 bg-amber-500/10';
-		if (toast.type === 'info') return 'text-blue-500 bg-blue-500/10';
+		if (toast.type === 'success') return 'text-[var(--color-success)] bg-[color-mix(in_srgb,var(--color-success)_12%,transparent)]';
+		if (toast.type === 'error') return 'text-[var(--color-error)] bg-[color-mix(in_srgb,var(--color-error)_12%,transparent)]';
+		if (toast.type === 'warning') return 'text-[var(--color-warning)] bg-[color-mix(in_srgb,var(--color-warning)_12%,transparent)]';
+		if (toast.type === 'info') return 'text-[var(--color-info)] bg-[color-mix(in_srgb,var(--color-info)_12%,transparent)]';
 		if (toast.type === 'loading') return 'text-foreground-muted bg-secondary/40';
 		return '';
 	});
 
 	const progressColorClass = $derived.by(() => {
-		if (toast.type === 'success') return 'bg-emerald-500';
-		if (toast.type === 'error') return 'bg-red-500';
-		if (toast.type === 'warning') return 'bg-amber-500';
-		if (toast.type === 'info') return 'bg-blue-500';
+		if (toast.type === 'success') return 'bg-[var(--color-success)]';
+		if (toast.type === 'error') return 'bg-[var(--color-error)]';
+		if (toast.type === 'warning') return 'bg-[var(--color-warning)]';
+		if (toast.type === 'info') return 'bg-[var(--color-info)]';
 		return 'bg-foreground-muted';
 	});
 </script>
@@ -46,7 +46,7 @@
 	aria-atomic="true"
 	class={cn(
 		'group relative flex w-full flex-col overflow-hidden',
-		'rounded-[calc(var(--toast-radius)+0.15rem)] border border-[var(--toast-border)]',
+		'rounded-[calc(var(--toast-radius)+0.15rem)] border border-border',
 		'bg-[var(--toast-bg)] shadow-[var(--toast-shadow)] backdrop-blur-[14px]',
 		'ring-1 ring-black/4 sm:ring-0',
 		'text-foreground'

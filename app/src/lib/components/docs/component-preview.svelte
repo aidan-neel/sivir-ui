@@ -46,7 +46,7 @@
 		{...rest}
 		class={cn(
 			classProp,
-			`bg-[var(--card-bg)] border border-[var(--card-border)] rounded-[var(--card-radius)] shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)] w-full rounded-lg border border-border/65 flex flex-col overflow-hidden max-w-full ${
+			`bg-[var(--card-bg)] border border-border rounded-[var(--card-radius)] shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)] w-full rounded-lg flex flex-col overflow-hidden max-w-full ${
 				selectedTab === 1
 					? 'items-center justify-center min-h-[20rem] px-6 py-16 md:px-10 md:py-20 bg-card/82'
 					: 'items-start justify-start bg-card/82'

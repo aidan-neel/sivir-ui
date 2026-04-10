@@ -37,7 +37,7 @@
 </script>
 
 {#if uiState.data.open}
-	<div class="fixed inset-0 z-40">
+	<div class="fixed inset-0 z-[115]">
 		<div
 			transition:fade={{ duration: 150, easing: cubicOut }}
 			class="absolute inset-0 bg-[var(--color-overlay)] [backface-visibility:hidden] [transform:translateZ(0)]"
@@ -49,7 +49,7 @@
 			bind:this={element}
 			class={cn(
 				className,
-				`bg-[var(--color-panel)] text-[var(--color-panel-foreground)] border border-[var(--panel-border)] rounded-[var(--panel-radius)] shadow-[inset_0_1px_0_var(--panel-highlight),var(--panel-shadow)] p-[var(--panel-padding-lg)] duration-200 transition-all flex flex-col gap-4 fixed top-1/2 left-1/2 z-50 overflow-y-auto overscroll-contain -translate-x-1/2 -translate-y-1/2 m-auto md:w-full w-[calc(100%-1.5rem)] max-w-[35rem] min-h-[5rem] max-h-[min(30rem,calc(100dvh-1.5rem))]`
+				`bg-[var(--color-panel)] text-[var(--color-panel-foreground)] border border-border rounded-[var(--panel-radius)] shadow-[inset_0_1px_0_var(--panel-highlight),var(--panel-shadow)] p-[var(--panel-padding-lg)] duration-200 transition-all flex flex-col gap-4 fixed top-1/2 left-1/2 z-[120] overflow-y-auto overscroll-contain -translate-x-1/2 -translate-y-1/2 m-auto md:w-full w-[calc(100%-1.5rem)] max-w-[35rem] min-h-[5rem] max-h-[min(30rem,calc(100dvh-1.5rem))]`
 			)}
 			use:clickOutside={() => {
 				if (allowClickOutside) {

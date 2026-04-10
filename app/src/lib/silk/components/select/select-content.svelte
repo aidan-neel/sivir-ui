@@ -36,7 +36,7 @@
 	data-ui="select-content"
 	class={cn(
 		props.class,
-		'min-w-[var(--popover-trigger-width)] w-max bg-[var(--color-panel)] text-[var(--color-panel-foreground)] border border-[var(--panel-border)] rounded-[var(--panel-radius)] shadow-[inset_0_1px_0_var(--panel-highlight),var(--panel-shadow)] p-1'
+		'min-w-[var(--popover-trigger-width)] w-max bg-[var(--color-panel)] text-[var(--color-panel-foreground)] border border-border rounded-[var(--panel-radius)] shadow-[inset_0_1px_0_var(--panel-highlight),var(--panel-shadow)] p-1'
 	)}
 >
 	{@render props.children?.()}

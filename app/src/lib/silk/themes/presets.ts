@@ -4,6 +4,7 @@ export type ThemePalette = {
 	borderStrong: string;
 	input: string;
 	primary: string;
+	info: string;
 	foregroundOpposite: string;
 	foreground: string;
 	muted: string;
@@ -52,6 +53,9 @@ export type ThemeBasePalette = {
 	surface: string;
 	text: string;
 	primary: string;
+	secondary?: string;
+	/** Optional border override — if omitted, derived automatically from surface + text mix. */
+	border?: string;
 };
 
 export type ThemeDraft = {
@@ -158,6 +162,7 @@ function palette(
 		borderStrong: values.borderStrong ?? '#c9d1dc',
 		input: values.input ?? values.borderStrong ?? '#c9d1dc',
 		primary: values.primary,
+		info: values.info ?? '#2563eb',
 		foregroundOpposite: values.foregroundOpposite ?? '#ffffff',
 		foreground: values.foreground,
 		muted: values.muted ?? '#f2f4f7',
@@ -274,12 +279,41 @@ export function generatePaletteFromBase(
 	const background =
 		mode === 'light' ? mixColors(baseBackground, '#ffffff', 0.38) : baseBackground;
 	const surface = mode === 'light' ? mixColors(baseSurface, '#ffffff', 0.16) : baseSurface;
-	const border = mixColors(surface, text, mode === 'light' ? 0.12 : 0.18);
-	const borderStrong = mixColors(surface, text, mode === 'light' ? 0.2 : 0.28);
-	const secondary = mixColors(background, surface, mode === 'light' ? 0.44 : 0.45);
+	const secondary =
+		normalizeHex(base.secondary ?? '') ??
+		mixColors(background, surface, mode === 'light' ? 0.44 : 0.45);
+	const border = base.border ? (normalizeHex(base.border) ?? mixColors(surface, text, mode === 'light' ? 0.12 : 0.18)) : mixColors(surface, text, mode === 'light' ? 0.12 : 0.18);
+	const borderStrong = base.border
+		? mixColors(border, text, mode === 'light' ? 0.2 : 0.25)
+		: mixColors(surface, text, mode === 'light' ? 0.2 : 0.28);
 	const muted = mixColors(background, surface, mode === 'light' ? 0.28 : 0.24);
 	const accent = mixColors(surface, primary, mode === 'light' ? 0.035 : 0.14);
 	const foregroundMuted = mixColors(text, background, mode === 'light' ? 0.38 : 0.32);
+	const info = mixColors(
+		secondary,
+		mode === 'light' ? '#2563eb' : '#60a5fa',
+		mode === 'light' ? 0.78 : 0.72
+	);
+	const success = mixColors(
+		secondary,
+		mode === 'light' ? '#16a34a' : '#4ade80',
+		mode === 'light' ? 0.76 : 0.7
+	);
+	const warning = mixColors(
+		secondary,
+		mode === 'light' ? '#d97706' : '#fbbf24',
+		mode === 'light' ? 0.8 : 0.72
+	);
+	const error = mixColors(
+		secondary,
+		mode === 'light' ? '#dc2626' : '#f87171',
+		mode === 'light' ? 0.8 : 0.72
+	);
+	const destructive = mixColors(
+		secondary,
+		mode === 'light' ? '#b91c1c' : '#ef4444',
+		mode === 'light' ? 0.84 : 0.76
+	);
 
 	return palette({
 		background,
@@ -287,6 +321,7 @@ export function generatePaletteFromBase(
 		borderStrong,
 		input: borderStrong,
 		primary,
+		info,
 		foreground: text,
 		foregroundOpposite: contrastText(text),
 		foregroundButton: contrastText(primary),
@@ -297,10 +332,10 @@ export function generatePaletteFromBase(
 		card: surface,
 		accent,
 		alternate: mixColors(text, background, mode === 'light' ? 0.08 : 0.16),
-		success: mixColors(primary, '#38a169', 0.42),
-		warning: mixColors(primary, '#d97706', 0.5),
-		error: mixColors(primary, '#dc2626', 0.56),
-		destructive: mixColors(primary, '#b91c1c', 0.62),
+		success,
+		warning,
+		error,
+		destructive,
 		overlay: alphaColor(mode === 'light' ? text : '#000000', mode === 'light' ? 0.18 : 0.62),
 		ring: alphaColor(primary, 0.2)
 	});
@@ -330,12 +365,6 @@ function panelTokensToCss(theme: ThemeDraft, mode: 'light' | 'dark') {
 	const panel = getPanelPalette(theme, mode);
 	const isInvertedLight = mode === 'light' && theme.invertedPanels;
 	const panelForeground = isInvertedLight ? mixColors(panel.foreground, '#ffffff', 0.04) : panel.foreground;
-	const panelBorder = isInvertedLight
-		? alphaColor(mixColors(panel.borderStrong, panel.foreground, 0.18), 0.42)
-		: `color-mix(in srgb, ${panel.borderStrong} 88%, transparent)`;
-	const menuItemHoverBorder = isInvertedLight
-		? alphaColor(mixColors(panel.borderStrong, panel.foreground, 0.14), 0.24)
-		: `color-mix(in srgb, ${panel.borderStrong} 30%, transparent)`;
 	const highlight =
 		isInvertedLight
 			? 'rgb(120 130 148 / 0.07)'
@@ -345,11 +374,9 @@ function panelTokensToCss(theme: ThemeDraft, mode: 'light' | 'dark') {
 
 	return `\t--color-floating-panel: ${panel.popover};
 \t--color-floating-panel-foreground: ${panelForeground};
-\t--floating-panel-border: ${panelBorder};
 \t--floating-panel-highlight: ${highlight};
 \t--floating-menu-item-foreground: ${panelForeground};
 \t--floating-menu-item-hover-bg: color-mix(in srgb, ${panel.secondary} 42%, transparent);
-\t--floating-menu-item-hover-border: ${menuItemHoverBorder};
 \t--floating-menu-item-active-bg: color-mix(in srgb, ${panel.primary} 10%, transparent);`;
 }
 
@@ -360,6 +387,7 @@ function paletteToCss(palette: ThemePalette) {
 \t--color-border-strong: ${palette.borderStrong};
 \t--color-input: ${palette.input};
 \t--color-primary: ${palette.primary};
+\t--color-info: ${palette.info};
 \t--color-foreground-opposite: ${palette.foregroundOpposite};
 \t--color-foreground: ${palette.foreground};
 \t--color-muted: ${palette.muted};
@@ -394,9 +422,9 @@ export function themeToCss(theme: ThemeDraft) {
 \t--radius-btn: var(--radius-lg);
 \t--motion-duration-hover: ${durations.hover};
 \t--motion-duration-menu: ${durations.menu};
-\t--motion-duration-panel: ${motion.panelDuration};
-\t--motion-duration-sheet: ${motion.sheetDuration};
-\t--motion-duration-overlay: ${motion.overlayDuration};
+\t--motion-duration-panel: ${durations.panel};
+\t--motion-duration-sheet: ${durations.sheet};
+\t--motion-duration-overlay: ${durations.overlay};
 \t--motion-duration-tooltip: ${durations.tooltip};
 \t--motion-duration-toast-in: ${durations.toastIn};
 \t--motion-duration-toast-out: ${durations.toastOut};
@@ -422,9 +450,9 @@ ${panelTokensToCss(theme, 'light')}
 \t--radius-xl: ${radii.xl};
 \t--motion-duration-hover: ${durations.hover};
 \t--motion-duration-menu: ${durations.menu};
-\t--motion-duration-panel: ${motion.panelDuration};
-\t--motion-duration-sheet: ${motion.sheetDuration};
-\t--motion-duration-overlay: ${motion.overlayDuration};
+\t--motion-duration-panel: ${durations.panel};
+\t--motion-duration-sheet: ${durations.sheet};
+\t--motion-duration-overlay: ${durations.overlay};
 \t--motion-duration-tooltip: ${durations.tooltip};
 \t--motion-duration-toast-in: ${durations.toastIn};
 \t--motion-duration-toast-out: ${durations.toastOut};

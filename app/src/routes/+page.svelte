@@ -180,7 +180,7 @@
 
 		<div class="mt-6 grid grid-cols-3 gap-4 max-md:grid-cols-1">
 			<article
-				class="fade-up bg-[var(--card-bg)] border border-[var(--card-border)] rounded-[var(--card-radius)] shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)] p-[1.35rem]"
+				class="fade-up bg-[var(--card-bg)] border border-border rounded-[var(--card-radius)] shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)] p-[1.35rem]"
 				use:revealOnScroll={{ delay: 140, threshold: 0.3 }}
 			>
 				<div
@@ -196,7 +196,7 @@
 			</article>
 
 			<article
-				class="fade-up bg-[var(--card-bg)] border border-[var(--card-border)] rounded-[var(--card-radius)] shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)] p-[1.35rem]"
+				class="fade-up bg-[var(--card-bg)] border border-border rounded-[var(--card-radius)] shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)] p-[1.35rem]"
 				use:revealOnScroll={{ delay: 220, threshold: 0.3 }}
 			>
 				<div
@@ -212,7 +212,7 @@
 			</article>
 
 			<article
-				class="fade-up bg-[var(--card-bg)] border border-[var(--card-border)] rounded-[var(--card-radius)] shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)] p-[1.35rem]"
+				class="fade-up bg-[var(--card-bg)] border border-border rounded-[var(--card-radius)] shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)] p-[1.35rem]"
 				use:revealOnScroll={{ delay: 300, threshold: 0.3 }}
 			>
 				<div
@@ -231,7 +231,7 @@
 
 	<section class="relative z-[1] mx-auto mt-[5.75rem] w-full max-w-[1400px] px-4 md:px-8">
 		<div
-			class="fade-up bg-[var(--card-bg)] border border-[var(--card-border)] rounded-[var(--card-radius)] shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)] flex items-center justify-between gap-4 bg-surface/72 p-6 shadow-none max-md:flex-col max-md:items-start"
+			class="fade-up bg-[var(--card-bg)] border border-border rounded-[var(--card-radius)] shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)] flex items-center justify-between gap-4 bg-surface/72 p-6 shadow-none max-md:flex-col max-md:items-start"
 			use:revealOnScroll={{ delay: 120, threshold: 0.25 }}
 		>
 			<div>

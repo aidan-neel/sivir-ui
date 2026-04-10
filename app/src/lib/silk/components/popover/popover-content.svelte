@@ -169,7 +169,7 @@
 			data-ui="popover-content"
 			class={cn(
 				classProp,
-				`bg-[var(--color-panel)] text-[var(--color-panel-foreground)] border border-[var(--panel-border)] rounded-[var(--panel-radius)] shadow-[inset_0_1px_0_var(--panel-highlight),var(--panel-shadow)] p-[var(--panel-padding)] text-sm m-auto max-w-[min(var(--popover-available-width,calc(100vw-1rem)),calc(100vw-1rem))] max-h-[min(var(--popover-available-height,calc(100vh-1rem)),calc(100vh-1rem))] overflow-auto`
+				`bg-[var(--color-panel)] text-[var(--color-panel-foreground)] border border-border rounded-[var(--panel-radius)] shadow-[inset_0_1px_0_var(--panel-highlight),var(--panel-shadow)] p-[var(--panel-padding)] text-sm m-auto max-w-[min(var(--popover-available-width,calc(100vw-1rem)),calc(100vw-1rem))] max-h-[min(var(--popover-available-height,calc(100vh-1rem)),calc(100vh-1rem))] overflow-auto`
 			)}
 		>
 			{@render children?.()}

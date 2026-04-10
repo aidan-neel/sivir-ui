@@ -25,20 +25,20 @@
 	</section>
 
 	<section class="mt-8 grid gap-4 md:grid-cols-3">
-		<div class="rounded-lg border border-[var(--card-border)] bg-[var(--card-bg)] p-4 shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)]">
+		<div class="rounded-lg border border-border bg-[var(--card-bg)] p-4 shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)]">
 			<p class="text-sm font-semibold text-foreground">Copyable primitives</p>
 			<p class="mt-2 text-sm leading-6 text-foreground-muted">
 				Bring in a component, own the code, and keep shipping without fighting opaque internals.
 			</p>
 		</div>
-		<div class="rounded-lg border border-[var(--card-border)] bg-[var(--card-bg)] p-4 shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)]">
+		<div class="rounded-lg border border-border bg-[var(--card-bg)] p-4 shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)]">
 			<p class="text-sm font-semibold text-foreground">Token-first theming</p>
 			<p class="mt-2 text-sm leading-6 text-foreground-muted">
 				Adjust the overall mood with semantic tokens, then go deeper with component-level variables
 				only when you need to.
 			</p>
 		</div>
-		<div class="rounded-lg border border-[var(--card-border)] bg-[var(--card-bg)] p-4 shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)]">
+		<div class="rounded-lg border border-border bg-[var(--card-bg)] p-4 shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)]">
 			<p class="text-sm font-semibold text-foreground">Polished interaction states</p>
 			<p class="mt-2 text-sm leading-6 text-foreground-muted">
 				Menus, dialogs, sheets, focus states, and overlays are tuned to feel deliberate instead of
@@ -59,7 +59,7 @@
 			</p>
 		</div>
 
-		<div class="rounded-lg border border-[var(--card-border)] bg-[var(--card-bg)] p-5 shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)]">
+		<div class="rounded-lg border border-border bg-[var(--card-bg)] p-5 shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)]">
 			<p class="text-sm font-semibold uppercase tracking-[0.12em] text-foreground-muted">
 				Recommended flow
 			</p>

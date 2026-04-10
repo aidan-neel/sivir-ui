@@ -19,7 +19,7 @@
 			tokens. Start with semantic values like background, surface, text, primary, ring, and radius.
 			Those feed the primitives first. Component-specific tokens come second.
 		</p>
-		<div class="rounded-lg border border-[var(--card-border)] bg-[var(--card-bg)] p-5 shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)]">
+		<div class="rounded-lg border border-border bg-[var(--card-bg)] p-5 shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)]">
 			<p class="text-sm font-semibold uppercase tracking-[0.12em] text-foreground-muted">
 				Theming layers
 			</p>
@@ -132,7 +132,7 @@
 }
 
 [data-ui='toast'] {
-	--toast-border: color-mix(in srgb, var(--color-primary) 24%, var(--color-border));
+	--color-border: color-mix(in srgb, var(--color-primary) 24%, var(--color-border));
 }
 
 [data-ui='dropdown-menu-content'] {
@@ -151,7 +151,7 @@
 			The same editor tooling used on the Themes page is available inside the app, so if you are
 			building internal theme controls or a preset manager, you can reuse the same pieces.
 		</p>
-		<div class="rounded-lg border border-[var(--card-border)] bg-[var(--card-bg)] p-4 shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)]">
+		<div class="rounded-lg border border-border bg-[var(--card-bg)] p-4 shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)]">
 			<ColorPicker
 				label="Primary"
 				value={previewColor}

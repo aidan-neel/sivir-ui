@@ -178,7 +178,7 @@
 		<div class="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
 			{#each themes as preset, index}
 				<article
-					class="fade-up rounded-lg border border-[var(--card-border)] bg-[var(--card-bg)] p-5 shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)]"
+					class="fade-up rounded-lg border border-border bg-[var(--card-bg)] p-5 shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)]"
 					use:revealOnScroll={{ delay: 150 + index * 50, threshold: 0.22 }}
 				>
 					<div class="flex items-start justify-between gap-3">
@@ -244,7 +244,7 @@
 
 	<section class="relative z-[1] mx-auto mt-[5.75rem] w-full max-w-[1440px] px-4 md:px-8">
 		<div
-			class="fade-up flex items-center justify-between gap-4 rounded-lg border border-[var(--card-border)] bg-[var(--card-bg)] bg-surface/72 p-6 shadow-none max-md:flex-col max-md:items-start"
+			class="fade-up flex items-center justify-between gap-4 rounded-lg border border-border bg-[var(--card-bg)] bg-surface/72 p-6 shadow-none max-md:flex-col max-md:items-start"
 			use:revealOnScroll={{ delay: 120, threshold: 0.25 }}
 		>
 			<div>

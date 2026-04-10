@@ -64,7 +64,7 @@
 		tabindex="-1"
 		class={cn(
 			className,
-			'bg-[var(--color-panel)] text-[var(--color-panel-foreground)] border border-[var(--panel-border)] rounded-[var(--panel-radius)] shadow-[inset_0_1px_0_var(--panel-highlight),var(--panel-shadow)] fixed top-1/2 left-1/2 z-50 m-auto flex max-h-[30rem] min-h-[5rem] w-[calc(100%-1.5rem)] max-w-[35rem] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden duration-200 transition-all'
+			'bg-[var(--color-panel)] text-[var(--color-panel-foreground)] border border-border rounded-[var(--panel-radius)] shadow-[inset_0_1px_0_var(--panel-highlight),var(--panel-shadow)] fixed top-1/2 left-1/2 z-50 m-auto flex max-h-[30rem] min-h-[5rem] w-[calc(100%-1.5rem)] max-w-[35rem] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden duration-200 transition-all'
 		)}
 		use:clickOutside={() => {
 			if (allowClickOutside) {

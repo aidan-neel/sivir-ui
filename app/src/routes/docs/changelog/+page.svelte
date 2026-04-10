@@ -19,7 +19,7 @@
 		</div>
 
 		<div class="grid gap-4">
-			<article class="rounded-lg border border-[var(--card-border)] bg-[var(--card-bg)] p-5 shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)]">
+			<article class="rounded-lg border border-border bg-[var(--card-bg)] p-5 shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)]">
 				<h2 class="docs-subsection-heading">
 					Accessibility and interaction pass
 				</h2>
@@ -30,7 +30,7 @@
 				</p>
 			</article>
 
-			<article class="rounded-lg border border-[var(--card-border)] bg-[var(--card-bg)] p-5 shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)]">
+			<article class="rounded-lg border border-border bg-[var(--card-bg)] p-5 shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)]">
 				<h2 class="docs-subsection-heading">
 					Theme studio improvements
 				</h2>
@@ -41,7 +41,7 @@
 				</p>
 			</article>
 
-			<article class="rounded-lg border border-[var(--card-border)] bg-[var(--card-bg)] p-5 shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)]">
+			<article class="rounded-lg border border-border bg-[var(--card-bg)] p-5 shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)]">
 				<h2 class="docs-subsection-heading">
 					Mobile and docs cleanup
 				</h2>
@@ -62,7 +62,7 @@
 			</p>
 		</div>
 
-		<div class="rounded-lg border border-[var(--card-border)] bg-[var(--card-bg)] p-5 shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)]">
+		<div class="rounded-lg border border-border bg-[var(--card-bg)] p-5 shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)]">
 			<h2 class="docs-subsection-heading">v1.0.0</h2>
 			<p class="mt-3 text-base leading-7 text-foreground-muted">
 				The first release established the core component collection, CLI installation flow, and the

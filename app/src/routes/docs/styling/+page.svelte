@@ -110,7 +110,7 @@
 }
 
 [data-ui='toast'] {
-	--toast-border: color-mix(in srgb, var(--color-primary) 22%, var(--color-border));
+	--color-border: color-mix(in srgb, var(--color-primary) 22%, var(--color-border));
 }
 
 [data-ui='badge'][data-variant='secondary'] {

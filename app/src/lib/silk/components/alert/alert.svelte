@@ -22,7 +22,7 @@
 
 <div role="alert" class={cn(classProp, alert({ variant: variant }))}>
 	{#if variant == 'info'}
-		<Info size="18" aria-hidden="true" class="mt-1 text-foreground" />
+		<Info size="18" aria-hidden="true" class="mt-1 text-info" />
 	{/if}
 	{#if variant == 'success'}
 		<Check size="18" aria-hidden="true" class="mt-1 text-success" />

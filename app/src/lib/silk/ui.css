@@ -10,10 +10,11 @@
 
 	/* Core colors */
 	--color-background: #fcfcfd;
-	--color-border: #dde2ea;
+	--color-border: #c9d1dc;
 	--color-border-strong: #c9d1dc;
 	--color-input: #c9d1dc;
 	--color-primary: #155eef;
+	--color-info: #2563eb;
 	--color-foreground-opposite: #ffffff;
 	--color-foreground: #101828;
 	--color-muted: #f2f4f7;
@@ -138,7 +139,6 @@
 	--button-flat-hover-bg: color-mix(in srgb, var(--color-primary) 10%, transparent);
 
 	--button-outlined-bg: var(--color-surface);
-	--button-outlined-border: color-mix(in srgb, var(--color-input) 80%, transparent);
 	--button-outlined-foreground: var(--color-foreground);
 	--button-outlined-hover-bg: color-mix(in srgb, var(--color-secondary) 85%, transparent);
 	--button-outlined-shadow: 0 0.5px 3px rgba(0, 0, 100, 0), inset 0 -1px 2px rgba(0, 0, 255, 0.03);
@@ -166,7 +166,6 @@
 	--field-height: var(--size-control-md);
 	--field-padding-x: var(--space-control-x);
 	--field-padding-y: 0.5rem;
-	--field-border: color-mix(in srgb, var(--color-input) 94%, transparent);
 	--field-focus-border: color-mix(in srgb, var(--color-primary) 28%, var(--color-border-strong));
 	--field-disabled-opacity: 0.55;
 	--field-outlined-shadow: 0 0.5px 3px rgba(0, 0, 100, 0), inset 0 -1px 2px rgba(0, 0, 255, 0.03);
@@ -174,20 +173,17 @@
 	--panel-radius: var(--radius-panel);
 	--panel-padding: var(--space-panel);
 	--panel-padding-lg: var(--space-panel-lg);
-	--panel-border: color-mix(in srgb, var(--color-border-strong) 88%, transparent);
-	--floating-panel-border: var(--panel-border);
 	--panel-shadow: 0 6px 16px rgb(16 24 40 / 0.05);
+	--outline-shadow: inset 0 1px 0 var(--panel-highlight);
 
 	--card-radius: var(--radius-panel);
 	--card-padding: 1.5rem;
 	--card-bg: var(--color-surface);
-	--card-border: var(--panel-border);
 	--card-shadow: var(--shadow-xs);
 
 	--tooltip-radius: calc(var(--radius-md) - 0.02rem);
 	--tooltip-padding-y: 0.22rem;
 	--tooltip-padding-x: 0.46rem;
-	--tooltip-border: color-mix(in srgb, var(--color-foreground) 28%, transparent);
 	--tooltip-shadow: 0 10px 22px rgb(16 24 40 / 0.18);
 
 	--menu-item-height: 2rem;
@@ -197,8 +193,6 @@
 	--floating-menu-item-foreground: var(--menu-item-foreground);
 	--menu-item-hover-bg: color-mix(in srgb, var(--color-secondary) 38%, transparent);
 	--floating-menu-item-hover-bg: var(--menu-item-hover-bg);
-	--menu-item-hover-border: color-mix(in srgb, var(--color-border-strong) 26%, transparent);
-	--floating-menu-item-hover-border: var(--menu-item-hover-border);
 	--menu-item-active-bg: color-mix(in srgb, var(--color-primary) 10%, transparent);
 	--floating-menu-item-active-bg: var(--menu-item-active-bg);
 	--menu-label-foreground: var(--color-foreground-muted);
@@ -211,14 +205,12 @@
 
 	--checkbox-size: 1rem;
 	--checkbox-radius: calc(var(--radius-sm) + 0.02rem);
-	--checkbox-border: var(--field-border);
 	--checkbox-bg: var(--color-surface);
 	--checkbox-checked-bg: var(--color-primary);
 	--checkbox-checked-foreground: var(--color-foreground-btn);
 
 	--toast-radius: var(--radius-panel);
 	--toast-bg: var(--color-surface);
-	--toast-border: var(--panel-border);
 	--toast-shadow: 0 10px 24px rgb(16 24 40 / 0.08);
 	--skeleton-base: color-mix(in srgb, var(--color-secondary) 92%, var(--color-border));
 	--skeleton-highlight: color-mix(in srgb, white 78%, var(--color-secondary));
@@ -231,10 +223,11 @@
 
 	/* Core colors */
 	--color-background: #0b0d11;
-	--color-border: #1d232b;
+	--color-border: #2b333e;
 	--color-border-strong: #2b333e;
 	--color-input: #2b333e;
 	--color-primary: #528bff;
+	--color-info: #60a5fa;
 	--color-foreground-opposite: #ffffff;
 	--color-foreground: #f3f5f7;
 	--color-muted: #12161c;
@@ -278,7 +271,6 @@
 	--panel-shadow: 0 10px 22px rgb(0 0 0 / 0.18);
 	--card-highlight: rgb(120 130 148 / 0.06);
 	--panel-highlight: rgb(120 130 148 / 0.07);
-	--floating-panel-border: color-mix(in srgb, var(--color-border-strong) 88%, transparent);
 	--floating-panel-highlight: var(--panel-highlight);
 	--button-primary-border: color-mix(in srgb, var(--color-primary) 76%, #7aa2ff);
 	--button-primary-hover-bg: color-mix(in srgb, var(--color-primary) 94%, white);
@@ -300,17 +292,16 @@
 	--floating-menu-item-foreground: var(--color-foreground);
 	--menu-item-hover-bg: color-mix(in srgb, var(--color-secondary) 42%, transparent);
 	--floating-menu-item-hover-bg: var(--menu-item-hover-bg);
-	--menu-item-hover-border: color-mix(in srgb, var(--color-border-strong) 30%, transparent);
-	--floating-menu-item-hover-border: var(--menu-item-hover-border);
 	--floating-menu-item-active-bg: color-mix(in srgb, var(--color-primary) 10%, transparent);
 	--button-alternate-foreground: var(--color-foreground);
 	--button-destructive-foreground: var(--color-foreground);
 	--switch-thumb-bg: var(--color-foreground-opposite);
+	--switch-track-bg: color-mix(in srgb, var(--color-secondary) 75%, var(--color-border-strong));
 	--field-outlined-shadow:
 		0 0.5px 3px rgba(0, 0, 0, 0), inset 0 1px 0 rgba(255, 255, 255, 0.03),
 		inset 0 -1px 2px rgba(0, 0, 0, 0.2);
+	--outline-shadow: inset 0 1px 0 var(--panel-highlight);
 	--toast-shadow: 0 14px 28px rgb(0 0 0 / 0.22);
-	--tooltip-border: color-mix(in srgb, white 72%, transparent);
 	--tooltip-shadow: 0 14px 28px rgb(0 0 0 / 0.22);
 	--skeleton-base: color-mix(in srgb, var(--color-secondary) 86%, var(--color-border-strong));
 	--skeleton-highlight: color-mix(in srgb, var(--color-accent) 68%, var(--color-foreground) 14%);

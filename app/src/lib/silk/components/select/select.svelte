@@ -40,6 +40,12 @@
 	}: Props = $props();
 	let syncedValue = $state(value ?? '');
 
+	// Sync the initial value prop into internal state immediately on mount
+	if (value && value !== '') {
+		uiState.data.value = value;
+		uiState.data.selectedLabel = value;
+	}
+
 	$effect(() => {
 		const nextValue = value ?? '';
 		if (nextValue !== syncedValue) {

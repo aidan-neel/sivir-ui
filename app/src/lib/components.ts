@@ -19,6 +19,7 @@ export const components = [
 	'shortcut',
 	'skeleton',
 	'switch',
+	'tabs',
 	'textarea',
 	'toast',
 	'tooltip'

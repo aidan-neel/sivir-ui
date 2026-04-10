@@ -35,7 +35,7 @@
 
 	{#if items.length !== 0}
 		<div
-			class="w-full overflow-x-auto rounded-[1rem] border border-[var(--card-border)] bg-[var(--card-bg)] shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)]"
+			class="w-full overflow-x-auto rounded-[1rem] border border-border bg-[var(--card-bg)] shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)]"
 		>
 			<table class="min-w-[42rem] w-full border-collapse text-left">
 				<thead>

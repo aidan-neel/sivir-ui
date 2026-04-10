@@ -1,10 +1,7 @@
 <script lang="ts">
-	import Check from '@lucide/svelte/icons/check';
-	import Copy from '@lucide/svelte/icons/copy';
-	import Pipette from '@lucide/svelte/icons/pipette';
-	import { Input } from '$lib/silk/components/input';
 	import * as Popover from '$lib/silk/components/popover';
-	import * as Select from '$lib/silk/components/select';
+	import { useState } from '$lib/silk/internals/state.svelte.ts';
+	import { Button } from '$lib/silk/components/button';
 	import { cn } from '$lib/silk/utils';
 
 	export type ColorOption = {
@@ -16,322 +13,300 @@
 		label?: string;
 		value: string;
 		onValueChange?: (value: string) => void;
-		options?: Array<ColorOption | string>;
+		options?: ColorOption[];
+		/** @deprecated no-op */
 		showSelect?: boolean;
 		class?: string;
 	};
 
-	const {
+	let {
 		label,
 		value,
 		onValueChange,
-		options = [
-			{ label: 'Blue', value: '#155eef' },
-			{ label: 'Green', value: '#2f7a54' },
-			{ label: 'Copper', value: '#a44a2f' },
-			{ label: 'Charcoal', value: '#101828' },
-			{ label: 'White', value: '#ffffff' }
-		],
-		showSelect = true,
+		options = [],
 		class: className
 	}: Props = $props();
 
-	let copied = $state(false);
-	let colorArea = $state<HTMLDivElement | undefined>();
-	let hue = $state(220);
-	let saturation = $state(0.91);
-	let brightness = $state(0.94);
-	let hexInput = $state('');
+	// ── Color conversion ────────────────────────────────────────────────────────
 
-	const CUSTOM_LABEL = 'Custom';
-
-	const normalizedOptions = $derived(
-		options.map((option) =>
-			typeof option === 'string' ? { label: option.toUpperCase(), value: option } : option
-		)
-	);
-
-	const selectedOptionLabel = $derived(
-		normalizedOptions.find((option) => option.value.toLowerCase() === value.toLowerCase())?.label ??
-			CUSTOM_LABEL
-	);
-
-	const hueColor = $derived(hsvToHex(hue, 1, 1));
-	const thumbLeft = $derived(`${saturation * 100}%`);
-	const thumbTop = $derived(`${(1 - brightness) * 100}%`);
-
-	/** Clamps a numeric value into a safe range. */
-	function clamp(number: number, min: number, max: number) {
-		return Math.min(max, Math.max(min, number));
-	}
-
-	/** Normalizes a hex string to six-digit lowercase form. */
-	function normalizeHex(input: string) {
-		const trimmed = input.trim();
-		if (/^#[0-9a-f]{6}$/i.test(trimmed)) return trimmed.toLowerCase();
-		if (/^#[0-9a-f]{3}$/i.test(trimmed)) {
-			const [, r, g, b] = trimmed;
-			return `#${r}${r}${g}${g}${b}${b}`.toLowerCase();
-		}
-		return null;
-	}
-
-	/** Converts a hex color to RGB channels. */
-	function hexToRgb(hex: string) {
-		const normalized = normalizeHex(hex) ?? '#000000';
-		return {
-			r: Number.parseInt(normalized.slice(1, 3), 16),
-			g: Number.parseInt(normalized.slice(3, 5), 16),
-			b: Number.parseInt(normalized.slice(5, 7), 16)
-		};
-	}
-
-	/** Converts RGB channels into a hex string. */
-	function rgbToHex(r: number, g: number, b: number) {
-		return `#${[r, g, b]
-			.map((channel) => clamp(Math.round(channel), 0, 255).toString(16).padStart(2, '0'))
-			.join('')}`;
-	}
-
-	/** Converts RGB channels into HSV values. */
-	function rgbToHsv(r: number, g: number, b: number) {
-		const red = r / 255;
-		const green = g / 255;
-		const blue = b / 255;
-		const max = Math.max(red, green, blue);
-		const min = Math.min(red, green, blue);
-		const delta = max - min;
-		let nextHue = 0;
-
+	function hexToHsv(hex: string): [number, number, number] {
+		const h = hex.replace('#', '');
+		if (h.length !== 6) return [0, 0, 100];
+		const r = parseInt(h.slice(0, 2), 16) / 255;
+		const g = parseInt(h.slice(2, 4), 16) / 255;
+		const b = parseInt(h.slice(4, 6), 16) / 255;
+		const max = Math.max(r, g, b), min = Math.min(r, g, b), delta = max - min;
+		let hue = 0;
 		if (delta !== 0) {
-			if (max === red) nextHue = ((green - blue) / delta) % 6;
-			else if (max === green) nextHue = (blue - red) / delta + 2;
-			else nextHue = (red - green) / delta + 4;
+			if (max === r) hue = ((g - b) / delta) % 6;
+			else if (max === g) hue = (b - r) / delta + 2;
+			else hue = (r - g) / delta + 4;
+			hue = hue * 60;
+			if (hue < 0) hue += 360;
 		}
-
-		return {
-			h: (nextHue * 60 + 360) % 360,
-			s: max === 0 ? 0 : delta / max,
-			v: max
-		};
+		return [Math.round(hue), max === 0 ? 0 : Math.round((delta / max) * 100), Math.round(max * 100)];
 	}
 
-	/** Converts HSV values into a hex string. */
-	function hsvToHex(nextHue: number, nextSaturation: number, nextBrightness: number) {
-		const chroma = nextBrightness * nextSaturation;
-		const segment = nextHue / 60;
-		const secondary = chroma * (1 - Math.abs((segment % 2) - 1));
-		const match = nextBrightness - chroma;
-
-		let red = 0;
-		let green = 0;
-		let blue = 0;
-
-		if (segment >= 0 && segment < 1) [red, green, blue] = [chroma, secondary, 0];
-		else if (segment < 2) [red, green, blue] = [secondary, chroma, 0];
-		else if (segment < 3) [red, green, blue] = [0, chroma, secondary];
-		else if (segment < 4) [red, green, blue] = [0, secondary, chroma];
-		else if (segment < 5) [red, green, blue] = [secondary, 0, chroma];
-		else [red, green, blue] = [chroma, 0, secondary];
-
-		return rgbToHex((red + match) * 255, (green + match) * 255, (blue + match) * 255);
+	function hsvToHex(hue: number, sat: number, val: number): string {
+		const s = sat / 100, v = val / 100;
+		const c = v * s, x = c * (1 - Math.abs(((hue / 60) % 2) - 1)), m = v - c;
+		let r = 0, g = 0, b = 0;
+		if (hue < 60) { r = c; g = x; }
+		else if (hue < 120) { r = x; g = c; }
+		else if (hue < 180) { g = c; b = x; }
+		else if (hue < 240) { g = x; b = c; }
+		else if (hue < 300) { r = x; b = c; }
+		else { r = c; b = x; }
+		const toH = (n: number) => Math.round((n + m) * 255).toString(16).padStart(2, '0');
+		return `#${toH(r)}${toH(g)}${toH(b)}`;
 	}
 
-	/** Syncs the HSV controls from the current hex value. */
-	function syncPickerState(nextValue: string) {
-		const normalized = normalizeHex(nextValue);
-		if (!normalized) return;
-		const { r, g, b } = hexToRgb(normalized);
-		const hsv = rgbToHsv(r, g, b);
-		hue = hsv.h;
-		saturation = hsv.s;
-		brightness = hsv.v;
-		hexInput = normalized.toUpperCase();
+	function isValidHex(h: string) {
+		return /^#[0-9a-fA-F]{6}$/.test(h);
 	}
 
-	/** Emits a valid color change and updates the local picker state. */
-	function commitColor(nextValue: string) {
-		const normalized = normalizeHex(nextValue);
-		if (!normalized) return;
-		onValueChange?.(normalized);
-		syncPickerState(normalized);
-	}
+	// ── Popover state (same pattern as DropdownMenu / Select) ───────────────────
 
-	/** Updates the current HSV values and emits the derived hex color. */
-	function setPickerColor(nextHue: number, nextSaturation: number, nextBrightness: number) {
-		hue = clamp(nextHue, 0, 360);
-		saturation = clamp(nextSaturation, 0, 1);
-		brightness = clamp(nextBrightness, 0, 1);
-		const nextValue = hsvToHex(hue, saturation, brightness);
-		onValueChange?.(nextValue);
-		hexInput = nextValue.toUpperCase();
-	}
+	const key = Math.random().toString(36).substring(2);
+	// svelte-ignore state_referenced_locally
+	const uiState = useState(
+		{
+			open: false,
+			trigger: null,
+			focusedElement: null,
+			buttonRef: null,
+			popoverRef: null,
+			placement: 'bottom',
+			onclick: undefined,
+			closeTimeout: undefined,
+			hoverable: false,
+			delay: 0,
+			closeDelay: 150
+		},
+		key
+	);
 
-	/** Updates the picker from a pointer event inside the saturation area. */
-	function updateFromArea(event: PointerEvent) {
-		if (!colorArea) return;
-		const rect = colorArea.getBoundingClientRect();
-		const nextSaturation = clamp((event.clientX - rect.left) / rect.width, 0, 1);
-		const nextBrightness = 1 - clamp((event.clientY - rect.top) / rect.height, 0, 1);
-		setPickerColor(hue, nextSaturation, nextBrightness);
-	}
+	// ── Picker state ─────────────────────────────────────────────────────────────
 
-	/** Starts a pointer drag for the saturation area. */
-	function startAreaDrag(event: PointerEvent) {
-		event.preventDefault();
-		updateFromArea(event);
+	let hue = $state(0);
+	let sat = $state(0);
+	let val = $state(100);
+	// svelte-ignore state_referenced_locally
+	let hexInput = $state(isValidHex(value) ? value.toLowerCase() : '#000000');
+	// svelte-ignore state_referenced_locally
+	let activeTab = $state<'swatches' | 'picker'>(options.length > 0 ? 'swatches' : 'picker');
+	let sbEl = $state<HTMLElement | undefined>(undefined);
+	let hueEl = $state<HTMLElement | undefined>(undefined);
 
-		const move = (nextEvent: PointerEvent) => updateFromArea(nextEvent);
-		const stop = () => {
-			window.removeEventListener('pointermove', move);
-			window.removeEventListener('pointerup', stop);
-		};
+	const hasOptions = $derived(options.length > 0);
+	const hueColor = $derived(`hsl(${hue}, 100%, 50%)`);
+	const previewHex = $derived(isValidHex(hexInput) ? hexInput : (isValidHex(value) ? value : '#000000'));
+	const selectedLabel = $derived(
+		options.find((o) => o.value.toLowerCase() === (value ?? '').toLowerCase())?.label ?? null
+	);
+	const pickerActive = $derived(!hasOptions || activeTab === 'picker');
 
-		window.addEventListener('pointermove', move);
-		window.addEventListener('pointerup', stop);
-	}
-
-	/** Copies the current hex value to the clipboard when possible. */
-	async function copyHex() {
-		if (!navigator?.clipboard) return;
-		await navigator.clipboard.writeText(value.toUpperCase());
-		copied = true;
-		setTimeout(() => {
-			copied = false;
-		}, 1400);
-	}
-
+	// Sync external value → HSV + hexInput
 	$effect(() => {
-		syncPickerState(value);
+		if (isValidHex(value)) {
+			const [h, s, v2] = hexToHsv(value);
+			hue = h; sat = s; val = v2;
+			hexInput = value.toLowerCase();
+		}
 	});
+
+	// ── Apply ───────────────────────────────────────────────────────────────────
+
+	function applyHex(hex: string) {
+		if (!isValidHex(hex)) return;
+		onValueChange?.(hex.toLowerCase());
+		uiState.data.open = false;
+	}
+
+	function applyHsv() {
+		const hex = hsvToHex(hue, sat, val);
+		hexInput = hex;
+		onValueChange?.(hex);
+	}
+
+	function handleHexInput(raw: string) {
+		hexInput = raw;
+		if (isValidHex(raw)) {
+			const [h, s, v2] = hexToHsv(raw);
+			hue = h; sat = s; val = v2;
+			onValueChange?.(raw.toLowerCase());
+		}
+	}
+
+	// ── SB drag ──────────────────────────────────────────────────────────────────
+
+	let draggingSb = false;
+
+	function sbEventToSV(e: PointerEvent) {
+		if (!sbEl) return;
+		const rect = sbEl.getBoundingClientRect();
+		sat = Math.round(Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width)) * 100);
+		val = Math.round(Math.max(0, Math.min(1, 1 - (e.clientY - rect.top) / rect.height)) * 100);
+		applyHsv();
+	}
+
+	function onSbDown(e: PointerEvent) { draggingSb = true; sbEl?.setPointerCapture(e.pointerId); sbEventToSV(e); }
+	function onSbMove(e: PointerEvent) { if (draggingSb) sbEventToSV(e); }
+	function onSbUp(e: PointerEvent) { if (draggingSb) { draggingSb = false; sbEl?.releasePointerCapture(e.pointerId); } }
+
+	// ── Hue drag ─────────────────────────────────────────────────────────────────
+
+	let draggingHue = false;
+
+	function hueEventToH(e: PointerEvent) {
+		if (!hueEl) return;
+		const rect = hueEl.getBoundingClientRect();
+		hue = Math.round(Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width)) * 360);
+		applyHsv();
+	}
+
+	function onHueDown(e: PointerEvent) { draggingHue = true; hueEl?.setPointerCapture(e.pointerId); hueEventToH(e); }
+	function onHueMove(e: PointerEvent) { if (draggingHue) hueEventToH(e); }
+	function onHueUp(e: PointerEvent) { if (draggingHue) { draggingHue = false; hueEl?.releasePointerCapture(e.pointerId); } }
 </script>
 
-<div class={cn(className, 'grid gap-2')}>
+<div class={cn('space-y-1', className)}>
 	{#if label}
-		<span class="text-sm font-medium text-foreground">{label}</span>
+		<p class="text-sm text-foreground-muted">{label}</p>
 	{/if}
 
-	<div
-		class={cn(
-			'items-center gap-2',
-			showSelect ? 'grid grid-cols-[minmax(0,1fr)_2.9rem]' : 'flex justify-start'
-		)}
-	>
-		{#if showSelect}
-			<Select.Root value={selectedOptionLabel} class="">
-				<Select.Trigger class="w-full" variant="outlined">Choose a color</Select.Trigger>
-				<Select.Content class="">
-					{#each normalizedOptions as option}
-						<Select.Item value={option.value} onclick={() => commitColor(option.value)}>
-							{option.label}
-						</Select.Item>
-					{/each}
-					<Select.Item value={`${label?.toLowerCase() ?? 'color'}-custom`}
-						>{CUSTOM_LABEL}</Select.Item
-					>
-				</Select.Content>
-			</Select.Root>
-		{/if}
+	<Popover.Root state_key={key} placement="bottom">
+		<Popover.Trigger
+			variant="outlined"
+			class="h-8 w-full justify-start gap-2 border-border/60 bg-card px-2 text-sm font-normal shadow-none"
+		>
+			<span
+				class="size-4 shrink-0 rounded-[3px] border border-black/10 shadow-sm"
+				style="background:{isValidHex(value) ? value : '#888888'};"
+			></span>
+			<span class="min-w-0 flex-1 truncate text-left">
+				{selectedLabel ?? (isValidHex(value) ? value : value)}
+			</span>
+		</Popover.Trigger>
 
-		<Popover.Root placement="bottom">
-			<Popover.Trigger
-				variant="outlined"
-				class="size-[2.3rem] rounded-xl border border-[var(--field-border)] p-0 shadow-[inset_0_-1.5px_3px_rgba(16,24,40,0.12),inset_0_1px_0_rgba(255,255,255,0.16)]"
-				style={`background:${value};`}
-				aria-label={`Open ${label?.toLowerCase() ?? 'color'} picker`}
-			/>
-			<Popover.Content class="w-[17rem] overflow-hidden p-3">
-				<div class="grid gap-3">
-					<div
-						bind:this={colorArea as HTMLDivElement}
-						class="relative h-52 overflow-hidden rounded-[0.8rem] border border-border/65 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]"
-						style={`background:
-							linear-gradient(180deg, transparent, #000),
-							linear-gradient(90deg, #fff, ${hueColor});`}
-						onpointerdown={startAreaDrag}
-						role="presentation"
-					>
-						<div
-							class="pointer-events-none absolute size-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-[3px] border-white shadow-[0_1px_6px_rgba(16,24,40,0.25)]"
-							style={`left:${thumbLeft};top:${thumbTop};`}
-						></div>
-					</div>
+		<Popover.Content class="w-[240px] !p-0 overflow-hidden">
+			<!-- Tab bar (only when preset options exist) -->
+			{#if hasOptions}
+				<div class="flex border-b border-border/60 px-1 pt-1">
+					<button
+						type="button"
+						class="flex-1 rounded-t-[calc(var(--radius-sm)+1px)] px-2 py-1.5 text-sm font-medium transition-colors {activeTab === 'swatches' ? 'bg-background text-foreground shadow-sm' : 'text-foreground-muted hover:text-foreground'}"
+						onclick={() => (activeTab = 'swatches')}
+					>Presets</button>
+					<button
+						type="button"
+						class="flex-1 rounded-t-[calc(var(--radius-sm)+1px)] px-2 py-1.5 text-sm font-medium transition-colors {activeTab === 'picker' ? 'bg-background text-foreground shadow-sm' : 'text-foreground-muted hover:text-foreground'}"
+						onclick={() => (activeTab = 'picker')}
+					>Custom</button>
+				</div>
+			{/if}
 
-					<input
-						type="range"
-						min="0"
-						max="360"
-						step="1"
-						value={hue}
-						oninput={(event) => {
-							setPickerColor(Number(event.currentTarget.value), saturation, brightness);
-						}}
-						class="h-3 w-full appearance-none rounded-full border border-border/60 bg-transparent"
-						style="background: linear-gradient(90deg, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%);"
-						aria-label={`${label ?? 'Color'} hue`}
-					/>
-
-					<div class="grid gap-1.5">
-						<span
-							class="text-[0.72rem] font-medium uppercase tracking-[0.12em] text-foreground-muted"
-						>
-							Hex
-						</span>
-						<Input
-							variant="outlined"
-							value={hexInput}
-							class="font-mono text-sm"
-							oninput={(event) => {
-								hexInput = event.currentTarget.value.toUpperCase();
-								const normalized = normalizeHex(event.currentTarget.value);
-								if (normalized) {
-									commitColor(normalized);
-								}
-							}}
-						/>
-					</div>
-
-					<div class="grid grid-cols-[2.75rem_2.75rem_minmax(0,1fr)] gap-2">
-						<button
-							type="button"
-							class="inline-flex h-11 items-center justify-center rounded-[0.8rem] border border-border/60 bg-card text-foreground-muted shadow-[inset_0_1px_0_rgba(255,255,255,0.16)] transition-colors hover:bg-secondary/40"
-							onclick={copyHex}
-							aria-label={`Copy ${label?.toLowerCase() ?? 'color'} hex value`}
-						>
-							{#if copied}
-								<Check size={16} />
-							{:else}
-								<Copy size={16} />
-							{/if}
-						</button>
-
-						<label
-							class="relative inline-flex h-11 items-center justify-center overflow-hidden rounded-[0.8rem] border border-border/60 bg-card text-foreground-muted shadow-[inset_0_1px_0_rgba(255,255,255,0.16)] transition-colors hover:bg-secondary/40"
-						>
-							<Pipette size={16} />
-							<input
-								type="color"
-								value={normalizeHex(value) ?? '#155eef'}
-								oninput={(event) => commitColor(event.currentTarget.value)}
-								class="absolute inset-0 cursor-pointer opacity-0"
-								aria-label={`Open native ${label?.toLowerCase() ?? 'color'} picker`}
-							/>
-						</label>
-
-						<div
-							class="h-11 rounded-[0.8rem] border border-border/60 shadow-[inset_0_-1.5px_3px_rgba(16,24,40,0.12),inset_0_1px_0_rgba(255,255,255,0.16)]"
-							style={`background:${value};`}
-							aria-hidden="true"
-						></div>
+			<!-- Presets panel — grid-rows animation so Popover's ResizeObserver repositions automatically -->
+			{#if hasOptions}
+				<div
+					class="grid transition-[grid-template-rows] duration-200 ease-out"
+					style="grid-template-rows: {activeTab === 'swatches' ? '1fr' : '0fr'};"
+				>
+					<div class="overflow-hidden">
+						<div class="flex flex-wrap gap-1 p-2.5">
+							{#each options as opt}
+								{@const isActive = opt.value.toLowerCase() === (value ?? '').toLowerCase()}
+								<Button
+									variant={isActive ? 'secondary' : 'ghost'}
+									class="h-7 gap-1.5 px-2 text-sm {isActive ? 'ring-1 ring-border' : ''}"
+									onclick={() => applyHex(opt.value)}
+								>
+									<span
+										class="size-3 shrink-0 rounded-full border border-black/10 shadow-sm"
+										style="background:{opt.value};"
+									></span>
+									{opt.label}
+								</Button>
+							{/each}
+						</div>
+						<div class="border-t border-border/60 px-2.5 pb-2.5 pt-2">
+							<div class="flex items-center gap-2">
+								<span class="size-5 shrink-0 rounded-[3px] border border-black/10 shadow-sm" style="background:{previewHex};"></span>
+								<input
+									class="h-7 flex-1 rounded-[var(--radius-sm)] border border-border/60 bg-background px-2 font-mono text-sm text-foreground outline-none transition-[border-color,box-shadow] focus:border-primary/50 focus:shadow-[0_0_0_2px_var(--color-ring)]"
+									value={hexInput}
+									placeholder="#000000"
+									maxlength={7}
+									spellcheck={false}
+									autocomplete="off"
+									oninput={(e) => handleHexInput((e.currentTarget as HTMLInputElement).value)}
+									onkeydown={(e) => { if (e.key === 'Enter') applyHex(hexInput); }}
+								/>
+							</div>
+						</div>
 					</div>
 				</div>
-			</Popover.Content>
-		</Popover.Root>
-	</div>
+			{/if}
 
-	<span
-		class="w-fit rounded-md border border-border/55 bg-secondary/28 px-2.5 py-1 font-mono text-[0.74rem] text-foreground-muted shadow-[inset_0_1px_0_rgba(255,255,255,0.16)]"
-	>
-		{value.toUpperCase()}
-	</span>
+			<!-- Custom picker panel — same animation technique -->
+			<div
+				class="grid transition-[grid-template-rows] duration-200 ease-out"
+				style="grid-template-rows: {pickerActive ? '1fr' : '0fr'};"
+			>
+				<div class="overflow-hidden">
+					<div class="space-y-2.5 p-2.5">
+						<!-- SB area -->
+						<div
+							bind:this={sbEl}
+							class="relative h-[130px] w-full cursor-crosshair overflow-hidden rounded-[var(--radius-sm)]"
+							style="background:linear-gradient(to bottom,transparent,#000),linear-gradient(to right,#fff,{hueColor});"
+							onpointerdown={onSbDown}
+							onpointermove={onSbMove}
+							onpointerup={onSbUp}
+							role="presentation"
+						>
+							<div
+								class="pointer-events-none absolute size-[14px] -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white shadow-[0_1px_4px_rgb(0_0_0_/_0.5)]"
+								style="left:{sat}%;top:{100-val}%;"
+							></div>
+						</div>
+
+						<!-- Hue slider -->
+						<div
+							bind:this={hueEl}
+							class="relative h-3 w-full cursor-ew-resize overflow-hidden rounded-full"
+							style="background:linear-gradient(to right,#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00);"
+							onpointerdown={onHueDown}
+							onpointermove={onHueMove}
+							onpointerup={onHueUp}
+							role="presentation"
+						>
+							<div
+								class="pointer-events-none absolute top-1/2 size-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white shadow-[0_1px_4px_rgb(0_0_0_/_0.5)]"
+								style="left:{(hue/360)*100}%;background:{hueColor};"
+							></div>
+						</div>
+
+						<!-- Preview + hex input -->
+						<div class="flex items-center gap-2">
+							<span
+								class="size-6 shrink-0 rounded-[4px] border border-black/10 shadow-sm"
+								style="background:{previewHex};"
+							></span>
+							<input
+								class="h-7 flex-1 rounded-[var(--radius-sm)] border border-border/60 bg-background px-2 font-mono text-sm text-foreground outline-none transition-[border-color,box-shadow] focus:border-primary/50 focus:shadow-[0_0_0_2px_var(--color-ring)]"
+								value={hexInput}
+								placeholder="#000000"
+								maxlength={7}
+								spellcheck={false}
+								autocomplete="off"
+								oninput={(e) => handleHexInput((e.currentTarget as HTMLInputElement).value)}
+								onkeydown={(e) => { if (e.key === 'Enter') applyHex(hexInput); }}
+							/>
+						</div>
+					</div>
+				</div>
+			</div>
+		</Popover.Content>
+	</Popover.Root>
 </div>

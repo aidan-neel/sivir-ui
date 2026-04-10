@@ -11,7 +11,7 @@ export const badge = tv({
 			flat:
 				'bg-[var(--button-flat-bg)] text-[var(--button-flat-foreground)] border-[var(--button-flat-border)] hover:bg-[var(--button-flat-hover-bg)]',
 			outlined:
-				'bg-[var(--button-outlined-bg)] text-[var(--button-outlined-foreground)] border-[var(--button-outlined-border)] shadow-[var(--button-outlined-shadow)] hover:bg-[var(--button-outlined-hover-bg)]',
+				'bg-[var(--button-outlined-bg)] text-[var(--button-outlined-foreground)] border-border shadow-[var(--button-outlined-shadow)] hover:bg-[var(--button-outlined-hover-bg)]',
 			ghost:
 				'bg-[var(--button-ghost-bg)] text-[var(--button-ghost-foreground)] border-[var(--button-ghost-border)] hover:bg-[var(--button-ghost-hover-bg)]',
 			alternate:

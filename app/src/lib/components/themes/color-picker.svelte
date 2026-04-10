@@ -6,7 +6,7 @@
 		value: string;
 		label: string;
 		onValueChange?: (value: string) => void;
-		swatches?: Array<ColorOption | string>;
+		swatches?: ColorOption[];
 		showSelect?: boolean;
 		class?: string;
 	};

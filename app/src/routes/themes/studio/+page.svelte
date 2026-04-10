@@ -1,16 +1,13 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
-	import Check from '@lucide/svelte/icons/check';
-	import Copy from '@lucide/svelte/icons/copy';
-	import * as Dialog from '$lib/silk/components/dialog';
+	import { mode } from 'mode-watcher';
 	import { Badge } from '$lib/silk/components/badge';
 	import { Button } from '$lib/silk/components/button';
-	import { Checkbox } from '$lib/silk/components/checkbox';
 	import { Input } from '$lib/silk/components/input';
-	import { Switch } from '$lib/silk/components/switch';
 	import { Textarea } from '$lib/silk/components/textarea';
-	import * as Tooltip from '$lib/silk/components/tooltip';
+	import * as Select from '$lib/silk/components/select';
+	import { Switch } from '$lib/silk/components/switch';
 	import { toast } from '$lib/silk/components/toast';
 	import {
 		applyLiveThemeCss,
@@ -20,6 +17,7 @@
 	} from '$lib/silk/themes/live';
 	import {
 		type ThemeDurationPreset,
+		type ThemePalette,
 		durationPresets,
 		generatePaletteFromBase,
 		getDurationPreset,
@@ -28,9 +26,8 @@
 		type ThemeBasePalette,
 		type ThemeDraft
 	} from '$lib/silk/themes/presets';
-	import { builtInThemePresets, defaultTheme as defaultThemePreset } from '$lib/silk/themes/builtin-presets';
-	import StudioLeftSidebar from '$lib/components/themes/studio-left-sidebar.svelte';
-	import StudioRightSidebar from '$lib/components/themes/studio-right-sidebar.svelte';
+	import { builtInThemePresets } from '$lib/silk/themes/builtin-presets';
+	import StudioSidebar from '$lib/components/themes/studio-sidebar.svelte';
 	import type { ColorOption } from '$lib/silk/components/color-picker';
 	import type { PageData } from './$types';
 
@@ -38,24 +35,8 @@
 
 	type FontOption = { label: string; value: string };
 	type RadiusOption = { label: string; value: string };
-	type DurationOption = { label: string; value: string };
-	type PanelStyleOption = { label: string; value: 'standard' | 'inverted' };
-	type NumericMotionKey = 'panelX' | 'panelBlur' | 'panelScaleStart' | 'sheetOffset' | 'overlayBlur';
-	type MotionField = {
-		key: NumericMotionKey;
-		label: string;
-		min: number;
-		max: number;
-		step: number;
-		suffix?: string;
-	};
 	type BasePaletteKey = keyof ThemeBasePalette;
-	type AccentOption = {
-		label: string;
-		value: string;
-		light: string;
-		dark: string;
-	};
+	type PaletteKey = keyof ThemePalette;
 	type StudioSnapshot = {
 		selectedPresetSlug: string;
 		editorTheme: ThemeDraft;
@@ -91,85 +72,123 @@
 		{ label: 'Rounded', value: '0.72rem' }
 	];
 
-	const durationOptions: DurationOption[] = [
-		{ label: '100ms', value: '100ms' },
-		{ label: '140ms', value: '140ms' },
-		{ label: '180ms', value: '180ms' },
-		{ label: '220ms', value: '220ms' },
-		{ label: '260ms', value: '260ms' },
-		{ label: '320ms', value: '320ms' },
-		{ label: '380ms', value: '380ms' }
-	];
-
-	const panelStyleOptions: PanelStyleOption[] = [
-		{ label: 'Standard', value: 'standard' },
-		{ label: 'Inverted', value: 'inverted' }
-	];
 
 	const lightBackgroundOptions: ColorOption[] = [
-		{ label: 'Paper', value: '#fcfcfd' },
-		{ label: 'Cloud', value: '#f8fafc' },
-		{ label: 'Mist', value: '#f6f8fb' },
-		{ label: 'Warm', value: '#fdfaf6' }
+		{ label: 'White', value: '#ffffff' },
+		{ label: 'Slate', value: '#f8fafc' },
+		{ label: 'Gray', value: '#f9fafb' },
+		{ label: 'Zinc', value: '#fafafa' },
+		{ label: 'Stone', value: '#fafaf9' },
+		{ label: 'Neutral', value: '#fafafa' },
+		{ label: 'Warm', value: '#fffbeb' }
 	];
 	const lightSurfaceOptions: ColorOption[] = [
 		{ label: 'White', value: '#ffffff' },
-		{ label: 'Soft', value: '#fbfcfe' },
-		{ label: 'Fog', value: '#f7f9fc' },
-		{ label: 'Warm', value: '#fffdf9' }
+		{ label: 'Slate', value: '#f8fafc' },
+		{ label: 'Gray', value: '#f9fafb' },
+		{ label: 'Zinc', value: '#fafafa' },
+		{ label: 'Stone', value: '#fafaf9' }
+	];
+	const lightSecondaryOptions: ColorOption[] = [
+		{ label: 'Slate', value: '#f1f5f9' },
+		{ label: 'Gray', value: '#f3f4f6' },
+		{ label: 'Zinc', value: '#f4f4f5' },
+		{ label: 'Stone', value: '#f5f5f4' },
+		{ label: 'Blue Tint', value: '#eff6ff' },
+		{ label: 'Amber Tint', value: '#fffbeb' }
 	];
 	const lightTextOptions: ColorOption[] = [
-		{ label: 'Ink', value: '#101828' },
-		{ label: 'Slate', value: '#162033' },
-		{ label: 'Charcoal', value: '#1c2434' },
-		{ label: 'Warm Ink', value: '#271d19' }
+		{ label: 'Slate', value: '#0f172a' },
+		{ label: 'Gray', value: '#111827' },
+		{ label: 'Zinc', value: '#18181b' },
+		{ label: 'Stone', value: '#1c1917' },
+		{ label: 'Neutral', value: '#171717' }
 	];
 	const lightPrimaryOptions: ColorOption[] = [
-		{ label: 'Blue', value: '#155eef' },
-		{ label: 'Graphite', value: '#4d607f' },
-		{ label: 'Green', value: '#2f7a54' },
-		{ label: 'Copper', value: '#a44a2f' }
+		{ label: 'Blue', value: '#2563eb' },
+		{ label: 'Indigo', value: '#4f46e5' },
+		{ label: 'Violet', value: '#7c3aed' },
+		{ label: 'Purple', value: '#9333ea' },
+		{ label: 'Fuchsia', value: '#c026d3' },
+		{ label: 'Pink', value: '#db2777' },
+		{ label: 'Rose', value: '#e11d48' },
+		{ label: 'Red', value: '#dc2626' },
+		{ label: 'Orange', value: '#ea580c' },
+		{ label: 'Amber', value: '#d97706' },
+		{ label: 'Yellow', value: '#ca8a04' },
+		{ label: 'Lime', value: '#65a30d' },
+		{ label: 'Green', value: '#16a34a' },
+		{ label: 'Emerald', value: '#059669' },
+		{ label: 'Teal', value: '#0d9488' },
+		{ label: 'Cyan', value: '#0891b2' },
+		{ label: 'Sky', value: '#0284c7' },
+		{ label: 'Slate', value: '#475569' }
 	];
 	const darkBackgroundOptions: ColorOption[] = [
-		{ label: 'Midnight', value: '#0b0d11' },
-		{ label: 'Navy', value: '#091018' },
-		{ label: 'Forest', value: '#0c100d' },
-		{ label: 'Ash', value: '#100e0c' }
+		{ label: 'Slate', value: '#020617' },
+		{ label: 'Gray', value: '#030712' },
+		{ label: 'Zinc', value: '#09090b' },
+		{ label: 'Stone', value: '#0c0a09' },
+		{ label: 'Neutral', value: '#0a0a0a' }
 	];
 	const darkSurfaceOptions: ColorOption[] = [
-		{ label: 'Panel', value: '#141b24' },
-		{ label: 'Deep Navy', value: '#111824' },
-		{ label: 'Soft Midnight', value: '#131922' },
-		{ label: 'Forest Panel', value: '#101510' }
+		{ label: 'Slate', value: '#1e293b' },
+		{ label: 'Gray', value: '#1f2937' },
+		{ label: 'Zinc', value: '#27272a' },
+		{ label: 'Stone', value: '#292524' },
+		{ label: 'Neutral', value: '#262626' }
+	];
+	const darkSecondaryOptions: ColorOption[] = [
+		{ label: 'Slate', value: '#1e293b' },
+		{ label: 'Gray', value: '#1f2937' },
+		{ label: 'Zinc', value: '#27272a' },
+		{ label: 'Stone', value: '#292524' },
+		{ label: 'Blue Tint', value: '#172554' },
+		{ label: 'Amber Tint', value: '#451a03' }
 	];
 	const darkTextOptions: ColorOption[] = [
-		{ label: 'Frost', value: '#eef2f8' },
-		{ label: 'Pearl', value: '#e8f4fb' },
-		{ label: 'Soft White', value: '#edf5ef' },
-		{ label: 'Warm Light', value: '#f6ece7' }
+		{ label: 'White', value: '#ffffff' },
+		{ label: 'Slate', value: '#f8fafc' },
+		{ label: 'Gray', value: '#f9fafb' },
+		{ label: 'Zinc', value: '#fafafa' },
+		{ label: 'Stone', value: '#fafaf9' }
 	];
 	const darkPrimaryOptions: ColorOption[] = [
-		{ label: 'Blue', value: '#528bff' },
-		{ label: 'Graphite', value: '#4d607f' },
-		{ label: 'Mint', value: '#63c08c' },
-		{ label: 'Copper', value: '#ef8c5a' }
+		{ label: 'Blue', value: '#60a5fa' },
+		{ label: 'Indigo', value: '#818cf8' },
+		{ label: 'Violet', value: '#a78bfa' },
+		{ label: 'Purple', value: '#c084fc' },
+		{ label: 'Fuchsia', value: '#e879f9' },
+		{ label: 'Pink', value: '#f472b6' },
+		{ label: 'Rose', value: '#fb7185' },
+		{ label: 'Red', value: '#f87171' },
+		{ label: 'Orange', value: '#fb923c' },
+		{ label: 'Amber', value: '#fbbf24' },
+		{ label: 'Yellow', value: '#facc15' },
+		{ label: 'Lime', value: '#a3e635' },
+		{ label: 'Green', value: '#4ade80' },
+		{ label: 'Emerald', value: '#34d399' },
+		{ label: 'Teal', value: '#2dd4bf' },
+		{ label: 'Cyan', value: '#22d3ee' },
+		{ label: 'Sky', value: '#38bdf8' },
+		{ label: 'Slate', value: '#94a3b8' }
 	];
 
-	const motionFields: MotionField[] = [
-		{ key: 'panelX', label: 'Panel X Offset', min: -24, max: 24, step: 2, suffix: 'px' },
-		{ key: 'panelBlur', label: 'Panel Blur', min: 0, max: 8, step: 1, suffix: 'px' },
-		{ key: 'panelScaleStart', label: 'Panel Scale Start', min: 0.94, max: 1, step: 0.005 },
-		{ key: 'sheetOffset', label: 'Sheet Offset', min: 24, max: 160, step: 4, suffix: 'px' },
-		{ key: 'overlayBlur', label: 'Overlay Blur', min: 0, max: 6, step: 1, suffix: 'px' }
-	];
+	// lightPrimaryOptions and darkPrimaryOptions share labels in the same order — used for cross-mode sync
 
-	const accentOptions: AccentOption[] = [
-		{ label: 'Blue', value: 'blue', light: '#2563eb', dark: '#3b82f6' },
-		{ label: 'Emerald', value: 'emerald', light: '#059669', dark: '#10b981' },
-		{ label: 'Violet', value: 'violet', light: '#7c3aed', dark: '#8b5cf6' },
-		{ label: 'Amber', value: 'amber', light: '#d97706', dark: '#f59e0b' },
-		{ label: 'Rose', value: 'rose', light: '#e11d48', dark: '#f43f5e' },
-		{ label: 'Cyan', value: 'cyan', light: '#0891b2', dark: '#06b6d4' }
+	const lightBorderOptions: ColorOption[] = [
+		{ label: 'Slate', value: '#e2e8f0' },
+		{ label: 'Gray', value: '#e5e7eb' },
+		{ label: 'Zinc', value: '#e4e4e7' },
+		{ label: 'Stone', value: '#e7e5e4' },
+		{ label: 'Neutral', value: '#e5e5e5' }
+	];
+	const darkBorderOptions: ColorOption[] = [
+		{ label: 'Slate', value: '#334155' },
+		{ label: 'Gray', value: '#374151' },
+		{ label: 'Zinc', value: '#3f3f46' },
+		{ label: 'Stone', value: '#44403c' },
+		{ label: 'Neutral', value: '#404040' }
 	];
 
 	function cloneTheme(theme: ThemeDraft): ThemeDraft {
@@ -195,17 +214,15 @@
 		return fontOptions.find((font) => font.value === fontValue)?.label ?? fontOptions[0].label;
 	}
 
-	function getRadiusLabel(radiusValue: string) {
-		return radiusOptions.find((option) => option.value === radiusValue)?.label ?? 'Balanced';
-	}
-
 	function createBasePalette(theme: ThemeDraft, mode: 'light' | 'dark'): ThemeBasePalette {
 		const palette = theme[mode];
 		return {
 			background: palette.background,
 			surface: palette.card,
 			text: palette.foreground,
-			primary: palette.primary
+			primary: palette.primary,
+			secondary: palette.secondary,
+			border: palette.border
 		};
 	}
 
@@ -243,24 +260,15 @@
 		const cleanedName = editorName.trim();
 		const slug = slugifyThemeName(cleanedName);
 		if (!cleanedName || !slug) {
-			toast({
-				title: 'Theme name required',
-				description: 'Add a valid theme name before publishing.',
-				duration: 2500,
-				type: 'error'
-			});
+			toast({ title: 'Theme name required', description: 'Add a valid theme name before publishing.', duration: 2500, type: 'error' });
 			return;
 		}
-
 		const payload: ThemeDraft = {
 			...cloneTheme(editorTheme),
 			name: cleanedName,
 			slug,
-			description:
-				editorTheme.description?.trim() ||
-				'A custom theme published from the Silk UI Theme Studio.'
+			description: editorTheme.description?.trim() || 'A custom theme published from the Silk UI Theme Studio.'
 		};
-
 		isPublishing = true;
 		try {
 			const response = await fetch('/api/themes', {
@@ -274,19 +282,11 @@
 				themesCatalog = [payload, ...themesCatalog];
 			}
 			selectedPresetSlug = payload.slug;
-			toast({
-				title: 'Theme published',
-				description: `${payload.name} is now in the catalog.`,
-				duration: 2400,
-				type: 'success'
-			});
+			toast({ title: 'Theme published', description: `${payload.name} is now in the catalog.`, duration: 2400, type: 'success' });
 		} catch (publishError) {
 			toast({
 				title: 'Publish failed',
-				description:
-					publishError instanceof Error
-						? publishError.message
-						: 'Unable to publish this theme right now.',
+				description: publishError instanceof Error ? publishError.message : 'Unable to publish this theme right now.',
 				duration: 3000,
 				type: 'error'
 			});
@@ -303,22 +303,13 @@
 		bodyFontSelection = state.bodyFontSelection;
 		lightBasePalette = state.lightBasePalette;
 		darkBasePalette = state.darkBasePalette;
-		editorTheme.fontMono = resolveMonoFont(
-			editorTheme.fontHeader,
-			editorTheme.fontSans,
-			editorTheme.fontMono
-		);
+		editorTheme.fontMono = resolveMonoFont(editorTheme.fontHeader, editorTheme.fontSans, editorTheme.fontMono);
 	}
 
 	function loadPreset(theme: ThemeDraft, notify = true) {
 		applyStudioState(createStudioState(theme));
 		if (notify) {
-			toast({
-				title: `${theme.name} loaded`,
-				description: 'The preset is now applied across the site.',
-				duration: 2200,
-				type: 'success'
-			});
+			toast({ title: `${theme.name} loaded`, description: 'The preset is now applied across the site.', duration: 2200, type: 'success' });
 		}
 	}
 
@@ -335,48 +326,39 @@
 	}
 
 	function updateBasePalette(mode: 'light' | 'dark', key: BasePaletteKey, nextValue: string) {
-		const nextPalette = {
-			...(mode === 'light' ? lightBasePalette : darkBasePalette),
-			[key]: nextValue
-		};
-		syncBasePalette(mode, nextPalette);
+		syncBasePalette(mode, { ...(mode === 'light' ? lightBasePalette : darkBasePalette), [key]: nextValue });
+	}
+
+	function updatePaletteToken(mode: 'light' | 'dark', key: 'border', nextValue: string) {
+		const base = mode === 'light' ? lightBasePalette : darkBasePalette;
+		syncBasePalette(mode, { ...base, border: nextValue });
 	}
 
 	function applyBasePalette(mode: 'light' | 'dark') {
-		const palette = mode === 'light' ? lightBasePalette : darkBasePalette;
-		syncBasePalette(mode, palette);
-		toast({
-			title: `${mode === 'light' ? 'Light' : 'Dark'} palette generated`,
-			description: 'The semantic tokens were regenerated from the current base colors.',
-			duration: 2200,
-			type: 'success'
-		});
+		syncBasePalette(mode, mode === 'light' ? lightBasePalette : darkBasePalette);
+		toast({ title: `${mode === 'light' ? 'Light' : 'Dark'} palette generated`, description: 'Semantic tokens regenerated from base colors.', duration: 2200, type: 'success' });
 	}
 
 	async function copyGeneratedCss() {
 		await navigator.clipboard.writeText(generatedCss);
 		copiedCss = true;
 		setTimeout(() => (copiedCss = false), 1800);
-		toast({
-			title: 'Copied CSS',
-			description: 'Generated theme CSS copied to your clipboard.',
-			duration: 1800,
-			type: 'success'
-		});
+		toast({ title: 'Copied CSS', description: 'Generated theme CSS copied to your clipboard.', duration: 1800, type: 'success' });
 	}
 
-	function showPreviewToast() {
-		toast({
-			title: 'Preview toast',
-			description: 'This should still feel balanced inside the active theme.',
-			duration: 2600,
-			type: 'success'
-		});
+	function preloadFont(fontStack: string) {
+		if (!browser) return;
+		const primaryFamily = fontStack.split(',')[0]?.trim();
+		if (!primaryFamily) return;
+		for (const weight of ['400', '500', '600', '700']) {
+			void document.fonts.load(`${weight} 16px ${primaryFamily}`);
+		}
 	}
 
 	function updateHeaderFont(label: string) {
 		const next = fontOptions.find((font) => font.label === label)?.value;
 		if (!next) return;
+		preloadFont(next);
 		headerFontSelection = label;
 		editorTheme.fontHeader = next;
 		editorTheme.fontMono = resolveMonoFont(next, editorTheme.fontSans, editorTheme.fontMono);
@@ -386,6 +368,7 @@
 	function updateBodyFont(label: string) {
 		const next = fontOptions.find((font) => font.label === label)?.value;
 		if (!next) return;
+		preloadFont(next);
 		bodyFontSelection = label;
 		editorTheme.fontSans = next;
 		editorTheme.fontMono = resolveMonoFont(editorTheme.fontHeader, next, editorTheme.fontMono);
@@ -411,27 +394,87 @@
 		selectedPresetSlug = 'custom';
 	}
 
-	function updateMotionDuration(
-		key: 'panelDuration' | 'sheetDuration' | 'overlayDuration',
-		next: string
-	) {
-		editorTheme.motion[key] = next;
+	function updatePrimaryColor(sourcMode: 'light' | 'dark', hex: string) {
+		const srcOpts = sourcMode === 'light' ? lightPrimaryOptions : darkPrimaryOptions;
+		const dstOpts = sourcMode === 'light' ? darkPrimaryOptions : lightPrimaryOptions;
+		const idx = srcOpts.findIndex((o) => o.value.toLowerCase() === hex.toLowerCase());
+		// Always update the source mode
+		syncBasePalette(sourcMode, {
+			...(sourcMode === 'light' ? lightBasePalette : darkBasePalette),
+			primary: hex
+		});
+		// If there's a paired color, update the opposite mode too
+		if (idx !== -1 && dstOpts[idx]) {
+			const opposite: 'light' | 'dark' = sourcMode === 'light' ? 'dark' : 'light';
+			syncBasePalette(opposite, {
+				...(opposite === 'light' ? lightBasePalette : darkBasePalette),
+				primary: dstOpts[idx].value
+			});
+		}
+	}
+
+	function shuffleTheme() {
+		function pick<T>(arr: T[]): T { return arr[Math.floor(Math.random() * arr.length)]; }
+
+		// Pick a paired primary (same index in light/dark options)
+		const primaryIdx = Math.floor(Math.random() * lightPrimaryOptions.length);
+		const lightPrimary = lightPrimaryOptions[primaryIdx].value;
+		const darkPrimary = darkPrimaryOptions[primaryIdx].value;
+
+		// Pick background / surface from presets
+		const lightBg = pick(lightBackgroundOptions).value;
+		const lightSurface = pick(lightSurfaceOptions).value;
+		const darkBg = pick(darkBackgroundOptions).value;
+		const darkSurface = pick(darkSurfaceOptions).value;
+
+		// Keep text neutral (don't randomize — keeps readability)
+		const lightText = pick(lightTextOptions).value;
+		const darkText = pick(darkTextOptions).value;
+
+		// Optionally randomize border
+		const lightSecondary = pick(lightSecondaryOptions).value;
+		const lightBorder = pick(lightBorderOptions).value;
+		const darkBorder = pick(darkBorderOptions).value;
+		const darkSecondary = pick(darkSecondaryOptions).value;
+
+		// Randomize radius & motion
+		const radius = pick(radiusOptions).value;
+		const duration = pick(durationPresets).slug;
+
+		// Apply both palettes atomically
+		const newLightBase: ThemeBasePalette = {
+			background: lightBg,
+			surface: lightSurface,
+			text: lightText,
+			primary: lightPrimary,
+			secondary: lightSecondary,
+			border: lightBorder
+		};
+		const newDarkBase: ThemeBasePalette = {
+			background: darkBg,
+			surface: darkSurface,
+			text: darkText,
+			primary: darkPrimary,
+			secondary: darkSecondary,
+			border: darkBorder
+		};
+
+		lightBasePalette = newLightBase;
+		darkBasePalette = newDarkBase;
+		editorTheme.light = generatePaletteFromBase(newLightBase, 'light');
+		editorTheme.dark = generatePaletteFromBase(newDarkBase, 'dark');
+		editorTheme.radiusBase = radius;
+		editorTheme.durationPreset = duration;
 		selectedPresetSlug = 'custom';
 	}
 
-	function updateMotionField(key: NumericMotionKey, next: number) {
-		editorTheme.motion[key] = next;
+	function updateRawToken(tokenMode: 'light' | 'dark', key: PaletteKey, value: string) {
+		if (tokenMode === 'light') {
+			editorTheme.light = { ...editorTheme.light, [key]: value };
+		} else {
+			editorTheme.dark = { ...editorTheme.dark, [key]: value };
+		}
 		selectedPresetSlug = 'custom';
-	}
-
-	function updatePanelStyle(next: PanelStyleOption['value']) {
-		editorTheme.invertedPanels = next === 'inverted';
-		selectedPresetSlug = 'custom';
-	}
-
-	function applyAccentColor(option: AccentOption) {
-		syncBasePalette('light', { ...lightBasePalette, primary: option.light });
-		syncBasePalette('dark', { ...darkBasePalette, primary: option.dark });
 	}
 
 	function applySnapshot(snapshot: StudioSnapshot) {
@@ -439,9 +482,7 @@
 		applyStudioState(snapshot);
 		lastSnapshot = captureStudioSnapshot();
 		lastSnapshotSignature = JSON.stringify(lastSnapshot);
-		queueMicrotask(() => {
-			ignoreHistory = false;
-		});
+		queueMicrotask(() => { ignoreHistory = false; });
 	}
 
 	function undoHistory() {
@@ -463,9 +504,10 @@
 	}
 
 	const getInitialThemesCatalog = () =>
-		data.themes.length ? [...builtInThemePresets, ...data.themes.filter((theme) => theme.slug !== 'default')] : builtInThemePresets;
+		data.themes.length ? [...builtInThemePresets, ...data.themes.filter((t) => t.slug !== 'default')] : builtInThemePresets;
 	const initialThemesCatalog = getInitialThemesCatalog();
 	const defaultTheme = initialThemesCatalog[0];
+
 	let themesCatalog = $state<ThemeDraft[]>([...initialThemesCatalog]);
 	let selectedPresetSlug = $state(defaultTheme.slug);
 	let editorTheme = $state(cloneTheme(defaultTheme));
@@ -477,38 +519,22 @@
 	let lightBasePalette = $state<ThemeBasePalette>(createBasePalette(defaultTheme, 'light'));
 	let darkBasePalette = $state<ThemeBasePalette>(createBasePalette(defaultTheme, 'dark'));
 	let hydrated = $state(false);
-	let advancedOptionsOpen = $state(false);
 	let undoStack = $state<StudioSnapshot[]>([]);
 	let redoStack = $state<StudioSnapshot[]>([]);
 	let ignoreHistory = $state(false);
 	let lastSnapshot = $state<StudioSnapshot>(createStudioState(defaultTheme));
 	let lastSnapshotSignature = $state(JSON.stringify(createStudioState(defaultTheme)));
 
-	const generatedCss = $derived(
-		themeToCss({
-			...editorTheme,
-			name: editorName,
-			slug: slugifyThemeName(editorName) || 'custom-theme'
-		})
-	);
+	const generatedCss = $derived(themeToCss({ ...editorTheme, name: editorName, slug: slugifyThemeName(editorName) || 'custom-theme' }));
 
 	const activePreset = $derived(
 		themesCatalog.find((theme) => theme.slug === selectedPresetSlug) ?? {
-			...defaultTheme,
-			slug: 'custom',
-			name: 'Custom',
+			...defaultTheme, slug: 'custom', name: 'Custom',
 			description: 'A generated theme draft based on your current base colors and guided controls.'
 		}
 	);
 
-	const activeDuration = $derived(getDurationPreset(editorTheme.durationPreset));
-	const activeAccentValue = $derived(
-		accentOptions.find(
-			(option) =>
-				option.light.toLowerCase() === lightBasePalette.primary.toLowerCase() &&
-				option.dark.toLowerCase() === darkBasePalette.primary.toLowerCase()
-		)?.value ?? 'custom'
-	);
+	const colorMode = $derived<'light' | 'dark'>(mode.current === 'dark' ? 'dark' : 'light');
 
 	onMount(() => {
 		const restored = loadThemeStudioState();
@@ -521,6 +547,9 @@
 		lastSnapshot = captureStudioSnapshot();
 		lastSnapshotSignature = JSON.stringify(lastSnapshot);
 		hydrated = true;
+		// Preload the active fonts so they're immediately available
+		preloadFont(editorTheme.fontHeader);
+		preloadFont(editorTheme.fontSans);
 	});
 
 	$effect(() => {
@@ -542,15 +571,7 @@
 
 	$effect(() => {
 		if (!hydrated || !browser) return;
-		saveThemeStudioState({
-			selectedPresetSlug,
-			editorTheme,
-			editorName,
-			headerFontSelection,
-			bodyFontSelection,
-			lightBasePalette,
-			darkBasePalette
-		});
+		saveThemeStudioState({ selectedPresetSlug, editorTheme, editorName, headerFontSelection, bodyFontSelection, lightBasePalette, darkBasePalette });
 	});
 
 	$effect(() => {
@@ -567,517 +588,302 @@
 
 <svelte:head>
 	<title>Silk UI Theme Studio</title>
-	<meta
-		name="description"
-		content="Build, preview, and export Silk UI themes from a dedicated full-width studio workspace."
-	/>
+	<meta name="description" content="Build, preview, and export Silk UI themes from a dedicated full-width studio workspace." />
 </svelte:head>
 
-<div class="min-h-[calc(100vh-3.5rem)] px-3 pb-6 pt-[4.2rem] md:px-5 xl:px-6">
-	<div class="grid min-h-[calc(100vh-5.1rem)] overflow-hidden rounded-[2rem] border border-border/60 bg-background shadow-[0_24px_80px_rgba(15,23,42,0.08)] xl:grid-cols-[15rem_minmax(0,1fr)]">
-		<div class="border-r border-border/50 bg-card/80 p-4 text-foreground backdrop-blur">
-			<StudioLeftSidebar
-				bind:editorName
-				activePresetName={activePreset.name}
-				selectedPresetSlug={selectedPresetSlug}
-				activeAccentValue={activeAccentValue}
-				accentOptions={accentOptions}
-				themesCatalog={themesCatalog}
+<!-- Full-height layout: floating left sidebar | canvas -->
+<div class="flex h-[calc(100vh-4rem)] pt-16">
+
+	<!-- Left sidebar (floating) -->
+	<div class="w-72 shrink-0 p-3">
+		<div class="flex h-full flex-col overflow-hidden rounded-[var(--radius-xl)] border border-border bg-card shadow-[var(--outline-shadow)]">
+			<StudioSidebar
+				editorName={editorName}
 				editorTheme={editorTheme}
+				colorMode={colorMode}
 				headerFontSelection={headerFontSelection}
 				bodyFontSelection={bodyFontSelection}
 				radiusOptions={radiusOptions}
 				durationPresets={durationPresets}
-				panelStyleOptions={panelStyleOptions}
 				fontOptions={fontOptions}
-				durationOptions={durationOptions}
-				motionFields={motionFields}
+				themesCatalog={themesCatalog}
+				lightBasePalette={lightBasePalette}
+				darkBasePalette={darkBasePalette}
+				lightBackgroundOptions={lightBackgroundOptions}
+				lightSurfaceOptions={lightSurfaceOptions}
+				lightSecondaryOptions={lightSecondaryOptions}
+				lightTextOptions={lightTextOptions}
+				lightPrimaryOptions={lightPrimaryOptions}
+				lightBorderOptions={lightBorderOptions}
+				darkBackgroundOptions={darkBackgroundOptions}
+				darkSurfaceOptions={darkSurfaceOptions}
+				darkSecondaryOptions={darkSecondaryOptions}
+				darkTextOptions={darkTextOptions}
+				darkPrimaryOptions={darkPrimaryOptions}
+				darkBorderOptions={darkBorderOptions}
+				copiedCss={copiedCss}
+				isPublishing={isPublishing}
 				undoDisabled={undoStack.length === 0}
 				redoDisabled={redoStack.length === 0}
 				loadPreset={loadPreset}
 				updateEditorName={updateEditorName}
-				undoHistory={undoHistory}
-				redoHistory={redoHistory}
 				updateRadius={updateRadius}
 				updateDurationPreset={updateDurationPreset}
-				updatePanelStyle={updatePanelStyle}
-				updatePrimaryButtonOutline={updatePrimaryButtonOutline}
 				updateHeaderFont={updateHeaderFont}
 				updateBodyFont={updateBodyFont}
-				updateMotionDuration={updateMotionDuration}
-				updateMotionField={updateMotionField}
-				applyAccentColor={applyAccentColor}
-				openAdvancedOptions={() => (advancedOptionsOpen = true)}
+				updateBasePalette={updateBasePalette}
+				updatePrimaryColor={updatePrimaryColor}
+				updatePaletteToken={updatePaletteToken}
+				updateRawToken={updateRawToken}
+				shuffleTheme={shuffleTheme}
+				undoHistory={undoHistory}
+				redoHistory={redoHistory}
+				copyGeneratedCss={copyGeneratedCss}
+				publishTheme={publishTheme}
 			/>
 		</div>
+	</div>
 
-		<div class="min-w-0 bg-[radial-gradient(circle_at_top_left,color-mix(in_srgb,var(--color-primary)_10%,transparent),transparent_28%),linear-gradient(180deg,color-mix(in_srgb,var(--color-background)_96%,transparent),color-mix(in_srgb,var(--color-card)_82%,transparent))]">
-			<div class="border-b border-border/60 px-6 py-4 md:px-8">
-				<div class="flex flex-wrap items-center justify-between gap-3">
-					<div class="space-y-1">
-						<p class="text-[0.72rem] uppercase tracking-[0.18em] text-foreground-muted">Theme canvas</p>
-						<p class="text-sm text-foreground-muted">
-							{activePreset.name} · {activeDuration.name} · {slugifyThemeName(editorName) || 'custom-theme'}
-						</p>
+	<!-- Canvas -->
+	<div
+		class="min-w-0 flex-1 overflow-y-auto"
+		style={`--font-header:${editorTheme.fontHeader}; --font-sans:${editorTheme.fontSans}; --font-mono:${editorTheme.fontMono};`}
+	>
+		<div class="p-6">
+			<div class="grid auto-rows-max gap-4 xl:grid-cols-3">
+
+				<!-- Card: Sign-up form -->
+				<section class="rounded-[var(--radius-xl)] border border-border bg-card p-5 shadow-[var(--outline-shadow)]">
+					<p class="text-lg font-semibold tracking-tight text-foreground" style="font-family: var(--font-header);">
+						Create your account
+					</p>
+					<p class="mt-1 text-sm text-foreground-muted">
+						Join thousands of teams already using Silk.
+					</p>
+					<div class="mt-5 space-y-3">
+						<Input label="Full name" placeholder="Alex Johnson" variant="outlined" />
+						<Input label="Email address" placeholder="alex@company.com" type="email" variant="outlined" />
+						<div class="space-y-1.5">
+							<span class="text-sm font-medium text-foreground">Role</span>
+							<Select.Root value="" class="">
+								<Select.Trigger class="w-full" variant="outlined">Select a role</Select.Trigger>
+								<Select.Content class="">
+									<Select.Item value="engineer">Engineer</Select.Item>
+									<Select.Item value="designer">Designer</Select.Item>
+									<Select.Item value="product">Product Manager</Select.Item>
+									<Select.Item value="founder">Founder</Select.Item>
+								</Select.Content>
+							</Select.Root>
+						</div>
 					</div>
-					<div class="flex flex-wrap items-center gap-2">
-						<Button onclick={copyGeneratedCss} variant="outlined" class="h-10 border-border/60 bg-card text-sm text-foreground shadow-none">
-							{copiedCss ? 'Copied CSS' : 'Copy CSS'}
-						</Button>
-						<Button onclick={publishTheme} class="h-10 px-4 text-sm" disabled={isPublishing}>
-							{isPublishing ? 'Publishing...' : 'Publish Theme'}
-						</Button>
-					</div>
-				</div>
-			</div>
+					<Button class="mt-5 w-full">Create Account</Button>
+					<p class="mt-3 text-center text-sm text-foreground-muted">
+						Already have an account? <a href="/themes/studio" class="text-primary underline-offset-4 hover:underline">Sign in</a>
+					</p>
+				</section>
 
-			<div class="grid gap-5 p-4 md:p-6 xl:grid-cols-[minmax(0,1fr)_20rem]">
-				<div class="grid auto-rows-max gap-4 xl:grid-cols-3">
-					<section class="rounded-[1.45rem] border border-border/60 bg-card p-4 shadow-[0_6px_24px_rgba(15,23,42,0.06)] xl:col-span-1">
-						<div class="flex items-start justify-between gap-4">
-							<div>
-								<p class="text-[1.15rem] font-medium tracking-[-0.04em] text-foreground" style={`font-family:${editorTheme.fontHeader};`}>
-									Contribution History
-								</p>
-								<p class="mt-1 text-xs text-foreground-muted" style={`font-family:${editorTheme.fontSans};`}>
-									Last 6 months of activity
-								</p>
-							</div>
-							<div class="rounded-full border border-border/60 bg-background px-3 py-1 text-xs font-medium text-foreground">
-								+12% vs last month
-							</div>
-						</div>
-						<div class="mt-5 flex h-32 items-end gap-3">
-							{#each [52, 68, 58, 80, 49, 86] as height, index}
-								<div class="flex flex-1 flex-col items-center gap-3">
-									<div
-										class="w-full rounded-t-[0.55rem] bg-[var(--color-primary)]"
-										style={`height:${height}%; opacity:${index === 4 ? 0.86 : 1};`}
-									></div>
-									<span class="text-[11px] text-foreground-muted">{['Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May'][index]}</span>
-								</div>
-							{/each}
-						</div>
-						<div class="mt-5 grid gap-3 sm:grid-cols-2">
-							<div class="rounded-[1rem] bg-secondary/35 p-3">
-								<p class="text-[11px] uppercase tracking-[0.12em] text-foreground-muted">Upcoming</p>
-								<p class="mt-2 text-base font-medium text-foreground">May 25, 2024</p>
-								<p class="mt-1 text-xs text-foreground-muted">$1,000 scheduled</p>
-							</div>
-							<div class="rounded-[1rem] bg-secondary/35 p-3">
-								<p class="text-[11px] uppercase tracking-[0.12em] text-foreground-muted">Auto-save plan</p>
-								<p class="mt-2 text-base font-medium text-foreground">Accelerated</p>
-								<p class="mt-1 text-xs text-foreground-muted">Recurring weekly</p>
-							</div>
-						</div>
-						<Button class="mt-5 h-10 w-full rounded-full">
-							View Full Report
-						</Button>
-					</section>
-
-					<section class="rounded-[1.45rem] border border-border/60 bg-card p-4 shadow-[0_6px_24px_rgba(15,23,42,0.06)] xl:col-span-1">
-						<div class="flex items-start justify-between gap-4">
-							<div>
-								<p class="text-[1.15rem] font-medium tracking-[-0.04em] text-foreground" style={`font-family:${editorTheme.fontHeader};`}>
-									Payout Threshold
-								</p>
-								<p class="mt-1 max-w-[30ch] text-xs text-foreground-muted" style={`font-family:${editorTheme.fontSans};`}>
-									Set the minimum balance required before a payout is triggered.
-								</p>
-							</div>
-							<div class="flex size-8 items-center justify-center rounded-full bg-secondary/35 text-sm text-foreground">
-								×
-							</div>
-						</div>
-						<div class="mt-5 space-y-5">
-							<div>
-								<p class="text-sm font-medium text-foreground">Preferred Currency</p>
-								<div class="mt-2 rounded-full bg-secondary/35 px-4 py-3 text-sm text-foreground">
-									USD — United States Dollar
-								</div>
-							</div>
-							<div>
-								<div class="flex items-end justify-between gap-4">
-									<p class="text-sm font-medium text-foreground">Minimum Payout Amount</p>
-									<p class="text-lg font-medium text-foreground">$2500.00</p>
-								</div>
-								<div class="mt-4 h-2 rounded-full bg-secondary/45">
-									<div class="h-full w-[28%] rounded-full bg-primary"></div>
-								</div>
-								<div class="mt-2 flex items-center justify-between text-xs text-foreground-muted">
-									<span>$50 (MIN)</span>
-									<span>$10,000 (MAX)</span>
-								</div>
-							</div>
-							<div>
-								<p class="text-sm font-medium text-foreground">Notes</p>
-								<Textarea
-									class="mt-2 min-h-20 rounded-[1rem] border-0 bg-secondary/35 text-sm"
-									placeholder="Add any notes for this payout configuration..."
-								/>
-							</div>
-							<Button class="h-10 w-full rounded-full">
-								Save Threshold
-							</Button>
-						</div>
-					</section>
-
-					<section class="rounded-[1.45rem] border border-border/60 bg-card p-4 shadow-[0_6px_24px_rgba(15,23,42,0.06)] xl:col-span-1">
-						<div class="flex items-center justify-between gap-4">
-							<div>
-								<p class="text-[1.15rem] font-medium tracking-[-0.04em] text-foreground" style={`font-family:${editorTheme.fontHeader};`}>
-									Savings Targets
-								</p>
-								<p class="mt-1 text-xs text-foreground-muted" style={`font-family:${editorTheme.fontSans};`}>
-									Active milestones for 2024
-								</p>
-							</div>
-							<button class="rounded-full border border-border/60 bg-background px-4 py-2 text-sm text-foreground">
-								New Goal
-							</button>
-						</div>
-						<div class="mt-4 space-y-3">
-							{#each [
-								['Retirement', '$420,000', '65% achieved', '$273,000', '65%'],
-								['Real Estate', '$85,000', '32% achieved', '$27,200', '32%']
-							] as [label, total, progress, current, width]}
-								<div class="rounded-[1rem] bg-secondary/35 p-3">
-									<p class="text-[11px] uppercase tracking-[0.12em] text-foreground-muted">{label}</p>
-									<p class="mt-2 text-[1.55rem] font-medium leading-none text-foreground">{total}</p>
-									<div class="mt-4 h-2.5 rounded-full bg-secondary/45">
-										<div class="h-full rounded-full bg-primary" style={`width:${width};`}></div>
-									</div>
-									<div class="mt-3 flex items-center justify-between text-xs text-foreground-muted">
-										<span>{progress}</span>
-										<span class="font-medium text-foreground">{current}</span>
-									</div>
-								</div>
-							{/each}
-						</div>
-						<p class="mt-4 text-xs text-foreground-muted">You have not met your targets for this year.</p>
-					</section>
-
-					<section class="rounded-[1.45rem] border border-border/60 bg-card p-4 shadow-[0_6px_24px_rgba(15,23,42,0.06)]">
+				<!-- Card: Typography -->
+				<section class="rounded-[var(--radius-xl)] border border-border bg-card p-5 shadow-[var(--outline-shadow)]">
+					<div class="flex items-start justify-between gap-3">
 						<div>
-							<p class="text-[1.15rem] font-medium tracking-[-0.04em] text-foreground" style={`font-family:${editorTheme.fontHeader};`}>
-								Buy Investment
+							<Badge variant="secondary" class="mb-3">Typography</Badge>
+							<p class="text-2xl font-bold leading-tight tracking-tight text-foreground" style="font-family: var(--font-header);">
+								The quick brown fox
 							</p>
 						</div>
-						<div class="mt-5 space-y-4">
-							<div>
-								<p class="text-sm font-medium text-foreground">Amount to Invest</p>
-								<div class="mt-2 rounded-[1rem] bg-secondary/35 px-4 py-3 text-base text-foreground">$ 1,000.00</div>
-							</div>
-							<div>
-								<p class="text-sm font-medium text-foreground">Order Type</p>
-								<div class="mt-2 rounded-[1rem] bg-secondary/35 px-4 py-3 text-sm text-foreground">Market Order</div>
-								<p class="mt-2 text-xs text-foreground-muted">Market orders execute at the current price.</p>
-							</div>
-							<div class="flex items-end justify-between gap-4 text-sm">
-								<div class="space-y-2 text-foreground-muted">
-									<p>Estimated Shares</p>
-									<p>Buying Power</p>
-								</div>
-								<div class="space-y-2 text-right font-medium text-foreground">
-									<p>12.4</p>
-									<p>$3,840.00</p>
-								</div>
-							</div>
-							<Button class="h-10 w-full rounded-full">
-								Review Order
-							</Button>
-							<p class="text-center text-xs text-foreground-muted">
-								Trades are typically executed within minutes during market hours.
-							</p>
-						</div>
-					</section>
+					</div>
+					<p class="mt-3 text-sm leading-relaxed text-foreground">
+						Build interfaces people love. Silk UI gives your team a shared language — from colors and spacing to motion and typography.
+					</p>
+					<p class="mt-3 text-sm text-foreground-muted">
+						Supporting body text in a muted tone, used for captions, descriptions, and secondary information throughout the interface.
+					</p>
+					<div class="mt-4 flex flex-wrap items-center gap-2">
+						<Badge>Primary</Badge>
+						<Badge variant="secondary">Secondary</Badge>
+						<Badge variant="outlined">Outlined</Badge>
+						<Badge variant="flat">Flat</Badge>
+					</div>
+					<div class="mt-4 space-y-1 border-t border-border pt-4">
+						{#each ['Geist · sans-serif', 'Inter · system', 'Fraunces · serif'] as sample}
+							<p class="text-sm text-foreground-muted">{sample}</p>
+						{/each}
+					</div>
+				</section>
 
-					<section class="rounded-[1.45rem] border border-border/60 bg-card p-4 shadow-[0_6px_24px_rgba(15,23,42,0.06)]">
-						<div class="flex items-center justify-between gap-3">
-							<div>
-								<p class="text-[1.05rem] font-medium tracking-[-0.03em] text-foreground" style={`font-family:${editorTheme.fontHeader};`}>
-									Team Presence
+				<!-- Card: Stats -->
+				<section class="rounded-[var(--radius-xl)] border border-border bg-card p-5 shadow-[var(--outline-shadow)]">
+					<div class="flex items-center justify-between gap-3">
+						<p class="text-lg font-semibold tracking-tight text-foreground" style="font-family: var(--font-header);">
+							Monthly Overview
+						</p>
+						<Badge variant="secondary">Oct 2024</Badge>
+					</div>
+					<div class="mt-5 grid grid-cols-2 gap-3">
+						{#each [
+							['Revenue', '$48,200', '+12%'],
+							['Customers', '1,840', '+8%'],
+							['Churn Rate', '1.2%', '−0.4%'],
+							['MRR Growth', '18%', '+3%']
+						] as [label, value, delta]}
+							<div class="rounded-[var(--radius-md)] bg-secondary/40 p-3">
+								<p class="text-sm text-foreground-muted">{label}</p>
+								<p class="mt-1 text-xl font-semibold tracking-tight text-foreground" style="font-family: var(--font-header);">
+									{value}
 								</p>
-								<p class="mt-1 text-xs text-foreground-muted">Who is active right now</p>
+								<p class="mt-0.5 text-sm text-primary">{delta}</p>
 							</div>
-							<div class="flex -space-x-2">
-								{#each ['A', 'J', 'M'] as initial}
-									<div class="flex size-8 items-center justify-center rounded-full border border-background bg-primary/15 text-xs font-medium text-foreground">
-										{initial}
-									</div>
-								{/each}
+						{/each}
+					</div>
+					<div class="mt-4 space-y-2.5">
+						{#each [['Q1 Target', '82%'], ['Q2 Target', '67%'], ['Q3 Target', '91%']] as [label, pct]}
+							<div>
+								<div class="mb-1.5 flex items-center justify-between text-sm">
+									<span class="text-foreground-muted">{label}</span>
+									<span class="font-medium text-foreground">{pct}</span>
+								</div>
+								<div class="h-1.5 overflow-hidden rounded-full bg-secondary/50">
+									<div class="h-full rounded-full bg-primary transition-all" style="width:{pct};"></div>
+								</div>
 							</div>
-						</div>
-						<div class="mt-4 grid gap-2">
-							{#each [['Design', 'Reviewing palette'], ['Product', 'Checking previews'], ['QA', 'Watching contrast']] as [team, status]}
-								<div class="flex items-center justify-between rounded-[1rem] bg-secondary/35 px-3 py-2.5">
+						{/each}
+					</div>
+				</section>
+
+				<!-- Card: Buttons (full width) -->
+				<section class="rounded-[var(--radius-xl)] border border-border bg-card p-5 shadow-[var(--outline-shadow)] xl:col-span-3">
+					<p class="mb-4 text-sm font-medium text-foreground-muted">Button variants</p>
+					<div class="flex flex-wrap items-center gap-3">
+						<Button>Primary</Button>
+						<Button variant="success">Success</Button>
+						<Button variant="warning">Warning</Button>
+						<Button variant="error">Error</Button>
+						<Button variant="destructive">Destructive</Button>
+						<Button variant="secondary">Secondary</Button>
+						<Button variant="outlined">Outlined</Button>
+						<Button variant="ghost">Ghost</Button>
+						<Button variant="flat">Flat</Button>
+						<div class="h-5 w-px bg-border/60"></div>
+						<Button class="rounded-full">Pill</Button>
+						<Button variant="outlined" class="rounded-full border-border">Pill outlined</Button>
+						<div class="h-5 w-px bg-border/60"></div>
+						<Button disabled>Disabled</Button>
+					</div>
+					<p class="mb-4 mt-6 text-sm font-medium text-foreground-muted">Input variants</p>
+					<div class="grid gap-3 sm:grid-cols-3">
+						<Input placeholder="Default input" />
+						<Input placeholder="Outlined input" variant="outlined" />
+						<Input placeholder="Secondary input" variant="secondary" />
+					</div>
+					<p class="mb-4 mt-6 text-sm font-medium text-foreground-muted">Status colors</p>
+					<div class="grid gap-3 sm:grid-cols-5">
+						{#each [
+							['Info', 'var(--color-info)'],
+							['Success', 'var(--color-success)'],
+							['Warning', 'var(--color-warning)'],
+							['Error', 'var(--color-error)'],
+							['Destructive', 'var(--color-destructive)']
+						] as [label, color]}
+							<div class="rounded-[var(--radius-md)] border border-border bg-background p-3">
+								<div class="flex items-center gap-2">
+									<span class="size-3 rounded-full" style={`background:${color};`}></span>
+									<p class="text-sm font-medium text-foreground">{label}</p>
+								</div>
+								<p class="mt-2 font-mono text-[11px] text-foreground-muted">{color}</p>
+							</div>
+						{/each}
+					</div>
+				</section>
+
+				<!-- Card: Notifications -->
+				<section class="rounded-[var(--radius-xl)] border border-border bg-card p-5 shadow-[var(--outline-shadow)]">
+					<div class="flex items-center justify-between gap-3">
+						<p class="text-lg font-semibold tracking-tight text-foreground" style="font-family: var(--font-header);">
+							Notifications
+						</p>
+						<Badge variant="secondary">3 new</Badge>
+					</div>
+					<div class="mt-4 space-y-1">
+						{#each [
+							{ title: 'Deployment succeeded', desc: 'v2.4.1 is live in production', time: 'Just now', dot: 'var(--color-success)' },
+							{ title: 'New team member', desc: 'Maya Chen joined the workspace', time: '4m ago', dot: 'var(--color-info)' },
+							{ title: 'Billing warning', desc: 'Payment method expires in 2 days', time: '1h ago', dot: 'var(--color-warning)' },
+							{ title: 'Theme publish failed', desc: 'Slug already exists in the catalog', time: 'Yesterday', dot: 'var(--color-destructive)' }
+						] as item}
+							<div class="flex items-start gap-3 rounded-[var(--radius-md)] px-3 py-2.5 transition-colors hover:bg-secondary/30">
+								<div class="mt-1.5 size-2 shrink-0 rounded-full" style={`background:${item.dot};`}></div>
+								<div class="min-w-0 flex-1">
+									<p class="truncate text-sm font-medium text-foreground">{item.title}</p>
+									<p class="mt-0.5 truncate text-sm text-foreground-muted">{item.desc}</p>
+								</div>
+								<p class="shrink-0 text-sm text-foreground-muted">{item.time}</p>
+							</div>
+						{/each}
+					</div>
+				</section>
+
+				<!-- Card: Settings form -->
+				<section class="rounded-[var(--radius-xl)] border border-border bg-card p-5 shadow-[var(--outline-shadow)]">
+					<p class="text-lg font-semibold tracking-tight text-foreground" style="font-family: var(--font-header);">
+						Workspace settings
+					</p>
+					<div class="mt-5 space-y-5">
+						<Input label="Workspace name" placeholder="Acme Inc." variant="outlined" />
+						<div class="space-y-3">
+							{#each [
+								{ label: 'Email notifications', desc: 'Receive updates about your account' },
+								{ label: 'Two-factor auth', desc: 'Add an extra layer of security' },
+								{ label: 'Public profile', desc: 'Let others find your workspace' }
+							] as item}
+								<div class="flex items-center justify-between gap-4 rounded-[var(--radius-md)] border border-border bg-background/60 px-4 py-3">
 									<div>
-										<p class="text-sm font-medium text-foreground">{team}</p>
-										<p class="text-xs text-foreground-muted">{status}</p>
+										<p class="text-sm font-medium text-foreground">{item.label}</p>
+										<p class="text-sm text-foreground-muted">{item.desc}</p>
 									</div>
-									<div class="size-2 rounded-full bg-primary"></div>
+									<Switch />
 								</div>
 							{/each}
 						</div>
-					</section>
+						<Button variant="outlined" class="w-full">Save changes</Button>
+					</div>
+				</section>
 
-					<section class="rounded-[1.45rem] border border-border/60 bg-card p-4 shadow-[0_6px_24px_rgba(15,23,42,0.06)]">
-						<div class="flex items-center justify-between gap-3">
-							<div>
-								<p class="text-[1.05rem] font-medium tracking-[-0.03em] text-foreground" style={`font-family:${editorTheme.fontHeader};`}>
-									Notification Stack
-								</p>
-								<p class="mt-1 text-xs text-foreground-muted">Feedback in compact form</p>
-							</div>
-							<Button variant="ghost" class="h-8 px-3 text-xs" onclick={showPreviewToast}>Test</Button>
-						</div>
-						<div class="mt-4 space-y-2">
-							{#each [
-								['Theme updated', 'Accent tokens regenerated'],
-								['Preview shared', 'Workspace link copied'],
-								['Contrast check', 'Muted text still passes']
-							] as [title, message]}
-								<div class="rounded-[1rem] border border-border/50 bg-background/70 px-3 py-3">
-									<p class="text-sm font-medium text-foreground">{title}</p>
-									<p class="mt-1 text-xs text-foreground-muted">{message}</p>
+				<!-- Card: Transaction list -->
+				<section class="rounded-[var(--radius-xl)] border border-border bg-card p-5 shadow-[var(--outline-shadow)]">
+					<div class="flex items-center justify-between gap-3">
+						<p class="text-lg font-semibold tracking-tight text-foreground" style="font-family: var(--font-header);">
+							Transactions
+						</p>
+						<button class="text-sm text-primary hover:underline underline-offset-4">View all</button>
+					</div>
+					<div class="mt-4 space-y-px">
+						{#each [
+							{ name: 'Figma', category: 'Design', amount: '−$45.00', date: 'Today' },
+							{ name: 'Vercel', category: 'Infrastructure', amount: '−$20.00', date: 'Yesterday' },
+							{ name: 'Stripe Payout', category: 'Income', amount: '+$4,300.00', date: 'Oct 13' },
+							{ name: 'Linear', category: 'Productivity', amount: '−$18.00', date: 'Oct 11' },
+							{ name: 'AWS', category: 'Infrastructure', amount: '−$214.60', date: 'Oct 1' }
+						] as tx}
+							<div class="flex items-center gap-3 rounded-[var(--radius-md)] px-2 py-2.5 transition-colors hover:bg-secondary/30">
+								<div class="flex size-8 shrink-0 items-center justify-center rounded-[var(--radius-sm)] bg-secondary/50 text-sm font-medium text-foreground">
+									{tx.name[0]}
 								</div>
-							{/each}
-						</div>
-					</section>
-
-					<section class="rounded-[1.45rem] border border-border/60 bg-card p-4 shadow-[0_6px_24px_rgba(15,23,42,0.06)]">
-						<div class="flex h-full flex-col items-center justify-center text-center">
-							<div class="flex size-10 items-center justify-center rounded-2xl bg-secondary/35 text-[1.5rem] text-foreground">+</div>
-							<p class="mt-5 text-[1.15rem] font-medium tracking-[-0.04em] text-foreground" style={`font-family:${editorTheme.fontHeader};`}>
-								Distribute Track
-							</p>
-							<p class="mt-3 max-w-[28ch] text-xs leading-6 text-foreground-muted" style={`font-family:${editorTheme.fontSans};`}>
-								Upload your first master to start reaching listeners on Spotify, Apple Music, and more.
-							</p>
-							<Button class="mt-5 h-10 rounded-full px-6">
-								Create Release
-							</Button>
-						</div>
-					</section>
-
-					<section class="rounded-[1.45rem] border border-border/60 bg-card p-4 shadow-[0_6px_24px_rgba(15,23,42,0.06)]">
-						<p class="text-xs text-foreground-muted">Claimable Balance</p>
-						<p class="mt-2 text-[2.1rem] font-medium leading-none tracking-[-0.05em] text-foreground">$0.00</p>
-						<div class="mt-3 inline-flex items-center gap-2 rounded-full border border-border/60 bg-background px-3 py-1 text-xs text-foreground">
-							<span class="size-2 rounded-full bg-primary"></span>
-							Pending Setup
-						</div>
-						<div class="mt-5 rounded-[1rem] bg-secondary/35 p-3">
-							<div class="flex items-center justify-between text-sm">
-								<span class="text-foreground-muted">Net Royalties</span>
-								<span class="font-medium text-foreground">$0.00</span>
-							</div>
-							<div class="mt-3 flex items-center justify-between text-sm">
-								<span class="text-foreground-muted">Payout Threshold</span>
-								<span class="font-medium text-foreground">$2,500.00</span>
-							</div>
-						</div>
-					</section>
-				</div>
-
-				<div class="space-y-6">
-					<section class="rounded-[1.45rem] border border-border/60 bg-card p-4 shadow-[0_6px_24px_rgba(15,23,42,0.06)] xl:sticky xl:top-6">
-						<div class="flex items-start justify-between gap-3">
-							<div>
-								<p class="text-[1.1rem] font-medium tracking-[-0.04em] text-foreground" style={`font-family:${editorTheme.fontHeader};`}>
-									Recent Transactions
-								</p>
-								<p class="mt-1 text-xs text-foreground-muted" style={`font-family:${editorTheme.fontSans};`}>
-									Your latest account activity.
-								</p>
-							</div>
-							<button class="rounded-full border border-border/60 bg-background px-4 py-2 text-sm text-foreground">View All</button>
-						</div>
-						<div class="mt-4 space-y-1">
-							{#each [
-								['Blue Bottle Coffee', 'Food & Drink', 'Today, 10:24 AM', '-$6.50'],
-								['Whole Foods Market', 'Groceries', 'Yesterday', '-$142.30'],
-								['Stripe Payout', 'Income', 'Oct 13', '+$4,300.00']
-							] as [title, meta, time, amount]}
-								<div class="flex items-center gap-4 border-t border-border/50 py-3 first:border-t-0">
-									<div class="flex size-9 items-center justify-center rounded-2xl bg-secondary/35 text-foreground">◦</div>
-									<div class="min-w-0 flex-1">
-										<p class="truncate text-sm font-medium text-foreground">{title}</p>
-										<p class="mt-1 text-xs text-foreground-muted">{meta}</p>
-									</div>
-									<div class="text-right">
-										<p class="text-xs text-foreground-muted">{time}</p>
-										<p class="mt-1 text-sm font-medium text-foreground">{amount}</p>
-									</div>
+								<div class="min-w-0 flex-1">
+									<p class="truncate text-sm font-medium text-foreground">{tx.name}</p>
+									<p class="text-sm text-foreground-muted">{tx.category}</p>
 								</div>
-							{/each}
-						</div>
-					</section>
+								<div class="text-right">
+									<p class="text-sm font-medium text-foreground">{tx.amount}</p>
+									<p class="text-sm text-foreground-muted">{tx.date}</p>
+								</div>
+							</div>
+						{/each}
+					</div>
+				</section>
 
-					<details class="group rounded-[1.45rem] border border-border/60 bg-card p-4 shadow-[0_6px_24px_rgba(15,23,42,0.06)]">
-						<summary class="flex list-none items-center justify-between gap-4">
-							<div class="space-y-1">
-								<p class="text-[1.05rem] font-medium tracking-[-0.03em] text-foreground" style={`font-family:${editorTheme.fontHeader};`}>
-									Generated CSS
-								</p>
-								<p class="text-xs text-foreground-muted">Inspect the final export and copy it directly.</p>
-							</div>
-							<div class="flex items-center gap-3">
-								<Tooltip.Root placement="top" delay={0}>
-									<Tooltip.Trigger>
-										<button
-											type="button"
-											class="inline-flex size-10 items-center justify-center rounded-full border border-border/60 bg-background text-foreground"
-											onclick={copyGeneratedCss}
-										>
-											{#if copiedCss}
-												<Check size={16} />
-											{:else}
-												<Copy size={16} />
-											{/if}
-										</button>
-									</Tooltip.Trigger>
-									<Tooltip.Content>{copiedCss ? 'Copied' : 'Copy generated CSS'}</Tooltip.Content>
-								</Tooltip.Root>
-								<span class="text-xs uppercase tracking-[0.14em] text-foreground-muted group-open:hidden">Expand</span>
-								<span class="hidden text-xs uppercase tracking-[0.14em] text-foreground-muted group-open:inline">Collapse</span>
-							</div>
-						</summary>
-						<div class="mt-5">
-							<Textarea class="min-h-[24rem] rounded-[1.15rem] border-0 bg-secondary/35 font-mono text-xs leading-6" readonly value={generatedCss} />
-						</div>
-					</details>
-				</div>
 			</div>
 		</div>
 	</div>
 
-	<Dialog.Root bind:open={advancedOptionsOpen}>
-		<Dialog.Content class="max-w-[min(92vw,88rem)] rounded-[2rem] border border-border/60 bg-background p-0 shadow-[0_28px_120px_rgba(15,23,42,0.2)]">
-			<div class="grid gap-0 xl:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]">
-				<div class="border-b border-border/60 p-6 xl:border-b-0 xl:border-r">
-					<Dialog.Header>
-						<Dialog.Title>More Options</Dialog.Title>
-						<Dialog.Description>
-							Adjust custom colors, advanced surfaces, and export details without crowding the main studio.
-						</Dialog.Description>
-					</Dialog.Header>
 
-					<div class="mt-6 grid gap-6">
-						<div class="grid gap-4 md:grid-cols-2">
-							<div class="space-y-3">
-								<p class="text-sm font-medium text-foreground">Panel style</p>
-								<div class="grid grid-cols-2 gap-2">
-									{#each panelStyleOptions as option}
-										<Button
-											variant={editorTheme.invertedPanels === (option.value === 'inverted') ? 'primary' : 'outlined'}
-											class="justify-start text-sm"
-											onclick={() => updatePanelStyle(option.value)}
-										>
-											{option.label}
-										</Button>
-									{/each}
-								</div>
-							</div>
-							<div class="space-y-3">
-								<p class="text-sm font-medium text-foreground">Primary buttons</p>
-								<div class="grid grid-cols-2 gap-2">
-									<Button
-										variant={editorTheme.primaryButtonOutline ? 'primary' : 'outlined'}
-										class="justify-start text-sm"
-										onclick={() => updatePrimaryButtonOutline(true)}
-									>
-										Stroke
-									</Button>
-									<Button
-										variant={!editorTheme.primaryButtonOutline ? 'primary' : 'outlined'}
-										class="justify-start text-sm"
-										onclick={() => updatePrimaryButtonOutline(false)}
-									>
-										Filled
-									</Button>
-								</div>
-							</div>
-						</div>
-
-						<div class="space-y-4">
-							<p class="text-sm font-medium text-foreground">Motion details</p>
-							<div class="grid gap-4 md:grid-cols-3">
-								{#each [
-									['Panel duration', 'panelDuration'],
-									['Sheet duration', 'sheetDuration'],
-									['Overlay duration', 'overlayDuration']
-								] as [label, key]}
-									<div class="space-y-2">
-										<p class="text-xs uppercase tracking-[0.12em] text-foreground-muted">{label}</p>
-										<div class="grid gap-2">
-											{#each durationOptions as option}
-												{#if option.label === '140ms' || option.label === '220ms' || option.label === '320ms'}
-													<Button
-														variant={editorTheme.motion[key as 'panelDuration' | 'sheetDuration' | 'overlayDuration'] === option.value ? 'primary' : 'outlined'}
-														class="justify-start text-xs"
-														onclick={() =>
-															updateMotionDuration(
-																key as 'panelDuration' | 'sheetDuration' | 'overlayDuration',
-																option.value
-															)}
-													>
-														{option.label}
-													</Button>
-												{/if}
-											{/each}
-										</div>
-									</div>
-								{/each}
-							</div>
-
-							<div class="grid gap-4 md:grid-cols-2">
-								{#each motionFields as field}
-									<label class="grid gap-2">
-										<div class="flex items-center justify-between gap-3 text-sm font-medium text-foreground">
-											<span>{field.label}</span>
-											<span class="text-xs text-foreground-muted">
-												{editorTheme.motion[field.key]}{field.suffix ?? ''}
-											</span>
-										</div>
-										<input
-											type="range"
-											min={field.min}
-											max={field.max}
-											step={field.step}
-											value={editorTheme.motion[field.key]}
-											oninput={(event) => updateMotionField(field.key, Number((event.currentTarget as HTMLInputElement).value))}
-										/>
-									</label>
-								{/each}
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<div class="p-6">
-					<StudioRightSidebar
-						selectedPresetSlug={selectedPresetSlug}
-						activePresetName={activePreset.name}
-						activeDurationName={activeDuration.name}
-						editorName={editorName}
-						editorTheme={editorTheme}
-						lightBasePalette={lightBasePalette}
-						darkBasePalette={darkBasePalette}
-						lightBackgroundOptions={lightBackgroundOptions}
-						lightSurfaceOptions={lightSurfaceOptions}
-						lightTextOptions={lightTextOptions}
-						lightPrimaryOptions={lightPrimaryOptions}
-						darkBackgroundOptions={darkBackgroundOptions}
-						darkSurfaceOptions={darkSurfaceOptions}
-						darkTextOptions={darkTextOptions}
-						darkPrimaryOptions={darkPrimaryOptions}
-						slugifyThemeName={slugifyThemeName}
-						applyBasePalette={applyBasePalette}
-						updateBasePalette={updateBasePalette}
-					/>
-				</div>
-			</div>
-		</Dialog.Content>
-	</Dialog.Root>
 </div>
