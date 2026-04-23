@@ -1,6 +1,8 @@
-import type { ThemesModel } from './model';
+import type { ThemeDraft, ThemeRecord } from './model';
 
-export const defaultThemes: ThemesModel['publishBody'][] = [
+const DEFAULT_THEME_TIMESTAMP = '2026-04-04T00:00:00.000Z';
+
+export const defaultThemes: ThemeDraft[] = [
 	{
 		slug: 'default',
 		name: 'Default',
@@ -33,6 +35,7 @@ export const defaultThemes: ThemesModel['publishBody'][] = [
 			borderStrong: '#c9d1dc',
 			input: '#c9d1dc',
 			primary: '#155eef',
+			info: '#2563eb',
 			foregroundOpposite: '#ffffff',
 			foreground: '#101828',
 			muted: '#f2f4f7',
@@ -56,6 +59,7 @@ export const defaultThemes: ThemesModel['publishBody'][] = [
 			borderStrong: '#282f3a',
 			input: '#262d38',
 			primary: '#528bff',
+			info: '#60a5fa',
 			foregroundOpposite: '#ffffff',
 			foreground: '#eef2f8',
 			muted: '#101419',
@@ -106,6 +110,7 @@ export const defaultThemes: ThemesModel['publishBody'][] = [
 			borderStrong: '#cdbfae',
 			input: '#d8cbbb',
 			primary: '#a44a2f',
+			info: '#3170b8',
 			foregroundOpposite: '#ffffff',
 			foreground: '#271d19',
 			muted: '#f6efe7',
@@ -129,6 +134,7 @@ export const defaultThemes: ThemesModel['publishBody'][] = [
 			borderStrong: '#372f29',
 			input: '#342b26',
 			primary: '#f08f69',
+			info: '#8cb4ef',
 			foregroundOpposite: '#ffffff',
 			foreground: '#f4ece6',
 			muted: '#171310',
@@ -179,6 +185,7 @@ export const defaultThemes: ThemesModel['publishBody'][] = [
 			borderStrong: '#c2d0bb',
 			input: '#c7d5c1',
 			primary: '#2f7a54',
+			info: '#2f6fb8',
 			foregroundOpposite: '#ffffff',
 			foreground: '#18261d',
 			muted: '#f1f5ee',
@@ -202,6 +209,7 @@ export const defaultThemes: ThemesModel['publishBody'][] = [
 			borderStrong: '#283229',
 			input: '#273228',
 			primary: '#63c08c',
+			info: '#7fb6ef',
 			foregroundOpposite: '#ffffff',
 			foreground: '#edf5ef',
 			muted: '#111711',
@@ -252,6 +260,7 @@ export const defaultThemes: ThemesModel['publishBody'][] = [
 			borderStrong: '#d7dee8',
 			input: '#d7dee8',
 			primary: '#4d607f',
+			info: '#2563eb',
 			foregroundOpposite: '#ffffff',
 			foreground: '#111827',
 			muted: '#f4f6fa',
@@ -275,6 +284,7 @@ export const defaultThemes: ThemesModel['publishBody'][] = [
 			borderStrong: '#2b3442',
 			input: '#293240',
 			primary: '#4d607f',
+			info: '#7aa8ff',
 			foregroundOpposite: '#ffffff',
 			foreground: '#eef2f8',
 			muted: '#10151d',
@@ -294,3 +304,22 @@ export const defaultThemes: ThemesModel['publishBody'][] = [
 		}
 	}
 ];
+
+const DEFAULT_SLUGS: ReadonlySet<string> = new Set(defaultThemes.map((theme) => theme.slug));
+
+export function isDefaultSlug(slug: string): boolean {
+	return DEFAULT_SLUGS.has(slug);
+}
+
+export function findDefaultTheme(slug: string): ThemeDraft | undefined {
+	return defaultThemes.find((theme) => theme.slug === slug);
+}
+
+export function defaultThemeRecord(theme: ThemeDraft): ThemeRecord {
+	return {
+		...theme,
+		id: `default:${theme.slug}`,
+		createdAt: DEFAULT_THEME_TIMESTAMP,
+		updatedAt: DEFAULT_THEME_TIMESTAMP
+	};
+}

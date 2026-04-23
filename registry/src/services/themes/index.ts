@@ -1,42 +1,36 @@
 import { Elysia } from 'elysia';
-import { ThemesModel } from './model';
-import { Themes } from './service';
+import {
+	publishResponseSchema,
+	slugConflictSchema,
+	slugParamsSchema,
+	themeDraftSchema,
+	themeListSchema,
+	themeNotFoundSchema,
+	themeRecordSchema
+} from './model';
+import { getThemeBySlug, listThemes, publishTheme } from './service';
 
-export const themesController = new Elysia({ prefix: '/themes' });
-
-/* Create a theme and save to database. */
-themesController.post(
-	'/',
-	async ({ body }) => {
-		const res = await Themes.publish(body);
-		return res;
-	},
-	{
-		body: ThemesModel.publishBody,
+export const themesController = new Elysia({
+	prefix: '/themes',
+	tags: ['themes']
+})
+	.get('/', () => listThemes(), {
+		detail: { summary: 'List every built-in and published theme.' },
+		response: { 200: themeListSchema }
+	})
+	.get('/:slug', ({ params }) => getThemeBySlug(params.slug), {
+		params: slugParamsSchema,
+		detail: { summary: 'Fetch a theme by its slug.' },
 		response: {
-			200: ThemesModel.publishResponse,
-			409: ThemesModel.slugTaken
+			200: themeRecordSchema,
+			404: themeNotFoundSchema
 		}
-	}
-);
-
-/* Fetch all themes. */
-themesController.get('/', async () => {
-	return await Themes.getAll();
-});
-
-/* Fetch theme by slug. */
-themesController.get(
-	'/:slug',
-	async ({ params }) => {
-		const res = await Themes.getBySlug(params);
-		return res;
-	},
-	{
-		params: ThemesModel.getBySlugBody,
+	})
+	.post('/', ({ body }) => publishTheme(body), {
+		body: themeDraftSchema,
+		detail: { summary: 'Publish a new theme to the registry.' },
 		response: {
-			200: ThemesModel.getBySlugResponse,
-			404: ThemesModel.doesntExist
+			200: publishResponseSchema,
+			409: slugConflictSchema
 		}
-	}
-);
+	});
