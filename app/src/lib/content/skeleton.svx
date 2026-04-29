@@ -12,20 +12,6 @@
     import { Skeleton } from '$lib/silk/components/skeleton';
 </script>
 
-<h1 class="py-2 h1">
-    Import
-</h1>
-
-<p class="py-2">
-    Skeleton only exports 1 component
-</p>
-
-<ExportItem title="Skeleton">The main component for displaying a skeleton.</ExportItem>
-
-<h1 class="py-6 h1">
-    Example
-</h1>
-
 <ComponentPreview code={`<script>
     import { Skeleton } from '$lib/silk/components/skeleton';
 </script>\n
@@ -38,8 +24,22 @@
         </div>
     </div>
 </ComponentPreview>
+<div class="flex flex-col gap-5 pt-8 pb-8">
+	<h1 class="h1">Installation</h1>
+	<CodeBlock lang="shell" code={`bunx @aidan-neel/ui add skeleton`} />
+</div>
 
-<h1 class="py-6 h1">
+<h1 class="py-2 h1">
+    Import
+</h1>
+
+<p class="py-2">
+    Skeleton only exports 1 component
+</p>
+
+<ExportItem title="Skeleton">The main component for displaying a skeleton.</ExportItem>
+
+<h1 class="py-6 h1 pt-10">
     API Reference
 </h1>
 

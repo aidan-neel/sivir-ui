@@ -8,24 +8,10 @@
 </script>
 
 <script>
-	import { ComponentPreview, ExportItem, APIReference } from '$lib/components/docs';
+	import { ComponentPreview, ExportItem, APIReference, CodeBlock } from '$lib/components/docs';
 	import * as Dialog from '$lib/silk/components/dialog';
 	import { Input } from '$lib/silk/components/input';
 </script>
-
-<h1 class="py-2 h1">Import</h1>
-<p class="py-2">Dialog exports 8 components.</p>
-
-<ExportItem title="Root">Owns the open state for the dialog.</ExportItem>
-<ExportItem title="Trigger">Button that opens the dialog.</ExportItem>
-<ExportItem title="Content">Dialog surface rendered in the modal layer.</ExportItem>
-<ExportItem title="Header">Layout wrapper for title and description.</ExportItem>
-<ExportItem title="Title">Primary dialog heading.</ExportItem>
-<ExportItem title="Description">Supporting copy under the title.</ExportItem>
-<ExportItem title="Footer">Action row for confirm and exit buttons.</ExportItem>
-<ExportItem title="Exit / Confirm">Convenience action buttons that close the dialog.</ExportItem>
-
-<h1 class="py-6 h1">Example</h1>
 
 <ComponentPreview code={`<script>
 	import * as Dialog from '$lib/silk/components/dialog';
@@ -56,7 +42,7 @@
 				<Dialog.Title>Edit profile</Dialog.Title>
 				<Dialog.Description>Update your profile details below.</Dialog.Description>
 			</Dialog.Header>
-			<div class="grid gap-4">
+			<div class="grid gap-4 px-[var(--panel-padding-lg)] pb-[var(--panel-padding-lg)]">
 				<Input label="Name" value="Pedro Duarte" />
 				<Input label="Username" value="@peduarte" />
 			</div>
@@ -67,6 +53,22 @@
 		</Dialog.Content>
 	</Dialog.Root>
 </ComponentPreview>
+<div class="flex flex-col gap-5 pt-8 pb-8">
+	<h1 class="h1">Installation</h1>
+	<CodeBlock lang="shell" code={`bunx @aidan-neel/ui add dialog`} />
+</div>
+
+<h1 class="py-2 h1">Import</h1>
+<p class="py-2">Dialog exports 8 components.</p>
+
+<ExportItem title="Root">Owns the open state for the dialog.</ExportItem>
+<ExportItem title="Trigger">Button that opens the dialog.</ExportItem>
+<ExportItem title="Content">Dialog surface rendered in the modal layer.</ExportItem>
+<ExportItem title="Header">Layout wrapper for title and description.</ExportItem>
+<ExportItem title="Title">Primary dialog heading.</ExportItem>
+<ExportItem title="Description">Supporting copy under the title.</ExportItem>
+<ExportItem title="Footer">Action row for confirm and exit buttons.</ExportItem>
+<ExportItem title="Exit / Confirm">Convenience action buttons that close the dialog.</ExportItem>
 
 <h1 class="py-6 h1">API Reference</h1>
 
@@ -77,7 +79,6 @@
 	]} />
 
 	<APIReference title="Dialog" component="Trigger" description="Button used to open the dialog." items={[
-		{ property: "variant", type: "ButtonVariant", description: "Button variant passed through to the trigger." },
 		{ property: "children", type: "Snippet", description: "Trigger label or custom content." }
 	]} />
 

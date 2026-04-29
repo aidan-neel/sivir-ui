@@ -8,19 +8,10 @@
 </script>
 
 <script>
-	import { ComponentPreview, ExportItem, APIReference } from '$lib/components/docs';
+	import { ComponentPreview, ExportItem, APIReference, CodeBlock } from '$lib/components/docs';
 	import * as Tooltip from '$lib/silk/components/tooltip';
 	import { Button } from '$lib/silk/components/button';
 </script>
-
-<h1 class="py-2 h1">Import</h1>
-<p class="py-2">Tooltip exports 3 components.</p>
-
-<ExportItem title="Root">Configures tooltip timing and placement.</ExportItem>
-<ExportItem title="Trigger">The element that receives hover and focus interactions.</ExportItem>
-<ExportItem title="Content">The tooltip label shown beside the trigger.</ExportItem>
-
-<h1 class="py-6 h1">Example</h1>
 
 <ComponentPreview code={`<script>
 	import * as Tooltip from '$lib/silk/components/tooltip';
@@ -44,6 +35,17 @@
 		</Tooltip.Content>
 	</Tooltip.Root>
 </ComponentPreview>
+<div class="flex flex-col gap-5 pt-8 pb-8">
+	<h1 class="h1">Installation</h1>
+	<CodeBlock lang="shell" code={`bunx @aidan-neel/ui add tooltip`} />
+</div>
+
+<h1 class="py-2 h1">Import</h1>
+<p class="py-2">Tooltip exports 3 components.</p>
+
+<ExportItem title="Root">Configures tooltip timing and placement.</ExportItem>
+<ExportItem title="Trigger">The element that receives hover and focus interactions.</ExportItem>
+<ExportItem title="Content">The tooltip label shown beside the trigger.</ExportItem>
 
 <h1 class="py-6 h1">API Reference</h1>
 
@@ -66,7 +68,6 @@
 		description="Interactive trigger element for the tooltip."
 		items={[
 			{ property: "children", type: "Snippet", description: "Trigger content." },
-			{ property: "variant", type: "ButtonVariant", description: "Optional button variant when using the built-in button trigger." },
 			{ property: "class", type: "string", description: "Additional classes for the trigger." },
 			{ property: "...rest", type: "HTMLButtonAttributes | HTMLAnchorAttributes", description: "Additional attributes passed to the trigger button." }
 		]}

@@ -12,6 +12,6 @@
 	} = $props();
 </script>
 
-<div data-ui="card" {...rest} class={cn(classProp, `bg-[var(--card-bg)] border border-border rounded-[var(--card-radius)] shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)] p-[var(--card-padding)] flex flex-col`)}>
+<div data-ui="card" {...rest} class={cn(classProp, `bg-[var(--card-bg)] border border-border rounded-[var(--radius-lg)] shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)] p-[var(--card-padding)] flex flex-col`)}>
 	{@render children?.()}
 </div>

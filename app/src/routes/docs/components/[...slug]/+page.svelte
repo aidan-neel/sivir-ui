@@ -27,33 +27,7 @@
 	let prevComponent = $derived(components[curIndex - 1]);
 </script>
 
-<PageHeader
-	title={sanitizeComponent(Title)}
-	description={Description}
-	compact={true}
-/>
-
-<div class="flex flex-wrap gap-2.5 pt-4">
-	{#if Source && !Source.endsWith('/componentname')}
-		<Badge href={Source} variant="secondary" class="rounded-lg gap-1 font-semibold text-foreground-muted">
-			Component Source
-			<ExternalLink size={10} />
-		</Badge>
-	{/if}
-	{#each Dependencies as dependency}
-		<Badge href={dependency.url} variant="secondary" class="rounded-lg gap-1 font-semibold text-foreground-muted">
-			{dependency.name}
-			<ExternalLink size={10} />
-		</Badge>
-	{/each}
-</div>
-
-<div class="flex flex-col gap-4 py-8">
-	<h1 class="h1">Installation</h1>
-	{#key Title}
-		<CodeBlock lang="shell" code={`bunx @aidan-neel/ui add ${Title.toLowerCase()}`} />
-	{/key}
-</div>
+<PageHeader title={sanitizeComponent(Title)} description={Description} compact={true} />
 
 <div class="flex-grow w-full pb-16">
 	<Markdown />

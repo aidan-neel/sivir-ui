@@ -58,7 +58,6 @@
 	</div>
 
 	<div class="flex-1 overflow-y-auto">
-
 		<!-- Accent -->
 		<div class="border-b border-border/60 p-4">
 			<p class="mb-3 text-sm font-medium text-foreground-muted">Accent</p>
@@ -67,15 +66,22 @@
 					{@const isActive = activeAccentValue === option.value}
 					<button
 						type="button"
-						class="group flex flex-col items-center gap-2 rounded-[var(--radius-md)] px-2 py-3 transition-colors hover:bg-secondary/50 {isActive ? 'bg-secondary/60' : ''}"
+						class="group flex flex-col items-center gap-2 rounded-[var(--radius-md)] px-2 py-3 transition-colors hover:bg-secondary/50 {isActive
+							? 'bg-secondary/60'
+							: ''}"
 						onclick={() => applyAccentColor(option)}
 						aria-pressed={isActive}
 					>
 						<div
-							class="size-8 rounded-full border-[3px] shadow-sm transition-transform group-hover:scale-105 {isActive ? 'scale-105 border-white shadow-md' : 'border-transparent'}"
+							class="size-8 rounded-full border-[3px] shadow-sm transition-transform group-hover:scale-105 {isActive
+								? 'scale-105 border-white shadow-md'
+								: 'border-transparent'}"
 							style="background:{option.light};"
 						></div>
-						<span class="text-sm {isActive ? 'font-medium text-foreground' : 'text-foreground-muted'}">{option.label}</span>
+						<span
+							class="text-sm {isActive ? 'font-medium text-foreground' : 'text-foreground-muted'}"
+							>{option.label}</span
+						>
 					</button>
 				{/each}
 			</div>
@@ -88,7 +94,11 @@
 					<div class="size-3.5 rounded-full border border-border/60 bg-white shadow-sm"></div>
 					<span class="text-sm font-medium text-foreground">Light</span>
 				</div>
-				<Button variant="secondary" class="h-7 px-3 text-sm" onclick={() => applyBasePalette('light')}>
+				<Button
+					variant="secondary"
+					class="h-7 px-3 text-sm"
+					onclick={() => applyBasePalette('light')}
+				>
 					Generate
 				</Button>
 			</div>
@@ -100,9 +110,9 @@
 					options={lightBackgroundOptions}
 				/>
 				<ColorPicker
-					label="Surface"
-					value={lightBasePalette.surface}
-					onValueChange={(v) => updateBasePalette('light', 'surface', v)}
+					label="Card"
+					value={lightBasePalette.card}
+					onValueChange={(v) => updateBasePalette('light', 'card', v)}
 					options={lightSurfaceOptions}
 				/>
 				<ColorPicker
@@ -133,7 +143,11 @@
 					<div class="size-3.5 rounded-full border border-border/60 bg-[#0f172a] shadow-sm"></div>
 					<span class="text-sm font-medium text-foreground">Dark</span>
 				</div>
-				<Button variant="secondary" class="h-7 px-3 text-sm" onclick={() => applyBasePalette('dark')}>
+				<Button
+					variant="secondary"
+					class="h-7 px-3 text-sm"
+					onclick={() => applyBasePalette('dark')}
+				>
 					Generate
 				</Button>
 			</div>
@@ -145,9 +159,9 @@
 					options={darkBackgroundOptions}
 				/>
 				<ColorPicker
-					label="Surface"
-					value={darkBasePalette.surface}
-					onValueChange={(v) => updateBasePalette('dark', 'surface', v)}
+					label="Card"
+					value={darkBasePalette.card}
+					onValueChange={(v) => updateBasePalette('dark', 'card', v)}
 					options={darkSurfaceOptions}
 				/>
 				<ColorPicker
@@ -170,6 +184,5 @@
 				/>
 			</div>
 		</div>
-
 	</div>
 </div>

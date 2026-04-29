@@ -117,8 +117,11 @@ export function clickOutside(node: Node, callback: () => void, exclude: Node[] =
 		const isInsideExcluded = exclude.some(
 			(excludeNode) => path.includes(excludeNode) || (target ? excludeNode.contains(target) : false)
 		);
+		const isInsideFloating = path.some(
+			(el) => el instanceof Element && el.hasAttribute('data-floating-content')
+		);
 
-		if (!isInsideNode && !isInsideExcluded) {
+		if (!isInsideNode && !isInsideExcluded && !isInsideFloating) {
 			callback();
 		}
 	};

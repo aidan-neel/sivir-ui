@@ -50,21 +50,19 @@
 		role="option"
 		aria-selected={uiState.selected?.value === item.value}
 		{...rest}
-		onclick={close}
-		class={cn(
-			className,
-			'min-h-[var(--menu-item-height)] px-[var(--menu-item-padding-x)] rounded-[var(--menu-item-radius)] text-[var(--menu-item-foreground)] border border-transparent transition-[background-color,border-color,color,box-shadow] duration-150 hover:bg-[var(--menu-item-hover-bg)] hover:border-border hover:shadow-[inset_0_1px_0_color-mix(in_srgb,var(--panel-highlight)_44%,transparent)] data-[active=true]:bg-[var(--menu-item-hover-bg)] data-[active=true]:border-border data-[active=true]:shadow-[inset_0_1px_0_color-mix(in_srgb,var(--panel-highlight)_44%,transparent)] data-[selected=true]:bg-[var(--menu-item-active-bg)] w-full text-[14px] duration-50 font-medium hover:cursor-default px-2 items-center justify-start text-left'
-		)}
-		variant={'ghost'}
+	onclick={close}
+	class={cn(
+		className,
+		'min-h-[var(--menu-item-height)] px-[var(--menu-item-padding-x)] rounded-[var(--radius-lg)] text-[var(--menu-item-foreground)] border border-transparent transition-[background-color,border-color,color,box-shadow] duration-150 hover:bg-[var(--menu-item-hover-bg)] data-[active=true]:bg-[var(--menu-item-hover-bg)] data-[selected=true]:bg-[var(--menu-item-active-bg)] w-full text-[14px] duration-50 font-medium hover:cursor-default px-2 items-center justify-between text-left'
+	)}
+	variant={'ghost'}
 	>
-		<div class="size-3">
-			{#if uiState.selected}
-				{#if uiState.selected.value === item.value}
-					<Check class="size-3" />
-				{/if}
-			{/if}
-		</div>
 		{label}
+		{#if uiState.selected?.value === item.value}
+			<div aria-hidden="true">
+				<Check />
+			</div>
+		{/if}
 	</Button>
 {:else}
 	<Button
@@ -73,23 +71,21 @@
 		role="option"
 		aria-selected={uiState.selected?.value === item.value}
 		{...rest}
-		onclick={close}
-		class={cn(
-			className,
-			'min-h-[var(--menu-item-height)] px-[var(--menu-item-padding-x)] rounded-[var(--menu-item-radius)] text-[var(--menu-item-foreground)] border border-transparent transition-[background-color,border-color,color,box-shadow] duration-150 hover:bg-[var(--menu-item-hover-bg)] hover:border-border hover:shadow-[inset_0_1px_0_color-mix(in_srgb,var(--panel-highlight)_44%,transparent)] data-[active=true]:bg-[var(--menu-item-hover-bg)] data-[active=true]:border-border data-[active=true]:shadow-[inset_0_1px_0_color-mix(in_srgb,var(--panel-highlight)_44%,transparent)] data-[selected=true]:bg-[var(--menu-item-active-bg)] w-full text-[14px] duration-50 font-medium hover:cursor-default px-2 items-center justify-start text-left',
-			uiState.searchContent !== '' &&
-				!Array.from(uiState.results).some((r) => r.value === item.value) &&
-				'hidden'
-		)}
-		variant="ghost"
+	onclick={close}
+	class={cn(
+		className,
+		'min-h-[var(--menu-item-height)] px-[var(--menu-item-padding-x)] rounded-[var(--radius-lg)] text-[var(--menu-item-foreground)] border border-transparent transition-[background-color,border-color,color,box-shadow] duration-150 hover:bg-[var(--menu-item-hover-bg)] data-[active=true]:bg-[var(--menu-item-hover-bg)] data-[selected=true]:bg-[var(--menu-item-active-bg)] w-full text-[14px] duration-50 font-medium hover:cursor-default px-2 items-center justify-between text-left',
+		uiState.searchContent !== '' &&
+			!Array.from(uiState.results).some((r) => r.value === item.value) &&
+			'hidden'
+	)}
+	variant="ghost"
 	>
-		<div class="size-3">
-			{#if uiState.selected}
-				{#if uiState.selected.value === item.value}
-					<Check class="size-3" />
-				{/if}
-			{/if}
-		</div>
 		{label}
+		{#if uiState.selected?.value === item.value}
+			<div aria-hidden="true">
+				<Check />
+			</div>
+		{/if}
 	</Button>
 {/if}

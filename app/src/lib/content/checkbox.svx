@@ -12,6 +12,19 @@
     import { Checkbox } from '$lib/silk/components/checkbox';
 </script>
 
+<ComponentPreview code={`<script lang="ts">
+    import { Checkbox } from "$lib/silk/components/checkbox";
+</script>\n
+<Checkbox label="Agree to terms and service" />`}>
+    <div class="flex flex-col gap-6 items-start">
+        <Checkbox label="Agree to terms and service" />
+    </div>
+</ComponentPreview>
+<div class="flex flex-col gap-5 pt-8 pb-8">
+	<h1 class="h1">Installation</h1>
+	<CodeBlock lang="shell" code={`bunx @aidan-neel/ui add checkbox`} />
+</div>
+
 <h1 class="py-2 h1">
     Import
 </h1>
@@ -22,26 +35,29 @@
 
 <ExportItem title="Checkbox">The main component for displaying a checkbox.</ExportItem>
 
-<h1 class="py-6 h1">
-    Example
+<h1 class="py-6 h1 pt-10">
+    Variants
 </h1>
 
-<ComponentPreview code={`<script lang="ts">
-    import { Checkbox } from "$lib/silk/components/checkbox";
-</script>\n
-<Checkbox label="Agree to terms and service" />
-<Checkbox label="Agree to terms and service" description="By clicking this checkbox, you agree to the terms and conditions." />
-<Checkbox label="Enable notifications" disabled={true} />
-<Checkbox variant="primary" label="Agree to terms and service" description="By clicking this checkbox, you agree to the terms and conditions." />`}>
+<h1 class="py-2 pb-4 h2">
+    Primary
+</h1>
+
+<ComponentPreview code={`<Checkbox
+    variant="primary"
+    label="Agree to terms and service"
+    description="By clicking this checkbox, you agree to the terms and conditions."
+/>`}>
     <div class="flex flex-col gap-6 items-start">
-        <Checkbox label="Agree to terms and service" />
-        <Checkbox label="Agree to terms and service" description="By clicking this checkbox, you agree to the terms and conditions." />
-        <Checkbox label="Enable notifications" disabled={true} />
-        <Checkbox variant="primary" label="Agree to terms and service" description="By clicking this checkbox, you agree to the terms and conditions." />
+        <Checkbox
+            variant="primary"
+            label="Agree to terms and service"
+            description="By clicking this checkbox, you agree to the terms and conditions."
+        />
     </div>
 </ComponentPreview>
 
-<h1 class="py-6 h1">
+<h1 class="py-6 h1 pt-10">
     API Reference
 </h1>
 
@@ -62,12 +78,6 @@
 				type: "boolean",
 				description: "Whether or not the checkbox is disabled",
 				defaults: "false"
-			},
-            {
-				property: "variant",
-				type: "'default' | 'primary'",
-				description: "The variant of the checkbox.",
-				defaults: "'default'"
 			},
 			{
 				property: "label",

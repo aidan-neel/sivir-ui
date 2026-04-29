@@ -41,7 +41,7 @@
 		data-ui="button"
 		data-variant={variant}
 		data-size={size}
-		class={cn(classProp, button({ variant, size: size === 'icon' ? 'icon' : undefined }))}
+		class={cn(classProp, button({ variant, size }))}
 		aria-disabled={(rest as HTMLAnchorAttributes)['aria-disabled']}
 		onmouseenter={() => onhover?.()}
 		onmouseleave={() => onhoverend?.()}
@@ -63,7 +63,7 @@
 		data-ui="button"
 		data-variant={variant}
 		data-size={size}
-		class={cn(classProp, button({ variant, size: size === 'icon' ? 'icon' : undefined }))}
+		class={cn(classProp, button({ variant, size }))}
 		onmouseenter={() => onhover?.()}
 		onmouseleave={() => onhoverend?.()}
 		onclick={() => onclick?.()}

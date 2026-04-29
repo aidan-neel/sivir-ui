@@ -9,36 +9,33 @@
 	--font-header: var(--font-sans);
 
 	/* Core colors */
-	--color-background: #fcfcfd;
-	--color-border: #c9d1dc;
-	--color-border-strong: #c9d1dc;
-	--color-input: #c9d1dc;
-	--color-primary: #155eef;
-	--color-info: #2563eb;
+	--color-background: #fafafa;
+	--color-border: #e5e5e5;
+	--color-border-strong: #d0d0d0;
+	--color-input: #d0d0d0;
+	--color-primary: #5e6ad2;
+	--color-info: #5e6ad2;
 	--color-foreground-opposite: #ffffff;
-	--color-foreground: #101828;
-	--color-muted: #f2f4f7;
-	--color-popover: #ffffff;
-	--color-foreground-muted: #667085;
+	--color-foreground: #0f0f10;
+	--color-muted: #f5f5f5;
+	--color-panel: #ffffff;
+	--color-modal: #ffffff;
+	--color-foreground-muted: #8a8a8a;
 	--color-foreground-btn: #ffffff;
-	--color-secondary: #f9fafb;
+	--color-secondary: #f2f2f2;
 	--color-card: #ffffff;
 	--color-accent: #ffffff;
-	--color-alternate: #2c2c2c;
-	--color-success: #46ab61;
-	--color-warning: #ff9800;
-	--color-error: #ef5350;
-	--color-destructive: #fa4234;
-	--color-overlay: rgb(16 24 40 / 0.18);
-	--color-ring: rgb(21 94 239 / 0.18);
+	--color-alternate: #1a1a1b;
+	--color-success: #4caf7d;
+	--color-warning: #f5a623;
+	--color-error: #eb5757;
+	--color-destructive: #e03f3f;
+	--color-overlay: rgb(15 15 16 / 0.18);
+	--color-ring: rgb(94 106 210 / 0.22);
 
 	/* Semantic aliases */
-	--color-surface: var(--color-popover);
-	--color-surface-muted: var(--color-secondary);
-	--color-surface-elevated: var(--color-card);
-	--color-panel: var(--color-popover);
 	--color-panel-foreground: var(--color-foreground);
-	--color-floating-panel: var(--color-popover);
+	--color-floating-panel: var(--color-panel);
 	--color-floating-panel-foreground: var(--color-foreground);
 	--color-tooltip: color-mix(in srgb, var(--color-foreground) 90%, black);
 	--color-tooltip-foreground: var(--color-foreground-opposite);
@@ -50,13 +47,9 @@
 
 	/* Border radius */
 	--radius-sm: 0.2rem;
-	--radius-md: 0.45rem;
-	--radius-lg: 0.55rem;
-	--radius-xl: 0.67rem;
-	--radius-btn: var(--radius-lg);
-	--radius-control: var(--radius-lg);
-	--radius-panel: var(--radius-lg);
-	--radius-pill: 999px;
+	--radius-md: 0.3rem;
+	--radius-lg: 0.4rem;
+	--radius-xl: 0.6rem;
 	--motion-duration-hover: 240ms;
 	--motion-duration-menu: 150ms;
 	--motion-duration-panel: 240ms;
@@ -74,15 +67,15 @@
 	--border-size: 1px;
 
 	/* Spacing + sizing */
-	--space-control-x: 0.85rem;
+	--space-control-x: 0.75rem;
 	--space-control-y: 0.5rem;
 	--space-panel: 1rem;
 	--space-panel-lg: 1.25rem;
 	--space-menu-item-x: 0.5rem;
 	--space-menu-item-y: 0.45rem;
-	--size-control-sm: 2rem;
-	--size-control-md: 2.25rem;
-	--size-control-lg: 2.75rem;
+	--size-control-sm: 1.8rem;
+	--size-control-md: 2.1rem;
+	--size-control-lg: 2.5rem;
 	--size-icon-md: 2.25rem;
 	--size-switch-track: 2.45rem;
 	--size-switch-thumb: 0.875rem;
@@ -102,96 +95,94 @@
 	--text-base: 16px;
 
 	/* Component-level tokens */
-	--button-radius: var(--radius-btn);
 	--button-height: var(--size-control-md);
 	--button-padding-x: calc(var(--space-control-x) + 0.15rem);
 	--button-gap: 0.375rem;
 	--button-font-weight: 500;
 
 	--button-primary-bg: var(--color-primary);
-	--button-primary-border: color-mix(in srgb, var(--color-primary) 76%, #1237b9);
+	--button-primary-border: color-mix(in srgb, var(--color-primary) 78%, #2d3273);
 	--button-primary-foreground: var(--color-foreground-btn);
-	--button-primary-hover-bg: color-mix(in srgb, var(--color-primary) 90%, #1237b9);
+	--button-primary-hover-bg: color-mix(in srgb, var(--color-primary) 88%, #2d3273);
+	--button-primary-shadow:
+		0 1px 2px 0 rgb(10 13 18 / 0.05), inset 0 -2px 0 0 rgb(0 0 0 / 0.05),
+		inset 0 0 0 1px rgb(0 0 0 / 0.25);
 
 	--button-success-bg: var(--color-success);
-	--button-success-border: color-mix(in srgb, var(--color-success) 78%, #2f7a45);
-	--button-success-foreground: #f3fff6;
-	--button-success-hover-bg: color-mix(in srgb, var(--color-success) 88%, #2f7a45);
+	--button-success-border: color-mix(in srgb, var(--color-success) 80%, #2f7a4e);
+	--button-success-foreground: #f0fff5;
+	--button-success-hover-bg: color-mix(in srgb, var(--color-success) 88%, #2f7a4e);
 
 	--button-warning-bg: var(--color-warning);
-	--button-warning-border: color-mix(in srgb, var(--color-warning) 82%, #b86800);
+	--button-warning-border: color-mix(in srgb, var(--color-warning) 82%, #a06800);
 	--button-warning-foreground: #fff8ef;
-	--button-warning-hover-bg: color-mix(in srgb, var(--color-warning) 88%, #b86800);
+	--button-warning-hover-bg: color-mix(in srgb, var(--color-warning) 88%, #a06800);
 
 	--button-error-bg: var(--color-error);
-	--button-error-border: color-mix(in srgb, var(--color-error) 80%, #b4332f);
+	--button-error-border: color-mix(in srgb, var(--color-error) 80%, #8b2222);
 	--button-error-foreground: #fff5f5;
-	--button-error-hover-bg: color-mix(in srgb, var(--color-error) 88%, #b4332f);
+	--button-error-hover-bg: color-mix(in srgb, var(--color-error) 88%, #8b2222);
 
 	--button-secondary-bg: var(--color-secondary);
-	--button-secondary-border: transparent;
+	--button-secondary-border: var(--color-border);
 	--button-secondary-foreground: var(--color-foreground);
-	--button-secondary-hover-bg: color-mix(in srgb, var(--color-secondary) 86%, var(--color-border));
+	--button-secondary-hover-bg: color-mix(in srgb, var(--color-secondary) 72%, var(--color-border));
 
-	--button-flat-bg: color-mix(in srgb, var(--color-primary) 18%, transparent);
+	--button-flat-bg: color-mix(in srgb, var(--color-primary) 12%, transparent);
 	--button-flat-border: transparent;
-	--button-flat-foreground: color-mix(in srgb, var(--color-primary) 88%, black);
-	--button-flat-hover-bg: color-mix(in srgb, var(--color-primary) 10%, transparent);
+	--button-flat-foreground: var(--color-primary);
+	--button-flat-hover-bg: color-mix(in srgb, var(--color-primary) 18%, transparent);
 
-	--button-outlined-bg: var(--color-surface);
+	--button-outlined-bg: var(--color-background);
 	--button-outlined-foreground: var(--color-foreground);
-	--button-outlined-hover-bg: color-mix(in srgb, var(--color-secondary) 85%, transparent);
-	--button-outlined-shadow: 0 0.5px 3px rgba(0, 0, 100, 0), inset 0 -1px 2px rgba(0, 0, 255, 0.03);
+	--button-outlined-hover-bg: color-mix(in oklch, var(--button-outlined-bg), black 4%);
+	--button-outlined-shadow: 0 1px 2px rgb(16 24 40 / 0.04);
 
 	--button-ghost-bg: transparent;
 	--button-ghost-border: transparent;
 	--button-ghost-foreground: var(--color-foreground);
-	--button-ghost-hover-bg: color-mix(in srgb, var(--color-secondary) 52%, transparent);
+	--button-ghost-hover-bg: color-mix(in srgb, var(--color-foreground) 6%, transparent);
 
 	--button-alternate-bg: var(--color-alternate);
 	--button-alternate-border: var(--color-alternate);
 	--button-alternate-foreground: var(--color-foreground-opposite);
-	--button-alternate-hover-bg: color-mix(in srgb, var(--color-alternate) 90%, white);
+	--button-alternate-hover-bg: color-mix(in srgb, var(--color-alternate) 90%, #ffffff);
 
 	--button-destructive-bg: var(--color-destructive);
-	--button-destructive-border: var(--color-destructive);
+	--button-destructive-border: color-mix(in srgb, var(--color-destructive) 80%, #8b0000);
 	--button-destructive-foreground: var(--color-foreground-btn);
-	--button-destructive-hover-bg: color-mix(in srgb, var(--color-destructive) 86%, black);
+	--button-destructive-hover-bg: color-mix(in srgb, var(--color-destructive) 88%, #8b0000);
 
-	--badge-radius: var(--radius-md);
 	--badge-padding-x: 0.55rem;
 	--badge-padding-y: 0.2rem;
 
-	--field-radius: var(--radius-control);
 	--field-height: var(--size-control-md);
 	--field-padding-x: var(--space-control-x);
 	--field-padding-y: 0.5rem;
 	--field-focus-border: color-mix(in srgb, var(--color-primary) 28%, var(--color-border-strong));
 	--field-disabled-opacity: 0.55;
-	--field-outlined-shadow: 0 0.5px 3px rgba(0, 0, 100, 0), inset 0 -1px 2px rgba(0, 0, 255, 0.03);
+	--field-outlined-shadow:
+		0 1px 2px 0 rgb(10 13 18 / 0.05), inset 0 -2px 0 0 rgb(0 0 0 / 0.05),
+		inset 0 0 0 1px var(--color-border);
 
-	--panel-radius: var(--radius-panel);
 	--panel-padding: var(--space-panel);
 	--panel-padding-lg: var(--space-panel-lg);
-	--panel-shadow: 0 6px 16px rgb(16 24 40 / 0.05);
-	--outline-shadow: inset 0 1px 0 var(--panel-highlight);
+	--panel-shadow: 0 4px 12px rgb(15 15 16 / 0.06), 0 1px 3px rgb(15 15 16 / 0.04);
+	--outline-shadow: none;
 
-	--card-radius: var(--radius-panel);
 	--card-padding: 1.5rem;
-	--card-bg: var(--color-surface);
+	--card-bg: var(--color-card);
 	--card-shadow: var(--shadow-xs);
 
-	--tooltip-radius: calc(var(--radius-md) - 0.02rem);
 	--tooltip-padding-y: 0.22rem;
 	--tooltip-padding-x: 0.46rem;
 	--tooltip-shadow: 0 10px 22px rgb(16 24 40 / 0.18);
 
-	--menu-item-height: 2rem;
-	--menu-item-radius: calc(var(--radius-control) - 0.05rem);
+	--menu-item-height: 1.875rem;
 	--menu-item-padding-x: var(--space-menu-item-x);
 	--menu-item-foreground: var(--color-foreground);
 	--floating-menu-item-foreground: var(--menu-item-foreground);
-	--menu-item-hover-bg: color-mix(in srgb, var(--color-secondary) 38%, transparent);
+	--menu-item-hover-bg: color-mix(in srgb, var(--color-foreground) 6%, transparent);
 	--floating-menu-item-hover-bg: var(--menu-item-hover-bg);
 	--menu-item-active-bg: color-mix(in srgb, var(--color-primary) 10%, transparent);
 	--floating-menu-item-active-bg: var(--menu-item-active-bg);
@@ -204,13 +195,11 @@
 	--switch-thumb-bg: #ffffff;
 
 	--checkbox-size: 1rem;
-	--checkbox-radius: calc(var(--radius-sm) + 0.02rem);
-	--checkbox-bg: var(--color-surface);
+	--checkbox-bg: var(--color-field);
 	--checkbox-checked-bg: var(--color-primary);
 	--checkbox-checked-foreground: var(--color-foreground-btn);
 
-	--toast-radius: var(--radius-panel);
-	--toast-bg: var(--color-surface);
+	--toast-bg: var(--color-panel);
 	--toast-shadow: 0 10px 24px rgb(16 24 40 / 0.08);
 	--skeleton-base: color-mix(in srgb, var(--color-secondary) 92%, var(--color-border));
 	--skeleton-highlight: color-mix(in srgb, white 78%, var(--color-secondary));
@@ -222,42 +211,39 @@
 	--font-mono: 'Geist Mono', monospace;
 
 	/* Core colors */
-	--color-background: #0b0d11;
-	--color-border: #2b333e;
-	--color-border-strong: #2b333e;
-	--color-input: #2b333e;
-	--color-primary: #528bff;
-	--color-info: #60a5fa;
+	--color-background: #141516;
+	--color-border: #252526;
+	--color-border-strong: #303031;
+	--color-input: #303031;
+	--color-primary: #5e6ad2;
+	--color-info: #7b8cf7;
 	--color-foreground-opposite: #ffffff;
-	--color-foreground: #f3f5f7;
-	--color-muted: #12161c;
-	--color-popover: #131922;
-	--color-foreground-muted: #8f98a6;
-	--color-foreground-btn: #eef4ff;
-	--color-secondary: #151b23;
-	--color-card: #141b24;
-	--color-accent: #18202a;
-	--color-alternate: rgba(44, 44, 44, 1);
-	--color-success: rgba(70, 171, 97, 1);
-	--color-warning: rgba(255, 152, 0, 1);
-	--color-error: rgba(239, 83, 80, 1);
-	--color-destructive: rgba(181, 0, 3, 1);
-	--color-overlay: rgb(0 0 0 / 0.62);
-	--color-ring: rgb(82 139 255 / 0.16);
+	--color-foreground: #e8e8e8;
+	--color-muted: #1c1c1d;
+	--color-panel: #1f2023;
+	--color-modal: #24262a;
+	--color-foreground-muted: #717171;
+	--color-foreground-btn: #ffffff;
+	--color-secondary: #1e1e1f;
+	--color-card: #1c1c1d;
+	--color-accent: #222224;
+	--color-alternate: #e8e8e8;
+	--color-success: #4caf7d;
+	--color-warning: #f5a623;
+	--color-error: #eb5757;
+	--color-destructive: #c53030;
+	--color-overlay: rgb(0 0 0 / 0.68);
+	--color-ring: rgb(94 106 210 / 0.28);
 
 	/* Semantic aliases */
-	--color-surface: var(--color-popover);
-	--color-surface-muted: var(--color-secondary);
-	--color-surface-elevated: var(--color-card);
-	--color-panel: var(--color-popover);
 	--color-panel-foreground: var(--color-foreground);
-	--color-floating-panel: var(--color-popover);
+	--color-floating-panel: var(--color-panel);
 	--color-floating-panel-foreground: var(--color-foreground);
 	--color-tooltip: color-mix(in srgb, white 92%, var(--color-background));
 	--color-tooltip-foreground: #0f1720;
 	--color-field: var(--color-secondary);
 	--color-field-hover: color-mix(in srgb, var(--color-accent) 65%, var(--color-secondary));
-	--color-field-focus: color-mix(in srgb, var(--color-accent) 85%, var(--color-popover));
+	--color-field-focus: color-mix(in srgb, var(--color-accent) 85%, var(--color-panel));
 	--color-field-foreground: var(--color-foreground);
 	--color-field-placeholder: color-mix(in srgb, var(--color-foreground) 34%, transparent);
 
@@ -268,41 +254,50 @@
 	--shadow-lg: 0 18px 36px rgb(0 0 0 / 0.32);
 
 	/* Variant tweaks */
-	--panel-shadow: 0 10px 22px rgb(0 0 0 / 0.18);
-	--card-highlight: rgb(120 130 148 / 0.06);
-	--panel-highlight: rgb(120 130 148 / 0.07);
+	--panel-shadow: 0 8px 24px rgb(0 0 0 / 0.28);
+	--card-highlight: rgb(255 255 255 / 0.04);
+	--panel-highlight: rgb(255 255 255 / 0.05);
 	--floating-panel-highlight: var(--panel-highlight);
-	--button-primary-border: color-mix(in srgb, var(--color-primary) 76%, #7aa2ff);
-	--button-primary-hover-bg: color-mix(in srgb, var(--color-primary) 94%, white);
-	--button-success-border: color-mix(in srgb, var(--color-success) 78%, #78d092);
-	--button-success-foreground: #effef3;
-	--button-success-hover-bg: color-mix(in srgb, var(--color-success) 92%, white);
-	--button-warning-border: color-mix(in srgb, var(--color-warning) 76%, #ffc46b);
+	--button-primary-border: color-mix(in srgb, var(--color-primary) 80%, #7b8cf7);
+	--button-primary-hover-bg: color-mix(in srgb, var(--color-primary) 88%, #7b8cf7);
+	--button-primary-shadow:
+		0 1px 2px 0 rgb(0 0 0 / 0.18), inset 0 -2px 0 0 rgb(0 0 0 / 0.12),
+		inset 0 0 0 1px rgb(255 255 255 / 0.12);
+	--button-secondary-bg: var(--color-secondary);
+	--button-secondary-border: var(--color-border);
+	--button-secondary-hover-bg: color-mix(in srgb, var(--color-secondary) 72%, var(--color-border));
+	--button-success-border: color-mix(in srgb, var(--color-success) 80%, #78d092);
+	--button-success-foreground: #f0fff5;
+	--button-success-hover-bg: color-mix(in srgb, var(--color-success) 88%, #78d092);
+	--button-warning-border: color-mix(in srgb, var(--color-warning) 80%, #ffc46b);
 	--button-warning-foreground: #fff8ef;
-	--button-warning-hover-bg: color-mix(in srgb, var(--color-warning) 92%, white);
-	--button-error-border: color-mix(in srgb, var(--color-error) 76%, #ffaaa8);
+	--button-warning-hover-bg: color-mix(in srgb, var(--color-warning) 88%, #ffc46b);
+	--button-error-border: color-mix(in srgb, var(--color-error) 80%, #ffaaa8);
 	--button-error-foreground: #fff4f4;
-	--button-error-hover-bg: color-mix(in srgb, var(--color-error) 92%, white);
-	--button-flat-foreground: color-mix(in srgb, var(--color-primary) 86%, white);
-	--button-outlined-hover-bg: color-mix(in srgb, var(--color-secondary) 78%, var(--color-accent));
-	--button-outlined-shadow:
-		0 0.5px 3px rgba(0, 0, 0, 0), inset 0 1px 0 rgba(255, 255, 255, 0.03),
-		inset 0 -1px 2px rgba(0, 0, 0, 0.2);
-	--button-ghost-hover-bg: color-mix(in srgb, var(--color-accent) 58%, transparent);
+	--button-error-hover-bg: color-mix(in srgb, var(--color-error) 88%, #ffaaa8);
+	--button-flat-foreground: color-mix(in srgb, var(--color-primary) 90%, white);
+	--button-outlined-hover-bg: color-mix(in oklch, var(--button-outlined-bg), black 6%);
+	--button-outlined-shadow: 0 1px 2px rgb(0 0 0 / 0.12);
+	--button-ghost-hover-bg: color-mix(in srgb, var(--color-foreground) 8%, transparent);
+	--button-alternate-bg: var(--color-foreground);
+	--button-alternate-border: var(--color-foreground);
+	--button-alternate-foreground: var(--color-background);
+	--button-alternate-hover-bg: color-mix(in srgb, var(--color-foreground) 88%, transparent);
+	--button-destructive-border: color-mix(in srgb, var(--color-destructive) 80%, #ff6b6b);
+	--button-destructive-foreground: #ffffff;
+	--button-destructive-hover-bg: color-mix(in srgb, var(--color-destructive) 88%, #ff6b6b);
 	--floating-menu-item-foreground: var(--color-foreground);
-	--menu-item-hover-bg: color-mix(in srgb, var(--color-secondary) 42%, transparent);
+	--menu-item-hover-bg: color-mix(in srgb, var(--color-foreground) 7%, transparent);
 	--floating-menu-item-hover-bg: var(--menu-item-hover-bg);
-	--floating-menu-item-active-bg: color-mix(in srgb, var(--color-primary) 10%, transparent);
-	--button-alternate-foreground: var(--color-foreground);
-	--button-destructive-foreground: var(--color-foreground);
+	--floating-menu-item-active-bg: color-mix(in srgb, var(--color-primary) 12%, transparent);
 	--switch-thumb-bg: var(--color-foreground-opposite);
 	--switch-track-bg: color-mix(in srgb, var(--color-secondary) 75%, var(--color-border-strong));
 	--field-outlined-shadow:
-		0 0.5px 3px rgba(0, 0, 0, 0), inset 0 1px 0 rgba(255, 255, 255, 0.03),
-		inset 0 -1px 2px rgba(0, 0, 0, 0.2);
-	--outline-shadow: inset 0 1px 0 var(--panel-highlight);
-	--toast-shadow: 0 14px 28px rgb(0 0 0 / 0.22);
-	--tooltip-shadow: 0 14px 28px rgb(0 0 0 / 0.22);
+		0 1px 2px 0 rgb(0 0 0 / 0.16), inset 0 -1px 0 0 rgb(0 0 0 / 0.16),
+		inset 0 0 0 1px var(--color-border);
+	--outline-shadow: none;
+	--toast-shadow: 0 12px 32px rgb(0 0 0 / 0.32);
+	--tooltip-shadow: 0 12px 28px rgb(0 0 0 / 0.28);
 	--skeleton-base: color-mix(in srgb, var(--color-secondary) 86%, var(--color-border-strong));
 	--skeleton-highlight: color-mix(in srgb, var(--color-accent) 68%, var(--color-foreground) 14%);
 }

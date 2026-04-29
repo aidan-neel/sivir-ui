@@ -9,6 +9,7 @@ type FlyAndScaleParams = {
 	durationVar?: string;
 	blur?: number;
 	xVar?: string;
+	yVar?: string;
 	blurVar?: string;
 	startVar?: string;
 };
@@ -19,6 +20,7 @@ type FlyNoOpacityParams = {
 	duration?: number;
 	durationVar?: string;
 	xVar?: string;
+	yVar?: string;
 	xMultiplier?: number;
 };
 
@@ -52,6 +54,7 @@ export const flyNoOpacity = (
 	const offsetX =
 		params.x ??
 		getCssNumber(node, params.xVar ?? '--motion-sheet-offset', 0) * (params.xMultiplier ?? 1);
+	const offsetY = params.y ?? getCssNumber(node, params.yVar ?? '--motion-panel-y', 5);
 
 	const scaleConversion = (valueA: number, from: [number, number], to: [number, number]) => {
 		const [minA, maxA] = from;
@@ -72,7 +75,7 @@ export const flyNoOpacity = (
 		delay: 0,
 		easing: quintOut,
 		css: (t) => {
-			const y = scaleConversion(t, [0, 1], [params.y ?? 5, 0]);
+			const y = scaleConversion(t, [0, 1], [offsetY, 0]);
 			const x = scaleConversion(t, [0, 1], [offsetX, 0]);
 			return styleToString({
 				transform: `${transform} translate3d(${x}px, ${y}px, 0)`
@@ -90,6 +93,7 @@ export const flyAndScale = (
 	const duration =
 		params.duration ?? getCssDuration(node, params.durationVar ?? '--motion-duration-panel', 240);
 	const offsetX = params.x ?? getCssNumber(node, params.xVar ?? '--motion-panel-x', 0);
+	const offsetY = params.y ?? getCssNumber(node, params.yVar ?? '--motion-panel-y', 5);
 	const blur = params.blur ?? getCssNumber(node, params.blurVar ?? '--motion-panel-blur', 0);
 	const start =
 		params.start ?? getCssNumber(node, params.startVar ?? '--motion-panel-scale-start', 0.95);
@@ -115,7 +119,7 @@ export const flyAndScale = (
 		duration,
 		delay: 0,
 		css: (t) => {
-			const y = scaleConversion(t, [0, 1], [params.y ?? 5, 0]);
+			const y = scaleConversion(t, [0, 1], [offsetY, 0]);
 			const x = scaleConversion(t, [0, 1], [offsetX, 0]);
 			const scale = scaleConversion(t, [0, 1], [start, 1]);
 			const filter = blur > 0 ? `blur(${scaleConversion(t, [0, 1], [blur, 0])}px)` : undefined;

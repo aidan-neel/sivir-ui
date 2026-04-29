@@ -14,23 +14,6 @@
     import * as Popover from '$lib/silk/components/popover';
 </script>
 
-<h1 class="py-2 h1">
-    Import
-</h1>
-
-<p class="py-2">
-    Popover exports 4 components
-</p>
-
-<ExportItem title="Root">The root component that manages the popover.</ExportItem>
-<ExportItem title="Trigger">The element that opens the popover when interacted with.</ExportItem>
-<ExportItem title="Content">The content container that appears within the popover.</ExportItem>
-<ExportItem title="Title">An optional heading inside the popover surface.</ExportItem>
-
-<h1 class="py-6 h1">
-    Example
-</h1>
-
 <ComponentPreview code={`<script lang="ts">
     import * as Popover from "$lib/silk/components/popover";
 </script>\n
@@ -91,8 +74,25 @@
         </Popover.Content>
     </Popover.Root>
 </ComponentPreview>
+<div class="flex flex-col gap-5 pt-8 pb-8">
+	<h1 class="h1">Installation</h1>
+	<CodeBlock lang="shell" code={`bunx @aidan-neel/ui add popover`} />
+</div>
 
-<h1 class="py-6 h1">
+<h1 class="py-2 h1">
+    Import
+</h1>
+
+<p class="py-2">
+    Popover exports 4 components
+</p>
+
+<ExportItem title="Root">The root component that manages the popover.</ExportItem>
+<ExportItem title="Trigger">The element that opens the popover when interacted with.</ExportItem>
+<ExportItem title="Content">The content container that appears within the popover.</ExportItem>
+<ExportItem title="Title">An optional heading inside the popover surface.</ExportItem>
+
+<h1 class="py-6 h1 pt-10">
     API Reference
 </h1>
 
@@ -166,11 +166,6 @@
 				description: "Button content rendered inside the trigger."
 			},
 			{
-				property: "variant",
-				type: "ButtonVariant",
-				description: "Button variant passed to the underlying trigger button."
-			},
-			{
 				property: "icon",
 				type: "boolean",
 				description: "Optional trigger flag used by icon-style trigger layouts."
@@ -184,30 +179,6 @@
 				property: "...rest",
 				type: "HTMLButtonAttributes",
 				description: "Additional HTML button attributes passed to the trigger.",
-				defaults: "{}"
-			}
-		]}
-	/>
-
-	<APIReference
-		title="Popover"
-		component="Title"
-		description="The title of the popover, typically used for headers or headings."
-		items={[
-			{
-				property: "children",
-				type: "Snippet",
-				description: "The content to render as the title."
-			},
-			{
-				property: "class",
-				type: "string",
-				description: "Additional CSS classes to apply to the title."
-			},
-			{
-				property: "...rest",
-				type: "HTMLParagraphAttributes",
-				description: "Additional attributes passed to the title element.",
 				defaults: "{}"
 			}
 		]}

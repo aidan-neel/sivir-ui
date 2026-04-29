@@ -23,7 +23,7 @@
 	let copying = $state<boolean>(false);
 </script>
 
-<div class="flex flex-col gap-3">
+<div class="flex flex-col gap-3" data-component-preview>
 	<div class="flex flex-row gap-4 px-1">
 		<button
 			onclick={() => (selectedTab = 1)}
@@ -46,7 +46,7 @@
 		{...rest}
 		class={cn(
 			classProp,
-			`bg-[var(--card-bg)] border border-border rounded-[var(--card-radius)] shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)] w-full rounded-lg flex flex-col overflow-hidden max-w-full ${
+			`bg-[var(--card-bg)] dark:bg-background border border-border border-dashed rounded-[var(--radius-lg)] shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)] w-full rounded-lg flex flex-col overflow-hidden max-w-full ${
 				selectedTab === 1
 					? 'items-center justify-center min-h-[20rem] px-6 py-16 md:px-10 md:py-20 bg-card/82'
 					: 'items-start justify-start bg-card/82'
@@ -89,7 +89,7 @@
 						{/if}
 					</Tooltip.Content>
 				</Tooltip.Root>
-				<CodeBlock {code} />
+				<CodeBlock class="border-none" {code} />
 			{/if}
 		</div>
 	</div>

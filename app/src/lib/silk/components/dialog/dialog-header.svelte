@@ -12,7 +12,10 @@
     const uiState = states[key].data as DialogState;
 </script>
 
-<div {...rest} class={cn(className, `flex flex-col`)}>
+<div
+	{...rest}
+	class={cn(className, 'relative flex flex-col gap-2 px-[var(--panel-padding-lg)] py-[var(--panel-padding-lg)]')}
+>
 	{@render children?.()}
 	<Button
 		onclick={() => {

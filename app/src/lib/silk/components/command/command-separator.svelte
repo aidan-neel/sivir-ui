@@ -20,7 +20,7 @@
 	<div
 		{...rest}
 		data-ui="menu-separator"
-		class={cn(className, 'bg-[var(--separator-color)] rounded-[var(--radius-pill)] h-[var(--border-size)] w-[calc(100%-1.5rem)] mx-auto my-1')}
+		class={cn(className, 'bg-[var(--separator-color)] rounded-[var(--radius-xl)] h-[var(--border-size)] w-[calc(100%-1.5rem)] mx-auto my-1')}
 	>
 		{@render children?.()}
 	</div>

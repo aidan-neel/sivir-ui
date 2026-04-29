@@ -16,10 +16,7 @@
 <h1
 	{...rest}
 	id={uiState.key + '-title'}
-	class={cn(
-		className,
-		`text-lg text-center sm:text-left font-medium tracking-[-0.02em]`
-	)}
+	class={cn(className, 'text-lg text-center font-semibold tracking-[-0.02em] sm:text-left')}
 >
 	{@render children?.()}
 </h1>

@@ -12,22 +12,7 @@
     import { Input } from '$lib/silk/components/input';
 </script>
 
-<h1 class="py-2 h1">
-    Import
-</h1>
-
-<p class="py-2">
-    Input only exports 1 component
-</p>
-
-<ExportItem title="Input">The main component for displaying a input.</ExportItem>
-
-<h1 class="py-6 h1">
-    Example
-</h1>
-
 <ComponentPreview code={`<Input
-    variant="outlined"
     type="text"
     placeholder="Username"
     label="Username"
@@ -38,8 +23,62 @@
         label="Username"
     />
 </ComponentPreview>
+<div class="flex flex-col gap-5 pt-8 pb-8">
+	<h1 class="h1">Installation</h1>
+	<CodeBlock lang="shell" code={`bunx @aidan-neel/ui add input`} />
+</div>
 
-<h1 class="py-6 h1">
+<h1 class="py-2 h1">
+    Import
+</h1>
+
+<p class="py-2">
+    Input only exports 1 component
+</p>
+
+<ExportItem title="Input">The main component for displaying a input.</ExportItem>
+
+<h1 class="py-6 h1 pt-10">
+    Variants
+</h1>
+
+<h1 class="py-2 pb-4 h2">
+    Outlined
+</h1>
+
+<ComponentPreview code={`<Input
+    variant="outlined"
+    type="text"
+    placeholder="Username"
+    label="Username"
+/>`}>
+    <Input
+        variant="outlined"
+        type="text"
+        placeholder="Username"
+        label="Username"
+    />
+</ComponentPreview>
+
+<h1 class="py-2 pb-4 h2 pt-8">
+    Secondary
+</h1>
+
+<ComponentPreview code={`<Input
+    variant="secondary"
+    type="text"
+    placeholder="Username"
+    label="Username"
+/>`}>
+    <Input
+        variant="secondary"
+        type="text"
+        placeholder="Username"
+        label="Username"
+    />
+</ComponentPreview>
+
+<h1 class="py-6 h1 pt-10">
     API Reference
 </h1>
 
@@ -54,12 +93,6 @@
 				type: "string",
 				description: "The HTML input type (e.g., text, file, checkbox).",
 				defaults: `"text"`
-			},
-			{
-				property: "variant",
-				type: `"primary" | "outlined" | "secondary"`,
-				description: "Controls the visual style of the input.",
-				defaults: `"primary"`
 			},
 			{
 				property: "label",

@@ -8,18 +8,9 @@
 </script>
 
 <script>
-	import { ComponentPreview, ExportItem, APIReference } from '$lib/components/docs';
+	import { ComponentPreview, ExportItem, APIReference, CodeBlock } from '$lib/components/docs';
 	import * as Breadcrumb from '$lib/silk/components/breadcrumb';
 </script>
-
-<h1 class="py-2 h1">Import</h1>
-<p class="py-2">Breadcrumb exports 3 components.</p>
-
-<ExportItem title="Root">Wraps the breadcrumb trail.</ExportItem>
-<ExportItem title="Item">Renders an individual breadcrumb link.</ExportItem>
-<ExportItem title="Separator">Displays the divider between breadcrumb items.</ExportItem>
-
-<h1 class="py-6 h1">Example</h1>
 
 <ComponentPreview code={`<script>
 	import * as Breadcrumb from '$lib/silk/components/breadcrumb';
@@ -40,19 +31,21 @@
 		<Breadcrumb.Item href="/docs/components/breadcrumb">Breadcrumb</Breadcrumb.Item>
 	</Breadcrumb.Root>
 </ComponentPreview>
+<div class="flex flex-col gap-5 pt-8 pb-8">
+	<h1 class="h1">Installation</h1>
+	<CodeBlock lang="shell" code={`bunx @aidan-neel/ui add breadcrumb`} />
+</div>
+
+<h1 class="py-2 h1">Import</h1>
+<p class="py-2">Breadcrumb exports 3 components.</p>
+
+<ExportItem title="Root">Wraps the breadcrumb trail.</ExportItem>
+<ExportItem title="Item">Renders an individual breadcrumb link.</ExportItem>
+<ExportItem title="Separator">Displays the divider between breadcrumb items.</ExportItem>
 
 <h1 class="py-6 h1">API Reference</h1>
 
 <div class="flex flex-col gap-10">
-	<APIReference
-		title="Breadcrumb"
-		component="Root"
-		description="Container for the breadcrumb trail."
-		items={[
-			{ property: "children", type: "Snippet", description: "Breadcrumb items and separators." },
-			{ property: "class", type: "string", description: "Additional classes for the wrapper." }
-		]}
-	/>
 
 	<APIReference
 		title="Breadcrumb"
@@ -65,13 +58,4 @@
 		]}
 	/>
 
-	<APIReference
-		title="Breadcrumb"
-		component="Separator"
-		description="Divider displayed between breadcrumb items."
-		items={[
-			{ property: "children", type: "Snippet", description: "Optional custom separator content." },
-			{ property: "class", type: "string", description: "Additional classes for the separator." }
-		]}
-	/>
 </div>

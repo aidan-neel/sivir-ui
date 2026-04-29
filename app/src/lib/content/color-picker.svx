@@ -8,19 +8,11 @@
 </script>
 
 <script lang="ts">
-	import { APIReference, ComponentPreview, ExportItem } from '$lib/components/docs';
+	import { APIReference, ComponentPreview, ExportItem, CodeBlock } from '$lib/components/docs';
 	import { ColorPicker } from '$lib/silk/components/color-picker';
 
 	let accent = $state('#155eef');
 </script>
-
-<h1 class="py-2 h1">Import</h1>
-
-<p class="py-2">Color Picker only exports 1 component.</p>
-
-<ExportItem title="ColorPicker">A guided color field with swatches, a visual picker, and hex editing.</ExportItem>
-
-<h1 class="py-6 h1">Example</h1>
 
 <ComponentPreview code={`<script lang="ts">
 	import { ColorPicker } from '$lib/silk/components/color-picker';
@@ -47,6 +39,16 @@
 		/>
 	</div>
 </ComponentPreview>
+<div class="flex flex-col gap-5 pt-8 pb-8">
+	<h1 class="h1">Installation</h1>
+	<CodeBlock lang="shell" code={`bunx @aidan-neel/ui add color-picker`} />
+</div>
+
+<h1 class="py-2 h1">Import</h1>
+
+<p class="py-2">Color Picker only exports 1 component.</p>
+
+<ExportItem title="ColorPicker">A guided color field with swatches, a visual picker, and hex editing.</ExportItem>
 
 <h1 class="py-6 h1">API Reference</h1>
 

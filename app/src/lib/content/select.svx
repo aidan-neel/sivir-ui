@@ -17,24 +17,6 @@
     let t = $state('');
 </script>
 
-<h1 class="py-2 h1">
-    Import
-</h1>
-
-<p class="py-2">
-    Select exports 5 components
-</p>
-
-<ExportItem title="Root">The top-level component that manages the select</ExportItem>
-<ExportItem title="Trigger">The element that opens the list when activated</ExportItem>
-<ExportItem title="Content">The container that holds all selectable options</ExportItem>
-<ExportItem title="Item">An option that can be chosen</ExportItem>
-<ExportItem title="Label">A non-selectable text divider for grouping options</ExportItem>
-
-<h1 class="py-6 h1">
-    Example
-</h1>
-
 <ComponentPreview code={`<script lang="ts">
     import * as Select from "$lib/silk/components/select"
 
@@ -64,8 +46,26 @@
         </Select.Content>
     </Select.Root>
 </ComponentPreview>
+<div class="flex flex-col gap-5 pt-8 pb-8">
+	<h1 class="h1">Installation</h1>
+	<CodeBlock lang="shell" code={`bunx @aidan-neel/ui add select`} />
+</div>
 
-<h1 class="py-6 h1">
+<h1 class="py-2 h1">
+    Import
+</h1>
+
+<p class="py-2">
+    Select exports 5 components
+</p>
+
+<ExportItem title="Root">The top-level component that manages the select</ExportItem>
+<ExportItem title="Trigger">The element that opens the list when activated</ExportItem>
+<ExportItem title="Content">The container that holds all selectable options</ExportItem>
+<ExportItem title="Item">An option that can be chosen</ExportItem>
+<ExportItem title="Label">A non-selectable text divider for grouping options</ExportItem>
+
+<h1 class="py-6 h1 pt-10">
     API Reference
 </h1>
 
@@ -111,11 +111,6 @@
 				description: "The placeholder or trigger content to display when no value is selected."
 			},
 			{
-				property: "variant",
-				type: "ButtonVariant",
-				description: "Optional button variant styling for the trigger."
-			},
-			{
 				property: "class",
 				type: "string",
 				description: "Additional CSS classes to apply to the trigger button."
@@ -124,30 +119,6 @@
 				property: "...rest",
 				type: "HTMLButtonAttributes | HTMLAnchorAttributes",
 				description: "Additional HTML button attributes passed to the trigger.",
-				defaults: "{}"
-			}
-		]}
-	/>
-
-	<APIReference
-		title="Select"
-		component="Label"
-		description="A non-selectable text label used to group or divide items in the list."
-		items={[
-			{
-				property: "children",
-				type: "Snippet",
-				description: "The label text to render."
-			},
-			{
-				property: "class",
-				type: "string",
-				description: "Additional CSS classes to apply to the label."
-			},
-			{
-				property: "...rest",
-				type: "HTMLParagraphAttributes",
-				description: "Additional attributes passed to the label element.",
 				defaults: "{}"
 			}
 		]}
@@ -182,27 +153,4 @@
 		]}
 	/>
 
-	<APIReference
-		title="Select"
-		component="Content"
-		description="The container that holds and displays the list of selectable items."
-		items={[
-			{
-				property: "children",
-				type: "Snippet",
-				description: "The content to render inside the list."
-			},
-			{
-				property: "class",
-				type: "string",
-				description: "Additional CSS classes to apply to the content container."
-			},
-			{
-				property: "...rest",
-				type: "HTMLDivAttributes",
-				description: "Additional attributes passed to the content wrapper.",
-				defaults: "{}"
-			}
-		]}
-	/>
 </div>

@@ -8,22 +8,11 @@
 </script>
 
 <script lang="ts">
-	import { APIReference, ComponentPreview, ExportItem } from '$lib/components/docs';
+	import { APIReference, ComponentPreview, ExportItem, CodeBlock } from '$lib/components/docs';
 	import * as Tabs from '$lib/silk/components/tabs';
 
 	let activeTab = $state('overview');
 </script>
-
-<h1 class="py-2 h1">Import</h1>
-
-<p class="py-2">Tabs exports 4 components.</p>
-
-<ExportItem title="Root">Owns the active tab value and coordinates the tab system.</ExportItem>
-<ExportItem title="List">Wraps the set of tab triggers.</ExportItem>
-<ExportItem title="Trigger">Activates a tab when clicked or focused with arrow keys.</ExportItem>
-<ExportItem title="Content">Renders the panel associated with a given tab value.</ExportItem>
-
-<h1 class="py-6 h1">Example</h1>
 
 <ComponentPreview
 	code={`<script lang="ts">
@@ -70,6 +59,19 @@
 		</Tabs.Root>
 	</div>
 </ComponentPreview>
+<div class="flex flex-col gap-5 pt-8 pb-8">
+	<h1 class="h1">Installation</h1>
+	<CodeBlock lang="shell" code={`bunx @aidan-neel/ui add tabs`} />
+</div>
+
+<h1 class="py-2 h1">Import</h1>
+
+<p class="py-2">Tabs exports 4 components.</p>
+
+<ExportItem title="Root">Owns the active tab value and coordinates the tab system.</ExportItem>
+<ExportItem title="List">Wraps the set of tab triggers.</ExportItem>
+<ExportItem title="Trigger">Activates a tab when clicked or focused with arrow keys.</ExportItem>
+<ExportItem title="Content">Renders the panel associated with a given tab value.</ExportItem>
 
 <h1 class="py-6 h1">API Reference</h1>
 
@@ -83,16 +85,6 @@
 			{ property: 'orientation', type: '"horizontal" | "vertical"', description: 'Sets arrow-key navigation direction.', defaults: '"horizontal"' },
 			{ property: 'children', type: 'Snippet', description: 'The tab list and any matching tab panels.' },
 			{ property: 'class', type: 'string', description: 'Additional classes for the root wrapper.' }
-		]}
-	/>
-
-	<APIReference
-		title="Tabs"
-		component="List"
-		description="The container for one or more tab triggers."
-		items={[
-			{ property: 'children', type: 'Snippet', description: 'One or more `Tabs.Trigger` elements.' },
-			{ property: 'class', type: 'string', description: 'Additional classes for the tab list.' }
 		]}
 	/>
 

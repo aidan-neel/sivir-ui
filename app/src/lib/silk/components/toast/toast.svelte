@@ -46,7 +46,7 @@
 	aria-atomic="true"
 	class={cn(
 		'group relative flex w-full flex-col overflow-hidden',
-		'rounded-[calc(var(--toast-radius)+0.15rem)] border border-border',
+		'rounded-[calc(var(--radius-lg)+0.15rem)] border border-border',
 		'bg-[var(--toast-bg)] shadow-[var(--toast-shadow)] backdrop-blur-[14px]',
 		'ring-1 ring-black/4 sm:ring-0',
 		'text-foreground'

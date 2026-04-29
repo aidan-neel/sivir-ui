@@ -13,6 +13,7 @@ export const components = [
 	'dialog',
 	'dropdown-menu',
 	'input',
+	'modal',
 	'popover',
 	'select',
 	'sheet',

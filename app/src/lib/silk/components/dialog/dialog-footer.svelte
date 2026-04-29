@@ -1,19 +1,10 @@
 <script lang="ts">
-	import { states, UIState, useState } from '$lib/silk/internals/state.svelte.ts';
-	import { getContext, setContext } from 'svelte';
-	import type { DialogFooterProps, DialogState } from ".";
-    import { Button, type ButtonProps } from "$lib/silk/components/button";
-    import { cn, type DefaultProps } from "$lib/silk/utils";
+	import * as Modal from '$lib/silk/components/modal';
+	import type { DialogFooterProps } from '.';
 
-    let { class: className, children, ...rest }: DialogFooterProps = $props();
-
-    const key = getContext<string>('key');
-    const uiState = states[key].data as DialogState;
+	let { class: className, children, ...rest }: DialogFooterProps = $props();
 </script>
 
-<div
-	{...rest}
-	class={cn(className, `flex flex-col-reverse sm:flex-row mt-1 gap-2 justify-end items-center`)}
->
+<Modal.Footer class={className} {...rest}>
 	{@render children?.()}
-</div>
+</Modal.Footer>

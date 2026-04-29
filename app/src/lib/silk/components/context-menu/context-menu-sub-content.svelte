@@ -15,7 +15,7 @@
 	data-ui="context-submenu-content"
 	class={cn(
 		className,
-		'min-w-[11rem] bg-[var(--color-panel)] text-[var(--color-panel-foreground)] border border-border rounded-[var(--panel-radius)] shadow-[inset_0_1px_0_var(--panel-highlight),var(--panel-shadow)] p-1'
+		'min-w-[11rem] bg-[var(--color-panel)] text-[var(--color-panel-foreground)] border border-border rounded-[var(--radius-lg)] shadow-outlined p-1'
 	)}
 >
 	{@render children?.()}

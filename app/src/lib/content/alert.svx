@@ -13,22 +13,6 @@
     import { toast } from '$lib/silk/components/toast';
 </script>
 
-<h1 class="py-2 h1">
-    Import
-</h1>
-
-<p class="py-2">
-    Alert exports 3 components
-</p>
-
-<ExportItem title="Root">The main component that contains the alert structure.</ExportItem>
-<ExportItem title="Title">The title of the alert, displayed prominently.</ExportItem>
-<ExportItem title="Description">The content or message of the alert.</ExportItem>
-
-<h1 class="py-6 h1">
-    Example
-</h1>
-
 <ComponentPreview code={`<Alert.Root variant="info">
     <Alert.Title>Verify Email</Alert.Title>
     <Alert.Description>
@@ -42,8 +26,82 @@
         </Alert.Description>
     </Alert.Root>
 </ComponentPreview>
+<div class="flex flex-col gap-5 pt-8 pb-8">
+	<h1 class="h1">Installation</h1>
+	<CodeBlock lang="shell" code={`bunx @aidan-neel/ui add alert`} />
+</div>
 
-<h1 class="py-6 h1">
+<h1 class="py-2 h1">
+    Import
+</h1>
+
+<p class="py-2">
+    Alert exports 3 components
+</p>
+
+<ExportItem title="Root">The main component that contains the alert structure.</ExportItem>
+<ExportItem title="Title">The title of the alert, displayed prominently.</ExportItem>
+<ExportItem title="Description">The content or message of the alert.</ExportItem>
+
+<h1 class="py-6 h1 pt-10">
+    Variants
+</h1>
+
+<h1 class="py-2 pb-4 h2">
+    Success
+</h1>
+
+<ComponentPreview code={`<Alert.Root variant="success">
+    <Alert.Title>Changes saved</Alert.Title>
+    <Alert.Description>
+        Your profile has been updated successfully.
+    </Alert.Description>
+</Alert.Root>`}>
+    <Alert.Root variant="success">
+        <Alert.Title>Changes saved</Alert.Title>
+        <Alert.Description>
+            Your profile has been updated successfully.
+        </Alert.Description>
+    </Alert.Root>
+</ComponentPreview>
+
+<h1 class="py-2 pb-4 h2 pt-8">
+    Warning
+</h1>
+
+<ComponentPreview code={`<Alert.Root variant="warning">
+    <Alert.Title>Storage almost full</Alert.Title>
+    <Alert.Description>
+        You have 200 MB remaining before uploads are paused.
+    </Alert.Description>
+</Alert.Root>`}>
+    <Alert.Root variant="warning">
+        <Alert.Title>Storage almost full</Alert.Title>
+        <Alert.Description>
+            You have 200 MB remaining before uploads are paused.
+        </Alert.Description>
+    </Alert.Root>
+</ComponentPreview>
+
+<h1 class="py-2 pb-4 h2 pt-8">
+    Error
+</h1>
+
+<ComponentPreview code={`<Alert.Root variant="error">
+    <Alert.Title>Payment failed</Alert.Title>
+    <Alert.Description>
+        We could not process your card. Please try again.
+    </Alert.Description>
+</Alert.Root>`}>
+    <Alert.Root variant="error">
+        <Alert.Title>Payment failed</Alert.Title>
+        <Alert.Description>
+            We could not process your card. Please try again.
+        </Alert.Description>
+    </Alert.Root>
+</ComponentPreview>
+
+<h1 class="py-6 h1 pt-10">
     API Reference
 </h1>
 
@@ -53,12 +111,6 @@
 		component="Root"
 		description="A styled alert container component with variant icons and content."
 		items={[
-			{
-				property: "variant",
-				type: `"info" | "error" | "success" | "warning"`,
-				description: "Determines the alert style and icon to render.",
-				defaults: `"info"`
-			},
 			{
 				property: "children",
 				type: "Snippet",
@@ -78,51 +130,4 @@
 		]}
 	/>
 
-	<APIReference
-		title="Alert"
-		component="Title"
-		description="The main title text of the alert."
-		items={[
-			{
-				property: "children",
-				type: "Snippet",
-				description: "The text or elements to render as the title."
-			},
-			{
-				property: "class",
-				type: "string",
-				description: "Additional CSS classes to apply to the title."
-			},
-			{
-				property: "...rest",
-				type: "HTMLParagraphAttributes",
-				description: "Additional paragraph attributes applied to the title element.",
-				defaults: "{}"
-			}
-		]}
-	/>
-
-	<APIReference
-		title="Alert"
-		component="Description"
-		description="The descriptive content of the alert."
-		items={[
-			{
-				property: "children",
-				type: "Snippet",
-				description: "The text or elements to render as the description."
-			},
-			{
-				property: "class",
-				type: "string",
-				description: "Additional CSS classes to apply to the description."
-			},
-			{
-				property: "...rest",
-				type: "HTMLParagraphAttributes",
-				description: "Additional paragraph attributes applied to the description element.",
-				defaults: "{}"
-			}
-		]}
-	/>
 </div>

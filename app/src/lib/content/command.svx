@@ -8,7 +8,7 @@
 </script>
 
 <script>
-	import { ComponentPreview, ExportItem, APIReference } from '$lib/components/docs';
+	import { ComponentPreview, ExportItem, APIReference, CodeBlock } from '$lib/components/docs';
 	import * as Command from '$lib/silk/components/command';
 	import { Shortcut } from '$lib/silk/components/shortcut';
 	import Calendar from '@lucide/svelte/icons/calendar';
@@ -21,20 +21,6 @@
 	import Settings from '@lucide/svelte/icons/settings';
 	import User from '@lucide/svelte/icons/user';
 </script>
-
-<h1 class="py-2 h1">Import</h1>
-<p class="py-2">Command exports 8 components.</p>
-
-<ExportItem title="Root">Wraps command palette state.</ExportItem>
-<ExportItem title="Trigger">Opens the command palette.</ExportItem>
-<ExportItem title="Content">Modal surface for the palette.</ExportItem>
-<ExportItem title="Search">Input used to filter commands.</ExportItem>
-<ExportItem title="Results">Container for visible command items.</ExportItem>
-<ExportItem title="Group">Optional labeled grouping for related items.</ExportItem>
-<ExportItem title="Item">Single command action.</ExportItem>
-<ExportItem title="Separator">Visual divider between command groups.</ExportItem>
-
-<h1 class="py-6 h1">Example</h1>
 
 <ComponentPreview code={`<script>
 	import * as Command from '$lib/silk/components/command';
@@ -161,6 +147,22 @@
 		</Command.Content>
 	</Command.Root>
 </ComponentPreview>
+<div class="flex flex-col gap-5 pt-8 pb-8">
+	<h1 class="h1">Installation</h1>
+	<CodeBlock lang="shell" code={`bunx @aidan-neel/ui add command`} />
+</div>
+
+<h1 class="py-2 h1">Import</h1>
+<p class="py-2">Command exports 8 components.</p>
+
+<ExportItem title="Root">Wraps command palette state.</ExportItem>
+<ExportItem title="Trigger">Opens the command palette.</ExportItem>
+<ExportItem title="Content">Modal surface for the palette.</ExportItem>
+<ExportItem title="Search">Input used to filter commands.</ExportItem>
+<ExportItem title="Results">Container for visible command items.</ExportItem>
+<ExportItem title="Group">Optional labeled grouping for related items.</ExportItem>
+<ExportItem title="Item">Single command action.</ExportItem>
+<ExportItem title="Separator">Visual divider between command groups.</ExportItem>
 
 <h1 class="py-6 h1">API Reference</h1>
 
@@ -182,7 +184,6 @@
 		description="Button that opens the command palette."
 		items={[
 			{ property: "children", type: "Snippet", description: "Trigger content." },
-			{ property: "variant", type: "ButtonVariant", description: "Button variant for the trigger." },
 			{ property: "class", type: "string", description: "Additional trigger classes." }
 		]}
 	/>

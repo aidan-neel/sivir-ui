@@ -4,12 +4,14 @@
 </script>
 
 <main class="flex w-full flex-col pb-12">
-	<PageHeader title="Styling" description="Tokens first, component overrides second" compact={true} />
+	<PageHeader
+		title="Styling"
+		description="Tokens first, component overrides second"
+		compact={true}
+	/>
 
 	<section class="flex flex-col gap-2 pt-6">
-		<p class="text-base">
-			The styling system is built around three layers:
-		</p>
+		<p class="text-base">The styling system is built around three layers:</p>
 		<p class="text-base">
 			1. Core semantic tokens like `--color-background`, `--color-primary`, and `--radius-lg`
 		</p>
@@ -40,7 +42,7 @@
 	--color-foreground: #211c18;
 	--color-foreground-btn: #fffaf3;
 	--color-secondary: #efe8dc;
-	--color-popover: #fffdf8;
+	--color-panel: #fffdf8;
 	--color-card: #f7f1e7;
 	--radius-lg: 0.8rem;
 	--color-ring: rgb(143 61 46 / 0.24);
@@ -54,7 +56,7 @@
 	--color-foreground: #f4ece6;
 	--color-foreground-btn: #1a1613;
 	--color-secondary: #201a18;
-	--color-popover: #1e1816;
+	--color-panel: #1e1816;
 	--color-card: #1b1614;
 	--color-ring: rgb(240 141 105 / 0.3);
 }`}
@@ -93,8 +95,8 @@
 		<p class="docs-section-heading">Per-Component Overrides</p>
 		<p class="text-base">
 			Every major primitive exposes `data-ui`, and many controls also expose `data-variant` and
-			`data-size`. That gives you a clean way to target one family of components without
-			forking the library.
+			`data-size`. That gives you a clean way to target one family of components without forking the
+			library.
 		</p>
 
 		<CodeBlock

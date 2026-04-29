@@ -8,7 +8,7 @@
 </script>
 
 <script>
-	import { ComponentPreview, ExportItem, APIReference } from '$lib/components/docs';
+	import { ComponentPreview, ExportItem, APIReference, CodeBlock } from '$lib/components/docs';
 	import * as Combobox from '$lib/silk/components/combobox';
 
 	const companies = [
@@ -19,18 +19,6 @@
 		{ value: "amazon", label: "Amazon" }
 	];
 </script>
-
-<h1 class="py-2 h1">Import</h1>
-<p class="py-2">Combobox exports 6 components.</p>
-
-<ExportItem title="Root">Wraps the combobox state and interactions.</ExportItem>
-<ExportItem title="Trigger">Opens the list and displays the current selection.</ExportItem>
-<ExportItem title="Content">Popover surface for the search and results.</ExportItem>
-<ExportItem title="Search">Search input for filtering items.</ExportItem>
-<ExportItem title="Results">Container for combobox items.</ExportItem>
-<ExportItem title="Item">Selectable result row.</ExportItem>
-
-<h1 class="py-6 h1">Example</h1>
 
 <ComponentPreview code={`<script>
 	import * as Combobox from '$lib/silk/components/combobox';
@@ -69,6 +57,20 @@
 		</Combobox.Content>
 	</Combobox.Root>
 </ComponentPreview>
+<div class="flex flex-col gap-5 pt-8 pb-8">
+	<h1 class="h1">Installation</h1>
+	<CodeBlock lang="shell" code={`bunx @aidan-neel/ui add combobox`} />
+</div>
+
+<h1 class="py-2 h1">Import</h1>
+<p class="py-2">Combobox exports 6 components.</p>
+
+<ExportItem title="Root">Wraps the combobox state and interactions.</ExportItem>
+<ExportItem title="Trigger">Opens the list and displays the current selection.</ExportItem>
+<ExportItem title="Content">Popover surface for the search and results.</ExportItem>
+<ExportItem title="Search">Search input for filtering items.</ExportItem>
+<ExportItem title="Results">Container for combobox items.</ExportItem>
+<ExportItem title="Item">Selectable result row.</ExportItem>
 
 <h1 class="py-6 h1">API Reference</h1>
 
@@ -91,7 +93,6 @@
 		items={[
 			{ property: "children", type: "Snippet", description: "Fallback label shown before a selection is made." },
 			{ property: "icon", type: "boolean", description: "Shows or hides the chevron icon.", defaults: "true" },
-			{ property: "variant", type: "ButtonVariant", description: "Button variant passed to the trigger." },
 			{ property: "class", type: "string", description: "Additional trigger classes." }
 		]}
 	/>

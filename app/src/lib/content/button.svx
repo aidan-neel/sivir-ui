@@ -12,6 +12,20 @@
     import { Button } from '$lib/silk/components/button';
 </script>
 
+<ComponentPreview code={`<script>
+    import { Button } from '$lib/silk/components/button';
+</script>\n
+<Button>Button</Button>
+`}>
+    <div class="flex flex-row flex-wrap gap-3 px-12">
+        <Button class="w-auto">Button</Button>
+    </div>
+</ComponentPreview>
+<div class="flex flex-col gap-5 pt-8 pb-8">
+	<h1 class="h1">Installation</h1>
+	<CodeBlock lang="shell" code={`bunx @aidan-neel/ui add button`} />
+</div>
+
 <h1 class="py-2 h1">
     Import
 </h1>
@@ -22,33 +36,105 @@
 
 <ExportItem title="Button">The main component for displaying a button.</ExportItem>
 
-<h1 class="py-6 h1">
-    Example
+<h1 class="py-6 h1 pt-10">
+    Variants
 </h1>
 
-<ComponentPreview code={`<script>
-    import { Button } from '$lib/silk/components/button';
-</script>\n
-<Button>Button</Button>
-<Button variant="flat">Flat</Button>
-<Button variant="outlined">Outlined</Button>
-<Button variant="secondary">Secondary</Button>
-<Button variant="ghost">Ghost</Button>
-<Button variant="alternate">Alternate</Button>
-<Button variant="destructive">Destructive</Button>
-`}>
+<h1 class="py-2 pb-4 h2">
+    Outlined
+</h1>
+
+<ComponentPreview code={`<Button variant="outlined">Outlined</Button>`}>
     <div class="flex flex-row flex-wrap gap-3 px-12">
-        <Button class="w-auto">Button</Button>
-        <Button class="w-auto" variant="flat">Flat</Button>
         <Button class="w-auto" variant="outlined">Outlined</Button>
+    </div>
+</ComponentPreview>
+
+<h1 class="py-2 pb-4 h2 pt-8">
+    Flat
+</h1>
+
+<ComponentPreview code={`<Button variant="flat">Flat</Button>`}>
+    <div class="flex flex-row flex-wrap gap-3 px-12">
+        <Button class="w-auto" variant="flat">Flat</Button>
+    </div>
+</ComponentPreview>
+
+<h1 class="py-2 pb-4 h2 pt-8">
+    Secondary
+</h1>
+
+<ComponentPreview code={`<Button variant="secondary">Secondary</Button>`}>
+    <div class="flex flex-row flex-wrap gap-3 px-12">
         <Button class="w-auto" variant="secondary">Secondary</Button>
+    </div>
+</ComponentPreview>
+
+<h1 class="py-2 pb-4 h2 pt-8">
+    Ghost
+</h1>
+
+<ComponentPreview code={`<Button variant="ghost">Ghost</Button>`}>
+    <div class="flex flex-row flex-wrap gap-3 px-12">
         <Button class="w-auto" variant="ghost">Ghost</Button>
+    </div>
+</ComponentPreview>
+
+<h1 class="py-2 pb-4 h2 pt-8">
+    Alternate
+</h1>
+
+<ComponentPreview code={`<Button variant="alternate">Alternate</Button>`}>
+    <div class="flex flex-row flex-wrap gap-3 px-12">
         <Button class="w-auto" variant="alternate">Alternate</Button>
+    </div>
+</ComponentPreview>
+
+<h1 class="py-2 pb-4 h2 pt-8">
+    Destructive
+</h1>
+
+<ComponentPreview code={`<Button variant="destructive">Destructive</Button>`}>
+    <div class="flex flex-row flex-wrap gap-3 px-12">
         <Button class="w-auto" variant="destructive">Destructive</Button>
     </div>
 </ComponentPreview>
 
-<h1 class="py-6 h1">
+<h1 class="py-6 h1 pt-10">
+    Sizes
+</h1>
+
+<h1 class="py-2 pb-4 h2">
+    Small
+</h1>
+
+<ComponentPreview code={`<Button size="sm">Small</Button>`}>
+    <div class="flex flex-row flex-wrap gap-3 px-12">
+        <Button class="w-auto" size="sm">Small</Button>
+    </div>
+</ComponentPreview>
+
+<h1 class="py-2 pb-4 h2 pt-8">
+    Default
+</h1>
+
+<ComponentPreview code={`<Button>Default</Button>`}>
+    <div class="flex flex-row flex-wrap gap-3 px-12">
+        <Button class="w-auto">Default</Button>
+    </div>
+</ComponentPreview>
+
+<h1 class="py-2 pb-4 h2 pt-8">
+    Large
+</h1>
+
+<ComponentPreview code={`<Button size="lg">Large</Button>`}>
+    <div class="flex flex-row flex-wrap gap-3 px-12">
+        <Button class="w-auto" size="lg">Large</Button>
+    </div>
+</ComponentPreview>
+
+<h1 class="py-6 h1 pt-10">
     API Reference
 </h1>
 
@@ -58,18 +144,6 @@
 		component="Root"
 		description="A flexible button component supporting multiple variants and optional link behavior."
 		items={[
-			{
-				property: "variant",
-				type: `"primary" | "flat" | "outlined" | "secondary" | "ghost" | "alternate" | "destructive"`,
-				description: "Controls the visual style of the button.",
-				defaults: `"primary"`
-			},
-			{
-				property: "size",
-				type: `"default" | "icon"`,
-				description: "Optional size preset for standard or icon-only buttons.",
-				defaults: `"default"`
-			},
 			{
 				property: "children",
 				type: "Snippet",

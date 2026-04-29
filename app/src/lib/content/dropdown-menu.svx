@@ -14,21 +14,6 @@ import Shortcut from '$lib/silk/components/shortcut';
 import * as DropdownMenu from '$lib/silk/components/dropdown-menu';
 </script>
 
-<h1 class="py-2 h1">Import</h1>
-<p class="py-2">DropdownMenu exports multiple components for building structured popovers.</p>
-
-<ExportItem title="Root">Manages dropdown state and placement.</ExportItem>
-<ExportItem title="Trigger">Button that toggles the dropdown.</ExportItem>
-<ExportItem title="Content">Container for dropdown items.</ExportItem>
-<ExportItem title="Item">Clickable menu item with optional callback or shortcut.</ExportItem>
-<ExportItem title="Label">Text header inside the dropdown.</ExportItem>
-<ExportItem title="Separator">Visual divider between items.</ExportItem>
-<ExportItem title="Sub">Wrapper for nested submenu.</ExportItem>
-<ExportItem title="SubTrigger">Row that opens a nested submenu.</ExportItem>
-<ExportItem title="SubContent">Container for items inside a Sub.</ExportItem>
-
-<h1 class="py-6 h1">Example</h1>
-
 <ComponentPreview code={`<script lang="ts">
     import * as DropdownMenu from "$lib/silk/components/dropdown-menu"
 </script>\n
@@ -115,6 +100,23 @@ import * as DropdownMenu from '$lib/silk/components/dropdown-menu';
         </DropdownMenu.Content>
     </DropdownMenu.Root>
 </ComponentPreview>
+<div class="flex flex-col gap-5 pt-8 pb-8">
+	<h1 class="h1">Installation</h1>
+	<CodeBlock lang="shell" code={`bunx @aidan-neel/ui add dropdown-menu`} />
+</div>
+
+<h1 class="py-2 h1">Import</h1>
+<p class="py-2">DropdownMenu exports multiple components for building structured popovers.</p>
+
+<ExportItem title="Root">Manages dropdown state and placement.</ExportItem>
+<ExportItem title="Trigger">Button that toggles the dropdown.</ExportItem>
+<ExportItem title="Content">Container for dropdown items.</ExportItem>
+<ExportItem title="Item">Clickable menu item with optional callback or shortcut.</ExportItem>
+<ExportItem title="Label">Text header inside the dropdown.</ExportItem>
+<ExportItem title="Separator">Visual divider between items.</ExportItem>
+<ExportItem title="Sub">Wrapper for nested submenu.</ExportItem>
+<ExportItem title="SubTrigger">Row that opens a nested submenu.</ExportItem>
+<ExportItem title="SubContent">Container for items inside a Sub.</ExportItem>
 
 <h1 class="py-6 h1">API Reference</h1>
 
@@ -139,7 +141,6 @@ import * as DropdownMenu from '$lib/silk/components/dropdown-menu';
     items={[
       { property: "children", type: "Snippet", description: "Trigger content." },
       { property: "class", type: "string", description: "CSS classes." },
-      { property: "variant", type: `"ghost" | "outlined" | "primary"`, description: "Button style variant." },
       { property: "...rest", type: "HTMLAttributes<HTMLElement>", description: "Extra attributes.", defaults: "{}" }
     ]}
   />
@@ -168,58 +169,4 @@ import * as DropdownMenu from '$lib/silk/components/dropdown-menu';
     ]}
   />
 
-  <APIReference
-    title="DropdownMenu"
-    component="Label"
-    description="Text header inside dropdown."
-    items={[
-      { property: "children", type: "Snippet", description: "Label content." },
-      { property: "class", type: "string", description: "CSS classes." },
-      { property: "...rest", type: "HTMLAttributes<HTMLElement>", description: "Extra attributes.", defaults: "{}" }
-    ]}
-  />
-
-  <APIReference
-    title="DropdownMenu"
-    component="Separator"
-    description="Divider between items."
-    items={[
-      { property: "children", type: "Snippet", description: "Optional content." },
-      { property: "class", type: "string", description: "CSS classes." },
-      { property: "...rest", type: "HTMLAttributes<HTMLElement>", description: "Extra attributes.", defaults: "{}" }
-    ]}
-  />
-
-  <APIReference
-    title="DropdownMenu"
-    component="Sub"
-    description="Wrapper for nested submenu trigger and content."
-    items={[
-      { property: "children", type: "Snippet", description: "SubTrigger and SubContent." },
-      { property: "class", type: "string", description: "CSS classes." },
-      { property: "...rest", type: "HTMLAttributes<HTMLElement>", description: "Extra attributes.", defaults: "{}" }
-    ]}
-  />
-
-  <APIReference
-    title="DropdownMenu"
-    component="SubTrigger"
-    description="Trigger row that opens a submenu."
-    items={[
-      { property: "children", type: "Snippet", description: "Visible label for the submenu trigger." },
-      { property: "class", type: "string", description: "CSS classes." },
-      { property: "...rest", type: "ButtonProps", description: "Extra button props." }
-    ]}
-  />
-
-  <APIReference
-    title="DropdownMenu"
-    component="SubContent"
-    description="Container for items inside a Sub."
-    items={[
-      { property: "children", type: "Snippet", description: "Submenu items." },
-      { property: "class", type: "string", description: "CSS classes." },
-      { property: "...rest", type: "HTMLDivAttributes", description: "Extra attributes.", defaults: "{}" }
-    ]}
-  />
 </div>

@@ -8,17 +8,10 @@
 </script>
 
 <script>
-	import { ComponentPreview, ExportItem, APIReference } from '$lib/components/docs';
+	import { ComponentPreview, ExportItem, APIReference, CodeBlock } from '$lib/components/docs';
 	import { Button } from '$lib/silk/components/button';
 	import { Shortcut } from '$lib/silk/components/shortcut';
 </script>
-
-<h1 class="py-2 h1">Import</h1>
-<p class="py-2">Shortcut exports a single component.</p>
-
-<ExportItem title="Shortcut">Renders shortcut text and listens for the matching key combination.</ExportItem>
-
-<h1 class="py-6 h1">Example</h1>
 
 <ComponentPreview code={`<script>
 	import { Button } from '$lib/silk/components/button';
@@ -34,6 +27,15 @@
 		<Shortcut shortcut="Ctrl+B">Ctrl+B</Shortcut>
 	</Button>
 </ComponentPreview>
+<div class="flex flex-col gap-5 pt-8 pb-8">
+	<h1 class="h1">Installation</h1>
+	<CodeBlock lang="shell" code={`bunx @aidan-neel/ui add shortcut`} />
+</div>
+
+<h1 class="py-2 h1">Import</h1>
+<p class="py-2">Shortcut exports a single component.</p>
+
+<ExportItem title="Shortcut">Renders shortcut text and listens for the matching key combination.</ExportItem>
 
 <h1 class="py-6 h1">API Reference</h1>
 

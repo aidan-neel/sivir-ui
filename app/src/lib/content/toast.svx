@@ -44,8 +44,8 @@ toast({
             label: 'Dismiss',
             variant: 'ghost',
             callback: () => restoreFile(),
-        },
-    ],
+        }
+		]},
 });
 
 // Persistent (won't auto-dismiss)
@@ -62,22 +62,6 @@ t.exit();`;
         });
     }
 </script>
-
-<h1 class="py-2 h1">
-    Import
-</h1>
-
-<p class="py-2">
-    Toast exports 2 components and 1 function.
-</p>
-
-<ExportItem title="toast()">A function to display a toast notification. Also has shorthand methods: <CodeSnippet>toast.success()</CodeSnippet>, <CodeSnippet>toast.error()</CodeSnippet>, <CodeSnippet>toast.warning()</CodeSnippet>, <CodeSnippet>toast.info()</CodeSnippet>, <CodeSnippet>toast.promise()</CodeSnippet>.</ExportItem>
-<ExportItem title="Toast">The individual toast notification component.</ExportItem>
-<ExportItem title="Toaster">The container that manages and renders active toasts.</ExportItem>
-
-<h1 class="py-6 h1">
-    Example
-</h1>
 
 <ComponentPreview code={`<script>
     import { toast } from '$lib/silk/components/toast';
@@ -123,8 +107,8 @@ t.exit();`;
         actions: [
             { label: 'View', variant: 'success', callback: () => {} },
             { label: 'Undo', variant: 'warning', callback: () => {} },
-            { label: 'Dismiss', variant: 'ghost', callback: () => {} },
-        ],
+            { label: 'Dismiss', variant: 'ghost', callback: () => {} }
+		]},
     })}>
         With Action
     </Button>
@@ -134,8 +118,8 @@ t.exit();`;
         type: 'error',
         actions: [
             { label: 'Delete', variant: 'error', callback: () => {} },
-            { label: 'Cancel', variant: 'secondary', callback: () => {} },
-        ],
+            { label: 'Cancel', variant: 'secondary', callback: () => {} }
+		]},
     })}>
         Action Variants
     </Button>
@@ -170,8 +154,8 @@ t.exit();`;
             actions: [
                 { label: 'View', variant: 'success', callback: () => {} },
                 { label: 'Undo', variant: 'warning', callback: () => {} },
-                { label: 'Dismiss', variant: 'ghost', callback: () => {} },
-            ],
+                { label: 'Dismiss', variant: 'ghost', callback: () => {} }
+		]},
         })}>
             With Action
         </Button>
@@ -181,13 +165,29 @@ t.exit();`;
             type: 'error',
             actions: [
                 { label: 'Delete', variant: 'error', callback: () => {} },
-                { label: 'Cancel', variant: 'secondary', callback: () => {} },
-            ],
+                { label: 'Cancel', variant: 'secondary', callback: () => {} }
+		]},
         })}>
             Action Variants
         </Button>
     </div>
 </ComponentPreview>
+<div class="flex flex-col gap-5 pt-8 pb-8">
+	<h1 class="h1">Installation</h1>
+	<CodeBlock lang="shell" code={`bunx @aidan-neel/ui add toast`} />
+</div>
+
+<h1 class="py-2 h1">
+    Import
+</h1>
+
+<p class="py-2">
+    Toast exports 2 components and 1 function.
+</p>
+
+<ExportItem title="toast()">A function to display a toast notification. Also has shorthand methods: <CodeSnippet>toast.success()</CodeSnippet>, <CodeSnippet>toast.error()</CodeSnippet>, <CodeSnippet>toast.warning()</CodeSnippet>, <CodeSnippet>toast.info()</CodeSnippet>, <CodeSnippet>toast.promise()</CodeSnippet>.</ExportItem>
+<ExportItem title="Toast">The individual toast notification component.</ExportItem>
+<ExportItem title="Toaster">The container that manages and renders active toasts.</ExportItem>
 
 <h1 class="py-6 h1">
     Usage
@@ -209,7 +209,7 @@ t.exit();`;
 
 <CodeBlock code={toastUsageCode}></CodeBlock>
 
-<h1 class="py-6 h1">
+<h1 class="py-6 h1 pt-10">
     API Reference
 </h1>
 

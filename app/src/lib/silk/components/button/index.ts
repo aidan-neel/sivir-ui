@@ -17,7 +17,7 @@ export type ButtonVariant =
 export type ButtonProps = {
 	href?: string;
 	variant?: ButtonVariant;
-	size?: 'icon' | 'default';
+	size?: 'sm' | 'default' | 'lg' | 'icon';
 	children?: Snippet;
 	element?: HTMLButtonElement | HTMLAnchorElement | undefined;
 	onhover?: () => void;

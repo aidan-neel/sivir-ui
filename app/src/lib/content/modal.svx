@@ -1,0 +1,119 @@
+<script module lang="ts">
+	export const metadata = {
+	  "title": "Modal",
+	  "description": "A base fullscreen overlay primitive for dialogs, confirmations, and custom modal flows.",
+	  "component": true,
+	  "source": "https://github.com/aidan-neel/silk/tree/main/registry/silk/default/modal"
+};
+</script>
+
+<script>
+	import { ComponentPreview, CodeBlock, ExportItem, APIReference } from '$lib/components/docs';
+	import * as Modal from '$lib/silk/components/modal';
+</script>
+
+<ComponentPreview code={`<script>
+	import * as Modal from '$lib/silk/components/modal';
+</script>
+
+<Modal.Root>
+	<Modal.Trigger variant="outlined">Open Modal</Modal.Trigger>
+	<Modal.Content class="max-w-[30rem]">
+		<Modal.Header>
+			<Modal.Title>Invite a collaborator</Modal.Title>
+			<Modal.Description>Send access to a teammate and keep the work moving.</Modal.Description>
+		</Modal.Header>
+		<div class="px-[var(--panel-padding-lg)] pb-[var(--panel-padding-lg)] text-sm text-foreground-muted">
+			Choose a teammate, confirm access, and ship the change from one reusable modal layer.
+		</div>
+		<Modal.Footer>
+			<Modal.Close>Cancel</Modal.Close>
+			<Modal.Confirm>Send Invite</Modal.Confirm>
+		</Modal.Footer>
+	</Modal.Content>
+</Modal.Root>`}>
+	<Modal.Root>
+		<Modal.Trigger variant="outlined">Open Modal</Modal.Trigger>
+		<Modal.Content class="max-w-[30rem]">
+			<Modal.Header>
+				<Modal.Title>Invite a collaborator</Modal.Title>
+				<Modal.Description>Send access to a teammate and keep the work moving.</Modal.Description>
+			</Modal.Header>
+			<div class="px-[var(--panel-padding-lg)] pb-[var(--panel-padding-lg)] text-sm text-foreground-muted">
+				Choose a teammate, confirm access, and ship the change from one reusable modal layer.
+			</div>
+			<Modal.Footer>
+				<Modal.Close>Cancel</Modal.Close>
+				<Modal.Confirm>Send Invite</Modal.Confirm>
+			</Modal.Footer>
+		</Modal.Content>
+	</Modal.Root>
+</ComponentPreview>
+<div class="flex flex-col gap-5 pt-8 pb-8">
+	<h1 class="h1">Installation</h1>
+	<CodeBlock lang="shell" code={`bunx @aidan-neel/ui add modal`} />
+</div>
+
+<h1 class="py-2 h1">Import</h1>
+<p class="py-2">Modal exports 8 components.</p>
+
+<ExportItem title="Root">Owns the open state for the modal.</ExportItem>
+<ExportItem title="Trigger">Button that opens the modal.</ExportItem>
+<ExportItem title="Content">Centered modal surface rendered in the overlay layer.</ExportItem>
+<ExportItem title="Header">Top section for title and description.</ExportItem>
+<ExportItem title="Title">Primary modal heading.</ExportItem>
+<ExportItem title="Description">Supporting copy under the title.</ExportItem>
+<ExportItem title="Footer">Action row for close and confirm buttons.</ExportItem>
+<ExportItem title="Close / Confirm">Convenience action buttons that close the modal.</ExportItem>
+
+<h1 class="py-6 h1 pt-10">API Reference</h1>
+
+<div class="flex flex-col gap-10">
+	<APIReference
+		title="Modal"
+		component="Root"
+		description="Controls modal visibility."
+		items={[
+			{ property: "open", type: "boolean", description: "Bound open state for the modal." },
+			{ property: "children", type: "Snippet", description: "Trigger and content." }
+		]}
+	/>
+
+	<APIReference
+		title="Modal"
+		component="Trigger"
+		description="Button used to open the modal."
+		items={[
+			{ property: "children", type: "Snippet", description: "Trigger label or custom content." }
+		]}
+	/>
+
+	<APIReference
+		title="Modal"
+		component="Content"
+		description="Shared fullscreen overlay surface used by modal-based components."
+		items={[
+			{ property: "allowClickOutside", type: "boolean", description: "Whether outside clicks should dismiss the modal.", defaults: "true" },
+			{ property: "role", type: `"dialog" | "alertdialog"`, description: "Accessible role applied to the panel.", defaults: `"dialog"` },
+			{ property: "class", type: "string", description: "Additional classes for the modal surface." }
+		]}
+	/>
+
+	<APIReference
+		title="Modal"
+		component="Confirm"
+		description="Convenience action button that closes the modal after running its callback."
+		items={[
+			{ property: "onclick", type: "() => void", description: "Optional click handler called before the modal closes." }
+		]}}
+	/>
+
+	<APIReference
+		title="Modal"
+		component="Close"
+		description="Convenience action button that closes the modal."
+		items={[
+			{ property: "onclick", type: "() => void", description: "Optional click handler called before the modal closes." }
+		]}}
+	/>
+</div>

@@ -12,6 +12,20 @@
     import { Badge } from '$lib/silk/components/badge';
 </script>
 
+<ComponentPreview code={`<script>
+    import { Badge } from '$lib/silk/components/badge';
+</script>\n
+<Badge>Primary</Badge>`}>
+    <div class="flex flex-row flex-wrap gap-2 px-12">
+        <Badge class="w-auto max-w-[7rem]">Primary</Badge>
+    </div>
+</ComponentPreview>
+
+<div class="flex flex-col gap-5 pt-8 pb-8">
+	<h1 class="h1">Installation</h1>
+	<CodeBlock lang="shell" code={`bunx @aidan-neel/ui add badge`} />
+</div>
+
 <h1 class="py-2 h1">
     Import
 </h1>
@@ -22,47 +36,79 @@
 
 <ExportItem title="Badge">The main component for displaying a badge.</ExportItem>
 
-<h1 class="py-6 h1">
-    Example
+<h1 class="py-6 h1 pt-10">
+    Variants
 </h1>
 
-<ComponentPreview code={`<script>
-    import { Badge } from '$lib/silk/components/badge';
-</script>\n
-<Badge>Primary</Badge>
-<Badge variant="flat">Flat</Badge>
-<Badge variant="outlined">Outlined</Badge>
-<Badge variant="secondary">Secondary</Badge>
-<Badge variant="ghost">Ghost</Badge>
-<Badge variant="alternate">Alternate</Badge>
-<Badge variant="destructive">Destructive</Badge>
-`}>
+<h1 class="py-2 pb-4 h2">
+    Outlined
+</h1>
+
+<ComponentPreview code={`<Badge variant="outlined">Outlined</Badge>`}>
     <div class="flex flex-row flex-wrap gap-2 px-12">
-        <Badge class="w-auto max-w-[7rem]">Badge</Badge>
-        <Badge class="w-auto max-w-[7rem]" variant="flat">Flat</Badge>
         <Badge class="w-auto max-w-[7rem]" variant="outlined">Outlined</Badge>
+    </div>
+</ComponentPreview>
+
+<h1 class="py-2 pb-4 h2 pt-8">
+    Flat
+</h1>
+
+<ComponentPreview code={`<Badge variant="flat">Flat</Badge>`}>
+    <div class="flex flex-row flex-wrap gap-2 px-12">
+        <Badge class="w-auto max-w-[7rem]" variant="flat">Flat</Badge>
+    </div>
+</ComponentPreview>
+
+<h1 class="py-2 pb-4 h2 pt-8">
+    Secondary
+</h1>
+
+<ComponentPreview code={`<Badge variant="secondary">Secondary</Badge>`}>
+    <div class="flex flex-row flex-wrap gap-2 px-12">
         <Badge class="w-auto max-w-[7rem]" variant="secondary">Secondary</Badge>
+    </div>
+</ComponentPreview>
+
+<h1 class="py-2 pb-4 h2 pt-8">
+    Ghost
+</h1>
+
+<ComponentPreview code={`<Badge variant="ghost">Ghost</Badge>`}>
+    <div class="flex flex-row flex-wrap gap-2 px-12">
         <Badge class="w-auto max-w-[7rem]" variant="ghost">Ghost</Badge>
+    </div>
+</ComponentPreview>
+
+<h1 class="py-2 pb-4 h2 pt-8">
+    Alternate
+</h1>
+
+<ComponentPreview code={`<Badge variant="alternate">Alternate</Badge>`}>
+    <div class="flex flex-row flex-wrap gap-2 px-12">
         <Badge class="w-auto max-w-[7rem]" variant="alternate">Alternate</Badge>
+    </div>
+</ComponentPreview>
+
+<h1 class="py-2 pb-4 h2 pt-8">
+    Destructive
+</h1>
+
+<ComponentPreview code={`<Badge variant="destructive">Destructive</Badge>`}>
+    <div class="flex flex-row flex-wrap gap-2 px-12">
         <Badge class="w-auto max-w-[7rem]" variant="destructive">Destructive</Badge>
     </div>
 </ComponentPreview>
 
-<h1 class="py-6 h1">
+<h1 class="py-6 h1 pt-10">
     API Reference
-</h1>
+</h1>	
 
 <APIReference
 	title="Badge"
 	component="Badge"
 	description="A stylable label component for highlighting statuses or metadata."
 	items={[
-		{
-			property: "variant",
-			type: `"primary" | "flat" | "outlined" | "secondary" | "ghost" | "alternate" | "destructive"`,
-			description: "Sets the visual style of the badge.",
-			defaults: `"primary"`
-		},
 		{
 			property: "children",
 			type: "Snippet",

@@ -41,14 +41,14 @@
 	{#if checked}
 		<div
 			in:scaleFade={{ duration: 200 }}
-			class="flex h-4 w-4 items-center justify-center rounded-[var(--checkbox-radius)] bg-primary p-0 ring-offset-2 transition-[box-shadow,transform] peer-focus-visible:ring-2 peer-focus-visible:ring-[var(--color-ring)] peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-background"
+			class="flex h-4 w-4 items-center justify-center rounded-[var(--radius-sm)] bg-primary p-0 ring-offset-2 transition-[box-shadow,transform] peer-focus-visible:ring-2 peer-focus-visible:ring-[var(--color-ring)] peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-background"
 		>
 			<Check size="12" class="text-foreground-btn" />
 		</div>
 	{:else}
 		<div
 			in:scaleFade={{ duration: 200 }}
-			class="flex h-4 w-4 items-center justify-center rounded-[var(--checkbox-radius)] border bg-popover p-0 duration-200 transition-[background-color,box-shadow,transform] peer-hover:bg-secondary peer-focus-visible:bg-secondary peer-focus-visible:ring-2 peer-focus-visible:ring-[var(--color-ring)] peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-background"
+			class="flex h-4 w-4 items-center justify-center rounded-[var(--radius-sm)] border bg-[var(--checkbox-bg)] p-0 duration-200 transition-[background-color,box-shadow,transform] peer-hover:bg-[var(--color-field-hover)] peer-focus-visible:bg-[var(--color-field-hover)] peer-focus-visible:ring-2 peer-focus-visible:ring-[var(--color-ring)] peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-background"
 		></div>
 	{/if}
 	{#if label}

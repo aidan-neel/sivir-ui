@@ -8,22 +8,12 @@
 </script>
 
 <script>
-	import { ComponentPreview, ExportItem, APIReference } from '$lib/components/docs';
+	import { ComponentPreview, ExportItem, APIReference, CodeBlock } from '$lib/components/docs';
 	import { Switch } from '$lib/silk/components/switch';
 
 	let notifications = $state(true);
 	let marketing = $state(false);
 </script>
-
-<h1 class="py-2 h1">Import</h1>
-
-<p class="py-2">
-	Switch exports a single component for binary toggles with optional supporting copy.
-</p>
-
-<ExportItem title="Switch">A button-based switch control for on/off settings.</ExportItem>
-
-<h1 class="py-6 h1">Example</h1>
 
 <ComponentPreview
 	code={`<script lang="ts">
@@ -70,6 +60,18 @@
 		/>
 	</div>
 </ComponentPreview>
+<div class="flex flex-col gap-5 pt-8 pb-8">
+	<h1 class="h1">Installation</h1>
+	<CodeBlock lang="shell" code={`bunx @aidan-neel/ui add switch`} />
+</div>
+
+<h1 class="py-2 h1">Import</h1>
+
+<p class="py-2">
+	Switch exports a single component for binary toggles with optional supporting copy.
+</p>
+
+<ExportItem title="Switch">A button-based switch control for on/off settings.</ExportItem>
 
 <h1 class="py-6 h1">API Reference</h1>
 

@@ -40,7 +40,10 @@
 			tabs?.[tabs.length - 1]?.click();
 			return;
 		}
-		if ((isHorizontal && event.key === 'ArrowRight') || (!isHorizontal && event.key === 'ArrowDown')) {
+		if (
+			(isHorizontal && event.key === 'ArrowRight') ||
+			(!isHorizontal && event.key === 'ArrowDown')
+		) {
 			event.preventDefault();
 			moveFocus(target, 1);
 		}
@@ -57,7 +60,7 @@
 	data-ui="tabs-list"
 	class={cn(
 		className,
-		'inline-flex items-center gap-1 rounded-[var(--radius-md)] border border-border bg-background p-0.5 shadow-[var(--outline-shadow)]'
+		'inline-flex items-center gap-0.5 rounded-[calc(var(--radius-lg)+1px)] border border-border bg-background p-[1px] shadow-[var(--outline-shadow)]'
 	)}
 	onkeydown={handleKeydown}
 	{...rest}

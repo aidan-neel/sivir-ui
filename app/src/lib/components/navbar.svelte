@@ -163,7 +163,7 @@
 			<div class="flex flex-row items-center gap-1.5 md:gap-2">
 				<div class="hidden md:block">
 					<Command.Trigger
-						class="h-9 w-72 justify-between rounded-md px-2.5 text-sm text-foreground-muted shadow-sm"
+						class="h-9 w-72 justify-between rounded-md px-2.5 text-sm text-foreground-muted"
 						variant="outlined"
 					>
 						Search docs...

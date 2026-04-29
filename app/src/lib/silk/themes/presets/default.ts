@@ -1,15 +1,15 @@
-import { generatePaletteFromBase, type ThemeDraft } from '$lib/silk/themes/presets';
+import type { ThemeDraft } from '$lib/silk/themes/presets';
 
-export const defaultTheme: ThemeDraft = {
+export const preset: ThemeDraft = {
 	slug: 'default',
 	name: 'Default',
 	description: 'Balanced blue accents with neutral surfaces and polished contrast.',
 	publisher: 'Silk UI',
 	fontSans: 'Geist, sans-serif',
-	fontMono: '"Geist Mono", monospace',
+	fontMono: '"SF Mono", monospace',
 	fontHeader: 'Geist, sans-serif',
 	radiusBase: '0.45rem',
-	radiusSm: '0.2rem',
+	radiusSm: '0.21rem',
 	radiusMd: '0.45rem',
 	radiusLg: '0.55rem',
 	radiusXl: '0.67rem',
@@ -17,21 +17,69 @@ export const defaultTheme: ThemeDraft = {
 	invertedPanels: false,
 	durationPreset: 'default',
 	motion: {
+		hoverDuration: '240ms',
+		menuDuration: '150ms',
 		panelDuration: '240ms',
+		sheetDuration: '320ms',
+		overlayDuration: '150ms',
+		tooltipDuration: '140ms',
+		toastInDuration: '440ms',
+		toastOutDuration: '340ms',
 		panelX: 0,
+		panelY: 5,
 		panelBlur: 0,
 		panelScaleStart: 0.99,
-		sheetDuration: '320ms',
 		sheetOffset: 132,
-		overlayDuration: '150ms',
 		overlayBlur: 0
 	},
-	light: generatePaletteFromBase(
-		{ background: '#fcfcfd', surface: '#ffffff', text: '#101828', primary: '#155eef' },
-		'light'
-	),
-	dark: generatePaletteFromBase(
-		{ background: '#090b0f', surface: '#141b24', text: '#eef2f8', primary: '#528bff' },
-		'dark'
-	)
+	light: {
+		background: '#ffffff',
+		border: '#e2e3e5',
+		borderStrong: '#b8babf',
+		input: '#b8babf',
+		primary: '#4c4c57',
+		info: '#5383ed',
+		foregroundOpposite: '#ffffff',
+		foreground: '#101828',
+		muted: '#ffffff',
+		panel: '#ffffff',
+		modal: '#ffffff',
+		foregroundMuted: '#6b707a',
+		foregroundButton: '#ffffff',
+		secondary: '#f4f4f5',
+		card: '#ffffff',
+		accent: '#f9f9f9',
+		alternate: '#232a39',
+		success: '#4bb673',
+		warning: '#de9036',
+		error: '#e14f4f',
+		destructive: '#c23f3f',
+		overlay: 'rgb(16 24 40 / 0.18)',
+		ring: 'rgb(76 76 87 / 0.2)'
+	},
+	dark: {
+		background: '#080808',
+		border: '#2e2e2e',
+		borderStrong: '#5e5f61',
+		input: '#5e5f61',
+		primary: '#575859',
+		info: '#5082c0',
+		foregroundOpposite: '#09090b',
+		foreground: '#eef2f8',
+		muted: '#0d0d0d',
+		panel: '#363636',
+		modal: '#363636',
+		foregroundMuted: '#a4a7ab',
+		foregroundButton: '#ffffff',
+		secondary: '#27272a',
+		card: '#1c1c1c',
+		accent: '#242425',
+		alternate: '#c9cdd2',
+		success: '#40a766',
+		warning: '#c09426',
+		error: '#bd5c5d',
+		destructive: '#bf3d3e',
+		overlay: 'rgb(0 0 0 / 0.62)',
+		ring: 'rgb(87 88 89 / 0.2)'
+	}
 };

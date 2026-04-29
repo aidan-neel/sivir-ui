@@ -12,27 +12,6 @@
 	import * as AlertDialog from '$lib/silk/components/alert-dialog';
 </script>
 
-<h1 class="py-2 h1">
-    Import
-</h1>
-
-<p class="py-2">
-    Alert Dialog exports 8 components
-</p>
-
-<ExportItem title="Root">The root component.</ExportItem>
-<ExportItem title="Trigger">The button that triggers the alert dialog.</ExportItem>
-<ExportItem title="Content">The container for the alert dialog's content.</ExportItem>
-<ExportItem title="Title">The title of the alert dialog.</ExportItem>
-<ExportItem title="Description">The description or body text of the alert dialog.</ExportItem>
-<ExportItem title="Footer">The footer section of the alert dialog.</ExportItem>
-<ExportItem title="Exit">The button to close the alert dialog.</ExportItem>
-<ExportItem title="Confirm">The button to confirm an action within the alert dialog.</ExportItem>
-
-<h1 class="py-6 h1">
-    Example
-</h1>
-
 <ComponentPreview code={`<script>
 	import * as AlertDialog from '$lib/silk/components/alert-dialog';
 </script>\n
@@ -63,8 +42,29 @@
         </AlertDialog.Content>
     </AlertDialog.Root>
 </ComponentPreview>
+<div class="flex flex-col gap-5 pt-8 pb-8">
+	<h1 class="h1">Installation</h1>
+	<CodeBlock lang="shell" code={`bunx @aidan-neel/ui add alert-dialog`} />
+</div>
 
-<h1 class="py-6 h1">
+<h1 class="py-2 h1">
+    Import
+</h1>
+
+<p class="py-2">
+    Alert Dialog exports 8 components
+</p>
+
+<ExportItem title="Root">The root component.</ExportItem>
+<ExportItem title="Trigger">The button that triggers the alert dialog.</ExportItem>
+<ExportItem title="Content">The container for the alert dialog's content.</ExportItem>
+<ExportItem title="Title">The title of the alert dialog.</ExportItem>
+<ExportItem title="Description">The description or body text of the alert dialog.</ExportItem>
+<ExportItem title="Footer">The footer section of the alert dialog.</ExportItem>
+<ExportItem title="Exit">The button to close the alert dialog.</ExportItem>
+<ExportItem title="Confirm">The button to confirm an action within the alert dialog.</ExportItem>
+
+<h1 class="py-6 h1 pt-10">
     API Reference
 </h1>
 
@@ -84,102 +84,6 @@
                 type: "boolean",
                 description: "Controls whether the alert dialog is open or closed.",
                 defaults: "false"
-            }
-        ]}
-    />
-
-    <APIReference
-        title="AlertDialog"
-        component="Trigger"
-        description="A button that triggers the opening of the alert dialog."
-        items={[
-            {
-                property: "children",
-                type: "Snippet",
-                description: "The child elements to render inside the trigger button."
-            },
-            {
-                property: "class",
-                type: "string",
-                description: "Additional CSS classes to apply to the trigger button."
-            },
-            {
-                property: "...rest",
-                type: "HTMLButtonAttributes",
-                description: "Additional HTML button attributes passed to the trigger.",
-                defaults: "{}"
-            }
-        ]}
-    />
-
-    <APIReference
-        title="AlertDialog"
-        component="Title"
-        description="The title of the alert dialog."
-        items={[
-            {
-                property: "children",
-                type: "Snippet",
-                description: "The text or elements to render as the title."
-            },
-            {
-                property: "class",
-                type: "string",
-                description: "Additional CSS classes to apply to the title."
-            }
-        ]}
-    />
-
-    <APIReference
-        title="AlertDialog"
-        component="Footer"
-        description="A footer container for alert dialog actions."
-        items={[
-            {
-                property: "children",
-                type: "Snippet",
-                description: "The elements to render inside the footer."
-            },
-            {
-                property: "class",
-                type: "string",
-                description: "Additional CSS classes to apply to the footer."
-            }
-        ]}
-    />
-
-    <APIReference
-        title="AlertDialog"
-        component="Exit"
-        description="A button that closes the alert dialog when clicked."
-        items={[
-            {
-                property: "children",
-                type: "Snippet",
-                description: "The text or elements to render inside the button."
-            },
-            {
-                property: "class",
-                type: "string",
-                description: "Additional CSS classes to apply to the button."
-            }
-        ]}
-    />
-
-    <APIReference
-        title="AlertDialog"
-        component="Description"
-        description="A description for the alert dialog."
-        items={[
-            {
-                property: "children",
-                type: "Snippet",
-                description: "The text or elements to render as the description."
-            },
-            {
-                property: "class",
-                type: "string",
-                description: "Additional CSS classes to apply to the description."
             }
         ]}
     />
@@ -222,11 +126,6 @@
                 property: "class",
                 type: "string",
                 description: "Additional CSS classes to apply to the button."
-            },
-            {
-                property: "variant",
-                type: "any",
-                description: "The variant style of the button."
             },
             {
                 property: "closeOnConfirm",

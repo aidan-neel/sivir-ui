@@ -79,7 +79,7 @@
 </svelte:head>
 
 <div
-	class="relative min-h-[calc(100vh-3.5rem)] overflow-clip pb-16 pt-[6.5rem] max-md:pt-[5.75rem]"
+	class="relative min-h-[calc(100vh-3.5rem)] overflow-clip pb-16 gap-16 pt-[6.5rem] max-md:pt-[5.75rem]"
 >
 	<div
 		class="pointer-events-none absolute left-[-6rem] top-[5rem] h-[18rem] w-[18rem] rounded-[999px] bg-[rgb(21_94_239_/_0.12)] opacity-80 blur-[70px]"
@@ -91,9 +91,9 @@
 		class="pointer-events-none absolute inset-0 [background-image:linear-gradient(rgb(16_24_40_/_0.03)_1px,transparent_1px),linear-gradient(90deg,rgb(16_24_40_/_0.03)_1px,transparent_1px)] [background-size:44px_44px] [mask-image:linear-gradient(180deg,rgb(0_0_0_/_0.55),transparent_82%)]"
 	></div>
 
-	<section class="relative z-[1] mx-auto flex w-full max-w-[1400px] justify-start px-4 md:px-8">
+	<section class="relative z-[1] mx-auto flex w-full max-w-[1400px] justify-center px-4 md:px-8">
 		<div
-			class="flex max-w-[82rem] flex-col items-start gap-8 pt-[4.25rem] text-left max-[1100px]:pt-8"
+			class="flex max-w-[82rem] flex-col items-center gap-10 pt-[4.25rem] text-center max-[1100px]:pt-8"
 		>
 			<div class="fade-up" use:revealOnScroll={{ delay: 80, threshold: 0.9 }}>
 				<Badge href="/docs/changelog" variant="outlined" class="w-fit gap-2 px-3 text-[0.82rem]">
@@ -103,9 +103,9 @@
 				</Badge>
 			</div>
 
-			<div class="flex flex-col gap-4">
+			<div class="flex flex-col items-center gap-4">
 				<h1
-					class="hero-title fade-up m-0 max-w-[70%] text-balance text-[clamp(3.2rem,5vw,4.4rem)] font-medium leading-[0.95] tracking-[-0.05em] [font-family:var(--font-header),sans-serif] max-[1100px]:max-w-[25ch] max-md:max-w-none max-md:text-[clamp(2.7rem,11vw,4rem)]"
+					class="hero-title fade-up m-0 w-full text-balance text-[64px] font-medium leading-[0.95] tracking-[-0.05em] [font-family:var(--font-header),sans-serif] max-[1100px]:max-w-[25ch] max-md:max-w-none max-md:text-[clamp(2.7rem,11vw,4rem)]"
 					use:revealOnScroll={{ delay: 120, threshold: 0.85 }}
 				>
 					{#each heroWords as word, index}
@@ -115,7 +115,7 @@
 					{/each}
 				</h1>
 				<p
-					class="fade-up m-0 max-w-[58rem] text-balance text-[1.05rem] leading-7 text-foreground-muted"
+					class="fade-up m-0 max-w-[48rem] text-balance text-[1.05rem] leading-7 text-foreground-muted"
 					use:revealOnScroll={{ delay: 240, threshold: 0.85 }}
 				>
 					Silk UI gives you customizable Svelte 5 primitives, elegant defaults, and a styling system
@@ -124,9 +124,11 @@
 				</p>
 			</div>
 
-			<div class="fade-up flex flex-wrap gap-3" use:revealOnScroll={{ delay: 320, threshold: 0.8 }}>
+			<div
+				class="fade-up flex flex-wrap items-center justify-center gap-3"
+				use:revealOnScroll={{ delay: 320, threshold: 0.8 }}
+			>
 				<Button href="/docs/components/alert" class="text-sm">Browse Components</Button>
-				<Button href="/themes" variant="outlined" class="text-sm">Explore Themes</Button>
 				<Button href="https://github.com/aidan-neel/ui" variant="ghost" class="text-sm">
 					View on GitHub
 				</Button>
@@ -134,7 +136,7 @@
 
 			<div class="grid w-full max-w-[60rem] grid-cols-3 gap-[0.9rem] max-md:grid-cols-1">
 				<div
-					class="fade-up flex flex-col gap-[0.3rem] border-t border-border-strong/70 pr-4 pt-4"
+					class="fade-up flex flex-col gap-[0.3rem] border-border-strong/70 pt-4 text-center"
 					use:revealOnScroll={{ delay: 380, threshold: 0.7 }}
 				>
 					<span class="text-[0.95rem] font-semibold">Svelte 5</span>
@@ -143,7 +145,7 @@
 					>
 				</div>
 				<div
-					class="fade-up flex flex-col gap-[0.3rem] border-t border-border-strong/70 pr-4 pt-4"
+					class="fade-up flex flex-col gap-[0.3rem] border-border-strong/70 pt-4 text-center"
 					use:revealOnScroll={{ delay: 460, threshold: 0.7 }}
 				>
 					<span class="text-[0.95rem] font-semibold">Token-first</span>
@@ -152,7 +154,7 @@
 					>
 				</div>
 				<div
-					class="fade-up flex flex-col gap-[0.3rem] border-t border-border-strong/70 pr-4 pt-4"
+					class="fade-up flex flex-col gap-[0.3rem] border-border-strong/70 pt-4 text-center"
 					use:revealOnScroll={{ delay: 540, threshold: 0.7 }}
 				>
 					<span class="text-[0.95rem] font-semibold">Accessible</span>
@@ -165,7 +167,7 @@
 	</section>
 
 	<section class="relative z-[1] mx-auto mt-[9.5rem] w-full max-w-[1400px] px-4 md:px-8">
-		<div class="flex max-w-[42rem] flex-col gap-[0.85rem]">
+		<div class="mx-auto flex max-w-[42rem] flex-col items-center gap-[0.85rem] text-center">
 			<span
 				class="fade-up text-[0.8rem] font-medium uppercase tracking-[0.12em] text-foreground-muted"
 				use:revealOnScroll={{ delay: 40 }}>What makes it distinct</span

@@ -1,3 +1,10 @@
+import {
+	cloneTransitionMotion,
+	getTransitionPreset,
+	type ThemeMotion,
+	type ThemeTransitionPresetSlug
+} from './transitions';
+
 export type ThemePalette = {
 	background: string;
 	border: string;
@@ -8,7 +15,8 @@ export type ThemePalette = {
 	foregroundOpposite: string;
 	foreground: string;
 	muted: string;
-	popover: string;
+	panel: string;
+	modal: string;
 	foregroundMuted: string;
 	foregroundButton: string;
 	secondary: string;
@@ -23,38 +31,13 @@ export type ThemePalette = {
 	ring: string;
 };
 
-export type ThemeDurationPreset = {
-	slug: 'default' | 'snappy' | 'instant' | 'smooth';
-	name: string;
-	description: string;
-	hover: string;
-	menu: string;
-	panel: string;
-	sheet: string;
-	overlay: string;
-	tooltip: string;
-	toastIn: string;
-	toastOut: string;
-};
-
-export type ThemeMotion = {
-	panelDuration: string;
-	panelX: number;
-	panelBlur: number;
-	panelScaleStart: number;
-	sheetDuration: string;
-	sheetOffset: number;
-	overlayDuration: string;
-	overlayBlur: number;
-};
-
 export type ThemeBasePalette = {
 	background: string;
-	surface: string;
+	card: string;
 	text: string;
 	primary: string;
 	secondary?: string;
-	/** Optional border override — if omitted, derived automatically from surface + text mix. */
+	/** Optional border override — if omitted, derived automatically from card + text mix. */
 	border?: string;
 };
 
@@ -73,66 +56,11 @@ export type ThemeDraft = {
 	radiusXl: string;
 	primaryButtonOutline: boolean;
 	invertedPanels: boolean;
-	durationPreset: ThemeDurationPreset['slug'];
+	durationPreset: ThemeTransitionPresetSlug;
 	motion: ThemeMotion;
 	light: ThemePalette;
 	dark: ThemePalette;
 };
-
-export const durationPresets: ThemeDurationPreset[] = [
-	{
-		slug: 'default',
-		name: 'Balanced',
-		description: 'Matches the current Silk feel with polished but unhurried motion.',
-		hover: '240ms',
-		menu: '150ms',
-		panel: '240ms',
-		sheet: '320ms',
-		overlay: '150ms',
-		tooltip: '140ms',
-		toastIn: '440ms',
-		toastOut: '340ms'
-	},
-	{
-		slug: 'snappy',
-		name: 'Snappy',
-		description: 'A little quicker across hovers, menus, and modal surfaces.',
-		hover: '190ms',
-		menu: '120ms',
-		panel: '210ms',
-		sheet: '260ms',
-		overlay: '120ms',
-		tooltip: '110ms',
-		toastIn: '360ms',
-		toastOut: '280ms'
-	},
-	{
-		slug: 'instant',
-		name: 'Instant',
-		description: 'Very tight feedback for utility-first interfaces and fast workflows.',
-		hover: '120ms',
-		menu: '90ms',
-		panel: '170ms',
-		sheet: '210ms',
-		overlay: '100ms',
-		tooltip: '90ms',
-		toastIn: '280ms',
-		toastOut: '220ms'
-	},
-	{
-		slug: 'smooth',
-		name: 'Smooth',
-		description: 'Softer, slower transitions for editorial or premium-feeling themes.',
-		hover: '280ms',
-		menu: '180ms',
-		panel: '300ms',
-		sheet: '380ms',
-		overlay: '180ms',
-		tooltip: '160ms',
-		toastIn: '500ms',
-		toastOut: '380ms'
-	}
-];
 
 /** Rounds a radius token to a stable rem string. */
 function roundRadius(value: number) {
@@ -166,7 +94,8 @@ function palette(
 		foregroundOpposite: values.foregroundOpposite ?? '#ffffff',
 		foreground: values.foreground,
 		muted: values.muted ?? '#f2f4f7',
-		popover: values.popover ?? '#ffffff',
+		panel: values.panel ?? '#ffffff',
+		modal: values.modal ?? values.panel ?? '#ffffff',
 		foregroundMuted: values.foregroundMuted ?? '#667085',
 		foregroundButton: values.foregroundButton ?? '#ffffff',
 		secondary: values.secondary ?? '#f9fafb',
@@ -184,19 +113,12 @@ function palette(
 
 /** Builds the motion token set from a named duration preset plus overrides. */
 function motionFromPreset(
-	slug: ThemeDurationPreset['slug'],
+	slug: ThemeTransitionPresetSlug,
 	overrides: Partial<ThemeMotion> = {}
 ): ThemeMotion {
-	const preset = getDurationPreset(slug);
+	const preset = getTransitionPreset(slug);
 	return {
-		panelDuration: preset.panel,
-		panelX: 0,
-		panelBlur: 0,
-		panelScaleStart: 0.99,
-		sheetDuration: preset.sheet,
-		sheetOffset: 132,
-		overlayDuration: preset.overlay,
-		overlayBlur: 0,
+		...cloneTransitionMotion(preset.motion),
 		...overrides
 	};
 }
@@ -272,22 +194,28 @@ export function generatePaletteFromBase(
 	base: ThemeBasePalette,
 	mode: 'light' | 'dark'
 ): ThemePalette {
-	const baseBackground = normalizeHex(base.background) ?? (mode === 'light' ? '#fcfcfd' : '#090b0f');
-	const baseSurface = normalizeHex(base.surface) ?? (mode === 'light' ? '#ffffff' : '#0f1318');
+	const baseBackground =
+		normalizeHex(base.background) ?? (mode === 'light' ? '#fcfcfd' : '#090b0f');
+	const baseCard = normalizeHex(base.card) ?? (mode === 'light' ? '#ffffff' : '#0f1318');
 	const text = normalizeHex(base.text) ?? (mode === 'light' ? '#101828' : '#eef2f8');
 	const primary = normalizeHex(base.primary) ?? (mode === 'light' ? '#155eef' : '#528bff');
-	const background =
-		mode === 'light' ? mixColors(baseBackground, '#ffffff', 0.38) : baseBackground;
-	const surface = mode === 'light' ? mixColors(baseSurface, '#ffffff', 0.16) : baseSurface;
+	const background = mode === 'light' ? mixColors(baseBackground, '#ffffff', 0.38) : baseBackground;
+	const card = mode === 'light' ? mixColors(baseCard, '#ffffff', 0.16) : baseCard;
+	const panel =
+		mode === 'light' ? mixColors(card, '#ffffff', 0.08) : mixColors(card, '#ffffff', 0.04);
+	const modal =
+		mode === 'light' ? mixColors(panel, '#ffffff', 0.06) : mixColors(panel, '#ffffff', 0.02);
 	const secondary =
 		normalizeHex(base.secondary ?? '') ??
-		mixColors(background, surface, mode === 'light' ? 0.44 : 0.45);
-	const border = base.border ? (normalizeHex(base.border) ?? mixColors(surface, text, mode === 'light' ? 0.12 : 0.18)) : mixColors(surface, text, mode === 'light' ? 0.12 : 0.18);
+		mixColors(background, card, mode === 'light' ? 0.44 : 0.45);
+	const border = base.border
+		? (normalizeHex(base.border) ?? mixColors(card, text, mode === 'light' ? 0.12 : 0.18))
+		: mixColors(card, text, mode === 'light' ? 0.12 : 0.18);
 	const borderStrong = base.border
 		? mixColors(border, text, mode === 'light' ? 0.2 : 0.25)
-		: mixColors(surface, text, mode === 'light' ? 0.2 : 0.28);
-	const muted = mixColors(background, surface, mode === 'light' ? 0.28 : 0.24);
-	const accent = mixColors(surface, primary, mode === 'light' ? 0.035 : 0.14);
+		: mixColors(card, text, mode === 'light' ? 0.2 : 0.28);
+	const muted = mixColors(background, card, mode === 'light' ? 0.28 : 0.24);
+	const accent = mixColors(card, primary, mode === 'light' ? 0.035 : 0.14);
 	const foregroundMuted = mixColors(text, background, mode === 'light' ? 0.38 : 0.32);
 	const info = mixColors(
 		secondary,
@@ -326,10 +254,11 @@ export function generatePaletteFromBase(
 		foregroundOpposite: contrastText(text),
 		foregroundButton: contrastText(primary),
 		muted,
-		popover: surface,
+		panel,
+		modal,
 		foregroundMuted,
 		secondary,
-		card: surface,
+		card,
 		accent,
 		alternate: mixColors(text, background, mode === 'light' ? 0.08 : 0.16),
 		success,
@@ -350,9 +279,12 @@ export function slugifyThemeName(name: string) {
 		.replace(/^-+|-+$/g, '');
 }
 
-/** Returns the matching duration preset or falls back to the default preset. */
-export function getDurationPreset(slug: ThemeDurationPreset['slug']) {
-	return durationPresets.find((preset) => preset.slug === slug) ?? durationPresets[0];
+/** Resolves a theme motion object against the selected preset. */
+export function resolveThemeMotion(
+	durationPreset: ThemeTransitionPresetSlug,
+	motion?: Partial<ThemeMotion> | null
+) {
+	return motionFromPreset(durationPreset, motion ?? {});
 }
 
 /** Chooses which palette should drive floating panel surfaces for a given mode. */
@@ -364,15 +296,16 @@ function getPanelPalette(theme: ThemeDraft, mode: 'light' | 'dark') {
 function panelTokensToCss(theme: ThemeDraft, mode: 'light' | 'dark') {
 	const panel = getPanelPalette(theme, mode);
 	const isInvertedLight = mode === 'light' && theme.invertedPanels;
-	const panelForeground = isInvertedLight ? mixColors(panel.foreground, '#ffffff', 0.04) : panel.foreground;
-	const highlight =
-		isInvertedLight
+	const panelForeground = isInvertedLight
+		? mixColors(panel.foreground, '#ffffff', 0.04)
+		: panel.foreground;
+	const highlight = isInvertedLight
+		? 'rgb(120 130 148 / 0.07)'
+		: mode === 'dark'
 			? 'rgb(120 130 148 / 0.07)'
-			: mode === 'dark'
-				? 'rgb(120 130 148 / 0.07)'
-				: 'rgb(255 255 255 / 0.58)';
+			: 'rgb(255 255 255 / 0.58)';
 
-	return `\t--color-floating-panel: ${panel.popover};
+	return `\t--color-floating-panel: ${panel.panel};
 \t--color-floating-panel-foreground: ${panelForeground};
 \t--floating-panel-highlight: ${highlight};
 \t--floating-menu-item-foreground: ${panelForeground};
@@ -391,7 +324,8 @@ function paletteToCss(palette: ThemePalette) {
 \t--color-foreground-opposite: ${palette.foregroundOpposite};
 \t--color-foreground: ${palette.foreground};
 \t--color-muted: ${palette.muted};
-\t--color-popover: ${palette.popover};
+\t--color-panel: ${palette.panel};
+\t--color-modal: ${palette.modal};
 \t--color-foreground-muted: ${palette.foregroundMuted};
 \t--color-foreground-btn: ${palette.foregroundButton};
 \t--color-secondary: ${palette.secondary};
@@ -406,11 +340,42 @@ function paletteToCss(palette: ThemePalette) {
 \t--color-ring: ${palette.ring};`;
 }
 
+function serializeTypeScriptValue(value: unknown, indentLevel = 0): string {
+	const indent = '\t'.repeat(indentLevel);
+	const nestedIndent = '\t'.repeat(indentLevel + 1);
+
+	if (Array.isArray(value)) {
+		if (value.length === 0) return '[]';
+		return `[\n${value
+			.map((entry) => `${nestedIndent}${serializeTypeScriptValue(entry, indentLevel + 1)}`)
+			.join(',\n')}\n${indent}]`;
+	}
+
+	if (value && typeof value === 'object') {
+		const entries = Object.entries(value);
+		if (entries.length === 0) return '{}';
+		return `{\n${entries
+			.map(
+				([key, entry]) =>
+					`${nestedIndent}${key}: ${serializeTypeScriptValue(entry, indentLevel + 1)}`
+			)
+			.join(',\n')}\n${indent}}`;
+	}
+
+	return JSON.stringify(value);
+}
+
+/** Converts a theme draft into a TypeScript preset module for direct reuse in presets/. */
+export function themeToTypeScriptPreset(theme: ThemeDraft) {
+	return `import type { ThemeDraft } from '$lib/silk/themes/presets';
+
+export const preset: ThemeDraft = ${serializeTypeScriptValue(theme)};`;
+}
+
 /** Converts a theme draft into the CSS shipped by the preset endpoints and studio. */
 export function themeToCss(theme: ThemeDraft) {
 	const radii = radiiFromBase(theme.radiusBase || theme.radiusMd);
-	const durations = getDurationPreset(theme.durationPreset);
-	const motion = theme.motion ?? motionFromPreset(theme.durationPreset);
+	const motion = resolveThemeMotion(theme.durationPreset, theme.motion);
 	return `@theme {
 \t--font-sans: ${theme.fontSans};
 \t--font-mono: ${theme.fontMono};
@@ -419,16 +384,16 @@ export function themeToCss(theme: ThemeDraft) {
 \t--radius-md: ${radii.md};
 \t--radius-lg: ${radii.lg};
 \t--radius-xl: ${radii.xl};
-\t--radius-btn: var(--radius-lg);
-\t--motion-duration-hover: ${durations.hover};
-\t--motion-duration-menu: ${durations.menu};
-\t--motion-duration-panel: ${durations.panel};
-\t--motion-duration-sheet: ${durations.sheet};
-\t--motion-duration-overlay: ${durations.overlay};
-\t--motion-duration-tooltip: ${durations.tooltip};
-\t--motion-duration-toast-in: ${durations.toastIn};
-\t--motion-duration-toast-out: ${durations.toastOut};
+\t--motion-duration-hover: ${motion.hoverDuration};
+\t--motion-duration-menu: ${motion.menuDuration};
+\t--motion-duration-panel: ${motion.panelDuration};
+\t--motion-duration-sheet: ${motion.sheetDuration};
+\t--motion-duration-overlay: ${motion.overlayDuration};
+\t--motion-duration-tooltip: ${motion.tooltipDuration};
+\t--motion-duration-toast-in: ${motion.toastInDuration};
+\t--motion-duration-toast-out: ${motion.toastOutDuration};
 \t--motion-panel-x: ${motion.panelX}px;
+\t--motion-panel-y: ${motion.panelY}px;
 \t--motion-panel-blur: ${motion.panelBlur}px;
 \t--motion-panel-scale-start: ${motion.panelScaleStart};
 \t--motion-sheet-offset: ${motion.sheetOffset}px;
@@ -448,15 +413,16 @@ ${panelTokensToCss(theme, 'light')}
 \t--radius-md: ${radii.md};
 \t--radius-lg: ${radii.lg};
 \t--radius-xl: ${radii.xl};
-\t--motion-duration-hover: ${durations.hover};
-\t--motion-duration-menu: ${durations.menu};
-\t--motion-duration-panel: ${durations.panel};
-\t--motion-duration-sheet: ${durations.sheet};
-\t--motion-duration-overlay: ${durations.overlay};
-\t--motion-duration-tooltip: ${durations.tooltip};
-\t--motion-duration-toast-in: ${durations.toastIn};
-\t--motion-duration-toast-out: ${durations.toastOut};
+\t--motion-duration-hover: ${motion.hoverDuration};
+\t--motion-duration-menu: ${motion.menuDuration};
+\t--motion-duration-panel: ${motion.panelDuration};
+\t--motion-duration-sheet: ${motion.sheetDuration};
+\t--motion-duration-overlay: ${motion.overlayDuration};
+\t--motion-duration-tooltip: ${motion.tooltipDuration};
+\t--motion-duration-toast-in: ${motion.toastInDuration};
+\t--motion-duration-toast-out: ${motion.toastOutDuration};
 \t--motion-panel-x: ${motion.panelX}px;
+\t--motion-panel-y: ${motion.panelY}px;
 \t--motion-panel-blur: ${motion.panelBlur}px;
 \t--motion-panel-scale-start: ${motion.panelScaleStart};
 \t--motion-sheet-offset: ${motion.sheetOffset}px;

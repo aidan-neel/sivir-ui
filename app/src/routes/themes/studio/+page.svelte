@@ -16,24 +16,29 @@
 		saveThemeStudioState
 	} from '$lib/silk/themes/live';
 	import {
-		type ThemeDurationPreset,
 		type ThemePalette,
-		durationPresets,
 		generatePaletteFromBase,
-		getDurationPreset,
+		resolveThemeMotion,
 		slugifyThemeName,
 		themeToCss,
+		themeToTypeScriptPreset,
 		type ThemeBasePalette,
 		type ThemeDraft
 	} from '$lib/silk/themes/presets';
+	import {
+		getTransitionPreset,
+		transitionPresets,
+		type ThemeMotion,
+		type ThemeTransitionPresetSlug
+	} from '$lib/silk/themes/transitions';
 	import { builtInThemePresets } from '$lib/silk/themes/builtin-presets';
 	import StudioSidebar from '$lib/components/themes/studio-sidebar.svelte';
 	import type { ColorOption } from '$lib/silk/components/color-picker';
 	import type { PageData } from './$types';
 
-	const { data }: { data: PageData } = $props();
+	const { data = { themes: builtInThemePresets } as PageData }: { data?: PageData } = $props();
 
-	type FontOption = { label: string; value: string };
+	type FontOption = { label: string; value: string; group: 'Sans Serif' | 'Serif' | 'Mono' };
 	type RadiusOption = { label: string; value: string };
 	type BasePaletteKey = keyof ThemeBasePalette;
 	type PaletteKey = keyof ThemePalette;
@@ -48,21 +53,22 @@
 	};
 
 	const fontOptions: FontOption[] = [
-		{ label: 'Geist', value: 'Geist, sans-serif' },
-		{ label: 'Instrument Sans', value: '"Instrument Sans", sans-serif' },
-		{ label: 'Manrope', value: 'Manrope, sans-serif' },
-		{ label: 'DM Sans', value: '"DM Sans", sans-serif' },
-		{ label: 'Plus Jakarta Sans', value: '"Plus Jakarta Sans", sans-serif' },
-		{ label: 'Outfit', value: 'Outfit, sans-serif' },
-		{ label: 'Space Grotesk', value: '"Space Grotesk", sans-serif' },
-		{ label: 'Sora', value: 'Sora, sans-serif' },
-		{ label: 'IBM Plex Sans', value: '"IBM Plex Sans", sans-serif' },
-		{ label: 'Lora', value: 'Lora, serif' },
-		{ label: 'Source Serif 4', value: '"Source Serif 4", serif' },
-		{ label: 'Fraunces', value: 'Fraunces, serif' },
-		{ label: 'Newsreader', value: 'Newsreader, serif' },
-		{ label: 'Geist Mono', value: '"Geist Mono", monospace' },
-		{ label: 'IBM Plex Mono', value: '"IBM Plex Mono", monospace' }
+		{ label: 'Geist', value: 'Geist, sans-serif', group: 'Sans Serif' },
+		{ label: 'Inter', value: 'Inter, sans-serif', group: 'Sans Serif' },
+		{ label: 'Instrument Sans', value: '"Instrument Sans", sans-serif', group: 'Sans Serif' },
+		{ label: 'Manrope', value: 'Manrope, sans-serif', group: 'Sans Serif' },
+		{ label: 'DM Sans', value: '"DM Sans", sans-serif', group: 'Sans Serif' },
+		{ label: 'Plus Jakarta Sans', value: '"Plus Jakarta Sans", sans-serif', group: 'Sans Serif' },
+		{ label: 'Outfit', value: 'Outfit, sans-serif', group: 'Sans Serif' },
+		{ label: 'Space Grotesk', value: '"Space Grotesk", sans-serif', group: 'Sans Serif' },
+		{ label: 'Sora', value: 'Sora, sans-serif', group: 'Sans Serif' },
+		{ label: 'IBM Plex Sans', value: '"IBM Plex Sans", sans-serif', group: 'Sans Serif' },
+		{ label: 'Lora', value: 'Lora, serif', group: 'Serif' },
+		{ label: 'Source Serif 4', value: '"Source Serif 4", serif', group: 'Serif' },
+		{ label: 'Fraunces', value: 'Fraunces, serif', group: 'Serif' },
+		{ label: 'Newsreader', value: 'Newsreader, serif', group: 'Serif' },
+		{ label: 'Geist Mono', value: '"Geist Mono", monospace', group: 'Mono' },
+		{ label: 'IBM Plex Mono', value: '"IBM Plex Mono", monospace', group: 'Mono' }
 	];
 
 	const radiusOptions: RadiusOption[] = [
@@ -71,7 +77,6 @@
 		{ label: 'Soft', value: '0.58rem' },
 		{ label: 'Rounded', value: '0.72rem' }
 	];
-
 
 	const lightBackgroundOptions: ColorOption[] = [
 		{ label: 'White', value: '#ffffff' },
@@ -218,7 +223,7 @@
 		const palette = theme[mode];
 		return {
 			background: palette.background,
-			surface: palette.card,
+			card: palette.card,
 			text: palette.foreground,
 			primary: palette.primary,
 			secondary: palette.secondary,
@@ -253,21 +258,29 @@
 	function findPresetFromStoredCss() {
 		const stored = getStoredLiveThemeCss();
 		if (!stored) return null;
-		return themesCatalog.find((theme) => normalizeGeneratedCss(themeToCss(theme)) === stored) ?? null;
+		return (
+			themesCatalog.find((theme) => normalizeGeneratedCss(themeToCss(theme)) === stored) ?? null
+		);
 	}
 
 	async function publishTheme() {
 		const cleanedName = editorName.trim();
 		const slug = slugifyThemeName(cleanedName);
 		if (!cleanedName || !slug) {
-			toast({ title: 'Theme name required', description: 'Add a valid theme name before publishing.', duration: 2500, type: 'error' });
+			toast({
+				title: 'Theme name required',
+				description: 'Add a valid theme name before publishing.',
+				duration: 2500,
+				type: 'error'
+			});
 			return;
 		}
 		const payload: ThemeDraft = {
 			...cloneTheme(editorTheme),
 			name: cleanedName,
 			slug,
-			description: editorTheme.description?.trim() || 'A custom theme published from the Silk UI Theme Studio.'
+			description:
+				editorTheme.description?.trim() || 'A custom theme published from the Silk UI Theme Studio.'
 		};
 		isPublishing = true;
 		try {
@@ -282,11 +295,19 @@
 				themesCatalog = [payload, ...themesCatalog];
 			}
 			selectedPresetSlug = payload.slug;
-			toast({ title: 'Theme published', description: `${payload.name} is now in the catalog.`, duration: 2400, type: 'success' });
+			toast({
+				title: 'Theme published',
+				description: `${payload.name} is now in the catalog.`,
+				duration: 2400,
+				type: 'success'
+			});
 		} catch (publishError) {
 			toast({
 				title: 'Publish failed',
-				description: publishError instanceof Error ? publishError.message : 'Unable to publish this theme right now.',
+				description:
+					publishError instanceof Error
+						? publishError.message
+						: 'Unable to publish this theme right now.',
 				duration: 3000,
 				type: 'error'
 			});
@@ -298,18 +319,28 @@
 	function applyStudioState(state: StudioSnapshot) {
 		selectedPresetSlug = state.selectedPresetSlug;
 		editorTheme = cloneTheme(state.editorTheme);
+		editorTheme.motion = resolveThemeMotion(editorTheme.durationPreset, editorTheme.motion);
 		editorName = state.editorName;
 		headerFontSelection = state.headerFontSelection;
 		bodyFontSelection = state.bodyFontSelection;
 		lightBasePalette = state.lightBasePalette;
 		darkBasePalette = state.darkBasePalette;
-		editorTheme.fontMono = resolveMonoFont(editorTheme.fontHeader, editorTheme.fontSans, editorTheme.fontMono);
+		editorTheme.fontMono = resolveMonoFont(
+			editorTheme.fontHeader,
+			editorTheme.fontSans,
+			editorTheme.fontMono
+		);
 	}
 
 	function loadPreset(theme: ThemeDraft, notify = true) {
 		applyStudioState(createStudioState(theme));
 		if (notify) {
-			toast({ title: `${theme.name} loaded`, description: 'The preset is now applied across the site.', duration: 2200, type: 'success' });
+			toast({
+				title: `${theme.name} loaded`,
+				description: 'The preset is now applied across the site.',
+				duration: 2200,
+				type: 'success'
+			});
 		}
 	}
 
@@ -326,7 +357,10 @@
 	}
 
 	function updateBasePalette(mode: 'light' | 'dark', key: BasePaletteKey, nextValue: string) {
-		syncBasePalette(mode, { ...(mode === 'light' ? lightBasePalette : darkBasePalette), [key]: nextValue });
+		syncBasePalette(mode, {
+			...(mode === 'light' ? lightBasePalette : darkBasePalette),
+			[key]: nextValue
+		});
 	}
 
 	function updatePaletteToken(mode: 'light' | 'dark', key: 'border', nextValue: string) {
@@ -336,14 +370,36 @@
 
 	function applyBasePalette(mode: 'light' | 'dark') {
 		syncBasePalette(mode, mode === 'light' ? lightBasePalette : darkBasePalette);
-		toast({ title: `${mode === 'light' ? 'Light' : 'Dark'} palette generated`, description: 'Semantic tokens regenerated from base colors.', duration: 2200, type: 'success' });
+		toast({
+			title: `${mode === 'light' ? 'Light' : 'Dark'} palette generated`,
+			description: 'Semantic tokens regenerated from base colors.',
+			duration: 2200,
+			type: 'success'
+		});
 	}
 
 	async function copyGeneratedCss() {
 		await navigator.clipboard.writeText(generatedCss);
 		copiedCss = true;
 		setTimeout(() => (copiedCss = false), 1800);
-		toast({ title: 'Copied CSS', description: 'Generated theme CSS copied to your clipboard.', duration: 1800, type: 'success' });
+		toast({
+			title: 'Copied CSS',
+			description: 'Generated theme CSS copied to your clipboard.',
+			duration: 1800,
+			type: 'success'
+		});
+	}
+
+	async function copyTypeScriptPreset() {
+		await navigator.clipboard.writeText(generatedTypeScriptPreset);
+		copiedTypeScriptPreset = true;
+		setTimeout(() => (copiedTypeScriptPreset = false), 1800);
+		toast({
+			title: 'Copied TypeScript preset',
+			description: 'Preset module copied to your clipboard.',
+			duration: 1800,
+			type: 'success'
+		});
 	}
 
 	function preloadFont(fontStack: string) {
@@ -389,8 +445,14 @@
 		selectedPresetSlug = 'custom';
 	}
 
-	function updateDurationPreset(next: ThemeDurationPreset['slug']) {
+	function updateDurationPreset(next: ThemeTransitionPresetSlug) {
 		editorTheme.durationPreset = next;
+		editorTheme.motion = resolveThemeMotion(next);
+		selectedPresetSlug = 'custom';
+	}
+
+	function updateMotion<K extends keyof ThemeMotion>(key: K, nextValue: ThemeMotion[K]) {
+		editorTheme.motion = { ...editorTheme.motion, [key]: nextValue };
 		selectedPresetSlug = 'custom';
 	}
 
@@ -414,14 +476,16 @@
 	}
 
 	function shuffleTheme() {
-		function pick<T>(arr: T[]): T { return arr[Math.floor(Math.random() * arr.length)]; }
+		function pick<T>(arr: T[]): T {
+			return arr[Math.floor(Math.random() * arr.length)];
+		}
 
 		// Pick a paired primary (same index in light/dark options)
 		const primaryIdx = Math.floor(Math.random() * lightPrimaryOptions.length);
 		const lightPrimary = lightPrimaryOptions[primaryIdx].value;
 		const darkPrimary = darkPrimaryOptions[primaryIdx].value;
 
-		// Pick background / surface from presets
+		// Pick background / card tones from presets
 		const lightBg = pick(lightBackgroundOptions).value;
 		const lightSurface = pick(lightSurfaceOptions).value;
 		const darkBg = pick(darkBackgroundOptions).value;
@@ -439,12 +503,12 @@
 
 		// Randomize radius & motion
 		const radius = pick(radiusOptions).value;
-		const duration = pick(durationPresets).slug;
+		const duration = pick(transitionPresets).slug;
 
 		// Apply both palettes atomically
 		const newLightBase: ThemeBasePalette = {
 			background: lightBg,
-			surface: lightSurface,
+			card: lightSurface,
 			text: lightText,
 			primary: lightPrimary,
 			secondary: lightSecondary,
@@ -452,7 +516,7 @@
 		};
 		const newDarkBase: ThemeBasePalette = {
 			background: darkBg,
-			surface: darkSurface,
+			card: darkSurface,
 			text: darkText,
 			primary: darkPrimary,
 			secondary: darkSecondary,
@@ -465,6 +529,7 @@
 		editorTheme.dark = generatePaletteFromBase(newDarkBase, 'dark');
 		editorTheme.radiusBase = radius;
 		editorTheme.durationPreset = duration;
+		editorTheme.motion = resolveThemeMotion(duration);
 		selectedPresetSlug = 'custom';
 	}
 
@@ -482,7 +547,9 @@
 		applyStudioState(snapshot);
 		lastSnapshot = captureStudioSnapshot();
 		lastSnapshotSignature = JSON.stringify(lastSnapshot);
-		queueMicrotask(() => { ignoreHistory = false; });
+		queueMicrotask(() => {
+			ignoreHistory = false;
+		});
 	}
 
 	function undoHistory() {
@@ -503,8 +570,12 @@
 		applySnapshot(next);
 	}
 
-	const getInitialThemesCatalog = () =>
-		data.themes.length ? [...builtInThemePresets, ...data.themes.filter((t) => t.slug !== 'default')] : builtInThemePresets;
+	const getInitialThemesCatalog = () => {
+		const themes = Array.isArray(data?.themes) ? data.themes : [];
+		return themes.length
+			? [...builtInThemePresets, ...themes.filter((t) => t.slug !== 'default')]
+			: builtInThemePresets;
+	};
 	const initialThemesCatalog = getInitialThemesCatalog();
 	const defaultTheme = initialThemesCatalog[0];
 
@@ -513,6 +584,7 @@
 	let editorTheme = $state(cloneTheme(defaultTheme));
 	let editorName = $state(defaultTheme.name);
 	let copiedCss = $state(false);
+	let copiedTypeScriptPreset = $state(false);
 	let isPublishing = $state(false);
 	let headerFontSelection = $state(getFontLabel(defaultTheme.fontHeader));
 	let bodyFontSelection = $state(getFontLabel(defaultTheme.fontSans));
@@ -525,11 +597,28 @@
 	let lastSnapshot = $state<StudioSnapshot>(createStudioState(defaultTheme));
 	let lastSnapshotSignature = $state(JSON.stringify(createStudioState(defaultTheme)));
 
-	const generatedCss = $derived(themeToCss({ ...editorTheme, name: editorName, slug: slugifyThemeName(editorName) || 'custom-theme' }));
+	const generatedCss = $derived(
+		themeToCss({
+			...editorTheme,
+			motion: resolveThemeMotion(editorTheme.durationPreset, editorTheme.motion),
+			name: editorName,
+			slug: slugifyThemeName(editorName) || 'custom-theme'
+		})
+	);
+	const generatedTypeScriptPreset = $derived(
+		themeToTypeScriptPreset({
+			...cloneTheme(editorTheme),
+			motion: resolveThemeMotion(editorTheme.durationPreset, editorTheme.motion),
+			name: editorName.trim() || editorTheme.name,
+			slug: slugifyThemeName(editorName) || 'custom-theme'
+		})
+	);
 
 	const activePreset = $derived(
 		themesCatalog.find((theme) => theme.slug === selectedPresetSlug) ?? {
-			...defaultTheme, slug: 'custom', name: 'Custom',
+			...defaultTheme,
+			slug: 'custom',
+			name: 'Custom',
 			description: 'A generated theme draft based on your current base colors and guided controls.'
 		}
 	);
@@ -571,7 +660,15 @@
 
 	$effect(() => {
 		if (!hydrated || !browser) return;
-		saveThemeStudioState({ selectedPresetSlug, editorTheme, editorName, headerFontSelection, bodyFontSelection, lightBasePalette, darkBasePalette });
+		saveThemeStudioState({
+			selectedPresetSlug,
+			editorTheme,
+			editorName,
+			headerFontSelection,
+			bodyFontSelection,
+			lightBasePalette,
+			darkBasePalette
+		});
 	});
 
 	$effect(() => {
@@ -588,58 +685,65 @@
 
 <svelte:head>
 	<title>Silk UI Theme Studio</title>
-	<meta name="description" content="Build, preview, and export Silk UI themes from a dedicated full-width studio workspace." />
+	<meta
+		name="description"
+		content="Build, preview, and export Silk UI themes from a dedicated full-width studio workspace."
+	/>
 </svelte:head>
 
 <!-- Full-height layout: floating left sidebar | canvas -->
 <div class="flex h-[calc(100vh-4rem)] pt-16">
-
 	<!-- Left sidebar (floating) -->
 	<div class="w-72 shrink-0 p-3">
-		<div class="flex h-full flex-col overflow-hidden rounded-[var(--radius-xl)] border border-border bg-card shadow-[var(--outline-shadow)]">
+		<div
+			class="flex h-full flex-col overflow-hidden rounded-[var(--radius-xl)] border border-border bg-card shadow-[var(--outline-shadow)]"
+		>
 			<StudioSidebar
-				editorName={editorName}
-				editorTheme={editorTheme}
-				colorMode={colorMode}
-				headerFontSelection={headerFontSelection}
-				bodyFontSelection={bodyFontSelection}
-				radiusOptions={radiusOptions}
-				durationPresets={durationPresets}
-				fontOptions={fontOptions}
-				themesCatalog={themesCatalog}
-				lightBasePalette={lightBasePalette}
-				darkBasePalette={darkBasePalette}
-				lightBackgroundOptions={lightBackgroundOptions}
-				lightSurfaceOptions={lightSurfaceOptions}
-				lightSecondaryOptions={lightSecondaryOptions}
-				lightTextOptions={lightTextOptions}
-				lightPrimaryOptions={lightPrimaryOptions}
-				lightBorderOptions={lightBorderOptions}
-				darkBackgroundOptions={darkBackgroundOptions}
-				darkSurfaceOptions={darkSurfaceOptions}
-				darkSecondaryOptions={darkSecondaryOptions}
-				darkTextOptions={darkTextOptions}
-				darkPrimaryOptions={darkPrimaryOptions}
-				darkBorderOptions={darkBorderOptions}
-				copiedCss={copiedCss}
-				isPublishing={isPublishing}
+				{editorName}
+				{editorTheme}
+				{colorMode}
+				{headerFontSelection}
+				{bodyFontSelection}
+				{radiusOptions}
+				{transitionPresets}
+				{fontOptions}
+				{themesCatalog}
+				{lightBasePalette}
+				{darkBasePalette}
+				{lightBackgroundOptions}
+				{lightSurfaceOptions}
+				{lightSecondaryOptions}
+				{lightTextOptions}
+				{lightPrimaryOptions}
+				{lightBorderOptions}
+				{darkBackgroundOptions}
+				{darkSurfaceOptions}
+				{darkSecondaryOptions}
+				{darkTextOptions}
+				{darkPrimaryOptions}
+				{darkBorderOptions}
+				{copiedCss}
+				{copiedTypeScriptPreset}
+				{isPublishing}
 				undoDisabled={undoStack.length === 0}
 				redoDisabled={redoStack.length === 0}
-				loadPreset={loadPreset}
-				updateEditorName={updateEditorName}
-				updateRadius={updateRadius}
-				updateDurationPreset={updateDurationPreset}
-				updateHeaderFont={updateHeaderFont}
-				updateBodyFont={updateBodyFont}
-				updateBasePalette={updateBasePalette}
-				updatePrimaryColor={updatePrimaryColor}
-				updatePaletteToken={updatePaletteToken}
-				updateRawToken={updateRawToken}
-				shuffleTheme={shuffleTheme}
-				undoHistory={undoHistory}
-				redoHistory={redoHistory}
-				copyGeneratedCss={copyGeneratedCss}
-				publishTheme={publishTheme}
+				{loadPreset}
+				{updateEditorName}
+				{updateRadius}
+				{updateDurationPreset}
+				{updateMotion}
+				{updateHeaderFont}
+				{updateBodyFont}
+				{updateBasePalette}
+				{updatePrimaryColor}
+				{updatePaletteToken}
+				{updateRawToken}
+				{shuffleTheme}
+				{undoHistory}
+				{redoHistory}
+				{copyGeneratedCss}
+				{copyTypeScriptPreset}
+				{publishTheme}
 			/>
 		</div>
 	</div>
@@ -651,10 +755,14 @@
 	>
 		<div class="p-6">
 			<div class="grid auto-rows-max gap-4 xl:grid-cols-3">
-
 				<!-- Card: Sign-up form -->
-				<section class="rounded-[var(--radius-xl)] border border-border bg-card p-5 shadow-[var(--outline-shadow)]">
-					<p class="text-lg font-semibold tracking-tight text-foreground" style="font-family: var(--font-header);">
+				<section
+					class="rounded-[var(--radius-xl)] border border-border bg-card p-5 shadow-[var(--outline-shadow)]"
+				>
+					<p
+						class="text-lg font-semibold tracking-tight text-foreground"
+						style="font-family: var(--font-header);"
+					>
 						Create your account
 					</p>
 					<p class="mt-1 text-sm text-foreground-muted">
@@ -662,7 +770,12 @@
 					</p>
 					<div class="mt-5 space-y-3">
 						<Input label="Full name" placeholder="Alex Johnson" variant="outlined" />
-						<Input label="Email address" placeholder="alex@company.com" type="email" variant="outlined" />
+						<Input
+							label="Email address"
+							placeholder="alex@company.com"
+							type="email"
+							variant="outlined"
+						/>
 						<div class="space-y-1.5">
 							<span class="text-sm font-medium text-foreground">Role</span>
 							<Select.Root value="" class="">
@@ -678,25 +791,35 @@
 					</div>
 					<Button class="mt-5 w-full">Create Account</Button>
 					<p class="mt-3 text-center text-sm text-foreground-muted">
-						Already have an account? <a href="/themes/studio" class="text-primary underline-offset-4 hover:underline">Sign in</a>
+						Already have an account? <a
+							href="/themes/studio"
+							class="text-primary underline-offset-4 hover:underline">Sign in</a
+						>
 					</p>
 				</section>
 
 				<!-- Card: Typography -->
-				<section class="rounded-[var(--radius-xl)] border border-border bg-card p-5 shadow-[var(--outline-shadow)]">
+				<section
+					class="rounded-[var(--radius-xl)] border border-border bg-card p-5 shadow-[var(--outline-shadow)]"
+				>
 					<div class="flex items-start justify-between gap-3">
 						<div>
 							<Badge variant="secondary" class="mb-3">Typography</Badge>
-							<p class="text-2xl font-bold leading-tight tracking-tight text-foreground" style="font-family: var(--font-header);">
+							<p
+								class="text-2xl font-bold leading-tight tracking-tight text-foreground"
+								style="font-family: var(--font-header);"
+							>
 								The quick brown fox
 							</p>
 						</div>
 					</div>
 					<p class="mt-3 text-sm leading-relaxed text-foreground">
-						Build interfaces people love. Silk UI gives your team a shared language — from colors and spacing to motion and typography.
+						Build interfaces people love. Silk UI gives your team a shared language — from colors
+						and spacing to motion and typography.
 					</p>
 					<p class="mt-3 text-sm text-foreground-muted">
-						Supporting body text in a muted tone, used for captions, descriptions, and secondary information throughout the interface.
+						Supporting body text in a muted tone, used for captions, descriptions, and secondary
+						information throughout the interface.
 					</p>
 					<div class="mt-4 flex flex-wrap items-center gap-2">
 						<Badge>Primary</Badge>
@@ -712,23 +835,26 @@
 				</section>
 
 				<!-- Card: Stats -->
-				<section class="rounded-[var(--radius-xl)] border border-border bg-card p-5 shadow-[var(--outline-shadow)]">
+				<section
+					class="rounded-[var(--radius-xl)] border border-border bg-card p-5 shadow-[var(--outline-shadow)]"
+				>
 					<div class="flex items-center justify-between gap-3">
-						<p class="text-lg font-semibold tracking-tight text-foreground" style="font-family: var(--font-header);">
+						<p
+							class="text-lg font-semibold tracking-tight text-foreground"
+							style="font-family: var(--font-header);"
+						>
 							Monthly Overview
 						</p>
 						<Badge variant="secondary">Oct 2024</Badge>
 					</div>
 					<div class="mt-5 grid grid-cols-2 gap-3">
-						{#each [
-							['Revenue', '$48,200', '+12%'],
-							['Customers', '1,840', '+8%'],
-							['Churn Rate', '1.2%', '−0.4%'],
-							['MRR Growth', '18%', '+3%']
-						] as [label, value, delta]}
+						{#each [['Revenue', '$48,200', '+12%'], ['Customers', '1,840', '+8%'], ['Churn Rate', '1.2%', '−0.4%'], ['MRR Growth', '18%', '+3%']] as [label, value, delta]}
 							<div class="rounded-[var(--radius-md)] bg-secondary/40 p-3">
 								<p class="text-sm text-foreground-muted">{label}</p>
-								<p class="mt-1 text-xl font-semibold tracking-tight text-foreground" style="font-family: var(--font-header);">
+								<p
+									class="mt-1 text-xl font-semibold tracking-tight text-foreground"
+									style="font-family: var(--font-header);"
+								>
 									{value}
 								</p>
 								<p class="mt-0.5 text-sm text-primary">{delta}</p>
@@ -743,7 +869,10 @@
 									<span class="font-medium text-foreground">{pct}</span>
 								</div>
 								<div class="h-1.5 overflow-hidden rounded-full bg-secondary/50">
-									<div class="h-full rounded-full bg-primary transition-all" style="width:{pct};"></div>
+									<div
+										class="h-full rounded-full bg-primary transition-all"
+										style="width:{pct};"
+									></div>
 								</div>
 							</div>
 						{/each}
@@ -751,7 +880,9 @@
 				</section>
 
 				<!-- Card: Buttons (full width) -->
-				<section class="rounded-[var(--radius-xl)] border border-border bg-card p-5 shadow-[var(--outline-shadow)] xl:col-span-3">
+				<section
+					class="rounded-[var(--radius-xl)] border border-border bg-card p-5 shadow-[var(--outline-shadow)] xl:col-span-3"
+				>
 					<p class="mb-4 text-sm font-medium text-foreground-muted">Button variants</p>
 					<div class="flex flex-wrap items-center gap-3">
 						<Button>Primary</Button>
@@ -777,13 +908,7 @@
 					</div>
 					<p class="mb-4 mt-6 text-sm font-medium text-foreground-muted">Status colors</p>
 					<div class="grid gap-3 sm:grid-cols-5">
-						{#each [
-							['Info', 'var(--color-info)'],
-							['Success', 'var(--color-success)'],
-							['Warning', 'var(--color-warning)'],
-							['Error', 'var(--color-error)'],
-							['Destructive', 'var(--color-destructive)']
-						] as [label, color]}
+						{#each [['Info', 'var(--color-info)'], ['Success', 'var(--color-success)'], ['Warning', 'var(--color-warning)'], ['Error', 'var(--color-error)'], ['Destructive', 'var(--color-destructive)']] as [label, color]}
 							<div class="rounded-[var(--radius-md)] border border-border bg-background p-3">
 								<div class="flex items-center gap-2">
 									<span class="size-3 rounded-full" style={`background:${color};`}></span>
@@ -796,22 +921,27 @@
 				</section>
 
 				<!-- Card: Notifications -->
-				<section class="rounded-[var(--radius-xl)] border border-border bg-card p-5 shadow-[var(--outline-shadow)]">
+				<section
+					class="rounded-[var(--radius-xl)] border border-border bg-card p-5 shadow-[var(--outline-shadow)]"
+				>
 					<div class="flex items-center justify-between gap-3">
-						<p class="text-lg font-semibold tracking-tight text-foreground" style="font-family: var(--font-header);">
+						<p
+							class="text-lg font-semibold tracking-tight text-foreground"
+							style="font-family: var(--font-header);"
+						>
 							Notifications
 						</p>
 						<Badge variant="secondary">3 new</Badge>
 					</div>
 					<div class="mt-4 space-y-1">
-						{#each [
-							{ title: 'Deployment succeeded', desc: 'v2.4.1 is live in production', time: 'Just now', dot: 'var(--color-success)' },
-							{ title: 'New team member', desc: 'Maya Chen joined the workspace', time: '4m ago', dot: 'var(--color-info)' },
-							{ title: 'Billing warning', desc: 'Payment method expires in 2 days', time: '1h ago', dot: 'var(--color-warning)' },
-							{ title: 'Theme publish failed', desc: 'Slug already exists in the catalog', time: 'Yesterday', dot: 'var(--color-destructive)' }
-						] as item}
-							<div class="flex items-start gap-3 rounded-[var(--radius-md)] px-3 py-2.5 transition-colors hover:bg-secondary/30">
-								<div class="mt-1.5 size-2 shrink-0 rounded-full" style={`background:${item.dot};`}></div>
+						{#each [{ title: 'Deployment succeeded', desc: 'v2.4.1 is live in production', time: 'Just now', dot: 'var(--color-success)' }, { title: 'New team member', desc: 'Maya Chen joined the workspace', time: '4m ago', dot: 'var(--color-info)' }, { title: 'Billing warning', desc: 'Payment method expires in 2 days', time: '1h ago', dot: 'var(--color-warning)' }, { title: 'Theme publish failed', desc: 'Slug already exists in the catalog', time: 'Yesterday', dot: 'var(--color-destructive)' }] as item}
+							<div
+								class="flex items-start gap-3 rounded-[var(--radius-md)] px-3 py-2.5 transition-colors hover:bg-secondary/30"
+							>
+								<div
+									class="mt-1.5 size-2 shrink-0 rounded-full"
+									style={`background:${item.dot};`}
+								></div>
 								<div class="min-w-0 flex-1">
 									<p class="truncate text-sm font-medium text-foreground">{item.title}</p>
 									<p class="mt-0.5 truncate text-sm text-foreground-muted">{item.desc}</p>
@@ -823,19 +953,22 @@
 				</section>
 
 				<!-- Card: Settings form -->
-				<section class="rounded-[var(--radius-xl)] border border-border bg-card p-5 shadow-[var(--outline-shadow)]">
-					<p class="text-lg font-semibold tracking-tight text-foreground" style="font-family: var(--font-header);">
+				<section
+					class="rounded-[var(--radius-xl)] border border-border bg-card p-5 shadow-[var(--outline-shadow)]"
+				>
+					<p
+						class="text-lg font-semibold tracking-tight text-foreground"
+						style="font-family: var(--font-header);"
+					>
 						Workspace settings
 					</p>
 					<div class="mt-5 space-y-5">
 						<Input label="Workspace name" placeholder="Acme Inc." variant="outlined" />
 						<div class="space-y-3">
-							{#each [
-								{ label: 'Email notifications', desc: 'Receive updates about your account' },
-								{ label: 'Two-factor auth', desc: 'Add an extra layer of security' },
-								{ label: 'Public profile', desc: 'Let others find your workspace' }
-							] as item}
-								<div class="flex items-center justify-between gap-4 rounded-[var(--radius-md)] border border-border bg-background/60 px-4 py-3">
+							{#each [{ label: 'Email notifications', desc: 'Receive updates about your account' }, { label: 'Two-factor auth', desc: 'Add an extra layer of security' }, { label: 'Public profile', desc: 'Let others find your workspace' }] as item}
+								<div
+									class="flex items-center justify-between gap-4 rounded-[var(--radius-md)] border border-border bg-background/60 px-4 py-3"
+								>
 									<div>
 										<p class="text-sm font-medium text-foreground">{item.label}</p>
 										<p class="text-sm text-foreground-muted">{item.desc}</p>
@@ -849,23 +982,27 @@
 				</section>
 
 				<!-- Card: Transaction list -->
-				<section class="rounded-[var(--radius-xl)] border border-border bg-card p-5 shadow-[var(--outline-shadow)]">
+				<section
+					class="rounded-[var(--radius-xl)] border border-border bg-card p-5 shadow-[var(--outline-shadow)]"
+				>
 					<div class="flex items-center justify-between gap-3">
-						<p class="text-lg font-semibold tracking-tight text-foreground" style="font-family: var(--font-header);">
+						<p
+							class="text-lg font-semibold tracking-tight text-foreground"
+							style="font-family: var(--font-header);"
+						>
 							Transactions
 						</p>
-						<button class="text-sm text-primary hover:underline underline-offset-4">View all</button>
+						<button class="text-sm text-primary hover:underline underline-offset-4">View all</button
+						>
 					</div>
 					<div class="mt-4 space-y-px">
-						{#each [
-							{ name: 'Figma', category: 'Design', amount: '−$45.00', date: 'Today' },
-							{ name: 'Vercel', category: 'Infrastructure', amount: '−$20.00', date: 'Yesterday' },
-							{ name: 'Stripe Payout', category: 'Income', amount: '+$4,300.00', date: 'Oct 13' },
-							{ name: 'Linear', category: 'Productivity', amount: '−$18.00', date: 'Oct 11' },
-							{ name: 'AWS', category: 'Infrastructure', amount: '−$214.60', date: 'Oct 1' }
-						] as tx}
-							<div class="flex items-center gap-3 rounded-[var(--radius-md)] px-2 py-2.5 transition-colors hover:bg-secondary/30">
-								<div class="flex size-8 shrink-0 items-center justify-center rounded-[var(--radius-sm)] bg-secondary/50 text-sm font-medium text-foreground">
+						{#each [{ name: 'Figma', category: 'Design', amount: '−$45.00', date: 'Today' }, { name: 'Vercel', category: 'Infrastructure', amount: '−$20.00', date: 'Yesterday' }, { name: 'Stripe Payout', category: 'Income', amount: '+$4,300.00', date: 'Oct 13' }, { name: 'Linear', category: 'Productivity', amount: '−$18.00', date: 'Oct 11' }, { name: 'AWS', category: 'Infrastructure', amount: '−$214.60', date: 'Oct 1' }] as tx}
+							<div
+								class="flex items-center gap-3 rounded-[var(--radius-md)] px-2 py-2.5 transition-colors hover:bg-secondary/30"
+							>
+								<div
+									class="flex size-8 shrink-0 items-center justify-center rounded-[var(--radius-sm)] bg-secondary/50 text-sm font-medium text-foreground"
+								>
 									{tx.name[0]}
 								</div>
 								<div class="min-w-0 flex-1">
@@ -880,10 +1017,7 @@
 						{/each}
 					</div>
 				</section>
-
 			</div>
 		</div>
 	</div>
-
-
 </div>

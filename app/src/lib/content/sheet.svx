@@ -8,24 +8,10 @@
 </script>
 
 <script>
-	import { ComponentPreview, ExportItem, APIReference } from '$lib/components/docs';
+	import { ComponentPreview, ExportItem, APIReference, CodeBlock } from '$lib/components/docs';
 	import * as Sheet from '$lib/silk/components/sheet';
 	import { Input } from '$lib/silk/components/input';
 </script>
-
-<h1 class="py-2 h1">Import</h1>
-<p class="py-2">Sheet exports 8 components.</p>
-
-<ExportItem title="Root">Owns the sheet open state.</ExportItem>
-<ExportItem title="Trigger">Button that opens the sheet.</ExportItem>
-<ExportItem title="Content">Sliding panel container.</ExportItem>
-<ExportItem title="Header">Top section for title and description.</ExportItem>
-<ExportItem title="Title">Sheet heading.</ExportItem>
-<ExportItem title="Description">Sheet supporting copy.</ExportItem>
-<ExportItem title="Footer">Action row inside the sheet.</ExportItem>
-<ExportItem title="Close">Button that closes the sheet.</ExportItem>
-
-<h1 class="py-6 h1">Example</h1>
 
 <ComponentPreview code={`<script>
 	import * as Sheet from '$lib/silk/components/sheet';
@@ -65,6 +51,22 @@
 		</Sheet.Content>
 	</Sheet.Root>
 </ComponentPreview>
+<div class="flex flex-col gap-5 pt-8 pb-8">
+	<h1 class="h1">Installation</h1>
+	<CodeBlock lang="shell" code={`bunx @aidan-neel/ui add sheet`} />
+</div>
+
+<h1 class="py-2 h1">Import</h1>
+<p class="py-2">Sheet exports 8 components.</p>
+
+<ExportItem title="Root">Owns the sheet open state.</ExportItem>
+<ExportItem title="Trigger">Button that opens the sheet.</ExportItem>
+<ExportItem title="Content">Sliding panel container.</ExportItem>
+<ExportItem title="Header">Top section for title and description.</ExportItem>
+<ExportItem title="Title">Sheet heading.</ExportItem>
+<ExportItem title="Description">Sheet supporting copy.</ExportItem>
+<ExportItem title="Footer">Action row inside the sheet.</ExportItem>
+<ExportItem title="Close">Button that closes the sheet.</ExportItem>
 
 <h1 class="py-6 h1">API Reference</h1>
 

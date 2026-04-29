@@ -16,10 +16,12 @@
 	<section class="grid gap-4 pt-6">
 		<p class="text-base leading-7 text-foreground-muted">
 			Silk UI is designed so the whole interface moves together when you change a small set of core
-			tokens. Start with semantic values like background, surface, text, primary, ring, and radius.
-			Those feed the primitives first. Component-specific tokens come second.
+			tokens. Start with semantic values like background, card, panel, text, primary, ring, and
+			radius. Those feed the primitives first. Component-specific tokens come second.
 		</p>
-		<div class="rounded-lg border border-border bg-[var(--card-bg)] p-5 shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)]">
+		<div
+			class="rounded-lg border border-border bg-[var(--card-bg)] p-5 shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)]"
+		>
 			<p class="text-sm font-semibold uppercase tracking-[0.12em] text-foreground-muted">
 				Theming layers
 			</p>
@@ -38,11 +40,9 @@
 	</section>
 
 	<section class="mt-8 flex flex-col gap-2">
-		<p class="docs-section-heading">
-			1. Start with semantic tokens
-		</p>
+		<p class="docs-section-heading">1. Start with semantic tokens</p>
 		<p class="text-base leading-7 text-foreground-muted">
-			Think in terms of the whole interface, not isolated components. If your background, surfaces,
+			Think in terms of the whole interface, not isolated components. If your background, cards,
 			text, and primary accent are balanced, a lot of the library will already feel cohesive.
 		</p>
 		<CodeBlock
@@ -58,7 +58,7 @@
 	--color-border: #dde2ea;
 	--color-input: #c9d1dc;
 	--color-secondary: #f2f4f7;
-	--color-popover: #ffffff;
+	--color-panel: #ffffff;
 	--color-card: #ffffff;
 	--color-ring: rgb(21 94 239 / 0.18);
 
@@ -74,7 +74,7 @@
 	--color-border: #27303f;
 	--color-input: #334155;
 	--color-secondary: #141b26;
-	--color-popover: #171f2b;
+	--color-panel: #171f2b;
 	--color-card: #1a2431;
 	--color-ring: rgb(122 162 255 / 0.22);
 }`}
@@ -84,9 +84,7 @@
 	</section>
 
 	<section class="mt-8 flex flex-col gap-2">
-		<p class="docs-section-heading">
-			2. Shape the interaction feel
-		</p>
+		<p class="docs-section-heading">2. Shape the interaction feel</p>
 		<p class="text-base leading-7 text-foreground-muted">
 			Theming is more than color. Radius, panel shadows, overlay blur, and motion timing change how
 			the UI feels just as much as hue does.
@@ -114,9 +112,7 @@
 	</section>
 
 	<section class="mt-8 flex flex-col gap-2">
-		<p class="docs-section-heading">
-			3. Override one primitive at a time when needed
-		</p>
+		<p class="docs-section-heading">3. Override one primitive at a time when needed</p>
 		<p class="text-base leading-7 text-foreground-muted">
 			When a single component needs to break from the system a bit, reach for the exposed hooks
 			before you rewrite the component. That keeps customizations explicit and easier to maintain.
@@ -136,7 +132,7 @@
 }
 
 [data-ui='dropdown-menu-content'] {
-	--color-panel: color-mix(in srgb, var(--color-popover) 90%, white);
+	--color-panel: color-mix(in srgb, var(--color-panel) 90%, white);
 }`}
 			class="p-3 max-h-[20rem]"
 			lang="css"
@@ -144,14 +140,14 @@
 	</section>
 
 	<section class="mt-8 flex flex-col gap-3">
-		<p class="docs-section-heading">
-			4. Use the theme editor primitives
-		</p>
+		<p class="docs-section-heading">4. Use the theme editor primitives</p>
 		<p class="text-base leading-7 text-foreground-muted">
 			The same editor tooling used on the Themes page is available inside the app, so if you are
 			building internal theme controls or a preset manager, you can reuse the same pieces.
 		</p>
-		<div class="rounded-lg border border-border bg-[var(--card-bg)] p-4 shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)]">
+		<div
+			class="rounded-lg border border-border bg-[var(--card-bg)] p-4 shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)]"
+		>
 			<ColorPicker
 				label="Primary"
 				value={previewColor}
@@ -163,9 +159,7 @@
 	</section>
 
 	<section class="mt-8 flex flex-col gap-2">
-		<p class="docs-section-heading">
-			5. Install a preset, then customize from there
-		</p>
+		<p class="docs-section-heading">5. Install a preset, then customize from there</p>
 		<p class="text-base leading-7 text-foreground-muted">
 			If you do not want to start from zero, install a preset and tune it. The preset gallery lives
 			on the <a href="/themes" class="font-medium underline">themes page</a>.

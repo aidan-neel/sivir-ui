@@ -2,6 +2,7 @@ import type { DefaultProps } from '$lib/silk/utils';
 import Root from './alert-dialog.svelte';
 import Trigger from './alert-dialog-trigger.svelte';
 import Content from './alert-dialog-content.svelte';
+import Header from './alert-dialog-header.svelte';
 import Title from './alert-dialog-title.svelte';
 import Description from './alert-dialog-description.svelte';
 import Footer from './alert-dialog-footer.svelte';
@@ -17,4 +18,4 @@ export type AlertDialogProps = {
 	open?: boolean;
 } & DefaultProps;
 
-export { Root, Trigger, Content, Title, Description, Exit, Footer, Confirm };
+export { Root, Trigger, Content, Header, Title, Description, Exit, Footer, Confirm };

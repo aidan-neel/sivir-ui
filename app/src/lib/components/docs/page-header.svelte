@@ -14,7 +14,7 @@
 	} = $props();
 </script>
 
-<header class="border-b border-border-strong/60 pb-6">
+<header class="pb-6" data-page-header>
 	<div class="flex flex-col gap-4">
 		{#if eyebrow}
 			<Badge variant="outlined" class="w-fit px-3 text-[0.76rem]">
@@ -24,11 +24,11 @@
 
 		<div class="flex flex-col gap-3">
 			<h1
-				class={`m-0 max-w-[12ch] text-balance font-medium leading-[0.98] tracking-[-0.045em] [font-family:var(--font-header),sans-serif] ${
+				class={`m-0 max-w-[12ch] text-balance font-semibold leading-[1] tracking-[-0.035em] [font-family:var(--font-header),sans-serif] ${
 					compact
-						? 'text-[clamp(1.85rem,3.1vw,2.45rem)] md:max-w-[14ch]'
-						: 'text-[clamp(2.35rem,4vw,3.25rem)]'
-				} max-md:max-w-none max-md:text-[clamp(2rem,9vw,2.8rem)]`}
+						? 'text-[clamp(1.55rem,2.4vw,1.9rem)] md:max-w-[18ch]'
+						: 'text-[clamp(2rem,3.5vw,2.8rem)]'
+				} max-md:max-w-none max-md:text-[clamp(1.6rem,7vw,2.2rem)]`}
 			>
 				{title}
 			</h1>
