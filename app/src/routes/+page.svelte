@@ -91,7 +91,7 @@
 		class="pointer-events-none absolute inset-0 [background-image:linear-gradient(rgb(16_24_40_/_0.03)_1px,transparent_1px),linear-gradient(90deg,rgb(16_24_40_/_0.03)_1px,transparent_1px)] [background-size:44px_44px] [mask-image:linear-gradient(180deg,rgb(0_0_0_/_0.55),transparent_82%)]"
 	></div>
 
-	<section class="relative z-[1] mx-auto flex w-full max-w-[1400px] justify-center px-4 md:px-8">
+	<section class="relative z-[1] mx-auto flex w-full max-w-[1600px] justify-center px-4 md:px-8">
 		<div
 			class="flex max-w-[82rem] flex-col items-center gap-10 pt-[4.25rem] text-center max-[1100px]:pt-8"
 		>
@@ -166,7 +166,7 @@
 		</div>
 	</section>
 
-	<section class="relative z-[1] mx-auto mt-[9.5rem] w-full max-w-[1400px] px-4 md:px-8">
+	<section class="relative z-[1] mx-auto mt-[9.5rem] w-full max-w-[1600px] px-4 md:px-8">
 		<div class="mx-auto flex max-w-[42rem] flex-col items-center gap-[0.85rem] text-center">
 			<span
 				class="fade-up text-[0.8rem] font-medium uppercase tracking-[0.12em] text-foreground-muted"
@@ -231,7 +231,7 @@
 		</div>
 	</section>
 
-	<section class="relative z-[1] mx-auto mt-[5.75rem] w-full max-w-[1400px] px-4 md:px-8">
+	<section class="relative z-[1] mx-auto mt-[5.75rem] w-full max-w-[1600px] px-4 md:px-8">
 		<div
 			class="fade-up bg-[var(--card-bg)] border border-border rounded-[var(--card-radius)] shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)] flex items-center justify-between gap-4 bg-surface/72 p-6 shadow-none max-md:flex-col max-md:items-start"
 			use:revealOnScroll={{ delay: 120, threshold: 0.25 }}
@@ -259,7 +259,7 @@
 	</section>
 
 	<footer
-		class="fade-up relative z-[1] mx-auto mt-24 flex w-full max-w-[1400px] items-center justify-between gap-4 border-t border-border-strong/60 px-4 pt-5 md:px-8 max-md:flex-col max-md:items-start"
+		class="fade-up relative z-[1] mx-auto mt-24 flex w-full max-w-[1600px] items-center justify-between gap-4 border-t border-border-strong/60 px-4 pt-5 md:px-8 max-md:flex-col max-md:items-start"
 		use:revealOnScroll={{ delay: 80, threshold: 0.01, rootMargin: '0px 0px 12% 0px' }}
 	>
 		<div>

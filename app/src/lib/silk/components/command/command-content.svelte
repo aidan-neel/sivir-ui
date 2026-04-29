@@ -51,7 +51,7 @@
 {#if uiState.open}
 	<div
 		transition:fade={{ duration: 150, easing: cubicOut }}
-		class="fixed inset-0 z-40 bg-[var(--color-overlay)] backdrop-blur-[2px]"
+		class="fixed inset-0 z-40 bg-[var(--color-overlay)]"
 	></div>
 	<div
 		bind:this={element}

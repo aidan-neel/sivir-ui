@@ -1,11 +1,5 @@
 <script lang="ts">
-	type ApiReferenceItem = {
-		property: string;
-		type: string;
-		description: string;
-		defaults: string;
-	};
-
+	import type { ApiReferenceItem } from './api-reference-types';
 	const {
 		title,
 		component,

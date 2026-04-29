@@ -140,18 +140,23 @@
 		class={`relative mx-auto flex h-16 w-full items-center justify-between px-4 md:px-8 ${
 			$page.url.pathname.startsWith('/themes/studio')
 				? 'max-w-none xl:px-10 2xl:px-12'
-				: 'max-w-[1400px]'
+				: 'max-w-[1600px]'
 		}`}
 	>
 		<Command.Root>
-			<div class="flex min-w-0 flex-row items-center gap-4 md:gap-6">
+			<div class="flex min-w-0 flex-row items-center gap-4 md:gap-5">
 				<a
 					href="/"
 					onclick={closeMobileMenu}
-					class="flex min-w-0 flex-row items-center gap-3 rounded-lg px-1 py-2 text-sm font-semibold tracking-tight text-foreground transition-colors duration-150 hover:text-foreground"
+					class="flex min-w-0 flex-row items-center gap-2 rounded-lg px-1 py-2 text-sm font-semibold tracking-tight text-foreground transition-colors duration-150 hover:text-foreground"
 				>
 					<Logo />
 					<span class="truncate">Silk UI</span>
+					<span
+						class="ml-1 rounded-md bg-secondary px-1.5 py-0.5 font-mono text-[0.7rem] font-medium text-foreground-muted"
+					>
+						v0.4.2
+					</span>
 				</a>
 				<div class="hidden items-center gap-1 md:flex">
 					{#each navItems as item}
@@ -177,27 +182,7 @@
 				>
 					<Search size={16} />
 				</Command.Trigger>
-				<Button
-					class="hidden size-9 rounded-lg sm:inline-flex"
-					variant="ghost"
-					onclick={() =>
-						window.open('https://github.com/aidan-neel/ui', '_blank', 'noopener,noreferrer')}
-					size="icon"
-					aria-label="Open GitHub repository"
-				>
-					<svg
-						viewBox="0 0 24 24"
-						aria-hidden="true"
-						class="size-4 fill-none stroke-current"
-						stroke-width="1.8"
-					>
-						<path
-							d="M9 19c-4 1.2-4-2-6-2m12 4v-3.1a2.7 2.7 0 0 0-.8-2.1c2.7-.3 5.6-1.3 5.6-6a4.7 4.7 0 0 0-1.3-3.2 4.3 4.3 0 0 0-.1-3.1s-1-.3-3.3 1.2a11.5 11.5 0 0 0-6 0C6.8 3.4 5.8 3.7 5.8 3.7a4.3 4.3 0 0 0-.1 3.1 4.7 4.7 0 0 0-1.3 3.2c0 4.7 2.9 5.7 5.6 6a2.7 2.7 0 0 0-.8 2.1V21"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-						/>
-					</svg>
-				</Button>
+
 				<Button
 					class="size-9 rounded-lg"
 					variant="ghost"
@@ -225,6 +210,21 @@
 					{:else}
 						<Menu size={16} />
 					{/if}
+				</Button>
+
+				<Button
+					class="hidden h-9 gap-1.5 rounded-lg px-2.5 sm:inline-flex"
+					variant="primary"
+					onclick={() =>
+						window.open('https://github.com/aidan-neel/ui', '_blank', 'noopener,noreferrer')}
+					aria-label="Star Silk UI on GitHub"
+				>
+					<svg viewBox="0 0 24 24" aria-hidden="true" class="size-3.5 fill-current">
+						<path
+							d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
+						/>
+					</svg>
+					<span class="text-xs font-medium">Star · 8.4k</span>
 				</Button>
 			</div>
 

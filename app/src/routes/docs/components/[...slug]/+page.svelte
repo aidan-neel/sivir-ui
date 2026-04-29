@@ -1,14 +1,13 @@
 <script lang="ts">
 	import { sanitizeComponent } from '$lib/components';
 	import type { PageData } from './$types';
-	import { Badge } from '$lib/silk/components/badge';
 	import { components } from '$lib/components';
-	import ExternalLink from '@lucide/svelte/icons/external-link';
 	import { Button } from '$lib/silk/components/button';
 	import ChevronRight from '@lucide/svelte/icons/chevron-right';
 	import ChevronLeft from '@lucide/svelte/icons/chevron-left';
-	import CodeBlock from '$lib/components/docs/code-block.svelte';
 	import PageHeader from '$lib/components/docs/page-header.svelte';
+	import PageActions from '$lib/components/docs/page-actions.svelte';
+	import { page } from '$app/stores';
 
 	const {
 		data
@@ -20,14 +19,33 @@
 	const Title = $derived(data.metadata.title);
 	const Description = $derived(data.metadata.description);
 	const Source = $derived(data.metadata.source);
-	const Dependencies = $derived(data.metadata.dependencies ?? []);
+	const AriaUrl = $derived((data.metadata as Record<string, unknown>).ariaUrl as string | undefined);
+	const slug = $derived($page.params.slug);
 
 	let curIndex = $derived(components.indexOf(Title.toLowerCase()));
 	let nextComponent = $derived(components[curIndex + 1]);
 	let prevComponent = $derived(components[curIndex - 1]);
 </script>
 
+{#key Title}
+	<PageActions
+		title={sanitizeComponent(Title)}
+		{slug}
+		source={Source}
+		ariaUrl={AriaUrl}
+		section="breadcrumbs"
+	/>
+{/key}
 <PageHeader title={sanitizeComponent(Title)} description={Description} compact={true} />
+{#key Title}
+	<PageActions
+		title={sanitizeComponent(Title)}
+		{slug}
+		source={Source}
+		ariaUrl={AriaUrl}
+		section="actions"
+	/>
+{/key}
 
 <div class="flex-grow w-full pb-16">
 	<Markdown />

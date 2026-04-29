@@ -10,7 +10,7 @@ export const badge = tv({
 				'bg-[var(--button-secondary-bg)] text-[var(--button-secondary-foreground)] border-[var(--button-secondary-border)] hover:bg-[var(--button-secondary-hover-bg)]',
 			flat: 'bg-[var(--button-flat-bg)] text-[var(--button-flat-foreground)] border-[var(--button-flat-border)] hover:bg-[var(--button-flat-hover-bg)]',
 			outlined:
-				'[--ui-badge-shadow:var(--button-outlined-shadow)] bg-[var(--button-outlined-bg)] text-[var(--button-outlined-foreground)] border-border shadow-[var(--ui-badge-shadow)] hover:bg-[var(--button-outlined-hover-bg)]',
+				'relative bg-[var(--button-outlined-bg)] text-[var(--button-outlined-foreground)] hover:bg-[var(--button-outlined-hover-bg)] shadow-[var(--field-outlined-shadow)]',
 			ghost:
 				'bg-[var(--button-ghost-bg)] text-[var(--button-ghost-foreground)] border-[var(--button-ghost-border)] hover:bg-[var(--button-ghost-hover-bg)]',
 			alternate:

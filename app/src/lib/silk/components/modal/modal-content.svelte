@@ -48,7 +48,6 @@
 				overlayClass,
 				'absolute inset-0 bg-[var(--color-overlay)] [backface-visibility:hidden] [transform:translateZ(0)]'
 			)}
-			style="backdrop-filter: blur(var(--motion-overlay-blur));"
 		></div>
 		<div
 			transition:flyAndScale={{ durationVar: '--motion-duration-panel' }}

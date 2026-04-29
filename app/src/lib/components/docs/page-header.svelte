@@ -26,8 +26,8 @@
 			<h1
 				class={`m-0 max-w-[12ch] text-balance font-semibold leading-[1] tracking-[-0.035em] [font-family:var(--font-header),sans-serif] ${
 					compact
-						? 'text-[clamp(1.55rem,2.4vw,1.9rem)] md:max-w-[18ch]'
-						: 'text-[clamp(2rem,3.5vw,2.8rem)]'
+						? 'text-[clamp(2rem,3vw,2.5rem)] md:max-w-[18ch]'
+						: 'text-[clamp(2.2rem,3.8vw,3rem)]'
 				} max-md:max-w-none max-md:text-[clamp(1.6rem,7vw,2.2rem)]`}
 			>
 				{title}

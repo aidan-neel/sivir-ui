@@ -154,7 +154,7 @@
 	--button-destructive-hover-bg: color-mix(in srgb, var(--color-destructive) 88%, #8b0000);
 
 	--badge-padding-x: 0.55rem;
-	--badge-padding-y: 0.2rem;
+	--badge-padding-y: 0.25rem;
 
 	--field-height: var(--size-control-md);
 	--field-padding-x: var(--space-control-x);

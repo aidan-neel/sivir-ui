@@ -2,7 +2,7 @@
 	viewBox="0 0 24 24"
 	fill="none"
 	aria-hidden="true"
-	class="h-5 w-5 text-foreground"
+	class="h-6 w-6 text-foreground"
 >
-	<circle cx="12" cy="12" r="6" fill="currentColor" />
+	<circle cx="12" cy="12" r="7" fill="currentColor" />
 </svg>
