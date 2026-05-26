@@ -41,6 +41,31 @@ export type ThemeBasePalette = {
 	border?: string;
 };
 
+export type ThemeTypography = {
+	/** Header / display text. Default 600. */
+	weightHeader: number;
+	/** Body / paragraph text. Default 400. */
+	weightBody: number;
+	/** Form labels. Default 500. */
+	weightLabel: number;
+	/** Button text. Default 500. */
+	weightButton: number;
+	/** Badge text. Default 500. */
+	weightBadge: number;
+};
+
+export const defaultTypography: ThemeTypography = {
+	weightHeader: 600,
+	weightBody: 400,
+	weightLabel: 500,
+	weightButton: 500,
+	weightBadge: 500
+};
+
+export function resolveTypography(input?: Partial<ThemeTypography>): ThemeTypography {
+	return { ...defaultTypography, ...(input ?? {}) };
+}
+
 export type ThemeDraft = {
 	slug: string;
 	name: string;
@@ -56,10 +81,18 @@ export type ThemeDraft = {
 	radiusXl: string;
 	primaryButtonOutline: boolean;
 	invertedPanels: boolean;
+	/**
+	 * Background for floating overlays (Modal, Dialog, AlertDialog, Sheet,
+	 * Command, Popover). When true, overlays paint with `--color-card` so they
+	 * sit "above" the page; when false (default) they reuse the page background.
+	 */
+	overlaysOnSurface?: boolean;
 	durationPreset: ThemeTransitionPresetSlug;
 	motion: ThemeMotion;
 	light: ThemePalette;
 	dark: ThemePalette;
+	/** Per-element font weights. Optional — falls back to `defaultTypography`. */
+	typography?: ThemeTypography;
 };
 
 /** Rounds a radius token to a stable rem string. */
@@ -304,10 +337,18 @@ function panelTokensToCss(theme: ThemeDraft, mode: 'light' | 'dark') {
 		: mode === 'dark'
 			? 'rgb(120 130 148 / 0.07)'
 			: 'rgb(255 255 255 / 0.58)';
+	// Overlay surface (modal / dialog / alert-dialog / sheet / command).
+	// Always sourced from the ACTIVE mode's palette — `invertedPanels` is for
+	// floating popover menus, not full overlays. When `overlaysOnSurface` is
+	// true we paint with the card color so panels visually float above the
+	// page; otherwise we reuse the page background.
+	const overlayPalette = theme[mode];
+	const overlayBg = theme.overlaysOnSurface ? overlayPalette.card : overlayPalette.background;
 
 	return `\t--color-floating-panel: ${panel.panel};
 \t--color-floating-panel-foreground: ${panelForeground};
 \t--floating-panel-highlight: ${highlight};
+\t--color-overlay-bg: ${overlayBg};
 \t--floating-menu-item-foreground: ${panelForeground};
 \t--floating-menu-item-hover-bg: color-mix(in srgb, ${panel.secondary} 42%, transparent);
 \t--floating-menu-item-active-bg: color-mix(in srgb, ${panel.primary} 10%, transparent);`;
@@ -376,10 +417,16 @@ export const preset: ThemeDraft = ${serializeTypeScriptValue(theme)};`;
 export function themeToCss(theme: ThemeDraft) {
 	const radii = radiiFromBase(theme.radiusBase || theme.radiusMd);
 	const motion = resolveThemeMotion(theme.durationPreset, theme.motion);
+	const type = resolveTypography(theme.typography);
 	return `@theme {
 \t--font-sans: ${theme.fontSans};
 \t--font-mono: ${theme.fontMono};
 \t--font-header: ${theme.fontHeader};
+\t--font-weight-header: ${type.weightHeader};
+\t--font-weight-body: ${type.weightBody};
+\t--font-weight-label: ${type.weightLabel};
+\t--font-weight-button: ${type.weightButton};
+\t--font-weight-badge: ${type.weightBadge};
 \t--radius-sm: ${radii.sm};
 \t--radius-md: ${radii.md};
 \t--radius-lg: ${radii.lg};
@@ -401,6 +448,7 @@ export function themeToCss(theme: ThemeDraft) {
 \t--motion-panel-perspective: ${motion.panelPerspective ?? 0};
 \t--motion-panel-rotate-x: ${motion.panelRotateX ?? 0};
 \t--motion-panel-opacity-start: ${motion.panelOpacityStart ?? 0};
+\t--motion-panel-easing: ${motion.panelEasing ?? 'cubic-bezier(0.22,1,0.36,1)'};
 \t--button-primary-border: ${theme.primaryButtonOutline ? `color-mix(in srgb, ${theme.light.primary} 76%, #1237b9)` : 'transparent'};
 \t--text-xs: 12px;
 \t--text-sm: 14px;
@@ -412,6 +460,11 @@ ${panelTokensToCss(theme, 'light')}
 \t--font-sans: ${theme.fontSans};
 \t--font-mono: ${theme.fontMono};
 \t--font-header: ${theme.fontHeader};
+\t--font-weight-header: ${type.weightHeader};
+\t--font-weight-body: ${type.weightBody};
+\t--font-weight-label: ${type.weightLabel};
+\t--font-weight-button: ${type.weightButton};
+\t--font-weight-badge: ${type.weightBadge};
 \t--radius-sm: ${radii.sm};
 \t--radius-md: ${radii.md};
 \t--radius-lg: ${radii.lg};
@@ -433,8 +486,23 @@ ${panelTokensToCss(theme, 'light')}
 \t--motion-panel-perspective: ${motion.panelPerspective ?? 0};
 \t--motion-panel-rotate-x: ${motion.panelRotateX ?? 0};
 \t--motion-panel-opacity-start: ${motion.panelOpacityStart ?? 0};
+\t--motion-panel-easing: ${motion.panelEasing ?? 'cubic-bezier(0.22,1,0.36,1)'};
 \t--button-primary-border: ${theme.primaryButtonOutline ? `color-mix(in srgb, ${theme.dark.primary} 76%, #7aa2ff)` : 'transparent'};
 ${paletteToCss(theme.dark)}
 ${panelTokensToCss(theme, 'dark')}
-}`;
+}${
+		theme.durationPreset === 'none'
+			? `
+
+/* "None" motion preset: zero out every transition and animation, including
+   component-level hardcoded durations that ignore --motion-duration-* vars. */
+*, *::before, *::after {
+\ttransition-duration: 0ms !important;
+\ttransition-delay: 0ms !important;
+\tanimation-duration: 0.01ms !important;
+\tanimation-delay: 0ms !important;
+\tanimation-iteration-count: 1 !important;
+}`
+			: ''
+	}`;
 }

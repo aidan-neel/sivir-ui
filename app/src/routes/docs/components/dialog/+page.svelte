@@ -68,14 +68,14 @@
 		<Badge variant="ghost" class="text-[0.66rem]">Focus-trapped</Badge>
 		<Badge variant="ghost" class="text-[0.66rem]">Portaled</Badge>
 		</div>
-		<a href={SOURCE} target="_blank" rel="noreferrer noopener" class="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2.5 py-1 text-[0.7rem] font-medium text-foreground-muted transition-colors hover:bg-secondary/60 hover:text-foreground">
+		<a href={SOURCE} target="_blank" rel="noreferrer noopener" class="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2.5 py-1 text-[0.7rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted transition-colors hover:bg-secondary/60 hover:text-foreground">
 			View source
 			<External size={11} />
 		</a>
 	</div>
 
 	<div class="flex flex-col gap-3">
-		<h1 class="m-0 text-[2.6rem] font-medium leading-[1] tracking-[-0.035em] md:text-[3rem]" style="font-family: var(--font-header);">Dialog</h1>
+		<h1 class="m-0 text-[2.6rem] [font-weight:var(--font-weight-label,500)] leading-[1] tracking-[-0.035em] md:text-[3rem]" style="font-family: var(--font-header);">Dialog</h1>
 		<p class="m-0 max-w-[42rem] text-[1rem] leading-relaxed text-foreground-muted">
 			A focused modal for forms, editors, and one-off flows. Renders portaled to the document
 			body so it always sits above the rest of your app — no z-index gymnastics required.
@@ -139,7 +139,7 @@
 			<span class="grid size-6 place-items-center rounded-md bg-primary/10 text-primary">
 				<Sparkles size={12} />
 			</span>
-			<h2 class="m-0 text-[1.4rem] font-medium tracking-tight" style="font-family: var(--font-header);">
+			<h2 class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] tracking-tight" style="font-family: var(--font-header);">
 				Real-world examples
 			</h2>
 		</div>
@@ -151,7 +151,7 @@
 	<div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
 		<!-- Invite -->
 		<div class="flex flex-col gap-3 rounded-[var(--radius-lg)] border border-border bg-card p-4">
-			<span class="text-[0.7rem] font-medium uppercase tracking-wide text-foreground-muted">Invite collaborator</span>
+			<span class="text-[0.7rem] [font-weight:var(--font-weight-label,500)] uppercase tracking-wide text-foreground-muted">Invite collaborator</span>
 			<Dialog.Root open={false}>
 				<Dialog.Trigger variant="outlined"><Send size={13} /> Invite</Dialog.Trigger>
 				<Dialog.Content class="w-full max-w-[28rem] gap-0 overflow-hidden p-0">
@@ -176,7 +176,7 @@
 
 		<!-- Change password -->
 		<div class="flex flex-col gap-3 rounded-[var(--radius-lg)] border border-border bg-card p-4">
-			<span class="text-[0.7rem] font-medium uppercase tracking-wide text-foreground-muted">Change password</span>
+			<span class="text-[0.7rem] [font-weight:var(--font-weight-label,500)] uppercase tracking-wide text-foreground-muted">Change password</span>
 			<Dialog.Root open={false}>
 				<Dialog.Trigger variant="outlined"><Lock size={13} /> Change password</Dialog.Trigger>
 				<Dialog.Content class="w-full max-w-[28rem] gap-0 overflow-hidden p-0">
@@ -202,7 +202,7 @@
 
 		<!-- Add payment -->
 		<div class="flex flex-col gap-3 rounded-[var(--radius-lg)] border border-border bg-card p-4">
-			<span class="text-[0.7rem] font-medium uppercase tracking-wide text-foreground-muted">Add payment method</span>
+			<span class="text-[0.7rem] [font-weight:var(--font-weight-label,500)] uppercase tracking-wide text-foreground-muted">Add payment method</span>
 			<Dialog.Root open={false}>
 				<Dialog.Trigger variant="primary"><CreditCard size={13} /> Add card</Dialog.Trigger>
 				<Dialog.Content class="w-full max-w-[30rem] gap-0 overflow-hidden p-0">
@@ -232,7 +232,7 @@
 
 		<!-- Submit feedback -->
 		<div class="flex flex-col gap-3 rounded-[var(--radius-lg)] border border-border bg-card p-4">
-			<span class="text-[0.7rem] font-medium uppercase tracking-wide text-foreground-muted">Send feedback</span>
+			<span class="text-[0.7rem] [font-weight:var(--font-weight-label,500)] uppercase tracking-wide text-foreground-muted">Send feedback</span>
 			<Dialog.Root open={false}>
 				<Dialog.Trigger variant="ghost">Send feedback</Dialog.Trigger>
 				<Dialog.Content class="w-full max-w-[28rem] gap-0 overflow-hidden p-0">
@@ -245,7 +245,7 @@
 					</div>
 					<div class="flex flex-col gap-3 px-5 py-4">
 						<label class="flex flex-col gap-1">
-							<span class="text-[0.78rem] font-medium text-foreground">Feedback</span>
+							<span class="text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground">Feedback</span>
 							<textarea
 								rows={4}
 								class="resize-none rounded-[var(--radius-md)] border border-border bg-[var(--color-field)] px-3 py-2 text-[0.86rem] leading-relaxed text-foreground outline-none transition-[border-color,box-shadow] focus:border-[var(--field-focus-border)] focus:shadow-[0_0_0_3px_var(--color-ring)]"
@@ -268,7 +268,7 @@
 	<section class="scroll-mt-20 flex flex-col gap-5">
 		<div class="flex items-center gap-2">
 			<span class="grid size-6 place-items-center rounded-md bg-primary/10 text-primary"><Hash size={12} /></span>
-			<h2 class="m-0 text-[1.4rem] font-medium tracking-tight" style="font-family: var(--font-header);">API</h2>
+			<h2 class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] tracking-tight" style="font-family: var(--font-header);">API</h2>
 		</div>
 
 		<div class="overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card">
@@ -277,7 +277,7 @@
 					<li class="grid grid-cols-[1fr_1.4fr_0.6fr] gap-3 px-4 py-3 max-md:grid-cols-1">
 						<div class="flex flex-col gap-1">
 							<code class="font-mono text-[0.7rem] text-foreground-muted">Dialog.{row.component}</code>
-							<code class="font-mono text-[0.82rem] font-semibold">{row.prop}</code>
+							<code class="font-mono text-[0.82rem] [font-weight:var(--font-weight-label,600)]">{row.prop}</code>
 						</div>
 						<div class="flex flex-col gap-1">
 							<code class="overflow-x-auto rounded-md bg-secondary/40 px-2 py-1 font-mono text-[0.74rem] text-foreground">{row.type}</code>
@@ -292,7 +292,7 @@
 
 	<section class="flex flex-col items-start justify-between gap-4 rounded-[var(--radius-lg)] border border-border bg-card p-6 sm:flex-row sm:items-center">
 		<div class="flex flex-col gap-1">
-			<p class="m-0 text-[1rem] font-medium tracking-tight" style="font-family: var(--font-header);">Want to make it yours?</p>
+			<p class="m-0 text-[1rem] [font-weight:var(--font-weight-label,500)] tracking-tight" style="font-family: var(--font-header);">Want to make it yours?</p>
 			<p class="m-0 text-[0.86rem] text-foreground-muted">Every Silk component reads from your theme tokens — open the studio to restyle them.</p>
 		</div>
 		<Button href="/themes/studio">Open theme studio<ArrowRight size={14} /></Button>

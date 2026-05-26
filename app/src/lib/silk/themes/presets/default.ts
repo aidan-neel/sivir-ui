@@ -15,6 +15,7 @@ export const preset: ThemeDraft = {
 	radiusXl: '0.67rem',
 	primaryButtonOutline: true,
 	invertedPanels: false,
+	overlaysOnSurface: false,
 	durationPreset: 'default',
 	motion: {
 		hoverDuration: '240ms',
@@ -81,5 +82,12 @@ export const preset: ThemeDraft = {
 		destructive: '#bf3d3e',
 		overlay: 'rgb(0 0 0 / 0.62)',
 		ring: 'rgb(87 88 89 / 0.2)'
+	},
+	typography: {
+		weightHeader: 600,
+		weightBody: 400,
+		weightLabel: 500,
+		weightButton: 500,
+		weightBadge: 500
 	}
 };

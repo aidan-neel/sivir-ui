@@ -1,37 +1,15 @@
-version: "3.9"
+# Postgres lives on Supabase. The registry's `env_file` pulls DATABASE_URL +
+# DIRECT_URL out of registry/.env. See registry/README.md for the URL formats.
 
 services:
-  db:
-    image: postgres:16
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: app
-      POSTGRES_PASSWORD: app
-      POSTGRES_DB: app
-    ports:
-      - "5432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U app -d app"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
-
   registry:
     build: ./registry
     restart: unless-stopped
+    # Loads DATABASE_URL + DIRECT_URL straight from registry/.env so we don't
+    # need a separate root-level .env or exported shell vars.
+    env_file:
+      - registry/.env
     environment:
-      DATABASE_URL: "postgres://app:app@db:5432/app?sslmode=disable"
       PORT: "4100"
-      ADMIN_USERNAME: "${ADMIN_USERNAME:-admin}"
-      ADMIN_PASSWORD: "${ADMIN_PASSWORD:-changeme}"
-      ADMIN_TOKEN_SECRET: "${ADMIN_TOKEN_SECRET:-dev-secret-please-change-at-least-32-chars}"
     ports:
       - "4100:4100"
-    depends_on:
-      db:
-        condition: service_healthy
-
-volumes:
-  pgdata:

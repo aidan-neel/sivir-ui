@@ -2,7 +2,6 @@ import { Elysia } from 'elysia';
 import { openapi } from '@elysiajs/openapi';
 
 import { themesController } from './services/themes';
-import { authController } from './services/auth';
 
 const port = Number(process.env.PORT ?? 4100);
 
@@ -12,7 +11,6 @@ const app = new Elysia()
 			path: '/openapi'
 		})
 	)
-	.use(authController)
 	.use(themesController)
 	.get('/', () => 'Hello Elysia')
 	.listen(port);

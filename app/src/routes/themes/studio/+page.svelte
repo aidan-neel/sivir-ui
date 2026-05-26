@@ -36,13 +36,17 @@
 		themeToCss,
 		themeToTypeScriptPreset,
 		type ThemeBasePalette,
-		type ThemeDraft
+		type ThemeDraft,
+		defaultTypography,
+		resolveTypography,
+		type ThemeTypography
 	} from '$lib/silk/themes/presets';
 	import { transitionPresets, type ThemeTransitionPresetSlug } from '$lib/silk/themes/transitions';
 	import { builtInThemePresets } from '$lib/silk/themes/builtin-presets';
 
 	import RotateCcw from '@lucide/svelte/icons/rotate-ccw';
 	import RotateCw from '@lucide/svelte/icons/rotate-cw';
+	import RefreshCcw from '@lucide/svelte/icons/refresh-ccw';
 	import Shuffle from '@lucide/svelte/icons/shuffle';
 	import Copy from '@lucide/svelte/icons/copy';
 	import Check from '@lucide/svelte/icons/check';
@@ -236,7 +240,14 @@
 	];
 
 	function cloneTheme(theme: ThemeDraft): ThemeDraft {
-		return JSON.parse(JSON.stringify(theme));
+		// Round-trip through JSON to deep-clone, then guarantee `typography` and
+		// `overlaysOnSurface` exist on the result. Without this, undefined fields
+		// get stripped by JSON and the $state proxy never registers them — which
+		// silently breaks the studio's weights selects and the overlays toggle.
+		const cloned = JSON.parse(JSON.stringify(theme)) as ThemeDraft;
+		cloned.typography = resolveTypography(cloned.typography);
+		cloned.overlaysOnSurface = cloned.overlaysOnSurface === true;
+		return cloned;
 	}
 
 	function normalizeGeneratedCss(css: string) {
@@ -353,21 +364,13 @@
 		});
 	}
 
-	function updatePrimaryColor(sourcMode: 'light' | 'dark', hex: string) {
-		const srcOpts = sourcMode === 'light' ? lightPrimaryOptions : darkPrimaryOptions;
-		const dstOpts = sourcMode === 'light' ? darkPrimaryOptions : lightPrimaryOptions;
-		const idx = srcOpts.findIndex((o) => o.value.toLowerCase() === hex.toLowerCase());
-		syncBasePalette(sourcMode, {
-			...(sourcMode === 'light' ? lightBasePalette : darkBasePalette),
+	function updatePrimaryColor(sourceMode: 'light' | 'dark', hex: string) {
+		// Light and dark palettes are now independent — picking red primary on
+		// light leaves dark untouched. Use the mode-specific picker for each.
+		syncBasePalette(sourceMode, {
+			...(sourceMode === 'light' ? lightBasePalette : darkBasePalette),
 			primary: hex
 		});
-		if (idx !== -1 && dstOpts[idx]) {
-			const opposite: 'light' | 'dark' = sourcMode === 'light' ? 'dark' : 'light';
-			syncBasePalette(opposite, {
-				...(opposite === 'light' ? lightBasePalette : darkBasePalette),
-				primary: dstOpts[idx].value
-			});
-		}
 	}
 
 	async function copyGeneratedCss() {
@@ -423,14 +426,77 @@
 		selectedPresetSlug = 'custom';
 	}
 
+	function updateWeight(key: keyof ThemeTypography, value: number) {
+		const current = resolveTypography(editorTheme.typography);
+		editorTheme.typography = { ...current, [key]: value };
+		selectedPresetSlug = 'custom';
+	}
+
+	// ─── Easing ───
+	const defaultEasing = 'cubic-bezier(0.22,1,0.36,1)';
+	const easingOptions = [
+		{ label: 'Soft', value: 'cubic-bezier(0.22,1,0.36,1)', description: 'Gentle ease-out — Silk default.' },
+		{ label: 'Standard', value: 'cubic-bezier(0.4,0,0.2,1)', description: 'Material standard easing — even acceleration, sharp landing.' },
+		{ label: 'Sharp', value: 'cubic-bezier(0.4,0,0.6,1)', description: 'Quick start, smooth tail.' },
+		{ label: 'Spring', value: 'cubic-bezier(0.34,1.56,0.64,1)', description: 'Overshoots a touch, springs back.' },
+		{ label: 'Linear', value: 'linear', description: 'Constant velocity. Use sparingly.' },
+		{ label: 'Ease in-out', value: 'cubic-bezier(0.65,0,0.35,1)', description: 'Symmetric acceleration / deceleration.' }
+	] as const;
+
+	const currentEasing = $derived(
+		easingOptions.find((o) => o.value === (editorTheme.motion.panelEasing ?? defaultEasing)) ??
+			{ label: 'Custom', value: 'custom', description: 'Custom cubic-bezier set via All motion options.' }
+	);
+
+	function updateEasing(value: string) {
+		editorTheme.motion = { ...editorTheme.motion, panelEasing: value };
+		selectedPresetSlug = 'custom';
+	}
+
+	const weightFields: { key: keyof ThemeTypography; label: string }[] = [
+		{ key: 'weightHeader', label: 'Header' },
+		{ key: 'weightBody', label: 'Body' },
+		{ key: 'weightLabel', label: 'Label' },
+		{ key: 'weightButton', label: 'Button' },
+		{ key: 'weightBadge', label: 'Badge' }
+	];
+
+	const weightOptions = [
+		{ value: 300, label: 'Light' },
+		{ value: 400, label: 'Regular' },
+		{ value: 500, label: 'Medium' },
+		{ value: 600, label: 'Semibold' },
+		{ value: 700, label: 'Bold' },
+		{ value: 800, label: 'Extrabold' }
+	] as const;
+
+	function weightLabel(value: number) {
+		return weightOptions.find((o) => o.value === value)?.label ?? '';
+	}
+
 	function updateRadius(next: string) {
 		editorTheme.radiusBase = next;
 		selectedPresetSlug = 'custom';
 	}
 
 	function updateDurationPreset(next: ThemeTransitionPresetSlug) {
+		// Motion preset = durations only. Panel-shape fields (panelX, panelY,
+		// panelBlur, panelScaleStart, sheetOffset, overlayBlur, panelPerspective,
+		// panelRotateX, panelOpacityStart) stay put — those are controlled by
+		// the Transition preset below.
 		editorTheme.durationPreset = next;
-		editorTheme.motion = resolveThemeMotion(next);
+		const preset = resolveThemeMotion(next);
+		editorTheme.motion = {
+			...editorTheme.motion,
+			hoverDuration: preset.hoverDuration,
+			menuDuration: preset.menuDuration,
+			panelDuration: preset.panelDuration,
+			sheetDuration: preset.sheetDuration,
+			overlayDuration: preset.overlayDuration,
+			tooltipDuration: preset.tooltipDuration,
+			toastInDuration: preset.toastInDuration,
+			toastOutDuration: preset.toastOutDuration
+		};
 		selectedPresetSlug = 'custom';
 	}
 
@@ -586,6 +652,18 @@
 	let lastSnapshot = $state<StudioSnapshot>(createStudioState(defaultTheme));
 	let lastSnapshotSignature = $state(JSON.stringify(createStudioState(defaultTheme)));
 	let inspectorTab = $state('colors');
+	// Mobile: inspector is a slide-up drawer toggled by a floating button.
+	// On lg+ this is ignored and the inspector renders inline on the right.
+	let mobileInspectorOpen = $state(false);
+
+	// Source of truth: editorTheme.overlaysOnSurface. The Switch reads the
+	// derived `overlaysOnSurfaceOn` and writes via the onclick callback —
+	// no bidirectional bind / no racing effects.
+	const overlaysOnSurfaceOn = $derived(editorTheme.overlaysOnSurface === true);
+	function toggleOverlaysOnSurface() {
+		editorTheme.overlaysOnSurface = !overlaysOnSurfaceOn;
+		selectedPresetSlug = 'custom';
+	}
 
 	const generatedCss = $derived(
 		themeToCss({
@@ -611,12 +689,15 @@
 	const colorMode = $derived<'light' | 'dark'>(mode.current === 'dark' ? 'dark' : 'light');
 
 	onMount(() => {
-		const restored = loadThemeStudioState();
-		if (restored) {
-			applyStudioState(restored);
+		// Prefer whatever theme is *currently applied* across the app so the studio
+		// opens onto what the user is looking at — falling back to the persisted
+		// studio draft only when no live theme is detected.
+		const matchedPreset = findPresetFromStoredCss();
+		if (matchedPreset) {
+			loadPreset(matchedPreset, false);
 		} else {
-			const matchedPreset = findPresetFromStoredCss();
-			if (matchedPreset) loadPreset(matchedPreset, false);
+			const restored = loadThemeStudioState();
+			if (restored) applyStudioState(restored);
 		}
 		lastSnapshot = captureStudioSnapshot();
 		lastSnapshotSignature = JSON.stringify(lastSnapshot);
@@ -630,11 +711,11 @@
 	$effect(() => {
 		const parsed = Number.parseFloat(editorTheme.radiusBase);
 		if (!Number.isFinite(parsed)) return;
-		const safe = Math.max(parsed, 0.14);
+		const safe = Math.max(parsed, 0);
 		const rounded = `${Math.round(safe * 1000) / 1000}rem`;
 		if (editorTheme.radiusBase !== rounded) editorTheme.radiusBase = rounded;
 		editorTheme.radiusMd = rounded;
-		editorTheme.radiusSm = `${Math.round(Math.max(safe - 0.24, 0.14) * 1000) / 1000}rem`;
+		editorTheme.radiusSm = `${Math.round(Math.max(safe - 0.24, 0) * 1000) / 1000}rem`;
 		editorTheme.radiusLg = `${Math.round((safe + 0.1) * 1000) / 1000}rem`;
 		editorTheme.radiusXl = `${Math.round((safe + 0.22) * 1000) / 1000}rem`;
 	});
@@ -1145,6 +1226,20 @@
 		}
 	}
 
+	function resetToDefault() {
+		// Force-resets to the built-in default — bypasses attemptLoadPreset's
+		// slug-equality short-circuit so the action still works when the editor
+		// is on the default preset but values have diverged.
+		if (isDirty) {
+			pendingThemeLoad = cloneTheme(defaultTheme);
+			pendingLoadSavedId = null;
+			saveAlertOpen = true;
+			return;
+		}
+		activeSavedThemeId = null;
+		loadPreset(defaultTheme);
+	}
+
 	function applyPendingLoad() {
 		const pending = pendingThemeLoad;
 		const savedId = pendingLoadSavedId;
@@ -1284,7 +1379,7 @@
 >
 	<!-- ─────────────────────────  TOOLBAR  ───────────────────────── -->
 	<header
-		class="z-10 flex h-14 shrink-0 items-center gap-3 border-b border-border bg-background px-4"
+		class="z-10 flex h-14 shrink-0 items-center gap-3 overflow-x-auto whitespace-nowrap border-b border-border bg-background px-3 md:px-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
 	>
 		<!-- Left cluster: theme identity -->
 		<div class="flex min-w-0 items-center gap-2">
@@ -1295,11 +1390,11 @@
 				<Sparkles size={14} />
 			</span>
 			<div class="flex min-w-0 flex-col leading-none">
-				<span class="text-[0.78rem] font-medium text-foreground-muted"
+				<span class="text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted"
 					>Theme Studio</span
 				>
 				<span
-					class="truncate text-[0.95rem] font-semibold tracking-tight text-foreground"
+					class="truncate text-[0.95rem] [font-weight:var(--font-weight-label,600)] tracking-tight text-foreground"
 					style="font-family: var(--font-header);"
 					aria-label="Theme name"
 				>
@@ -1386,6 +1481,16 @@
 			>
 				<Shuffle size={13} />
 				<span class="max-md:hidden">Shuffle</span>
+			</Button>
+
+			<Button
+				variant="ghost"
+				size="sm"
+				class="h-8 gap-1.5 text-[0.78rem]"
+				onclick={resetToDefault}
+			>
+				<RefreshCcw size={13} />
+				<span class="max-md:hidden">Reset</span>
 			</Button>
 
 			<Button
@@ -1492,7 +1597,7 @@
 						<div class="flex flex-col gap-1.5">
 							<label
 								for="publish-description"
-								class="text-[0.78rem] font-medium text-foreground"
+								class="text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground"
 							>
 								Description
 							</label>
@@ -1568,25 +1673,25 @@
 							<div class="flex items-center gap-3">
 								<div class="flex -space-x-2">
 									<span
-										class="grid size-9 place-items-center rounded-full border-2 border-card bg-primary/15 text-[0.78rem] font-semibold text-primary"
+										class="grid size-9 place-items-center rounded-full border-2 border-card bg-primary/15 text-[0.78rem] [font-weight:var(--font-weight-label,600)] text-primary"
 										>AN</span
 									>
 									<span
-										class="grid size-9 place-items-center rounded-full border-2 border-card bg-secondary text-[0.78rem] font-semibold text-foreground-muted"
+										class="grid size-9 place-items-center rounded-full border-2 border-card bg-secondary text-[0.78rem] [font-weight:var(--font-weight-label,600)] text-foreground-muted"
 										>MC</span
 									>
 									<span
-										class="grid size-9 place-items-center rounded-full border-2 border-card bg-secondary text-[0.78rem] font-semibold text-foreground-muted"
+										class="grid size-9 place-items-center rounded-full border-2 border-card bg-secondary text-[0.78rem] [font-weight:var(--font-weight-label,600)] text-foreground-muted"
 										>LK</span
 									>
 									<span
-										class="grid size-9 place-items-center rounded-full border-2 border-card bg-background text-[0.7rem] font-semibold text-foreground-muted"
+										class="grid size-9 place-items-center rounded-full border-2 border-card bg-background text-[0.7rem] [font-weight:var(--font-weight-label,600)] text-foreground-muted"
 										>+4</span
 									>
 								</div>
 								<div>
 									<h2
-										class="m-0 text-[1.5rem] font-medium leading-tight tracking-tight"
+										class="m-0 text-[1.5rem] [font-weight:var(--font-weight-header,500)] leading-tight tracking-tight"
 										style="font-family: var(--font-header);"
 									>
 										Welcome back, {pgInputName}
@@ -1712,7 +1817,7 @@
 												bind:value={newProjectName}
 											/>
 											<div class="flex flex-col gap-1.5">
-												<span class="text-[0.78rem] font-medium">Team</span>
+												<span class="text-[0.78rem] [font-weight:var(--font-weight-label,500)]">Team</span>
 												<Select.Root value={newProjectTeam}>
 													<Select.Trigger class="w-full" variant="outlined">
 														{newProjectTeam.charAt(0).toUpperCase() + newProjectTeam.slice(1)}
@@ -1776,14 +1881,14 @@
 							<div class="flex flex-col gap-1">
 								<p class="m-0 text-[0.78rem] text-foreground-muted">{stat.label}</p>
 								<p
-									class="m-0 text-[1.6rem] font-semibold tracking-tight"
+									class="m-0 text-[1.6rem] [font-weight:var(--font-weight-header,500)] tracking-tight"
 									style="font-family: var(--font-header);"
 								>
 									{stat.value}
 								</p>
 								<div class="mt-0.5 flex items-center gap-1.5">
 									<span
-										class="inline-flex items-center gap-0.5 rounded-full bg-[var(--color-success)]/12 px-1.5 py-0.5 text-[0.7rem] font-medium text-[var(--color-success)]"
+										class="inline-flex items-center gap-0.5 rounded-full bg-[var(--color-success)]/12 px-1.5 py-0.5 text-[0.7rem] [font-weight:var(--font-weight-label,500)] text-[var(--color-success)]"
 									>
 										<TrendingUp size={11} />
 										{stat.delta}
@@ -1798,9 +1903,9 @@
 					<section class="flex flex-col gap-3 px-6 py-7 md:px-8">
 						<div class="flex items-center justify-between gap-3 max-sm:flex-col max-sm:items-start">
 							<div>
-								<p class="m-0 text-[0.78rem] font-medium text-foreground-muted">Tabs</p>
+								<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">Tabs</p>
 								<p
-									class="m-0 mt-0.5 text-[1.05rem] font-medium tracking-tight"
+									class="m-0 mt-0.5 text-[1.05rem] [font-weight:var(--font-weight-label,500)] tracking-tight"
 									style="font-family: var(--font-header);"
 								>
 									Project activity
@@ -1847,9 +1952,9 @@
 					<!-- ─── Form section ─── -->
 					<section class="flex flex-col gap-4 px-6 py-7 md:px-8">
 						<div>
-							<p class="m-0 text-[0.78rem] font-medium text-foreground-muted">Form</p>
+							<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">Form</p>
 							<p
-								class="m-0 mt-0.5 text-[1.05rem] font-medium tracking-tight"
+								class="m-0 mt-0.5 text-[1.05rem] [font-weight:var(--font-weight-label,500)] tracking-tight"
 								style="font-family: var(--font-header);"
 							>
 								Account settings
@@ -1873,7 +1978,7 @@
 						</div>
 
 						<div class="flex flex-col gap-1.5">
-							<span class="text-[0.78rem] font-medium">Role</span>
+							<span class="text-[0.78rem] [font-weight:var(--font-weight-label,500)]">Role</span>
 							<Select.Root value={pgRole}>
 								<Select.Trigger class="w-full" variant="outlined">
 									{pgRole.charAt(0).toUpperCase() + pgRole.slice(1)}
@@ -1928,9 +2033,9 @@
 					<!-- ─── Buttons + Badges showcase ─── -->
 					<section class="flex flex-col gap-4 px-6 py-7 md:px-8">
 						<div>
-							<p class="m-0 text-[0.78rem] font-medium text-foreground-muted">Variants</p>
+							<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">Variants</p>
 							<p
-								class="m-0 mt-0.5 text-[1.05rem] font-medium tracking-tight"
+								class="m-0 mt-0.5 text-[1.05rem] [font-weight:var(--font-weight-label,500)] tracking-tight"
 								style="font-family: var(--font-header);"
 							>
 								Buttons & badges
@@ -1968,9 +2073,9 @@
 					<!-- ─── Alerts ─── -->
 					<section class="flex flex-col gap-3 px-6 py-7 md:px-8">
 						<div>
-							<p class="m-0 text-[0.78rem] font-medium text-foreground-muted">Feedback</p>
+							<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">Feedback</p>
 							<p
-								class="m-0 mt-0.5 text-[1.05rem] font-medium tracking-tight"
+								class="m-0 mt-0.5 text-[1.05rem] [font-weight:var(--font-weight-label,500)] tracking-tight"
 								style="font-family: var(--font-header);"
 							>
 								Alerts
@@ -1999,9 +2104,9 @@
 					<!-- ─── Progress + Skeleton ─── -->
 					<section class="flex flex-col gap-4 px-6 py-7 md:px-8">
 						<div>
-							<p class="m-0 text-[0.78rem] font-medium text-foreground-muted">Progress</p>
+							<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">Progress</p>
 							<p
-								class="m-0 mt-0.5 text-[1.05rem] font-medium tracking-tight"
+								class="m-0 mt-0.5 text-[1.05rem] [font-weight:var(--font-weight-label,500)] tracking-tight"
 								style="font-family: var(--font-header);"
 							>
 								Storage usage
@@ -2013,7 +2118,7 @@
 								<div>
 									<div class="mb-1 flex items-center justify-between text-[0.78rem]">
 										<span class="text-foreground-muted">{bar.label}</span>
-										<span class="font-medium">{bar.pct}%</span>
+										<span class="[font-weight:var(--font-weight-label,500)]">{bar.pct}%</span>
 									</div>
 									<div class="h-1.5 overflow-hidden rounded-full bg-secondary">
 										<div
@@ -2040,7 +2145,7 @@
 						</div>
 
 						<div class="flex flex-col gap-2 pt-1">
-							<p class="m-0 text-[0.78rem] font-medium text-foreground-muted">Skeleton</p>
+							<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">Skeleton</p>
 							<Skeleton class="h-3 w-full" />
 							<Skeleton class="h-3 w-[80%]" />
 							<Skeleton class="h-3 w-[60%]" />
@@ -2051,9 +2156,9 @@
 					<section class="flex flex-col gap-2 px-6 py-7 md:px-8">
 						<div class="flex items-center justify-between">
 							<div>
-								<p class="m-0 text-[0.78rem] font-medium text-foreground-muted">Activity</p>
+								<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">Activity</p>
 								<p
-									class="m-0 mt-0.5 text-[1.05rem] font-medium tracking-tight"
+									class="m-0 mt-0.5 text-[1.05rem] [font-weight:var(--font-weight-label,500)] tracking-tight"
 									style="font-family: var(--font-header);"
 								>
 									Notifications
@@ -2071,7 +2176,7 @@
 										style={`background:${item.dot};`}
 									></span>
 									<div class="min-w-0 flex-1">
-										<p class="m-0 truncate text-[0.84rem] font-medium">{item.title}</p>
+										<p class="m-0 truncate text-[0.84rem] [font-weight:var(--font-weight-label,500)]">{item.title}</p>
 										<p class="m-0 mt-0.5 truncate text-[0.76rem] text-foreground-muted">
 											{item.desc}
 										</p>
@@ -2085,9 +2190,9 @@
 					<!-- ─── Command teaser + Tooltip ─── -->
 					<section class="flex flex-col gap-3 px-6 py-7 md:px-8">
 						<div>
-							<p class="m-0 text-[0.78rem] font-medium text-foreground-muted">Command</p>
+							<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">Command</p>
 							<p
-								class="m-0 mt-0.5 text-[1.05rem] font-medium tracking-tight"
+								class="m-0 mt-0.5 text-[1.05rem] [font-weight:var(--font-weight-label,500)] tracking-tight"
 								style="font-family: var(--font-header);"
 							>
 								Quick actions
@@ -2134,9 +2239,9 @@
 
 					<!-- ─── Typography preview ─── -->
 					<section class="flex flex-col gap-2 px-6 py-7 md:px-8">
-						<p class="m-0 text-[0.78rem] font-medium text-foreground-muted">Typography</p>
+						<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">Typography</p>
 						<h3
-							class="m-0 text-[2rem] font-medium leading-[1.05] tracking-tight"
+							class="m-0 text-[2rem] [font-weight:var(--font-weight-header,500)] leading-[1.05] tracking-tight"
 							style="font-family: var(--font-header);"
 						>
 							The quick brown fox jumps over the lazy dog.
@@ -2160,9 +2265,9 @@
 						<!-- ─── Settings: General ─── -->
 						<section class="flex flex-col gap-4 px-6 py-7 md:px-8">
 							<div>
-								<p class="m-0 text-[0.78rem] font-medium text-foreground-muted">General</p>
+								<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">General</p>
 								<p
-									class="m-0 mt-0.5 text-[1.05rem] font-medium tracking-tight"
+									class="m-0 mt-0.5 text-[1.05rem] [font-weight:var(--font-weight-label,500)] tracking-tight"
 									style="font-family: var(--font-header);"
 								>
 									Profile
@@ -2182,7 +2287,7 @@
 								/>
 							</div>
 							<div class="flex flex-col gap-1.5">
-								<span class="text-[0.78rem] font-medium">Default role</span>
+								<span class="text-[0.78rem] [font-weight:var(--font-weight-label,500)]">Default role</span>
 								<Select.Root value={pgRole}>
 									<Select.Trigger class="w-full" variant="outlined">
 										{pgRole.charAt(0).toUpperCase() + pgRole.slice(1)}
@@ -2201,9 +2306,9 @@
 						<!-- ─── Settings: Preferences ─── -->
 						<section class="flex flex-col gap-4 px-6 py-7 md:px-8">
 							<div>
-								<p class="m-0 text-[0.78rem] font-medium text-foreground-muted">Preferences</p>
+								<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">Preferences</p>
 								<p
-									class="m-0 mt-0.5 text-[1.05rem] font-medium tracking-tight"
+									class="m-0 mt-0.5 text-[1.05rem] [font-weight:var(--font-weight-label,500)] tracking-tight"
 									style="font-family: var(--font-header);"
 								>
 									Notifications & security
@@ -2266,9 +2371,9 @@
 						<!-- ─── Settings: Danger zone ─── -->
 						<section class="flex flex-col gap-3 px-6 py-7 md:px-8">
 							<div>
-								<p class="m-0 text-[0.78rem] font-medium text-foreground-muted">Danger zone</p>
+								<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">Danger zone</p>
 								<p
-									class="m-0 mt-0.5 text-[1.05rem] font-medium tracking-tight"
+									class="m-0 mt-0.5 text-[1.05rem] [font-weight:var(--font-weight-label,500)] tracking-tight"
 									style="font-family: var(--font-header);"
 								>
 									Workspace lifecycle
@@ -2296,9 +2401,9 @@
 						<section class="flex flex-col gap-3 px-6 py-7 md:px-8">
 							<div class="flex items-center justify-between">
 								<div>
-									<p class="m-0 text-[0.78rem] font-medium text-foreground-muted">Inbox</p>
+									<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">Inbox</p>
 									<p
-										class="m-0 mt-0.5 text-[1.05rem] font-medium tracking-tight"
+										class="m-0 mt-0.5 text-[1.05rem] [font-weight:var(--font-weight-label,500)] tracking-tight"
 										style="font-family: var(--font-header);"
 									>
 										{mailMessages.filter((m) => m.unread).length} unread
@@ -2317,12 +2422,12 @@
 										class={`flex items-start gap-3 px-3 py-3 text-left transition-colors ${active ? 'bg-secondary/60' : 'hover:bg-secondary/40'}`}
 									>
 										<span
-											class="grid size-9 shrink-0 place-items-center rounded-full bg-secondary text-[0.74rem] font-semibold text-foreground"
+											class="grid size-9 shrink-0 place-items-center rounded-full bg-secondary text-[0.74rem] [font-weight:var(--font-weight-label,600)] text-foreground"
 											>{msg.initials}</span
 										>
 										<div class="min-w-0 flex-1">
 											<div class="flex items-center justify-between gap-2">
-												<span class="truncate text-[0.84rem] font-medium">{msg.sender}</span>
+												<span class="truncate text-[0.84rem] [font-weight:var(--font-weight-label,500)]">{msg.sender}</span>
 												<span class="shrink-0 text-[0.7rem] text-foreground-muted"
 													>{msg.time}</span
 												>
@@ -2350,11 +2455,11 @@
 							<div class="flex items-start justify-between gap-3">
 								<div class="flex items-center gap-3">
 									<span
-										class="grid size-10 place-items-center rounded-full bg-primary/12 text-[0.78rem] font-semibold text-primary"
+										class="grid size-10 place-items-center rounded-full bg-primary/12 text-[0.78rem] [font-weight:var(--font-weight-label,600)] text-primary"
 										>{selectedMail.initials}</span
 									>
 									<div>
-										<p class="m-0 text-[0.92rem] font-medium">{selectedMail.sender}</p>
+										<p class="m-0 text-[0.92rem] [font-weight:var(--font-weight-label,500)]">{selectedMail.sender}</p>
 										<p class="m-0 mt-0.5 text-[0.74rem] text-foreground-muted">
 											to me · {selectedMail.time}
 										</p>
@@ -2373,7 +2478,7 @@
 								</div>
 							</div>
 							<h3
-								class="m-0 text-[1.2rem] font-medium leading-tight tracking-tight"
+								class="m-0 text-[1.2rem] [font-weight:var(--font-weight-header,500)] leading-tight tracking-tight"
 								style="font-family: var(--font-header);"
 							>
 								{selectedMail.subject}
@@ -2403,10 +2508,39 @@
 		</div>
 		</main>
 
+		<!-- Mobile drawer toggle (lg-: floating button, lg+: hidden) -->
+		<button
+			type="button"
+			onclick={() => (mobileInspectorOpen = !mobileInspectorOpen)}
+			class="lg:hidden fixed bottom-4 right-4 z-40 inline-flex h-11 items-center gap-2 rounded-full border border-border bg-primary px-4 text-[0.82rem] [font-weight:var(--font-weight-label,500)] text-foreground-opposite shadow-[0_8px_24px_-6px_color-mix(in_srgb,var(--color-primary)_45%,transparent)]"
+			aria-expanded={mobileInspectorOpen}
+			aria-controls="studio-inspector"
+		>
+			<Sliders size={14} />
+			{mobileInspectorOpen ? 'Close' : 'Tweak theme'}
+		</button>
+
+		<!-- Mobile backdrop when drawer is open -->
+		{#if mobileInspectorOpen}
+			<button
+				type="button"
+				aria-label="Close inspector"
+				onclick={() => (mobileInspectorOpen = false)}
+				class="lg:hidden fixed inset-0 z-30 bg-[var(--color-overlay)] backdrop-blur-[2px]"
+			></button>
+		{/if}
+
 		<!-- ───── INSPECTOR ───── -->
 		<aside
-			class="flex w-[20rem] shrink-0 flex-col overflow-hidden border-l border-border bg-background max-lg:w-full max-lg:border-l-0 max-lg:border-t"
+			id="studio-inspector"
+			class={`flex w-[20rem] shrink-0 flex-col overflow-hidden border-l border-border bg-background
+				max-lg:fixed max-lg:inset-x-0 max-lg:bottom-0 max-lg:z-40 max-lg:w-auto max-lg:h-[78vh] max-lg:border-l-0 max-lg:border-t max-lg:rounded-t-[var(--radius-lg)] max-lg:transition-transform max-lg:duration-[var(--motion-duration-sheet,260ms)] max-lg:ease-out max-lg:shadow-[0_-12px_36px_-12px_color-mix(in_srgb,var(--color-foreground)_18%,transparent)]
+				${mobileInspectorOpen ? 'max-lg:translate-y-0' : 'max-lg:translate-y-full max-lg:pointer-events-none'}`}
 		>
+			<!-- Mobile drawer handle -->
+			<div class="lg:hidden flex justify-center pt-2 pb-1">
+				<span class="h-1 w-10 rounded-full bg-border"></span>
+			</div>
 			<Tabs.Root bind:value={inspectorTab} class="flex h-full flex-col">
 				<div class="flex justify-center border-b border-border p-2.5">
 					<Tabs.List class="grid w-full grid-cols-4">
@@ -2423,7 +2557,7 @@
 					<Tabs.Content value="colors" class="flex flex-col gap-4 p-3.5">
 						{#snippet colorRow(label: string, value: string, opts: ColorOption[], onChange: (v: string) => void)}
 							<div class="flex items-center justify-between gap-2">
-								<span class="text-[0.74rem] text-foreground-muted">{label}</span>
+								<span class="text-[0.74rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">{label}</span>
 								<ColorPicker
 									class="w-[170px]"
 									value={value}
@@ -2435,10 +2569,10 @@
 
 						<section class="flex flex-col gap-2.5">
 							<div class="flex items-center justify-between">
-								<p class="m-0 text-[0.78rem] font-medium text-foreground-muted">
+								<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">
 									Light mode
 								</p>
-								<span class="text-[0.65rem] text-foreground-muted/70">6 tokens</span>
+								<span class="text-[0.65rem] [font-weight:var(--font-weight-body,400)] text-foreground-muted/70">6 tokens</span>
 							</div>
 							{@render colorRow('Background', lightBasePalette.background, lightBackgroundOptions, (v) => updateBasePalette('light', 'background', v))}
 							{@render colorRow('Surface', lightBasePalette.card, lightSurfaceOptions, (v) => updateBasePalette('light', 'card', v))}
@@ -2452,10 +2586,10 @@
 
 						<section class="flex flex-col gap-2.5">
 							<div class="flex items-center justify-between">
-								<p class="m-0 text-[0.78rem] font-medium text-foreground-muted">
+								<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">
 									Dark mode
 								</p>
-								<span class="text-[0.65rem] text-foreground-muted/70">6 tokens</span>
+								<span class="text-[0.65rem] [font-weight:var(--font-weight-body,400)] text-foreground-muted/70">6 tokens</span>
 							</div>
 							{@render colorRow('Background', darkBasePalette.background, darkBackgroundOptions, (v) => updateBasePalette('dark', 'background', v))}
 							{@render colorRow('Surface', darkBasePalette.card, darkSurfaceOptions, (v) => updateBasePalette('dark', 'card', v))}
@@ -2466,6 +2600,18 @@
 						</section>
 
 						<div class="border-t border-border"></div>
+
+						<section class="flex items-center justify-between gap-3 rounded-lg border border-border bg-background/40 px-3 py-2.5">
+							<div class="flex flex-col gap-0.5">
+								<span class="text-[0.82rem] [font-weight:var(--font-weight-label,500)] text-foreground">Overlays on surface</span>
+								<span class="text-[0.72rem] text-foreground-muted">Modals, dialogs &amp; sheets paint with Surface instead of Background.</span>
+							</div>
+							<Switch
+								switched={overlaysOnSurfaceOn}
+								onclick={toggleOverlaysOnSurface}
+								aria-label="Toggle overlays-on-surface"
+							/>
+						</section>
 
 						<Button
 							variant="outlined"
@@ -2481,7 +2627,7 @@
 					<!-- TYPE TAB -->
 					<Tabs.Content value="type" class="flex flex-col gap-4 p-3.5">
 						<section class="flex flex-col gap-2">
-							<p class="m-0 text-[0.78rem] font-medium text-foreground-muted">
+							<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">
 								Header font
 							</p>
 							<Select.Root value={headerFontSelection}>
@@ -2504,7 +2650,7 @@
 						</section>
 
 						<section class="flex flex-col gap-2">
-							<p class="m-0 text-[0.78rem] font-medium text-foreground-muted">
+							<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">
 								Body font
 							</p>
 							<Select.Root value={bodyFontSelection}>
@@ -2528,14 +2674,54 @@
 
 						<div class="border-t border-border"></div>
 
+						<section class="flex flex-col gap-2">
+							<div class="flex items-center justify-between">
+								<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">Weights</p>
+								<span class="text-[0.66rem] text-foreground-muted/70">Per-element</span>
+							</div>
+							<div class="flex flex-col gap-2">
+								{#each weightFields as field}
+									{@const current = (editorTheme.typography ?? defaultTypography)[field.key]}
+									{@const fontFam = field.key === 'weightHeader' ? 'var(--font-header)' : 'var(--font-sans)'}
+									<div class="flex items-center justify-between gap-2">
+										<span class="text-[0.74rem] text-foreground-muted">{field.label}</span>
+										<Select.Root value={String(current)}>
+											<Select.Trigger class="h-8 min-w-[8rem] text-[0.78rem]" variant="outlined">
+												{weightLabel(current)}
+											</Select.Trigger>
+											<Select.Content class="max-h-72 overflow-y-auto">
+												{#each weightOptions as opt}
+													<Select.Item
+														value={String(opt.value)}
+														onclick={() => updateWeight(field.key, opt.value)}
+													>
+														<span class="silk-weight-row">
+															<span
+																class="silk-weight-aa"
+																style={`font-weight:${opt.value};font-family:${fontFam};`}
+																aria-hidden="true"
+															></span>
+															{opt.label}
+														</span>
+													</Select.Item>
+												{/each}
+											</Select.Content>
+										</Select.Root>
+									</div>
+								{/each}
+							</div>
+						</section>
+
+						<div class="border-t border-border"></div>
+
 						<section class="flex flex-col gap-2 rounded-lg border border-border bg-background/40 p-3">
-							<p class="m-0 text-[0.78rem] font-medium text-foreground-muted">
+							<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">
 								Preview
 							</p>
-							<p class="m-0 text-[1.4rem] font-medium leading-tight tracking-tight" style="font-family: var(--font-header);">
+							<p class="m-0 text-[1.4rem] leading-tight tracking-tight" style="font-family: var(--font-header); font-weight: var(--font-weight-header, 500);">
 								The quick brown fox jumps.
 							</p>
-							<p class="m-0 text-[0.86rem] leading-[1.55] text-foreground-muted">
+							<p class="m-0 text-[0.86rem] leading-[1.55] text-foreground-muted" style="font-weight: var(--font-weight-body, 400);">
 								Body text in {bodyFontSelection}. A calmer base that adapts to your product's tone.
 							</p>
 							<p class="m-0 font-mono text-[0.72rem] text-foreground-muted">
@@ -2548,7 +2734,7 @@
 					<Tabs.Content value="shape" class="flex flex-col gap-4 p-3.5">
 						<section class="flex flex-col gap-2">
 							<div class="flex items-baseline justify-between">
-								<p class="m-0 text-[0.78rem] font-medium text-foreground-muted">Radius</p>
+								<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">Radius</p>
 								<span
 									class="rounded-md bg-secondary/60 px-1.5 py-0.5 font-mono text-[0.66rem] text-foreground"
 								>
@@ -2591,7 +2777,7 @@
 						<div class="border-t border-border"></div>
 
 						<section class="flex flex-col gap-2">
-							<p class="m-0 text-[0.78rem] font-medium text-foreground-muted">Motion preset</p>
+							<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">Motion preset</p>
 							<div class="grid grid-cols-3 gap-1.5">
 								{#each transitionPresets as preset}
 									{@const active = editorTheme.durationPreset === preset.slug}
@@ -2616,7 +2802,7 @@
 												></span>
 											{/each}
 										</span>
-										<span class="font-medium {active ? 'text-foreground' : ''}">{preset.name}</span>
+										<span class="[font-weight:var(--font-weight-label,500)] {active ? 'text-foreground' : ''}">{preset.name}</span>
 									</button>
 								{/each}
 							</div>
@@ -2629,10 +2815,10 @@
 
 						<section class="flex flex-col gap-2">
 							<div class="flex items-baseline justify-between">
-								<p class="m-0 text-[0.78rem] font-medium text-foreground-muted">
+								<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">
 									Transition preset
 								</p>
-								<span class="text-[0.65rem] text-foreground-muted/70">
+								<span class="text-[0.65rem] [font-weight:var(--font-weight-body,400)] text-foreground-muted/70">
 									{activeTransitionShape?.name ?? 'Custom'}
 								</span>
 							</div>
@@ -2651,7 +2837,7 @@
 										>
 											<shape.icon size={12} />
 										</span>
-										<span class={`font-medium ${active ? 'text-foreground' : ''}`}>
+										<span class={`[font-weight:var(--font-weight-label,500)] ${active ? 'text-foreground' : ''}`}>
 											{shape.name}
 										</span>
 									</button>
@@ -2676,6 +2862,36 @@
 								All motion options
 							</Button>
 						</section>
+
+						<div class="border-t border-border"></div>
+
+						<section class="flex flex-col gap-2">
+							<div class="flex items-baseline justify-between">
+								<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">Easing</p>
+								<span class="text-[0.65rem] [font-weight:var(--font-weight-body,400)] text-foreground-muted/70">{currentEasing.label}</span>
+							</div>
+							<Select.Root value={editorTheme.motion.panelEasing ?? defaultEasing} class="">
+								<Select.Trigger class="h-9 w-full text-[0.82rem]" variant="outlined">
+									{currentEasing.label}
+								</Select.Trigger>
+								<Select.Content class="max-h-72 overflow-y-auto">
+									{#each easingOptions as opt}
+										<Select.Item
+											value={opt.value}
+											label={opt.label}
+											class=""
+											onclick={() => updateEasing(opt.value)}
+										>
+											<span class="flex w-full items-center justify-between gap-3">
+												<span class="[font-weight:var(--font-weight-label,500)]">{opt.label}</span>
+												<code class="font-mono text-[0.66rem] text-foreground-muted">{opt.value}</code>
+											</span>
+										</Select.Item>
+									{/each}
+								</Select.Content>
+							</Select.Root>
+							<p class="m-0 text-[0.72rem] text-foreground-muted">{currentEasing.description}</p>
+						</section>
 					</Tabs.Content>
 
 					<!-- PRESETS TAB -->
@@ -2683,10 +2899,10 @@
 						{#if savedThemes.length > 0}
 							<section class="flex flex-col gap-2">
 								<div class="flex items-center justify-between">
-									<p class="m-0 text-[0.78rem] font-medium text-foreground-muted">
+									<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">
 										Saved locally
 									</p>
-									<span class="text-[0.65rem] text-foreground-muted/70"
+									<span class="text-[0.65rem] [font-weight:var(--font-weight-body,400)] text-foreground-muted/70"
 										>{savedThemes.length}
 										{savedThemes.length === 1 ? 'theme' : 'themes'}</span
 									>
@@ -2721,7 +2937,7 @@
 												></span>
 											</div>
 											<div class="relative min-w-0 flex-1">
-												<p class="m-0 truncate text-[0.8rem] font-medium">{preset.name}</p>
+												<p class="m-0 truncate text-[0.8rem] [font-weight:var(--font-weight-label,500)]">{preset.name}</p>
 												<p class="m-0 truncate text-[0.68rem] text-foreground-muted">
 													Saved {new Date(preset.savedAt).toLocaleDateString(undefined, {
 														month: 'short',
@@ -2744,7 +2960,7 @@
 						{/if}
 
 						<section class="flex flex-col gap-2">
-							<p class="m-0 text-[0.78rem] font-medium text-foreground-muted">
+							<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">
 								Catalog
 							</p>
 							<div class="flex flex-col gap-1">
@@ -2761,7 +2977,7 @@
 											<span class="size-5 rounded-md ring-1 ring-border/60" style={`background:${preset.dark.primary};`}></span>
 										</div>
 										<div class="min-w-0 flex-1">
-											<p class="m-0 truncate text-[0.8rem] font-medium">{preset.name}</p>
+											<p class="m-0 truncate text-[0.8rem] [font-weight:var(--font-weight-label,500)]">{preset.name}</p>
 											<p class="m-0 truncate text-[0.68rem] text-foreground-muted">
 												{preset.description ?? 'Custom theme preset'}
 											</p>
@@ -2782,7 +2998,7 @@
 	<!-- ─── All colors dialog ─── -->
 	<Dialog.Root bind:open={advancedColorsOpen}>
 		<Dialog.Content
-			class="w-full max-w-[min(42rem,calc(100vw-2rem))] gap-0 overflow-hidden p-0"
+			class="flex w-full max-w-[min(42rem,calc(100vw-2rem))] flex-col gap-0 overflow-hidden p-0"
 		>
 			<div
 				class="flex shrink-0 items-start justify-between px-5 py-4"
@@ -2803,7 +3019,7 @@
 				</Dialog.Exit>
 			</div>
 
-			<Tabs.Root bind:value={advancedColorsMode}>
+			<Tabs.Root bind:value={advancedColorsMode} class="flex min-h-0 flex-1 flex-col">
 				<div class="flex shrink-0 items-center justify-between border-b border-border px-5 py-3">
 					<Tabs.List>
 						<Tabs.Trigger value="light">Light</Tabs.Trigger>
@@ -2820,7 +3036,7 @@
 							{#each paletteGroups as group}
 								<section class="flex flex-col gap-2">
 									<p
-										class="m-0 text-[0.78rem] font-medium text-foreground-muted"
+										class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted"
 									>
 										{group.title}
 									</p>
@@ -2870,7 +3086,7 @@
 				<div class="flex flex-col gap-1">
 					<Dialog.Title>Remove from library?</Dialog.Title>
 					<Dialog.Description>
-						<span class="font-medium text-foreground">{removeSavedTarget?.name ?? ''}</span>
+						<span class="[font-weight:var(--font-weight-label,500)] text-foreground">{removeSavedTarget?.name ?? ''}</span>
 						will be deleted from your local saved themes.
 					</Dialog.Description>
 				</div>
@@ -2913,9 +3129,9 @@
 					<Dialog.Title>Save changes first?</Dialog.Title>
 					<Dialog.Description>
 						You have unsaved tweaks to
-						<span class="font-medium text-foreground">{editorName || 'this theme'}</span>.
+						<span class="[font-weight:var(--font-weight-label,500)] text-foreground">{editorName || 'this theme'}</span>.
 						Loading
-						<span class="font-medium text-foreground"
+						<span class="[font-weight:var(--font-weight-label,500)] text-foreground"
 							>{pendingThemeLoad?.name ?? 'another theme'}</span
 						>
 						will replace them.
@@ -2965,7 +3181,7 @@
 	<!-- ─── All motion dialog ─── -->
 	<Dialog.Root bind:open={advancedMotionOpen}>
 		<Dialog.Content
-			class="w-full max-w-[min(36rem,calc(100vw-2rem))] gap-0 overflow-hidden p-0"
+			class="flex w-full max-w-[min(36rem,calc(100vw-2rem))] flex-col gap-0 overflow-hidden p-0"
 		>
 			<div
 				class="flex shrink-0 items-start justify-between px-5 py-4"
@@ -2989,7 +3205,7 @@
 			<div class="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto px-5 py-4">
 				<section class="flex flex-col gap-2">
 					<p
-						class="m-0 text-[0.78rem] font-medium text-foreground-muted"
+						class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted"
 					>
 						Durations
 					</p>
@@ -2998,7 +3214,7 @@
 							{@const value = durationToMs(editorTheme.motion[field.key])}
 							<label class="flex flex-col gap-1.5">
 								<div class="flex items-baseline justify-between gap-2">
-									<span class="text-[0.74rem] font-medium text-foreground">{field.label}</span>
+									<span class="text-[0.74rem] [font-weight:var(--font-weight-label,500)] text-foreground">{field.label}</span>
 									<span
 										class="rounded-md bg-secondary/60 px-1.5 py-0.5 font-mono text-[0.68rem] text-foreground"
 									>
@@ -3026,7 +3242,7 @@
 
 				<section class="flex flex-col gap-2">
 					<p
-						class="m-0 text-[0.78rem] font-medium text-foreground-muted"
+						class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted"
 					>
 						Transition
 					</p>
@@ -3041,11 +3257,11 @@
 								: String(numericValue)}
 							<label class="flex flex-col gap-1.5">
 								<div class="flex items-baseline justify-between gap-2">
-									<span class="flex items-center gap-1.5 text-[0.74rem] font-medium text-foreground">
+									<span class="flex items-center gap-1.5 text-[0.74rem] [font-weight:var(--font-weight-label,500)] text-foreground">
 										{field.label}
 										{#if field.experimental}
 											<span
-												class="rounded-full border border-border bg-secondary/40 px-1.5 py-0.5 text-[0.6rem] font-medium uppercase tracking-wide text-foreground-muted"
+												class="rounded-full border border-border bg-secondary/40 px-1.5 py-0.5 text-[0.6rem] [font-weight:var(--font-weight-label,500)] uppercase tracking-wide text-foreground-muted"
 											>
 												Experimental
 											</span>
@@ -3099,6 +3315,25 @@
 <style>
 	.studio-shell {
 		font-family: var(--font-sans), sans-serif;
+	}
+
+	/* Weight preview "Aa" rendered via ::before so it shows visually but
+	   doesn't enter textContent (which Select.Item uses for its label).
+	   Without this trick the trigger would shift from e.g. "Medium" to
+	   "Aa Medium" the first time the dropdown is opened. */
+	.silk-weight-row {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		text-align: left;
+	}
+	.silk-weight-aa::before {
+		content: 'Aa';
+		display: inline-block;
+		min-width: 1.6rem;
+		text-align: center;
+		font-size: 0.86rem;
+		line-height: 1;
 	}
 
 	.silk-range {

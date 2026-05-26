@@ -175,7 +175,7 @@
 >
 	<div
 		class={`relative mx-auto flex h-16 w-full items-center justify-between ${
-			isStudio ? 'max-w-none px-4' : 'max-w-[1600px] px-4 md:px-8'
+			isStudio ? 'max-w-none px-4' : 'max-w-[1440px] px-4 md:px-8'
 		}`}
 	>
 		<Command.Root>
@@ -183,12 +183,12 @@
 				<a
 					href="/"
 					onclick={closeMobileMenu}
-					class="flex min-w-0 flex-row items-center gap-2 rounded-lg px-1 py-2 text-sm font-semibold tracking-tight text-foreground transition-colors duration-150 hover:text-foreground"
+					class="flex min-w-0 flex-row items-center gap-2 rounded-lg px-1 py-2 text-sm [font-weight:var(--font-weight-label,600)] tracking-tight text-foreground transition-colors duration-150 hover:text-foreground"
 				>
 					<Logo />
 					<span class="truncate">Silk UI</span>
 					<span
-						class="ml-1 rounded-md bg-secondary px-1.5 py-0.5 font-mono text-[0.7rem] font-medium text-foreground-muted"
+						class="ml-1 rounded-md bg-secondary px-1.5 py-0.5 font-mono text-[0.7rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted"
 					>
 						v0.4.2
 					</span>
@@ -259,7 +259,7 @@
 							d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
 						/>
 					</svg>
-					<span class="text-[0.72rem] font-medium">Star · {formatStarCount(starCount)}</span>
+					<span class="text-[0.72rem] [font-weight:var(--font-weight-label,500)]">Star · {formatStarCount(starCount)}</span>
 				</Button>
 			</div>
 

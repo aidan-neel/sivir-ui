@@ -1,7 +1,7 @@
 import { tv } from 'tailwind-variants';
 
 export const badge = tv({
-	base: 'flex items-center justify-center rounded-[var(--radius-lg)] px-[var(--badge-padding-x)] py-[var(--badge-padding-y)] text-[length:var(--text-xs)] leading-[1.2] font-medium transition-[background-color,border-color,color,box-shadow,transform] [transition-duration:var(--motion-duration-hover)] ease-in-out hover:cursor-default [transform:translateZ(0)] [backface-visibility:hidden] focus-visible:translate-y-px focus-visible:outline-none focus-visible:ring-0 focus-visible:shadow-[var(--ui-badge-shadow,0_0_#0000),0_0_0_3px_var(--color-ring)] disabled:cursor-not-allowed disabled:opacity-50',
+	base: 'flex items-center justify-center rounded-[var(--radius-lg)] px-[var(--badge-padding-x)] py-[var(--badge-padding-y)] text-[length:var(--text-xs)] leading-[1.2] [font-weight:var(--font-weight-badge,500)] transition-[background-color,border-color,color,box-shadow,transform] [transition-duration:var(--motion-duration-hover)] ease-in-out hover:cursor-default [transform:translateZ(0)] [backface-visibility:hidden] focus-visible:translate-y-px focus-visible:outline-none focus-visible:ring-0 focus-visible:shadow-[var(--ui-badge-shadow,0_0_#0000),0_0_0_3px_var(--color-ring)] disabled:cursor-not-allowed disabled:opacity-50',
 	variants: {
 		variant: {
 			primary:

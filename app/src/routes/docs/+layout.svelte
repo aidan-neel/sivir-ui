@@ -8,7 +8,7 @@
 
 <main class="min-h-screen w-screen bg-background pt-16">
 	<div
-		class="mx-auto flex min-h-[calc(100vh-3.5rem)] w-full max-w-[1600px] flex-col gap-5 px-4 md:px-8 lg:flex-row lg:gap-28"
+		class="mx-auto flex min-h-[calc(100vh-3.5rem)] w-full max-w-[1440px] flex-col gap-5 px-4 md:px-8 lg:flex-row lg:gap-28"
 	>
 		<SideNavbar
 			class="hidden sticky top-14 h-[calc(100vh-3.5rem)] w-56 flex-shrink-0 pt-8 lg:flex"

@@ -68,12 +68,12 @@
 
 		<div class="flex min-w-0 flex-1 flex-col gap-0.5">
 			<p
-				class="text-[0.875rem] font-medium leading-snug tracking-[-0.015em] text-foreground"
+				class="text-[0.875rem] [font-weight:var(--font-weight-body,400)] leading-snug tracking-[-0.015em] text-foreground"
 			>
 				{toast.title}
 			</p>
 			{#if toast.description}
-				<p class="text-[0.8125rem] leading-[1.45] text-foreground-muted">
+				<p class="text-[0.8125rem] leading-[1.45] [font-weight:var(--font-weight-body,400)] text-foreground-muted">
 					{toast.description}
 				</p>
 			{/if}

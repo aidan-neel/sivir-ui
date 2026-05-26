@@ -10,6 +10,10 @@
 
 	/* Core colors */
 	--color-background: #fafafa;
+	/* Background for floating overlays (Modal/Dialog/Sheet/Command). Themes
+	   override this to either --color-background or --color-card based on the
+	   `overlaysOnSurface` flag. */
+	--color-overlay-bg: var(--color-background);
 	--color-border: #e5e5e5;
 	--color-border-strong: #d0d0d0;
 	--color-input: #d0d0d0;
@@ -95,10 +99,9 @@
 	--text-base: 16px;
 
 	/* Component-level tokens */
-	--button-height: var(--size-control-md);
+	--button-height: calc(var(--size-control-md) + 1px);
 	--button-padding-x: calc(var(--space-control-x) + 0.15rem);
 	--button-gap: 0.375rem;
-	--button-font-weight: 500;
 
 	--button-primary-bg: var(--color-primary);
 	--button-primary-border: color-mix(in srgb, var(--color-primary) 78%, #2d3273);
@@ -178,7 +181,7 @@
 	--tooltip-padding-x: 0.46rem;
 	--tooltip-shadow: 0 10px 22px rgb(16 24 40 / 0.18);
 
-	--menu-item-height: 1.875rem;
+	--menu-item-height: 1.7rem;
 	--menu-item-padding-x: var(--space-menu-item-x);
 	--menu-item-foreground: var(--color-foreground);
 	--floating-menu-item-foreground: var(--menu-item-foreground);
@@ -322,7 +325,6 @@
 	[data-ui='dialog-content'],
 	[data-ui='alert-dialog-content'],
 	[data-ui='command-content'],
-	[data-ui='sheet-content'],
 	[data-ui='popover-content'] {
 		transition-duration: var(--motion-duration-panel) !important;
 	}

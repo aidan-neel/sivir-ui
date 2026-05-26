@@ -24,7 +24,7 @@
 
 		<div class="flex flex-col gap-3">
 			<h1
-				class={`m-0 max-w-[12ch] text-balance font-semibold leading-[1] tracking-[-0.035em] [font-family:var(--font-header),sans-serif] ${
+				class={`m-0 max-w-[12ch] text-balance [font-weight:var(--font-weight-label,600)] leading-[1] tracking-[-0.035em] [font-family:var(--font-header),sans-serif] ${
 					compact
 						? 'text-[clamp(2rem,3vw,2.5rem)] md:max-w-[18ch]'
 						: 'text-[clamp(2.2rem,3.8vw,3rem)]'

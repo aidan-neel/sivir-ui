@@ -53,7 +53,7 @@
 	onclick={close}
 	class={cn(
 		className,
-		'min-h-[var(--menu-item-height)] px-[var(--menu-item-padding-x)] rounded-[var(--radius-lg)] text-[var(--menu-item-foreground)] border border-transparent transition-[background-color,border-color,color,box-shadow] duration-150 hover:bg-[var(--menu-item-hover-bg)] data-[active=true]:bg-[var(--menu-item-hover-bg)] data-[selected=true]:bg-[var(--menu-item-active-bg)] w-full text-[14px] duration-50 font-medium hover:cursor-default px-2 items-center justify-between text-left'
+		'min-h-[var(--menu-item-height)] px-[var(--menu-item-padding-x)] rounded-[var(--radius-lg)] text-[var(--menu-item-foreground)] border border-transparent transition-[background-color,border-color,color,box-shadow] duration-150 hover:bg-[var(--menu-item-hover-bg)] data-[active=true]:bg-[var(--menu-item-hover-bg)] data-[selected=true]:bg-[var(--menu-item-active-bg)] w-full text-[14px] duration-50 [font-weight:var(--font-weight-button,500)] hover:cursor-default px-2 items-center justify-between text-left'
 	)}
 	variant={'ghost'}
 	>
@@ -74,7 +74,7 @@
 	onclick={close}
 	class={cn(
 		className,
-		'min-h-[var(--menu-item-height)] px-[var(--menu-item-padding-x)] rounded-[var(--radius-lg)] text-[var(--menu-item-foreground)] border border-transparent transition-[background-color,border-color,color,box-shadow] duration-150 hover:bg-[var(--menu-item-hover-bg)] data-[active=true]:bg-[var(--menu-item-hover-bg)] data-[selected=true]:bg-[var(--menu-item-active-bg)] w-full text-[14px] duration-50 font-medium hover:cursor-default px-2 items-center justify-between text-left',
+		'min-h-[var(--menu-item-height)] px-[var(--menu-item-padding-x)] rounded-[var(--radius-lg)] text-[var(--menu-item-foreground)] border border-transparent transition-[background-color,border-color,color,box-shadow] duration-150 hover:bg-[var(--menu-item-hover-bg)] data-[active=true]:bg-[var(--menu-item-hover-bg)] data-[selected=true]:bg-[var(--menu-item-active-bg)] w-full text-[14px] duration-50 [font-weight:var(--font-weight-button,500)] hover:cursor-default px-2 items-center justify-between text-left',
 		uiState.searchContent !== '' &&
 			!Array.from(uiState.results).some((r) => r.value === item.value) &&
 			'hidden'

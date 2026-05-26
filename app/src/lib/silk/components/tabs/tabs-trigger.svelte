@@ -31,7 +31,7 @@
 	{disabled}
 	class={cn(
 		className,
-		'relative z-10 rounded-[var(--radius-lg)] hover:cursor-pointer px-3.5 py-1.5 text-sm font-medium leading-tight transition-colors duration-200 ease-out focus-visible:outline-none focus-visible:ring-0 focus-visible:shadow-[0_0_0_3px_var(--color-ring)] disabled:cursor-not-allowed disabled:opacity-50',
+		'relative z-10 rounded-[var(--radius-lg)] hover:cursor-pointer px-3.5 py-1.5 text-sm [font-weight:var(--font-weight-button,500)] leading-tight transition-colors duration-200 ease-out focus-visible:outline-none focus-visible:ring-0 focus-visible:shadow-[0_0_0_3px_var(--color-ring)] disabled:cursor-not-allowed disabled:opacity-50',
 		active ? 'text-foreground' : 'text-foreground-muted hover:text-foreground'
 	)}
 	onclick={() => {

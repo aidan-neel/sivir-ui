@@ -19,7 +19,7 @@
 </script>
 
 <ContextMenu.Root>
-	<ContextMenu.Trigger class="rounded-lg border border-border/70 bg-secondary/40 px-10 py-14 text-center font-medium text-foreground-muted">
+	<ContextMenu.Trigger class="rounded-lg border border-border/70 bg-secondary/40 px-10 py-14 text-center [font-weight:var(--font-weight-label,500)] text-foreground-muted">
 		Right click this project card
 	</ContextMenu.Trigger>
 	<ContextMenu.Content class="w-[248px]">
@@ -68,7 +68,7 @@
 	</ContextMenu.Content>
 </ContextMenu.Root>`}>
 	<ContextMenu.Root>
-		<ContextMenu.Trigger class="rounded-lg border border-border/70 bg-secondary/40 px-10 py-14 text-center font-medium text-foreground-muted">
+		<ContextMenu.Trigger class="rounded-lg border border-border/70 bg-secondary/40 px-10 py-14 text-center [font-weight:var(--font-weight-label,500)] text-foreground-muted">
 			Right click this project card
 		</ContextMenu.Trigger>
 		<ContextMenu.Content class="w-[248px]">

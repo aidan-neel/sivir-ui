@@ -8,6 +8,9 @@ generator client {
   output   = "./generated/prisma"
 }
 
+// URLs live in prisma.config.ts (Prisma 7+).
+// - Runtime queries: src/lib/prisma.ts reads DATABASE_URL (Supabase transaction pooler, port 6543).
+// - Migrations: prisma.config.ts → DIRECT_URL (Supabase session/direct, port 5432).
 datasource db {
   provider = "postgresql"
 }
@@ -32,6 +35,9 @@ model Theme {
   motion                Json
   light                 Json
   dark                  Json
+  /// Per-element font weights (header, body, label, button, badge).
+  /// Optional — older themes without this field fall back to library defaults.
+  typography            Json?
   createdAt             DateTime                @default(now())
   updatedAt             DateTime                @updatedAt
 }

@@ -15,7 +15,7 @@
 <p
 	id={`$popover-{String(key)}-title`}
 	{...rest}
-	class={cn(classProp, `text-text text-lg text-foreground font-medium tracking-[-0.02em]`)}
+	class={cn(classProp, `text-text text-lg text-foreground [font-weight:var(--font-weight-header,600)] tracking-[-0.02em]`)}
 >
 	{@render children?.()}
 </p>

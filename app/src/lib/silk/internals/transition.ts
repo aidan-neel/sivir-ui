@@ -34,8 +34,16 @@ type FlyNoOpacityParams = {
 export function getCssDuration(node: Element, variableName: string, fallback: number) {
 	const raw = getComputedStyle(node).getPropertyValue(variableName).trim();
 	if (!raw) return fallback;
-	if (raw.endsWith('ms')) return Number.parseFloat(raw) || fallback;
-	if (raw.endsWith('s')) return (Number.parseFloat(raw) || fallback / 1000) * 1000;
+	// Use isFinite over `parsed || fallback` so a legitimate `0ms` (e.g. the
+	// "None" motion preset) survives instead of getting replaced by fallback.
+	if (raw.endsWith('ms')) {
+		const parsed = Number.parseFloat(raw);
+		return Number.isFinite(parsed) ? parsed : fallback;
+	}
+	if (raw.endsWith('s')) {
+		const parsed = Number.parseFloat(raw);
+		return Number.isFinite(parsed) ? parsed * 1000 : fallback;
+	}
 	const parsed = Number.parseFloat(raw);
 	return Number.isFinite(parsed) ? parsed : fallback;
 }
@@ -157,9 +165,74 @@ export const flyAndScale = (
 	};
 };
 
+type ThemedFadeParams = {
+	durationVar?: string;
+	fallback?: number;
+};
+
+/** Opacity-only fade that reads its duration from a CSS motion variable. */
+export const themedFade = (
+	node: Element,
+	params: ThemedFadeParams = {}
+): TransitionConfig => {
+	const duration = getCssDuration(
+		node,
+		params.durationVar ?? '--motion-duration-overlay',
+		params.fallback ?? 150
+	);
+	return {
+		duration,
+		delay: 0,
+		easing: cubicOut,
+		css: (t) => `opacity: ${t};`
+	};
+};
+
+type ThemedSlideParams = {
+	durationVar?: string;
+	fallback?: number;
+};
+
+/** Vertical slide that reads its duration from a CSS motion variable. */
+export const themedSlide = (
+	node: Element,
+	params: ThemedSlideParams = {}
+): TransitionConfig => {
+	const duration = getCssDuration(
+		node,
+		params.durationVar ?? '--motion-duration-panel',
+		params.fallback ?? 220
+	);
+	const style = getComputedStyle(node);
+	const opacity = +style.opacity;
+	const height = parseFloat(style.height);
+	const paddingTop = parseFloat(style.paddingTop);
+	const paddingBottom = parseFloat(style.paddingBottom);
+	const marginTop = parseFloat(style.marginTop);
+	const marginBottom = parseFloat(style.marginBottom);
+	const borderTopWidth = parseFloat(style.borderTopWidth);
+	const borderBottomWidth = parseFloat(style.borderBottomWidth);
+	return {
+		duration,
+		delay: 0,
+		easing: cubicOut,
+		css: (t) =>
+			`overflow: hidden;` +
+			`opacity: ${Math.min(t * 20, 1) * opacity};` +
+			`height: ${t * height}px;` +
+			`padding-top: ${t * paddingTop}px;` +
+			`padding-bottom: ${t * paddingBottom}px;` +
+			`margin-top: ${t * marginTop}px;` +
+			`margin-bottom: ${t * marginBottom}px;` +
+			`border-top-width: ${t * borderTopWidth}px;` +
+			`border-bottom-width: ${t * borderBottomWidth}px;`
+	};
+};
+
 type ScaleFadeParams = {
 	startScale?: number;
 	duration?: number;
+	durationVar?: string;
 };
 
 /** Combines a small scale-up with a fade-in for compact content. */
@@ -174,8 +247,12 @@ export const scaleFade = (
 		}, '');
 	};
 
+	const duration = params.durationVar
+		? getCssDuration(node, params.durationVar, params.duration ?? 250)
+		: (params.duration ?? 250);
+
 	return {
-		duration: params.duration ?? 250,
+		duration,
 		delay: 0,
 		easing: cubicOut,
 		css: (t) => {

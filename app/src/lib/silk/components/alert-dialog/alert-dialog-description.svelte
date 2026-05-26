@@ -16,7 +16,7 @@
 <p
 	{...rest}
 	id={uiState.key + '-desc'}
-	class={cn(className, 'text-sm text-center font-medium text-foreground-muted sm:text-left')}
+	class={cn(className, 'text-sm text-center [font-weight:var(--font-weight-body,400)] text-foreground-muted sm:text-left')}
 >
 	{@render children?.()}
 </p>

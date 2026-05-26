@@ -51,7 +51,7 @@
 
 	<div class="flex flex-col gap-3">
 		<h1
-			class="m-0 max-w-[20ch] text-[2.6rem] font-medium leading-[1.02] tracking-[-0.04em] md:text-[3.2rem]"
+			class="m-0 max-w-[20ch] text-[2.6rem] [font-weight:var(--font-weight-label,500)] leading-[1.02] tracking-[-0.04em] md:text-[3.2rem]"
 			style="font-family: var(--font-header);"
 		>
 			Svelte components that feel designed, not generated.
@@ -82,13 +82,6 @@
 		</button>
 	</div>
 
-	<div class="flex flex-wrap items-center gap-2">
-		<Button href="/docs/installation">
-			Get installed
-			<ArrowRight size={14} />
-		</Button>
-		<Button href="/docs/components" variant="outlined">Browse components</Button>
-	</div>
 </header>
 
 <!-- ─── Pillars ─────────────────────────────────────────────────── -->
@@ -97,7 +90,7 @@
 		<span class="grid size-6 place-items-center rounded-md bg-primary/10 text-primary">
 			<Layers size={12} />
 		</span>
-		<h2 class="m-0 text-[1.4rem] font-medium tracking-tight" style="font-family: var(--font-header);">
+		<h2 class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] tracking-tight" style="font-family: var(--font-header);">
 			Why Silk
 		</h2>
 	</div>
@@ -109,7 +102,7 @@
 					<pillar.icon size={15} />
 				</span>
 				<p
-					class="m-0 text-[1rem] font-medium tracking-tight"
+					class="m-0 text-[1rem] [font-weight:var(--font-weight-label,500)] tracking-tight"
 					style="font-family: var(--font-header);"
 				>
 					{pillar.title}
@@ -126,7 +119,7 @@
 		<span class="grid size-6 place-items-center rounded-md bg-primary/10 text-primary">
 			<GitFork size={12} />
 		</span>
-		<h2 class="m-0 text-[1.4rem] font-medium tracking-tight" style="font-family: var(--font-header);">
+		<h2 class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] tracking-tight" style="font-family: var(--font-header);">
 			What's inside
 		</h2>
 	</div>
@@ -136,12 +129,12 @@
 			{#each [{ value: '25', label: 'Components', sub: 'Buttons, dialogs, tabs, …' }, { value: '10', label: 'Variants per button', sub: 'Semantic + status + neutral' }, { value: '4', label: 'Token surfaces', sub: 'Color · type · radius · motion' }, { value: '0', label: 'Lock-in', sub: 'You own the files' }] as stat}
 				<div class="flex flex-col gap-1 p-5">
 					<span
-						class="text-[2rem] font-medium tracking-tight"
+						class="text-[2rem] [font-weight:var(--font-weight-label,500)] tracking-tight"
 						style="font-family: var(--font-header);"
 					>
 						{stat.value}
 					</span>
-					<p class="m-0 text-[0.84rem] font-medium">{stat.label}</p>
+					<p class="m-0 text-[0.84rem] [font-weight:var(--font-weight-label,500)]">{stat.label}</p>
 					<p class="m-0 text-[0.72rem] text-foreground-muted">{stat.sub}</p>
 				</div>
 			{/each}
@@ -155,7 +148,7 @@
 		<span class="grid size-6 place-items-center rounded-md bg-primary/10 text-primary">
 			<Sparkles size={12} />
 		</span>
-		<h2 class="m-0 text-[1.4rem] font-medium tracking-tight" style="font-family: var(--font-header);">
+		<h2 class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] tracking-tight" style="font-family: var(--font-header);">
 			Principles
 		</h2>
 	</div>
@@ -167,7 +160,7 @@
 					<principle.icon size={15} />
 				</span>
 				<div class="flex flex-col gap-1">
-					<p class="m-0 text-[0.94rem] font-medium tracking-tight">{principle.title}</p>
+					<p class="m-0 text-[0.94rem] [font-weight:var(--font-weight-label,500)] tracking-tight">{principle.title}</p>
 					<p class="m-0 text-[0.84rem] leading-relaxed text-foreground-muted">{principle.body}</p>
 				</div>
 			</div>
@@ -192,7 +185,7 @@
 	class="mt-12 flex flex-col items-start justify-between gap-4 rounded-[var(--radius-lg)] border border-border bg-card p-6 sm:flex-row sm:items-center"
 >
 	<div class="flex flex-col gap-1">
-		<p class="m-0 text-[1rem] font-medium tracking-tight" style="font-family: var(--font-header);">
+		<p class="m-0 text-[1rem] [font-weight:var(--font-weight-label,500)] tracking-tight" style="font-family: var(--font-header);">
 			Ready in five minutes
 		</p>
 		<p class="m-0 text-[0.86rem] text-foreground-muted">

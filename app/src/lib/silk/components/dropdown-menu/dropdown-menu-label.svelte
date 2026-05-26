@@ -13,6 +13,6 @@
     let { children, class: className, ...rest}: Props = $props();
 </script>
 
-<p {...rest} data-ui="menu-label" class={cn(className, "text-[length:var(--text-xs)] font-medium text-[var(--menu-label-foreground)] select-none px-2 py-2 pb-1")}>
+<p {...rest} data-ui="menu-label" class={cn(className, "text-[length:var(--text-xs)] [font-weight:var(--font-weight-label,500)] text-[var(--menu-label-foreground)] select-none px-2 py-2 pb-1")}>
     {@render children?.()}
 </p>

@@ -10,6 +10,10 @@
 	const uiState = states[key] as UIState<SheetState>;
 </script>
 
-<p {...rest} id={uiState.key + '-desc'} class={cn(className, `text-sm text-foreground-muted`)}>
+<p
+	{...rest}
+	id={uiState.key + '-desc'}
+	class={cn(className, 'text-sm [font-weight:var(--font-weight-body,400)] text-foreground-muted')}
+>
 	{@render children?.()}
 </p>

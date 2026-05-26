@@ -66,7 +66,7 @@
 				}
 			}
 		}}
-		class="w-full bg-transparent text-sm font-medium placeholder:text-foreground-muted focus-visible:outline-none"
+		class="w-full bg-transparent text-sm [font-weight:var(--font-weight-body,400)] placeholder:text-foreground-muted focus-visible:outline-none"
 		placeholder="Type a command or search..."
 		aria-label="Search commands"
 		{...rest}

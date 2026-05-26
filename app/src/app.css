@@ -62,7 +62,7 @@ pre {
 
 .h1 {
 	font-size: 1.3rem;
-	font-weight: 500;
+	font-weight: var(--font-weight-header, 500);
 	font-family: var(--font-header), sans-serif;
 	letter-spacing: -0.025em;
 	line-height: 1.1;
@@ -71,7 +71,7 @@ pre {
 
 .h2 {
 	font-size: 1rem;
-	font-weight: 600;
+	font-weight: var(--font-weight-header, 600);
 	letter-spacing: -0.025em;
 	line-height: 1.15;
 	margin-bottom: 0.5rem;
@@ -79,7 +79,7 @@ pre {
 
 .docs-section-heading {
 	font-size: 1.15rem;
-	font-weight: 600;
+	font-weight: var(--font-weight-header, 600);
 	letter-spacing: -0.025em;
 	line-height: 1.15;
 	color: var(--color-foreground);
@@ -87,7 +87,7 @@ pre {
 
 .docs-subsection-heading {
 	font-size: 1rem;
-	font-weight: 600;
+	font-weight: var(--font-weight-header, 600);
 	letter-spacing: -0.018em;
 	line-height: 1.2;
 	color: var(--color-foreground);
@@ -131,7 +131,7 @@ pre {
 }
 .tok-keyword {
 	color: var(--color-foreground);
-	font-weight: 600;
+	font-weight: var(--font-weight-header, 600);
 }
 .tok-number {
 	color: color-mix(in srgb, var(--color-foreground) 80%, transparent);
@@ -141,11 +141,11 @@ pre {
 }
 .tok-type {
 	color: color-mix(in srgb, var(--color-foreground) 88%, transparent);
-	font-weight: 500;
+	font-weight: var(--font-weight-label, 500);
 }
 .tok-tag {
 	color: color-mix(in srgb, var(--color-foreground) 92%, transparent);
-	font-weight: 500;
+	font-weight: var(--font-weight-label, 500);
 }
 .tok-attr {
 	color: color-mix(in srgb, var(--color-foreground) 65%, transparent);

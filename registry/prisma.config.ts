@@ -6,7 +6,9 @@ export default defineConfig({
   migrations: {
     path: "prisma/migrations",
   },
+  // CLI / migrations talk to Supabase's direct (session-mode) URL. The runtime
+  // adapter uses DATABASE_URL (transaction pooler) — see src/lib/prisma.ts.
   datasource: {
-    url: env("DATABASE_URL"),
+    url: env("DIRECT_URL"),
   },
 });

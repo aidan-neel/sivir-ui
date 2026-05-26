@@ -57,6 +57,6 @@
 		{placeholder}
 		oninput={handleInput}
 		bind:this={element}
-		class="w-full text-sm font-medium placeholder:text-foreground-muted focus-visible:outline-none"
+		class="w-full text-sm [font-weight:var(--font-weight-body,400)] placeholder:text-foreground-muted focus-visible:outline-none"
 	/>
 </div>

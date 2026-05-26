@@ -37,13 +37,22 @@ export const motionSchema = t.Object({
 	sheetDuration: t.String(),
 	sheetOffset: t.Number(),
 	overlayDuration: t.String(),
-	overlayBlur: t.Number()
+	overlayBlur: t.Number(),
+	panelEasing: t.Optional(t.String())
 });
 
 // Free-form slug so new presets (crisp, swift, gentle, dramatic, glide, none,
 // or anything the user invents in the studio) round-trip without a registry
 // schema update.
 export const durationPresetSlugSchema = t.String({ minLength: 1 });
+
+export const typographySchema = t.Object({
+	weightHeader: t.Number({ minimum: 100, maximum: 900 }),
+	weightBody: t.Number({ minimum: 100, maximum: 900 }),
+	weightLabel: t.Number({ minimum: 100, maximum: 900 }),
+	weightButton: t.Number({ minimum: 100, maximum: 900 }),
+	weightBadge: t.Number({ minimum: 100, maximum: 900 })
+});
 
 const themeSharedFields = {
 	name: t.String({ minLength: 1 }),
@@ -62,31 +71,15 @@ const themeSharedFields = {
 	durationPreset: durationPresetSlugSchema,
 	motion: motionSchema,
 	light: paletteSchema,
-	dark: paletteSchema
+	dark: paletteSchema,
+	/** Optional — older themes from before the typography field exists round-trip without it. */
+	typography: t.Optional(typographySchema)
 };
 
 export const themeDraftSchema = t.Object({
 	slug: t.String({ minLength: 1, pattern: '^[a-z0-9]+(?:-[a-z0-9]+)*$' }),
 	...themeSharedFields
 });
-
-export const themeUpdateSchema = t.Partial(themeDraftSchema);
-
-export const themeDeleteResponseSchema = t.Object({
-	success: t.Literal(true),
-	message: t.Literal('Successfully deleted theme.')
-});
-
-export const adminErrorSchema = t.Union([
-	t.Literal('Admin authentication is required.'),
-	t.Literal('Not found.')
-]);
-
-export const themeMutationConflictSchema = t.Union([
-	t.Literal('The default theme cannot be deleted.'),
-	t.Literal('The default theme cannot be edited.'),
-	t.Literal('A theme with this slug already exists, try another one.')
-]);
 
 export const themeRecordSchema = t.Object({
 	id: t.String(),

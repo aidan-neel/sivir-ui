@@ -11,25 +11,34 @@
 
 	type Props = {
 		value: string;
+		label?: string;
 	} & ButtonProps;
 
 	let {
 		children,
 		class: className,
 		value,
+		label,
 		onclick: userOnclick,
 		...rest
 	}: Props = $props();
 	let element = $state<HTMLButtonElement | HTMLAnchorElement | undefined>();
 
+	function resolveLabel() {
+		if (label) return label;
+		const fromAttr = element?.querySelector<HTMLElement>('[data-select-label]')?.textContent?.trim();
+		if (fromAttr) return fromAttr;
+		return element?.textContent?.trim() ?? '';
+	}
+
 	$effect(() => {
 		uiState.data.values.add(value);
 		void tick().then(() => {
-			const label = element?.textContent?.trim();
-			if (!label) return;
-			uiState.data.labels.set(value, label);
+			const resolved = resolveLabel();
+			if (!resolved) return;
+			uiState.data.labels.set(value, resolved);
 			if (uiState.data.value === value) {
-				uiState.data.selectedLabel = label;
+				uiState.data.selectedLabel = resolved;
 			}
 		});
 	});
@@ -49,14 +58,14 @@
 	onclick={() => {
 		uiState.data.value = value;
 		uiState.data.selectedLabel =
-			element?.textContent?.trim() || uiState.data.labels.get(value) || value;
+			resolveLabel() || uiState.data.labels.get(value) || value;
 		uiState.data.open = false;
 		uiState.data.buttonRef?.focus();
 		userOnclick?.();
 	}}
 	class={cn(
 		className,
-		'min-h-[var(--menu-item-height)] px-[var(--menu-item-padding-x)] rounded-[var(--radius-lg)] text-[var(--menu-item-foreground)] border border-transparent transition-[background-color,border-color,color,box-shadow] [transition-duration:var(--motion-duration-menu)] hover:bg-[var(--menu-item-hover-bg)] data-[active=true]:bg-[var(--menu-item-hover-bg)] data-[selected=true]:bg-[var(--menu-item-active-bg)] w-full text-[14px] font-medium hover:cursor-default px-2 items-center justify-between text-left'
+		'min-h-[var(--menu-item-height)] px-[var(--menu-item-padding-x)] rounded-[var(--radius-lg)] text-[var(--menu-item-foreground)] border border-transparent transition-[background-color,border-color,color,box-shadow] [transition-duration:var(--motion-duration-menu)] hover:bg-[var(--menu-item-hover-bg)] data-[active=true]:bg-[var(--menu-item-hover-bg)] data-[selected=true]:bg-[var(--menu-item-active-bg)] w-full text-[14px] [font-weight:var(--font-weight-button,500)] hover:cursor-default px-2 items-center justify-between text-left'
 	)}
 	variant={'ghost'}
 >

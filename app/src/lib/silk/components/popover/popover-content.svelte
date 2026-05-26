@@ -1,3 +1,60 @@
+<script lang="ts" module>
+	// Shared across all Popover.Content instances. Nested popovers
+	// (dropdown → submenu, etc.) reference-count so the body lock only
+	// releases when the last open one closes.
+	let openCount = 0;
+	let savedOverflow = '';
+	let savedPaddingRight = '';
+
+	function isOverlay(el: Element) {
+		// Popover wrappers are portaled to body without an id (the id lives on
+		// the inner content div) — match the `data-floating-content` attribute
+		// they always carry, plus the well-known overlay id prefixes for Modal,
+		// Dialog, Sheet, Command (which portal the labeled element directly).
+		if (el.hasAttribute('data-floating-content')) return true;
+		const id = el.id;
+		return (
+			id.startsWith('popover-') ||
+			id.startsWith('modal-') ||
+			id.startsWith('dialog-') ||
+			id.startsWith('sheet-') ||
+			id.startsWith('command-')
+		);
+	}
+
+	function acquireLock() {
+		if (typeof document === 'undefined') return;
+		if (openCount === 0) {
+			savedOverflow = document.body.style.overflow;
+			const sbw = window.innerWidth - document.documentElement.clientWidth;
+			if (sbw > 0) {
+				savedPaddingRight = document.body.style.paddingRight;
+				document.body.style.paddingRight = `${sbw}px`;
+			}
+			document.body.style.overflow = 'hidden';
+			for (const el of Array.from(document.body.children) as HTMLElement[]) {
+				if (isOverlay(el)) continue;
+				el.classList.add('pointer-events-none');
+			}
+		}
+		openCount += 1;
+	}
+
+	function releaseLock() {
+		if (typeof document === 'undefined') return;
+		openCount = Math.max(0, openCount - 1);
+		if (openCount === 0) {
+			document.body.style.overflow = savedOverflow;
+			document.body.style.paddingRight = savedPaddingRight;
+			savedOverflow = '';
+			savedPaddingRight = '';
+			for (const el of Array.from(document.body.children) as HTMLElement[]) {
+				el.classList.remove('pointer-events-none');
+			}
+		}
+	}
+</script>
+
 <script lang="ts">
 	import { onDestroy, onMount } from 'svelte';
 	import { states } from '$lib/silk/internals/state.svelte.ts';
@@ -13,7 +70,6 @@
 		allowClickOutside = true,
 		portal = true,
 		refElement,
-		lockBody = false,
 		role = 'dialog',
 		tabindex = -1,
 		id,
@@ -33,18 +89,20 @@
 	}
 
 	function updatePosition() {
-		if (uiState && popover) {
-			const triggerWidth = uiState.buttonRef?.getBoundingClientRect().width;
-			if (triggerWidth) {
-				popover.style.setProperty('--popover-trigger-width', `${triggerWidth}px`);
-			}
+		if (!uiState || !popover) return;
+		const reference = refElement ?? uiState.buttonRef;
+		if (!reference) return;
 
-			positionFloatingPanel(
-				refElement ?? (uiState.buttonRef as ReferenceElement),
-				popover,
-				refElement ? 'right-start' : uiState.placement
-			);
+		const triggerWidth = uiState.buttonRef?.getBoundingClientRect().width;
+		if (triggerWidth) {
+			popover.style.setProperty('--popover-trigger-width', `${triggerWidth}px`);
 		}
+
+		positionFloatingPanel(
+			reference,
+			popover,
+			refElement ? 'right-start' : uiState.placement
+		);
 	}
 
 	onMount(() => {
@@ -101,6 +159,7 @@
 			document.removeEventListener('focusout', handleFocusOut);
 			ro.disconnect();
 			clickOutsideCleanup?.();
+			if (uiState.open) releaseLock();
 
 			uiState.open = false;
 			uiState.popoverRef?.remove();
@@ -117,25 +176,20 @@
 		}
 	}
 
+	// Lock body scroll + inert background siblings whenever the popover is open.
+	// We don't run a focus trap here — popover-driven components (Select,
+	// Dropdown, Combobox, ContextMenu) manage their own initial focus and
+	// keyboard navigation, and stacking trapFocus on top recurses with their
+	// own focus() calls. The click-outside + Escape handlers handle dismiss.
 	$effect(() => {
-		if (!document) return;
-
-		const bodyChildren = Array.from(document.body.children) as HTMLElement[];
-
-		if (lockBody && uiState.open) {
-			document.body.style.overflow = 'hidden';
-			for (const el of bodyChildren) {
-				if (!el.id.startsWith('popover-') || el.id.includes('controls')) {
-					el.classList.add('pointer-events-none');
-				}
-			}
-		} else {
-			document.body.style.overflow = '';
-			for (const el of bodyChildren) {
-				el.classList.remove('pointer-events-none');
-			}
+		if (typeof document === 'undefined') return;
+		if (uiState.open && popover) {
+			acquireLock();
+			return () => releaseLock();
 		}
+	});
 
+	$effect(() => {
 		if (!uiState.hovering && !uiState.focusedInside) {
 			cancelClose();
 		}
@@ -163,7 +217,7 @@
 			{...rest}
 			id={id ?? `popover-${String(key)}-content`}
 			{role}
-			aria-modal="false"
+			aria-modal="true"
 			aria-labelledby={`popover-${String(key)}-title`}
 			{tabindex}
 			transition:flyAndScale={{ durationVar: '--motion-duration-panel' }}

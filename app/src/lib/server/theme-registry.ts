@@ -7,11 +7,6 @@ export type RegistryTheme = ThemeDraft & {
 	updatedAt: string;
 };
 
-export type AdminLoginResponse = {
-	token: string;
-	expiresAt: string;
-};
-
 const DEFAULT_REGISTRY_URL = 'http://localhost:4100';
 
 export class RegistryRequestError extends Error {
@@ -30,10 +25,6 @@ function getRegistryBaseUrl() {
 async function parseErrorMessage(response: Response) {
 	const body = await response.text();
 	return body.trim() || `Registry request failed with status ${response.status}`;
-}
-
-function adminHeaders(token: string | null | undefined): Record<string, string> {
-	return token ? { authorization: `Bearer ${token}` } : {};
 }
 
 export async function listRegistryThemes(fetchImpl: typeof fetch) {
@@ -72,58 +63,4 @@ export async function publishRegistryTheme(fetchImpl: typeof fetch, theme: Theme
 		success: boolean;
 		message: 'Successfully published theme!';
 	};
-}
-
-export async function adminLogin(
-	fetchImpl: typeof fetch,
-	credentials: { username: string; password: string }
-): Promise<AdminLoginResponse> {
-	const response = await fetchImpl(`${getRegistryBaseUrl()}/auth/login`, {
-		method: 'POST',
-		headers: { 'content-type': 'application/json' },
-		body: JSON.stringify(credentials)
-	});
-	if (!response.ok) {
-		let message = `Login failed with status ${response.status}`;
-		try {
-			const body = (await response.json()) as { error?: string };
-			if (body?.error) message = body.error;
-		} catch {
-			/* leave default */
-		}
-		throw new RegistryRequestError(response.status, message);
-	}
-	return (await response.json()) as AdminLoginResponse;
-}
-
-export async function deleteRegistryTheme(
-	fetchImpl: typeof fetch,
-	slug: string,
-	token: string | null | undefined
-) {
-	const response = await fetchImpl(`${getRegistryBaseUrl()}/themes/${encodeURIComponent(slug)}`, {
-		method: 'DELETE',
-		headers: adminHeaders(token)
-	});
-	if (!response.ok) {
-		throw new RegistryRequestError(response.status, await parseErrorMessage(response));
-	}
-	return (await response.json()) as { success: true; message: string };
-}
-
-export async function updateRegistryTheme(
-	fetchImpl: typeof fetch,
-	slug: string,
-	patch: Partial<ThemeDraft>,
-	token: string | null | undefined
-) {
-	const response = await fetchImpl(`${getRegistryBaseUrl()}/themes/${encodeURIComponent(slug)}`, {
-		method: 'PATCH',
-		headers: { 'content-type': 'application/json', ...adminHeaders(token) },
-		body: JSON.stringify(patch)
-	});
-	if (!response.ok) {
-		throw new RegistryRequestError(response.status, await parseErrorMessage(response));
-	}
-	return (await response.json()) as RegistryTheme;
 }

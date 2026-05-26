@@ -14,12 +14,21 @@
 		value: string;
 		onValueChange?: (value: string) => void;
 		options?: ColorOption[];
+		/** Trigger style — matches Button variants. Defaults to outlined. */
+		variant?: 'outlined' | 'secondary' | 'ghost';
 		/** @deprecated no-op */
 		showSelect?: boolean;
 		class?: string;
 	};
 
-	let { label, value, onValueChange, options = [], class: className }: Props = $props();
+	let {
+		label,
+		value,
+		onValueChange,
+		options = [],
+		variant = 'outlined',
+		class: className
+	}: Props = $props();
 
 	// ── Color conversion ────────────────────────────────────────────────────────
 
@@ -179,12 +188,23 @@
 	let sbEl = $state<HTMLElement | undefined>(undefined);
 	let hueEl = $state<HTMLElement | undefined>(undefined);
 
+	// HSL slider state — owned by the sliders themselves so user intent
+	// survives the hex round-trip (low-saturation hexes lose hue precision
+	// and pure-grey hexes have no hue at all, so deriving HSL straight from
+	// the hex would snap the H slider back to 0 mid-drag).
+	// svelte-ignore state_referenced_locally
+	let hslH = $state(isValidHex(value) ? hexToHsl(value)[0] : 0);
+	// svelte-ignore state_referenced_locally
+	let hslS = $state(isValidHex(value) ? hexToHsl(value)[1] : 0);
+	// svelte-ignore state_referenced_locally
+	let hslL = $state(isValidHex(value) ? hexToHsl(value)[2] : 100);
+	let skipNextSync = false;
+
 	const hasOptions = $derived(options.length > 0);
 	const hueColor = $derived(`hsl(${hue}, 100%, 50%)`);
 	const previewHex = $derived(
 		isValidHex(hexInput) ? hexInput : isValidHex(value) ? value : '#000000'
 	);
-	const hsl = $derived(hexToHsl(previewHex));
 	const selectedLabel = $derived(
 		options.find((o) => o.value.toLowerCase() === (value ?? '').toLowerCase())?.label ?? null
 	);
@@ -192,24 +212,45 @@
 	function setHslChannel(channel: 'h' | 's' | 'l', rawValue: string) {
 		const next = Number.parseFloat(rawValue);
 		if (!Number.isFinite(next)) return;
-		const [h, s, l] = hsl;
-		const newHex = hslToHex(
-			channel === 'h' ? next : h,
-			channel === 's' ? next : s,
-			channel === 'l' ? next : l
-		);
+		if (channel === 'h') {
+			hslH = next;
+			// At S=0 every hue maps to the same grey hex, so moving H feels
+			// dead. Bump S to a sensible default so the chosen hue is visible.
+			if (hslS === 0) hslS = 60;
+		} else if (channel === 's') {
+			hslS = next;
+		} else {
+			hslL = next;
+		}
+		const newHex = hslToHex(hslH, hslS, hslL);
+		skipNextSync = true;
 		applyHex(newHex);
 	}
 
-	// Sync external value → HSV + hexInput
+	// Sync external value → HSV + hexInput + HSL.
 	$effect(() => {
-		if (isValidHex(value)) {
-			const [h, s, v2] = hexToHsv(value);
-			hue = h;
-			sat = s;
-			val = v2;
-			hexInput = value.toLowerCase();
+		if (!isValidHex(value)) return;
+		const lower = value.toLowerCase();
+		if (skipNextSync) {
+			skipNextSync = false;
+			hexInput = lower;
+			const [hh, ss, vv] = hexToHsv(value);
+			hue = hh;
+			sat = ss;
+			val = vv;
+			return;
 		}
+		const [h, s, v2] = hexToHsv(value);
+		hue = h;
+		sat = s;
+		val = v2;
+		hexInput = lower;
+		const [hh, hs, hl] = hexToHsl(value);
+		// Preserve the user's last hue choice when the hex is achromatic — the
+		// roundtrip would otherwise snap H to 0.
+		if (hs > 0) hslH = hh;
+		hslS = hs;
+		hslL = hl;
 	});
 
 	// ── Apply ───────────────────────────────────────────────────────
@@ -302,8 +343,8 @@
 
 	<Popover.Root state_key={key} placement="bottom">
 		<Popover.Trigger
-			variant="outlined"
-			class="group h-8 w-full justify-start gap-2 border-border bg-card px-1.5 text-sm font-normal shadow-none transition-colors hover:border-border-strong"
+			{variant}
+			class="group h-8 w-full justify-start gap-2 px-1.5 text-sm [font-weight:var(--font-weight-button,500)]"
 		>
 			<span
 				class="size-5 shrink-0 rounded-md ring-1 ring-inset ring-black/10"
@@ -374,9 +415,9 @@
 
 			<!-- HSL sliders -->
 			<div class="flex flex-col gap-1.5 border-b border-border/60 px-2.5 py-2.5">
-				{#each [{ key: 'h', label: 'H', max: 360, value: hsl[0], unit: '°' }, { key: 's', label: 'S', max: 100, value: hsl[1], unit: '%' }, { key: 'l', label: 'L', max: 100, value: hsl[2], unit: '%' }] as channel (channel.key)}
+				{#each [{ key: 'h', label: 'H', max: 360, value: hslH, unit: '°' }, { key: 's', label: 'S', max: 100, value: hslS, unit: '%' }, { key: 'l', label: 'L', max: 100, value: hslL, unit: '%' }] as channel (channel.key)}
 					<div class="flex items-center gap-2">
-						<span class="w-3 shrink-0 font-mono text-[0.66rem] font-medium text-foreground-muted">
+						<span class="w-3 shrink-0 font-mono text-[0.66rem] [font-weight:var(--font-weight-body,400)] text-foreground-muted">
 							{channel.label}
 						</span>
 						<input

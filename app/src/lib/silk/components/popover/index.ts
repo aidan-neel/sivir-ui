@@ -16,7 +16,6 @@ export type PopoverContentProps = {
 	allowClickOutside?: boolean;
 	portal?: boolean;
 	refElement?: VirtualElement;
-	lockBody?: boolean;
 	role?: 'dialog' | 'menu' | 'listbox';
 	tabindex?: number;
 } & DefaultProps &

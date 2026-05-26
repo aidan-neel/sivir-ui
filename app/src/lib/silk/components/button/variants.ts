@@ -1,7 +1,7 @@
 import { tv } from 'tailwind-variants';
 
 export const button = tv({
-	base: 'flex h-[var(--button-height)] hover:cursor-pointer items-center justify-center gap-[var(--button-gap)] whitespace-nowrap rounded-[var(--radius-lg)] px-[var(--button-padding-x)] text-[length:var(--text-sm)] font-medium leading-none antialiased transition-[background-color,border-color,color,opacity,box-shadow] [transition-duration:var(--motion-duration-hover)] ease-[cubic-bezier(0.25,0.1,0.25,1)] [transform:translateZ(0)] [backface-visibility:hidden] focus-visible:outline-none focus-visible:ring-0 focus-visible:shadow-[var(--ui-button-shadow,0_0_#0000),0_0_0_3px_var(--color-ring)] disabled:pointer-events-none disabled:opacity-40 [&_svg]:pointer-events-none [&_svg:not([class*="size-"])]:size-4 [&_svg]:shrink-0',
+	base: 'flex h-[var(--button-height)] hover:cursor-pointer items-center justify-center gap-[var(--button-gap)] whitespace-nowrap rounded-[var(--radius-lg)] px-[var(--button-padding-x)] text-[length:var(--text-sm)] [font-weight:var(--font-weight-button,500)] leading-none antialiased transition-[background-color,border-color,color,opacity,box-shadow] [transition-duration:var(--motion-duration-hover)] ease-[cubic-bezier(0.25,0.1,0.25,1)] [transform:translateZ(0)] [backface-visibility:hidden] focus-visible:outline-none focus-visible:ring-0 focus-visible:shadow-[var(--ui-button-shadow,0_0_#0000),0_0_0_3px_var(--color-ring)] disabled:pointer-events-none disabled:opacity-40 [&_svg]:pointer-events-none [&_svg:not([class*="size-"])]:size-4 [&_svg]:shrink-0',
 	variants: {
 		variant: {
 			primary:

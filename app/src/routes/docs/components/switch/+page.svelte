@@ -61,14 +61,14 @@
 		<Badge variant="outlined" class="text-[0.66rem]">v0.4.2</Badge>
 		<Badge variant="ghost" class="text-[0.66rem]">Bindable</Badge>
 		</div>
-		<a href={SOURCE} target="_blank" rel="noreferrer noopener" class="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2.5 py-1 text-[0.7rem] font-medium text-foreground-muted transition-colors hover:bg-secondary/60 hover:text-foreground">
+		<a href={SOURCE} target="_blank" rel="noreferrer noopener" class="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2.5 py-1 text-[0.7rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted transition-colors hover:bg-secondary/60 hover:text-foreground">
 			View source
 			<External size={11} />
 		</a>
 	</div>
 
 	<div class="flex flex-col gap-3">
-		<h1 class="m-0 text-[2.6rem] font-medium leading-[1] tracking-[-0.035em] md:text-[3rem]" style="font-family: var(--font-header);">Switch</h1>
+		<h1 class="m-0 text-[2.6rem] [font-weight:var(--font-weight-label,500)] leading-[1] tracking-[-0.035em] md:text-[3rem]" style="font-family: var(--font-header);">Switch</h1>
 		<p class="m-0 max-w-[42rem] text-[1rem] leading-relaxed text-foreground-muted">
 			A toggle for things that take effect immediately — notifications, dark mode, auto-save.
 			Pair it with a clear label so users know what they're enabling.
@@ -93,35 +93,35 @@
 
 			<div class="flex flex-col divide-y divide-border/60">
 				<div class="flex flex-col gap-2 px-6 py-4">
-					<label for="pg-label" class="text-[0.7rem] font-medium uppercase tracking-wide text-foreground-muted">Label</label>
+					<label for="pg-label" class="text-[0.7rem] [font-weight:var(--font-weight-label,500)] uppercase tracking-wide text-foreground-muted">Label</label>
 					<input id="pg-label" bind:value={pgLabel} class="h-9 w-full max-w-[28rem] rounded-[var(--radius-md)] border border-border bg-[var(--color-field)] px-3 text-[0.86rem] text-foreground outline-none focus:border-[var(--field-focus-border)] focus:shadow-[0_0_0_3px_var(--color-ring)]" />
 				</div>
 				<div class="flex flex-col gap-2 px-6 py-4">
-					<label for="pg-desc" class="text-[0.7rem] font-medium uppercase tracking-wide text-foreground-muted">Description</label>
+					<label for="pg-desc" class="text-[0.7rem] [font-weight:var(--font-weight-label,500)] uppercase tracking-wide text-foreground-muted">Description</label>
 					<input id="pg-desc" bind:value={pgDesc} class="h-9 w-full rounded-[var(--radius-md)] border border-border bg-[var(--color-field)] px-3 text-[0.86rem] text-foreground outline-none focus:border-[var(--field-focus-border)] focus:shadow-[0_0_0_3px_var(--color-ring)]" />
 				</div>
 			</div>
 
 			<div class="flex items-center justify-between gap-2 border-t border-border/70 bg-secondary/40 px-6 py-2.5">
-				<span class="text-[0.66rem] font-medium uppercase tracking-wide text-foreground-muted">Snippet</span>
+				<span class="text-[0.66rem] [font-weight:var(--font-weight-label,500)] uppercase tracking-wide text-foreground-muted">Snippet</span>
 				<button type="button" onclick={() => copy(playgroundCode, 'playground')} class="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2 py-1 text-[0.72rem] text-foreground-muted transition-colors hover:bg-secondary/60 hover:text-foreground">
 					{#if copiedSnippet === 'playground'}<Check size={11} class="text-[var(--color-success)]" />Copied{:else}<Copy size={11} />Copy code{/if}
 				</button>
 			</div>
-			<pre class="m-0 overflow-x-auto bg-secondary/40 px-6 pb-4 pt-1 font-mono text-[0.78rem] leading-relaxed text-foreground"><code>{@html highlight(playgroundCode, "svelte")}</code></pre>
+			<pre class="m-0 overflow-x-auto bg-secondary/40 px-6 py-4 font-mono text-[0.78rem] leading-relaxed text-foreground"><code>{@html highlight(playgroundCode, "svelte")}</code></pre>
 		</div>
 	</div>
 </section>
 
 <div class="flex flex-col gap-16 pt-16">
 	<section class="scroll-mt-20 flex flex-col gap-5">
-		<div class="flex items-center gap-2"><span class="grid size-6 place-items-center rounded-md bg-primary/10 text-primary"><Hash size={12} /></span><h2 class="m-0 text-[1.4rem] font-medium tracking-tight" style="font-family: var(--font-header);">API</h2></div>
+		<div class="flex items-center gap-2"><span class="grid size-6 place-items-center rounded-md bg-primary/10 text-primary"><Hash size={12} /></span><h2 class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] tracking-tight" style="font-family: var(--font-header);">API</h2></div>
 
 		<div class="overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card">
 			<ul class="flex flex-col divide-y divide-border/60">
 				{#each apiRows as row}
 					<li class="grid grid-cols-[1fr_1.6fr_0.5fr] gap-3 px-4 py-3 max-md:grid-cols-1">
-						<code class="font-mono text-[0.82rem] font-semibold">{row.prop}</code>
+						<code class="font-mono text-[0.82rem] [font-weight:var(--font-weight-label,600)]">{row.prop}</code>
 						<div class="flex flex-col gap-1"><code class="overflow-x-auto rounded-md bg-secondary/40 px-2 py-1 font-mono text-[0.74rem] text-foreground">{row.type}</code><p class="m-0 text-[0.78rem] leading-snug text-foreground-muted">{row.description}</p></div>
 						<div class="md:text-right"><code class="inline-block rounded-md bg-secondary/40 px-2 py-1 font-mono text-[0.72rem]">{row.default}</code></div>
 					</li>
@@ -132,7 +132,7 @@
 
 	<section class="flex flex-col items-start justify-between gap-4 rounded-[var(--radius-lg)] border border-border bg-card p-6 sm:flex-row sm:items-center">
 		<div class="flex flex-col gap-1">
-			<p class="m-0 text-[1rem] font-medium tracking-tight" style="font-family: var(--font-header);">Want to make it yours?</p>
+			<p class="m-0 text-[1rem] [font-weight:var(--font-weight-label,500)] tracking-tight" style="font-family: var(--font-header);">Want to make it yours?</p>
 			<p class="m-0 text-[0.86rem] text-foreground-muted">Every Silk component reads from your theme tokens — open the studio to restyle them.</p>
 		</div>
 		<Button href="/themes/studio">Open theme studio<ArrowRight size={14} /></Button>

@@ -40,24 +40,24 @@
 	{/if}
 	{#if checked}
 		<div
-			in:scaleFade={{ duration: 200 }}
+			in:scaleFade={{ duration: 200, durationVar: '--motion-duration-hover' }}
 			class="flex h-4 w-4 items-center justify-center rounded-[var(--radius-sm)] bg-primary p-0 ring-offset-2 transition-[box-shadow,transform] peer-focus-visible:ring-2 peer-focus-visible:ring-[var(--color-ring)] peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-background"
 		>
 			<Check size="12" class="text-foreground-btn" />
 		</div>
 	{:else}
 		<div
-			in:scaleFade={{ duration: 200 }}
+			in:scaleFade={{ duration: 200, durationVar: '--motion-duration-hover' }}
 			class="flex h-4 w-4 items-center justify-center rounded-[var(--radius-sm)] border bg-[var(--checkbox-bg)] p-0 duration-200 transition-[background-color,box-shadow,transform] peer-hover:bg-[var(--color-field-hover)] peer-focus-visible:bg-[var(--color-field-hover)] peer-focus-visible:ring-2 peer-focus-visible:ring-[var(--color-ring)] peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-background"
 		></div>
 	{/if}
 	{#if label}
 		<div class="flex flex-col justify-center">
-			<span class="text-text text-sm mt-[-0.2rem] font-medium">
+			<span class="text-text text-sm mt-[-0.2rem] [font-weight:var(--font-weight-body,400)]">
 				{label}
 			</span>
 			{#if description}
-				<span class="text-text text-sm text-foreground-muted">
+				<span class="text-text text-sm [font-weight:var(--font-weight-body,400)] text-foreground-muted">
 					{description}
 				</span>
 			{/if}

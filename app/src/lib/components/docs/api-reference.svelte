@@ -21,7 +21,7 @@
 		>
 			<span class="text-foreground-muted">
 				{title}
-			</span>.<span class="font-semibold">
+			</span>.<span class="[font-weight:var(--font-weight-label,600)]">
 				{component}
 			</span>
 		</h1>
@@ -37,21 +37,21 @@
 			<table class="min-w-[42rem] w-full border-collapse text-left">
 				<thead>
 					<tr class="border-b">
-						<th class="p-3 font-medium">Property</th>
-						<th class="p-3 font-medium">Type</th>
-						<th class="p-3 font-medium">Description</th>
+						<th class="p-3 [font-weight:var(--font-weight-label,500)]">Property</th>
+						<th class="p-3 [font-weight:var(--font-weight-label,500)]">Type</th>
+						<th class="p-3 [font-weight:var(--font-weight-label,500)]">Description</th>
 					</tr>
 				</thead>
 				<tbody>
 					{#each items as { property, type, description, defaults }}
 						<tr class="border-t">
 							<td class="w-[11rem] p-3 font-mono align-top">
-								<span class="bg-secondary px-2 p-1 rounded-lg font-medium text-sm">
+								<span class="bg-secondary px-2 p-1 rounded-lg [font-weight:var(--font-weight-label,500)] text-sm">
 									{property}
 								</span>
 							</td>
 							<td class="w-[11rem] p-3 font-mono align-top">
-								<span class="bg-secondary px-2 p-1 rounded-lg font-medium text-sm">
+								<span class="bg-secondary px-2 p-1 rounded-lg [font-weight:var(--font-weight-label,500)] text-sm">
 									{type}
 								</span>
 							</td>

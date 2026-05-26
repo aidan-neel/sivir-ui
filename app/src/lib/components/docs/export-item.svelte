@@ -16,7 +16,7 @@
 
 <p {...rest} class={cn(classProp, `text-foreground-muted`)}>
 	<span class="text-foreground px-3">•</span><span
-		class="text-foreground font-medium [font-family:var(--font-header),sans-serif]">{title} -</span
+		class="text-foreground [font-weight:var(--font-weight-label,500)] [font-family:var(--font-header),sans-serif]">{title} -</span
 	>
 	{@render children?.()}
 </p>

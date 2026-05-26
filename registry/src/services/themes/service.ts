@@ -29,16 +29,21 @@ function normalizePalette(palette: unknown, fallbackInfo: string): ThemePalette 
 }
 
 function serialize(theme: NonNullable<PersistedTheme>): ThemeRecord {
-	const { publisher, motion, light, dark, createdAt, updatedAt, ...rest } = theme;
+	// Cast through `any` because the generated Prisma client lags the schema
+	// until `prisma generate` runs. After that this can be removed.
+	const t = theme as unknown as Record<string, unknown> & NonNullable<PersistedTheme>;
+	const { publisher, motion, light, dark, createdAt, updatedAt, ...rest } = t;
+	const typography = t.typography;
 	const record: ThemeRecord = {
-		...rest,
+		...(rest as unknown as ThemeRecord),
 		motion: motion as ThemeMotion,
 		light: normalizePalette(light, FALLBACK_INFO_LIGHT),
 		dark: normalizePalette(dark, FALLBACK_INFO_DARK),
-		createdAt: toIso(createdAt),
-		updatedAt: toIso(updatedAt)
+		createdAt: toIso(createdAt as Date | string),
+		updatedAt: toIso(updatedAt as Date | string)
 	};
-	if (publisher) record.publisher = publisher;
+	if (publisher) record.publisher = publisher as string;
+	if (typography) record.typography = typography as ThemeRecord['typography'];
 	return record;
 }
 
@@ -70,61 +75,6 @@ export async function getThemeBySlug(slug: string): Promise<ThemeRecord> {
 	return serialize(theme);
 }
 
-export async function deleteTheme(slug: string) {
-	if (slug === 'default') {
-		throw status(409, 'The default theme cannot be deleted.' as const);
-	}
-
-	const existing = await prisma.theme.findUnique({ where: { slug }, select: { id: true } });
-	if (existing) {
-		await prisma.theme.delete({ where: { slug } });
-		return { success: true as const, message: 'Successfully deleted theme.' as const };
-	}
-
-	// Not a published theme — fall back to hiding it if it's a built-in default
-	// that hasn't already been tombstoned.
-	if (findDefaultTheme(slug)) {
-		await prisma.hiddenDefault.upsert({
-			where: { slug },
-			create: { slug },
-			update: {}
-		});
-		return { success: true as const, message: 'Successfully deleted theme.' as const };
-	}
-
-	throw status(404, 'A theme with this slug does not exist.' as const);
-}
-
-export async function updateTheme(slug: string, input: Partial<ThemeDraft>) {
-	if (slug === 'default') {
-		throw status(409, 'The default theme cannot be edited.' as const);
-	}
-	const existing = await prisma.theme.findUnique({ where: { slug }, select: { id: true } });
-	if (!existing) {
-		throw status(404, 'A theme with this slug does not exist.' as const);
-	}
-	if (input.slug && input.slug !== slug) {
-		const collision = await prisma.theme.findUnique({
-			where: { slug: input.slug },
-			select: { id: true }
-		});
-		if (collision) {
-			throw status(409, 'A theme with this slug already exists, try another one.' as const);
-		}
-	}
-	const { publisher, light, dark, ...rest } = input;
-	const updated = await prisma.theme.update({
-		where: { slug },
-		data: {
-			...rest,
-			...(light ? { light: normalizePalette(light, FALLBACK_INFO_LIGHT) } : {}),
-			...(dark ? { dark: normalizePalette(dark, FALLBACK_INFO_DARK) } : {}),
-			...(publisher !== undefined ? { publisher: publisher ?? null } : {})
-		}
-	});
-	return serialize(updated);
-}
-
 export async function publishTheme(input: ThemeDraft) {
 	if (isDefaultSlug(input.slug)) {
 		throw status(409, 'This slug is reserved for a built-in theme.' as const);
@@ -138,13 +88,18 @@ export async function publishTheme(input: ThemeDraft) {
 		throw status(409, 'A theme with this slug already exists, try another one.' as const);
 	}
 
+	// Cast through `any` because the generated Prisma client lags the schema
+	// until `prisma generate` runs. The `typography` column exists in the DB
+	// (schema.prisma) but the regenerated types haven't propagated yet.
 	await prisma.theme.create({
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		data: {
 			...input,
 			light: normalizePalette(input.light, FALLBACK_INFO_LIGHT),
 			dark: normalizePalette(input.dark, FALLBACK_INFO_DARK),
-			publisher: input.publisher ?? null
-		}
+			publisher: input.publisher ?? null,
+			typography: input.typography ?? null
+		} as never
 	});
 
 	return {

@@ -4,8 +4,11 @@
 	import { getContext, onMount, type Snippet } from 'svelte';
 	import type { ButtonState } from '../button';
 
-    const key = getContext('key') as string;
-    const uiState = states[key].data as ButtonState;
+    const key = getContext('key') as string | undefined;
+    // Shortcut is most commonly used inside a Button (auto-wires onclick), but
+    // it can also be rendered standalone. When there's no parent Button,
+    // `uiState` is undefined and the key handler simply does nothing.
+    const uiState = key ? (states[key]?.data as ButtonState | undefined) : undefined;
 
     type Props = {
         children?: Snippet;

@@ -28,7 +28,7 @@
 		{@render children?.()}
 	{:else}
 		<div class="w-full p-3 flex items-center justify-center">
-			<p class="text-sm font-medium text-foreground-muted">No results found</p>
+			<p class="text-sm [font-weight:var(--font-weight-body,400)] text-foreground-muted">No results found</p>
 		</div>
 	{/if}
 </div>

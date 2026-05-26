@@ -14,7 +14,7 @@
 
 <p
 	{...rest}
-	class={cn(classProp, `m-0 text-[0.8rem] leading-[1.55] text-foreground-muted`)}
+	class={cn(classProp, 'm-0 text-[0.8rem] leading-[1.55] [font-weight:var(--font-weight-body,400)] text-foreground-muted')}
 >
 	{@render children?.()}
 </p>

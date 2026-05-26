@@ -88,7 +88,7 @@
 
 {#if items.length > 0}
 	<aside class={`text-sm ${className}`}>
-		<p class="mb-4 font-medium text-foreground">On This Page</p>
+		<p class="mb-4 [font-weight:var(--font-weight-label,500)] text-foreground">On This Page</p>
 		<nav aria-label="On this page">
 			<ul class="space-y-1.5 text-[0.96rem] text-foreground-muted">
 				{#each items as item}

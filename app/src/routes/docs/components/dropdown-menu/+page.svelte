@@ -72,14 +72,14 @@
 		<Badge variant="outlined" class="text-[0.66rem]">v0.4.2</Badge>
 		<Badge variant="ghost" class="text-[0.66rem]">Nestable</Badge>
 		</div>
-		<a href={SOURCE} target="_blank" rel="noreferrer noopener" class="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2.5 py-1 text-[0.7rem] font-medium text-foreground-muted transition-colors hover:bg-secondary/60 hover:text-foreground">
+		<a href={SOURCE} target="_blank" rel="noreferrer noopener" class="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2.5 py-1 text-[0.7rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted transition-colors hover:bg-secondary/60 hover:text-foreground">
 			View source
 			<External size={11} />
 		</a>
 	</div>
 
 	<div class="flex flex-col gap-3">
-		<h1 class="m-0 text-[2.6rem] font-medium leading-[1] tracking-[-0.035em] md:text-[3rem]" style="font-family: var(--font-header);">Dropdown Menu</h1>
+		<h1 class="m-0 text-[2.6rem] [font-weight:var(--font-weight-label,500)] leading-[1] tracking-[-0.035em] md:text-[3rem]" style="font-family: var(--font-header);">Dropdown Menu</h1>
 		<p class="m-0 max-w-[42rem] text-[1rem] leading-relaxed text-foreground-muted">
 			A list of actions anchored to a button. Use it for user menus, row-level actions, and
 			anywhere a `…` button needs to do more than one thing.
@@ -103,7 +103,7 @@
 				<DropdownMenu.Root class="" value="">
 					<DropdownMenu.Trigger variant="outlined" class="h-9 gap-2 text-[0.82rem]">
 						<span
-							class="inline-flex size-6 items-center justify-center rounded-full bg-primary/15 text-[0.66rem] font-semibold text-primary"
+							class="inline-flex size-6 items-center justify-center rounded-full bg-primary/15 text-[0.66rem] [font-weight:var(--font-weight-label,600)] text-primary"
 						>AN</span>
 						<span>Aidan Neel</span>
 						<ChevronDown size={12} class="text-foreground-muted" />
@@ -111,7 +111,7 @@
 					<DropdownMenu.Content class="min-w-[16rem]">
 						<DropdownMenu.Label class="">
 							<div class="flex flex-col gap-0.5">
-								<span class="font-medium text-foreground">Aidan Neel</span>
+								<span class="[font-weight:var(--font-weight-label,500)] text-foreground">Aidan Neel</span>
 								<span class="text-[0.7rem] text-foreground-muted">aidan@silk-ui.dev</span>
 							</div>
 						</DropdownMenu.Label>
@@ -194,7 +194,7 @@
 				<Sparkles size={12} />
 			</span>
 			<h2
-				class="m-0 text-[1.4rem] font-medium tracking-tight"
+				class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] tracking-tight"
 				style="font-family: var(--font-header);"
 			>
 				Real-world examples
@@ -209,7 +209,7 @@
 		<!-- Row actions -->
 		<div class="flex flex-col gap-3 rounded-[var(--radius-lg)] border border-border bg-card p-5">
 			<div class="flex flex-col gap-1">
-				<span class="text-[0.7rem] font-medium uppercase tracking-wide text-foreground-muted">
+				<span class="text-[0.7rem] [font-weight:var(--font-weight-label,500)] uppercase tracking-wide text-foreground-muted">
 					Row actions
 				</span>
 				<p class="m-0 text-[0.84rem] text-foreground-muted">
@@ -241,7 +241,7 @@
 		<!-- Share menu -->
 		<div class="flex flex-col gap-3 rounded-[var(--radius-lg)] border border-border bg-card p-5">
 			<div class="flex flex-col gap-1">
-				<span class="text-[0.7rem] font-medium uppercase tracking-wide text-foreground-muted">
+				<span class="text-[0.7rem] [font-weight:var(--font-weight-label,500)] uppercase tracking-wide text-foreground-muted">
 					Share
 				</span>
 				<p class="m-0 text-[0.84rem] text-foreground-muted">
@@ -273,7 +273,7 @@
 		<!-- Sort -->
 		<div class="flex flex-col gap-3 rounded-[var(--radius-lg)] border border-border bg-card p-5">
 			<div class="flex flex-col gap-1">
-				<span class="text-[0.7rem] font-medium uppercase tracking-wide text-foreground-muted">
+				<span class="text-[0.7rem] [font-weight:var(--font-weight-label,500)] uppercase tracking-wide text-foreground-muted">
 					Sort
 				</span>
 				<p class="m-0 text-[0.84rem] text-foreground-muted">
@@ -303,7 +303,7 @@
 	<section class="scroll-mt-20 flex flex-col gap-5">
 		<div class="flex items-center gap-2">
 			<span class="grid size-6 place-items-center rounded-md bg-primary/10 text-primary"><Hash size={12} /></span>
-			<h2 class="m-0 text-[1.4rem] font-medium tracking-tight" style="font-family: var(--font-header);">API</h2>
+			<h2 class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] tracking-tight" style="font-family: var(--font-header);">API</h2>
 		</div>
 
 		<div class="overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card">
@@ -312,7 +312,7 @@
 					<li class="grid grid-cols-[1fr_1.4fr_0.6fr] gap-3 px-4 py-3 max-md:grid-cols-1">
 						<div class="flex flex-col gap-1">
 							<code class="font-mono text-[0.7rem] text-foreground-muted">DropdownMenu.{row.component}</code>
-							<code class="font-mono text-[0.82rem] font-semibold">{row.prop}</code>
+							<code class="font-mono text-[0.82rem] [font-weight:var(--font-weight-label,600)]">{row.prop}</code>
 						</div>
 						<div class="flex flex-col gap-1">
 							<code class="overflow-x-auto rounded-md bg-secondary/40 px-2 py-1 font-mono text-[0.74rem] text-foreground">{row.type}</code>
@@ -327,7 +327,7 @@
 
 	<section class="flex flex-col items-start justify-between gap-4 rounded-[var(--radius-lg)] border border-border bg-card p-6 sm:flex-row sm:items-center">
 		<div class="flex flex-col gap-1">
-			<p class="m-0 text-[1rem] font-medium tracking-tight" style="font-family: var(--font-header);">Want to make it yours?</p>
+			<p class="m-0 text-[1rem] [font-weight:var(--font-weight-label,500)] tracking-tight" style="font-family: var(--font-header);">Want to make it yours?</p>
 			<p class="m-0 text-[0.86rem] text-foreground-muted">Every Silk component reads from your theme tokens — open the studio to restyle them.</p>
 		</div>
 		<Button href="/themes/studio">Open theme studio<ArrowRight size={14} /></Button>

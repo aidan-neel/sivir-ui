@@ -2,9 +2,7 @@
 	import { getContext, tick, type Snippet } from 'svelte';
 	import { states } from '$lib/silk/internals/state.svelte.ts';
 	import type { CommandState } from '.';
-	import { fade } from 'svelte/transition';
-	import { cubicOut } from 'svelte/easing';
-	import { flyAndScale } from '$lib/silk/internals/transition';
+	import { flyAndScale, themedFade } from '$lib/silk/internals/transition';
 	import { clickOutside, cn, trapFocus } from '$lib/silk/utils';
 
 	const key = getContext('key') as string;
@@ -50,7 +48,7 @@
 
 {#if uiState.open}
 	<div
-		transition:fade={{ duration: 150, easing: cubicOut }}
+		transition:themedFade={{ durationVar: '--motion-duration-overlay', fallback: 150 }}
 		class="fixed inset-0 z-40 bg-[var(--color-overlay)]"
 	></div>
 	<div
@@ -64,7 +62,7 @@
 		tabindex="-1"
 		class={cn(
 			className,
-			'bg-[var(--color-background)] text-[var(--color-panel-foreground)] border border-border rounded-[var(--radius-lg)] shadow-[inset_0_1px_0_var(--panel-highlight),var(--panel-shadow)] fixed top-[47%] left-1/2 z-50 m-auto flex max-h-[min(28rem,calc(100dvh-2rem))] min-h-[5rem] w-[calc(100%-1.5rem)] max-w-[35rem] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden duration-200 transition-all'
+			'bg-[var(--color-overlay-bg)] text-[var(--color-panel-foreground)] border border-border rounded-[var(--radius-lg)] shadow-[inset_0_1px_0_var(--panel-highlight),var(--panel-shadow)] fixed top-[47%] left-1/2 z-50 m-auto flex max-h-[min(28rem,calc(100dvh-2rem))] min-h-[5rem] w-[calc(100%-1.5rem)] max-w-[35rem] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden duration-200 transition-all'
 		)}
 		use:clickOutside={() => {
 			if (allowClickOutside) {

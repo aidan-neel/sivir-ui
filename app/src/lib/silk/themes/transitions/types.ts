@@ -21,6 +21,8 @@ export type ThemeMotion = {
 	panelRotateX?: number;
 	/** Opacity at the start of the enter transition (0–1). Defaults to 0. */
 	panelOpacityStart?: number;
+	/** CSS easing function for panel transitions. Defaults to a soft ease-out. */
+	panelEasing?: string;
 };
 
 export type ThemeTransitionPreset = {

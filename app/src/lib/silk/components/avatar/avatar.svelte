@@ -1,0 +1,37 @@
+<script lang="ts">
+	import { cn } from '$lib/silk/utils';
+	import { setContext } from 'svelte';
+	import type { AvatarProps } from '.';
+
+	let {
+		class: className,
+		size = 'md',
+		shape = 'circle',
+		children,
+		...rest
+	}: AvatarProps = $props();
+
+	const sizes: Record<string, string> = {
+		sm: 'size-7 text-[0.7rem]',
+		md: 'size-9 text-[0.78rem]',
+		lg: 'size-12 text-[0.95rem]',
+		xl: 'size-16 text-[1.1rem]'
+	};
+
+	// Shared state lets <Avatar.Image> hide the fallback when its image loads.
+	const ctx = $state({ imageLoaded: false });
+	setContext('avatar-state', ctx);
+</script>
+
+<span
+	data-ui="avatar"
+	class={cn(
+		'relative inline-flex shrink-0 select-none items-center justify-center overflow-hidden bg-secondary text-foreground-muted [font-weight:var(--font-weight-body,400)]',
+		shape === 'circle' ? 'rounded-full' : 'rounded-[var(--radius-md)]',
+		sizes[size] ?? sizes.md,
+		className
+	)}
+	{...rest}
+>
+	{@render children?.()}
+</span>

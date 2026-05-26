@@ -32,7 +32,7 @@
 <Popover.Trigger
 	class={cn(
 		className,
-		`flex flex-row justify-between px-3 items-center font-medium ${uiState.data.value !== '' ? 'text-foreground' : 'text-foreground-muted'}`
+		`flex flex-row justify-between px-3 items-center [font-weight:var(--font-weight-button,500)] ${uiState.data.value !== '' ? 'text-foreground' : 'text-foreground-muted'}`
 	)}
 	role="combobox"
 	aria-haspopup="listbox"

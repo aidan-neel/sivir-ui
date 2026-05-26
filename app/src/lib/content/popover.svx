@@ -27,19 +27,19 @@
 
         <div class="flex flex-col mt-4 gap-2">
             <div class="flex flex-row items-center justify-between gap-4">
-                <p class="font-medium w-24 text-left">Width</p>
+                <p class="[font-weight:var(--font-weight-label,500)] w-24 text-left">Width</p>
                 <Input class="" placeholder="Width" value="100px" />
             </div>
             <div class="flex flex-row items-center justify-between gap-4">
-                <p class="font-medium w-24 text-left">Max Width</p>
+                <p class="[font-weight:var(--font-weight-label,500)] w-24 text-left">Max Width</p>
                 <Input class="" placeholder="Max Width" value="300px" />
             </div>
             <div class="flex flex-row items-center justify-between gap-4">
-                <p class="font-medium w-24 text-left">Height</p>
+                <p class="[font-weight:var(--font-weight-label,500)] w-24 text-left">Height</p>
                 <Input class="" placeholder="Height" value="25px" />
             </div>
             <div class="flex flex-row items-center justify-between gap-4">
-                <p class="font-medium w-24 text-left">Max Height</p>
+                <p class="[font-weight:var(--font-weight-label,500)] w-24 text-left">Max Height</p>
                 <Input class="" placeholder="Max Height" value="None" />
             </div>
         </div>
@@ -55,19 +55,19 @@
 
             <div class="flex flex-col mt-4 gap-2">
                 <div class="flex flex-row items-center justify-between gap-4">
-                    <label for="width" class="font-medium w-24 text-left">Width</label>
+                    <label for="width" class="[font-weight:var(--font-weight-label,500)] w-24 text-left">Width</label>
                     <Input id="width" class="dark:bg-input/40" placeholder="Width" value="100px" />
                 </div>
                 <div class="flex flex-row items-center justify-between gap-4">
-                    <label for="max-width" class="font-medium w-24 text-left">Max Width</label>
+                    <label for="max-width" class="[font-weight:var(--font-weight-label,500)] w-24 text-left">Max Width</label>
                     <Input id="max-width" class="dark:bg-input/40" placeholder="Max Width" value="300px" />
                 </div>
                 <div class="flex flex-row items-center justify-between gap-4">
-                    <label for="height" class="font-medium w-24 text-left">Height</label>
+                    <label for="height" class="[font-weight:var(--font-weight-label,500)] w-24 text-left">Height</label>
                     <Input id="height" class="dark:bg-input/40" placeholder="Height" value="25px" />
                 </div>
                 <div class="flex flex-row items-center justify-between gap-4">
-                    <label for="max-height" class="font-medium w-24 text-left">Max Height</label>
+                    <label for="max-height" class="[font-weight:var(--font-weight-label,500)] w-24 text-left">Max Height</label>
                     <Input id="max-height" class="dark:bg-input/40" placeholder="Max Height" value="None" />
                 </div>
             </div>
