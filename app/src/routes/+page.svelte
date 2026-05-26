@@ -157,7 +157,7 @@
 					<div class="preview-topbar-crumb">
 						<span class="text-[0.72rem] text-foreground-muted">Workspace</span>
 						<span class="text-foreground-muted/50">/</span>
-						<span class="text-[0.78rem] [font-weight:var(--font-weight-label,500)]">Dashboard</span>
+						<span class="text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]">Dashboard</span>
 					</div>
 					<div class="preview-topbar-search">
 						<Search size={12} />
@@ -192,7 +192,7 @@
 						<div class="preview-card-head">
 							<Avatar.Root size="md"><Avatar.Fallback>AN</Avatar.Fallback></Avatar.Root>
 							<div class="preview-card-meta">
-								<p class="m-0 text-[0.86rem] [font-weight:var(--font-weight-label,500)] leading-tight">Aidan Neel</p>
+								<p class="m-0 text-[0.86rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] leading-tight">Aidan Neel</p>
 								<p class="m-0 text-[0.74rem] leading-tight text-foreground-muted">aidan@silk-ui.dev</p>
 							</div>
 							<Badge variant="primary" class="ml-auto px-2 text-[0.66rem]">Pro</Badge>
@@ -231,7 +231,7 @@
 
 						<div class="preview-tile">
 							<div class="preview-tile-head">
-								<span class="text-[0.78rem] [font-weight:var(--font-weight-label,500)]">Quick actions</span>
+								<span class="text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]">Quick actions</span>
 								<Star size={13} class="text-foreground-muted" />
 							</div>
 							<div class="preview-tile-row">
@@ -255,7 +255,7 @@
 				<!-- Bottom row: activity list -->
 				<div class="preview-activity">
 					<div class="preview-activity-head">
-						<span class="text-[0.78rem] [font-weight:var(--font-weight-label,500)]">Recent activity</span>
+						<span class="text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]">Recent activity</span>
 						<a href="#" class="inline-flex items-center gap-1 text-[0.74rem] text-foreground-muted hover:text-foreground">
 							View all <ArrowUpRight size={11} />
 						</a>
@@ -268,7 +268,7 @@
 						<div class="preview-activity-row">
 							<Avatar.Root size="sm"><Avatar.Fallback>{row.initials}</Avatar.Fallback></Avatar.Root>
 							<div class="flex-1 min-w-0">
-								<p class="m-0 text-[0.8rem] leading-tight"><span class="[font-weight:var(--font-weight-label,500)]">{row.name}</span> <span class="text-foreground-muted">{row.action}</span></p>
+								<p class="m-0 text-[0.8rem] leading-tight"><span class="[font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]">{row.name}</span> <span class="text-foreground-muted">{row.action}</span></p>
 							</div>
 							<span class="font-mono text-[0.7rem] text-foreground-muted">{row.time}</span>
 						</div>
@@ -408,7 +408,7 @@
 		background: color-mix(in srgb, var(--color-card) 80%, transparent);
 		font-size: 0.72rem;
 		font-weight: var(--font-weight-header, 500);
-		letter-spacing: 0.04em;
+		letter-spacing: var(--tracking-header, -0.02em);
 		color: var(--color-foreground-muted);
 	}
 	.eyebrow-dot {
@@ -421,10 +421,10 @@
 	.headline {
 		margin: 0;
 		font-family: var(--font-header), sans-serif;
-		font-size: clamp(1.85rem, 4.2vw, 3rem);
+		font-size: clamp(2.25rem, 5vw, 3.75rem);
 		font-weight: var(--font-weight-header, 500);
 		line-height: 1.05;
-		letter-spacing: -0.035em;
+		letter-spacing: var(--tracking-header, -0.02em);
 		max-width: 22ch;
 		text-wrap: balance;
 	}
@@ -498,7 +498,7 @@
 	.picker-eyebrow {
 		font-size: 0.7rem;
 		font-weight: var(--font-weight-header, 600);
-		letter-spacing: 0.16em;
+		letter-spacing: var(--tracking-header, -0.02em);
 		text-transform: uppercase;
 		color: var(--color-foreground-muted);
 	}
@@ -580,7 +580,7 @@
 		font-family: var(--font-header), sans-serif;
 		font-size: 1.25rem;
 		font-weight: var(--font-weight-header, 500);
-		letter-spacing: -0.025em;
+		letter-spacing: var(--tracking-header, -0.02em);
 		line-height: 1;
 	}
 	.preview-stat-trend {
@@ -589,6 +589,7 @@
 		gap: 0.2rem;
 		font-size: 0.7rem;
 		font-weight: var(--font-weight-header, 500);
+		letter-spacing: var(--tracking-header, -0.02em);
 		color: var(--color-success);
 	}
 
@@ -671,7 +672,7 @@
 		font-size: clamp(2rem, 3.5vw, 2.7rem);
 		font-weight: var(--font-weight-header, 500);
 		line-height: 1;
-		letter-spacing: -0.035em;
+		letter-spacing: var(--tracking-header, -0.02em);
 	}
 	.stat-label {
 		font-size: 0.78rem;
@@ -691,7 +692,7 @@
 		font-family: var(--font-header), sans-serif;
 		font-size: clamp(1.7rem, 3vw, 2.3rem);
 		font-weight: var(--font-weight-header, 500);
-		letter-spacing: -0.04em;
+		letter-spacing: var(--tracking-header, -0.02em);
 		line-height: 1.05;
 	}
 	.section-sub {
@@ -747,6 +748,7 @@
 		margin: 0 0 0.25rem;
 		font-size: 0.98rem;
 		font-weight: var(--font-weight-header, 500);
+		letter-spacing: var(--tracking-header, -0.02em);
 		color: var(--color-foreground);
 	}
 	.callout-body {
@@ -787,7 +789,7 @@
 		font-family: var(--font-header), sans-serif;
 		font-size: clamp(1.8rem, 3.5vw, 2.5rem);
 		font-weight: var(--font-weight-header, 500);
-		letter-spacing: -0.04em;
+		letter-spacing: var(--tracking-header, -0.02em);
 		line-height: 1.05;
 	}
 	.closer-sub {
@@ -819,7 +821,7 @@
 	@media (max-width: 720px) {
 		.footer { flex-direction: column; }
 	}
-	.footer-mark { margin: 0; font-weight: var(--font-weight-header, 600); }
+	.footer-mark { margin: 0; font-weight: var(--font-weight-header, 600); letter-spacing: var(--tracking-header, -0.02em); }
 	.footer-tag { margin: 0.3rem 0 0; font-size: 0.9rem; color: var(--color-foreground-muted); }
 	.footer-nav { display: flex; gap: 1.3rem; flex-wrap: wrap; }
 	.footer-nav a {

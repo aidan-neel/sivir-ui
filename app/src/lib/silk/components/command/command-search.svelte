@@ -47,7 +47,7 @@
 	}
 </script>
 
-<div class="flex w-full items-center gap-2 border-b border-border/70 p-3">
+<div class="flex w-full items-center gap-2 border-b border-border/70 p-[var(--menu-search-padding)]">
 	<Search size={18} class="mt-0.5 text-foreground-muted" />
 	<input
 		bind:this={element}
@@ -66,7 +66,7 @@
 				}
 			}
 		}}
-		class="w-full bg-transparent text-sm [font-weight:var(--font-weight-body,400)] placeholder:text-foreground-muted focus-visible:outline-none"
+		class="w-full bg-transparent [font-size:var(--font-size-body,16px)] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] placeholder:text-foreground-muted focus-visible:outline-none"
 		placeholder="Type a command or search..."
 		aria-label="Search commands"
 		{...rest}

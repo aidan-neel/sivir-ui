@@ -12,7 +12,7 @@
     const uiState = states[key].data as SheetState;
 </script>
 
-<div {...rest} class={cn(className, `flex flex-col gap-1 pb-6`)}>
+<div {...rest} class={cn(className, `flex flex-col gap-1 pb-[var(--sheet-header-padding-bottom,1.5rem)]`)}>
 	{@render children?.()}
 	<Button
 		onclick={() => {

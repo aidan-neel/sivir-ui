@@ -344,7 +344,7 @@
 	<Popover.Root state_key={key} placement="bottom">
 		<Popover.Trigger
 			{variant}
-			class="group h-8 w-full justify-start gap-2 px-1.5 text-sm [font-weight:var(--font-weight-button,500)]"
+			class="group h-8 w-full justify-start gap-2 px-1.5 text-sm [font-weight:var(--font-weight-button,500)] [letter-spacing:var(--tracking-button,0em)]"
 		>
 			<span
 				class="size-5 shrink-0 rounded-md ring-1 ring-inset ring-black/10"
@@ -373,7 +373,7 @@
 			</div>
 
 			<!-- Hue + preview row -->
-			<div class="flex items-center gap-2.5 border-b border-border/60 px-2.5 py-2.5">
+			<div class="flex items-center gap-2.5 border-b border-border/60 p-[var(--color-picker-padding)]">
 				<span
 					class="size-7 shrink-0 rounded-md ring-1 ring-inset ring-black/10"
 					style="background:{previewHex};"
@@ -414,10 +414,10 @@
 			</div>
 
 			<!-- HSL sliders -->
-			<div class="flex flex-col gap-1.5 border-b border-border/60 px-2.5 py-2.5">
+			<div class="flex flex-col gap-1.5 border-b border-border/60 p-[var(--color-picker-padding)]">
 				{#each [{ key: 'h', label: 'H', max: 360, value: hslH, unit: '°' }, { key: 's', label: 'S', max: 100, value: hslS, unit: '%' }, { key: 'l', label: 'L', max: 100, value: hslL, unit: '%' }] as channel (channel.key)}
 					<div class="flex items-center gap-2">
-						<span class="w-3 shrink-0 font-mono text-[0.66rem] [font-weight:var(--font-weight-body,400)] text-foreground-muted">
+						<span class="w-3 shrink-0 font-mono [font-size:var(--font-size-body,16px)] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted">
 							{channel.label}
 						</span>
 						<input
@@ -444,7 +444,7 @@
 
 			<!-- Swatch grid -->
 			{#if hasOptions}
-				<div class="grid grid-cols-7 gap-1.5 p-2.5">
+				<div class="grid grid-cols-7 gap-1.5 p-[var(--color-picker-padding)]">
 					{#each options as opt}
 						{@const isActive = opt.value.toLowerCase() === (value ?? '').toLowerCase()}
 						<button

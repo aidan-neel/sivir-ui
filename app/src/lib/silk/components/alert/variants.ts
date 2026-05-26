@@ -6,7 +6,7 @@ import { tv } from 'tailwind-variants';
  * primary color (including extreme cases like pure black or white).
  */
 export const alert = tv({
-	base: 'relative flex flex-row gap-3 overflow-hidden rounded-[var(--radius-md)] border border-border bg-[var(--color-card)] px-3.5 py-3 pl-4 text-[var(--color-foreground)] shadow-[0_1px_2px_rgb(0_0_0_/_0.04)]'
+	base: 'relative flex flex-row gap-3 overflow-hidden rounded-[var(--radius-md)] border border-border bg-[var(--color-card)] px-3.5 py-3 pl-4 text-[var(--color-foreground)] shadow-[var(--shadow-xs)]'
 });
 
 export const alertAccent = tv({

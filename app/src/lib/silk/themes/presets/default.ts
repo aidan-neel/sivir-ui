@@ -88,6 +88,16 @@ export const preset: ThemeDraft = {
 		weightBody: 400,
 		weightLabel: 500,
 		weightButton: 500,
-		weightBadge: 500
+		weightBadge: 500,
+		trackingHeader: -0.02,
+		trackingBody: 0,
+		trackingLabel: 0,
+		trackingButton: 0,
+		trackingBadge: 0,
+		sizeHeader: 18,
+		sizeBody: 16,
+		sizeLabel: 14,
+		sizeButton: 14,
+		sizeBadge: 12
 	}
 };

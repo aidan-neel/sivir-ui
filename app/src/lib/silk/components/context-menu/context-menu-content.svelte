@@ -19,7 +19,7 @@
 	{...rest}
 	class={cn(
 		className,
-		'bg-[var(--color-panel)] text-[var(--color-panel-foreground)] border border-border rounded-[var(--radius-lg)] shadow-outlined p-1'
+		'bg-[var(--color-panel)] text-[var(--color-panel-foreground)] border border-border rounded-[var(--radius-lg)] shadow-[var(--panel-shadow)] p-[var(--menu-padding)] flex flex-col gap-0'
 	)}
 >
 	{@render children?.()}

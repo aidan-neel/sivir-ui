@@ -54,7 +54,7 @@
 	onmouseenter={() => toast.id !== undefined && pauseToast(toast.id)}
 	onmouseleave={() => toast.id !== undefined && resumeToast(toast.id)}
 >
-	<div class="flex items-start gap-3 px-4 py-4 sm:px-4 sm:py-3.5">
+	<div class="flex items-start gap-3 px-[var(--toast-padding-x)] py-[var(--toast-padding-y)]">
 		{#if Icon}
 			<div
 				class={cn(
@@ -68,12 +68,12 @@
 
 		<div class="flex min-w-0 flex-1 flex-col gap-0.5">
 			<p
-				class="text-[0.875rem] [font-weight:var(--font-weight-body,400)] leading-snug tracking-[-0.015em] text-foreground"
+				class="[font-size:var(--font-size-body,16px)] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] leading-snug tracking-[-0.015em] text-foreground"
 			>
 				{toast.title}
 			</p>
 			{#if toast.description}
-				<p class="text-[0.8125rem] leading-[1.45] [font-weight:var(--font-weight-body,400)] text-foreground-muted">
+				<p class="[font-size:var(--font-size-body,16px)] leading-[1.45] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted">
 					{toast.description}
 				</p>
 			{/if}

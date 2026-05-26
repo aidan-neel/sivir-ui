@@ -29,7 +29,7 @@
 			onclick={() => (selectedTab = 1)}
 			class="{selectedTab === 1
 				? 'text-foreground'
-				: 'text-foreground-muted'} text-sm [font-weight:var(--font-weight-label,500)] duration-200"
+				: 'text-foreground-muted'} text-sm [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] duration-200"
 		>
 			Preview
 		</button>
@@ -37,7 +37,7 @@
 			onclick={() => (selectedTab = 2)}
 			class="{selectedTab === 2
 				? 'text-foreground'
-				: 'text-foreground-muted'} text-sm [font-weight:var(--font-weight-label,500)] duration-200"
+				: 'text-foreground-muted'} text-sm [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] duration-200"
 		>
 			Code
 		</button>

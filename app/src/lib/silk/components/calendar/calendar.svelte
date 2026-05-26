@@ -100,7 +100,7 @@
 
 <div
 	data-ui="calendar"
-	class={cn('inline-flex flex-col gap-3 rounded-[var(--radius-lg)] border border-border bg-card p-3', className)}
+	class={cn('inline-flex flex-col gap-3 rounded-[var(--radius-lg)] border border-border bg-card p-[var(--calendar-padding)]', className)}
 	{...rest}
 >
 	<div class="flex items-center justify-between gap-2">
@@ -112,7 +112,7 @@
 		>
 			<ChevronLeft size={14} />
 		</button>
-		<span class="text-[0.86rem] [font-weight:var(--font-weight-body,400)] text-foreground">{monthName}</span>
+		<span class="[font-size:var(--font-size-body,16px)] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground">{monthName}</span>
 		<button
 			type="button"
 			aria-label="Next month"
@@ -123,7 +123,7 @@
 		</button>
 	</div>
 
-	<div class="grid grid-cols-7 gap-1 text-center text-[0.72rem] [font-weight:var(--font-weight-body,400)] uppercase text-foreground-muted">
+	<div class="grid grid-cols-7 gap-1 text-center [font-size:var(--font-size-body,16px)] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] uppercase text-foreground-muted">
 		{#each weekdays as w, i (i)}
 			<span>{w}</span>
 		{/each}

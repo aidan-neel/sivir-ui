@@ -53,11 +53,11 @@
 	{/if}
 	{#if label}
 		<div class="flex flex-col justify-center">
-			<span class="text-text text-sm mt-[-0.2rem] [font-weight:var(--font-weight-body,400)]">
+			<span class="text-text [font-size:var(--font-size-body,16px)] mt-[-0.2rem] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)]">
 				{label}
 			</span>
 			{#if description}
-				<span class="text-text text-sm [font-weight:var(--font-weight-body,400)] text-foreground-muted">
+				<span class="text-text [font-size:var(--font-size-body,16px)] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted">
 					{description}
 				</span>
 			{/if}

@@ -9,7 +9,7 @@
 	{...rest}
 	class={cn(
 		className,
-		'flex w-full flex-col-reverse justify-end gap-2 border-border bg-transparent px-[var(--panel-padding-lg)] pb-[var(--panel-padding-lg)] sm:flex-row sm:items-center rounded-b-[var(--radius-lg)]'
+		'flex w-full flex-col-reverse justify-end gap-2 border-border bg-transparent sm:flex-row sm:items-center'
 	)}
 >
 	{@render children?.()}

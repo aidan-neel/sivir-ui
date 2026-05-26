@@ -53,14 +53,14 @@
 
 <div class="flex h-full flex-col overflow-hidden">
 	<div class="shrink-0 border-b border-border/60 px-4 py-3.5">
-		<p class="text-sm [font-weight:var(--font-weight-label,600)] text-foreground">Palette</p>
-		<p class="mt-0.5 text-sm [font-weight:var(--font-weight-body,400)] text-foreground-muted">Colors and accent for this theme</p>
+		<p class="text-sm [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)] text-foreground">Palette</p>
+		<p class="mt-0.5 text-sm [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted">Colors and accent for this theme</p>
 	</div>
 
 	<div class="flex-1 overflow-y-auto">
 		<!-- Accent -->
 		<div class="border-b border-border/60 p-4">
-			<p class="mb-3 text-sm [font-weight:var(--font-weight-label,500)] text-foreground-muted">Accent</p>
+			<p class="mb-3 text-sm [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Accent</p>
 			<div class="grid grid-cols-3 gap-2">
 				{#each accentOptions as option}
 					{@const isActive = activeAccentValue === option.value}
@@ -79,7 +79,7 @@
 							style="background:{option.light};"
 						></div>
 						<span
-							class="text-sm {isActive ? '[font-weight:var(--font-weight-label,500)] text-foreground' : 'text-foreground-muted'}"
+							class="text-sm {isActive ? '[font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground' : 'text-foreground-muted'}"
 							>{option.label}</span
 						>
 					</button>
@@ -92,7 +92,7 @@
 			<div class="mb-3 flex items-center justify-between">
 				<div class="flex items-center gap-2">
 					<div class="size-3.5 rounded-full border border-border/60 bg-white shadow-sm"></div>
-					<span class="text-sm [font-weight:var(--font-weight-label,500)] text-foreground">Light</span>
+					<span class="text-sm [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground">Light</span>
 				</div>
 				<Button
 					variant="secondary"
@@ -141,7 +141,7 @@
 			<div class="mb-3 flex items-center justify-between">
 				<div class="flex items-center gap-2">
 					<div class="size-3.5 rounded-full border border-border/60 bg-[#0f172a] shadow-sm"></div>
-					<span class="text-sm [font-weight:var(--font-weight-label,500)] text-foreground">Dark</span>
+					<span class="text-sm [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground">Dark</span>
 				</div>
 				<Button
 					variant="secondary"

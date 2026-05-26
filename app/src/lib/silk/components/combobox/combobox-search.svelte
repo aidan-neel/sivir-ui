@@ -37,7 +37,7 @@
 	}
 </script>
 
-<div class="flex items-center border-b border-border gap-2 p-2 px-3 w-full">
+<div class="flex items-center border-b border-border gap-2 p-[var(--menu-search-padding)] w-full">
 	<Search size={14} class="text-foreground-muted" />
 	<input
 		onkeydown={(e) => {
@@ -57,6 +57,6 @@
 		{placeholder}
 		oninput={handleInput}
 		bind:this={element}
-		class="w-full text-sm [font-weight:var(--font-weight-body,400)] placeholder:text-foreground-muted focus-visible:outline-none"
+		class="w-full [font-size:var(--font-size-body,16px)] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] placeholder:text-foreground-muted focus-visible:outline-none"
 	/>
 </div>

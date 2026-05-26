@@ -24,7 +24,7 @@
 
 		<div class="flex flex-col gap-3">
 			<h1
-				class={`m-0 max-w-[12ch] text-balance [font-weight:var(--font-weight-label,600)] leading-[1] tracking-[-0.035em] [font-family:var(--font-header),sans-serif] ${
+				class={`m-0 max-w-[12ch] text-balance [font-family:var(--font-header),sans-serif] [font-weight:var(--font-weight-header,600)] [letter-spacing:var(--tracking-header,-0.02em)] leading-[1] ${
 					compact
 						? 'text-[clamp(2rem,3vw,2.5rem)] md:max-w-[18ch]'
 						: 'text-[clamp(2.2rem,3.8vw,3rem)]'
@@ -33,7 +33,7 @@
 				{title}
 			</h1>
 			{#if description}
-				<p class="m-0 max-w-[46rem] text-balance text-[1rem] leading-[1.7] text-foreground-muted max-md:text-[0.98rem]">
+				<p class="m-0 max-w-[46rem] text-balance text-[1rem] leading-[1.7] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted max-md:text-[0.98rem]">
 					{description}
 				</p>
 			{/if}

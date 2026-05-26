@@ -123,7 +123,7 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 		<Badge variant="ghost" class="text-[0.66rem]">10 variants</Badge>
 		<Badge variant="ghost" class="text-[0.66rem]">4 sizes</Badge>
 		</div>
-		<a href={SOURCE} target="_blank" rel="noreferrer noopener" class="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2.5 py-1 text-[0.7rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted transition-colors hover:bg-secondary/60 hover:text-foreground">
+		<a href={SOURCE} target="_blank" rel="noreferrer noopener" class="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2.5 py-1 text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted transition-colors hover:bg-secondary/60 hover:text-foreground">
 			View source
 			<External size={11} />
 		</a>
@@ -131,7 +131,7 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 
 	<div class="flex flex-col gap-3">
 		<h1
-			class="m-0 text-[2.6rem] [font-weight:var(--font-weight-label,500)] leading-[1] tracking-[-0.035em] md:text-[3rem]"
+			class="m-0 text-[2.6rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] leading-[1] tracking-[-0.035em] md:text-[3rem]"
 			style="font-family: var(--font-header);"
 		>
 			Button
@@ -198,7 +198,7 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 				<div class="flex flex-col gap-2 px-6 py-4">
 					<label
 						for="pg-label"
-						class="text-[0.7rem] [font-weight:var(--font-weight-label,500)] uppercase tracking-wide text-foreground-muted"
+						class="text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted"
 					>
 						Label
 					</label>
@@ -211,7 +211,7 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 				</div>
 
 				<div class="flex flex-col gap-2 px-6 py-4">
-					<span class="text-[0.7rem] [font-weight:var(--font-weight-label,500)] uppercase tracking-wide text-foreground-muted">
+					<span class="text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted">
 						Variant
 					</span>
 					<div class="flex flex-wrap gap-1.5">
@@ -228,7 +228,7 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 				</div>
 
 				<div class="flex flex-col gap-2 px-6 py-4">
-					<span class="text-[0.7rem] [font-weight:var(--font-weight-label,500)] uppercase tracking-wide text-foreground-muted">
+					<span class="text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted">
 						Size
 					</span>
 					<div class="flex flex-wrap gap-1.5">
@@ -245,7 +245,7 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 				</div>
 
 				<div class="flex flex-col gap-2 px-6 py-4">
-					<span class="text-[0.7rem] [font-weight:var(--font-weight-label,500)] uppercase tracking-wide text-foreground-muted">
+					<span class="text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted">
 						Options
 					</span>
 					<label class="flex items-center gap-2">
@@ -258,7 +258,7 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 			<div
 				class="flex items-center justify-between gap-2 border-t border-border/70 bg-secondary/40 px-6 py-2.5"
 			>
-				<span class="text-[0.66rem] [font-weight:var(--font-weight-label,500)] uppercase tracking-wide text-foreground-muted">
+				<span class="text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted">
 					Snippet
 				</span>
 				<button
@@ -290,7 +290,7 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 				<Sparkles size={12} />
 			</span>
 			<h2
-				class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] tracking-tight"
+				class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
 				style="font-family: var(--font-header);"
 			>
 				At a glance
@@ -303,7 +303,7 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 						<card.icon size={14} />
 					</span>
 					<p
-						class="m-0 text-[1rem] [font-weight:var(--font-weight-label,500)] tracking-tight"
+						class="m-0 text-[1rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
 						style="font-family: var(--font-header);"
 					>
 						{card.title}
@@ -330,7 +330,7 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 					<Layers size={12} />
 				</span>
 				<h2
-					class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] tracking-tight"
+					class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
 					style="font-family: var(--font-header);"
 				>
 					Variants
@@ -355,7 +355,7 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 					</div>
 					<div class="flex flex-col gap-1 border-t border-border/70 px-4 py-3">
 						<div class="flex items-center justify-between gap-2">
-							<p class="m-0 text-[0.86rem] [font-weight:var(--font-weight-label,600)]">{v.label}</p>
+							<p class="m-0 text-[0.86rem] [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)]">{v.label}</p>
 							<button
 								type="button"
 								onclick={() => copy(code, `var-${v.value}`)}
@@ -369,7 +369,7 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 								{/if}
 							</button>
 						</div>
-						<p class="m-0 text-[0.72rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">{v.tone}</p>
+						<p class="m-0 text-[0.72rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">{v.tone}</p>
 						<p class="m-0 text-[0.74rem] leading-snug text-foreground-muted">{v.use}</p>
 					</div>
 				</div>
@@ -385,7 +385,7 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 					<Type size={12} />
 				</span>
 				<h2
-					class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] tracking-tight"
+					class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
 					style="font-family: var(--font-header);"
 				>
 					Sizes
@@ -416,7 +416,7 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 			<div class="grid grid-cols-1 divide-y divide-border/60 sm:grid-cols-2 lg:grid-cols-4 lg:divide-x lg:divide-y-0">
 				{#each sizeList as s}
 					<div class="flex flex-col gap-1 p-4">
-						<p class="m-0 font-mono text-[0.78rem] [font-weight:var(--font-weight-label,600)]">{s.label}</p>
+						<p class="m-0 font-mono text-[0.78rem] [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)]">{s.label}</p>
 						<div class="flex items-center gap-3 text-[0.72rem] text-foreground-muted">
 							<span class="font-mono">{s.height}</span>
 							<span aria-hidden="true">·</span>
@@ -439,7 +439,7 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 					<Wand size={12} />
 				</span>
 				<h2
-					class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] tracking-tight"
+					class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
 					style="font-family: var(--font-header);"
 				>
 					States
@@ -469,7 +469,7 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 							<Button>Rest</Button>
 						{/if}
 					</div>
-					<span class="text-[0.74rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">{s.label}</span>
+					<span class="text-[0.74rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">{s.label}</span>
 				</div>
 			{/each}
 		</div>
@@ -483,7 +483,7 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 					<Component size={12} />
 				</span>
 				<h2
-					class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] tracking-tight"
+					class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
 					style="font-family: var(--font-header);"
 				>
 					Composition
@@ -601,7 +601,7 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 					<Hash size={12} />
 				</span>
 				<h2
-					class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] tracking-tight"
+					class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
 					style="font-family: var(--font-header);"
 				>
 					API
@@ -615,7 +615,7 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 
 		<div class="overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card">
 			<div
-				class="grid grid-cols-[1fr_1.8fr_0.5fr] gap-3 border-b border-border bg-secondary/40 px-4 py-2.5 text-[0.7rem] [font-weight:var(--font-weight-label,500)] uppercase tracking-wide text-foreground-muted max-md:hidden"
+				class="grid grid-cols-[1fr_1.8fr_0.5fr] gap-3 border-b border-border bg-secondary/40 px-4 py-2.5 text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted max-md:hidden"
 			>
 				<span>Prop</span>
 				<span>Type</span>
@@ -630,7 +630,7 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 								onclick={() => copy(row.prop, `prop-${row.prop}`)}
 								class="group inline-flex items-center gap-1.5 rounded-md px-1 py-0.5 transition-colors hover:bg-secondary/60"
 							>
-								<code class="font-mono text-[0.82rem] [font-weight:var(--font-weight-label,600)] text-foreground">
+								<code class="font-mono text-[0.82rem] [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)] text-foreground">
 									{row.prop}
 								</code>
 								{#if copiedSnippet === `prop-${row.prop}`}
@@ -672,7 +672,7 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 	>
 		<div class="flex flex-col gap-1">
 			<p
-				class="m-0 text-[1rem] [font-weight:var(--font-weight-label,500)] tracking-tight"
+				class="m-0 text-[1rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
 				style="font-family: var(--font-header);"
 			>
 				Want to make it yours?

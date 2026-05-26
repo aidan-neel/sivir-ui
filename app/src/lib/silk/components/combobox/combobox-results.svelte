@@ -21,14 +21,14 @@
 	const { children, class: className, allowClickOutside = true, ...rest }: Props = $props();
 </script>
 
-<div class="overflow-y-auto max-h-full p-1">
+<div class="overflow-y-auto max-h-full p-[var(--menu-padding)] flex flex-col gap-0">
 	{#if uiState.searchContent === ''}
 		{@render children?.()}
 	{:else if uiState.results.size > 0}
 		{@render children?.()}
 	{:else}
 		<div class="w-full p-3 flex items-center justify-center">
-			<p class="text-sm [font-weight:var(--font-weight-body,400)] text-foreground-muted">No results found</p>
+			<p class="[font-size:var(--font-size-body,16px)] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted">No results found</p>
 		</div>
 	{/if}
 </div>

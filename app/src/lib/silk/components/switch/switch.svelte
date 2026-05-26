@@ -99,7 +99,7 @@
 			{#if label}
 				<span
 					id={labelId}
-					class="text-[length:var(--text-sm)] [font-weight:var(--font-weight-label,500)] text-foreground [font-family:var(--font-sans),sans-serif]"
+					class="text-[length:var(--text-sm)] [font-size:var(--font-size-label,14px)] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground [font-family:var(--font-sans),sans-serif]"
 				>
 					{label}
 				</span>
@@ -107,7 +107,7 @@
 			{#if description}
 				<span
 					id={descriptionId}
-					class="text-sm leading-6 [font-weight:var(--font-weight-body,400)] text-foreground-muted"
+					class="leading-6 [font-size:var(--font-size-body,16px)] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted"
 				>
 					{description}
 				</span>

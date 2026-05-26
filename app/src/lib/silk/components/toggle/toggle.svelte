@@ -14,9 +14,9 @@
 	}: ToggleProps = $props();
 
 	const sizes: Record<string, string> = {
-		sm: 'h-7 px-2 text-[0.75rem]',
-		md: 'h-8 px-2.5 text-[0.82rem]',
-		lg: 'h-10 px-3.5 text-[0.9rem]'
+		sm: 'h-7 px-[var(--toggle-padding-sm)] text-[0.75rem]',
+		md: 'h-8 px-[var(--toggle-padding-md)] text-[0.82rem]',
+		lg: 'h-10 px-[var(--toggle-padding-lg)] text-[0.9rem]'
 	};
 
 	function toggle() {
@@ -34,7 +34,7 @@
 	{disabled}
 	onclick={toggle}
 	class={cn(
-		'inline-flex items-center justify-center gap-1.5 rounded-[var(--radius-md)] [font-weight:var(--font-weight-button,500)] transition-[background-color,color,box-shadow] [transition-duration:var(--motion-duration-hover)] ease-out',
+		'inline-flex items-center justify-center gap-1.5 rounded-[var(--radius-md)] [font-weight:var(--font-weight-button,500)] [letter-spacing:var(--tracking-button,0em)] transition-[background-color,color,box-shadow] [transition-duration:var(--motion-duration-hover)] ease-out',
 		'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)]',
 		'disabled:cursor-not-allowed disabled:opacity-50',
 		variant === 'outlined' && 'border border-border',

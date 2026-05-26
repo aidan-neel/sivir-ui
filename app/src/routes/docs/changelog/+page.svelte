@@ -183,7 +183,7 @@
 
 	<div class="flex flex-col gap-3">
 		<h1
-			class="m-0 max-w-[26ch] text-[2.6rem] [font-weight:var(--font-weight-label,500)] leading-[1.02] tracking-[-0.04em] md:text-[3rem]"
+			class="m-0 max-w-[26ch] text-[2.6rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] leading-[1.02] tracking-[-0.04em] md:text-[3rem]"
 			style="font-family: var(--font-header);"
 		>
 			What's new in Silk.
@@ -202,7 +202,7 @@
 			<div class="flex flex-col gap-2">
 				<div class="flex flex-wrap items-center gap-2">
 					<span
-						class="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2 py-0.5 font-mono text-[0.74rem] [font-weight:var(--font-weight-label,600)] text-foreground"
+						class="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2 py-0.5 font-mono text-[0.74rem] [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)] text-foreground"
 					>
 						<GitCommit size={11} class="text-foreground-muted" />
 						{release.version}
@@ -218,7 +218,7 @@
 					{/if}
 				</div>
 				<h2
-					class="m-0 text-[1.5rem] [font-weight:var(--font-weight-label,500)] leading-tight tracking-[-0.025em]"
+					class="m-0 text-[1.5rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] leading-tight tracking-[-0.025em]"
 					style="font-family: var(--font-header);"
 				>
 					{release.title}
@@ -241,13 +241,13 @@
 								<entry.icon size={15} />
 							</span>
 							<span
-								class={`inline-flex items-center rounded-md border px-2 py-0.5 text-[0.62rem] [font-weight:var(--font-weight-label,500)] uppercase tracking-wide ${tagStyles[entry.tag].cls}`}
+								class={`inline-flex items-center rounded-md border px-2 py-0.5 text-[0.62rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide ${tagStyles[entry.tag].cls}`}
 							>
 								{tagStyles[entry.tag].label}
 							</span>
 						</div>
 						<p
-							class="m-0 text-[0.96rem] [font-weight:var(--font-weight-label,500)] tracking-tight"
+							class="m-0 text-[0.96rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
 							style="font-family: var(--font-header);"
 						>
 							{entry.title}
@@ -267,7 +267,7 @@
 	class="mt-12 flex flex-col items-start justify-between gap-4 rounded-[var(--radius-lg)] border border-border bg-card p-6 sm:flex-row sm:items-center"
 >
 	<div class="flex flex-col gap-1">
-		<p class="m-0 text-[1rem] [font-weight:var(--font-weight-label,500)] tracking-tight" style="font-family: var(--font-header);">
+		<p class="m-0 text-[1rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight" style="font-family: var(--font-header);">
 			Want to follow along?
 		</p>
 		<p class="m-0 text-[0.86rem] text-foreground-muted">

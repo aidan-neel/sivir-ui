@@ -21,7 +21,7 @@
 		>
 			<span class="text-foreground-muted">
 				{title}
-			</span>.<span class="[font-weight:var(--font-weight-label,600)]">
+			</span>.<span class="[font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)]">
 				{component}
 			</span>
 		</h1>
@@ -37,21 +37,21 @@
 			<table class="min-w-[42rem] w-full border-collapse text-left">
 				<thead>
 					<tr class="border-b">
-						<th class="p-3 [font-weight:var(--font-weight-label,500)]">Property</th>
-						<th class="p-3 [font-weight:var(--font-weight-label,500)]">Type</th>
-						<th class="p-3 [font-weight:var(--font-weight-label,500)]">Description</th>
+						<th class="p-3 [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]">Property</th>
+						<th class="p-3 [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]">Type</th>
+						<th class="p-3 [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]">Description</th>
 					</tr>
 				</thead>
 				<tbody>
 					{#each items as { property, type, description, defaults }}
 						<tr class="border-t">
 							<td class="w-[11rem] p-3 font-mono align-top">
-								<span class="bg-secondary px-2 p-1 rounded-lg [font-weight:var(--font-weight-label,500)] text-sm">
+								<span class="bg-secondary px-2 p-1 rounded-lg [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-sm">
 									{property}
 								</span>
 							</td>
 							<td class="w-[11rem] p-3 font-mono align-top">
-								<span class="bg-secondary px-2 p-1 rounded-lg [font-weight:var(--font-weight-label,500)] text-sm">
+								<span class="bg-secondary px-2 p-1 rounded-lg [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-sm">
 									{type}
 								</span>
 							</td>

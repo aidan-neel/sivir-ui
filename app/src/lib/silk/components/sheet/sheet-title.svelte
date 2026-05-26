@@ -15,7 +15,7 @@
 	id={uiState.key + '-title'}
 	class={cn(
 		className,
-		`text-lg [font-weight:var(--font-weight-header,600)] tracking-[-0.02em]`
+		`[font-family:var(--font-header)] [font-size:var(--font-size-header,18px)] [font-weight:var(--font-weight-header,600)] [letter-spacing:var(--tracking-header,-0.02em)]`
 	)}
 >
 	{@render children?.()}

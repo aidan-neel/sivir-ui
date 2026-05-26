@@ -31,6 +31,12 @@ model Theme {
   radiusXl              String
   primaryButtonOutline  Boolean                 @default(false)
   invertedPanels        Boolean                 @default(false)
+  fancyButtons          Boolean                 @default(true)
+  fancyBadges           Boolean                 @default(true)
+  fancyShadows          Boolean                 @default(true)
+  hapticPress           Boolean                 @default(false)
+  /// Padding token overrides (button/badge/field/card/panel/menu-item).
+  spacing               Json?
   durationPreset        String                  @default("default")
   motion                Json
   light                 Json

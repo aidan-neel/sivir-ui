@@ -103,7 +103,7 @@
 			transition:flyAndScale={{ durationVar: '--motion-duration-tooltip' }}
 			class={cn(
 				className,
-				'bg-[var(--color-tooltip)] text-[var(--color-tooltip-foreground)] pointer-events-auto max-w-[18rem] rounded-md border border-border px-[var(--tooltip-padding-x)] py-[var(--tooltip-padding-y)] text-[0.72rem] [font-weight:var(--font-weight-label,500)] shadow-[var(--tooltip-shadow,var(--shadow-sm))]'
+				'bg-[var(--color-tooltip)] text-[var(--color-tooltip-foreground)] pointer-events-auto max-w-[18rem] rounded-md border border-border px-[var(--tooltip-padding-x)] py-[var(--tooltip-padding-y)] [font-size:var(--font-size-label,14px)] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] shadow-[var(--tooltip-shadow,var(--shadow-sm))]'
 			)}
 		>
 			{@render children?.()}

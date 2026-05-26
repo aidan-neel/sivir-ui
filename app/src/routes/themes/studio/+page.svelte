@@ -6,6 +6,7 @@
 	import { Button } from '$lib/silk/components/button';
 	import { Input } from '$lib/silk/components/input';
 	import { Switch } from '$lib/silk/components/switch';
+	import { Slider } from '$lib/silk/components/slider';
 	import { Checkbox } from '$lib/silk/components/checkbox';
 	import { Skeleton } from '$lib/silk/components/skeleton';
 	import { ColorPicker, type ColorOption } from '$lib/silk/components/color-picker';
@@ -39,7 +40,10 @@
 		type ThemeDraft,
 		defaultTypography,
 		resolveTypography,
-		type ThemeTypography
+		type ThemeTypography,
+		defaultSpacing,
+		resolveSpacing,
+		type ThemeSpacing
 	} from '$lib/silk/themes/presets';
 	import { transitionPresets, type ThemeTransitionPresetSlug } from '$lib/silk/themes/transitions';
 	import { builtInThemePresets } from '$lib/silk/themes/builtin-presets';
@@ -247,6 +251,11 @@
 		const cloned = JSON.parse(JSON.stringify(theme)) as ThemeDraft;
 		cloned.typography = resolveTypography(cloned.typography);
 		cloned.overlaysOnSurface = cloned.overlaysOnSurface === true;
+		cloned.fancyButtons = cloned.fancyButtons !== false;
+		cloned.fancyBadges = cloned.fancyBadges !== false;
+		cloned.fancyShadows = cloned.fancyShadows !== false;
+		cloned.hapticPress = cloned.hapticPress === true;
+		cloned.spacing = resolveSpacing(cloned.spacing);
 		return cloned;
 	}
 
@@ -432,6 +441,18 @@
 		selectedPresetSlug = 'custom';
 	}
 
+	function updateTracking(key: keyof ThemeTypography, value: number) {
+		const current = resolveTypography(editorTheme.typography);
+		editorTheme.typography = { ...current, [key]: value };
+		selectedPresetSlug = 'custom';
+	}
+
+	function updateSize(key: keyof ThemeTypography, value: number) {
+		const current = resolveTypography(editorTheme.typography);
+		editorTheme.typography = { ...current, [key]: value };
+		selectedPresetSlug = 'custom';
+	}
+
 	// ─── Easing ───
 	const defaultEasing = 'cubic-bezier(0.22,1,0.36,1)';
 	const easingOptions = [
@@ -453,12 +474,17 @@
 		selectedPresetSlug = 'custom';
 	}
 
-	const weightFields: { key: keyof ThemeTypography; label: string }[] = [
-		{ key: 'weightHeader', label: 'Header' },
-		{ key: 'weightBody', label: 'Body' },
-		{ key: 'weightLabel', label: 'Label' },
-		{ key: 'weightButton', label: 'Button' },
-		{ key: 'weightBadge', label: 'Badge' }
+	const weightFields: {
+		key: keyof ThemeTypography;
+		trackingKey: keyof ThemeTypography;
+		sizeKey: keyof ThemeTypography;
+		label: string;
+	}[] = [
+		{ key: 'weightHeader', trackingKey: 'trackingHeader', sizeKey: 'sizeHeader', label: 'Header' },
+		{ key: 'weightBody', trackingKey: 'trackingBody', sizeKey: 'sizeBody', label: 'Body' },
+		{ key: 'weightLabel', trackingKey: 'trackingLabel', sizeKey: 'sizeLabel', label: 'Label' },
+		{ key: 'weightButton', trackingKey: 'trackingButton', sizeKey: 'sizeButton', label: 'Button' },
+		{ key: 'weightBadge', trackingKey: 'trackingBadge', sizeKey: 'sizeBadge', label: 'Badge' }
 	];
 
 	const weightOptions = [
@@ -472,6 +498,43 @@
 
 	function weightLabel(value: number) {
 		return weightOptions.find((o) => o.value === value)?.label ?? '';
+	}
+
+	const trackingOptions = [
+		{ value: -0.04, label: 'Tightest' },
+		{ value: -0.02, label: 'Tight' },
+		{ value: -0.01, label: 'Snug' },
+		{ value: 0, label: 'Normal' },
+		{ value: 0.01, label: 'Relaxed' },
+		{ value: 0.025, label: 'Wide' },
+		{ value: 0.05, label: 'Wider' },
+		{ value: 0.1, label: 'Widest' }
+	] as const;
+
+	function trackingLabelFor(value: number) {
+		const closest = trackingOptions.reduce((best, opt) =>
+			Math.abs(opt.value - value) < Math.abs(best.value - value) ? opt : best
+		);
+		return closest.label;
+	}
+
+	const sizeOptions = [
+		{ value: 10, label: '10px' },
+		{ value: 12, label: '12px' },
+		{ value: 13, label: '13px' },
+		{ value: 14, label: '14px' },
+		{ value: 15, label: '15px' },
+		{ value: 16, label: '16px' },
+		{ value: 18, label: '18px' },
+		{ value: 20, label: '20px' },
+		{ value: 22, label: '22px' },
+		{ value: 24, label: '24px' },
+		{ value: 28, label: '28px' },
+		{ value: 32, label: '32px' }
+	] as const;
+
+	function sizeLabelFor(value: number) {
+		return `${value}px`;
 	}
 
 	function updateRadius(next: string) {
@@ -665,6 +728,122 @@
 		selectedPresetSlug = 'custom';
 	}
 
+	const fancyButtonsOn = $derived(editorTheme.fancyButtons !== false);
+	function toggleFancyButtons() {
+		editorTheme.fancyButtons = !fancyButtonsOn;
+		selectedPresetSlug = 'custom';
+	}
+
+	const fancyBadgesOn = $derived(editorTheme.fancyBadges !== false);
+	function toggleFancyBadges() {
+		editorTheme.fancyBadges = !fancyBadgesOn;
+		selectedPresetSlug = 'custom';
+	}
+
+	const fancyShadowsOn = $derived(editorTheme.fancyShadows !== false);
+	function toggleFancyShadows() {
+		editorTheme.fancyShadows = !fancyShadowsOn;
+		selectedPresetSlug = 'custom';
+	}
+
+	const hapticPressOn = $derived(editorTheme.hapticPress === true);
+	function toggleHapticPress() {
+		editorTheme.hapticPress = !hapticPressOn;
+		selectedPresetSlug = 'custom';
+	}
+
+	function updateSpacing(key: keyof ThemeSpacing, value: number) {
+		const current = resolveSpacing(editorTheme.spacing);
+		editorTheme.spacing = { ...current, [key]: value };
+		selectedPresetSlug = 'custom';
+	}
+
+	type SpacingFieldGroup = {
+		title: string;
+		fields: { key: keyof ThemeSpacing; label: string; min: number; max: number; unit?: string }[];
+	};
+	const spacingGroups: SpacingFieldGroup[] = [
+		{
+			title: 'Heights',
+			fields: [
+				{ key: 'buttonHeight', label: 'Button (default)', min: 24, max: 56 },
+				{ key: 'buttonHeightSm', label: 'Button (small)', min: 20, max: 44 },
+				{ key: 'buttonHeightLg', label: 'Button (large)', min: 28, max: 64 },
+				{ key: 'fieldHeight', label: 'Input field', min: 24, max: 56 },
+				{ key: 'menuItemHeight', label: 'Menu / select item', min: 20, max: 48 },
+				{ key: 'iconButtonSize', label: 'Icon button', min: 20, max: 48 }
+			]
+		},
+		{
+			title: 'Switch',
+			fields: [
+				{ key: 'switchTrackWidth', label: 'Track width', min: 24, max: 64 },
+				{ key: 'switchThumbSize', label: 'Thumb', min: 8, max: 28 }
+			]
+		},
+		{
+			title: 'Button & field padding',
+			fields: [
+				{ key: 'buttonPaddingX', label: 'Button (X)', min: 4, max: 32 },
+				{ key: 'fieldPaddingX', label: 'Field (X)', min: 4, max: 24 },
+				{ key: 'badgePaddingX', label: 'Badge (X)', min: 2, max: 20 },
+				{ key: 'badgePaddingY', label: 'Badge (Y)', min: 0, max: 12 }
+			]
+		},
+		{
+			title: 'Surface padding',
+			fields: [
+				{ key: 'cardPadding', label: 'Card', min: 8, max: 48 },
+				{ key: 'panelPadding', label: 'Panel', min: 4, max: 24 }
+			]
+		},
+		{
+			title: 'Modal & overlay',
+			fields: [
+				{ key: 'modalPadding', label: 'Modal padding', min: 0, max: 48 },
+				{ key: 'modalTitleDescriptionGap', label: 'Title ↔ description', min: 0, max: 24 },
+				{ key: 'modalSectionGap', label: 'Section gap', min: 0, max: 32 },
+				{ key: 'sheetBodyPadding', label: 'Sheet padding', min: 0, max: 48 },
+				{ key: 'sheetHeaderPaddingBottom', label: 'Sheet header (bottom)', min: 0, max: 48 }
+			]
+		},
+		{
+			title: 'Menu padding',
+			fields: [
+				{ key: 'menuPadding', label: 'Menu surface', min: 0, max: 16 },
+				{ key: 'menuItemPaddingX', label: 'Menu item (X)', min: 2, max: 16 },
+				{ key: 'menuSearchPadding', label: 'Menu search', min: 0, max: 24 },
+				{ key: 'menuLabelPaddingX', label: 'Menu label (X)', min: 0, max: 16 },
+				{ key: 'menuLabelPaddingY', label: 'Menu label (Y)', min: 0, max: 12 }
+			]
+		},
+		{
+			title: 'Tabs padding',
+			fields: [
+				{ key: 'tabsTriggerPaddingX', label: 'Trigger (X)', min: 4, max: 32 },
+				{ key: 'tabsTriggerPaddingY', label: 'Trigger (Y)', min: 0, max: 16 },
+				{ key: 'tabsListPadding', label: 'List padding', min: 0, max: 12 }
+			]
+		},
+		{
+			title: 'Toggle padding',
+			fields: [
+				{ key: 'togglePaddingSm', label: 'Toggle (small)', min: 0, max: 20 },
+				{ key: 'togglePaddingMd', label: 'Toggle (default)', min: 0, max: 24 },
+				{ key: 'togglePaddingLg', label: 'Toggle (large)', min: 0, max: 32 }
+			]
+		},
+		{
+			title: 'Component padding',
+			fields: [
+				{ key: 'toastPaddingX', label: 'Toast (X)', min: 4, max: 32 },
+				{ key: 'toastPaddingY', label: 'Toast (Y)', min: 4, max: 32 },
+				{ key: 'calendarPadding', label: 'Calendar', min: 0, max: 24 },
+				{ key: 'colorPickerPadding', label: 'Color picker', min: 0, max: 24 }
+			]
+		}
+	];
+
 	const generatedCss = $derived(
 		themeToCss({
 			...editorTheme,
@@ -753,6 +932,7 @@
 		{ id: 'colors', label: 'Colors' },
 		{ id: 'type', label: 'Type' },
 		{ id: 'shape', label: 'Shape' },
+		{ id: 'padding', label: 'Padding' },
 		{ id: 'presets', label: 'Presets' }
 	] as const;
 
@@ -1390,11 +1570,11 @@
 				<Sparkles size={14} />
 			</span>
 			<div class="flex min-w-0 flex-col leading-none">
-				<span class="text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted"
+				<span class="text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
 					>Theme Studio</span
 				>
 				<span
-					class="truncate text-[0.95rem] [font-weight:var(--font-weight-label,600)] tracking-tight text-foreground"
+					class="truncate text-[0.95rem] [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)] tracking-tight text-foreground"
 					style="font-family: var(--font-header);"
 					aria-label="Theme name"
 				>
@@ -1597,7 +1777,7 @@
 						<div class="flex flex-col gap-1.5">
 							<label
 								for="publish-description"
-								class="text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground"
+								class="text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground"
 							>
 								Description
 							</label>
@@ -1673,25 +1853,25 @@
 							<div class="flex items-center gap-3">
 								<div class="flex -space-x-2">
 									<span
-										class="grid size-9 place-items-center rounded-full border-2 border-card bg-primary/15 text-[0.78rem] [font-weight:var(--font-weight-label,600)] text-primary"
+										class="grid size-9 place-items-center rounded-full border-2 border-card bg-primary/15 text-[0.78rem] [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)] text-primary"
 										>AN</span
 									>
 									<span
-										class="grid size-9 place-items-center rounded-full border-2 border-card bg-secondary text-[0.78rem] [font-weight:var(--font-weight-label,600)] text-foreground-muted"
+										class="grid size-9 place-items-center rounded-full border-2 border-card bg-secondary text-[0.78rem] [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
 										>MC</span
 									>
 									<span
-										class="grid size-9 place-items-center rounded-full border-2 border-card bg-secondary text-[0.78rem] [font-weight:var(--font-weight-label,600)] text-foreground-muted"
+										class="grid size-9 place-items-center rounded-full border-2 border-card bg-secondary text-[0.78rem] [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
 										>LK</span
 									>
 									<span
-										class="grid size-9 place-items-center rounded-full border-2 border-card bg-background text-[0.7rem] [font-weight:var(--font-weight-label,600)] text-foreground-muted"
+										class="grid size-9 place-items-center rounded-full border-2 border-card bg-background text-[0.7rem] [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
 										>+4</span
 									>
 								</div>
 								<div>
 									<h2
-										class="m-0 text-[1.5rem] [font-weight:var(--font-weight-header,500)] leading-tight tracking-tight"
+										class="m-0 text-[1.5rem] [font-weight:var(--font-weight-header,500)] leading-tight [letter-spacing:var(--tracking-header,-0.02em)]"
 										style="font-family: var(--font-header);"
 									>
 										Welcome back, {pgInputName}
@@ -1817,7 +1997,7 @@
 												bind:value={newProjectName}
 											/>
 											<div class="flex flex-col gap-1.5">
-												<span class="text-[0.78rem] [font-weight:var(--font-weight-label,500)]">Team</span>
+												<span class="text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]">Team</span>
 												<Select.Root value={newProjectTeam}>
 													<Select.Trigger class="w-full" variant="outlined">
 														{newProjectTeam.charAt(0).toUpperCase() + newProjectTeam.slice(1)}
@@ -1881,14 +2061,14 @@
 							<div class="flex flex-col gap-1">
 								<p class="m-0 text-[0.78rem] text-foreground-muted">{stat.label}</p>
 								<p
-									class="m-0 text-[1.6rem] [font-weight:var(--font-weight-header,500)] tracking-tight"
+									class="m-0 text-[1.6rem] [font-weight:var(--font-weight-header,500)] [letter-spacing:var(--tracking-header,-0.02em)]"
 									style="font-family: var(--font-header);"
 								>
 									{stat.value}
 								</p>
 								<div class="mt-0.5 flex items-center gap-1.5">
 									<span
-										class="inline-flex items-center gap-0.5 rounded-full bg-[var(--color-success)]/12 px-1.5 py-0.5 text-[0.7rem] [font-weight:var(--font-weight-label,500)] text-[var(--color-success)]"
+										class="inline-flex items-center gap-0.5 rounded-full bg-[var(--color-success)]/12 px-1.5 py-0.5 text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-[var(--color-success)]"
 									>
 										<TrendingUp size={11} />
 										{stat.delta}
@@ -1903,9 +2083,9 @@
 					<section class="flex flex-col gap-3 px-6 py-7 md:px-8">
 						<div class="flex items-center justify-between gap-3 max-sm:flex-col max-sm:items-start">
 							<div>
-								<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">Tabs</p>
+								<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Tabs</p>
 								<p
-									class="m-0 mt-0.5 text-[1.05rem] [font-weight:var(--font-weight-label,500)] tracking-tight"
+									class="m-0 mt-0.5 [font-size:var(--font-size-header,18px)] [font-weight:var(--font-weight-header,600)] [letter-spacing:var(--tracking-header,-0.02em)]"
 									style="font-family: var(--font-header);"
 								>
 									Project activity
@@ -1952,9 +2132,9 @@
 					<!-- ─── Form section ─── -->
 					<section class="flex flex-col gap-4 px-6 py-7 md:px-8">
 						<div>
-							<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">Form</p>
+							<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Form</p>
 							<p
-								class="m-0 mt-0.5 text-[1.05rem] [font-weight:var(--font-weight-label,500)] tracking-tight"
+								class="m-0 mt-0.5 [font-size:var(--font-size-header,18px)] [font-weight:var(--font-weight-header,600)] [letter-spacing:var(--tracking-header,-0.02em)]"
 								style="font-family: var(--font-header);"
 							>
 								Account settings
@@ -1978,7 +2158,7 @@
 						</div>
 
 						<div class="flex flex-col gap-1.5">
-							<span class="text-[0.78rem] [font-weight:var(--font-weight-label,500)]">Role</span>
+							<span class="text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]">Role</span>
 							<Select.Root value={pgRole}>
 								<Select.Trigger class="w-full" variant="outlined">
 									{pgRole.charAt(0).toUpperCase() + pgRole.slice(1)}
@@ -2033,9 +2213,9 @@
 					<!-- ─── Buttons + Badges showcase ─── -->
 					<section class="flex flex-col gap-4 px-6 py-7 md:px-8">
 						<div>
-							<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">Variants</p>
+							<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Variants</p>
 							<p
-								class="m-0 mt-0.5 text-[1.05rem] [font-weight:var(--font-weight-label,500)] tracking-tight"
+								class="m-0 mt-0.5 [font-size:var(--font-size-header,18px)] [font-weight:var(--font-weight-header,600)] [letter-spacing:var(--tracking-header,-0.02em)]"
 								style="font-family: var(--font-header);"
 							>
 								Buttons & badges
@@ -2073,9 +2253,9 @@
 					<!-- ─── Alerts ─── -->
 					<section class="flex flex-col gap-3 px-6 py-7 md:px-8">
 						<div>
-							<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">Feedback</p>
+							<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Feedback</p>
 							<p
-								class="m-0 mt-0.5 text-[1.05rem] [font-weight:var(--font-weight-label,500)] tracking-tight"
+								class="m-0 mt-0.5 [font-size:var(--font-size-header,18px)] [font-weight:var(--font-weight-header,600)] [letter-spacing:var(--tracking-header,-0.02em)]"
 								style="font-family: var(--font-header);"
 							>
 								Alerts
@@ -2104,9 +2284,9 @@
 					<!-- ─── Progress + Skeleton ─── -->
 					<section class="flex flex-col gap-4 px-6 py-7 md:px-8">
 						<div>
-							<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">Progress</p>
+							<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Progress</p>
 							<p
-								class="m-0 mt-0.5 text-[1.05rem] [font-weight:var(--font-weight-label,500)] tracking-tight"
+								class="m-0 mt-0.5 [font-size:var(--font-size-header,18px)] [font-weight:var(--font-weight-header,600)] [letter-spacing:var(--tracking-header,-0.02em)]"
 								style="font-family: var(--font-header);"
 							>
 								Storage usage
@@ -2118,7 +2298,7 @@
 								<div>
 									<div class="mb-1 flex items-center justify-between text-[0.78rem]">
 										<span class="text-foreground-muted">{bar.label}</span>
-										<span class="[font-weight:var(--font-weight-label,500)]">{bar.pct}%</span>
+										<span class="[font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]">{bar.pct}%</span>
 									</div>
 									<div class="h-1.5 overflow-hidden rounded-full bg-secondary">
 										<div
@@ -2145,7 +2325,7 @@
 						</div>
 
 						<div class="flex flex-col gap-2 pt-1">
-							<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">Skeleton</p>
+							<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Skeleton</p>
 							<Skeleton class="h-3 w-full" />
 							<Skeleton class="h-3 w-[80%]" />
 							<Skeleton class="h-3 w-[60%]" />
@@ -2156,9 +2336,9 @@
 					<section class="flex flex-col gap-2 px-6 py-7 md:px-8">
 						<div class="flex items-center justify-between">
 							<div>
-								<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">Activity</p>
+								<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Activity</p>
 								<p
-									class="m-0 mt-0.5 text-[1.05rem] [font-weight:var(--font-weight-label,500)] tracking-tight"
+									class="m-0 mt-0.5 [font-size:var(--font-size-header,18px)] [font-weight:var(--font-weight-header,600)] [letter-spacing:var(--tracking-header,-0.02em)]"
 									style="font-family: var(--font-header);"
 								>
 									Notifications
@@ -2176,7 +2356,7 @@
 										style={`background:${item.dot};`}
 									></span>
 									<div class="min-w-0 flex-1">
-										<p class="m-0 truncate text-[0.84rem] [font-weight:var(--font-weight-label,500)]">{item.title}</p>
+										<p class="m-0 truncate text-[0.84rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]">{item.title}</p>
 										<p class="m-0 mt-0.5 truncate text-[0.76rem] text-foreground-muted">
 											{item.desc}
 										</p>
@@ -2190,9 +2370,9 @@
 					<!-- ─── Command teaser + Tooltip ─── -->
 					<section class="flex flex-col gap-3 px-6 py-7 md:px-8">
 						<div>
-							<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">Command</p>
+							<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Command</p>
 							<p
-								class="m-0 mt-0.5 text-[1.05rem] [font-weight:var(--font-weight-label,500)] tracking-tight"
+								class="m-0 mt-0.5 [font-size:var(--font-size-header,18px)] [font-weight:var(--font-weight-header,600)] [letter-spacing:var(--tracking-header,-0.02em)]"
 								style="font-family: var(--font-header);"
 							>
 								Quick actions
@@ -2238,25 +2418,88 @@
 					</section>
 
 					<!-- ─── Typography preview ─── -->
-					<section class="flex flex-col gap-2 px-6 py-7 md:px-8">
-						<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">Typography</p>
-						<h3
-							class="m-0 text-[2rem] [font-weight:var(--font-weight-header,500)] leading-[1.05] tracking-tight"
-							style="font-family: var(--font-header);"
-						>
-							The quick brown fox jumps over the lazy dog.
-						</h3>
-						<p class="m-0 text-[0.95rem] leading-relaxed text-foreground">
-							Body text — Silk applies the body font here. Switch fonts in the inspector to see them
-							in action.
-							<a href="/docs/introduction" class="text-primary underline-offset-2 hover:underline"
-								>Inline links</a
+					<section class="flex flex-col gap-5 px-6 py-7 md:px-8">
+						<div>
+							<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Typography</p>
+							<p class="m-0 mt-0.5 [font-size:var(--font-size-header,18px)] [font-weight:var(--font-weight-header,600)] [letter-spacing:var(--tracking-header,-0.02em)]" style="font-family: var(--font-header);">
+								Every role, live
+							</p>
+						</div>
+
+						<!-- Header sample -->
+						<div class="flex flex-col gap-2 rounded-[var(--radius-md)] border border-border bg-background/40 p-4">
+							<div class="flex items-baseline justify-between gap-3">
+								<span class="text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase text-foreground-muted">Header</span>
+								<span class="font-mono text-[0.62rem] text-foreground-muted/70">--font-header · --font-size-header · --font-weight-header · --tracking-header</span>
+							</div>
+							<h3
+								class="m-0 text-[2rem] leading-[1.05] [font-family:var(--font-header)] [font-weight:var(--font-weight-header,600)] [letter-spacing:var(--tracking-header,-0.02em)]"
 							>
-							respect the primary token.
-						</p>
-						<p class="m-0 text-[0.86rem] leading-relaxed text-foreground-muted">
-							Muted secondary text — used for descriptions and helper copy.
-						</p>
+								Pack my box with five dozen liquor jugs.
+							</h3>
+							<p class="m-0 text-[1.25rem] leading-tight [font-family:var(--font-header)] [font-weight:var(--font-weight-header,600)] [letter-spacing:var(--tracking-header,-0.02em)] text-foreground-muted">
+								Sphinx of black quartz, judge my vow.
+							</p>
+						</div>
+
+						<!-- Body sample -->
+						<div class="flex flex-col gap-2 rounded-[var(--radius-md)] border border-border bg-background/40 p-4">
+							<div class="flex items-baseline justify-between gap-3">
+								<span class="text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase text-foreground-muted">Body</span>
+								<span class="font-mono text-[0.62rem] text-foreground-muted/70">--font-sans · --font-size-body · --font-weight-body · --tracking-body</span>
+							</div>
+							<p class="m-0 leading-relaxed [font-size:var(--font-size-body,16px)] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground">
+								Silk uses the body role for prose, descriptions, and most paragraph copy. Switch fonts or tweak weights and tracking from the inspector — the change ripples through every body element in this preview and in your published theme.
+								<a href="/docs/introduction" class="text-primary underline-offset-2 hover:underline">Inline links</a> respect the primary token.
+							</p>
+							<p class="m-0 text-[0.86rem] leading-relaxed [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted">
+								Muted secondary text — used for descriptions and helper copy underneath fields.
+							</p>
+						</div>
+
+						<!-- Label sample -->
+						<div class="flex flex-col gap-2 rounded-[var(--radius-md)] border border-border bg-background/40 p-4">
+							<div class="flex items-baseline justify-between gap-3">
+								<span class="text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase text-foreground-muted">Label</span>
+								<span class="font-mono text-[0.62rem] text-foreground-muted/70">--font-size-label · --font-weight-label · --tracking-label</span>
+							</div>
+							<div class="flex flex-wrap items-center gap-x-5 gap-y-2">
+								<span class="[font-size:var(--font-size-label,14px)] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground">Field label</span>
+								<span class="[font-size:var(--font-size-label,14px)] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Section header</span>
+								<span class="[font-size:var(--font-size-label,14px)] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase text-foreground-muted">Eyebrow</span>
+								<span class="rounded-full bg-secondary px-2 py-0.5 [font-size:var(--font-size-label,14px)] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Chip</span>
+							</div>
+						</div>
+
+						<!-- Button + Badge sample -->
+						<div class="grid grid-cols-2 gap-3 max-md:grid-cols-1">
+							<div class="flex flex-col gap-2 rounded-[var(--radius-md)] border border-border bg-background/40 p-4">
+								<div class="flex items-baseline justify-between gap-3">
+									<span class="text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase text-foreground-muted">Button</span>
+									<span class="font-mono text-[0.62rem] text-foreground-muted/70">--font-size-button · --font-weight-button · --tracking-button</span>
+								</div>
+								<div class="flex flex-wrap items-center gap-2">
+									<Button>Save changes</Button>
+									<Button variant="outlined">Discard</Button>
+									<Button variant="ghost">Cancel</Button>
+								</div>
+							</div>
+
+							<div class="flex flex-col gap-2 rounded-[var(--radius-md)] border border-border bg-background/40 p-4">
+								<div class="flex items-baseline justify-between gap-3">
+									<span class="text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase text-foreground-muted">Badge</span>
+									<span class="font-mono text-[0.62rem] text-foreground-muted/70">--font-size-badge · --font-weight-badge · --tracking-badge</span>
+								</div>
+								<div class="flex flex-wrap items-center gap-1.5">
+									<Badge>Live</Badge>
+									<Badge variant="secondary">Draft</Badge>
+									<Badge variant="outlined">Beta</Badge>
+									<Badge variant="ghost">v1.0</Badge>
+								</div>
+							</div>
+						</div>
+
+						<!-- Mono fallback -->
 						<p class="m-0 font-mono text-[0.82rem] text-foreground-muted">
 							const tokens = $derived(themeToCss(draft));
 						</p>
@@ -2265,9 +2508,9 @@
 						<!-- ─── Settings: General ─── -->
 						<section class="flex flex-col gap-4 px-6 py-7 md:px-8">
 							<div>
-								<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">General</p>
+								<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">General</p>
 								<p
-									class="m-0 mt-0.5 text-[1.05rem] [font-weight:var(--font-weight-label,500)] tracking-tight"
+									class="m-0 mt-0.5 [font-size:var(--font-size-header,18px)] [font-weight:var(--font-weight-header,600)] [letter-spacing:var(--tracking-header,-0.02em)]"
 									style="font-family: var(--font-header);"
 								>
 									Profile
@@ -2287,7 +2530,7 @@
 								/>
 							</div>
 							<div class="flex flex-col gap-1.5">
-								<span class="text-[0.78rem] [font-weight:var(--font-weight-label,500)]">Default role</span>
+								<span class="text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]">Default role</span>
 								<Select.Root value={pgRole}>
 									<Select.Trigger class="w-full" variant="outlined">
 										{pgRole.charAt(0).toUpperCase() + pgRole.slice(1)}
@@ -2306,9 +2549,9 @@
 						<!-- ─── Settings: Preferences ─── -->
 						<section class="flex flex-col gap-4 px-6 py-7 md:px-8">
 							<div>
-								<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">Preferences</p>
+								<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Preferences</p>
 								<p
-									class="m-0 mt-0.5 text-[1.05rem] [font-weight:var(--font-weight-label,500)] tracking-tight"
+									class="m-0 mt-0.5 [font-size:var(--font-size-header,18px)] [font-weight:var(--font-weight-header,600)] [letter-spacing:var(--tracking-header,-0.02em)]"
 									style="font-family: var(--font-header);"
 								>
 									Notifications & security
@@ -2371,9 +2614,9 @@
 						<!-- ─── Settings: Danger zone ─── -->
 						<section class="flex flex-col gap-3 px-6 py-7 md:px-8">
 							<div>
-								<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">Danger zone</p>
+								<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Danger zone</p>
 								<p
-									class="m-0 mt-0.5 text-[1.05rem] [font-weight:var(--font-weight-label,500)] tracking-tight"
+									class="m-0 mt-0.5 [font-size:var(--font-size-header,18px)] [font-weight:var(--font-weight-header,600)] [letter-spacing:var(--tracking-header,-0.02em)]"
 									style="font-family: var(--font-header);"
 								>
 									Workspace lifecycle
@@ -2401,9 +2644,9 @@
 						<section class="flex flex-col gap-3 px-6 py-7 md:px-8">
 							<div class="flex items-center justify-between">
 								<div>
-									<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">Inbox</p>
+									<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Inbox</p>
 									<p
-										class="m-0 mt-0.5 text-[1.05rem] [font-weight:var(--font-weight-label,500)] tracking-tight"
+										class="m-0 mt-0.5 [font-size:var(--font-size-header,18px)] [font-weight:var(--font-weight-header,600)] [letter-spacing:var(--tracking-header,-0.02em)]"
 										style="font-family: var(--font-header);"
 									>
 										{mailMessages.filter((m) => m.unread).length} unread
@@ -2422,12 +2665,12 @@
 										class={`flex items-start gap-3 px-3 py-3 text-left transition-colors ${active ? 'bg-secondary/60' : 'hover:bg-secondary/40'}`}
 									>
 										<span
-											class="grid size-9 shrink-0 place-items-center rounded-full bg-secondary text-[0.74rem] [font-weight:var(--font-weight-label,600)] text-foreground"
+											class="grid size-9 shrink-0 place-items-center rounded-full bg-secondary text-[0.74rem] [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)] text-foreground"
 											>{msg.initials}</span
 										>
 										<div class="min-w-0 flex-1">
 											<div class="flex items-center justify-between gap-2">
-												<span class="truncate text-[0.84rem] [font-weight:var(--font-weight-label,500)]">{msg.sender}</span>
+												<span class="truncate text-[0.84rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]">{msg.sender}</span>
 												<span class="shrink-0 text-[0.7rem] text-foreground-muted"
 													>{msg.time}</span
 												>
@@ -2455,11 +2698,11 @@
 							<div class="flex items-start justify-between gap-3">
 								<div class="flex items-center gap-3">
 									<span
-										class="grid size-10 place-items-center rounded-full bg-primary/12 text-[0.78rem] [font-weight:var(--font-weight-label,600)] text-primary"
+										class="grid size-10 place-items-center rounded-full bg-primary/12 text-[0.78rem] [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)] text-primary"
 										>{selectedMail.initials}</span
 									>
 									<div>
-										<p class="m-0 text-[0.92rem] [font-weight:var(--font-weight-label,500)]">{selectedMail.sender}</p>
+										<p class="m-0 text-[0.92rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]">{selectedMail.sender}</p>
 										<p class="m-0 mt-0.5 text-[0.74rem] text-foreground-muted">
 											to me · {selectedMail.time}
 										</p>
@@ -2478,7 +2721,7 @@
 								</div>
 							</div>
 							<h3
-								class="m-0 text-[1.2rem] [font-weight:var(--font-weight-header,500)] leading-tight tracking-tight"
+								class="m-0 text-[1.2rem] [font-weight:var(--font-weight-header,500)] leading-tight [letter-spacing:var(--tracking-header,-0.02em)]"
 								style="font-family: var(--font-header);"
 							>
 								{selectedMail.subject}
@@ -2512,7 +2755,7 @@
 		<button
 			type="button"
 			onclick={() => (mobileInspectorOpen = !mobileInspectorOpen)}
-			class="lg:hidden fixed bottom-4 right-4 z-40 inline-flex h-11 items-center gap-2 rounded-full border border-border bg-primary px-4 text-[0.82rem] [font-weight:var(--font-weight-label,500)] text-foreground-opposite shadow-[0_8px_24px_-6px_color-mix(in_srgb,var(--color-primary)_45%,transparent)]"
+			class="lg:hidden fixed bottom-4 right-4 z-40 inline-flex h-11 items-center gap-2 rounded-full border border-border bg-primary px-4 text-[0.82rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-opposite shadow-[0_8px_24px_-6px_color-mix(in_srgb,var(--color-primary)_45%,transparent)]"
 			aria-expanded={mobileInspectorOpen}
 			aria-controls="studio-inspector"
 		>
@@ -2533,7 +2776,7 @@
 		<!-- ───── INSPECTOR ───── -->
 		<aside
 			id="studio-inspector"
-			class={`flex w-[20rem] shrink-0 flex-col overflow-hidden border-l border-border bg-background
+			class={`flex w-[22.5rem] shrink-0 flex-col overflow-hidden border-l border-border bg-background
 				max-lg:fixed max-lg:inset-x-0 max-lg:bottom-0 max-lg:z-40 max-lg:w-auto max-lg:h-[78vh] max-lg:border-l-0 max-lg:border-t max-lg:rounded-t-[var(--radius-lg)] max-lg:transition-transform max-lg:duration-[var(--motion-duration-sheet,260ms)] max-lg:ease-out max-lg:shadow-[0_-12px_36px_-12px_color-mix(in_srgb,var(--color-foreground)_18%,transparent)]
 				${mobileInspectorOpen ? 'max-lg:translate-y-0' : 'max-lg:translate-y-full max-lg:pointer-events-none'}`}
 		>
@@ -2543,9 +2786,9 @@
 			</div>
 			<Tabs.Root bind:value={inspectorTab} class="flex h-full flex-col">
 				<div class="flex justify-center border-b border-border p-2.5">
-					<Tabs.List class="grid w-full grid-cols-4">
+					<Tabs.List class="flex w-full">
 						{#each tabs as t}
-							<Tabs.Trigger value={t.id} class="text-[0.76rem]">
+							<Tabs.Trigger value={t.id} class="flex-1 min-w-0 text-[0.76rem] px-2">
 								{t.label}
 							</Tabs.Trigger>
 						{/each}
@@ -2557,7 +2800,7 @@
 					<Tabs.Content value="colors" class="flex flex-col gap-4 p-3.5">
 						{#snippet colorRow(label: string, value: string, opts: ColorOption[], onChange: (v: string) => void)}
 							<div class="flex items-center justify-between gap-2">
-								<span class="text-[0.74rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">{label}</span>
+								<span class="text-[0.74rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">{label}</span>
 								<ColorPicker
 									class="w-[170px]"
 									value={value}
@@ -2569,10 +2812,10 @@
 
 						<section class="flex flex-col gap-2.5">
 							<div class="flex items-center justify-between">
-								<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">
+								<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">
 									Light mode
 								</p>
-								<span class="text-[0.65rem] [font-weight:var(--font-weight-body,400)] text-foreground-muted/70">6 tokens</span>
+								<span class="text-[0.65rem] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted/70">6 tokens</span>
 							</div>
 							{@render colorRow('Background', lightBasePalette.background, lightBackgroundOptions, (v) => updateBasePalette('light', 'background', v))}
 							{@render colorRow('Surface', lightBasePalette.card, lightSurfaceOptions, (v) => updateBasePalette('light', 'card', v))}
@@ -2586,10 +2829,10 @@
 
 						<section class="flex flex-col gap-2.5">
 							<div class="flex items-center justify-between">
-								<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">
+								<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">
 									Dark mode
 								</p>
-								<span class="text-[0.65rem] [font-weight:var(--font-weight-body,400)] text-foreground-muted/70">6 tokens</span>
+								<span class="text-[0.65rem] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted/70">6 tokens</span>
 							</div>
 							{@render colorRow('Background', darkBasePalette.background, darkBackgroundOptions, (v) => updateBasePalette('dark', 'background', v))}
 							{@render colorRow('Surface', darkBasePalette.card, darkSurfaceOptions, (v) => updateBasePalette('dark', 'card', v))}
@@ -2603,13 +2846,61 @@
 
 						<section class="flex items-center justify-between gap-3 rounded-lg border border-border bg-background/40 px-3 py-2.5">
 							<div class="flex flex-col gap-0.5">
-								<span class="text-[0.82rem] [font-weight:var(--font-weight-label,500)] text-foreground">Overlays on surface</span>
+								<span class="text-[0.82rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground">Overlays on surface</span>
 								<span class="text-[0.72rem] text-foreground-muted">Modals, dialogs &amp; sheets paint with Surface instead of Background.</span>
 							</div>
 							<Switch
 								switched={overlaysOnSurfaceOn}
 								onclick={toggleOverlaysOnSurface}
 								aria-label="Toggle overlays-on-surface"
+							/>
+						</section>
+
+						<section class="flex items-center justify-between gap-3 rounded-lg border border-border bg-background/40 px-3 py-2.5">
+							<div class="flex flex-col gap-0.5">
+								<span class="text-[0.82rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground">Fancy buttons</span>
+								<span class="text-[0.72rem] text-foreground-muted">Layered shadow &amp; inner highlight on all button variants. Off for flat.</span>
+							</div>
+							<Switch
+								switched={fancyButtonsOn}
+								onclick={toggleFancyButtons}
+								aria-label="Toggle fancy buttons"
+							/>
+						</section>
+
+						<section class="flex items-center justify-between gap-3 rounded-lg border border-border bg-background/40 px-3 py-2.5">
+							<div class="flex flex-col gap-0.5">
+								<span class="text-[0.82rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground">Fancy badges</span>
+								<span class="text-[0.72rem] text-foreground-muted">Layered shadow &amp; inner highlight on badges. Off for flat.</span>
+							</div>
+							<Switch
+								switched={fancyBadgesOn}
+								onclick={toggleFancyBadges}
+								aria-label="Toggle fancy badges"
+							/>
+						</section>
+
+						<section class="flex items-center justify-between gap-3 rounded-lg border border-border bg-background/40 px-3 py-2.5">
+							<div class="flex flex-col gap-0.5">
+								<span class="text-[0.82rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground">Fancy shadows</span>
+								<span class="text-[0.72rem] text-foreground-muted">Soft drop shadows on cards, modals, popovers, toasts, tooltips. Off for flat.</span>
+							</div>
+							<Switch
+								switched={fancyShadowsOn}
+								onclick={toggleFancyShadows}
+								aria-label="Toggle fancy shadows"
+							/>
+						</section>
+
+						<section class="flex items-center justify-between gap-3 rounded-lg border border-border bg-background/40 px-3 py-2.5">
+							<div class="flex flex-col gap-0.5">
+								<span class="text-[0.82rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground">Haptic press</span>
+								<span class="text-[0.72rem] text-foreground-muted">Buttons nudge -1px on press. Off for static.</span>
+							</div>
+							<Switch
+								switched={hapticPressOn}
+								onclick={toggleHapticPress}
+								aria-label="Toggle haptic press"
 							/>
 						</section>
 
@@ -2627,7 +2918,7 @@
 					<!-- TYPE TAB -->
 					<Tabs.Content value="type" class="flex flex-col gap-4 p-3.5">
 						<section class="flex flex-col gap-2">
-							<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">
+							<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">
 								Header font
 							</p>
 							<Select.Root value={headerFontSelection}>
@@ -2650,7 +2941,7 @@
 						</section>
 
 						<section class="flex flex-col gap-2">
-							<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">
+							<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">
 								Body font
 							</p>
 							<Select.Root value={bodyFontSelection}>
@@ -2676,37 +2967,89 @@
 
 						<section class="flex flex-col gap-2">
 							<div class="flex items-center justify-between">
-								<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">Weights</p>
+								<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Size, Weight & Tracking</p>
 								<span class="text-[0.66rem] text-foreground-muted/70">Per-element</span>
 							</div>
-							<div class="flex flex-col gap-2">
+							<div class="flex flex-col gap-2.5">
 								{#each weightFields as field}
-									{@const current = (editorTheme.typography ?? defaultTypography)[field.key]}
+									{@const typo = editorTheme.typography ?? defaultTypography}
+									{@const currentWeight = typo[field.key]}
+									{@const currentTracking = typo[field.trackingKey]}
+									{@const currentSize = typo[field.sizeKey]}
 									{@const fontFam = field.key === 'weightHeader' ? 'var(--font-header)' : 'var(--font-sans)'}
-									<div class="flex items-center justify-between gap-2">
+									<div class="flex flex-col gap-1.5">
 										<span class="text-[0.74rem] text-foreground-muted">{field.label}</span>
-										<Select.Root value={String(current)}>
-											<Select.Trigger class="h-8 min-w-[8rem] text-[0.78rem]" variant="outlined">
-												{weightLabel(current)}
-											</Select.Trigger>
-											<Select.Content class="max-h-72 overflow-y-auto">
-												{#each weightOptions as opt}
-													<Select.Item
-														value={String(opt.value)}
-														onclick={() => updateWeight(field.key, opt.value)}
-													>
-														<span class="silk-weight-row">
-															<span
-																class="silk-weight-aa"
-																style={`font-weight:${opt.value};font-family:${fontFam};`}
-																aria-hidden="true"
-															></span>
-															{opt.label}
-														</span>
-													</Select.Item>
-												{/each}
-											</Select.Content>
-										</Select.Root>
+										<div class="flex items-center gap-1.5">
+											<Select.Root value={String(currentSize)} class="">
+												<Select.Trigger class="h-8 w-[4.75rem] shrink-0 text-[0.78rem]" variant="outlined">
+													<span class="block min-w-0 flex-1 truncate text-left">{sizeLabelFor(currentSize)}</span>
+												</Select.Trigger>
+												<Select.Content class="max-h-72 overflow-y-auto">
+													{#each sizeOptions as opt}
+														<Select.Item
+															class=""
+															value={String(opt.value)}
+															onclick={() => updateSize(field.sizeKey, opt.value)}
+														>
+															<span class="silk-weight-row">
+																<span
+																	class="silk-weight-aa"
+																	style={`font-size:${opt.value}px;font-family:${fontFam};font-weight:${currentWeight};line-height:1;`}
+																	aria-hidden="true"
+																></span>
+																{opt.label}
+															</span>
+														</Select.Item>
+													{/each}
+												</Select.Content>
+											</Select.Root>
+											<Select.Root value={String(currentWeight)} class="">
+												<Select.Trigger class="h-8 w-[6.5rem] shrink-0 text-[0.78rem]" variant="outlined">
+													<span class="block min-w-0 flex-1 truncate text-left">{weightLabel(currentWeight)}</span>
+												</Select.Trigger>
+												<Select.Content class="max-h-72 overflow-y-auto">
+													{#each weightOptions as opt}
+														<Select.Item
+															class=""
+															value={String(opt.value)}
+															onclick={() => updateWeight(field.key, opt.value)}
+														>
+															<span class="silk-weight-row">
+																<span
+																	class="silk-weight-aa"
+																	style={`font-weight:${opt.value};font-family:${fontFam};`}
+																	aria-hidden="true"
+																></span>
+																{opt.label}
+															</span>
+														</Select.Item>
+													{/each}
+												</Select.Content>
+											</Select.Root>
+											<Select.Root value={String(currentTracking)} class="">
+												<Select.Trigger class="h-8 w-[6.5rem] shrink-0 text-[0.78rem]" variant="outlined">
+													<span class="block min-w-0 flex-1 truncate text-left">{trackingLabelFor(currentTracking)}</span>
+												</Select.Trigger>
+												<Select.Content class="max-h-72 overflow-y-auto">
+													{#each trackingOptions as opt}
+														<Select.Item
+															class=""
+															value={String(opt.value)}
+															onclick={() => updateTracking(field.trackingKey, opt.value)}
+														>
+															<span class="silk-weight-row">
+																<span
+																	class="silk-weight-aa"
+																	style={`letter-spacing:${opt.value}em;font-family:${fontFam};font-weight:${currentWeight};`}
+																	aria-hidden="true"
+																></span>
+																{opt.label}
+															</span>
+														</Select.Item>
+													{/each}
+												</Select.Content>
+											</Select.Root>
+										</div>
 									</div>
 								{/each}
 							</div>
@@ -2715,13 +3058,13 @@
 						<div class="border-t border-border"></div>
 
 						<section class="flex flex-col gap-2 rounded-lg border border-border bg-background/40 p-3">
-							<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">
+							<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">
 								Preview
 							</p>
-							<p class="m-0 text-[1.4rem] leading-tight tracking-tight" style="font-family: var(--font-header); font-weight: var(--font-weight-header, 500);">
+							<p class="m-0 text-[1.4rem] leading-tight" style="font-family: var(--font-header); font-weight: var(--font-weight-header, 500); letter-spacing: var(--tracking-header, -0.02em);">
 								The quick brown fox jumps.
 							</p>
-							<p class="m-0 text-[0.86rem] leading-[1.55] text-foreground-muted" style="font-weight: var(--font-weight-body, 400);">
+							<p class="m-0 text-[0.86rem] leading-[1.55] text-foreground-muted" style="font-weight: var(--font-weight-body, 400); letter-spacing: var(--tracking-body, 0em);">
 								Body text in {bodyFontSelection}. A calmer base that adapts to your product's tone.
 							</p>
 							<p class="m-0 font-mono text-[0.72rem] text-foreground-muted">
@@ -2734,7 +3077,7 @@
 					<Tabs.Content value="shape" class="flex flex-col gap-4 p-3.5">
 						<section class="flex flex-col gap-2">
 							<div class="flex items-baseline justify-between">
-								<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">Radius</p>
+								<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Radius</p>
 								<span
 									class="rounded-md bg-secondary/60 px-1.5 py-0.5 font-mono text-[0.66rem] text-foreground"
 								>
@@ -2777,7 +3120,7 @@
 						<div class="border-t border-border"></div>
 
 						<section class="flex flex-col gap-2">
-							<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">Motion preset</p>
+							<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Motion preset</p>
 							<div class="grid grid-cols-3 gap-1.5">
 								{#each transitionPresets as preset}
 									{@const active = editorTheme.durationPreset === preset.slug}
@@ -2802,7 +3145,7 @@
 												></span>
 											{/each}
 										</span>
-										<span class="[font-weight:var(--font-weight-label,500)] {active ? 'text-foreground' : ''}">{preset.name}</span>
+										<span class="[font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] {active ? 'text-foreground' : ''}">{preset.name}</span>
 									</button>
 								{/each}
 							</div>
@@ -2815,10 +3158,10 @@
 
 						<section class="flex flex-col gap-2">
 							<div class="flex items-baseline justify-between">
-								<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">
+								<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">
 									Transition preset
 								</p>
-								<span class="text-[0.65rem] [font-weight:var(--font-weight-body,400)] text-foreground-muted/70">
+								<span class="text-[0.65rem] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted/70">
 									{activeTransitionShape?.name ?? 'Custom'}
 								</span>
 							</div>
@@ -2837,7 +3180,7 @@
 										>
 											<shape.icon size={12} />
 										</span>
-										<span class={`[font-weight:var(--font-weight-label,500)] ${active ? 'text-foreground' : ''}`}>
+										<span class={`[font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] ${active ? 'text-foreground' : ''}`}>
 											{shape.name}
 										</span>
 									</button>
@@ -2867,8 +3210,8 @@
 
 						<section class="flex flex-col gap-2">
 							<div class="flex items-baseline justify-between">
-								<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">Easing</p>
-								<span class="text-[0.65rem] [font-weight:var(--font-weight-body,400)] text-foreground-muted/70">{currentEasing.label}</span>
+								<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Easing</p>
+								<span class="text-[0.65rem] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted/70">{currentEasing.label}</span>
 							</div>
 							<Select.Root value={editorTheme.motion.panelEasing ?? defaultEasing} class="">
 								<Select.Trigger class="h-9 w-full text-[0.82rem]" variant="outlined">
@@ -2883,7 +3226,7 @@
 											onclick={() => updateEasing(opt.value)}
 										>
 											<span class="flex w-full items-center justify-between gap-3">
-												<span class="[font-weight:var(--font-weight-label,500)]">{opt.label}</span>
+												<span class="[font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]">{opt.label}</span>
 												<code class="font-mono text-[0.66rem] text-foreground-muted">{opt.value}</code>
 											</span>
 										</Select.Item>
@@ -2894,15 +3237,76 @@
 						</section>
 					</Tabs.Content>
 
+					<!-- PADDING TAB -->
+					<Tabs.Content value="padding" class="flex flex-col gap-5 p-3.5">
+						<div class="flex flex-col gap-1">
+							<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Spacing & sizing</p>
+							<p class="m-0 text-[0.72rem] text-foreground-muted/80">Every control is a live token. Hover a value to copy.</p>
+						</div>
+
+						{#each spacingGroups as group, gi (group.title)}
+							{#if gi > 0}
+								<div class="border-t border-border/60"></div>
+							{/if}
+							<section class="flex flex-col gap-3">
+								<div class="flex items-center justify-between">
+									<span class="text-[0.7rem] uppercase [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted/80">{group.title}</span>
+									<span class="text-[0.62rem] font-mono text-foreground-muted/60">px</span>
+								</div>
+								<div class="flex flex-col gap-3">
+									{#each group.fields as field (field.key)}
+										{@const spacing = resolveSpacing(editorTheme.spacing)}
+										{@const value = spacing[field.key]}
+										<div class="flex flex-col gap-2">
+											<div class="flex items-baseline justify-between gap-2">
+												<span class="text-[0.76rem] text-foreground">{field.label}</span>
+												<span class="rounded bg-secondary/60 px-1.5 py-0.5 font-mono text-[0.66rem] text-foreground-muted">{value}</span>
+											</div>
+											<Slider
+												min={field.min}
+												max={field.max}
+												step={1}
+												value={value}
+												onValueChange={(v: number) => updateSpacing(field.key, v)}
+												label={field.label}
+											/>
+										</div>
+									{/each}
+								</div>
+							</section>
+						{/each}
+
+						<div class="border-t border-border/60"></div>
+
+						<section class="flex flex-col gap-2 rounded-[var(--radius-md)] border border-border bg-background/40 p-3">
+							<p class="m-0 text-[0.66rem] uppercase [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted/80">Live preview</p>
+							<div class="flex flex-wrap items-center gap-2">
+								<Button size="sm">Small</Button>
+								<Button>Default</Button>
+								<Button size="lg">Large</Button>
+							</div>
+							<div class="flex flex-wrap items-center gap-1.5">
+								<Badge>Live</Badge>
+								<Badge variant="secondary">Draft</Badge>
+								<Badge variant="outlined">Beta</Badge>
+							</div>
+							<Input placeholder="Field preview" variant="outlined" />
+							<div class="flex items-center justify-between rounded-[var(--radius-md)] border border-border bg-card px-3 py-2">
+								<span class="text-[0.78rem]">Toggle preview</span>
+								<Switch switched={true} aria-label="Switch preview" />
+							</div>
+						</section>
+					</Tabs.Content>
+
 					<!-- PRESETS TAB -->
 					<Tabs.Content value="presets" class="flex flex-col gap-3.5 p-3.5">
 						{#if savedThemes.length > 0}
 							<section class="flex flex-col gap-2">
 								<div class="flex items-center justify-between">
-									<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">
+									<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">
 										Saved locally
 									</p>
-									<span class="text-[0.65rem] [font-weight:var(--font-weight-body,400)] text-foreground-muted/70"
+									<span class="text-[0.65rem] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted/70"
 										>{savedThemes.length}
 										{savedThemes.length === 1 ? 'theme' : 'themes'}</span
 									>
@@ -2937,7 +3341,7 @@
 												></span>
 											</div>
 											<div class="relative min-w-0 flex-1">
-												<p class="m-0 truncate text-[0.8rem] [font-weight:var(--font-weight-label,500)]">{preset.name}</p>
+												<p class="m-0 truncate text-[0.8rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]">{preset.name}</p>
 												<p class="m-0 truncate text-[0.68rem] text-foreground-muted">
 													Saved {new Date(preset.savedAt).toLocaleDateString(undefined, {
 														month: 'short',
@@ -2960,7 +3364,7 @@
 						{/if}
 
 						<section class="flex flex-col gap-2">
-							<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">
+							<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">
 								Catalog
 							</p>
 							<div class="flex flex-col gap-1">
@@ -2977,7 +3381,7 @@
 											<span class="size-5 rounded-md ring-1 ring-border/60" style={`background:${preset.dark.primary};`}></span>
 										</div>
 										<div class="min-w-0 flex-1">
-											<p class="m-0 truncate text-[0.8rem] [font-weight:var(--font-weight-label,500)]">{preset.name}</p>
+											<p class="m-0 truncate text-[0.8rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]">{preset.name}</p>
 											<p class="m-0 truncate text-[0.68rem] text-foreground-muted">
 												{preset.description ?? 'Custom theme preset'}
 											</p>
@@ -3036,7 +3440,7 @@
 							{#each paletteGroups as group}
 								<section class="flex flex-col gap-2">
 									<p
-										class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted"
+										class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
 									>
 										{group.title}
 									</p>
@@ -3086,7 +3490,7 @@
 				<div class="flex flex-col gap-1">
 					<Dialog.Title>Remove from library?</Dialog.Title>
 					<Dialog.Description>
-						<span class="[font-weight:var(--font-weight-label,500)] text-foreground">{removeSavedTarget?.name ?? ''}</span>
+						<span class="[font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground">{removeSavedTarget?.name ?? ''}</span>
 						will be deleted from your local saved themes.
 					</Dialog.Description>
 				</div>
@@ -3129,9 +3533,9 @@
 					<Dialog.Title>Save changes first?</Dialog.Title>
 					<Dialog.Description>
 						You have unsaved tweaks to
-						<span class="[font-weight:var(--font-weight-label,500)] text-foreground">{editorName || 'this theme'}</span>.
+						<span class="[font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground">{editorName || 'this theme'}</span>.
 						Loading
-						<span class="[font-weight:var(--font-weight-label,500)] text-foreground"
+						<span class="[font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground"
 							>{pendingThemeLoad?.name ?? 'another theme'}</span
 						>
 						will replace them.
@@ -3205,7 +3609,7 @@
 			<div class="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto px-5 py-4">
 				<section class="flex flex-col gap-2">
 					<p
-						class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted"
+						class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
 					>
 						Durations
 					</p>
@@ -3214,7 +3618,7 @@
 							{@const value = durationToMs(editorTheme.motion[field.key])}
 							<label class="flex flex-col gap-1.5">
 								<div class="flex items-baseline justify-between gap-2">
-									<span class="text-[0.74rem] [font-weight:var(--font-weight-label,500)] text-foreground">{field.label}</span>
+									<span class="text-[0.74rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground">{field.label}</span>
 									<span
 										class="rounded-md bg-secondary/60 px-1.5 py-0.5 font-mono text-[0.68rem] text-foreground"
 									>
@@ -3242,7 +3646,7 @@
 
 				<section class="flex flex-col gap-2">
 					<p
-						class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted"
+						class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
 					>
 						Transition
 					</p>
@@ -3257,11 +3661,11 @@
 								: String(numericValue)}
 							<label class="flex flex-col gap-1.5">
 								<div class="flex items-baseline justify-between gap-2">
-									<span class="flex items-center gap-1.5 text-[0.74rem] [font-weight:var(--font-weight-label,500)] text-foreground">
+									<span class="flex items-center gap-1.5 text-[0.74rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground">
 										{field.label}
 										{#if field.experimental}
 											<span
-												class="rounded-full border border-border bg-secondary/40 px-1.5 py-0.5 text-[0.6rem] [font-weight:var(--font-weight-label,500)] uppercase tracking-wide text-foreground-muted"
+												class="rounded-full border border-border bg-secondary/40 px-1.5 py-0.5 text-[0.6rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted"
 											>
 												Experimental
 											</span>

@@ -231,16 +231,16 @@
 <div class="mt-16 min-h-[calc(100vh-4rem)] bg-background">
 	<!-- ─── Hero ─── -->
 	<section class="border-b border-border/60">
-		<div class="mx-auto flex w-full max-w-[1280px] flex-col gap-8 px-4 py-14 md:px-8 md:py-20">
-			<div class="flex flex-col gap-3">
+		<div class="mx-auto flex w-full max-w-[1440px] flex-col gap-8 px-4 py-14 md:px-8 md:py-20">
+			<div class="mx-auto flex w-full max-w-[44rem] flex-col items-center gap-3 text-center">
 				<div
-					class="inline-flex w-fit items-center gap-1.5 rounded-full border border-border/80 bg-card/60 px-2.5 py-1 text-[0.7rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted backdrop-blur"
+					class="inline-flex w-fit items-center gap-1.5 rounded-full border border-border/80 bg-card/60 px-2.5 py-1 text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted backdrop-blur"
 				>
 					<Sparkles size={11} class="text-primary" />
 					Community registry
 				</div>
 				<h1
-					class="m-0 text-[2.4rem] [font-weight:var(--font-weight-label,500)] leading-[1.05] tracking-tight md:text-[3rem]"
+					class="m-0 text-[2.9rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] leading-[1.05] tracking-tight md:text-[3.6rem]"
 					style="font-family: var(--font-header);"
 				>
 					Themes from the community.
@@ -251,7 +251,7 @@
 				</p>
 			</div>
 
-			<div class="flex flex-col items-stretch gap-2.5 sm:flex-row sm:items-center">
+			<div class="mx-auto flex w-full max-w-[44rem] flex-col items-stretch gap-2.5 sm:flex-row sm:items-center">
 				<div class="relative flex-1">
 					<Search
 						size={14}
@@ -296,7 +296,7 @@
 				</div>
 			</div>
 
-			<div class="flex flex-wrap items-center gap-3 text-[0.78rem] text-foreground-muted">
+			<div class="mx-auto flex w-full max-w-[44rem] flex-wrap items-center justify-center gap-3 text-[0.78rem] text-foreground-muted">
 				{#if loading}
 					<span class="inline-flex items-center gap-2">
 						<span class="size-1.5 animate-pulse rounded-full bg-foreground-muted"></span>
@@ -304,13 +304,13 @@
 					</span>
 				{:else}
 					<span>
-						<span class="[font-weight:var(--font-weight-label,600)] text-foreground">{themes.length}</span>
+						<span class="[font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)] text-foreground">{themes.length}</span>
 						{themes.length === 1 ? 'theme' : 'themes'} in the registry
 					</span>
 					{#if searchQuery.trim()}
 						<span aria-hidden="true">·</span>
 						<span>
-							<span class="[font-weight:var(--font-weight-label,600)] text-foreground">{filteredThemes.length}</span> matching
+							<span class="[font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)] text-foreground">{filteredThemes.length}</span> matching
 							"{searchQuery.trim()}"
 						</span>
 					{/if}
@@ -320,7 +320,7 @@
 	</section>
 
 	<!-- ─── Grid ─── -->
-	<section class="mx-auto w-full max-w-[1280px] px-4 py-10 md:px-8 md:py-14">
+	<section class="mx-auto w-full max-w-[1440px] px-4 py-10 md:px-8 md:py-14">
 		{#if loading}
 			<ul
 				class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
@@ -394,7 +394,7 @@
 					<Inbox size={20} />
 				</div>
 				<div class="flex flex-col gap-1">
-					<p class="m-0 text-[1rem] [font-weight:var(--font-weight-label,500)]">No themes match your search</p>
+					<p class="m-0 text-[1rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]">No themes match your search</p>
 					<p class="m-0 text-[0.84rem] text-foreground-muted">
 						{searchQuery.trim()
 							? 'Try a different keyword, or clear your search.'
@@ -434,7 +434,7 @@
 								style={`background:${theme.light.background};color:${theme.light.foreground};`}
 							>
 								<div class="flex items-center justify-between">
-									<span class="inline-flex items-center gap-1 text-[0.62rem] [font-weight:var(--font-weight-label,500)] opacity-70">
+									<span class="inline-flex items-center gap-1 text-[0.62rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] opacity-70">
 										<Sun size={10} />
 										Light
 									</span>
@@ -467,7 +467,7 @@
 									></span>
 								</div>
 								<span
-									class="truncate text-[0.7rem] [font-weight:var(--font-weight-label,500)]"
+									class="truncate text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]"
 									style={`font-family:${theme.fontHeader};`}
 								>
 									Aa Bb · 123
@@ -479,7 +479,7 @@
 								style={`background:${theme.dark.background};color:${theme.dark.foreground};`}
 							>
 								<div class="flex items-center justify-between">
-									<span class="inline-flex items-center gap-1 text-[0.62rem] [font-weight:var(--font-weight-label,500)] opacity-70">
+									<span class="inline-flex items-center gap-1 text-[0.62rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] opacity-70">
 										<Moon size={10} />
 										Dark
 									</span>
@@ -512,7 +512,7 @@
 									></span>
 								</div>
 								<span
-									class="truncate text-[0.7rem] [font-weight:var(--font-weight-label,500)]"
+									class="truncate text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]"
 									style={`font-family:${theme.fontHeader};`}
 								>
 									Aa Bb · 123
@@ -525,7 +525,7 @@
 							<div class="flex items-start justify-between gap-2">
 								<div class="min-w-0">
 									<h3
-										class="m-0 truncate text-[1rem] [font-weight:var(--font-weight-label,500)] leading-tight tracking-tight"
+										class="m-0 truncate text-[1rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] leading-tight tracking-tight"
 										style="font-family: var(--font-header);"
 									>
 										{theme.name}
@@ -614,7 +614,7 @@
 								<button
 									type="button"
 									onclick={() => (previewMode = 'light')}
-									class={`inline-flex h-6 items-center gap-1 rounded-full px-2 text-[0.72rem] [font-weight:var(--font-weight-label,500)] transition-colors ${previewMode === 'light' ? '' : 'opacity-60'}`}
+									class={`inline-flex h-6 items-center gap-1 rounded-full px-2 text-[0.72rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] transition-colors ${previewMode === 'light' ? '' : 'opacity-60'}`}
 									style={previewMode === 'light' ? 'background: var(--color-secondary); color: var(--color-foreground);' : 'color: var(--color-foreground-muted);'}
 								>
 									<Sun size={11} />Light
@@ -622,7 +622,7 @@
 								<button
 									type="button"
 									onclick={() => (previewMode = 'dark')}
-									class={`inline-flex h-6 items-center gap-1 rounded-full px-2 text-[0.72rem] [font-weight:var(--font-weight-label,500)] transition-colors ${previewMode === 'dark' ? '' : 'opacity-60'}`}
+									class={`inline-flex h-6 items-center gap-1 rounded-full px-2 text-[0.72rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] transition-colors ${previewMode === 'dark' ? '' : 'opacity-60'}`}
 									style={previewMode === 'dark' ? 'background: var(--color-secondary); color: var(--color-foreground);' : 'color: var(--color-foreground-muted);'}
 								>
 									<Moon size={11} />Dark
@@ -633,7 +633,7 @@
 						<div class="flex-1 px-6 py-6" style="background: var(--color-background); color: var(--color-foreground);">
 							<!-- Title slab -->
 							<div class="mb-6 flex flex-col gap-2">
-								<h2 class="m-0 text-[1.7rem] [font-weight:var(--font-weight-label,500)] leading-tight tracking-[-0.025em]" style="font-family: var(--font-header);">{t.name}</h2>
+								<h2 class="m-0 text-[1.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] leading-tight tracking-[-0.025em]" style="font-family: var(--font-header);">{t.name}</h2>
 								<p class="m-0 max-w-[44rem] text-[0.92rem] leading-relaxed" style="color: var(--color-foreground-muted);">{t.description}</p>
 							</div>
 
@@ -661,7 +661,7 @@
 									<div class="flex items-center gap-2.5">
 										<Avatar.Root size="md"><Avatar.Fallback>AN</Avatar.Fallback></Avatar.Root>
 										<div class="flex flex-col leading-tight">
-											<span class="text-[0.86rem] [font-weight:var(--font-weight-label,500)]" style="color: var(--color-foreground);">Aidan Neel</span>
+											<span class="text-[0.86rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]" style="color: var(--color-foreground);">Aidan Neel</span>
 											<span class="text-[0.74rem]" style="color: var(--color-foreground-muted);">aidan@silk-ui.dev</span>
 										</div>
 										<Badge variant="primary" class="ml-auto px-2 text-[0.66rem]">Pro</Badge>
@@ -680,14 +680,14 @@
 								</div>
 
 								<div class="flex flex-col gap-2.5 rounded-[var(--radius-md)] border p-4" style="border-color: var(--color-border); background: var(--color-card);">
-									<div class="text-[0.78rem] [font-weight:var(--font-weight-label,500)]" style="color: var(--color-foreground);">Buttons</div>
+									<div class="text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]" style="color: var(--color-foreground);">Buttons</div>
 									<div class="flex flex-wrap gap-1.5">
 										<Button size="sm" class="h-7 text-[0.74rem]">Primary</Button>
 										<Button size="sm" variant="secondary" class="h-7 text-[0.74rem]">Secondary</Button>
 										<Button size="sm" variant="outlined" class="h-7 text-[0.74rem]">Outlined</Button>
 										<Button size="sm" variant="ghost" class="h-7 text-[0.74rem]">Ghost</Button>
 									</div>
-									<div class="text-[0.78rem] [font-weight:var(--font-weight-label,500)] pt-1" style="color: var(--color-foreground);">Badges</div>
+									<div class="text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] pt-1" style="color: var(--color-foreground);">Badges</div>
 									<div class="flex flex-wrap gap-1.5">
 										<Badge variant="primary" class="px-2 text-[0.66rem]">Primary</Badge>
 										<Badge variant="outlined" class="px-2 text-[0.66rem]">Outlined</Badge>
@@ -715,7 +715,7 @@
 					<aside class="flex min-h-0 flex-col overflow-hidden border-l border-border bg-card max-md:border-l-0 max-md:border-t">
 						<header class="flex items-start justify-between gap-2 border-b border-border px-5 py-4">
 							<div class="flex min-w-0 flex-col gap-1">
-								<h3 class="m-0 truncate text-[1rem] [font-weight:var(--font-weight-label,500)] tracking-tight" style="font-family: var(--font-header);">{t.name}</h3>
+								<h3 class="m-0 truncate text-[1rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight" style="font-family: var(--font-header);">{t.name}</h3>
 								<p class="m-0 truncate text-[0.74rem] text-foreground-muted">by {t.publisher?.trim() || 'Anonymous'}</p>
 							</div>
 							<Dialog.Exit variant="ghost" size="icon" class="size-8 shrink-0" aria-label="Close">
@@ -727,23 +727,23 @@
 							<!-- Meta grid -->
 							<dl class="grid grid-cols-2 gap-x-3 gap-y-3 text-[0.78rem]">
 								<div class="flex flex-col gap-0.5">
-									<dt class="text-[0.74rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">Slug</dt>
+									<dt class="text-[0.74rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Slug</dt>
 									<dd class="m-0 font-mono text-foreground">{t.slug}</dd>
 								</div>
 								<div class="flex flex-col gap-0.5">
-									<dt class="text-[0.74rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">Published</dt>
+									<dt class="text-[0.74rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Published</dt>
 									<dd class="m-0 text-foreground">{formatPublishedDate(t.createdAt)}</dd>
 								</div>
 								<div class="flex flex-col gap-0.5">
-									<dt class="text-[0.74rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">Motion</dt>
+									<dt class="text-[0.74rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Motion</dt>
 									<dd class="m-0 inline-flex items-center gap-1 text-foreground"><Zap size={11} class="text-foreground-muted" />{t.durationPreset}</dd>
 								</div>
 								<div class="flex flex-col gap-0.5">
-									<dt class="text-[0.74rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">Radius</dt>
+									<dt class="text-[0.74rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Radius</dt>
 									<dd class="m-0 font-mono text-foreground">{t.radiusLg}</dd>
 								</div>
 								<div class="col-span-2 flex flex-col gap-0.5">
-									<dt class="text-[0.74rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">Fonts</dt>
+									<dt class="text-[0.74rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Fonts</dt>
 									<dd class="m-0 inline-flex items-center gap-1.5 text-foreground"><Type size={11} class="text-foreground-muted" />{fontPrimaryLabel(t.fontHeader)} · {fontPrimaryLabel(t.fontSans)}</dd>
 								</div>
 							</dl>
@@ -762,7 +762,7 @@
 									<ArrowUpRight size={12} class="ml-auto" />
 								</Button>
 
-								<div class="my-1 text-[0.74rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">Export</div>
+								<div class="my-1 text-[0.74rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Export</div>
 
 								<Button variant="ghost" class="justify-start gap-2" onclick={() => copyValue(detailCss, 'css', 'CSS')}>
 									{#if copiedKey === 'css'}<Check size={14} class="text-[var(--color-success)]" />{:else}<FileCode size={14} />{/if}

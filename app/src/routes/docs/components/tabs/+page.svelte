@@ -66,14 +66,14 @@
 		<Badge variant="outlined" class="text-[0.66rem]">v0.4.2</Badge>
 		<Badge variant="ghost" class="text-[0.66rem]">Sliding indicator</Badge>
 		</div>
-		<a href={SOURCE} target="_blank" rel="noreferrer noopener" class="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2.5 py-1 text-[0.7rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted transition-colors hover:bg-secondary/60 hover:text-foreground">
+		<a href={SOURCE} target="_blank" rel="noreferrer noopener" class="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2.5 py-1 text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted transition-colors hover:bg-secondary/60 hover:text-foreground">
 			View source
 			<External size={11} />
 		</a>
 	</div>
 
 	<div class="flex flex-col gap-3">
-		<h1 class="m-0 text-[2.6rem] [font-weight:var(--font-weight-label,500)] leading-[1] tracking-[-0.035em] md:text-[3rem]" style="font-family: var(--font-header);">Tabs</h1>
+		<h1 class="m-0 text-[2.6rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] leading-[1] tracking-[-0.035em] md:text-[3rem]" style="font-family: var(--font-header);">Tabs</h1>
 		<p class="m-0 max-w-[42rem] text-[1rem] leading-relaxed text-foreground-muted">
 			A peer-level switcher for views that share a context. The sliding indicator's speed comes
 			from your theme's motion preset — change the preset, the tabs follow.
@@ -127,7 +127,7 @@
 				<Sparkles size={12} />
 			</span>
 			<h2
-				class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] tracking-tight"
+				class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
 				style="font-family: var(--font-header);"
 			>
 				Real-world examples
@@ -142,9 +142,9 @@
 	<div class="flex flex-col gap-3 rounded-[var(--radius-lg)] border border-border bg-card p-5">
 		<div class="flex items-center justify-between gap-3 max-sm:flex-col max-sm:items-start">
 			<div>
-				<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">Project activity</p>
+				<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Project activity</p>
 				<p
-					class="m-0 mt-0.5 text-[1.05rem] [font-weight:var(--font-weight-label,500)] tracking-tight"
+					class="m-0 mt-0.5 text-[1.05rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
 					style="font-family: var(--font-header);"
 				>
 					silk-ui / dashboard
@@ -164,7 +164,7 @@
 					{#each [{ label: 'Open issues', value: '23', tone: 'text-[var(--color-warning)]' }, { label: 'Merged this week', value: '47', tone: 'text-[var(--color-success)]' }, { label: 'Build status', value: 'Passing', tone: 'text-[var(--color-success)]' }] as stat}
 						<div class="rounded-[var(--radius-md)] border border-border bg-background/40 p-3">
 							<p class="m-0 text-[0.7rem] text-foreground-muted">{stat.label}</p>
-							<p class="m-0 mt-1 text-[1.4rem] [font-weight:var(--font-weight-label,600)] tracking-tight {stat.tone}">
+							<p class="m-0 mt-1 text-[1.4rem] [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)] tracking-tight {stat.tone}">
 								{stat.value}
 							</p>
 						</div>
@@ -198,7 +198,7 @@
 	<!-- Billing period -->
 	<div class="grid grid-cols-1 gap-3 md:grid-cols-2">
 		<div class="flex flex-col gap-3 rounded-[var(--radius-lg)] border border-border bg-card p-5">
-			<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">Billing period</p>
+			<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Billing period</p>
 			<Tabs.Root bind:value={billingPeriod}>
 				<Tabs.List>
 					<Tabs.Trigger value="monthly">Monthly</Tabs.Trigger>
@@ -207,7 +207,7 @@
 			</Tabs.Root>
 			<div class="flex items-baseline gap-1.5">
 				<span
-					class="text-[2.4rem] [font-weight:var(--font-weight-label,500)] tracking-tight"
+					class="text-[2.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
 					style="font-family: var(--font-header);"
 				>
 					{billingPeriod === 'monthly' ? '$24' : '$19'}
@@ -223,7 +223,7 @@
 
 		<!-- Settings -->
 		<div class="flex flex-col gap-3 rounded-[var(--radius-lg)] border border-border bg-card p-5">
-			<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted">Settings</p>
+			<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Settings</p>
 			<Tabs.Root bind:value={settingsTab}>
 				<Tabs.List>
 					<Tabs.Trigger value="general">General</Tabs.Trigger>
@@ -250,13 +250,13 @@
 
 <div class="flex flex-col gap-16 pt-16">
 	<section class="scroll-mt-20 flex flex-col gap-5">
-		<div class="flex items-center gap-2"><span class="grid size-6 place-items-center rounded-md bg-primary/10 text-primary"><Hash size={12} /></span><h2 class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] tracking-tight" style="font-family: var(--font-header);">API</h2></div>
+		<div class="flex items-center gap-2"><span class="grid size-6 place-items-center rounded-md bg-primary/10 text-primary"><Hash size={12} /></span><h2 class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight" style="font-family: var(--font-header);">API</h2></div>
 
 		<div class="overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card">
 			<ul class="flex flex-col divide-y divide-border/60">
 				{#each apiRows as row}
 					<li class="grid grid-cols-[1fr_1.4fr_0.6fr] gap-3 px-4 py-3 max-md:grid-cols-1">
-						<div class="flex flex-col gap-1"><code class="font-mono text-[0.7rem] text-foreground-muted">Tabs.{row.component}</code><code class="font-mono text-[0.82rem] [font-weight:var(--font-weight-label,600)]">{row.prop}</code></div>
+						<div class="flex flex-col gap-1"><code class="font-mono text-[0.7rem] text-foreground-muted">Tabs.{row.component}</code><code class="font-mono text-[0.82rem] [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)]">{row.prop}</code></div>
 						<div class="flex flex-col gap-1"><code class="overflow-x-auto rounded-md bg-secondary/40 px-2 py-1 font-mono text-[0.74rem] text-foreground">{row.type}</code><p class="m-0 text-[0.78rem] leading-snug text-foreground-muted">{row.description}</p></div>
 						<div class="md:text-right"><code class="inline-block rounded-md bg-secondary/40 px-2 py-1 font-mono text-[0.72rem]">{row.default}</code></div>
 					</li>
@@ -267,7 +267,7 @@
 
 	<section class="flex flex-col items-start justify-between gap-4 rounded-[var(--radius-lg)] border border-border bg-card p-6 sm:flex-row sm:items-center">
 		<div class="flex flex-col gap-1">
-			<p class="m-0 text-[1rem] [font-weight:var(--font-weight-label,500)] tracking-tight" style="font-family: var(--font-header);">Want to make it yours?</p>
+			<p class="m-0 text-[1rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight" style="font-family: var(--font-header);">Want to make it yours?</p>
 			<p class="m-0 text-[0.86rem] text-foreground-muted">Every Silk component reads from your theme tokens — open the studio to restyle them.</p>
 		</div>
 		<Button href="/themes/studio">Open theme studio<ArrowRight size={14} /></Button>

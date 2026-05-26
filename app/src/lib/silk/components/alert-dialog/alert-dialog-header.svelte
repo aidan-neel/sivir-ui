@@ -10,7 +10,7 @@
 	{...rest}
 	class={cn(
 		className,
-		'flex flex-col gap-2 px-[var(--panel-padding-lg)] py-[var(--panel-padding-lg)]'
+		'flex flex-col gap-[var(--modal-title-description-gap,6px)]'
 	)}
 >
 	{@render children?.()}

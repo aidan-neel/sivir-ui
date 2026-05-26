@@ -36,7 +36,7 @@
 
 <label class="flex flex-col gap-1">
 	{#if label}
-		<span class="text-[length:var(--text-sm)] [font-weight:var(--font-weight-body,400)] text-foreground [font-family:var(--font-sans),sans-serif]">{label}</span>
+		<span class="text-[length:var(--text-sm)] [font-size:var(--font-size-body,16px)] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground [font-family:var(--font-sans),sans-serif]">{label}</span>
 	{/if}
 
 	{#if type === 'file'}
@@ -77,6 +77,6 @@
 	{/if}
 
 	{#if description}
-		<span class="text-sm [font-weight:var(--font-weight-body,400)] text-foreground-muted">{description}</span>
+		<span class="[font-size:var(--font-size-body,16px)] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted">{description}</span>
 	{/if}
 </label>

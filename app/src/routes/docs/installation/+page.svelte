@@ -81,7 +81,7 @@
 
 	<div class="flex flex-col gap-3">
 		<h1
-			class="m-0 text-[2.6rem] [font-weight:var(--font-weight-label,500)] leading-[1.02] tracking-[-0.04em] md:text-[3rem]"
+			class="m-0 text-[2.6rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] leading-[1.02] tracking-[-0.04em] md:text-[3rem]"
 			style="font-family: var(--font-header);"
 		>
 			Five commands from zero to shipping.
@@ -101,12 +101,12 @@
 		>
 			<div class="flex shrink-0 items-start gap-3 md:w-48">
 				<span
-					class="grid size-8 shrink-0 place-items-center rounded-full bg-primary/12 font-mono text-[0.8rem] [font-weight:var(--font-weight-label,600)] text-primary"
+					class="grid size-8 shrink-0 place-items-center rounded-full bg-primary/12 font-mono text-[0.8rem] [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)] text-primary"
 				>
 					{step.id}
 				</span>
 				<p
-					class="m-0 pt-1 text-[0.94rem] [font-weight:var(--font-weight-label,500)] leading-tight tracking-tight"
+					class="m-0 pt-1 text-[0.94rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] leading-tight tracking-tight"
 					style="font-family: var(--font-header);"
 				>
 					{step.title}
@@ -118,7 +118,7 @@
 					<div
 						class="flex items-center justify-between gap-2 border-b border-border/70 px-3 py-1.5"
 					>
-						<span class="inline-flex items-center gap-1.5 text-[0.66rem] [font-weight:var(--font-weight-label,500)] uppercase tracking-wide text-foreground-muted">
+						<span class="inline-flex items-center gap-1.5 text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted">
 							<Terminal size={11} />
 							{step.lang}
 						</span>
@@ -169,7 +169,7 @@
 	class="mt-10 flex flex-col items-start justify-between gap-4 rounded-[var(--radius-lg)] border border-border bg-card p-6 sm:flex-row sm:items-center"
 >
 	<div class="flex flex-col gap-1">
-		<p class="m-0 text-[1rem] [font-weight:var(--font-weight-label,500)] tracking-tight" style="font-family: var(--font-header);">
+		<p class="m-0 text-[1rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight" style="font-family: var(--font-header);">
 			You're set. Pick a starting point.
 		</p>
 		<p class="m-0 text-[0.86rem] text-foreground-muted">

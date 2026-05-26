@@ -26,7 +26,7 @@
 	aria-haspopup="listbox"
 	aria-controls={`popover-${String(key)}-content`}
 	aria-expanded={uiState.open}
-	class={cn(classProp, `flex flex-row justify-between items-center px-3 [font-weight:var(--font-weight-button,500)]`)}
+	class={cn(classProp, `flex flex-row justify-between items-center px-[var(--field-padding-x)] [font-weight:var(--font-weight-button,500)] [letter-spacing:var(--tracking-button,0em)]`)}
 >
 	{#if uiState.selected?.label}
 		{uiState.selected?.label}

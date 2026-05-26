@@ -57,7 +57,7 @@
 			onanimationend={onAnimationEnd}
 			class={cn(
 				className,
-				`silk-sheet-panel bg-[var(--color-overlay-bg)] text-[var(--color-foreground)] shadow-[var(--panel-shadow)] p-[var(--panel-padding-lg)] border border-border rounded-[var(--radius-lg)] fixed top-2 bottom-2 z-50 flex w-[calc(100%-1rem)] max-w-[25rem] flex-col overflow-y-auto overscroll-contain ${
+				`silk-sheet-panel bg-[var(--color-overlay-bg)] text-[var(--color-foreground)] shadow-[var(--panel-shadow)] p-[var(--sheet-body-padding,16px)] border border-border rounded-[var(--radius-lg)] fixed top-2 bottom-2 z-50 flex w-[calc(100%-1rem)] max-w-[25rem] flex-col overflow-y-auto overscroll-contain ${
 					side === 'left' ? 'left-2' : 'right-2'
 				}`
 			)}

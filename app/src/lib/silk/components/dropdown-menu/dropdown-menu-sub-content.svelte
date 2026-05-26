@@ -13,6 +13,6 @@
     let props: Props = $props();
 </script>
 
-<Popover.Content portal={false} data-ui="dropdown-submenu-content" class={cn(props.class, "bg-[var(--color-panel)] text-[var(--color-panel-foreground)] border border-border rounded-[var(--radius-lg)] shadow-outlined p-1")}>
+<Popover.Content portal={false} data-ui="dropdown-submenu-content" class={cn(props.class, "bg-[var(--color-panel)] text-[var(--color-panel-foreground)] border border-border rounded-[var(--radius-lg)] shadow-[var(--panel-shadow)] p-[var(--menu-padding)] flex flex-col gap-0")}>
     {@render props.children?.()}
 </Popover.Content>

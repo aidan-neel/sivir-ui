@@ -26,7 +26,7 @@
 <span
 	data-ui="avatar"
 	class={cn(
-		'relative inline-flex shrink-0 select-none items-center justify-center overflow-hidden bg-secondary text-foreground-muted [font-weight:var(--font-weight-body,400)]',
+		'relative inline-flex shrink-0 select-none items-center justify-center overflow-hidden bg-secondary text-foreground-muted [font-size:var(--font-size-body,16px)] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)]',
 		shape === 'circle' ? 'rounded-full' : 'rounded-[var(--radius-md)]',
 		sizes[size] ?? sizes.md,
 		className

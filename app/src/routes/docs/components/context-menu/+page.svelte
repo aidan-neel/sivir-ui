@@ -69,14 +69,14 @@
 		<Badge variant="outlined" class="text-[0.66rem]">v0.4.2</Badge>
 		<Badge variant="ghost" class="text-[0.66rem]">Right-click</Badge>
 		</div>
-		<a href={SOURCE} target="_blank" rel="noreferrer noopener" class="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2.5 py-1 text-[0.7rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted transition-colors hover:bg-secondary/60 hover:text-foreground">
+		<a href={SOURCE} target="_blank" rel="noreferrer noopener" class="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2.5 py-1 text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted transition-colors hover:bg-secondary/60 hover:text-foreground">
 			View source
 			<External size={11} />
 		</a>
 	</div>
 
 	<div class="flex flex-col gap-3">
-		<h1 class="m-0 text-[2.6rem] [font-weight:var(--font-weight-label,500)] leading-[1] tracking-[-0.035em] md:text-[3rem]" style="font-family: var(--font-header);">Context Menu</h1>
+		<h1 class="m-0 text-[2.6rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] leading-[1] tracking-[-0.035em] md:text-[3rem]" style="font-family: var(--font-header);">Context Menu</h1>
 		<p class="m-0 max-w-[42rem] text-[1rem] leading-relaxed text-foreground-muted">
 			A right-click menu for actions that apply to whatever the user clicked on. Same item
 			grammar as DropdownMenu — the only difference is what opens it.
@@ -135,7 +135,7 @@
 			<span class="grid size-6 place-items-center rounded-md bg-primary/10 text-primary">
 				<Sparkles size={12} />
 			</span>
-			<h2 class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] tracking-tight" style="font-family: var(--font-header);">
+			<h2 class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight" style="font-family: var(--font-header);">
 				Real-world examples
 			</h2>
 		</div>
@@ -147,7 +147,7 @@
 	<div class="grid grid-cols-1 gap-3 md:grid-cols-3">
 		<!-- File row -->
 		<div class="flex flex-col gap-3 rounded-[var(--radius-lg)] border border-border bg-card p-4">
-			<span class="text-[0.7rem] [font-weight:var(--font-weight-label,500)] uppercase tracking-wide text-foreground-muted">
+			<span class="text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted">
 				File row
 			</span>
 			<ContextMenu.Root>
@@ -155,7 +155,7 @@
 					<div class="flex items-center gap-3 rounded-[var(--radius-md)] border border-dashed border-border bg-secondary/30 px-3 py-3 cursor-default">
 						<FileText size={14} class="text-foreground-muted" />
 						<div class="flex flex-col">
-							<span class="text-[0.84rem] [font-weight:var(--font-weight-label,500)]">brand-guidelines.fig</span>
+							<span class="text-[0.84rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]">brand-guidelines.fig</span>
 							<span class="text-[0.7rem] text-foreground-muted">Edited 2h ago · 4.2 MB</span>
 						</div>
 					</div>
@@ -187,7 +187,7 @@
 
 		<!-- Image -->
 		<div class="flex flex-col gap-3 rounded-[var(--radius-lg)] border border-border bg-card p-4">
-			<span class="text-[0.7rem] [font-weight:var(--font-weight-label,500)] uppercase tracking-wide text-foreground-muted">
+			<span class="text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted">
 				Image
 			</span>
 			<ContextMenu.Root>
@@ -213,20 +213,20 @@
 
 		<!-- Task card -->
 		<div class="flex flex-col gap-3 rounded-[var(--radius-lg)] border border-border bg-card p-4">
-			<span class="text-[0.7rem] [font-weight:var(--font-weight-label,500)] uppercase tracking-wide text-foreground-muted">
+			<span class="text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted">
 				Task card
 			</span>
 			<ContextMenu.Root>
 				<ContextMenu.Trigger>
 					<div class="flex flex-col gap-2 rounded-[var(--radius-md)] border border-border bg-background/40 p-3 cursor-default">
 						<div class="flex items-center justify-between gap-2">
-							<span class="text-[0.7rem] [font-weight:var(--font-weight-label,500)] uppercase text-foreground-muted">SLK-482</span>
+							<span class="text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase text-foreground-muted">SLK-482</span>
 							<span class="inline-flex items-center gap-1 text-[0.66rem] text-[var(--color-warning)]">
 								<span class="size-1.5 rounded-full bg-[var(--color-warning)]"></span>
 								In review
 							</span>
 						</div>
-						<p class="m-0 text-[0.84rem] [font-weight:var(--font-weight-label,500)] leading-snug">
+						<p class="m-0 text-[0.84rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] leading-snug">
 							Refactor toolbar to share Button primitives
 						</p>
 					</div>
@@ -248,7 +248,7 @@
 	<section class="scroll-mt-20 flex flex-col gap-5">
 		<div class="flex items-center gap-2">
 			<span class="grid size-6 place-items-center rounded-md bg-primary/10 text-primary"><Hash size={12} /></span>
-			<h2 class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] tracking-tight" style="font-family: var(--font-header);">API</h2>
+			<h2 class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight" style="font-family: var(--font-header);">API</h2>
 		</div>
 
 		<div class="overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card">
@@ -257,7 +257,7 @@
 					<li class="grid grid-cols-[1fr_1.4fr_0.6fr] gap-3 px-4 py-3 max-md:grid-cols-1">
 						<div class="flex flex-col gap-1">
 							<code class="font-mono text-[0.7rem] text-foreground-muted">ContextMenu.{row.component}</code>
-							<code class="font-mono text-[0.82rem] [font-weight:var(--font-weight-label,600)]">{row.prop}</code>
+							<code class="font-mono text-[0.82rem] [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)]">{row.prop}</code>
 						</div>
 						<div class="flex flex-col gap-1">
 							<code class="overflow-x-auto rounded-md bg-secondary/40 px-2 py-1 font-mono text-[0.74rem] text-foreground">{row.type}</code>
@@ -272,7 +272,7 @@
 
 	<section class="flex flex-col items-start justify-between gap-4 rounded-[var(--radius-lg)] border border-border bg-card p-6 sm:flex-row sm:items-center">
 		<div class="flex flex-col gap-1">
-			<p class="m-0 text-[1rem] [font-weight:var(--font-weight-label,500)] tracking-tight" style="font-family: var(--font-header);">Want to make it yours?</p>
+			<p class="m-0 text-[1rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight" style="font-family: var(--font-header);">Want to make it yours?</p>
 			<p class="m-0 text-[0.86rem] text-foreground-muted">Every Silk component reads from your theme tokens — open the studio to restyle them.</p>
 		</div>
 		<Button href="/themes/studio">Open theme studio<ArrowRight size={14} /></Button>

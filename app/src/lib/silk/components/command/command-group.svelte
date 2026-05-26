@@ -18,9 +18,9 @@
     let { children, class: className, heading, ...rest }: Props = $props();
 </script>
 
-<div {...rest} class="px-1 pt-1 flex flex-col">
+<div {...rest} class="px-[var(--menu-padding)] pt-[var(--menu-padding)] flex flex-col">
 	{#if uiState.searchContent === ''}
-		<p class={cn(className, 'text-[length:var(--text-xs)] [font-weight:var(--font-weight-label,500)] text-[var(--menu-label-foreground)] select-none px-2 pb-3 pt-1')}>
+		<p class={cn(className, 'text-[length:var(--text-xs)] [font-size:var(--font-size-label,14px)] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-[var(--menu-label-foreground)] select-none px-[var(--menu-label-padding-x)] py-[var(--menu-label-padding-y)]')}>
 			{heading}
 		</p>
 	{/if}

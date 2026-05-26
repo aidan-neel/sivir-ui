@@ -46,10 +46,10 @@
 			<Badge variant="outlined" icon={Component} iconSize={11} class="gap-1.5 text-[0.66rem]">Component</Badge>
 			<Badge variant="ghost" class="text-[0.66rem]">Image + Fallback</Badge>
 		</div>
-		<a href={SOURCE} target="_blank" rel="noreferrer noopener" class="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2.5 py-1 text-[0.7rem] [font-weight:var(--font-weight-label,500)] text-foreground-muted transition-colors hover:bg-secondary/60 hover:text-foreground">View source<External size={11} /></a>
+		<a href={SOURCE} target="_blank" rel="noreferrer noopener" class="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2.5 py-1 text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted transition-colors hover:bg-secondary/60 hover:text-foreground">View source<External size={11} /></a>
 	</div>
 	<div class="flex flex-col gap-3">
-		<h1 class="m-0 text-[2.6rem] [font-weight:var(--font-weight-label,500)] leading-[1] tracking-[-0.035em] md:text-[3rem]" style="font-family: var(--font-header);">{TITLE}</h1>
+		<h1 class="m-0 text-[2.6rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] leading-[1] tracking-[-0.035em] md:text-[3rem]" style="font-family: var(--font-header);">{TITLE}</h1>
 		<p class="m-0 max-w-[42rem] text-[1rem] leading-relaxed text-foreground-muted">Render an image with initials as a fallback. Comes in four sizes and two shapes.</p>
 	</div>
 	<div class="flex max-w-[28rem] items-stretch overflow-hidden rounded-[var(--radius-md)] border border-border bg-card">
@@ -78,12 +78,12 @@
 
 <div class="flex flex-col gap-16 pt-16">
 	<section class="scroll-mt-20 flex flex-col gap-5">
-		<div class="flex items-center gap-2"><span class="grid size-6 place-items-center rounded-md bg-primary/10 text-primary"><Hash size={12} /></span><h2 class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] tracking-tight" style="font-family: var(--font-header);">API</h2></div>
+		<div class="flex items-center gap-2"><span class="grid size-6 place-items-center rounded-md bg-primary/10 text-primary"><Hash size={12} /></span><h2 class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight" style="font-family: var(--font-header);">API</h2></div>
 		<div class="overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card">
 			<ul class="flex flex-col divide-y divide-border/60">
 				{#each apiRows as row}
 					<li class="grid grid-cols-[1fr_1.4fr_0.6fr] gap-3 px-4 py-3 max-md:grid-cols-1">
-						<div class="flex flex-col gap-1"><code class="font-mono text-[0.7rem] text-foreground-muted">Avatar.{row.component}</code><code class="font-mono text-[0.82rem] [font-weight:var(--font-weight-label,600)]">{row.prop}</code></div>
+						<div class="flex flex-col gap-1"><code class="font-mono text-[0.7rem] text-foreground-muted">Avatar.{row.component}</code><code class="font-mono text-[0.82rem] [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)]">{row.prop}</code></div>
 						<div class="flex flex-col gap-1"><code class="overflow-x-auto rounded-md bg-secondary/40 px-2 py-1 font-mono text-[0.74rem] text-foreground">{row.type}</code><p class="m-0 text-[0.78rem] leading-snug text-foreground-muted">{row.description}</p></div>
 						<div class="md:text-right"><code class="inline-block rounded-md bg-secondary/40 px-2 py-1 font-mono text-[0.72rem]">{row.default}</code></div>
 					</li>
@@ -92,7 +92,7 @@
 		</div>
 	</section>
 	<section class="flex flex-col items-start justify-between gap-4 rounded-[var(--radius-lg)] border border-border bg-card p-6 sm:flex-row sm:items-center">
-		<div class="flex flex-col gap-1"><p class="m-0 text-[1rem] [font-weight:var(--font-weight-label,500)] tracking-tight" style="font-family: var(--font-header);">Want to make it yours?</p><p class="m-0 text-[0.86rem] text-foreground-muted">Every Silk component reads from your theme tokens — open the studio to restyle them.</p></div>
+		<div class="flex flex-col gap-1"><p class="m-0 text-[1rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight" style="font-family: var(--font-header);">Want to make it yours?</p><p class="m-0 text-[0.86rem] text-foreground-muted">Every Silk component reads from your theme tokens — open the studio to restyle them.</p></div>
 		<Button href="/themes/studio">Open theme studio<ArrowRight size={14} /></Button>
 	</section>
 </div>

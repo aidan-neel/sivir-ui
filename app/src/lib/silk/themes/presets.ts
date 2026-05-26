@@ -52,14 +52,156 @@ export type ThemeTypography = {
 	weightButton: number;
 	/** Badge text. Default 500. */
 	weightBadge: number;
+	/** Header letter-spacing in em. Default -0.02. */
+	trackingHeader: number;
+	/** Body letter-spacing in em. Default 0. */
+	trackingBody: number;
+	/** Label letter-spacing in em. Default 0. */
+	trackingLabel: number;
+	/** Button letter-spacing in em. Default 0. */
+	trackingButton: number;
+	/** Badge letter-spacing in em. Default 0. */
+	trackingBadge: number;
+	/** Header font-size in px. Default 18. */
+	sizeHeader: number;
+	/** Body font-size in px. Default 16. */
+	sizeBody: number;
+	/** Label font-size in px. Default 14. */
+	sizeLabel: number;
+	/** Button font-size in px. Default 14. */
+	sizeButton: number;
+	/** Badge font-size in px. Default 12. */
+	sizeBadge: number;
 };
+
+export type ThemeSpacing = {
+	/** Horizontal button padding in px. Default 14. */
+	buttonPaddingX: number;
+	/** Horizontal badge padding in px. Default 9. */
+	badgePaddingX: number;
+	/** Vertical badge padding in px. Default 4. */
+	badgePaddingY: number;
+	/** Card body padding in px. Default 24. */
+	cardPadding: number;
+	/** Panel padding in px. Default 12. */
+	panelPadding: number;
+	/** Input/textarea horizontal padding in px. Default 12. */
+	fieldPaddingX: number;
+	/** Menu item horizontal padding in px. Default 7. */
+	menuItemPaddingX: number;
+	/** Default button height in px (controls .default-size buttons). Default 35. */
+	buttonHeight: number;
+	/** Small button height in px. Default 29. */
+	buttonHeightSm: number;
+	/** Large button height in px. Default 40. */
+	buttonHeightLg: number;
+	/** Input/textarea height in px. Default 35. */
+	fieldHeight: number;
+	/** Menu / select item height in px. Default 32. */
+	menuItemHeight: number;
+	/** Switch track width in px. Default 39. */
+	switchTrackWidth: number;
+	/** Switch thumb diameter in px. Default 14. */
+	switchThumbSize: number;
+	/** Default icon button size in px. Default 32. */
+	iconButtonSize: number;
+	/** Padding inside dropdown / context / select / combobox content wrappers (px). Default 4. */
+	menuPadding: number;
+	/** Padding inside menu search bars (command / combobox search) (px). Default 12. */
+	menuSearchPadding: number;
+	/** Horizontal padding inside menu labels (px). Default 8. */
+	menuLabelPaddingX: number;
+	/** Vertical padding inside menu labels (px). Default 4. */
+	menuLabelPaddingY: number;
+	/** Toggle button padding (sm size) (px). Default 8. */
+	togglePaddingSm: number;
+	/** Toggle button padding (default size) (px). Default 10. */
+	togglePaddingMd: number;
+	/** Toggle button padding (lg size) (px). Default 14. */
+	togglePaddingLg: number;
+	/** Tabs trigger horizontal padding (px). Default 14. */
+	tabsTriggerPaddingX: number;
+	/** Tabs trigger vertical padding (px). Default 6. */
+	tabsTriggerPaddingY: number;
+	/** Tabs list container padding (px). Default 3. */
+	tabsListPadding: number;
+	/** Toast horizontal padding (px). Default 16. */
+	toastPaddingX: number;
+	/** Toast vertical padding (px). Default 16. */
+	toastPaddingY: number;
+	/** Calendar surface padding (px). Default 12. */
+	calendarPadding: number;
+	/** Color picker section padding (px). Default 10. */
+	colorPickerPadding: number;
+	/** Sheet header bottom padding (px). Default 24. */
+	sheetHeaderPaddingBottom: number;
+	/** Modal/Dialog/AlertDialog body content padding (px). Default 16. */
+	modalPadding: number;
+	/** Gap between modal title and description (px). Default 6. */
+	modalTitleDescriptionGap: number;
+	/** Gap between modal header / body / footer sections (px). Default 16. */
+	modalSectionGap: number;
+	/** Sheet body content padding (px). Default 16. */
+	sheetBodyPadding: number;
+};
+
+export const defaultSpacing: ThemeSpacing = {
+	buttonPaddingX: 14,
+	badgePaddingX: 9,
+	badgePaddingY: 4,
+	cardPadding: 24,
+	panelPadding: 12,
+	fieldPaddingX: 12,
+	menuItemPaddingX: 7,
+	buttonHeight: 35,
+	buttonHeightSm: 29,
+	buttonHeightLg: 40,
+	fieldHeight: 35,
+	menuItemHeight: 32,
+	switchTrackWidth: 39,
+	switchThumbSize: 14,
+	iconButtonSize: 32,
+	menuPadding: 4,
+	menuSearchPadding: 12,
+	menuLabelPaddingX: 8,
+	menuLabelPaddingY: 4,
+	togglePaddingSm: 8,
+	togglePaddingMd: 10,
+	togglePaddingLg: 14,
+	tabsTriggerPaddingX: 14,
+	tabsTriggerPaddingY: 6,
+	tabsListPadding: 3,
+	toastPaddingX: 16,
+	toastPaddingY: 16,
+	calendarPadding: 12,
+	colorPickerPadding: 10,
+	sheetHeaderPaddingBottom: 24,
+	modalPadding: 16,
+	modalTitleDescriptionGap: 6,
+	modalSectionGap: 16,
+	sheetBodyPadding: 16
+};
+
+export function resolveSpacing(input?: Partial<ThemeSpacing>): ThemeSpacing {
+	return { ...defaultSpacing, ...(input ?? {}) };
+}
 
 export const defaultTypography: ThemeTypography = {
 	weightHeader: 600,
 	weightBody: 400,
 	weightLabel: 500,
 	weightButton: 500,
-	weightBadge: 500
+	weightBadge: 500,
+	trackingHeader: -0.02,
+	trackingBody: 0,
+	trackingLabel: 0,
+	trackingButton: 0,
+	trackingBadge: 0,
+	sizeHeader: 18,
+	sizeBody: 16,
+	sizeLabel: 14,
+	sizeButton: 14,
+	sizeBadge: 12
 };
 
 export function resolveTypography(input?: Partial<ThemeTypography>): ThemeTypography {
@@ -87,12 +229,29 @@ export type ThemeDraft = {
 	 * sit "above" the page; when false (default) they reuse the page background.
 	 */
 	overlaysOnSurface?: boolean;
+	/**
+	 * When false, all button variants — colored (primary/success/warning/error/
+	 * destructive) and outlined — drop their layered shadow and inner highlight,
+	 * rendering flat. Default true.
+	 */
+	fancyButtons?: boolean;
+	/**
+	 * When false, badge variants drop their shadow + highlight, rendering flat.
+	 * Default true.
+	 */
+	fancyBadges?: boolean;
 	durationPreset: ThemeTransitionPresetSlug;
 	motion: ThemeMotion;
 	light: ThemePalette;
 	dark: ThemePalette;
 	/** Per-element font weights. Optional — falls back to `defaultTypography`. */
 	typography?: ThemeTypography;
+	/** Padding tokens. Optional — falls back to `defaultSpacing`. */
+	spacing?: ThemeSpacing;
+	/** When true, button:active translates -1px for a soft haptic feel. Default false. */
+	hapticPress?: boolean;
+	/** Master toggle for soft drop shadows on panels (card/modal/popover/select/etc.). Default true. */
+	fancyShadows?: boolean;
 };
 
 /** Rounds a radius token to a stable rem string. */
@@ -418,6 +577,21 @@ export function themeToCss(theme: ThemeDraft) {
 	const radii = radiiFromBase(theme.radiusBase || theme.radiusMd);
 	const motion = resolveThemeMotion(theme.durationPreset, theme.motion);
 	const type = resolveTypography(theme.typography);
+	const fancyButtons = theme.fancyButtons !== false;
+	const fancyBadges = theme.fancyBadges !== false;
+	const fancyShadows = theme.fancyShadows !== false;
+	const hapticPress = theme.hapticPress === true;
+	const spacing = resolveSpacing(theme.spacing);
+	const buttonShadowOverrides = fancyButtons
+		? ''
+		: `\n\t--button-primary-shadow: none;\n\t--button-success-shadow: none;\n\t--button-warning-shadow: none;\n\t--button-error-shadow: none;\n\t--button-destructive-shadow: none;\n\t--button-outlined-fancy-shadow: var(--button-outlined-flat-shadow, inset 0 0 0 1px var(--color-border));\n\t--button-fancy-highlight: transparent;`;
+	const badgeShadowOverrides = fancyBadges ? '' : `\n\t--badge-shadow: none;\n\t--badge-fancy-highlight: transparent;`;
+	const panelShadowOverrides = fancyShadows
+		? ''
+		: `\n\t--shadow-xs: none;\n\t--shadow-sm: none;\n\t--shadow-md: none;\n\t--shadow-lg: none;\n\t--panel-shadow: none;\n\t--card-shadow: none;\n\t--toast-shadow: none;\n\t--tooltip-shadow: none;\n\t--button-outlined-shadow: none;\n\t--field-outlined-shadow: inset 0 0 0 1px var(--color-border);`;
+	const hapticOverrides = hapticPress ? '\n\t--haptic-press-y: -1px;' : '\n\t--haptic-press-y: 0px;';
+	const spacingTokens = `\n\t--button-padding-x: ${spacing.buttonPaddingX}px;\n\t--badge-padding-x: ${spacing.badgePaddingX}px;\n\t--badge-padding-y: ${spacing.badgePaddingY}px;\n\t--card-padding: ${spacing.cardPadding}px;\n\t--panel-padding: ${spacing.panelPadding}px;\n\t--field-padding-x: ${spacing.fieldPaddingX}px;\n\t--space-menu-item-x: ${spacing.menuItemPaddingX}px;\n\t--menu-item-padding-x: ${spacing.menuItemPaddingX}px;\n\t--size-control-md: ${spacing.buttonHeight}px;\n\t--size-control-sm: ${spacing.buttonHeightSm}px;\n\t--size-control-lg: ${spacing.buttonHeightLg}px;\n\t--field-height: ${spacing.fieldHeight}px;\n\t--menu-item-height: ${spacing.menuItemHeight}px;\n\t--size-switch-track: ${spacing.switchTrackWidth}px;\n\t--size-switch-thumb: ${spacing.switchThumbSize}px;\n\t--size-icon-md: ${spacing.iconButtonSize}px;\n\t--menu-padding: ${spacing.menuPadding}px;\n\t--menu-search-padding: ${spacing.menuSearchPadding}px;\n\t--menu-label-padding-x: ${spacing.menuLabelPaddingX}px;\n\t--menu-label-padding-y: ${spacing.menuLabelPaddingY}px;\n\t--toggle-padding-sm: ${spacing.togglePaddingSm}px;\n\t--toggle-padding-md: ${spacing.togglePaddingMd}px;\n\t--toggle-padding-lg: ${spacing.togglePaddingLg}px;\n\t--tabs-trigger-padding-x: ${spacing.tabsTriggerPaddingX}px;\n\t--tabs-trigger-padding-y: ${spacing.tabsTriggerPaddingY}px;\n\t--tabs-list-padding: ${spacing.tabsListPadding}px;\n\t--toast-padding-x: ${spacing.toastPaddingX}px;\n\t--toast-padding-y: ${spacing.toastPaddingY}px;\n\t--calendar-padding: ${spacing.calendarPadding}px;\n\t--color-picker-padding: ${spacing.colorPickerPadding}px;\n\t--sheet-header-padding-bottom: ${spacing.sheetHeaderPaddingBottom}px;\n\t--modal-padding: ${spacing.modalPadding}px;\n\t--modal-title-description-gap: ${spacing.modalTitleDescriptionGap}px;\n\t--modal-section-gap: ${spacing.modalSectionGap}px;\n\t--sheet-body-padding: ${spacing.sheetBodyPadding}px;`;
+	const flatShadowOverrides = buttonShadowOverrides + badgeShadowOverrides + panelShadowOverrides + hapticOverrides + spacingTokens;
 	return `@theme {
 \t--font-sans: ${theme.fontSans};
 \t--font-mono: ${theme.fontMono};
@@ -427,6 +601,16 @@ export function themeToCss(theme: ThemeDraft) {
 \t--font-weight-label: ${type.weightLabel};
 \t--font-weight-button: ${type.weightButton};
 \t--font-weight-badge: ${type.weightBadge};
+\t--tracking-header: ${type.trackingHeader}em;
+\t--tracking-body: ${type.trackingBody}em;
+\t--tracking-label: ${type.trackingLabel}em;
+\t--tracking-button: ${type.trackingButton}em;
+\t--tracking-badge: ${type.trackingBadge}em;
+\t--font-size-header: ${type.sizeHeader}px;
+\t--font-size-body: ${type.sizeBody}px;
+\t--font-size-label: ${type.sizeLabel}px;
+\t--font-size-button: ${type.sizeButton}px;
+\t--font-size-badge: ${type.sizeBadge}px;
 \t--radius-sm: ${radii.sm};
 \t--radius-md: ${radii.md};
 \t--radius-lg: ${radii.lg};
@@ -451,7 +635,7 @@ export function themeToCss(theme: ThemeDraft) {
 \t--motion-panel-easing: ${motion.panelEasing ?? 'cubic-bezier(0.22,1,0.36,1)'};
 \t--button-primary-border: ${theme.primaryButtonOutline ? `color-mix(in srgb, ${theme.light.primary} 76%, #1237b9)` : 'transparent'};
 \t--text-xs: 12px;
-\t--text-sm: 14px;
+\t--text-sm: 14px;${flatShadowOverrides}
 ${paletteToCss(theme.light)}
 ${panelTokensToCss(theme, 'light')}
 }
@@ -465,6 +649,16 @@ ${panelTokensToCss(theme, 'light')}
 \t--font-weight-label: ${type.weightLabel};
 \t--font-weight-button: ${type.weightButton};
 \t--font-weight-badge: ${type.weightBadge};
+\t--tracking-header: ${type.trackingHeader}em;
+\t--tracking-body: ${type.trackingBody}em;
+\t--tracking-label: ${type.trackingLabel}em;
+\t--tracking-button: ${type.trackingButton}em;
+\t--tracking-badge: ${type.trackingBadge}em;
+\t--font-size-header: ${type.sizeHeader}px;
+\t--font-size-body: ${type.sizeBody}px;
+\t--font-size-label: ${type.sizeLabel}px;
+\t--font-size-button: ${type.sizeButton}px;
+\t--font-size-badge: ${type.sizeBadge}px;
 \t--radius-sm: ${radii.sm};
 \t--radius-md: ${radii.md};
 \t--radius-lg: ${radii.lg};
@@ -487,7 +681,7 @@ ${panelTokensToCss(theme, 'light')}
 \t--motion-panel-rotate-x: ${motion.panelRotateX ?? 0};
 \t--motion-panel-opacity-start: ${motion.panelOpacityStart ?? 0};
 \t--motion-panel-easing: ${motion.panelEasing ?? 'cubic-bezier(0.22,1,0.36,1)'};
-\t--button-primary-border: ${theme.primaryButtonOutline ? `color-mix(in srgb, ${theme.dark.primary} 76%, #7aa2ff)` : 'transparent'};
+\t--button-primary-border: ${theme.primaryButtonOutline ? `color-mix(in srgb, ${theme.dark.primary} 76%, #7aa2ff)` : 'transparent'};${flatShadowOverrides}
 ${paletteToCss(theme.dark)}
 ${panelTokensToCss(theme, 'dark')}
 }${

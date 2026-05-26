@@ -54,10 +54,10 @@
 	{#if label || description}
 		<span class="flex flex-col gap-0.5 leading-tight">
 			{#if label}
-				<span class="text-[0.86rem] [font-weight:var(--font-weight-label,500)] text-foreground">{label}</span>
+				<span class="[font-size:var(--font-size-label,14px)] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground">{label}</span>
 			{/if}
 			{#if description}
-				<span class="text-[0.78rem] [font-weight:var(--font-weight-body,400)] text-foreground-muted">{description}</span>
+				<span class="[font-size:var(--font-size-body,16px)] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted">{description}</span>
 			{/if}
 		</span>
 	{/if}

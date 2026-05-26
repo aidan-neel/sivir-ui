@@ -69,7 +69,7 @@
 		onmouseenter={cancelClose}
 		onmouseleave={scheduleClose}
 		class={cn(
-			'fixed left-0 top-0 z-[130] w-64 rounded-[var(--radius-lg)] border border-border bg-[var(--color-panel)] p-3 text-[0.86rem] text-[var(--color-panel-foreground)] shadow-outlined',
+			'fixed left-0 top-0 z-[130] w-64 rounded-[var(--radius-lg)] border border-border bg-[var(--color-panel)] p-[var(--panel-padding)] text-[0.86rem] text-[var(--color-panel-foreground)] shadow-[var(--panel-shadow)]',
 			className
 		)}
 		{...rest}

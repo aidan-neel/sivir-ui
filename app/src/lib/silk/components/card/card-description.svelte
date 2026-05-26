@@ -12,6 +12,6 @@
 	} = $props();
 </script>
 
-<p {...rest} class={cn(classProp, 'text-sm [font-weight:var(--font-weight-body,400)] text-foreground-muted')}>
+<p {...rest} class={cn(classProp, '[font-size:var(--font-size-body,16px)] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted')}>
 	{@render children?.()}
 </p>

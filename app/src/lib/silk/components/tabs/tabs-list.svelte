@@ -109,7 +109,7 @@
 	data-ui="tabs-list"
 	class={cn(
 		className,
-		'relative inline-flex items-center rounded-[var(--radius-lg)] border border-border bg-secondary/40 p-[3px] shadow-[var(--outline-shadow)]'
+		'relative inline-flex items-center rounded-[var(--radius-lg)] border border-border bg-secondary/40 p-[var(--tabs-list-padding)] shadow-[var(--outline-shadow)]'
 	)}
 	onkeydown={handleKeydown}
 	{...rest}
