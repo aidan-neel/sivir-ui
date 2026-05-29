@@ -1,0 +1,134 @@
+<script module lang="ts">
+	export const metadata = {
+	  "title": "Badge",
+	  "description": "Displays a badge or a component that looks like a badge.",
+	  "component": true,
+	  "source": "https://github.com/aidan-neel/silk/tree/main/registry/silk/default/badge"
+};
+</script>
+
+<script>
+    import { ComponentPreview, CodeBlock, CodeSnippet, ExportItem, APIReference } from '$lib/components/docs';
+    import { Badge } from '@silk/ui/components/badge';
+</script>
+
+<ComponentPreview code={`<script>
+    import { Badge } from '@silk/ui/components/badge';
+</script>\n
+<Badge>Primary</Badge>`}>
+    <div class="flex flex-row flex-wrap gap-2 px-12">
+        <Badge class="w-auto max-w-[7rem]">Primary</Badge>
+    </div>
+</ComponentPreview>
+
+<div class="flex flex-col gap-5 pt-8 pb-8">
+	<h1 class="h1">Installation</h1>
+	<CodeBlock lang="shell" code={`bunx @aidan-neel/ui add badge`} />
+</div>
+
+<h1 class="py-2 h1">
+    Import
+</h1>
+
+<p class="py-2">
+    Badge only exports 1 component
+</p>
+
+<ExportItem title="Badge">The main component for displaying a badge.</ExportItem>
+
+<h1 class="py-6 h1 pt-10">
+    Variants
+</h1>
+
+<h1 class="py-2 pb-4 h2">
+    Outlined
+</h1>
+
+<ComponentPreview code={`<Badge variant="outlined">Outlined</Badge>`}>
+    <div class="flex flex-row flex-wrap gap-2 px-12">
+        <Badge class="w-auto max-w-[7rem]" variant="outlined">Outlined</Badge>
+    </div>
+</ComponentPreview>
+
+<h1 class="py-2 pb-4 h2 pt-8">
+    Flat
+</h1>
+
+<ComponentPreview code={`<Badge variant="flat">Flat</Badge>`}>
+    <div class="flex flex-row flex-wrap gap-2 px-12">
+        <Badge class="w-auto max-w-[7rem]" variant="flat">Flat</Badge>
+    </div>
+</ComponentPreview>
+
+<h1 class="py-2 pb-4 h2 pt-8">
+    Secondary
+</h1>
+
+<ComponentPreview code={`<Badge variant="secondary">Secondary</Badge>`}>
+    <div class="flex flex-row flex-wrap gap-2 px-12">
+        <Badge class="w-auto max-w-[7rem]" variant="secondary">Secondary</Badge>
+    </div>
+</ComponentPreview>
+
+<h1 class="py-2 pb-4 h2 pt-8">
+    Ghost
+</h1>
+
+<ComponentPreview code={`<Badge variant="ghost">Ghost</Badge>`}>
+    <div class="flex flex-row flex-wrap gap-2 px-12">
+        <Badge class="w-auto max-w-[7rem]" variant="ghost">Ghost</Badge>
+    </div>
+</ComponentPreview>
+
+<h1 class="py-2 pb-4 h2 pt-8">
+    Alternate
+</h1>
+
+<ComponentPreview code={`<Badge variant="alternate">Alternate</Badge>`}>
+    <div class="flex flex-row flex-wrap gap-2 px-12">
+        <Badge class="w-auto max-w-[7rem]" variant="alternate">Alternate</Badge>
+    </div>
+</ComponentPreview>
+
+<h1 class="py-2 pb-4 h2 pt-8">
+    Destructive
+</h1>
+
+<ComponentPreview code={`<Badge variant="destructive">Destructive</Badge>`}>
+    <div class="flex flex-row flex-wrap gap-2 px-12">
+        <Badge class="w-auto max-w-[7rem]" variant="destructive">Destructive</Badge>
+    </div>
+</ComponentPreview>
+
+<h1 class="py-6 h1 pt-10">
+    API Reference
+</h1>	
+
+<APIReference
+	title="Badge"
+	component="Badge"
+	description="A stylable label component for highlighting statuses or metadata."
+	items={[
+		{
+			property: "children",
+			type: "Snippet",
+			description: "The content to display inside the badge."
+		},
+		{
+			property: "class",
+			type: "string",
+			description: "Additional CSS classes to apply to the badge."
+		},
+			{
+				property: "href",
+				type: "string",
+				description: "If provided, renders the badge as an anchor element."
+			},
+			{
+				property: "...rest",
+				type: "HTMLAttributes<HTMLElement>",
+				description: "Additional attributes passed to the badge element or link.",
+				defaults: "{}"
+			}
+		]}
+/>

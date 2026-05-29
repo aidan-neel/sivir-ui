@@ -1,0 +1,86 @@
+<script module lang="ts">
+	export const metadata = {
+	  "title": "Tooltip",
+	  "description": "Displays a small hover or focus hint near a trigger element.",
+	  "component": true,
+	  "source": "https://github.com/aidan-neel/silk/tree/main/registry/silk/default/tooltip"
+};
+</script>
+
+<script>
+	import { ComponentPreview, ExportItem, APIReference, CodeBlock } from '$lib/components/docs';
+	import * as Tooltip from '@silk/ui/components/tooltip';
+	import { Button } from '@silk/ui/components/button';
+</script>
+
+<ComponentPreview code={`<script>
+	import * as Tooltip from '@silk/ui/components/tooltip';
+	import { Button } from '@silk/ui/components/button';
+</script>
+
+<Tooltip.Root placement="top">
+	<Tooltip.Trigger>
+		<Button variant="outlined">Hover me</Button>
+	</Tooltip.Trigger>
+	<Tooltip.Content>
+		Copy CSS to clipboard
+	</Tooltip.Content>
+</Tooltip.Root>`}>
+	<Tooltip.Root placement="top">
+		<Tooltip.Trigger>
+			<Button variant="outlined">Hover me</Button>
+		</Tooltip.Trigger>
+		<Tooltip.Content>
+			Copy CSS to clipboard
+		</Tooltip.Content>
+	</Tooltip.Root>
+</ComponentPreview>
+<div class="flex flex-col gap-5 pt-8 pb-8">
+	<h1 class="h1">Installation</h1>
+	<CodeBlock lang="shell" code={`bunx @aidan-neel/ui add tooltip`} />
+</div>
+
+<h1 class="py-2 h1">Import</h1>
+<p class="py-2">Tooltip exports 3 components.</p>
+
+<ExportItem title="Root">Configures tooltip timing and placement.</ExportItem>
+<ExportItem title="Trigger">The element that receives hover and focus interactions.</ExportItem>
+<ExportItem title="Content">The tooltip label shown beside the trigger.</ExportItem>
+
+<h1 class="py-6 h1">API Reference</h1>
+
+<div class="flex flex-col gap-10">
+	<APIReference
+		title="Tooltip"
+		component="Root"
+		description="Hover and focus driven tooltip wrapper."
+		items={[
+			{ property: "placement", type: `"top" | "left" | "bottom" | "right"`, description: "Placement of the tooltip relative to its trigger.", defaults: `"top"` },
+			{ property: "delay", type: "number", description: "Delay before the tooltip opens on hover or focus.", defaults: "160" },
+			{ property: "children", type: "Snippet", description: "Trigger and content." },
+			{ property: "class", type: "string", description: "Additional classes forwarded through the wrapper." }
+		]}
+	/>
+
+	<APIReference
+		title="Tooltip"
+		component="Trigger"
+		description="Interactive trigger element for the tooltip."
+		items={[
+			{ property: "children", type: "Snippet", description: "Trigger content." },
+			{ property: "class", type: "string", description: "Additional classes for the trigger." },
+			{ property: "...rest", type: "HTMLButtonAttributes | HTMLAnchorAttributes", description: "Additional attributes passed to the trigger button." }
+		]}
+	/>
+
+	<APIReference
+		title="Tooltip"
+		component="Content"
+		description="Tooltip surface rendered above the rest of the UI."
+		items={[
+			{ property: "children", type: "Snippet", description: "Tooltip text or custom inline content." },
+			{ property: "class", type: "string", description: "Additional classes for the tooltip panel." },
+			{ property: "portal", type: "boolean", description: "Whether to portal the tooltip into document.body.", defaults: "true" }
+		]}
+	/>
+</div>

@@ -2,6 +2,7 @@
 node_modules
 
 # Output
+.turbo
 .output
 .vercel
 .netlify
@@ -26,5 +27,3 @@ ignored/
 inspiration/
 .claude/
 audit/
-/audit/
-audit

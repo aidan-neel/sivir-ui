@@ -1,0 +1,8 @@
+node_modules
+.svelte-kit
+build
+.vitest-attachments
+.env
+.env.*
+*.log
+.DS_Store

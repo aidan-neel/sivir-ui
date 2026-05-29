@@ -1,0 +1,10 @@
+**/node_modules
+**/.svelte-kit
+**/build
+**/.vitest-attachments
+**/.env
+**/.env.*
+**/*.log
+.git
+.DS_Store
+audit

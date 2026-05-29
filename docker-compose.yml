@@ -1,15 +1,29 @@
-# Postgres lives on Supabase. The registry's `env_file` pulls DATABASE_URL +
-# DIRECT_URL out of registry/.env. See registry/README.md for the URL formats.
+# Postgres lives on Supabase. The registry pulls DATABASE_URL + DIRECT_URL
+# from apps/registry/.env. See apps/registry/README.md for URL formats.
+# Both services build from the repo root so they can see the workspace lockfile.
 
 services:
   registry:
-    build: ./registry
+    build:
+      context: .
+      dockerfile: apps/registry/Dockerfile
     restart: unless-stopped
-    # Loads DATABASE_URL + DIRECT_URL straight from registry/.env so we don't
-    # need a separate root-level .env or exported shell vars.
     env_file:
-      - registry/.env
+      - apps/registry/.env
     environment:
       PORT: "4100"
     ports:
       - "4100:4100"
+
+  docs:
+    build:
+      context: .
+      dockerfile: apps/docs/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - registry
+    environment:
+      PORT: "3000"
+      HOST: "0.0.0.0"
+    ports:
+      - "3000:3000"

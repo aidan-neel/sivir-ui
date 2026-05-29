@@ -1,0 +1,26 @@
+<script lang="ts">
+	import * as Popover from '@silk/ui/components/popover';
+	import { cn } from '@silk/ui/utils';
+	import { getContext, type Snippet } from 'svelte';
+
+	const key = getContext('key');
+
+	type Props = {
+		children: Snippet;
+		class?: string;
+	};
+
+	let props: Props = $props();
+</script>
+
+<Popover.Content
+	role="menu"
+	tabindex={-1}
+	data-ui="dropdown-menu-content"
+	class={cn(
+		props.class,
+		'min-w-[var(--popover-trigger-width)] w-max bg-[var(--color-panel)] text-[var(--color-panel-foreground)] border border-border rounded-[var(--radius-lg)] shadow-[var(--panel-shadow)] p-[var(--menu-padding)] flex flex-col gap-0'
+	)}
+>
+	{@render props.children?.()}
+</Popover.Content>
