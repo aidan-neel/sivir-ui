@@ -50,3 +50,13 @@ The brief names decoupled transitions (`menu.transition` vs `panel.transition`) 
 ### D1.4 — Card now applies its `--card-shadow`
 
 `card.svelte` never applied a shadow despite `--card-shadow: var(--shadow-xs)` existing. **Decision:** wired `shadow-[var(--card-shadow)]` with the existing `--shadow-xs` default (subtle elevation, on-brand; `fancyShadows=false` still flattens it). This is the token working as designed, not a regression. **Rationale:** satisfies "every existing token affects its component"; revisit in the Phase 3 preview if it reads wrong.
+
+## Phase 2
+
+### D2.1 — Phase 2 decomposition scope: extract the preview module; fold toolbar/inspector/dialog extraction into Phases 3–4
+
+The Studio page (4,079 lines) was decomposed by extracting the **Playground preview** (~1,030 lines of template + its fully self-contained demo state) into `studio-preview.svelte` (page now 2,921 lines). **Decision:** the toolbar, inspector tabs, and dialogs are **not** extracted in Phase 2; that work folds into Phase 3 (preview rebuild) and Phase 4 (sidebar/toolbar rebuild), which rewrite those exact regions. **Rationale:** the preview was state-independent (referenced zero page identifiers) → a clean, zero-risk lift that also establishes the boundary Phase 3 needs. The toolbar/inspector/dialogs heavily mutate the central editor state; extracting them now requires shared-state plumbing that Phase 4's rebuild will redesign anyway — a separate extract-then-rewrite pass would be wasteful churn and added risk. Verified behavior-identical via a Playwright before/after screenshot of the live Studio.
+
+### D2.2 — Visual verification harness
+
+Playwright's `chrome` channel needs sudo for system deps (unavailable); installed `chromium` instead and drive it via a direct node script (`/tmp/silk-*.mjs`) against the dev server, rather than the Playwright MCP (which hard-looks for `/opt/google/chrome/chrome`). This gives a working before/after screenshot loop for the refactor/UI phases. **Note:** the `/themes/[name].css` endpoint returns 500 in this dev env — pre-existing, caused by the theme-**registry** backend not running (fails at `getRegistryThemeBySlug`, never reaches `themeToCss`); unrelated to this work and does not affect Studio rendering.
