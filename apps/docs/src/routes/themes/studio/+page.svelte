@@ -40,6 +40,7 @@
 		type ThemeSpacing
 	} from '@silk/ui/themes/presets';
 	import { transitionPresets, type ThemeTransitionPresetSlug } from '@silk/ui/themes/transitions';
+	import { stylePresets, getStyle, styleToCss } from '@silk/ui/themes/styles';
 	import { builtInThemePresets } from '@silk/ui/themes/builtin-presets';
 
 	import RotateCcw from '@lucide/svelte/icons/rotate-ccw';
@@ -741,6 +742,13 @@
 	// On lg+ this is ignored and the inspector renders inline on the right.
 	let mobileInspectorOpen = $state(false);
 
+	// Style: a coherent token-override layer (Flat / Soft / Sharp) applied on top
+	// of the theme. 'none' = theme defaults.
+	let selectedStyleSlug = $state('none');
+	function selectStyle(slug: string) {
+		selectedStyleSlug = slug;
+	}
+
 	// Source of truth: editorTheme.overlaysOnSurface. The Switch reads the
 	// derived `overlaysOnSurfaceOn` and writes via the onclick callback --
 	// no bidirectional bind / no racing effects.
@@ -801,7 +809,7 @@
 			motion: resolveThemeMotion(editorTheme.durationPreset, editorTheme.motion),
 			name: editorName,
 			slug: slugifyThemeName(editorName) || 'custom-theme'
-		})
+		}) + styleToCss(getStyle(selectedStyleSlug))
 	);
 	const generatedTypeScriptPreset = $derived(
 		themeToTypeScriptPreset({
@@ -2147,6 +2155,46 @@
 
 					<!-- SHAPE TAB -->
 					<Tabs.Content value="shape" class="flex flex-col gap-4 p-3.5">
+						<!-- Style: coherent token-bundle presets (Flat / Soft / Sharp) -->
+						<section class="flex flex-col gap-2" data-ui="style-picker">
+							<div class="flex items-baseline justify-between">
+								<p
+									class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+								>
+									Style
+								</p>
+								<span
+									class="text-[0.65rem] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted/70"
+									>coherent token bundle</span
+								>
+							</div>
+							<div class="grid grid-cols-2 gap-1.5">
+								<button
+									type="button"
+									onclick={() => selectStyle('none')}
+									aria-pressed={selectedStyleSlug === 'none'}
+									class={`rounded-[var(--radius-md)] border px-2.5 py-1.5 text-[0.8rem] transition-colors ${selectedStyleSlug === 'none' ? 'border-primary bg-primary/10 text-foreground' : 'border-border bg-background text-foreground-muted hover:bg-secondary'}`}
+								>
+									Default
+								</button>
+								{#each stylePresets as s (s.slug)}
+									<button
+										type="button"
+										onclick={() => selectStyle(s.slug)}
+										aria-pressed={selectedStyleSlug === s.slug}
+										title={s.description}
+										class={`rounded-[var(--radius-md)] border px-2.5 py-1.5 text-[0.8rem] transition-colors ${selectedStyleSlug === s.slug ? 'border-primary bg-primary/10 text-foreground' : 'border-border bg-background text-foreground-muted hover:bg-secondary'}`}
+									>
+										{s.name}
+									</button>
+								{/each}
+							</div>
+							<p class="m-0 text-[0.72rem] text-foreground-muted">
+								{getStyle(selectedStyleSlug)?.description ??
+									'Theme defaults. Pick a style to apply a coherent radius/elevation language across the reference components.'}
+							</p>
+						</section>
+
 						<section class="flex flex-col gap-2">
 							<div class="flex items-baseline justify-between">
 								<p

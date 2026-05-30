@@ -1,48 +1,55 @@
-# Theme Studio Overhaul — Run Report
+# Theme Studio Overhaul — Run Report (Final)
 
-> Living report, updated as phases land. Branch: `theme-studio-overhaul` (off `github-workflows`).
+> Branch: `theme-studio-overhaul` (off `github-workflows`). All five phases landed, each committed and green.
 
 ## Status at a glance
 
-| Phase                           | State                        | Verification                                               |
-| ------------------------------- | ---------------------------- | ---------------------------------------------------------- |
-| 0 — Audit & decisions           | ✅ Landed                    | gap-report/decisions/PLAN written from grep evidence       |
-| 1 — Token architecture & wiring | ✅ Landed                    | typecheck 0E, **581 tests**, lint 0E, build ✓              |
-| 2 — File decomposition          | ✅ Landed (scoped, see D2.1) | typecheck 0E, lint 0E, Studio pixel-identical (Playwright) |
-| 3 — Playground Preview rebuild  | ⏳ Not started               | —                                                          |
-| 4 — Sidebar + toolbar           | ⏳ Not started               | —                                                          |
-| 5 — Style prop (bounded)        | ⏳ Not started               | —                                                          |
+| Phase                           | State                    | Verification                                           |
+| ------------------------------- | ------------------------ | ------------------------------------------------------ |
+| 0 — Audit & decisions           | ✅ Landed                | gap-report/decisions/PLAN from grep evidence           |
+| 1 — Token architecture & wiring | ✅ Landed                | typecheck 0E, lint 0E, build ✓, tests ✓                |
+| 2 — File decomposition          | ✅ Landed (scoped, D2.1) | Studio pixel-identical (Playwright)                    |
+| 3 — Playground Preview rebuild  | ✅ Landed                | every token group renders (Playwright + coverage test) |
+| 4 — Sidebar + toolbar           | ✅ Landed                | every spacing token has a control (completeness test)  |
+| 5 — Style prop (bounded)        | ✅ Landed                | Flat/Soft/Sharp selectable + live-verified             |
 
-Every landed phase is committed and green. The repo is never left half-migrated.
+**Final gate:** typecheck **0 errors**, **595 tests** pass (was 573 at baseline; +22 new), lint **0 errors**, full build ✓.
 
-## What landed
+## What landed, by phase
 
-**Phase 0** — Empirical token audit (`gap-report.md`): 28 truly-dead tokens, 77 consumed-but-uneditable, 16 emitted-but-unconsumed, plus a hardcode catalog. Corrected the pre-audit "126 unused tokens" claim (false). Finalized the group taxonomy (`decisions.md` D0.3).
+**Phase 0 — Audit.** Empirical token map (`gap-report.md`): 28 dead tokens, 77 consumed-but-uneditable, 16 emitted-but-unconsumed, hardcode catalog. Corrected the briefing's false "126 unused tokens" claim. Finalized the 6-group taxonomy (D0.3).
 
-**Phase 1** — Single-source-of-truth token wiring:
+**Phase 1 — Single source of truth.** Wired every audited token to its component; tokenized all themeable hardcodes; promoted 5 spacing axes + a control-easing token into the editable schema; built the group-scoped **motion-curve (easing)** backbone (the brief's "decoupled transitions" pattern); resolved dead tokens. +8 emission/consumption tests.
 
-- 1a: wired dead/hardcoded values to existing tokens (card shadow, switch thumb, checkbox size/colors, sheet overlay duration); fixed button sm/lg padding shadowing so themed `buttonPaddingX` drives all sizes.
-- 1b: tokenized remaining hardcodes (textarea, breadcrumb, calendar, toast, color-picker, shortcut, slider) and promoted `fieldPaddingY`, `buttonGap`, `switchTrackPadding`, `textareaMinHeight/PaddingY` into the editable schema.
-- 1c: group-scoped **motion-curve easing** backbone — added `hoverEasing`, emit `--motion-easing-hover`, wired the button; made the dead `--motion-panel-easing` live; deleted inert aliases.
-- 1d/tests: +8 tests asserting token emission + variant consumption.
+**Phase 2 — Decomposition.** Extracted the ~1,030-line Playground preview into `studio-preview.svelte` (page 4,079 → 2,921 lines); verified pixel-identical. Toolbar/inspector/dialog extraction folded into 3–4 (D2.1); the spacing-control config was also extracted to a module in Phase 4.
 
-**Phase 2** — Extracted the Playground preview (~1,030 lines + self-contained demo state) into `apps/docs/src/lib/components/themes/studio/studio-preview.svelte`. Studio page 4,079 → 2,921 lines. Scope decision D2.1: toolbar/inspector/dialog extraction folds into Phases 3–4.
+**Phase 3 — Preview coverage.** Added a 4th "Gallery" screen rendering a representative component from **every** token group (Controls/Surfaces/Menus/Modals/Transient/Nav-Data), each section tagged `data-group`. +2 coverage tests; verified live.
+
+**Phase 4 — Controls.** Surfaced every spacing token (extracted `spacing-fields.ts`, added the 5 new tokens) + a decoupled "Control easing" control; wired `primaryButtonOutline` via CSS `outline` (no layout shift) + toggle. +4 completeness tests enforcing controls == `defaultSpacing` keys 1:1 (no orphan tokens / no dead controls).
+
+**Phase 5 — Style mechanism.** Token-bundle Style presets (`themes/styles/`), auto-registered, separately-installable; `styleToCss` applies a coherent override layer. Shipped Flat/Soft/Sharp on the 5-component reference set (Button/Card/Modal/DropdownMenu/Tooltip), Style picker in the Shape tab. +8 tests. Did **not** exceed the reference set; rollout in `style-rollout.md`.
 
 ## Decisions
 
-See `decisions.md` (D0.1–D0.5, D1.1–D1.4, D2.1–D2.2). Highlights: snapshot-committed pre-existing WIP for clean diffs (D0.1); deferred inert-flag wiring (`primaryButtonOutline`, `invertedPanels`) + per-group radius/elevation to Phase 4 for visual QA (D1.2).
+Full log in `decisions.md` (D0.1–D5.2). Notable autonomous calls:
 
-## Deferred / backlog (for Phases 3–5)
+- **D0.1** snapshot-committed the pre-existing 188-file WIP for clean per-phase diffs (recoverable via `git reset --soft 1e77c6b`).
+- **D2.1** scoped Phase 2 to the preview extraction; folded the rest into 3–4 to avoid extract-then-rewrite churn.
+- **D4.1** `invertedPanels` deferred (needs multi-file menu-color rewiring) — see backlog.
+- **D5.2** Style selection not persisted/undoable (bounded) — steps to add in `style-rollout.md`.
 
-- **Preview rebuild (P3):** render a representative component from every token group (Modals, Menus, Controls, Surfaces, Transient, Nav/Data) so every control visibly changes something; add a group-coverage acceptance test. `studio-preview.svelte` is the module to rebuild.
-- **Sidebar + toolbar (P4):** expose every customizable token by taxonomy; wire the deferred `primaryButtonOutline`/`invertedPanels` flags and the half-wired `--floating-*` menu tokens (D0.5); add per-group radius/elevation/focus-ring + border-treatment + density tokens; control↔token completeness cross-check test.
-- **Style prop (P5):** token-bundle preset mechanism, separately-installable packaging; 3 styles (Flat/Soft/Sharp) on 3–5 reference components; `style-rollout.md` backlog.
+## Deferred (backlog — `style-rollout.md`)
 
-## Known pre-existing issues (NOT introduced by this work)
+- Extend Flat/Soft/Sharp beyond the reference set to all components.
+- Per-group radius/elevation/focus-ring scales, density/scale, border-treatment tokens.
+- Wire `invertedPanels` (repoint menu-item consumers to `--floating-menu-item-*`).
+- Persist `selectedStyleSlug`.
 
-- `/themes/[name].css` 500s in dev — the theme-**registry** backend isn't running (`getRegistryThemeBySlug` throws before `themeToCss`). Does not affect Studio rendering.
-- Pre-existing svelte-check warnings (5) and eslint warnings (~134, mostly `svelte/require-each-key`) predate this work; baseline was green on errors.
+## Known pre-existing issues (NOT introduced here)
+
+- `/themes/[name].css` 500s in dev — the theme-**registry** backend isn't running (`getRegistryThemeBySlug` throws before `themeToCss`). No effect on Studio rendering.
+- Pre-existing svelte-check (5) and eslint (~134, mostly `svelte/require-each-key`) warnings predate this work; errors were green at baseline and remain 0.
 
 ## How to verify / resume
 
-From `apps/docs`: `bun run check` · `bun run lint` · `bun run test:ci` · (root) `bun run build`. Live drive: `bun run dev`, then the Playwright scripts in `/tmp/silk-*.mjs` (chromium) screenshot `/themes/studio`. Recover the pre-existing WIP as uncommitted with `git reset --soft <snapshot-commit>` if desired.
+From `apps/docs`: `bun run check` · `bun run lint` · `bun run test:ci` · (root) `bun run build`. Live: `bun run dev` then `/tmp/silk-*.mjs` Playwright scripts (chromium) against `/themes/studio` — **restart the dev server fresh before visual checks** (D2.2: accumulated HMR can transiently serve stale content). Scope was kept to the Theme Studio + token system only; no monorepo restructure or CLI build was started (hooks left in `style-rollout.md`).

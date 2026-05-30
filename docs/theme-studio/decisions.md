@@ -76,3 +76,13 @@ The brief says "rebuild" the preview, but the existing dashboard/settings/mail m
 ### D4.2 — Completeness invariant via extracted `spacing-fields.ts`
 
 Extracted the Padding-tab control config to `spacing-fields.ts` and added the five Phase-1 tokens (fieldPaddingY, buttonGap, switchTrackPadding, textareaMinHeight, textareaPaddingY) plus a `hoverEasing` (control-easing) control in the Shape tab (decoupled from panel easing). `studio-spacing-fields.test.ts` asserts the control set equals `Object.keys(defaultSpacing)` exactly — the enforced "no orphan tokens / no dead controls" guarantee. **Deferred new directions (backlog):** per-group radius/elevation/focus-ring scales, density/scale tokens, border-treatment tokens — additive token-group expansions best paired with the Style mechanism (Phase 5), listed in `style-rollout.md`.
+
+## Phase 5
+
+### D5.1 — Style = token-bundle layer applied via shared tokens; reference set bounded to 5 components
+
+A Style is a coherent named bundle of CSS-variable overrides (`StylePreset`) shipped one-file-per-style under `packages/silk/src/themes/styles/`, auto-registered by an `import.meta.glob` registry (mirrors transitions) so the future CLI can install a subset. `styleToCss(style)` serializes the bundle into a trailing `:root, .dark { … }` block appended to the theme CSS so it wins the cascade in both modes. **Coherence is achieved through shared tokens** (radius scale, elevation, padding) that all reference components consume — so a "Sharp" button matches a "Sharp" card with no per-component code. Shipped Flat/Soft/Sharp on the 5-component reference set (Button/Card/Modal/DropdownMenu/Tooltip), exposed as a Style picker in the Shape tab, verified live (Soft visibly rounds the Card). **Did NOT exceed the reference set** (per brief). Rollout + deferred per-group token directions documented in `style-rollout.md`.
+
+### D5.2 — Style selection not persisted / not in undo-redo (bounded)
+
+`selectedStyleSlug` is intentionally excluded from `ThemeStudioState` persistence and the undo/redo snapshot, to avoid coupling into that machinery in this bounded phase. On reload the picker resets to Default and the regenerated CSS omits the style layer (clean — no desync). Persistence steps are documented in `style-rollout.md`.
