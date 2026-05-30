@@ -67,6 +67,7 @@
 
 	import type { PageData } from './$types';
 	import StudioPreview from '$lib/components/themes/studio/studio-preview.svelte';
+	import { spacingGroups } from '$lib/components/themes/studio/spacing-fields';
 
 	const { data = { themes: builtInThemePresets } as PageData }: { data?: PageData } = $props();
 
@@ -479,6 +480,23 @@
 		selectedPresetSlug = 'custom';
 	}
 
+	// Control (hover/press) easing -- decoupled from panel easing so buttons and
+	// fields can feel different from floating surfaces.
+	const defaultHoverEasing = 'cubic-bezier(0.25,0.1,0.25,1)';
+	const currentHoverEasing = $derived(
+		easingOptions.find(
+			(o) => o.value === (editorTheme.motion.hoverEasing ?? defaultHoverEasing)
+		) ?? {
+			label: 'Custom',
+			value: 'custom',
+			description: 'Custom control easing.'
+		}
+	);
+	function updateHoverEasing(value: string) {
+		editorTheme.motion = { ...editorTheme.motion, hoverEasing: value };
+		selectedPresetSlug = 'custom';
+	}
+
 	const weightFields: {
 		key: keyof ThemeTypography;
 		trackingKey: keyof ThemeTypography;
@@ -738,6 +756,12 @@
 		selectedPresetSlug = 'custom';
 	}
 
+	const primaryButtonOutlineOn = $derived(editorTheme.primaryButtonOutline === true);
+	function togglePrimaryButtonOutline() {
+		editorTheme.primaryButtonOutline = !primaryButtonOutlineOn;
+		selectedPresetSlug = 'custom';
+	}
+
 	const fancyBadgesOn = $derived(editorTheme.fancyBadges !== false);
 	function toggleFancyBadges() {
 		editorTheme.fancyBadges = !fancyBadgesOn;
@@ -768,91 +792,8 @@
 		selectedPresetSlug = 'custom';
 	}
 
-	type SpacingFieldGroup = {
-		title: string;
-		fields: { key: keyof ThemeSpacing; label: string; min: number; max: number; unit?: string }[];
-	};
-	const spacingGroups: SpacingFieldGroup[] = [
-		{
-			title: 'Heights',
-			fields: [
-				{ key: 'buttonHeight', label: 'Button (default)', min: 24, max: 56 },
-				{ key: 'buttonHeightSm', label: 'Button (small)', min: 20, max: 44 },
-				{ key: 'buttonHeightLg', label: 'Button (large)', min: 28, max: 64 },
-				{ key: 'fieldHeight', label: 'Input field', min: 24, max: 56 },
-				{ key: 'menuItemHeight', label: 'Menu / select item', min: 20, max: 48 },
-				{ key: 'iconButtonSize', label: 'Icon button', min: 20, max: 48 }
-			]
-		},
-		{
-			title: 'Switch',
-			fields: [
-				{ key: 'switchTrackWidth', label: 'Track width', min: 24, max: 64 },
-				{ key: 'switchThumbSize', label: 'Thumb', min: 8, max: 28 }
-			]
-		},
-		{
-			title: 'Button & field padding',
-			fields: [
-				{ key: 'buttonPaddingX', label: 'Button (X)', min: 4, max: 32 },
-				{ key: 'fieldPaddingX', label: 'Field (X)', min: 4, max: 24 },
-				{ key: 'badgePaddingX', label: 'Badge (X)', min: 2, max: 20 },
-				{ key: 'badgePaddingY', label: 'Badge (Y)', min: 0, max: 12 }
-			]
-		},
-		{
-			title: 'Surface padding',
-			fields: [
-				{ key: 'cardPadding', label: 'Card', min: 8, max: 48 },
-				{ key: 'panelPadding', label: 'Panel', min: 4, max: 24 }
-			]
-		},
-		{
-			title: 'Modal & overlay',
-			fields: [
-				{ key: 'modalPadding', label: 'Modal padding', min: 0, max: 48 },
-				{ key: 'modalTitleDescriptionGap', label: 'Title ↔ description', min: 0, max: 24 },
-				{ key: 'modalSectionGap', label: 'Section gap', min: 0, max: 32 },
-				{ key: 'sheetBodyPadding', label: 'Sheet padding', min: 0, max: 48 },
-				{ key: 'sheetHeaderPaddingBottom', label: 'Sheet header (bottom)', min: 0, max: 48 }
-			]
-		},
-		{
-			title: 'Menu padding',
-			fields: [
-				{ key: 'menuPadding', label: 'Menu surface', min: 0, max: 16 },
-				{ key: 'menuItemPaddingX', label: 'Menu item (X)', min: 2, max: 16 },
-				{ key: 'menuSearchPadding', label: 'Menu search', min: 0, max: 24 },
-				{ key: 'menuLabelPaddingX', label: 'Menu label (X)', min: 0, max: 16 },
-				{ key: 'menuLabelPaddingY', label: 'Menu label (Y)', min: 0, max: 12 }
-			]
-		},
-		{
-			title: 'Tabs padding',
-			fields: [
-				{ key: 'tabsTriggerPaddingX', label: 'Trigger (X)', min: 4, max: 32 },
-				{ key: 'tabsTriggerPaddingY', label: 'Trigger (Y)', min: 0, max: 16 },
-				{ key: 'tabsListPadding', label: 'List padding', min: 0, max: 12 }
-			]
-		},
-		{
-			title: 'Toggle padding',
-			fields: [
-				{ key: 'togglePaddingSm', label: 'Toggle (small)', min: 0, max: 20 },
-				{ key: 'togglePaddingMd', label: 'Toggle (default)', min: 0, max: 24 },
-				{ key: 'togglePaddingLg', label: 'Toggle (large)', min: 0, max: 32 }
-			]
-		},
-		{
-			title: 'Component padding',
-			fields: [
-				{ key: 'toastPaddingX', label: 'Toast (X)', min: 4, max: 32 },
-				{ key: 'toastPaddingY', label: 'Toast (Y)', min: 4, max: 32 },
-				{ key: 'calendarPadding', label: 'Calendar', min: 0, max: 24 },
-				{ key: 'colorPickerPadding', label: 'Color picker', min: 0, max: 24 }
-			]
-		}
-	];
+	// spacingGroups (the Padding-tab control config) lives in a module so the
+	// completeness test can assert it covers every defaultSpacing key 1:1.
 
 	const generatedCss = $derived(
 		themeToCss({
@@ -1916,6 +1857,25 @@
 							<div class="flex flex-col gap-0.5">
 								<span
 									class="text-[0.82rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground"
+									>Primary button outline</span
+								>
+								<span class="text-[0.72rem] text-foreground-muted"
+									>Draw a tinted outline around the primary button.</span
+								>
+							</div>
+							<Switch
+								switched={primaryButtonOutlineOn}
+								onclick={togglePrimaryButtonOutline}
+								aria-label="Toggle primary button outline"
+							/>
+						</section>
+
+						<section
+							class="flex items-center justify-between gap-3 rounded-lg border border-border bg-background/40 px-3 py-2.5"
+						>
+							<div class="flex flex-col gap-0.5">
+								<span
+									class="text-[0.82rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground"
 									>Fancy badges</span
 								>
 								<span class="text-[0.72rem] text-foreground-muted"
@@ -2343,7 +2303,7 @@
 								<p
 									class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
 								>
-									Easing
+									Panel easing
 								</p>
 								<span
 									class="text-[0.65rem] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted/70"
@@ -2376,6 +2336,48 @@
 								</Select.Content>
 							</Select.Root>
 							<p class="m-0 text-[0.72rem] text-foreground-muted">{currentEasing.description}</p>
+						</section>
+
+						<section class="flex flex-col gap-2">
+							<div class="flex items-baseline justify-between">
+								<p
+									class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+								>
+									Control easing
+								</p>
+								<span
+									class="text-[0.65rem] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted/70"
+									>{currentHoverEasing.label}</span
+								>
+							</div>
+							<Select.Root value={editorTheme.motion.hoverEasing ?? defaultHoverEasing} class="">
+								<Select.Trigger class="h-9 w-full text-[0.82rem]" variant="outlined">
+									{currentHoverEasing.label}
+								</Select.Trigger>
+								<Select.Content class="max-h-72 overflow-y-auto">
+									{#each easingOptions as opt}
+										<Select.Item
+											value={opt.value}
+											label={opt.label}
+											class=""
+											onclick={() => updateHoverEasing(opt.value)}
+										>
+											<span class="flex w-full items-center justify-between gap-3">
+												<span
+													class="[font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]"
+													>{opt.label}</span
+												>
+												<code class="font-mono text-[0.66rem] text-foreground-muted"
+													>{opt.value}</code
+												>
+											</span>
+										</Select.Item>
+									{/each}
+								</Select.Content>
+							</Select.Root>
+							<p class="m-0 text-[0.72rem] text-foreground-muted">
+								Hover / press easing for buttons and fields. {currentHoverEasing.description}
+							</p>
 						</section>
 					</Tabs.Content>
 

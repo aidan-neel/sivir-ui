@@ -59,4 +59,20 @@ The Studio page (4,079 lines) was decomposed by extracting the **Playground prev
 
 ### D2.2 — Visual verification harness
 
-Playwright's `chrome` channel needs sudo for system deps (unavailable); installed `chromium` instead and drive it via a direct node script (`/tmp/silk-*.mjs`) against the dev server, rather than the Playwright MCP (which hard-looks for `/opt/google/chrome/chrome`). This gives a working before/after screenshot loop for the refactor/UI phases. **Note:** the `/themes/[name].css` endpoint returns 500 in this dev env — pre-existing, caused by the theme-**registry** backend not running (fails at `getRegistryThemeBySlug`, never reaches `themeToCss`); unrelated to this work and does not affect Studio rendering.
+Playwright's `chrome` channel needs sudo for system deps (unavailable); installed `chromium` instead and drive it via a direct node script (`/tmp/silk-*.mjs`) against the dev server, rather than the Playwright MCP (which hard-looks for `/opt/google/chrome/chrome`). This gives a working before/after screenshot loop for the refactor/UI phases. **Note:** the `/themes/[name].css` endpoint returns 500 in this dev env — pre-existing, caused by the theme-**registry** backend not running (fails at `getRegistryThemeBySlug`, never reaches `themeToCss`); unrelated to this work and does not affect Studio rendering. **Lesson:** restart the dev server fresh before visual verification — accumulated HMR cycles can desync client bundles and (transiently) serve stale/wrong content with hydration_mismatch warnings; a fresh server renders correctly.
+
+## Phase 3
+
+### D3.1 — Preview augmented with a Gallery screen rather than rewritten
+
+The brief says "rebuild" the preview, but the existing dashboard/settings/mail mock was already polished and already covered most groups. **Decision:** add a 4th "Gallery" screen that systematically renders a representative component from **every** token group (sections tagged `data-group`), rather than rewriting the existing screens. **Rationale:** preserves the existing quality (no regression risk), guarantees full group coverage, and makes the coverage acceptance test trivial (`studio-preview.test.ts` switches to Gallery and asserts each `data-group` + representative `data-ui`). Skipped Magic MCP — the visual language is already coherent and a from-scratch redesign would risk quality for little gain.
+
+## Phase 4
+
+### D4.1 — Wired `primaryButtonOutline` via CSS `outline` (no layout shift); deferred `invertedPanels`
+
+`primaryButtonOutline` was an inert flag. **Decision:** wire it through `--button-primary-border` consumed as a CSS **`outline`** (`outline outline-1 -outline-offset-1`) on the primary button — `outline` never affects box size, so the default (transparent) is a zero-layout, zero-visual change; the flag flips it to a tinted color via `themeToCss`. Set the `ui.css` base `--button-primary-border` to `transparent` so the docs site (no live theme) is unaffected. Added a Colors-tab toggle (verified live: the primary button gains a tinted outline). **`invertedPanels`** remains deferred: making it functional requires repointing menu-item color consumers across Dropdown/Context/Select/Combobox/Command/Popover to `--floating-menu-item-*` — a multi-file change; logged in `style-rollout.md` backlog. **Rationale:** outline is the one clean, no-regression way to honor "a control must do something" for the primary outline now; the menu-inversion rewiring is higher-risk and lower-traffic.
+
+### D4.2 — Completeness invariant via extracted `spacing-fields.ts`
+
+Extracted the Padding-tab control config to `spacing-fields.ts` and added the five Phase-1 tokens (fieldPaddingY, buttonGap, switchTrackPadding, textareaMinHeight, textareaPaddingY) plus a `hoverEasing` (control-easing) control in the Shape tab (decoupled from panel easing). `studio-spacing-fields.test.ts` asserts the control set equals `Object.keys(defaultSpacing)` exactly — the enforced "no orphan tokens / no dead controls" guarantee. **Deferred new directions (backlog):** per-group radius/elevation/focus-ring scales, density/scale tokens, border-treatment tokens — additive token-group expansions best paired with the Style mechanism (Phase 5), listed in `style-rollout.md`.

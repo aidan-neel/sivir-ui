@@ -5,7 +5,7 @@ export const button = tv({
 	variants: {
 		variant: {
 			primary:
-				'[--ui-button-shadow:var(--button-primary-shadow)] relative bg-[var(--button-primary-bg)] text-[var(--button-primary-foreground)] hover:bg-[var(--button-primary-hover-bg)] shadow-[var(--ui-button-shadow)] before:absolute before:inset-px before:rounded-[calc(var(--radius-lg)-1px)] before:border before:border-[var(--button-fancy-highlight,rgba(255,255,255,0.12))] before:[mask-image:linear-gradient(to_bottom,black,transparent)] before:pointer-events-none',
+				'[--ui-button-shadow:var(--button-primary-shadow)] relative bg-[var(--button-primary-bg)] text-[var(--button-primary-foreground)] hover:bg-[var(--button-primary-hover-bg)] shadow-[var(--ui-button-shadow)] outline outline-1 -outline-offset-1 outline-[var(--button-primary-border)] before:absolute before:inset-px before:rounded-[calc(var(--radius-lg)-1px)] before:border before:border-[var(--button-fancy-highlight,rgba(255,255,255,0.12))] before:[mask-image:linear-gradient(to_bottom,black,transparent)] before:pointer-events-none',
 			success:
 				'[--ui-button-shadow:var(--button-success-shadow)] relative bg-[var(--button-success-bg)] text-[var(--button-success-foreground)] hover:bg-[var(--button-success-hover-bg)] shadow-[var(--ui-button-shadow)] before:absolute before:inset-px before:rounded-[calc(var(--radius-lg)-1px)] before:border before:border-[var(--button-fancy-highlight,rgba(255,255,255,0.12))] before:[mask-image:linear-gradient(to_bottom,black,transparent)] before:pointer-events-none',
 			warning:
