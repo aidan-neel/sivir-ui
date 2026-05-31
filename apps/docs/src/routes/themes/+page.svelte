@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
+	import { resolve } from '$app/paths';
 	import { builtInThemePresets } from '@silk/ui/themes/builtin-presets';
 	import { Button } from '@silk/ui/components/button';
 	import { Input } from '@silk/ui/components/input';
@@ -226,7 +227,7 @@
 			darkBasePalette: basePaletteFrom(theme.dark)
 		});
 		applyLiveThemeCss(themeToCss(theme));
-		void goto('/themes/studio');
+		void goto(resolve('/themes/studio'));
 	}
 </script>
 
@@ -294,7 +295,7 @@
 						variant="primary"
 						size="sm"
 						class="h-9 gap-1.5 text-[0.82rem]"
-						onclick={() => void goto('/themes/studio')}
+						onclick={() => void goto(resolve('/themes/studio'))}
 					>
 						<Wand size={13} />
 						Open studio
@@ -424,7 +425,7 @@
 				{#if searchQuery.trim()}
 					<Button variant="ghost" size="sm" onclick={() => (searchQuery = '')}>Clear search</Button>
 				{:else}
-					<Button size="sm" onclick={() => void goto('/themes/studio')}>
+					<Button size="sm" onclick={() => void goto(resolve('/themes/studio'))}>
 						<Wand size={13} />
 						Publish from studio
 					</Button>
@@ -690,7 +691,7 @@
 
 							<!-- Swatches -->
 							<div class="mb-6 grid grid-cols-6 gap-2 max-sm:grid-cols-3">
-								{#each [{ name: 'Primary', color: palette.primary }, { name: 'Secondary', color: palette.secondary }, { name: 'Accent', color: palette.accent }, { name: 'Success', color: palette.success }, { name: 'Warning', color: palette.warning }, { name: 'Error', color: palette.error }] as s}
+								{#each [{ name: 'Primary', color: palette.primary }, { name: 'Secondary', color: palette.secondary }, { name: 'Accent', color: palette.accent }, { name: 'Success', color: palette.success }, { name: 'Warning', color: palette.warning }, { name: 'Error', color: palette.error }] as s (s.name)}
 									<div class="flex flex-col gap-1">
 										<span
 											class="h-12 w-full rounded-[var(--radius-md)] border"

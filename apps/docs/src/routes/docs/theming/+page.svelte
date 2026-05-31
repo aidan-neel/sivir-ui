@@ -195,7 +195,7 @@
 	</div>
 
 	<div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-		{#each layerCards as layer}
+		{#each layerCards as layer (layer.title)}
 			<div class="flex flex-col gap-3 rounded-[var(--radius-lg)] border border-border bg-card p-5">
 				<div class="flex items-center justify-between">
 					<span class="grid size-9 place-items-center rounded-md bg-secondary/60 text-foreground">
@@ -215,7 +215,7 @@
 				</p>
 				<p class="m-0 text-[0.84rem] leading-relaxed text-foreground-muted">{layer.body}</p>
 				<div class="flex flex-wrap gap-1.5 pt-1">
-					{#each layer.tokens as token}
+					{#each layer.tokens as token (token)}
 						<code
 							class="rounded-md border border-border/70 bg-secondary/40 px-1.5 py-0.5 font-mono text-[0.7rem] text-foreground-muted"
 						>
@@ -245,7 +245,7 @@
 		Start at the top. Drop down a layer only when the one above isn't enough.
 	</p>
 
-	<Tabs.Root bind:value={activeTab}>
+	<Tabs.Root bind:value={activeTab} variant="outlined">
 		<Tabs.List>
 			<Tabs.Trigger value="semantic">1 · Semantic tokens</Tabs.Trigger>
 			<Tabs.Trigger value="component">2 · Component tokens</Tabs.Trigger>

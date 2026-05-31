@@ -37,10 +37,12 @@
 		resolveTypography,
 		type ThemeTypography,
 		resolveSpacing,
-		type ThemeSpacing
+		type ThemeSpacing,
+		defaultSpacing,
+		densityLevels,
+		scaleSpacing
 	} from '@silk/ui/themes/presets';
 	import { transitionPresets, type ThemeTransitionPresetSlug } from '@silk/ui/themes/transitions';
-	import { stylePresets, getStyle, styleToCss } from '@silk/ui/themes/styles';
 	import { builtInThemePresets } from '@silk/ui/themes/builtin-presets';
 
 	import RotateCcw from '@lucide/svelte/icons/rotate-ccw';
@@ -53,7 +55,6 @@
 	import Sun from '@lucide/svelte/icons/sun';
 	import ChevronDown from '@lucide/svelte/icons/chevron-down';
 	import Send from '@lucide/svelte/icons/send';
-	import Sparkles from '@lucide/svelte/icons/sparkles';
 	import Save from '@lucide/svelte/icons/save';
 	import Sliders from '@lucide/svelte/icons/sliders-horizontal';
 	import X from '@lucide/svelte/icons/x';
@@ -713,9 +714,10 @@
 
 	const getInitialThemesCatalog = () => {
 		const themes = Array.isArray(data?.themes) ? data.themes : [];
-		return themes.length
-			? [...builtInThemePresets, ...themes.filter((t) => t.slug !== 'default')]
-			: builtInThemePresets;
+		// `data.themes` may already include the built-ins (the server merges them in),
+		// so prepend the built-ins and dedupe by slug -- keeping the built-in first.
+		const merged = themes.length ? [...builtInThemePresets, ...themes] : builtInThemePresets;
+		return merged.filter((t, i) => merged.findIndex((other) => other.slug === t.slug) === i);
 	};
 	const initialThemesCatalog = getInitialThemesCatalog();
 	const defaultTheme = initialThemesCatalog[0];
@@ -738,16 +740,18 @@
 	let lastSnapshot = $state<StudioSnapshot>(createStudioState(defaultTheme));
 	let lastSnapshotSignature = $state(JSON.stringify(createStudioState(defaultTheme)));
 	let inspectorTab = $state('colors');
+	// Which reference screen the canvas renders. Drives <StudioPreview />.
+	let activePreview = $state('components');
+	const previewOptions = [
+		{ id: 'components', label: 'Components' },
+		{ id: 'dashboard', label: 'Dashboard' },
+		{ id: 'settings', label: 'Settings' },
+		{ id: 'login', label: 'Login' },
+		{ id: 'mail', label: 'Mail' }
+	] as const;
 	// Mobile: inspector is a slide-up drawer toggled by a floating button.
 	// On lg+ this is ignored and the inspector renders inline on the right.
 	let mobileInspectorOpen = $state(false);
-
-	// Style: a coherent token-override layer (Flat / Soft / Sharp) applied on top
-	// of the theme. 'none' = theme defaults.
-	let selectedStyleSlug = $state('none');
-	function selectStyle(slug: string) {
-		selectedStyleSlug = slug;
-	}
 
 	// Source of truth: editorTheme.overlaysOnSurface. The Switch reads the
 	// derived `overlaysOnSurfaceOn` and writes via the onclick callback --
@@ -800,6 +804,26 @@
 		selectedPresetSlug = 'custom';
 	}
 
+	function updateAllSpacing(next: ThemeSpacing) {
+		editorTheme.spacing = { ...next };
+		selectedPresetSlug = 'custom';
+	}
+
+	// Padding-tab density presets: each level applies a scaled copy of the
+	// default spacing to every token at once. Computed once from densityLevels.
+	const densityPresets = densityLevels.map((level) => ({
+		...level,
+		spacing: scaleSpacing(defaultSpacing, level.scale)
+	}));
+
+	// Highlights the card whose computed spacing matches the editor's current
+	// spacing exactly. resolveSpacing and scaleSpacing share defaultSpacing's key
+	// order, so JSON comparison is stable.
+	const activeDensitySlug = $derived.by(() => {
+		const current = JSON.stringify(resolveSpacing(editorTheme.spacing));
+		return densityPresets.find((d) => JSON.stringify(d.spacing) === current)?.slug ?? null;
+	});
+
 	// spacingGroups (the Padding-tab control config) lives in a module so the
 	// completeness test can assert it covers every defaultSpacing key 1:1.
 
@@ -809,7 +833,7 @@
 			motion: resolveThemeMotion(editorTheme.durationPreset, editorTheme.motion),
 			name: editorName,
 			slug: slugifyThemeName(editorName) || 'custom-theme'
-		}) + styleToCss(getStyle(selectedStyleSlug))
+		})
 	);
 	const generatedTypeScriptPreset = $derived(
 		themeToTypeScriptPreset({
@@ -818,10 +842,6 @@
 			name: editorName.trim() || editorTheme.name,
 			slug: slugifyThemeName(editorName) || 'custom-theme'
 		})
-	);
-
-	const activePreset = $derived(
-		themesCatalog.find((theme) => theme.slug === selectedPresetSlug) ?? null
 	);
 
 	const colorMode = $derived<'light' | 'dark'>(mode.current === 'dark' ? 'dark' : 'light');
@@ -1264,16 +1284,6 @@
 	let savedThemes = $state<SavedTheme[]>([]);
 	let activeSavedThemeId = $state<string | null>(null);
 
-	// Toolbar Select.Item values for saved themes use their unique `id` (with a
-	// `local:` prefix) so two saved themes with the same name don't collide.
-	const selectedSelectValue = $derived(
-		activeSavedThemeId ? `local:${activeSavedThemeId}` : selectedPresetSlug
-	);
-
-	const activeSavedTheme = $derived(
-		activeSavedThemeId ? (savedThemes.find((t) => t.id === activeSavedThemeId) ?? null) : null
-	);
-
 	let lastSavedSignature = $state('');
 	let saveAlertOpen = $state(false);
 	let pendingThemeLoad = $state<ThemeDraft | null>(null);
@@ -1423,69 +1433,15 @@
 	<header
 		class="z-10 flex h-14 shrink-0 items-center gap-3 overflow-x-auto whitespace-nowrap border-b border-border bg-background px-3 md:px-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
 	>
-		<!-- Left cluster: theme identity -->
-		<div class="flex min-w-0 items-center gap-2">
-			<span
-				class="grid size-8 place-items-center rounded-lg bg-primary text-foreground-opposite shadow-[inset_0_1px_0_rgb(255_255_255_/_0.15)]"
-				aria-hidden="true"
-			>
-				<Sparkles size={14} />
-			</span>
-			<div class="flex min-w-0 flex-col leading-none">
-				<span
-					class="text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
-					>Theme Studio</span
-				>
-				<span
-					class="truncate text-[0.95rem] [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)] tracking-tight text-foreground"
-					style="font-family: var(--font-header);"
-					aria-label="Theme name"
-				>
-					{editorName}
-				</span>
-			</div>
-		</div>
-
-		<span class="h-6 w-px bg-border" aria-hidden="true"></span>
-
-		<!-- Preset select -->
-		<div class="hidden md:block">
-			<Select.Root value={selectedSelectValue}>
-				<Select.Trigger class="h-8 min-w-[10rem] gap-1.5 text-[0.82rem]" variant="outlined">
-					{activeSavedTheme?.name ?? activePreset?.name ?? 'Custom'}
-				</Select.Trigger>
-				<Select.Content class="max-h-72 overflow-y-auto">
-					{#if savedThemes.length > 0}
-						<Select.Label class="">Custom</Select.Label>
-						{#each savedThemes as preset (preset.id)}
-							<Select.Item
-								value={`local:${preset.id}`}
-								onclick={() => attemptLoadPreset(preset, preset.id)}
-							>
-								<span class="flex w-full items-center gap-2 text-left">
-									<span
-										class="size-3 rounded-full ring-1 ring-border"
-										style={`background:${preset.light.primary};`}
-									></span>
-									<span class="flex-1 truncate">{preset.name}</span>
-								</span>
-							</Select.Item>
-						{/each}
-						<Select.Label class="">Catalog</Select.Label>
-					{/if}
-					{#each themesCatalog.slice(0, 7) as preset (preset.slug)}
-						<Select.Item value={preset.slug} onclick={() => attemptLoadPreset(preset)}>
-							<span class="flex w-full items-center gap-2 text-left">
-								<span
-									class="size-3 rounded-full ring-1 ring-border"
-									style={`background:${preset.light.primary};`}
-								></span>
-								<span class="flex-1 truncate">{preset.name}</span>
-							</span>
-						</Select.Item>
+		<!-- Left cluster: preview selector -->
+		<div class="flex min-w-0 items-center gap-2.5">
+			<Tabs.Root bind:value={activePreview}>
+				<Tabs.List>
+					{#each previewOptions as opt (opt.id)}
+						<Tabs.Trigger value={opt.id} class="text-[0.78rem]">{opt.label}</Tabs.Trigger>
 					{/each}
-				</Select.Content>
-			</Select.Root>
+				</Tabs.List>
+			</Tabs.Root>
 		</div>
 
 		<!-- Spacer -->
@@ -1675,7 +1631,7 @@
 	<!-- ───────────────────────  WORKSPACE  ─────────────────────── -->
 	<div class="flex min-h-0 flex-1 max-lg:flex-col">
 		<!-- ───── CANVAS ───── -->
-		<StudioPreview />
+		<StudioPreview preview={activePreview} onpreview={(id) => (activePreview = id)} />
 
 		<!-- Mobile drawer toggle (lg-: floating button, lg+: hidden) -->
 		<button
@@ -1702,7 +1658,7 @@
 		<!-- ───── INSPECTOR ───── -->
 		<aside
 			id="studio-inspector"
-			class={`flex w-[22.5rem] shrink-0 flex-col overflow-hidden border-l border-border bg-background
+			class={`flex w-[25rem] shrink-0 flex-col overflow-hidden border-l border-border bg-background
 				max-lg:fixed max-lg:inset-x-0 max-lg:bottom-0 max-lg:z-40 max-lg:w-auto max-lg:h-[78vh] max-lg:border-l-0 max-lg:border-t max-lg:rounded-t-[var(--radius-lg)] max-lg:transition-transform max-lg:duration-[var(--motion-duration-sheet,260ms)] max-lg:ease-out max-lg:shadow-[0_-12px_36px_-12px_color-mix(in_srgb,var(--color-foreground)_18%,transparent)]
 				${mobileInspectorOpen ? 'max-lg:translate-y-0' : 'max-lg:translate-y-full max-lg:pointer-events-none'}`}
 		>
@@ -1713,7 +1669,7 @@
 			<Tabs.Root bind:value={inspectorTab} class="flex h-full flex-col">
 				<div class="flex justify-center border-b border-border p-2.5">
 					<Tabs.List class="flex w-full">
-						{#each tabs as t}
+						{#each tabs as t (t.id)}
 							<Tabs.Trigger value={t.id} class="flex-1 min-w-0 text-[0.76rem] px-2">
 								{t.label}
 							</Tabs.Trigger>
@@ -1979,7 +1935,7 @@
 									{headerFontSelection}
 								</Select.Trigger>
 								<Select.Content class="max-h-72 overflow-y-auto">
-									{#each fontOptions as font}
+									{#each fontOptions as font (font.value)}
 										<Select.Item value={font.label} onclick={() => updateHeaderFont(font.label)}>
 											<span style={`font-family:${font.value};`} class="text-left">
 												{font.label}
@@ -2001,7 +1957,7 @@
 									{bodyFontSelection}
 								</Select.Trigger>
 								<Select.Content class="max-h-72 overflow-y-auto">
-									{#each fontOptions as font}
+									{#each fontOptions as font (font.value)}
 										<Select.Item value={font.label} onclick={() => updateBodyFont(font.label)}>
 											<span style={`font-family:${font.value};`} class="text-left">
 												{font.label}
@@ -2024,7 +1980,7 @@
 								<span class="text-[0.66rem] text-foreground-muted/70">Per-element</span>
 							</div>
 							<div class="flex flex-col gap-2.5">
-								{#each weightFields as field}
+								{#each weightFields as field (field.key)}
 									{@const typo = editorTheme.typography ?? defaultTypography}
 									{@const currentWeight = typo[field.key] ?? defaultTypography[field.key]}
 									{@const currentTracking =
@@ -2034,18 +1990,15 @@
 										field.key === 'weightHeader' ? 'var(--font-header)' : 'var(--font-sans)'}
 									<div class="flex flex-col gap-1.5">
 										<span class="text-[0.74rem] text-foreground-muted">{field.label}</span>
-										<div class="flex items-center gap-1.5">
+										<div class="grid grid-cols-3 gap-1.5">
 											<Select.Root value={String(currentSize)} class="">
-												<Select.Trigger
-													class="h-8 w-[4.75rem] shrink-0 text-[0.78rem]"
-													variant="outlined"
-												>
+												<Select.Trigger class="h-8 w-full text-[0.78rem]" variant="outlined">
 													<span class="block min-w-0 flex-1 truncate text-left"
 														>{sizeLabelFor(currentSize)}</span
 													>
 												</Select.Trigger>
 												<Select.Content class="max-h-72 overflow-y-auto">
-													{#each sizeOptions as opt}
+													{#each sizeOptions as opt (opt.value)}
 														<Select.Item
 															class=""
 															value={String(opt.value)}
@@ -2064,16 +2017,13 @@
 												</Select.Content>
 											</Select.Root>
 											<Select.Root value={String(currentWeight)} class="">
-												<Select.Trigger
-													class="h-8 w-[6.5rem] shrink-0 text-[0.78rem]"
-													variant="outlined"
-												>
+												<Select.Trigger class="h-8 w-full text-[0.78rem]" variant="outlined">
 													<span class="block min-w-0 flex-1 truncate text-left"
 														>{weightLabel(currentWeight)}</span
 													>
 												</Select.Trigger>
 												<Select.Content class="max-h-72 overflow-y-auto">
-													{#each weightOptions as opt}
+													{#each weightOptions as opt (opt.value)}
 														<Select.Item
 															class=""
 															value={String(opt.value)}
@@ -2092,16 +2042,13 @@
 												</Select.Content>
 											</Select.Root>
 											<Select.Root value={String(currentTracking)} class="">
-												<Select.Trigger
-													class="h-8 w-[6.5rem] shrink-0 text-[0.78rem]"
-													variant="outlined"
-												>
+												<Select.Trigger class="h-8 w-full text-[0.78rem]" variant="outlined">
 													<span class="block min-w-0 flex-1 truncate text-left"
 														>{trackingLabelFor(currentTracking)}</span
 													>
 												</Select.Trigger>
 												<Select.Content class="max-h-72 overflow-y-auto">
-													{#each trackingOptions as opt}
+													{#each trackingOptions as opt (opt.value)}
 														<Select.Item
 															class=""
 															value={String(opt.value)}
@@ -2155,46 +2102,6 @@
 
 					<!-- SHAPE TAB -->
 					<Tabs.Content value="shape" class="flex flex-col gap-4 p-3.5">
-						<!-- Style: coherent token-bundle presets (Flat / Soft / Sharp) -->
-						<section class="flex flex-col gap-2" data-ui="style-picker">
-							<div class="flex items-baseline justify-between">
-								<p
-									class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
-								>
-									Style
-								</p>
-								<span
-									class="text-[0.65rem] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted/70"
-									>coherent token bundle</span
-								>
-							</div>
-							<div class="grid grid-cols-2 gap-1.5">
-								<button
-									type="button"
-									onclick={() => selectStyle('none')}
-									aria-pressed={selectedStyleSlug === 'none'}
-									class={`rounded-[var(--radius-md)] border px-2.5 py-1.5 text-[0.8rem] transition-colors ${selectedStyleSlug === 'none' ? 'border-primary bg-primary/10 text-foreground' : 'border-border bg-background text-foreground-muted hover:bg-secondary'}`}
-								>
-									Default
-								</button>
-								{#each stylePresets as s (s.slug)}
-									<button
-										type="button"
-										onclick={() => selectStyle(s.slug)}
-										aria-pressed={selectedStyleSlug === s.slug}
-										title={s.description}
-										class={`rounded-[var(--radius-md)] border px-2.5 py-1.5 text-[0.8rem] transition-colors ${selectedStyleSlug === s.slug ? 'border-primary bg-primary/10 text-foreground' : 'border-border bg-background text-foreground-muted hover:bg-secondary'}`}
-									>
-										{s.name}
-									</button>
-								{/each}
-							</div>
-							<p class="m-0 text-[0.72rem] text-foreground-muted">
-								{getStyle(selectedStyleSlug)?.description ??
-									'Theme defaults. Pick a style to apply a coherent radius/elevation language across the reference components.'}
-							</p>
-						</section>
-
 						<section class="flex flex-col gap-2">
 							<div class="flex items-baseline justify-between">
 								<p
@@ -2208,28 +2115,14 @@
 									{Number.parseFloat(editorTheme.radiusBase).toFixed(2)}rem
 								</span>
 							</div>
-							<div class="grid grid-cols-4 gap-1.5">
-								{#each radiusOptions as opt}
-									<button
-										type="button"
-										onclick={() => updateRadius(opt.value)}
-										class={`flex flex-col items-center gap-1.5 rounded-lg border p-2 text-[0.68rem] transition-colors ${editorTheme.radiusBase === opt.value ? 'border-primary bg-primary/10 text-primary' : 'border-border bg-background/40 text-foreground-muted hover:border-border-strong'}`}
-									>
-										<span
-											class="block size-6 border border-current"
-											style={`border-radius:${opt.value};`}
-											aria-hidden="true"
-										></span>
-										<span>{opt.label}</span>
-									</button>
-								{/each}
-							</div>
 							<input
 								type="range"
-								min="0.14"
+								min="0"
 								max="1.2"
 								step="0.01"
-								value={Number.parseFloat(editorTheme.radiusBase) || 0.45}
+								value={Number.isFinite(Number.parseFloat(editorTheme.radiusBase))
+									? Number.parseFloat(editorTheme.radiusBase)
+									: 0.45}
 								oninput={(e) =>
 									updateRadius(
 										`${Number.parseFloat((e.currentTarget as HTMLInputElement).value).toFixed(2)}rem`
@@ -2237,7 +2130,7 @@
 								class="silk-range mt-1"
 							/>
 							<span class="text-[0.66rem] text-foreground-muted">
-								Drag to fine-tune between presets.
+								Drag to set the base corner radius, from square to fully rounded.
 							</span>
 						</section>
 
@@ -2250,7 +2143,7 @@
 								Motion preset
 							</p>
 							<div class="grid grid-cols-3 gap-1.5">
-								{#each transitionPresets as preset}
+								{#each transitionPresets as preset (preset.slug)}
 									{@const active = editorTheme.durationPreset === preset.slug}
 									{@const speedDots =
 										preset.slug === 'none' || preset.slug === 'instant'
@@ -2267,7 +2160,7 @@
 										class={`flex flex-col items-center gap-1.5 rounded-lg border p-2 text-[0.72rem] transition-colors ${active ? 'border-primary bg-primary/10 text-foreground' : 'border-border bg-background/40 text-foreground-muted hover:border-border-strong'}`}
 									>
 										<span class="flex items-center gap-0.5" aria-hidden="true">
-											{#each Array(4) as _, i}
+											{#each Array(4) as _, i (i)}
 												<span
 													class={`size-1 rounded-full ${i < speedDots ? (active ? 'bg-primary' : 'bg-foreground-muted') : 'bg-border'}`}
 												></span>
@@ -2363,7 +2256,7 @@
 									{currentEasing.label}
 								</Select.Trigger>
 								<Select.Content class="max-h-72 overflow-y-auto">
-									{#each easingOptions as opt}
+									{#each easingOptions as opt (opt.value)}
 										<Select.Item
 											value={opt.value}
 											label={opt.label}
@@ -2403,7 +2296,7 @@
 									{currentHoverEasing.label}
 								</Select.Trigger>
 								<Select.Content class="max-h-72 overflow-y-auto">
-									{#each easingOptions as opt}
+									{#each easingOptions as opt (opt.value)}
 										<Select.Item
 											value={opt.value}
 											label={opt.label}
@@ -2438,6 +2331,48 @@
 								Spacing & sizing
 							</p>
 						</div>
+
+						<section class="flex flex-col gap-2">
+							<div class="flex flex-col gap-1">
+								<span
+									class="text-[0.7rem] uppercase [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted/80"
+								>
+									Density presets
+								</span>
+								<p
+									class="text-[0.65rem] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted/70"
+								>
+									Set every padding & size token at once, from tight to roomy.
+								</p>
+							</div>
+							<div class="grid grid-cols-5 gap-1.5">
+								{#each densityPresets as level (level.slug)}
+									{@const active = activeDensitySlug === level.slug}
+									<button
+										type="button"
+										onclick={() => updateAllSpacing(level.spacing)}
+										class={`flex flex-col items-center gap-1.5 rounded-lg border p-2 text-[0.62rem] transition-colors ${active ? 'border-primary bg-primary/10 text-foreground' : 'border-border bg-background/40 text-foreground-muted hover:border-border-strong'}`}
+									>
+										<span
+											class="flex h-6 w-6 flex-col items-stretch justify-center"
+											style={`gap:${level.scale * 2.5}px`}
+											aria-hidden="true"
+										>
+											<span class="h-[2px] rounded-full bg-current opacity-60"></span>
+											<span class="h-[2px] rounded-full bg-current opacity-60"></span>
+											<span class="h-[2px] rounded-full bg-current opacity-60"></span>
+										</span>
+										<span
+											class="text-center leading-tight [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]"
+										>
+											{level.label}
+										</span>
+									</button>
+								{/each}
+							</div>
+						</section>
+
+						<div class="border-t border-border/60"></div>
 
 						{#each spacingGroups as group, gi (group.title)}
 							{#if gi > 0}
@@ -2534,7 +2469,7 @@
 												class="absolute inset-0"
 												aria-label={`Load ${preset.name}`}
 											></button>
-											<div class="relative flex gap-0.5">
+											<div class="flex gap-0.5">
 												<span
 													class="size-5 rounded-md ring-1 ring-border/60"
 													style={`background:${preset.light.background};`}
@@ -2552,7 +2487,7 @@
 													style={`background:${preset.dark.primary};`}
 												></span>
 											</div>
-											<div class="relative min-w-0 flex-1">
+											<div class="min-w-0 flex-1">
 												<p
 													class="m-0 truncate text-[0.8rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]"
 												>
@@ -2586,7 +2521,7 @@
 								Catalog
 							</p>
 							<div class="flex flex-col gap-1">
-								{#each themesCatalog as preset}
+								{#each themesCatalog as preset (preset.slug)}
 									<button
 										type="button"
 										onclick={() => attemptLoadPreset(preset)}
@@ -2636,7 +2571,7 @@
 	<!-- ─── All colors dialog ─── -->
 	<Modal.Root bind:open={advancedColorsOpen}>
 		<Modal.Content
-			class="flex w-full max-w-[min(42rem,calc(100vw-2rem))] flex-col gap-0 overflow-hidden p-0"
+			class="flex max-h-[min(46rem,calc(100dvh-2rem))] w-full max-w-[min(42rem,calc(100vw-2rem))] flex-col gap-0 overflow-hidden p-0"
 		>
 			<div class="flex shrink-0 items-start justify-between px-5 py-4">
 				<div class="flex flex-col gap-1">
@@ -2650,7 +2585,16 @@
 				</Modal.Close>
 			</div>
 
-			<Tabs.Root bind:value={advancedColorsMode} class="flex min-h-0 flex-1 flex-col">
+			<Tabs.Root
+				bind:value={
+					() => advancedColorsMode,
+					(v) => {
+						advancedColorsMode = v as 'light' | 'dark';
+						setMode(v as 'light' | 'dark');
+					}
+				}
+				class="flex min-h-0 flex-1 flex-col"
+			>
 				<div class="flex shrink-0 items-center justify-between border-b border-border px-5 py-3">
 					<Tabs.List>
 						<Tabs.Trigger value="light">Light</Tabs.Trigger>
@@ -2662,9 +2606,9 @@
 				</div>
 
 				<div class="min-h-0 flex-1 overflow-y-auto px-5 py-4">
-					{#each ['light', 'dark'] as mode}
+					{#each ['light', 'dark'] as mode (mode)}
 						<Tabs.Content value={mode} class="flex flex-col gap-5">
-							{#each paletteGroups as group}
+							{#each paletteGroups as group (group.title)}
 								<section class="flex flex-col gap-2">
 									<p
 										class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
@@ -2672,7 +2616,7 @@
 										{group.title}
 									</p>
 									<div class="grid grid-cols-2 gap-x-3 gap-y-2 max-sm:grid-cols-1">
-										{#each group.fields as field}
+										{#each group.fields as field (field.key)}
 											<div class="flex items-center justify-between gap-2">
 												<span class="text-[0.74rem] text-foreground">{field.label}</span>
 												<ColorPicker
@@ -2793,7 +2737,7 @@
 	<!-- ─── All motion dialog ─── -->
 	<Modal.Root bind:open={advancedMotionOpen}>
 		<Modal.Content
-			class="flex w-full max-w-[min(36rem,calc(100vw-2rem))] flex-col gap-0 overflow-hidden p-0"
+			class="flex max-h-[min(46rem,calc(100dvh-2rem))] w-full max-w-[min(36rem,calc(100vw-2rem))] flex-col gap-0 overflow-hidden p-0"
 		>
 			<div class="flex shrink-0 items-start justify-between px-5 py-4">
 				<div class="flex flex-col gap-1">
@@ -2815,7 +2759,7 @@
 						Durations
 					</p>
 					<div class="grid grid-cols-2 gap-x-4 gap-y-4 max-sm:grid-cols-1">
-						{#each motionDurationFields as field}
+						{#each motionDurationFields as field (field.key)}
 							{@const value = durationToMs(editorTheme.motion[field.key])}
 							<label class="flex flex-col gap-1.5">
 								<div class="flex items-baseline justify-between gap-2">
@@ -2855,7 +2799,7 @@
 						Per-surface transform & blur — shapes how panels enter the screen.
 					</span>
 					<div class="grid grid-cols-2 gap-x-4 gap-y-4 max-sm:grid-cols-1">
-						{#each motionNumberFields as field}
+						{#each motionNumberFields as field (field.key)}
 							{@const numericValue = (editorTheme.motion[field.key] ?? 0) as number}
 							{@const display = field.format ? field.format(numericValue) : String(numericValue)}
 							<label class="flex flex-col gap-1.5">

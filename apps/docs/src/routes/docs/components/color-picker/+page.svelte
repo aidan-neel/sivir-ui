@@ -259,7 +259,7 @@
 		</div>
 
 		<div class="grid gap-3 md:grid-cols-3">
-			{#each ['outlined', 'secondary', 'ghost'] as v}
+			{#each ['outlined', 'secondary', 'ghost'] as v (v)}
 				<div
 					class="flex flex-col gap-3 rounded-[var(--radius-lg)] border border-border bg-card p-4"
 				>
@@ -297,7 +297,7 @@
 
 		<div class="overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card">
 			<ul class="flex flex-col divide-y divide-border/60">
-				{#each apiRows as row}
+				{#each apiRows as row, i (i)}
 					<li class="grid grid-cols-[1fr_1.6fr_0.5fr] gap-3 px-4 py-3 max-md:grid-cols-1">
 						<code
 							class="font-mono text-[0.82rem] [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)]"

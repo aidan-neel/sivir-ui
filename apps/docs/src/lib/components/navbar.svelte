@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { resolve } from '$app/paths';
+	import type { ResolvedPathname } from '$app/types';
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
 	import { components, sanitizeComponent } from '$lib/components';
@@ -52,56 +54,56 @@
 		{
 			title: 'Docs',
 			description: 'Browse the documentation hub',
-			href: '/docs',
+			href: resolve('/docs'),
 			icon: BookOpen,
 			keywords: 'docs documentation hub overview'
 		},
 		{
 			title: 'Introduction',
 			description: 'Overview and getting started with Silk UI',
-			href: '/docs/introduction',
+			href: resolve('/docs/introduction'),
 			icon: BookOpen,
 			keywords: 'docs intro overview getting started'
 		},
 		{
 			title: 'Installation',
 			description: 'Install and set up the library',
-			href: '/docs/installation',
+			href: resolve('/docs/installation'),
 			icon: Download,
 			keywords: 'docs install setup package'
 		},
 		{
 			title: 'Theming',
 			description: 'Customize tokens, colors, and defaults',
-			href: '/docs/theming',
+			href: resolve('/docs/theming'),
 			icon: Palette,
 			keywords: 'docs theme tokens colors styling'
 		},
 		{
 			title: 'Styling',
 			description: 'Learn how to style and override Silk UI components',
-			href: '/docs/styling',
+			href: resolve('/docs/styling'),
 			icon: Palette,
 			keywords: 'docs styling css overrides classes tokens'
 		},
 		{
 			title: 'Changelog',
 			description: 'Recent releases and updates',
-			href: '/docs/changelog',
+			href: resolve('/docs/changelog'),
 			icon: History,
 			keywords: 'docs release notes updates versions'
 		},
 		{
 			title: 'Themes',
 			description: 'Browse the theme presets gallery',
-			href: '/themes',
+			href: resolve('/themes'),
 			icon: LayoutTemplate,
 			keywords: 'themes presets gallery showcase'
 		},
 		{
 			title: 'Theme Studio',
 			description: 'Build, preview, and export a custom theme',
-			href: '/themes/studio',
+			href: resolve('/themes/studio'),
 			icon: LayoutTemplate,
 			keywords: 'themes studio editor preview export customize'
 		}
@@ -112,13 +114,13 @@
 		return {
 			title,
 			description: `${title} component docs`,
-			href: `/docs/components/${component}`,
+			href: resolve('/docs/components/[...slug]', { slug: component }),
 			icon: Component,
 			keywords: `component docs ${component} ${title.toLowerCase()}`
 		};
 	});
 
-	function navigateTo(href: string) {
+	function navigateTo(href: ResolvedPathname) {
 		void goto(href);
 	}
 
@@ -161,7 +163,7 @@
 		<Command.Root>
 			<div class="flex min-w-0 flex-row items-center gap-4 md:gap-5">
 				<a
-					href="/"
+					href={resolve('/')}
 					onclick={closeMobileMenu}
 					class="flex min-w-0 flex-row items-center gap-2 rounded-lg px-1 py-2 text-sm [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)] tracking-tight text-foreground transition-colors duration-150 hover:text-foreground"
 				>
@@ -174,7 +176,7 @@
 					</span>
 				</a>
 				<div class="hidden items-center gap-1 md:flex">
-					{#each navItems as item}
+					{#each navItems as item (item.href)}
 						<Navbutton href={item.href}>{item.label}</Navbutton>
 					{/each}
 				</div>
@@ -250,11 +252,14 @@
 				<Command.Search placeholder="Search pages, docs, and components..." />
 				<Command.Results>
 					<Command.Group heading="Pages">
-						<Command.Item name="Home landing page homepage main" callback={() => navigateTo('/')}>
+						<Command.Item
+							name="Home landing page homepage main"
+							callback={() => navigateTo(resolve('/'))}
+						>
 							<Rocket class="text-foreground-muted" />
 							<span>Home</span>
 						</Command.Item>
-						{#each docsPages as item}
+						{#each docsPages as item (item.href)}
 							<Command.Item
 								name={`${item.title} ${item.description} ${item.keywords}`}
 								callback={() => navigateTo(item.href)}
@@ -266,7 +271,7 @@
 					</Command.Group>
 					<Command.Separator />
 					<Command.Group heading="Components">
-						{#each componentPages as item}
+						{#each componentPages as item (item.href)}
 							<Command.Item
 								name={`${item.title} ${item.description} ${item.keywords}`}
 								callback={() => navigateTo(item.href)}
@@ -308,7 +313,7 @@
 				<div class="min-h-0 flex-1 overflow-y-auto">
 					<div class="border-b border-border/60 px-4 py-4">
 						<div class="grid gap-1.5">
-							{#each navItems as item}
+							{#each navItems as item (item.href)}
 								<Navbutton href={item.href} mobile onclick={closeMobileMenu}>
 									{item.label}
 								</Navbutton>

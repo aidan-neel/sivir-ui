@@ -12,8 +12,54 @@ import {
 	type ThemeBasePalette
 } from '@silk/ui/themes/presets';
 import { preset as defaultPreset } from '@silk/ui/themes/presets/default';
+import { builtInThemePresets } from '@silk/ui/themes/builtin-presets';
 import { button } from '@silk/ui/components/button/variants';
 import { input } from '@silk/ui/components/input/variants';
+
+describe('builtInThemePresets', () => {
+	it('includes the default plus the bundled personality presets', () => {
+		const slugs = builtInThemePresets.map((t) => t.slug);
+		expect(slugs).toContain('default');
+		expect(slugs).toContain('financial');
+		expect(slugs).toContain('saas');
+		expect(slugs).toContain('editorial');
+		expect(slugs).toContain('terminal');
+		expect(slugs).toContain('enterprise');
+	});
+
+	it('personality presets vary more than color — spacing and typography differ from defaults', () => {
+		const personalities = builtInThemePresets.filter((t) => t.slug !== 'default');
+		expect(personalities.length).toBeGreaterThan(0);
+		for (const theme of personalities) {
+			const spacingDiffers =
+				!!theme.spacing &&
+				Object.entries(theme.spacing).some(
+					([key, value]) => value !== defaultSpacing[key as keyof typeof defaultSpacing]
+				);
+			const typographyDiffers =
+				!!theme.typography &&
+				Object.entries(theme.typography).some(
+					([key, value]) => value !== defaultTypography[key as keyof typeof defaultTypography]
+				);
+			expect(spacingDiffers || typographyDiffers, `${theme.slug} only varies color`).toBe(true);
+		}
+	});
+
+	it('every built-in preset renders valid light + dark CSS', () => {
+		for (const theme of builtInThemePresets) {
+			const css = themeToCss(theme);
+			expect(css, theme.slug).toContain('--color-primary');
+			expect(css, theme.slug).toContain('--color-background');
+			// primary should be a real hex, not undefined
+			expect(css, theme.slug).toMatch(/--color-primary:\s*#[0-9a-fA-F]{6}/);
+		}
+	});
+
+	it('has unique slugs', () => {
+		const slugs = builtInThemePresets.map((t) => t.slug);
+		expect(new Set(slugs).size).toBe(slugs.length);
+	});
+});
 
 describe('slugifyThemeName', () => {
 	it('lowercases simple names', () => {

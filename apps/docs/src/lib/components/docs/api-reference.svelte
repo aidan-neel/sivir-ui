@@ -54,7 +54,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					{#each items as { property, type, description, defaults }}
+					{#each items as { property, type, description, defaults } (property)}
 						<tr class="border-t">
 							<td class="w-[11rem] p-3 font-mono align-top">
 								<span

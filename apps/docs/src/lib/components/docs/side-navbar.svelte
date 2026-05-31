@@ -7,8 +7,8 @@
 	import Palette from '@lucide/svelte/icons/palette';
 	import History from '@lucide/svelte/icons/history';
 
-	let pageName = $state($page.url.pathname);
 	let { class: classProp = '', onNavigate }: { class?: string; onNavigate?: () => void } = $props();
+	const pageName = $derived($page.url.pathname);
 
 	const gettingStartedItems = [
 		{ slug: 'introduction', label: 'Introduction', icon: BookOpen },
@@ -16,10 +16,6 @@
 		{ slug: 'theming', label: 'Theming', icon: Palette },
 		{ slug: 'changelog', label: 'Changelog', icon: History }
 	];
-
-	$effect(() => {
-		pageName = $page.url.pathname;
-	});
 
 	function isActive(path: string) {
 		return pageName === path;
@@ -34,7 +30,7 @@
 			Getting Started
 		</h3>
 		<div class="flex flex-col gap-0.5">
-			{#each gettingStartedItems as item}
+			{#each gettingStartedItems as item (item.slug)}
 				{@const active = isActive(`/docs/${item.slug}`)}
 				<Button
 					variant="ghost"
@@ -63,7 +59,7 @@
 			<span class="text-[11px] text-foreground-muted/70">{components.length}</span>
 		</div>
 		<div class="flex flex-col gap-0.5">
-			{#each components as component}
+			{#each components as component (component)}
 				{@const active = pageName === `/docs/components/${component}`}
 				<Button
 					variant="ghost"

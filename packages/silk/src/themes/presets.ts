@@ -201,6 +201,39 @@ export function resolveSpacing(input?: Partial<ThemeSpacing>): ThemeSpacing {
 	return { ...defaultSpacing, ...(input ?? {}) };
 }
 
+/** A named density anchor for the Studio's Padding presets. */
+export type DensityLevel = {
+	slug: string;
+	label: string;
+	/** Multiplier applied to every `defaultSpacing` token. 1 reproduces the defaults. */
+	scale: number;
+};
+
+/**
+ * Discrete density presets, from tight to roomy. `comfortable` (1.0) reproduces
+ * `defaultSpacing`; the others scale every token uniformly. Shared between the
+ * Studio's Padding tab and the personality presets so both stay in sync.
+ */
+export const densityLevels: DensityLevel[] = [
+	{ slug: 'compact', label: 'Compact', scale: 0.8 },
+	{ slug: 'cozy', label: 'Cozy', scale: 0.9 },
+	{ slug: 'comfortable', label: 'Comfortable', scale: 1 },
+	{ slug: 'relaxed', label: 'Relaxed', scale: 1.15 },
+	{ slug: 'spacious', label: 'Spacious', scale: 1.3 }
+];
+
+/**
+ * Scales every spacing token by `factor`, rounding to whole pixels and flooring
+ * at 0. Produces a complete, discrete `ThemeSpacing` set from a single base.
+ */
+export function scaleSpacing(base: ThemeSpacing, factor: number): ThemeSpacing {
+	const out = {} as ThemeSpacing;
+	for (const key of Object.keys(base) as (keyof ThemeSpacing)[]) {
+		out[key] = Math.max(0, Math.round(base[key] * factor));
+	}
+	return out;
+}
+
 export const defaultTypography: ThemeTypography = {
 	weightHeader: 600,
 	weightBody: 400,

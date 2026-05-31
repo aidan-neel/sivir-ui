@@ -27,3 +27,4 @@ ignored/
 inspiration/
 .claude/
 audit/
+node_modules/

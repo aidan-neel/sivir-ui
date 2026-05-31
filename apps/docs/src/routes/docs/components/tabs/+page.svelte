@@ -3,6 +3,7 @@
 	import { Badge } from '@silk/ui/components/badge';
 	import { highlight } from '$lib/highlight';
 	import * as Tabs from '@silk/ui/components/tabs';
+	import type { TabsVariant } from '@silk/ui/components/tabs';
 	import { components, sanitizeComponent } from '$lib/components';
 
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
@@ -22,6 +23,31 @@
 	let billingPeriod = $state('monthly');
 	let settingsTab = $state('general');
 	let projectTab = $state('overview');
+	let demoTab = $state('overview');
+
+	// ── Playground state ──────────────────────────────────────────────
+	let pgVariant = $state<TabsVariant>('default');
+
+	const variantList: { value: TabsVariant; label: string; note: string; use: string }[] = [
+		{
+			value: 'default',
+			label: 'Default',
+			note: 'Underline + hover highlight',
+			use: 'Page-level navigation and content switchers that sit flush on a surface.'
+		},
+		{
+			value: 'ghost',
+			label: 'Ghost',
+			note: 'Filled pill, no container',
+			use: 'Compact, low-chrome switchers inside cards and toolbars.'
+		},
+		{
+			value: 'outlined',
+			label: 'Outlined',
+			note: 'Bordered segmented control',
+			use: 'Self-contained segmented controls that need a clear boundary.'
+		}
+	];
 
 	const TITLE = 'Tabs';
 	const SOURCE = 'https://github.com/aidan-neel/silk/tree/main/registry/silk/default/tabs';
@@ -31,6 +57,20 @@
 	const nextComponent = components[curIndex + 1];
 
 	let pgTab = $state('overview');
+
+	const playgroundCode = $derived(
+		`<Tabs.Root bind:value={tab}${pgVariant !== 'default' ? ` variant="${pgVariant}"` : ''}>
+  <Tabs.List>
+    <Tabs.Trigger value="overview">Overview</Tabs.Trigger>
+    <Tabs.Trigger value="activity">Activity</Tabs.Trigger>
+    <Tabs.Trigger value="files">Files</Tabs.Trigger>
+  </Tabs.List>
+
+  <Tabs.Content value="overview">…</Tabs.Content>
+  <Tabs.Content value="activity">…</Tabs.Content>
+  <Tabs.Content value="files">…</Tabs.Content>
+</Tabs.Root>`
+	);
 
 	const apiRows = [
 		{
@@ -46,6 +86,14 @@
 			type: '"horizontal" | "vertical"',
 			default: '"horizontal"',
 			description: 'Keyboard navigation direction.'
+		},
+		{
+			component: 'Root',
+			prop: 'variant',
+			type: '"default" | "ghost" | "outlined"',
+			default: '"default"',
+			description:
+				'Visual style. default = underline + hover highlight, ghost = filled pill, outlined = bordered segmented container.'
 		},
 		{
 			component: 'List',
@@ -146,6 +194,7 @@
 	</div>
 </header>
 
+<!-- ─── Playground (configuration panel) ───────────────────────── -->
 <section class="pt-10">
 	<div class="relative">
 		<div
@@ -155,37 +204,149 @@
 			class="overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card shadow-[var(--shadow-sm)]"
 		>
 			<div
-				class="flex min-h-[12rem] flex-col items-center justify-center gap-4 border-b border-border/70 bg-[linear-gradient(135deg,color-mix(in_srgb,var(--color-secondary)_60%,transparent),transparent_70%)] p-8"
+				class="flex min-h-[12rem] flex-col items-center justify-center gap-5 border-b border-border/70 bg-[linear-gradient(135deg,color-mix(in_srgb,var(--color-secondary)_60%,transparent),transparent_70%)] p-10"
 			>
-				<Tabs.Root bind:value={pgTab}>
+				<Tabs.Root bind:value={pgTab} variant={pgVariant} class="flex flex-col items-center gap-4">
 					<Tabs.List>
 						<Tabs.Trigger value="overview">Overview</Tabs.Trigger>
 						<Tabs.Trigger value="activity">Activity</Tabs.Trigger>
 						<Tabs.Trigger value="files">Files</Tabs.Trigger>
 					</Tabs.List>
+					<!-- fixed-height, no-wrap slot keeps the panel from resizing as tabs change -->
+					<Tabs.Content
+						value="overview"
+						class="flex h-5 items-center justify-center whitespace-nowrap text-[0.84rem] text-foreground-muted"
+						>Stats, highlights, and recent activity.</Tabs.Content
+					>
+					<Tabs.Content
+						value="activity"
+						class="flex h-5 items-center justify-center whitespace-nowrap text-[0.84rem] text-foreground-muted"
+						>Merges, comments, and deploys.</Tabs.Content
+					>
+					<Tabs.Content
+						value="files"
+						class="flex h-5 items-center justify-center whitespace-nowrap text-[0.84rem] text-foreground-muted"
+						>Files attached to this project.</Tabs.Content
+					>
 				</Tabs.Root>
-				<p class="m-0 text-center text-[0.84rem] text-foreground-muted">
-					Active: <code class="font-mono text-foreground">{pgTab}</code>
-				</p>
+			</div>
+
+			<div class="flex flex-col divide-y divide-border/60">
+				<div class="flex flex-col gap-2 px-6 py-4">
+					<span
+						class="text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted"
+					>
+						Variant
+					</span>
+					<div class="flex flex-wrap gap-1.5">
+						{#each variantList as v (v.value)}
+							<button
+								type="button"
+								onclick={() => (pgVariant = v.value)}
+								class={`rounded-full border px-2.5 py-1 text-[0.74rem] transition-colors ${pgVariant === v.value ? 'border-primary bg-primary/10 text-foreground' : 'border-border bg-card text-foreground-muted hover:border-border-strong'}`}
+							>
+								{v.label}
+							</button>
+						{/each}
+					</div>
+				</div>
+			</div>
+
+			<div
+				class="flex items-center justify-between gap-2 border-t border-border/70 bg-secondary/40 px-6 py-2.5"
+			>
+				<span
+					class="text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted"
+				>
+					Snippet
+				</span>
+				<button
+					type="button"
+					onclick={() => copy(playgroundCode, 'playground')}
+					class="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2 py-1 text-[0.72rem] text-foreground-muted transition-colors hover:bg-secondary/60 hover:text-foreground"
+				>
+					{#if copiedSnippet === 'playground'}
+						<Check size={11} class="text-[var(--color-success)]" />
+						Copied
+					{:else}
+						<Copy size={11} />
+						Copy code
+					{/if}
+				</button>
 			</div>
 			<pre
 				class="m-0 overflow-x-auto bg-secondary/40 px-6 py-4 font-mono text-[0.78rem] leading-relaxed text-foreground"><code
-					>{@html highlight(
-						`<Tabs.Root bind:value={tab}>
-  <Tabs.List>
-    <Tabs.Trigger value="overview">Overview</Tabs.Trigger>
-    <Tabs.Trigger value="activity">Activity</Tabs.Trigger>
-    <Tabs.Trigger value="files">Files</Tabs.Trigger>
-  </Tabs.List>
-
-  <Tabs.Content value="overview">…</Tabs.Content>
-  <Tabs.Content value="activity">…</Tabs.Content>
-  <Tabs.Content value="files">…</Tabs.Content>
-</Tabs.Root>`,
-						'svelte'
-					)}</code
+					>{@html highlight(playgroundCode, 'svelte')}</code
 				></pre>
 		</div>
+	</div>
+</section>
+
+<!-- ─── Variants ───────────────────────────────────────────────── -->
+<section class="pt-12 flex flex-col gap-5">
+	<div class="flex flex-col gap-1">
+		<div class="flex items-center gap-2">
+			<span class="grid size-6 place-items-center rounded-md bg-primary/10 text-primary">
+				<Component size={12} />
+			</span>
+			<h2
+				class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
+				style="font-family: var(--font-header);"
+			>
+				Variants
+			</h2>
+		</div>
+		<p class="m-0 max-w-[42rem] text-[0.86rem] text-foreground-muted">
+			Three styles, one API. Set <code class="font-mono text-foreground">variant</code> on
+			<code class="font-mono text-foreground">Tabs.Root</code> — the sliding indicator adapts.
+		</p>
+	</div>
+
+	<div class="grid grid-cols-1 gap-3 lg:grid-cols-3">
+		{#each variantList as v (v.value)}
+			{@const code = `<Tabs.Root bind:value={tab}${v.value !== 'default' ? ` variant="${v.value}"` : ''}>…</Tabs.Root>`}
+			<div
+				class="group flex flex-col overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card transition-[border-color,box-shadow,transform] [transition-duration:var(--motion-duration-hover)] [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-border-strong hover:shadow-[var(--shadow-sm)]"
+			>
+				<div
+					class="grid min-h-[6.5rem] place-items-center bg-[linear-gradient(135deg,color-mix(in_srgb,var(--color-secondary)_50%,transparent),transparent_75%)] p-4"
+				>
+					<Tabs.Root bind:value={demoTab} variant={v.value}>
+						<Tabs.List>
+							<Tabs.Trigger value="overview">Overview</Tabs.Trigger>
+							<Tabs.Trigger value="activity">Activity</Tabs.Trigger>
+							<Tabs.Trigger value="files">Files</Tabs.Trigger>
+						</Tabs.List>
+					</Tabs.Root>
+				</div>
+				<div class="flex flex-col gap-1 border-t border-border/70 px-4 py-3">
+					<div class="flex items-center justify-between gap-2">
+						<code
+							class="font-mono text-[0.78rem] [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)]"
+							>variant="{v.value}"</code
+						>
+						<button
+							type="button"
+							onclick={() => copy(code, `var-${v.value}`)}
+							class="grid size-6 place-items-center rounded text-foreground-muted opacity-0 transition-opacity hover:bg-secondary/50 hover:text-foreground group-hover:opacity-100"
+							aria-label={`Copy ${v.label} snippet`}
+						>
+							{#if copiedSnippet === `var-${v.value}`}
+								<Check size={12} class="text-[var(--color-success)]" />
+							{:else}
+								<Copy size={12} />
+							{/if}
+						</button>
+					</div>
+					<p
+						class="m-0 text-[0.72rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+					>
+						{v.note}
+					</p>
+					<p class="m-0 text-[0.74rem] leading-snug text-foreground-muted">{v.use}</p>
+				</div>
+			</div>
+		{/each}
 	</div>
 </section>
 
@@ -224,7 +385,7 @@
 					silk-ui / dashboard
 				</p>
 			</div>
-			<Tabs.Root bind:value={projectTab}>
+			<Tabs.Root bind:value={projectTab} variant="outlined">
 				<Tabs.List>
 					<Tabs.Trigger value="overview">Overview</Tabs.Trigger>
 					<Tabs.Trigger value="activity">Activity</Tabs.Trigger>
@@ -235,7 +396,7 @@
 		<div class="text-[0.86rem] text-foreground-muted">
 			{#if projectTab === 'overview'}
 				<div class="grid grid-cols-3 gap-3 max-sm:grid-cols-1">
-					{#each [{ label: 'Open issues', value: '23', tone: 'text-[var(--color-warning)]' }, { label: 'Merged this week', value: '47', tone: 'text-[var(--color-success)]' }, { label: 'Build status', value: 'Passing', tone: 'text-[var(--color-success)]' }] as stat}
+					{#each [{ label: 'Open issues', value: '23', tone: 'text-[var(--color-warning)]' }, { label: 'Merged this week', value: '47', tone: 'text-[var(--color-success)]' }, { label: 'Build status', value: 'Passing', tone: 'text-[var(--color-success)]' }] as stat (stat.label)}
 						<div class="rounded-[var(--radius-md)] border border-border bg-background/40 p-3">
 							<p class="m-0 text-[0.7rem] text-foreground-muted">{stat.label}</p>
 							<p
@@ -248,7 +409,7 @@
 				</div>
 			{:else if projectTab === 'activity'}
 				<div class="flex flex-col gap-2">
-					{#each [{ who: 'Maya Chen', what: 'merged main into release-2.5', when: '2m' }, { who: 'Aidan Neel', what: 'opened PR #482 · refactor toolbar', when: '14m' }, { who: 'Leo Park', what: 'commented on issue #311', when: '1h' }, { who: 'GitHub Actions', what: 'deployed v2.4.1 to production', when: '3h' }] as item}
+					{#each [{ who: 'Maya Chen', what: 'merged main into release-2.5', when: '2m' }, { who: 'Aidan Neel', what: 'opened PR #482 · refactor toolbar', when: '14m' }, { who: 'Leo Park', what: 'commented on issue #311', when: '1h' }, { who: 'GitHub Actions', what: 'deployed v2.4.1 to production', when: '3h' }] as item (item.who)}
 						<div class="flex items-center gap-3 rounded-md px-2 py-1.5 hover:bg-secondary/40">
 							<TrendingUp size={13} class="text-foreground-muted" />
 							<span class="text-foreground">{item.who}</span>
@@ -259,7 +420,7 @@
 				</div>
 			{:else}
 				<div class="flex flex-col gap-2">
-					{#each [{ name: 'silk-ui-roadmap.md', size: '12 KB' }, { name: 'design-tokens.json', size: '4.8 KB' }, { name: 'brand-guidelines.fig', size: '4.2 MB' }, { name: 'icons.svg', size: '88 KB' }] as file}
+					{#each [{ name: 'silk-ui-roadmap.md', size: '12 KB' }, { name: 'design-tokens.json', size: '4.8 KB' }, { name: 'brand-guidelines.fig', size: '4.2 MB' }, { name: 'icons.svg', size: '88 KB' }] as file (file.name)}
 						<div class="flex items-center gap-3 rounded-md px-2 py-1.5 hover:bg-secondary/40">
 							<FileText size={13} class="text-foreground-muted" />
 							<span class="text-foreground">{file.name}</span>
@@ -279,7 +440,7 @@
 			>
 				Billing period
 			</p>
-			<Tabs.Root bind:value={billingPeriod}>
+			<Tabs.Root bind:value={billingPeriod} variant="outlined">
 				<Tabs.List>
 					<Tabs.Trigger value="monthly">Monthly</Tabs.Trigger>
 					<Tabs.Trigger value="annual">Annual (-20%)</Tabs.Trigger>
@@ -308,7 +469,7 @@
 			>
 				Settings
 			</p>
-			<Tabs.Root bind:value={settingsTab}>
+			<Tabs.Root bind:value={settingsTab} variant="outlined">
 				<Tabs.List>
 					<Tabs.Trigger value="general">General</Tabs.Trigger>
 					<Tabs.Trigger value="members">Members</Tabs.Trigger>
@@ -348,7 +509,7 @@
 
 		<div class="overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card">
 			<ul class="flex flex-col divide-y divide-border/60">
-				{#each apiRows as row}
+				{#each apiRows as row (row.prop)}
 					<li class="grid grid-cols-[1fr_1.4fr_0.6fr] gap-3 px-4 py-3 max-md:grid-cols-1">
 						<div class="flex flex-col gap-1">
 							<code class="font-mono text-[0.7rem] text-foreground-muted">Tabs.{row.component}</code

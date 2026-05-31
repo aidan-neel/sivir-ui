@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Action } from 'svelte/action';
+	import { resolve } from '$app/paths';
 	import { highlight } from '$lib/highlight';
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
 	import ArrowUpRight from '@lucide/svelte/icons/arrow-up-right';
@@ -288,7 +289,7 @@
 							View all <ArrowUpRight size={11} />
 						</a>
 					</div>
-					{#each [{ initials: 'MC', name: 'Maya Chen', action: 'published the Aurora theme', time: '2m' }, { initials: 'LP', name: 'Leo Park', action: 'shipped fix(calendar): keyboard nav', time: '14m' }, { initials: 'SR', name: 'Sofia Reyes', action: 'opened PR #42 in registry', time: '1h' }] as row}
+					{#each [{ initials: 'MC', name: 'Maya Chen', action: 'published the Aurora theme', time: '2m' }, { initials: 'LP', name: 'Leo Park', action: 'shipped fix(calendar): keyboard nav', time: '14m' }, { initials: 'SR', name: 'Sofia Reyes', action: 'opened PR #42 in registry', time: '1h' }] as row (row.initials)}
 						<div class="preview-activity-row">
 							<Avatar.Root size="sm"><Avatar.Fallback>{row.initials}</Avatar.Fallback></Avatar.Root>
 							<div class="flex-1 min-w-0">
@@ -309,7 +310,7 @@
 
 	<!-- ═══════════════════ STATS ═══════════════════ -->
 	<section class="stats-strip">
-		{#each stats as s, i}
+		{#each stats as s, i (s.label)}
 			<div class="stat reveal" use:revealOnScroll={{ delay: 60 + i * 70 }}>
 				<span class="stat-value">{s.value}</span>
 				<span class="stat-label">{s.label}</span>
@@ -400,9 +401,9 @@
 			<p class="footer-tag">Themed Svelte 5 components for teams that still want control.</p>
 		</div>
 		<nav class="footer-nav">
-			<a href="/docs/introduction">Docs</a>
-			<a href="/docs/components/accordion">Components</a>
-			<a href="/themes/studio">Studio</a>
+			<a href={resolve('/docs/introduction')}>Docs</a>
+			<a href={resolve('/docs/components/accordion')}>Components</a>
+			<a href={resolve('/themes/studio')}>Studio</a>
 			<a href="https://github.com/aidan-neel/ui">GitHub</a>
 		</nav>
 	</footer>

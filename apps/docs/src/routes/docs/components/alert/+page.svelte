@@ -229,7 +229,7 @@
 						>Variant</span
 					>
 					<div class="flex flex-wrap gap-1.5">
-						{#each variantList as v}
+						{#each variantList as v (v.value)}
 							<button
 								type="button"
 								onclick={() => (pgVariant = v.value)}
@@ -294,7 +294,7 @@
 		</div>
 
 		<div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-			{#each variantList as v}
+			{#each variantList as v (v.value)}
 				<div
 					class="flex flex-col gap-3 rounded-[var(--radius-lg)] border border-border bg-card p-4"
 				>
@@ -438,7 +438,7 @@
 
 		<div class="overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card">
 			<ul class="flex flex-col divide-y divide-border/60">
-				{#each apiRows as row}
+				{#each apiRows as row, i (i)}
 					<li class="grid grid-cols-[1fr_1.4fr_0.6fr] gap-3 px-4 py-3 max-md:grid-cols-1">
 						<div class="flex flex-col gap-1">
 							<code class="font-mono text-[0.7rem] text-foreground-muted">{row.component}</code>

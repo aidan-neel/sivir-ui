@@ -1,11 +1,15 @@
 <script lang="ts">
 	import * as Tabs from '@silk/ui/components/tabs';
+	import type { TabsVariant } from '@silk/ui/components/tabs';
 
-	let { value = $bindable('one'), orientation = 'horizontal' as 'horizontal' | 'vertical' } =
-		$props();
+	let {
+		value = $bindable('one'),
+		orientation = 'horizontal' as 'horizontal' | 'vertical',
+		variant = 'default' as TabsVariant
+	} = $props();
 </script>
 
-<Tabs.Root bind:value {orientation}>
+<Tabs.Root bind:value {orientation} {variant}>
 	<Tabs.List>
 		<Tabs.Trigger value="one"><span data-testid="trig-one">One</span></Tabs.Trigger>
 		<Tabs.Trigger value="two"><span data-testid="trig-two">Two</span></Tabs.Trigger>

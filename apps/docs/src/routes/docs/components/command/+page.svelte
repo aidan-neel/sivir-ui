@@ -275,7 +275,7 @@
 		</div>
 
 		<div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
-			{#each ['Root', 'Trigger', 'Content', 'Search', 'Results', 'Group', 'Item', 'Separator'] as part}
+			{#each ['Root', 'Trigger', 'Content', 'Search', 'Results', 'Group', 'Item', 'Separator'] as part (part)}
 				<div class="rounded-[var(--radius-md)] border border-border bg-card px-3 py-2 text-center">
 					<code class="font-mono text-[0.78rem] text-foreground">Command.{part}</code>
 				</div>
@@ -301,7 +301,7 @@
 
 		<div class="overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card">
 			<ul class="flex flex-col divide-y divide-border/60">
-				{#each apiRows as row}
+				{#each apiRows as row, i (i)}
 					<li class="grid grid-cols-[1fr_1.4fr_0.6fr] gap-3 px-4 py-3 max-md:grid-cols-1">
 						<div class="flex flex-col gap-1">
 							<code class="font-mono text-[0.7rem] text-foreground-muted"

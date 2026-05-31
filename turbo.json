@@ -13,6 +13,10 @@
 		"check": {
 			"dependsOn": ["^check"]
 		},
+		"generate": {
+			"inputs": ["prisma/schema.prisma", "prisma.config.ts"],
+			"outputs": ["prisma/generated/**"]
+		},
 		"lint": {},
 		"test": {
 			"dependsOn": ["^build"]

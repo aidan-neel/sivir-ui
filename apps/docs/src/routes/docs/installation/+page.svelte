@@ -98,7 +98,7 @@
 
 <!-- ─── Steps ──────────────────────────────────────────────────── -->
 <section class="pt-10 flex flex-col gap-3">
-	{#each steps as step}
+	{#each steps as step (step.id)}
 		<div
 			class="flex flex-col gap-4 rounded-[var(--radius-lg)] border border-border bg-card p-5 md:flex-row md:gap-6"
 		>

@@ -196,7 +196,7 @@
 
 <!-- ─── Release timeline ───────────────────────────────────────── -->
 <section class="pt-10 flex flex-col gap-10">
-	{#each releases as release, idx}
+	{#each releases as release, idx (release.version)}
 		<article class="relative flex flex-col gap-5">
 			<!-- Release header -->
 			<div class="flex flex-col gap-2">
@@ -230,7 +230,7 @@
 
 			<!-- Entries -->
 			<div class="grid grid-cols-1 gap-3 md:grid-cols-2">
-				{#each release.entries as entry}
+				{#each release.entries as entry (entry.title)}
 					<div
 						class="flex flex-col gap-3 rounded-[var(--radius-lg)] border border-border bg-card p-5"
 					>

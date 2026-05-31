@@ -324,7 +324,7 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 						Variant
 					</span>
 					<div class="flex flex-wrap gap-1.5">
-						{#each variantList as v}
+						{#each variantList as v (v.value)}
 							<button
 								type="button"
 								onclick={() => (pgVariant = v.value)}
@@ -343,7 +343,7 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 						Size
 					</span>
 					<div class="flex flex-wrap gap-1.5">
-						{#each sizeList as s}
+						{#each sizeList as s (s.value)}
 							<button
 								type="button"
 								onclick={() => (pgSize = s.value)}
@@ -414,7 +414,7 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 			</h2>
 		</div>
 		<div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
-			{#each [{ icon: Layers, title: '10 variants', body: 'Semantic + status + neutral.' }, { icon: Type, title: '4 sizes', body: 'Token-driven height + padding.' }, { icon: Link, title: 'Polymorphic', body: 'Pass `href` to render an anchor.' }] as card}
+			{#each [{ icon: Layers, title: '10 variants', body: 'Semantic + status + neutral.' }, { icon: Type, title: '4 sizes', body: 'Token-driven height + padding.' }, { icon: Link, title: 'Polymorphic', body: 'Pass `href` to render an anchor.' }] as card (card.title)}
 				<div
 					class="flex flex-col gap-2 rounded-[var(--radius-lg)] border border-border bg-card p-4"
 				>
@@ -462,7 +462,7 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 		</div>
 
 		<div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-			{#each variantList as v}
+			{#each variantList as v (v.value)}
 				{@const code = `<Button${v.value !== 'primary' ? ` variant="${v.value}"` : ''}>${v.label}</Button>`}
 				<div
 					class="group flex flex-col overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card transition-[border-color,box-shadow,transform] [transition-duration:var(--motion-duration-hover)] [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-border-strong hover:shadow-[var(--shadow-sm)]"
@@ -527,7 +527,7 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 			<div
 				class="flex flex-wrap items-end justify-around gap-5 border-b border-border/70 bg-[linear-gradient(180deg,transparent,color-mix(in_srgb,var(--color-secondary)_45%,transparent))] px-6 py-8"
 			>
-				{#each sizeList as s}
+				{#each sizeList as s (s.value)}
 					<div class="flex flex-col items-center gap-2">
 						<Button size={s.value} variant="primary">
 							{#if s.value === 'icon'}
@@ -543,7 +543,7 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 			<div
 				class="grid grid-cols-1 divide-y divide-border/60 sm:grid-cols-2 lg:grid-cols-4 lg:divide-x lg:divide-y-0"
 			>
-				{#each sizeList as s}
+				{#each sizeList as s (s.value)}
 					<div class="flex flex-col gap-1 p-4">
 						<p
 							class="m-0 font-mono text-[0.78rem] [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)]"
@@ -585,7 +585,7 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 		</div>
 
 		<div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-			{#each [{ label: 'Resting', node: 'rest' }, { label: 'Hover', node: 'hover' }, { label: 'Focus', node: 'focus' }, { label: 'Active', node: 'active' }, { label: 'Disabled', node: 'disabled' }] as s}
+			{#each [{ label: 'Resting', node: 'rest' }, { label: 'Hover', node: 'hover' }, { label: 'Focus', node: 'focus' }, { label: 'Active', node: 'active' }, { label: 'Disabled', node: 'disabled' }] as s (s.node)}
 				<div
 					class="flex flex-col items-center gap-3 rounded-[var(--radius-lg)] border border-border bg-card p-4"
 				>
@@ -630,7 +630,7 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 			</p>
 		</div>
 
-		<Tabs.Root value="leading">
+		<Tabs.Root value="leading" variant="outlined">
 			<Tabs.List>
 				<Tabs.Trigger value="leading">Leading icon</Tabs.Trigger>
 				<Tabs.Trigger value="trailing">Trailing icon</Tabs.Trigger>
@@ -783,7 +783,7 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 				<span class="text-right">Default</span>
 			</div>
 			<ul class="flex flex-col divide-y divide-border/60">
-				{#each apiRows as row}
+				{#each apiRows as row, i (i)}
 					<li class="grid grid-cols-[1fr_1.8fr_0.5fr] gap-3 px-4 py-3 max-md:grid-cols-1">
 						<div class="flex items-center gap-2">
 							<button

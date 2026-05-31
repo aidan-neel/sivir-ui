@@ -120,14 +120,9 @@
 		publishTheme
 	}: Props = $props();
 
-	// svelte-ignore state_referenced_locally
-	let paletteMode = $state<'light' | 'dark'>(colorMode);
+	let paletteMode = $derived(colorMode);
 	let advancedOpen = $state(false);
 	let motionOpen = $state(false);
-
-	$effect(() => {
-		paletteMode = colorMode;
-	});
 
 	$effect(() => {
 		if (paletteMode !== colorMode) {
@@ -259,7 +254,7 @@
 			<Select.Root value={activeRadius} class="">
 				<Select.Trigger class="w-full" variant="outlined">{activeRadius}</Select.Trigger>
 				<Select.Content class="">
-					{#each radiusOptions as option}
+					{#each radiusOptions as option (option.value)}
 						<Select.Item value={option.label} onclick={() => updateRadius(option.value)}>
 							<span class="flex items-center gap-3">
 								<span
@@ -295,10 +290,10 @@
 						<Combobox.Content class="w-full min-w-[var(--button-width,auto)]">
 							<Combobox.Search placeholder="Search fonts..." />
 							<Combobox.Results>
-								{#each groupedFontOptions as group}
+								{#each groupedFontOptions as group (group.group)}
 									{#if group.items.length > 0}
 										<Combobox.Label>{group.group}</Combobox.Label>
-										{#each group.items as opt}
+										{#each group.items as opt (opt.value)}
 											<Combobox.Item
 												value={opt.label}
 												label={opt.label}
@@ -326,10 +321,10 @@
 						<Combobox.Content class="w-full min-w-[var(--button-width,auto)]">
 							<Combobox.Search placeholder="Search fonts..." />
 							<Combobox.Results>
-								{#each groupedFontOptions as group}
+								{#each groupedFontOptions as group (group.group)}
 									{#if group.items.length > 0}
 										<Combobox.Label>{group.group}</Combobox.Label>
-										{#each group.items as opt}
+										{#each group.items as opt (opt.value)}
 											<Combobox.Item
 												value={opt.label}
 												label={opt.label}
@@ -357,7 +352,7 @@
 			<Select.Root value={activeDurationName} class="">
 				<Select.Trigger class="w-full" variant="outlined">{activeDurationName}</Select.Trigger>
 				<Select.Content class="">
-					{#each transitionPresets as preset}
+					{#each transitionPresets as preset (preset.slug)}
 						<Select.Item value={preset.name} onclick={() => updateDurationPreset(preset.slug)}>
 							{preset.name}
 						</Select.Item>
@@ -715,7 +710,7 @@
 					>
 						Base
 					</p>
-					{#each baseTokens as token}
+					{#each baseTokens as token (token.key)}
 						<ColorPicker
 							label={token.label}
 							value={advancedPalette[token.key] as string}
@@ -731,7 +726,7 @@
 					>
 						Text
 					</p>
-					{#each textTokens as token}
+					{#each textTokens as token (token.key)}
 						<ColorPicker
 							label={token.label}
 							value={advancedPalette[token.key] as string}
@@ -747,7 +742,7 @@
 					>
 						Borders
 					</p>
-					{#each borderTokens as token}
+					{#each borderTokens as token (token.key)}
 						<ColorPicker
 							label={token.label}
 							value={advancedPalette[token.key] as string}
@@ -763,7 +758,7 @@
 					>
 						Interactive
 					</p>
-					{#each interactiveTokens as token}
+					{#each interactiveTokens as token (token.key)}
 						<ColorPicker
 							label={token.label}
 							value={advancedPalette[token.key] as string}
@@ -779,7 +774,7 @@
 					>
 						Status
 					</p>
-					{#each statusTokens as token}
+					{#each statusTokens as token (token.key)}
 						<ColorPicker
 							label={token.label}
 							value={advancedPalette[token.key] as string}

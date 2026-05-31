@@ -102,7 +102,7 @@
 	</div>
 
 	<div class="grid grid-cols-1 gap-3 md:grid-cols-3">
-		{#each [{ icon: Box, title: 'Copy-paste, not opaque', body: 'Components live in your repo as plain Svelte files. Inspect, fork, or delete — nothing is hidden behind a node_module wall.' }, { icon: Palette, title: 'Token-first theming', body: 'Every visual decision flows from CSS variables. Swap a theme and the whole library re-skins in one frame.' }, { icon: Wand, title: 'Polished defaults', body: 'Focus rings, motion timings, hover states — calibrated so you can ship the first version without revisiting.' }] as pillar}
+		{#each [{ icon: Box, title: 'Copy-paste, not opaque', body: 'Components live in your repo as plain Svelte files. Inspect, fork, or delete — nothing is hidden behind a node_module wall.' }, { icon: Palette, title: 'Token-first theming', body: 'Every visual decision flows from CSS variables. Swap a theme and the whole library re-skins in one frame.' }, { icon: Wand, title: 'Polished defaults', body: 'Focus rings, motion timings, hover states — calibrated so you can ship the first version without revisiting.' }] as pillar (pillar.title)}
 			<div class="flex flex-col gap-3 rounded-[var(--radius-lg)] border border-border bg-card p-5">
 				<span class="grid size-9 place-items-center rounded-md bg-secondary/60 text-foreground">
 					<pillar.icon size={15} />
@@ -135,7 +135,7 @@
 
 	<div class="overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card">
 		<div class="grid grid-cols-2 divide-x divide-y divide-border/60 md:grid-cols-4">
-			{#each [{ value: '25', label: 'Components', sub: 'Buttons, dialogs, tabs, …' }, { value: '10', label: 'Variants per button', sub: 'Semantic + status + neutral' }, { value: '4', label: 'Token surfaces', sub: 'Color · type · radius · motion' }, { value: '0', label: 'Lock-in', sub: 'You own the files' }] as stat}
+			{#each [{ value: '25', label: 'Components', sub: 'Buttons, dialogs, tabs, …' }, { value: '10', label: 'Variants per button', sub: 'Semantic + status + neutral' }, { value: '4', label: 'Token surfaces', sub: 'Color · type · radius · motion' }, { value: '0', label: 'Lock-in', sub: 'You own the files' }] as stat (stat.label)}
 				<div class="flex flex-col gap-1 p-5">
 					<span
 						class="text-[2rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
@@ -172,7 +172,7 @@
 	<div
 		class="flex flex-col divide-y divide-border/60 overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card"
 	>
-		{#each [{ icon: Gauge, title: 'Fast feels intentional', body: 'Hover transitions cap at 240ms. Motion presets travel through a single CSS variable, so the whole UI changes tone together.' }, { icon: Keyboard, title: 'Keyboard-first', body: 'Tab order, escape handling, focus traps, and arrow-key navigation work out of the box — no extras to install.' }, { icon: Accessibility, title: 'Accessible by default', body: 'ARIA roles, labelled regions, and live-region toasts ship configured. Sensible focus rings even before you customize.' }, { icon: Type, title: 'Typography is a token', body: 'Headers, body, and mono each come from `--font-*` variables. Pair Geist with anything in seconds.' }] as principle}
+		{#each [{ icon: Gauge, title: 'Fast feels intentional', body: 'Hover transitions cap at 240ms. Motion presets travel through a single CSS variable, so the whole UI changes tone together.' }, { icon: Keyboard, title: 'Keyboard-first', body: 'Tab order, escape handling, focus traps, and arrow-key navigation work out of the box — no extras to install.' }, { icon: Accessibility, title: 'Accessible by default', body: 'ARIA roles, labelled regions, and live-region toasts ship configured. Sensible focus rings even before you customize.' }, { icon: Type, title: 'Typography is a token', body: 'Headers, body, and mono each come from `--font-*` variables. Pair Geist with anything in seconds.' }] as principle (principle.title)}
 			<div class="flex items-start gap-4 px-5 py-4">
 				<span
 					class="grid size-9 shrink-0 place-items-center rounded-md bg-secondary/60 text-foreground"

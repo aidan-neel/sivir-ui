@@ -17,6 +17,9 @@
 	const triggerId = $derived(`${tabsState.id}-trigger-${toIdPart(value)}`);
 	const contentId = $derived(`${tabsState.id}-content-${toIdPart(value)}`);
 	const active = $derived(tabsState.value === value);
+	// `ghost` has no active pill/underline, so lean on a heavier weight (plus the
+	// text-color shift below) to mark the active tab.
+	const ghostActive = $derived(active && tabsState.variant === 'ghost');
 </script>
 
 <button
@@ -32,7 +35,8 @@
 	class={cn(
 		className,
 		'relative z-10 rounded-[var(--radius-lg)] hover:cursor-[var(--ui-cursor-interactive)] px-[var(--tabs-trigger-padding-x)] py-[var(--tabs-trigger-padding-y)] text-sm [font-weight:var(--font-weight-button,500)] [letter-spacing:var(--tracking-button,0em)] leading-tight transition-colors duration-200 ease-out focus-visible:outline-none focus-visible:ring-0 focus-visible:shadow-[0_0_0_3px_var(--color-ring)] disabled:cursor-not-allowed disabled:opacity-50',
-		active ? 'text-foreground' : 'text-foreground-muted hover:text-foreground'
+		active ? 'text-foreground' : 'text-foreground-muted hover:text-foreground',
+		ghostActive && '[font-weight:600]'
 	)}
 	onclick={() => {
 		if (!disabled) tabsState.value = value;

@@ -101,7 +101,7 @@
 		</p>
 		<nav aria-label="On this page">
 			<ul class="space-y-1.5 text-[0.96rem] text-foreground-muted">
-				{#each items as item}
+				{#each items as item (item.id)}
 					<li>
 						<a
 							class="block rounded-sm py-1 transition-colors hover:text-foreground"

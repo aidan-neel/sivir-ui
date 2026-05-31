@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { render, screen } from '@testing-library/svelte';
+import { render, screen, waitFor } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
 import TabsFixture from '../../fixtures/TabsFixture.svelte';
 
@@ -90,5 +90,56 @@ describe('Tabs -- ARIA roles', () => {
 		render(TabsFixture, { props: { value: 'one' } });
 		const list = document.querySelector('[role="tablist"]');
 		expect(list).toBeInTheDocument();
+	});
+});
+
+describe('Tabs -- variants', () => {
+	it('defaults to the underline variant', () => {
+		render(TabsFixture, { props: { value: 'one' } });
+		const list = document.querySelector('[data-ui="tabs-list"]')!;
+		expect(list.getAttribute('data-variant')).toBe('default');
+	});
+
+	it('outlined renders a bordered container', () => {
+		render(TabsFixture, { props: { value: 'one', variant: 'outlined' } });
+		const list = document.querySelector('[data-ui="tabs-list"]')!;
+		expect(list.getAttribute('data-variant')).toBe('outlined');
+		expect(list.className).toContain('border-border');
+	});
+
+	it('ghost has no bordered container', () => {
+		render(TabsFixture, { props: { value: 'one', variant: 'ghost' } });
+		const list = document.querySelector('[data-ui="tabs-list"]')!;
+		expect(list.getAttribute('data-variant')).toBe('ghost');
+		expect(list.className).not.toContain('border-border');
+	});
+
+	it('default renders a 2px underline as the active indicator', async () => {
+		render(TabsFixture, { props: { value: 'one', variant: 'default' } });
+		await waitFor(() => {
+			const list = document.querySelector('[data-ui="tabs-list"]')!;
+			const indicator = list.querySelector('div[aria-hidden="true"]');
+			expect(indicator?.className).toContain('h-[2px]');
+		});
+	});
+
+	it('outlined renders a filled pill as the active indicator', async () => {
+		render(TabsFixture, { props: { value: 'one', variant: 'outlined' } });
+		await waitFor(() => {
+			const list = document.querySelector('[data-ui="tabs-list"]')!;
+			const indicator = list.querySelector('div[aria-hidden="true"]');
+			expect(indicator?.className).toContain('bg-secondary');
+		});
+	});
+
+	it('ghost has no pill/underline indicator -- active is shown on the trigger', () => {
+		render(TabsFixture, { props: { value: 'one', variant: 'ghost' } });
+		// no separate active-indicator element is rendered for ghost
+		const list = document.querySelector('[data-ui="tabs-list"]')!;
+		expect(list.querySelector('div[aria-hidden="true"]')).toBeNull();
+		// the active tab is conveyed on the trigger itself
+		const activeTrigger = screen.getByTestId('trig-one').closest('button')!;
+		expect(activeTrigger.getAttribute('aria-selected')).toBe('true');
+		expect(activeTrigger.className).toContain('text-foreground');
 	});
 });

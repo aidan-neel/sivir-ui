@@ -112,7 +112,7 @@
 			>
 				<ScrollArea class="h-48 w-64 rounded-[var(--radius-md)] border border-border bg-background">
 					<div class="flex flex-col">
-						{#each items as item, i}
+						{#each items as item, i (i)}
 							<div
 								class="border-b border-border/60 px-3 py-2 text-[0.86rem] text-foreground"
 								class:border-b-0={i === items.length - 1}
@@ -153,7 +153,7 @@
 		</div>
 		<div class="overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card">
 			<ul class="flex flex-col divide-y divide-border/60">
-				{#each apiRows as row}
+				{#each apiRows as row (row.prop)}
 					<li class="grid grid-cols-[1fr_1.4fr_0.6fr] gap-3 px-4 py-3 max-md:grid-cols-1">
 						<div class="flex flex-col gap-1">
 							<code class="font-mono text-[0.7rem] text-foreground-muted">ScrollArea</code><code
