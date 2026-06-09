@@ -5,6 +5,7 @@ import {
 	resolveTypography,
 	resolveThemeMotion,
 	generatePaletteFromBase,
+	contrastRatio,
 	themeToCss,
 	themeToTypeScriptPreset,
 	defaultSpacing,
@@ -361,5 +362,49 @@ describe('themeToTypeScriptPreset', () => {
 		// fontSans contains double quotes (e.g. '"IBM Plex Sans", sans-serif'), so the
 		// serializer JSON-escapes them; assert against the escaped form it actually emits.
 		expect(ts).toContain(JSON.stringify(defaultPreset.fontSans));
+	});
+});
+
+describe('contrastRatio', () => {
+	it('returns 21 for black on white', () => {
+		expect(contrastRatio('#ffffff', '#000000')).toBeCloseTo(21, 5);
+	});
+
+	it('returns 1 for identical colors', () => {
+		expect(contrastRatio('#2563eb', '#2563eb')).toBeCloseTo(1, 5);
+	});
+
+	it('is symmetric in its arguments', () => {
+		expect(contrastRatio('#2563eb', '#ffffff')).toBeCloseTo(
+			contrastRatio('#ffffff', '#2563eb'),
+			10
+		);
+	});
+
+	it('matches the WCAG reference value for #767676 on white', () => {
+		// 4.54:1 is the canonical "just passes AA" gray.
+		expect(contrastRatio('#767676', '#ffffff')).toBeCloseTo(4.54, 2);
+	});
+
+	it('stays within the 1-21 bounds for arbitrary colors', () => {
+		const samples = ['#000000', '#ffffff', '#ff0000', '#00ff00', '#0000ff', '#123456', '#fedcba'];
+		for (const a of samples) {
+			for (const b of samples) {
+				const ratio = contrastRatio(a, b);
+				expect(ratio).toBeGreaterThanOrEqual(1);
+				expect(ratio).toBeLessThanOrEqual(21);
+			}
+		}
+	});
+
+	it('matches the button-foreground pick from generatePaletteFromBase', () => {
+		// The palette generator chooses white button text on a dark primary via
+		// the same luminance math; the resulting pair passes WCAG AA.
+		const palette = generatePaletteFromBase(
+			{ background: '#ffffff', card: '#ffffff', text: '#111111', primary: '#2563eb' },
+			'light'
+		);
+		expect(palette.foregroundButton).toBe('#ffffff');
+		expect(contrastRatio(palette.foregroundButton, palette.primary)).toBeGreaterThanOrEqual(4.5);
 	});
 });
