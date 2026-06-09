@@ -401,6 +401,15 @@ function contrastText(color: string) {
 	return relativeLuminance(color) > 0.45 ? '#09090b' : '#ffffff';
 }
 
+/** Calculates the WCAG 2.1 contrast ratio (1-21) between two hex colors. */
+export function contrastRatio(colorA: string, colorB: string) {
+	const lumA = relativeLuminance(colorA);
+	const lumB = relativeLuminance(colorB);
+	const lighter = Math.max(lumA, lumB);
+	const darker = Math.min(lumA, lumB);
+	return (lighter + 0.05) / (darker + 0.05);
+}
+
 /** Expands a small set of base colors into a full semantic palette. */
 export function generatePaletteFromBase(
 	base: ThemeBasePalette,
