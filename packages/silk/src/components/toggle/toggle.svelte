@@ -14,9 +14,9 @@
 	}: ToggleProps = $props();
 
 	const sizes: Record<string, string> = {
-		sm: 'h-7 px-[var(--toggle-padding-sm)] text-[0.75rem]',
-		md: 'h-8 px-[var(--toggle-padding-md)] text-[0.82rem]',
-		lg: 'h-10 px-[var(--toggle-padding-lg)] text-[0.9rem]'
+		sm: 'h-7 px-[var(--toggle-padding-sm)] [font-size:calc(var(--font-size-button,14px)*0.857)]',
+		md: 'h-8 px-[var(--toggle-padding-md)] [font-size:calc(var(--font-size-button,14px)*0.937)]',
+		lg: 'h-10 px-[var(--toggle-padding-lg)] [font-size:calc(var(--font-size-button,14px)*1.029)]'
 	};
 
 	function toggle() {
