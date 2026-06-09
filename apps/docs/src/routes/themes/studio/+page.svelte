@@ -68,6 +68,7 @@
 
 	import type { PageData } from './$types';
 	import StudioPreview from '$lib/components/themes/studio/studio-preview.svelte';
+	import ContrastChecker from '$lib/components/themes/studio/contrast-checker.svelte';
 	import { spacingGroups } from '$lib/components/themes/studio/spacing-fields';
 
 	const { data = { themes: builtInThemePresets } as PageData }: { data?: PageData } = $props();
@@ -1818,6 +1819,10 @@
 								updateBasePalette('dark', 'border', v)
 							)}
 						</section>
+
+						<div class="border-t border-border"></div>
+
+						<ContrastChecker light={editorTheme.light} dark={editorTheme.dark} mode={colorMode} />
 
 						<div class="border-t border-border"></div>
 
