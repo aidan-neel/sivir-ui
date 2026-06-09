@@ -13,7 +13,7 @@ const config = {
 			'@silk/ui': '../../packages/silk/src',
 			'@silk/ui/*': '../../packages/silk/src/*'
 		}
-	},
+	}
 };
 
 export default config;
