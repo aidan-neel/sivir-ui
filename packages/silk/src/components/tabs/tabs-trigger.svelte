@@ -31,7 +31,7 @@
 	{disabled}
 	class={cn(
 		className,
-		'relative z-10 rounded-[var(--radius-lg)] hover:cursor-[var(--ui-cursor-interactive)] px-[var(--tabs-trigger-padding-x)] py-[var(--tabs-trigger-padding-y)] text-sm [font-weight:var(--font-weight-button,500)] [letter-spacing:var(--tracking-button,0em)] leading-tight transition-colors duration-200 ease-out focus-visible:outline-none focus-visible:ring-0 focus-visible:shadow-[0_0_0_3px_var(--color-ring)] disabled:cursor-not-allowed disabled:opacity-50',
+		'relative z-10 rounded-[var(--radius-lg)] hover:cursor-[var(--ui-cursor-interactive)] px-[var(--tabs-trigger-padding-x)] py-[var(--tabs-trigger-padding-y)] [font-size:var(--font-size-button,14px)] [font-weight:var(--font-weight-button,500)] [letter-spacing:var(--tracking-button,0em)] leading-tight transition-colors duration-200 ease-out focus-visible:outline-none focus-visible:ring-0 focus-visible:shadow-[0_0_0_3px_var(--color-ring)] disabled:cursor-not-allowed disabled:opacity-50',
 		active ? 'text-foreground' : 'text-foreground-muted hover:text-foreground'
 	)}
 	onclick={() => {

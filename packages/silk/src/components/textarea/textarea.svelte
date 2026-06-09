@@ -27,7 +27,7 @@
 <label class="flex flex-col gap-1">
 	{#if label}
 		<span
-			class="text-[length:var(--text-sm)] [font-size:var(--font-size-body,16px)] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground [font-family:var(--font-sans),sans-serif]"
+			class="[font-size:calc(var(--font-size-body,16px)*0.875)] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground [font-family:var(--font-sans),sans-serif]"
 		>
 			{label}
 		</span>

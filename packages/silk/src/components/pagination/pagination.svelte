@@ -65,7 +65,7 @@
 				aria-current={p === page ? 'page' : undefined}
 				onclick={() => go(p)}
 				class={cn(
-					'inline-flex size-8 items-center justify-center rounded-[var(--radius-md)] text-[0.82rem] [font-weight:var(--font-weight-button,500)] [letter-spacing:var(--tracking-button,0em)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)]',
+					'inline-flex size-8 items-center justify-center rounded-[var(--radius-md)] [font-size:calc(var(--font-size-button,14px)*0.937)] [font-weight:var(--font-weight-button,500)] [letter-spacing:var(--tracking-button,0em)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)]',
 					p === page
 						? 'bg-primary text-foreground-opposite'
 						: 'text-foreground-muted hover:bg-secondary hover:text-foreground'

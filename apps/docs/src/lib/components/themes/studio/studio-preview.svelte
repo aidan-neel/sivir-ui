@@ -172,13 +172,15 @@
 	}
 </script>
 
-<main class="relative flex min-w-0 flex-1 flex-col overflow-hidden bg-background">
+<main
+	class="relative flex min-w-0 flex-1 flex-col overflow-hidden bg-background [font-size:var(--font-size-body,16px)] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)]"
+>
 	<!-- Scrollable canvas body — single continuous surface, sections divided by hairlines -->
 	<div class="min-h-0 flex-1 overflow-y-auto">
 		<div class="mx-auto w-full max-w-[860px]">
 			<!-- ─── Page header ─── -->
 			<header class="flex flex-col gap-3 border-b border-border/60 px-6 py-7 md:px-8">
-				<Breadcrumb.Root class="text-[0.78rem]">
+				<Breadcrumb.Root class="[font-size:calc(var(--font-size-body,16px)*0.78)]">
 					<Breadcrumb.Item href="/themes/studio">Home</Breadcrumb.Item>
 					<Breadcrumb.Separator><Slash size={12} /></Breadcrumb.Separator>
 					<Breadcrumb.Item href="/themes/studio">Workspace</Breadcrumb.Item>
@@ -190,30 +192,32 @@
 					<div class="flex items-center gap-3">
 						<div class="flex -space-x-2">
 							<span
-								class="grid size-9 place-items-center rounded-full border-2 border-card bg-primary/15 text-[0.78rem] [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)] text-primary"
+								class="grid size-9 place-items-center rounded-full border-2 border-card bg-primary/15 [font-size:calc(var(--font-size-label,14px)*0.891)] [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)] text-primary"
 								>AN</span
 							>
 							<span
-								class="grid size-9 place-items-center rounded-full border-2 border-card bg-secondary text-[0.78rem] [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+								class="grid size-9 place-items-center rounded-full border-2 border-card bg-secondary [font-size:calc(var(--font-size-label,14px)*0.891)] [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
 								>MC</span
 							>
 							<span
-								class="grid size-9 place-items-center rounded-full border-2 border-card bg-secondary text-[0.78rem] [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+								class="grid size-9 place-items-center rounded-full border-2 border-card bg-secondary [font-size:calc(var(--font-size-label,14px)*0.891)] [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
 								>LK</span
 							>
 							<span
-								class="grid size-9 place-items-center rounded-full border-2 border-card bg-background text-[0.7rem] [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+								class="grid size-9 place-items-center rounded-full border-2 border-card bg-background [font-size:calc(var(--font-size-label,14px)*0.8)] [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
 								>+4</span
 							>
 						</div>
 						<div>
 							<h2
-								class="m-0 text-[1.5rem] [font-weight:var(--font-weight-header,500)] leading-tight [letter-spacing:var(--tracking-header,-0.02em)]"
+								class="m-0 [font-size:calc(var(--font-size-header,18px)*1.2)] [font-weight:var(--font-weight-header,500)] leading-tight [letter-spacing:var(--tracking-header,-0.02em)]"
 								style="font-family: var(--font-header);"
 							>
 								Welcome back, {pgInputName}
 							</h2>
-							<p class="m-0 mt-0.5 text-[0.85rem] text-foreground-muted">
+							<p
+								class="m-0 mt-0.5 [font-size:calc(var(--font-size-body,16px)*0.85)] text-foreground-muted"
+							>
 								Here's what's happening in your workspace today.
 							</p>
 						</div>
@@ -232,7 +236,7 @@
 							<Command.Trigger
 								variant="outlined"
 								size="sm"
-								class="gap-1.5 text-[0.82rem]"
+								class="gap-1.5 [font-size:calc(var(--font-size-button,14px)*0.937)]"
 								aria-label="Open command palette"
 							>
 								<Search size={13} />
@@ -291,7 +295,10 @@
 						</Command.Root>
 
 						<Modal.Root bind:open={newProjectOpen}>
-							<Modal.Trigger size="sm" class="gap-1.5 text-[0.82rem]">
+							<Modal.Trigger
+								size="sm"
+								class="gap-1.5 [font-size:calc(var(--font-size-button,14px)*0.937)]"
+							>
 								<Plus size={13} />
 								New project
 							</Modal.Trigger>
@@ -330,7 +337,7 @@
 									/>
 									<div class="flex flex-col gap-1.5">
 										<span
-											class="text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]"
+											class="[font-size:calc(var(--font-size-label,14px)*0.891)] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]"
 											>Team</span
 										>
 										<Select.Root value={newProjectTeam}>
@@ -348,8 +355,16 @@
 									</div>
 								</div>
 								<div class="flex shrink-0 items-center justify-end gap-2 px-5 py-3">
-									<Modal.Close variant="ghost" size="sm" class="text-[0.8rem]">Cancel</Modal.Close>
-									<Modal.Confirm size="sm" class="text-[0.8rem]" onclick={createProject}>
+									<Modal.Close
+										variant="ghost"
+										size="sm"
+										class="[font-size:calc(var(--font-size-button,14px)*0.914)]">Cancel</Modal.Close
+									>
+									<Modal.Confirm
+										size="sm"
+										class="[font-size:calc(var(--font-size-button,14px)*0.914)]"
+										onclick={createProject}
+									>
 										<Plus size={13} />
 										Create project
 									</Modal.Confirm>
@@ -371,7 +386,9 @@
 						{/each}
 					</Tabs.List>
 				</Tabs.Root>
-				<span class="text-[0.72rem] text-foreground-muted max-md:hidden">
+				<span
+					class="[font-size:calc(var(--font-size-body,16px)*0.72)] text-foreground-muted max-md:hidden"
+				>
 					Swap example screens to preview your theme across surfaces.
 				</span>
 			</div>
@@ -382,21 +399,28 @@
 					<section class="grid grid-cols-3 gap-3 px-6 py-7 md:px-8 max-sm:grid-cols-1">
 						{#each [{ label: 'Revenue', value: '$48.2k', delta: '+12%' }, { label: 'Active users', value: '1,840', delta: '+8%' }, { label: 'Churn rate', value: '1.2%', delta: '−0.4%' }] as stat}
 							<div class="flex flex-col gap-1">
-								<p class="m-0 text-[0.78rem] text-foreground-muted">{stat.label}</p>
 								<p
-									class="m-0 text-[1.6rem] [font-weight:var(--font-weight-header,500)] [letter-spacing:var(--tracking-header,-0.02em)]"
+									class="m-0 [font-size:calc(var(--font-size-body,16px)*0.78)] text-foreground-muted"
+								>
+									{stat.label}
+								</p>
+								<p
+									class="m-0 [font-size:calc(var(--font-size-header,18px)*1.28)] [font-weight:var(--font-weight-header,500)] [letter-spacing:var(--tracking-header,-0.02em)]"
 									style="font-family: var(--font-header);"
 								>
 									{stat.value}
 								</p>
 								<div class="mt-0.5 flex items-center gap-1.5">
 									<span
-										class="inline-flex items-center gap-0.5 rounded-full bg-[var(--color-success)]/12 px-1.5 py-0.5 text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-[var(--color-success)]"
+										class="inline-flex items-center gap-0.5 rounded-full bg-[var(--color-success)]/12 px-1.5 py-0.5 [font-size:calc(var(--font-size-label,14px)*0.8)] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-[var(--color-success)]"
 									>
 										<TrendingUp size={11} />
 										{stat.delta}
 									</span>
-									<span class="text-[0.7rem] text-foreground-muted">vs last month</span>
+									<span
+										class="[font-size:calc(var(--font-size-body,16px)*0.7)] text-foreground-muted"
+										>vs last month</span
+									>
 								</div>
 							</div>
 						{/each}
@@ -407,7 +431,7 @@
 						<div class="flex items-center justify-between gap-3 max-sm:flex-col max-sm:items-start">
 							<div>
 								<p
-									class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+									class="m-0 [font-size:calc(var(--font-size-label,14px)*0.891)] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
 								>
 									Tabs
 								</p>
@@ -426,7 +450,7 @@
 								</Tabs.List>
 							</Tabs.Root>
 						</div>
-						<div class="text-[0.86rem] text-foreground-muted">
+						<div class="[font-size:calc(var(--font-size-body,16px)*0.86)] text-foreground-muted">
 							{#if playgroundTab === 'overview'}
 								<p class="m-0">
 									<span class="text-foreground">All systems operational.</span> The pipeline finished
@@ -439,7 +463,9 @@
 											<span class="size-1.5 rounded-full bg-[var(--color-info)]"></span>
 											<span class="text-foreground">{item.who}</span>
 											<span>{item.what}</span>
-											<span class="ml-auto text-[0.7rem]">{item.when}</span>
+											<span class="ml-auto [font-size:calc(var(--font-size-body,16px)*0.7)]"
+												>{item.when}</span
+											>
 										</div>
 									{/each}
 								</div>
@@ -460,7 +486,7 @@
 					<section class="flex flex-col gap-4 px-6 py-7 md:px-8">
 						<div>
 							<p
-								class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+								class="m-0 [font-size:calc(var(--font-size-label,14px)*0.891)] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
 							>
 								Form
 							</p>
@@ -490,7 +516,7 @@
 
 						<div class="flex flex-col gap-1.5">
 							<span
-								class="text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]"
+								class="[font-size:calc(var(--font-size-label,14px)*0.891)] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]"
 								>Role</span
 							>
 							<Select.Root value={pgRole}>
@@ -511,21 +537,27 @@
 							<div class="flex items-center justify-between gap-3 px-3 py-2.5">
 								<div class="flex items-center gap-2">
 									<Bell size={14} class="text-foreground-muted" />
-									<span class="text-[0.86rem]">Push notifications</span>
+									<span class="[font-size:calc(var(--font-size-body,16px)*0.86)]"
+										>Push notifications</span
+									>
 								</div>
 								<Switch bind:switched={pgNotifications} aria-label="Toggle notifications" />
 							</div>
 							<div class="flex items-center justify-between gap-3 px-3 py-2.5">
 								<div class="flex items-center gap-2">
 									<FileText size={14} class="text-foreground-muted" />
-									<span class="text-[0.86rem]">Weekly email digest</span>
+									<span class="[font-size:calc(var(--font-size-body,16px)*0.86)]"
+										>Weekly email digest</span
+									>
 								</div>
 								<Switch bind:switched={pgEmailDigest} aria-label="Toggle email digest" />
 							</div>
 							<div class="flex items-center justify-between gap-3 px-3 py-2.5">
 								<div class="flex items-center gap-2">
 									<Settings size={14} class="text-foreground-muted" />
-									<span class="text-[0.86rem]">Two-factor auth</span>
+									<span class="[font-size:calc(var(--font-size-body,16px)*0.86)]"
+										>Two-factor auth</span
+									>
 								</div>
 								<Switch bind:switched={pgTwoFactor} aria-label="Toggle two-factor" />
 							</div>
@@ -550,7 +582,7 @@
 					<section class="flex flex-col gap-4 px-6 py-7 md:px-8">
 						<div>
 							<p
-								class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+								class="m-0 [font-size:calc(var(--font-size-label,14px)*0.891)] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
 							>
 								Variants
 							</p>
@@ -594,7 +626,7 @@
 					<section class="flex flex-col gap-3 px-6 py-7 md:px-8">
 						<div>
 							<p
-								class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+								class="m-0 [font-size:calc(var(--font-size-label,14px)*0.891)] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
 							>
 								Feedback
 							</p>
@@ -629,7 +661,7 @@
 					<section class="flex flex-col gap-4 px-6 py-7 md:px-8">
 						<div>
 							<p
-								class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+								class="m-0 [font-size:calc(var(--font-size-label,14px)*0.891)] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
 							>
 								Progress
 							</p>
@@ -644,7 +676,9 @@
 						<div class="flex flex-col gap-2.5">
 							{#each [{ label: 'Documents', pct: pgProgress }, { label: 'Images', pct: 38 }, { label: 'Builds', pct: 12 }] as bar}
 								<div>
-									<div class="mb-1 flex items-center justify-between text-[0.78rem]">
+									<div
+										class="mb-1 flex items-center justify-between [font-size:calc(var(--font-size-body,16px)*0.78)]"
+									>
 										<span class="text-foreground-muted">{bar.label}</span>
 										<span
 											class="[font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]"
@@ -672,12 +706,15 @@
 								variant="outlined"
 								onclick={() => (pgProgress = Math.min(100, pgProgress + 8))}>+</Button
 							>
-							<span class="ml-2 text-[0.78rem] text-foreground-muted">Adjust documents</span>
+							<span
+								class="ml-2 [font-size:calc(var(--font-size-body,16px)*0.78)] text-foreground-muted"
+								>Adjust documents</span
+							>
 						</div>
 
 						<div class="flex flex-col gap-2 pt-1">
 							<p
-								class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+								class="m-0 [font-size:calc(var(--font-size-label,14px)*0.891)] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
 							>
 								Skeleton
 							</p>
@@ -692,7 +729,7 @@
 						<div class="flex items-center justify-between">
 							<div>
 								<p
-									class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+									class="m-0 [font-size:calc(var(--font-size-label,14px)*0.891)] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
 								>
 									Activity
 								</p>
@@ -703,7 +740,10 @@
 									Notifications
 								</p>
 							</div>
-							<Badge variant="ghost" class="px-1.5 text-[0.66rem]">3 new</Badge>
+							<Badge
+								variant="ghost"
+								class="px-1.5 [font-size:calc(var(--font-size-badge,12px)*0.88)]">3 new</Badge
+							>
 						</div>
 						<div class="flex flex-col">
 							{#each [{ title: 'Deployment succeeded', desc: 'v2.4.1 is live in production', time: 'now', dot: 'var(--color-success)' }, { title: 'New team member', desc: 'Maya joined the workspace', time: '4m ago', dot: 'var(--color-info)' }, { title: 'Card expires soon', desc: 'Update your payment method', time: '1h ago', dot: 'var(--color-warning)' }, { title: 'Build failed', desc: 'Type-check returned 4 errors', time: 'yesterday', dot: 'var(--color-destructive)' }] as item}
@@ -716,15 +756,20 @@
 									></span>
 									<div class="min-w-0 flex-1">
 										<p
-											class="m-0 truncate text-[0.84rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]"
+											class="m-0 truncate [font-size:calc(var(--font-size-label,14px)*0.96)] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]"
 										>
 											{item.title}
 										</p>
-										<p class="m-0 mt-0.5 truncate text-[0.76rem] text-foreground-muted">
+										<p
+											class="m-0 mt-0.5 truncate [font-size:calc(var(--font-size-body,16px)*0.76)] text-foreground-muted"
+										>
 											{item.desc}
 										</p>
 									</div>
-									<span class="shrink-0 text-[0.72rem] text-foreground-muted">{item.time}</span>
+									<span
+										class="shrink-0 [font-size:calc(var(--font-size-body,16px)*0.72)] text-foreground-muted"
+										>{item.time}</span
+									>
 								</div>
 							{/each}
 						</div>
@@ -734,7 +779,7 @@
 					<section class="flex flex-col gap-3 px-6 py-7 md:px-8">
 						<div>
 							<p
-								class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+								class="m-0 [font-size:calc(var(--font-size-label,14px)*0.891)] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
 							>
 								Command
 							</p>
@@ -749,9 +794,12 @@
 						<div class="overflow-hidden rounded-[var(--radius-lg)] border border-border">
 							<div class="flex items-center gap-2 border-b border-border px-3 py-2">
 								<Search size={14} class="text-foreground-muted" />
-								<span class="flex-1 text-[0.84rem] text-foreground-muted">Type a command…</span>
+								<span
+									class="flex-1 [font-size:calc(var(--font-size-body,16px)*0.84)] text-foreground-muted"
+									>Type a command…</span
+								>
 								<kbd
-									class="rounded border border-border bg-secondary/60 px-1.5 py-0.5 font-mono text-[0.66rem] text-foreground-muted"
+									class="rounded border border-border bg-secondary/60 px-1.5 py-0.5 font-mono [font-size:calc(var(--font-size-body,16px)*0.66)] text-foreground-muted"
 									>⌘K</kbd
 								>
 							</div>
@@ -760,11 +808,14 @@
 									<Button
 										variant="ghost"
 										size="sm"
-										class="w-full justify-start gap-2 text-[0.84rem]"
+										class="w-full justify-start gap-2 [font-size:calc(var(--font-size-button,14px)*0.96)]"
 									>
 										<item.icon size={13} class="text-foreground-muted" />
 										<span>{item.label}</span>
-										<span class="ml-auto text-[0.7rem] text-foreground-muted">↵</span>
+										<span
+											class="ml-auto [font-size:calc(var(--font-size-body,16px)*0.7)] text-foreground-muted"
+											>↵</span
+										>
 									</Button>
 								{/each}
 							</div>
@@ -773,14 +824,18 @@
 						<div class="flex items-center gap-2">
 							<Tooltip.Root>
 								<Tooltip.Trigger>
-									<Button variant="outlined" size="sm" class="gap-1.5 text-[0.78rem]">
+									<Button
+										variant="outlined"
+										size="sm"
+										class="gap-1.5 [font-size:calc(var(--font-size-button,14px)*0.891)]"
+									>
 										<Info size={12} />
 										<span>Hover me</span>
 									</Button>
 								</Tooltip.Trigger>
 								<Tooltip.Content>This is a Silk tooltip.</Tooltip.Content>
 							</Tooltip.Root>
-							<span class="text-[0.76rem] text-foreground-muted"
+							<span class="[font-size:calc(var(--font-size-body,16px)*0.76)] text-foreground-muted"
 								>Tooltip uses the same motion preset</span
 							>
 						</div>
@@ -790,7 +845,7 @@
 					<section class="flex flex-col gap-5 px-6 py-7 md:px-8">
 						<div>
 							<p
-								class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+								class="m-0 [font-size:calc(var(--font-size-label,14px)*0.891)] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
 							>
 								Typography
 							</p>
@@ -808,20 +863,21 @@
 						>
 							<div class="flex items-baseline justify-between gap-3">
 								<span
-									class="text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase text-foreground-muted"
+									class="[font-size:calc(var(--font-size-label,14px)*0.754)] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase text-foreground-muted"
 									>Header</span
 								>
-								<span class="font-mono text-[0.62rem] text-foreground-muted/70"
+								<span
+									class="font-mono [font-size:calc(var(--font-size-body,16px)*0.62)] text-foreground-muted/70"
 									>--font-header · --font-size-header · --font-weight-header · --tracking-header</span
 								>
 							</div>
 							<h3
-								class="m-0 text-[2rem] leading-[1.05] [font-family:var(--font-header)] [font-weight:var(--font-weight-header,600)] [letter-spacing:var(--tracking-header,-0.02em)]"
+								class="m-0 [font-size:calc(var(--font-size-header,18px)*1.6)] leading-[1.05] [font-family:var(--font-header)] [font-weight:var(--font-weight-header,600)] [letter-spacing:var(--tracking-header,-0.02em)]"
 							>
 								Pack my box with five dozen liquor jugs.
 							</h3>
 							<p
-								class="m-0 text-[1.25rem] leading-tight [font-family:var(--font-header)] [font-weight:var(--font-weight-header,600)] [letter-spacing:var(--tracking-header,-0.02em)] text-foreground-muted"
+								class="m-0 [font-size:var(--font-size-header,18px)] leading-tight [font-family:var(--font-header)] [font-weight:var(--font-weight-header,600)] [letter-spacing:var(--tracking-header,-0.02em)] text-foreground-muted"
 							>
 								Sphinx of black quartz, judge my vow.
 							</p>
@@ -833,10 +889,11 @@
 						>
 							<div class="flex items-baseline justify-between gap-3">
 								<span
-									class="text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase text-foreground-muted"
+									class="[font-size:calc(var(--font-size-label,14px)*0.754)] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase text-foreground-muted"
 									>Body</span
 								>
-								<span class="font-mono text-[0.62rem] text-foreground-muted/70"
+								<span
+									class="font-mono [font-size:calc(var(--font-size-body,16px)*0.62)] text-foreground-muted/70"
 									>--font-sans · --font-size-body · --font-weight-body · --tracking-body</span
 								>
 							</div>
@@ -851,7 +908,7 @@
 								> respect the primary token.
 							</p>
 							<p
-								class="m-0 text-[0.86rem] leading-relaxed [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted"
+								class="m-0 [font-size:calc(var(--font-size-body,16px)*0.86)] leading-relaxed [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted"
 							>
 								Muted secondary text — used for descriptions and helper copy underneath fields.
 							</p>
@@ -863,10 +920,11 @@
 						>
 							<div class="flex items-baseline justify-between gap-3">
 								<span
-									class="text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase text-foreground-muted"
+									class="[font-size:calc(var(--font-size-label,14px)*0.754)] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase text-foreground-muted"
 									>Label</span
 								>
-								<span class="font-mono text-[0.62rem] text-foreground-muted/70"
+								<span
+									class="font-mono [font-size:calc(var(--font-size-body,16px)*0.62)] text-foreground-muted/70"
 									>--font-size-label · --font-weight-label · --tracking-label</span
 								>
 							</div>
@@ -897,10 +955,11 @@
 							>
 								<div class="flex items-baseline justify-between gap-3">
 									<span
-										class="text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase text-foreground-muted"
+										class="[font-size:calc(var(--font-size-label,14px)*0.754)] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase text-foreground-muted"
 										>Button</span
 									>
-									<span class="font-mono text-[0.62rem] text-foreground-muted/70"
+									<span
+										class="font-mono [font-size:calc(var(--font-size-body,16px)*0.62)] text-foreground-muted/70"
 										>--font-size-button · --font-weight-button · --tracking-button</span
 									>
 								</div>
@@ -916,10 +975,11 @@
 							>
 								<div class="flex items-baseline justify-between gap-3">
 									<span
-										class="text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase text-foreground-muted"
+										class="[font-size:calc(var(--font-size-label,14px)*0.754)] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase text-foreground-muted"
 										>Badge</span
 									>
-									<span class="font-mono text-[0.62rem] text-foreground-muted/70"
+									<span
+										class="font-mono [font-size:calc(var(--font-size-body,16px)*0.62)] text-foreground-muted/70"
 										>--font-size-badge · --font-weight-badge · --tracking-badge</span
 									>
 								</div>
@@ -933,7 +993,9 @@
 						</div>
 
 						<!-- Mono fallback -->
-						<p class="m-0 font-mono text-[0.82rem] text-foreground-muted">
+						<p
+							class="m-0 font-mono [font-size:calc(var(--font-size-body,16px)*0.82)] text-foreground-muted"
+						>
 							const tokens = $derived(themeToCss(draft));
 						</p>
 					</section>
@@ -942,7 +1004,7 @@
 					<section class="flex flex-col gap-4 px-6 py-7 md:px-8">
 						<div>
 							<p
-								class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+								class="m-0 [font-size:calc(var(--font-size-label,14px)*0.891)] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
 							>
 								General
 							</p>
@@ -959,7 +1021,7 @@
 						</div>
 						<div class="flex flex-col gap-1.5">
 							<span
-								class="text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]"
+								class="[font-size:calc(var(--font-size-label,14px)*0.891)] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]"
 								>Default role</span
 							>
 							<Select.Root value={pgRole}>
@@ -979,7 +1041,7 @@
 					<section class="flex flex-col gap-4 px-6 py-7 md:px-8">
 						<div>
 							<p
-								class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+								class="m-0 [font-size:calc(var(--font-size-label,14px)*0.891)] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
 							>
 								Preferences
 							</p>
@@ -997,8 +1059,11 @@
 								<div class="flex items-center gap-2">
 									<Bell size={14} class="text-foreground-muted" />
 									<div class="flex flex-col">
-										<span class="text-[0.86rem]">Push notifications</span>
-										<span class="text-[0.72rem] text-foreground-muted"
+										<span class="[font-size:calc(var(--font-size-body,16px)*0.86)]"
+											>Push notifications</span
+										>
+										<span
+											class="[font-size:calc(var(--font-size-body,16px)*0.72)] text-foreground-muted"
 											>Get notified about mentions and replies.</span
 										>
 									</div>
@@ -1009,8 +1074,11 @@
 								<div class="flex items-center gap-2">
 									<FileText size={14} class="text-foreground-muted" />
 									<div class="flex flex-col">
-										<span class="text-[0.86rem]">Weekly email digest</span>
-										<span class="text-[0.72rem] text-foreground-muted"
+										<span class="[font-size:calc(var(--font-size-body,16px)*0.86)]"
+											>Weekly email digest</span
+										>
+										<span
+											class="[font-size:calc(var(--font-size-body,16px)*0.72)] text-foreground-muted"
 											>A Monday summary of activity in your workspace.</span
 										>
 									</div>
@@ -1021,8 +1089,11 @@
 								<div class="flex items-center gap-2">
 									<Settings size={14} class="text-foreground-muted" />
 									<div class="flex flex-col">
-										<span class="text-[0.86rem]">Two-factor auth</span>
-										<span class="text-[0.72rem] text-foreground-muted"
+										<span class="[font-size:calc(var(--font-size-body,16px)*0.86)]"
+											>Two-factor auth</span
+										>
+										<span
+											class="[font-size:calc(var(--font-size-body,16px)*0.72)] text-foreground-muted"
 											>Add an extra layer of sign-in security.</span
 										>
 									</div>
@@ -1048,7 +1119,7 @@
 					<section class="flex flex-col gap-3 px-6 py-7 md:px-8">
 						<div>
 							<p
-								class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+								class="m-0 [font-size:calc(var(--font-size-label,14px)*0.891)] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
 							>
 								Danger zone
 							</p>
@@ -1082,7 +1153,7 @@
 						<div class="flex items-center justify-between">
 							<div>
 								<p
-									class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+									class="m-0 [font-size:calc(var(--font-size-label,14px)*0.891)] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
 								>
 									Inbox
 								</p>
@@ -1093,7 +1164,9 @@
 									{mailMessages.filter((m) => m.unread).length} unread
 								</p>
 							</div>
-							<Badge variant="outlined" class="text-[0.7rem]">5 messages</Badge>
+							<Badge variant="outlined" class="[font-size:calc(var(--font-size-badge,12px)*0.933)]"
+								>5 messages</Badge
+							>
 						</div>
 						<div
 							class="flex flex-col divide-y divide-border/60 overflow-hidden rounded-[var(--radius-md)] border border-border"
@@ -1106,21 +1179,26 @@
 									class={`flex items-start gap-3 px-3 py-3 text-left transition-colors ${active ? 'bg-secondary/60' : 'hover:bg-secondary/40'}`}
 								>
 									<span
-										class="grid size-9 shrink-0 place-items-center rounded-full bg-secondary text-[0.74rem] [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)] text-foreground"
+										class="grid size-9 shrink-0 place-items-center rounded-full bg-secondary [font-size:calc(var(--font-size-label,14px)*0.846)] [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)] text-foreground"
 										>{msg.initials}</span
 									>
 									<div class="min-w-0 flex-1">
 										<div class="flex items-center justify-between gap-2">
 											<span
-												class="truncate text-[0.84rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]"
+												class="truncate [font-size:calc(var(--font-size-label,14px)*0.96)] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]"
 												>{msg.sender}</span
 											>
-											<span class="shrink-0 text-[0.7rem] text-foreground-muted">{msg.time}</span>
+											<span
+												class="shrink-0 [font-size:calc(var(--font-size-body,16px)*0.7)] text-foreground-muted"
+												>{msg.time}</span
+											>
 										</div>
-										<p class="m-0 mt-0.5 truncate text-[0.8rem]">
+										<p class="m-0 mt-0.5 truncate [font-size:calc(var(--font-size-body,16px)*0.8)]">
 											{msg.subject}
 										</p>
-										<p class="m-0 mt-0.5 truncate text-[0.74rem] text-foreground-muted">
+										<p
+											class="m-0 mt-0.5 truncate [font-size:calc(var(--font-size-body,16px)*0.74)] text-foreground-muted"
+										>
 											{msg.preview}
 										</p>
 									</div>
@@ -1140,23 +1218,25 @@
 						<div class="flex items-start justify-between gap-3">
 							<div class="flex items-center gap-3">
 								<span
-									class="grid size-10 place-items-center rounded-full bg-primary/12 text-[0.78rem] [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)] text-primary"
+									class="grid size-10 place-items-center rounded-full bg-primary/12 [font-size:calc(var(--font-size-label,14px)*0.891)] [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)] text-primary"
 									>{selectedMail.initials}</span
 								>
 								<div>
 									<p
-										class="m-0 text-[0.92rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]"
+										class="m-0 [font-size:calc(var(--font-size-label,14px)*1.051)] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]"
 									>
 										{selectedMail.sender}
 									</p>
-									<p class="m-0 mt-0.5 text-[0.74rem] text-foreground-muted">
+									<p
+										class="m-0 mt-0.5 [font-size:calc(var(--font-size-body,16px)*0.74)] text-foreground-muted"
+									>
 										to me · {selectedMail.time}
 									</p>
 								</div>
 							</div>
 							<div class="flex items-center gap-1.5">
 								<span
-									class="inline-flex items-center gap-1 rounded-full border border-border px-2 py-0.5 text-[0.68rem] text-foreground-muted"
+									class="inline-flex items-center gap-1 rounded-full border border-border px-2 py-0.5 [font-size:calc(var(--font-size-body,16px)*0.68)] text-foreground-muted"
 								>
 									<span
 										class="size-1.5 rounded-full"
@@ -1167,15 +1247,19 @@
 							</div>
 						</div>
 						<h3
-							class="m-0 text-[1.2rem] [font-weight:var(--font-weight-header,500)] leading-tight [letter-spacing:var(--tracking-header,-0.02em)]"
+							class="m-0 [font-size:calc(var(--font-size-header,18px)*0.96)] [font-weight:var(--font-weight-header,500)] leading-tight [letter-spacing:var(--tracking-header,-0.02em)]"
 							style="font-family: var(--font-header);"
 						>
 							{selectedMail.subject}
 						</h3>
-						<p class="m-0 text-[0.92rem] leading-relaxed text-foreground">
+						<p
+							class="m-0 [font-size:calc(var(--font-size-body,16px)*0.92)] leading-relaxed text-foreground"
+						>
 							{selectedMail.preview}
 						</p>
-						<p class="m-0 text-[0.86rem] leading-relaxed text-foreground-muted">
+						<p
+							class="m-0 [font-size:calc(var(--font-size-body,16px)*0.86)] leading-relaxed text-foreground-muted"
+						>
 							Reply if you have any questions. Otherwise this thread will close automatically in 7
 							days.
 						</p>
@@ -1195,7 +1279,7 @@
 					<!-- ─── Gallery: a representative component from every token group ─── -->
 					{#snippet groupLabel(text: string)}
 						<p
-							class="text-[0.66rem] [font-weight:var(--font-weight-label,600)] [letter-spacing:0.08em] uppercase text-foreground-muted"
+							class="[font-size:calc(var(--font-size-label,14px)*0.754)] [font-weight:var(--font-weight-label,600)] [letter-spacing:0.08em] uppercase text-foreground-muted"
 						>
 							{text}
 						</p>
@@ -1241,7 +1325,7 @@
 								>
 							</Card.Header>
 							<Card.Content>
-								<p class="text-[0.85rem] text-foreground-muted">
+								<p class="[font-size:calc(var(--font-size-body,16px)*0.85)] text-foreground-muted">
 									Cards, panels, sheets, and accordions share the Surfaces token group.
 								</p>
 							</Card.Content>
@@ -1263,7 +1347,9 @@
 						<Collapsible.Root>
 							<Collapsible.Trigger>Toggle details</Collapsible.Trigger>
 							<Collapsible.Content>
-								<p class="pt-2 text-[0.85rem] text-foreground-muted">
+								<p
+									class="pt-2 [font-size:calc(var(--font-size-body,16px)*0.85)] text-foreground-muted"
+								>
 									Collapsible content surface.
 								</p>
 							</Collapsible.Content>
@@ -1272,7 +1358,7 @@
 						<ScrollArea
 							class="h-24 w-full rounded-[var(--radius-md)] border border-border bg-background p-3"
 						>
-							<p class="text-[0.85rem] text-foreground-muted">
+							<p class="[font-size:calc(var(--font-size-body,16px)*0.85)] text-foreground-muted">
 								Scroll region. Pellentesque habitant morbi tristique senectus et netus et malesuada
 								fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget,
 								tempor sit amet, ante. Donec eu libero sit amet quam egestas semper.
@@ -1301,7 +1387,9 @@
 								<Popover.Trigger variant="outlined" size="sm">Popover</Popover.Trigger>
 								<Popover.Content class="w-64">
 									<Popover.Title>Floating panel</Popover.Title>
-									<p class="text-[0.85rem] text-foreground-muted">
+									<p
+										class="[font-size:calc(var(--font-size-body,16px)*0.85)] text-foreground-muted"
+									>
 										Menus are button-anchored floating surfaces.
 									</p>
 								</Popover.Content>
@@ -1375,10 +1463,12 @@
 							duration="22s"
 							class="rounded-[var(--radius-md)] border border-border py-3"
 						>
-							<span class="px-4 text-[0.85rem] text-foreground-muted"
+							<span
+								class="px-4 [font-size:calc(var(--font-size-body,16px)*0.85)] text-foreground-muted"
 								>Silk · extreme customizability ·</span
 							>
-							<span class="px-4 text-[0.85rem] text-foreground-muted"
+							<span
+								class="px-4 [font-size:calc(var(--font-size-body,16px)*0.85)] text-foreground-muted"
 								>every token, one source ·</span
 							>
 						</Marquee>

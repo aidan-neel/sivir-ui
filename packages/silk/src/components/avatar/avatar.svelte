@@ -12,10 +12,10 @@
 	}: AvatarProps = $props();
 
 	const sizes: Record<string, string> = {
-		sm: 'size-7 text-[0.7rem]',
-		md: 'size-9 text-[0.78rem]',
-		lg: 'size-12 text-[0.95rem]',
-		xl: 'size-16 text-[1.1rem]'
+		sm: 'size-7 [font-size:calc(var(--font-size-body,16px)*0.7)]',
+		md: 'size-9 [font-size:calc(var(--font-size-body,16px)*0.78)]',
+		lg: 'size-12 [font-size:calc(var(--font-size-body,16px)*0.95)]',
+		xl: 'size-16 [font-size:calc(var(--font-size-body,16px)*1.1)]'
 	};
 
 	// Shared state lets <Avatar.Image> hide the fallback when its image loads.
