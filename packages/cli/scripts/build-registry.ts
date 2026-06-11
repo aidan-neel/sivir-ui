@@ -1,0 +1,135 @@
+/**
+ * Snapshots the silk component registry into `registry/`.
+ *
+ * Run with bun from packages/cli (`bun run build:registry`). Imports every
+ * `manifest.ts` under packages/silk/src/components, validates that the
+ * files each manifest references exist, then writes:
+ *
+ *   registry/index.json   -- RegistryIndex consumed by the CLI at runtime
+ *   registry/files/**     -- raw component/shared sources, paths preserved
+ *   registry/themes.json  -- built-in theme presets pre-rendered to CSS
+ */
+
+import { mkdir, readdir, rm, copyFile, writeFile } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { themeToCss } from '../../silk/src/themes/presets';
+import type { ThemeDraft } from '../../silk/src/themes/presets';
+import type { Manifest } from '../../silk/src/_manifest/types';
+import type { RegistryIndex, RegistryTheme } from '../src/types';
+import pkg from '../package.json';
+
+const cliRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const silkSrc = path.resolve(cliRoot, '../silk/src');
+const outDir = path.join(cliRoot, 'registry');
+
+async function collectManifestPaths() {
+	const componentsDir = path.join(silkSrc, 'components');
+	const result: string[] = [];
+	for (const entry of await readdir(componentsDir, { withFileTypes: true })) {
+		if (!entry.isDirectory()) continue;
+		if (entry.name === '_internal') {
+			for (const inner of await readdir(path.join(componentsDir, entry.name), {
+				withFileTypes: true
+			})) {
+				if (!inner.isDirectory()) continue;
+				const manifest = path.join(componentsDir, entry.name, inner.name, 'manifest.ts');
+				if (existsSync(manifest)) result.push(manifest);
+			}
+			continue;
+		}
+		const manifest = path.join(componentsDir, entry.name, 'manifest.ts');
+		if (existsSync(manifest)) result.push(manifest);
+	}
+	return result.sort();
+}
+
+/** Resolves a manifest `shared` entry to source files relative to silk src. */
+function sharedToFiles(entry: string): string[] {
+	if (entry.startsWith('utils.')) return ['utils.ts'];
+	if (entry.startsWith('internals/')) {
+		const module = entry.slice('internals/'.length);
+		for (const candidate of [`internals/${module}.ts`, `internals/${module}.svelte.ts`]) {
+			if (existsSync(path.join(silkSrc, candidate))) return [candidate];
+		}
+		throw new Error(`shared entry "${entry}" resolves to no file under ${silkSrc}/internals`);
+	}
+	throw new Error(`unrecognized shared entry "${entry}"`);
+}
+
+async function buildThemes(): Promise<RegistryTheme[]> {
+	const presetsDir = path.join(silkSrc, 'themes/presets');
+	const themes: RegistryTheme[] = [];
+	for (const file of (await readdir(presetsDir)).sort()) {
+		if (!file.endsWith('.ts')) continue;
+		const module = (await import(path.join(presetsDir, file))) as Record<string, ThemeDraft>;
+		const draft = module.preset ?? module.theme ?? module.defaultTheme;
+		if (!draft) continue;
+		themes.push({
+			slug: draft.slug,
+			name: draft.name,
+			description: draft.description,
+			css: themeToCss(draft)
+		});
+	}
+	return themes;
+}
+
+const manifests: Manifest[] = [];
+for (const manifestPath of await collectManifestPaths()) {
+	const module = (await import(manifestPath)) as { manifest: Manifest };
+	if (!module.manifest?.name) throw new Error(`${manifestPath} exports no manifest`);
+	manifests.push(module.manifest);
+}
+
+const fileSet = new Set<string>(['ui.css']);
+const known = new Set(manifests.map((m) => m.name));
+for (const manifest of manifests) {
+	for (const dep of manifest.components) {
+		if (!known.has(dep)) {
+			throw new Error(`${manifest.name} depends on unknown component "${dep}"`);
+		}
+	}
+	for (const file of manifest.files) fileSet.add(file);
+	for (const entry of manifest.shared) sharedToFiles(entry).forEach((f) => fileSet.add(f));
+}
+
+for (const file of fileSet) {
+	if (!existsSync(path.join(silkSrc, file))) {
+		throw new Error(`registry references missing file: ${file}`);
+	}
+}
+
+await rm(outDir, { recursive: true, force: true });
+for (const file of fileSet) {
+	const target = path.join(outDir, 'files', file);
+	await mkdir(path.dirname(target), { recursive: true });
+	await copyFile(path.join(silkSrc, file), target);
+}
+
+const index: RegistryIndex = {
+	cliVersion: pkg.version,
+	builtAt: new Date().toISOString(),
+	components: manifests.map(
+		({ name, version, visibility, description, files, components, shared, peerDependencies }) => ({
+			name,
+			version,
+			visibility,
+			description,
+			files,
+			components,
+			shared,
+			sharedFiles: [...new Set(shared.flatMap(sharedToFiles))],
+			peerDependencies
+		})
+	)
+};
+
+await writeFile(path.join(outDir, 'index.json'), JSON.stringify(index, null, '\t') + '\n');
+await writeFile(
+	path.join(outDir, 'themes.json'),
+	JSON.stringify(await buildThemes(), null, '\t') + '\n'
+);
+
+console.log(`registry: ${index.components.length} components, ${fileSet.size} files, themes built`);
