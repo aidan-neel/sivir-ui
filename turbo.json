@@ -8,7 +8,7 @@
 		},
 		"build": {
 			"dependsOn": ["^build", "check"],
-			"outputs": ["build/**", ".svelte-kit/**", "dist/**", "prisma/generated/**"]
+			"outputs": ["build/**", ".svelte-kit/**", "dist/**", "prisma/generated/**", "registry/**"]
 		},
 		"check": {
 			"dependsOn": ["^check"]

@@ -1,0 +1,31 @@
+{
+	"name": "@silk-ui/cli",
+	"version": "0.1.0",
+	"description": "Install Silk UI components into your Svelte project. Owns-the-code distribution, shadcn style.",
+	"type": "module",
+	"license": "MIT",
+	"bin": {
+		"silk": "./dist/index.js"
+	},
+	"files": [
+		"dist",
+		"registry"
+	],
+	"engines": {
+		"node": ">=20"
+	},
+	"scripts": {
+		"build:registry": "bun scripts/build-registry.ts",
+		"build": "bun run build:registry && bun build src/index.ts --outdir dist --target node --banner '#!/usr/bin/env node'",
+		"check": "tsc --noEmit",
+		"test": "bun run build:registry && bun test",
+		"lint": "prettier --check ."
+	},
+	"devDependencies": {
+		"@clack/prompts": "^0.11.0",
+		"bun-types": "latest",
+		"commander": "^14.0.2",
+		"picocolors": "^1.1.1",
+		"typescript": "^5.9.3"
+	}
+}
