@@ -4,6 +4,9 @@
 	"description": "Install Silk UI components into your Svelte project. Owns-the-code distribution, shadcn style.",
 	"type": "module",
 	"license": "MIT",
+	"publishConfig": {
+		"access": "public"
+	},
 	"bin": {
 		"silk": "./dist/index.js"
 	},
