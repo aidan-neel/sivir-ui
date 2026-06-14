@@ -1,36 +1,36 @@
 /**
- * silk CLI sandbox -- a throwaway SvelteKit-shaped project for exercising the
- * built `silk` binary against a fresh install. For CLI developers; this is not
- * shipped to library users (scripts/ is outside the published `files`).
+ * silk CLI sandbox -- verifies the CLI works by running the built `silk` binary
+ * against a throwaway, SvelteKit-shaped project under the gitignored `.sandbox/`.
+ * For CLI developers; not shipped to library users (scripts/ is outside the
+ * published `files`).
  *
- *   bun run sandbox                  # build, ensure an app, drop into a shell
- *   bun run sandbox add button       # run `silk add button` in the sandbox app
- *   bun run sandbox init -y          # any silk command works implicitly
- *   bun run sandbox scenario         # scripted end-to-end run with assertions
+ *   bun run sandbox                  # build, then run the full check suite
+ *   bun run sandbox run add button   # run one silk command in the sandbox app
  *   bun run sandbox reset [--bare]   # recreate the app (bare = omit peer deps)
- *   bun run sandbox clean            # delete the sandbox entirely
+ *   bun run sandbox clean            # delete the sandbox
  *
- * Prepend --no-build to skip rebuilding the CLI first:
+ * Prepend --no-build to skip rebuilding the CLI first (`bun run sandbox --no-build`).
  *
- *   bun run sandbox --no-build add card
- *
- * The sandbox app accumulates across `add` runs so you can build up a project
- * incrementally; `reset` and `scenario` wipe it first. Everything lives under
- * the gitignored `.sandbox/` directory.
+ * The check suite exercises every command and guard by invoking the real binary
+ * against a fresh install and asserting on the result; it exits non-zero if any
+ * check fails. Use `run` to reproduce a failing command interactively.
  */
 
 import { spawnSync } from 'node:child_process';
-import { chmodSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import pc from 'picocolors';
 import { gradientLine } from '../src/utils/ui';
+import pkg from '../package.json';
 
 const cliRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const distEntry = path.join(cliRoot, 'dist/index.js');
 const sandboxRoot = path.join(cliRoot, '.sandbox');
 const appDir = path.join(sandboxRoot, 'app');
-const binDir = path.join(sandboxRoot, 'bin');
+
+/** Directory `silk init` installs into by default; checks assert against it. */
+const SILK = 'src/lib/silk';
 
 /** Framework-level peers a real consumer project would already have. */
 const FRAMEWORK_PEERS: Record<string, string> = {
@@ -38,8 +38,8 @@ const FRAMEWORK_PEERS: Record<string, string> = {
 	tailwindcss: '^4.0.0'
 };
 
-/** Component-level peers silk pulls; omitted by `reset --bare` so the
- * missing-peer warning path can be exercised. */
+/** Component-level peers silk pulls; omitted by `--bare` so the missing-peer
+ * warning path can be exercised. */
 const COMPONENT_PEERS: Record<string, string> = {
 	clsx: '^2.0.0',
 	'tailwind-merge': '^3.0.0',
@@ -104,23 +104,6 @@ function createApp(bare: boolean) {
 	);
 
 	writeFileSync(
-		path.join(appDir, 'src/routes/+page.svelte'),
-		[
-			'<script lang="ts">',
-			'\t// After `silk add button`, uncomment to render the real component:',
-			"\t// import { Button } from '$lib/silk/components/button';",
-			'</script>',
-			'',
-			'<main>',
-			'\t<h1>silk sandbox</h1>',
-			'\t<p>Run <code>silk add button</code>, then import from <code>$lib/silk</code>.</p>',
-			'\t<!-- <Button>Click me</Button> -->',
-			'</main>',
-			''
-		].join('\n')
-	);
-
-	writeFileSync(
 		path.join(appDir, 'README.md'),
 		[
 			'# silk CLI sandbox (generated)',
@@ -158,168 +141,283 @@ function buildCli(noBuild: boolean) {
 	}
 }
 
-/** Runs the freshly built `silk` binary inside the sandbox app. */
-function runSilk(args: string[]) {
-	return spawnSync('node', [distEntry, ...args], { cwd: appDir, stdio: 'inherit' }).status ?? 1;
+// --- check suite: run the real binary, capture output, assert ---------------
+
+/** Runs `silk` in the sandbox app and captures combined output (no TTY, so the
+ * CLI never prompts -- it takes the non-interactive branch everywhere). */
+function silk(args: string[]): { status: number; out: string } {
+	const result = spawnSync('node', [distEntry, ...args], { cwd: appDir, encoding: 'utf8' });
+	return { status: result.status ?? 1, out: `${result.stdout ?? ''}${result.stderr ?? ''}` };
 }
 
-/** Drops a `silk` shim onto PATH so it resolves to the local build in a shell. */
-function writeShim() {
-	mkdirSync(binDir, { recursive: true });
-	const shim = path.join(binDir, 'silk');
-	writeFileSync(shim, `#!/usr/bin/env bash\nexec node "${distEntry}" "$@"\n`);
-	chmodSync(shim, 0o755);
+const exists = (rel: string) => existsSync(path.join(appDir, rel));
+const read = (rel: string) => readFileSync(path.join(appDir, rel), 'utf8');
+const config = () =>
+	JSON.parse(read('silk.json')) as { components?: Record<string, string> } & Record<
+		string,
+		unknown
+	>;
+
+/** Fresh app + `silk init -y`; returns the init result for assertions. */
+function initApp(bare = false) {
+	createApp(bare);
+	return silk(['init', '-y']);
 }
 
-function openShell(noBuild: boolean) {
-	buildCli(noBuild);
-	ensureApp();
-	writeShim();
+type Check = { label: string; run: () => string[] };
 
-	header('silk sandbox');
-	dim(`app:  ${path.relative(cliRoot, appDir)}`);
-	dim(`silk: local build (${path.relative(cliRoot, distEntry)})`);
-	console.log();
-	console.log(`  ${pc.cyan('silk init -y')}      bootstrap the project`);
-	console.log(`  ${pc.cyan('silk add button')}   install a component`);
-	console.log(`  ${pc.cyan('silk list')}         browse the catalog`);
-	console.log(`  ${pc.dim('exit')}              leave the sandbox`);
-	console.log();
-
-	const shell = process.env.SHELL || '/bin/bash';
-	const result = spawnSync(shell, [], {
-		cwd: appDir,
-		stdio: 'inherit',
-		env: { ...process.env, PATH: `${binDir}:${process.env.PATH ?? ''}`, SILK_SANDBOX: '1' }
-	});
-	process.exit(result.status ?? 0);
-}
-
-function runImplicit(silkArgs: string[], noBuild: boolean) {
-	if (silkArgs.length === 0) {
-		printHelp();
-		process.exit(1);
-	}
-	buildCli(noBuild);
-	ensureApp();
-	process.exit(runSilk(silkArgs));
-}
-
-// --- scenario: scripted end-to-end run against a fresh app ------------------
-
-function read(rel: string) {
-	return readFileSync(path.join(appDir, rel), 'utf8');
-}
-
-function exists(rel: string) {
-	return existsSync(path.join(appDir, rel));
-}
-
-type Step = {
-	label: string;
-	args: string[];
-	/** Returns the list of failed assertions; empty means the step passed. */
-	check: () => string[];
-};
-
-const SILK = 'src/lib/silk';
-
-const SCENARIO: Step[] = [
+const CHECKS: Check[] = [
 	{
-		label: 'silk init -y',
-		args: ['init', '-y'],
-		check: () => {
-			const failures: string[] = [];
+		label: 'init bootstraps silk.json + base files',
+		run: () => {
+			const f: string[] = [];
+			const r = initApp();
+			if (r.status !== 0) f.push(`init exited ${r.status}`);
 			for (const file of [
 				'silk.json',
 				`${SILK}/ui.css`,
 				`${SILK}/utils.ts`,
 				`${SILK}/internals/state.svelte.ts`
 			]) {
-				if (!exists(file)) failures.push(`missing ${file}`);
+				if (!exists(file)) f.push(`missing ${file}`);
 			}
-			return failures;
-		}
-	},
-	{
-		label: 'silk add command (transitive deps)',
-		args: ['add', 'command'],
-		check: () => {
-			const failures: string[] = [];
-			for (const file of [
-				`${SILK}/components/command/command.svelte`,
-				`${SILK}/components/popover/popover.svelte`,
-				`${SILK}/components/button/button.svelte`
-			]) {
-				if (!exists(file)) failures.push(`missing ${file}`);
+			if (exists('silk.json')) {
+				const cfg = config();
+				if (cfg.dir !== 'src/lib/silk') f.push(`silk.json dir = ${String(cfg.dir)}`);
+				if (cfg.alias !== '$lib/silk') f.push(`silk.json alias = ${String(cfg.alias)}`);
+				if (!cfg.registry) f.push('silk.json missing registry');
 			}
-			const button = exists(`${SILK}/components/button/button.svelte`)
-				? read(`${SILK}/components/button/button.svelte`)
-				: '';
-			if (!button.includes('$lib/silk')) failures.push('imports not rewritten to $lib/silk');
-			if (button.includes('@silk/ui')) failures.push('stale @silk/ui import remains');
-			return failures;
+			return f;
 		}
 	},
 	{
-		label: 'silk add theme default',
-		args: ['add', 'theme', 'default'],
-		check: () => {
-			if (!exists(`${SILK}/theme.css`)) return [`missing ${SILK}/theme.css`];
-			return read(`${SILK}/theme.css`).includes('@theme') ? [] : ['theme.css has no @theme block'];
+		label: 'init guards against re-initialising',
+		run: () => {
+			const f: string[] = [];
+			initApp();
+			const r = silk(['init', '-y']);
+			if (r.status !== 0) f.push(`second init exited ${r.status}`);
+			if (!r.out.includes('already exists')) f.push('no "already exists" notice');
+			return f;
 		}
 	},
 	{
-		label: 'silk add button (idempotent re-add)',
-		args: ['add', 'button'],
-		check: () => []
+		label: 'add installs files, rewrites imports, records version',
+		run: () => {
+			const f: string[] = [];
+			initApp();
+			const r = silk(['add', 'button']);
+			if (r.status !== 0) f.push(`add button exited ${r.status}`);
+			for (const file of ['button.svelte', 'index.ts', 'variants.ts']) {
+				if (!exists(`${SILK}/components/button/${file}`)) f.push(`missing button/${file}`);
+			}
+			if (exists(`${SILK}/components/button/button.svelte`)) {
+				const src = read(`${SILK}/components/button/button.svelte`);
+				if (!src.includes('$lib/silk')) f.push('imports not rewritten to alias');
+				if (src.includes('@silk/ui')) f.push('stale @silk/ui import remains');
+			}
+			if (!config().components?.button) f.push('silk.json did not record button');
+			return f;
+		}
+	},
+	{
+		label: 'add resolves transitive deps (command → popover, button)',
+		run: () => {
+			const f: string[] = [];
+			initApp();
+			const r = silk(['add', 'command']);
+			if (r.status !== 0) f.push(`add command exited ${r.status}`);
+			for (const name of ['command', 'popover', 'button']) {
+				if (!exists(`${SILK}/components/${name}`)) f.push(`missing component dir ${name}`);
+				if (!config().components?.[name]) f.push(`silk.json missing ${name}`);
+			}
+			return f;
+		}
+	},
+	{
+		label: 'add pulls internal deps (modal → _internal/overlay)',
+		run: () => {
+			const f: string[] = [];
+			initApp();
+			const r = silk(['add', 'modal']);
+			if (r.status !== 0) f.push(`add modal exited ${r.status}`);
+			if (!exists(`${SILK}/components/_internal/overlay/overlay.svelte.ts`)) {
+				f.push('internal overlay not installed');
+			}
+			if (!exists(`${SILK}/components/modal/modal.svelte`)) f.push('modal not installed');
+			return f;
+		}
+	},
+	{
+		label: 'add accepts multiple components at once',
+		run: () => {
+			const f: string[] = [];
+			initApp();
+			const r = silk(['add', 'accordion', 'badge']);
+			if (r.status !== 0) f.push(`add exited ${r.status}`);
+			for (const name of ['accordion', 'badge']) {
+				if (!config().components?.[name]) f.push(`silk.json missing ${name}`);
+			}
+			return f;
+		}
+	},
+	{
+		label: 'add is idempotent (re-add skips existing)',
+		run: () => {
+			const f: string[] = [];
+			initApp();
+			silk(['add', 'button']);
+			const r = silk(['add', 'button']);
+			if (r.status !== 0) f.push(`re-add exited ${r.status}`);
+			if (!r.out.includes('already existed')) f.push('no skip notice on re-add');
+			return f;
+		}
+	},
+	{
+		label: 'add --overwrite replaces modified files',
+		run: () => {
+			const f: string[] = [];
+			initApp();
+			silk(['add', 'button']);
+			const target = `${SILK}/components/button/button.svelte`;
+			writeFileSync(path.join(appDir, target), '// tampered\n');
+			const r = silk(['add', 'button', '--overwrite']);
+			if (r.status !== 0) f.push(`overwrite exited ${r.status}`);
+			const src = exists(target) ? read(target) : '';
+			if (src.includes('// tampered')) f.push('file not overwritten');
+			if (!src.includes('$lib/silk')) f.push('overwritten file missing rewritten imports');
+			return f;
+		}
+	},
+	{
+		label: 'add before init fails with guidance',
+		run: () => {
+			const f: string[] = [];
+			createApp(false); // deliberately skip init
+			const r = silk(['add', 'button']);
+			if (r.status === 0) f.push('expected non-zero exit');
+			if (!r.out.includes('silk init')) f.push('no "silk init" guidance');
+			return f;
+		}
+	},
+	{
+		label: 'unknown component suggests the closest match',
+		run: () => {
+			const f: string[] = [];
+			initApp();
+			const r = silk(['add', 'buton']);
+			if (r.status === 0) f.push('expected non-zero exit');
+			if (!r.out.includes('did you mean')) f.push('no suggestion offered');
+			if (!r.out.includes('button')) f.push('did not suggest "button"');
+			return f;
+		}
+	},
+	{
+		label: 'internal component rejected as a direct target',
+		run: () => {
+			const f: string[] = [];
+			initApp();
+			const r = silk(['add', '_internal/overlay']);
+			if (r.status === 0) f.push('expected non-zero exit');
+			if (!r.out.includes('internal')) f.push('no "internal" explanation');
+			return f;
+		}
+	},
+	{
+		label: 'add theme default resolves offline',
+		run: () => {
+			const f: string[] = [];
+			initApp();
+			const r = silk(['add', 'theme', 'default']);
+			if (r.status !== 0) f.push(`add theme exited ${r.status}`);
+			if (!exists(`${SILK}/theme.css`)) f.push('theme.css not written');
+			else if (!read(`${SILK}/theme.css`).includes('@theme')) f.push('theme.css missing @theme');
+			return f;
+		}
+	},
+	{
+		label: 'list shows components and themes',
+		run: () => {
+			const f: string[] = [];
+			const r = silk(['list']);
+			if (r.status !== 0) f.push(`list exited ${r.status}`);
+			if (!r.out.includes('button')) f.push('list missing "button"');
+			if (!r.out.includes('default')) f.push('list missing "default" theme');
+			return f;
+		}
+	},
+	{
+		label: '--version matches package.json',
+		run: () => {
+			const f: string[] = [];
+			const r = silk(['--version']);
+			if (r.status !== 0) f.push(`--version exited ${r.status}`);
+			if (r.out.trim() !== pkg.version) {
+				f.push(`printed "${r.out.trim()}", expected ${pkg.version}`);
+			}
+			return f;
+		}
+	},
+	{
+		label: 'bare project reports missing peer dependencies',
+		run: () => {
+			const f: string[] = [];
+			const r = initApp(true);
+			if (r.status !== 0) f.push(`init exited ${r.status}`);
+			if (!r.out.includes('missing peer dependencies')) f.push('no missing-peer warning');
+			return f;
+		}
 	}
 ];
 
-function runScenario(noBuild: boolean) {
+function verify(noBuild: boolean) {
 	buildCli(noBuild);
-	createApp(false);
-	header('silk sandbox · scenario');
+	header('silk sandbox · verify');
+	dim(`running ${CHECKS.length} checks against ${path.relative(cliRoot, appDir)}`);
+	console.log();
 
-	const results: { label: string; failures: string[]; status: number }[] = [];
-	for (const step of SCENARIO) {
-		console.log(pc.bold(`▸ ${step.label}`));
-		const status = runSilk(step.args);
-		const failures = step.check();
-		if (status !== 0) failures.unshift(`exit code ${status}`);
-		results.push({ label: step.label, failures, status });
-		console.log();
-	}
-
-	header('results');
 	let failed = 0;
-	for (const result of results) {
-		if (result.failures.length === 0) {
-			console.log(`  ${pc.green('✔')} ${result.label}`);
+	for (const check of CHECKS) {
+		const failures = check.run();
+		if (failures.length === 0) {
+			console.log(`  ${pc.green('✔')} ${check.label}`);
 		} else {
 			failed++;
-			console.log(`  ${pc.red('✖')} ${result.label}`);
-			for (const failure of result.failures) console.log(`    ${pc.red(failure)}`);
+			console.log(`  ${pc.red('✖')} ${check.label}`);
+			for (const failure of failures) console.log(`    ${pc.red(failure)}`);
 		}
 	}
+
 	console.log();
 	if (failed > 0) {
-		console.log(`  ${pc.red(`${failed} of ${results.length} steps failed`)}`);
+		console.log(`  ${pc.red(`${failed} of ${CHECKS.length} checks failed`)}`);
+		dim('reproduce a command with: bun run sandbox run <args>');
 		process.exit(1);
 	}
-	console.log(`  ${pc.green(`all ${results.length} steps passed`)}`);
-	dim(`inspect the result at ${path.relative(cliRoot, appDir)}`);
+	console.log(`  ${pc.green(`all ${CHECKS.length} checks passed`)}`);
+}
+
+/** Runs one silk command against the persistent sandbox app, for debugging. */
+function runOnce(silkArgs: string[], noBuild: boolean) {
+	if (silkArgs.length === 0) {
+		printHelp();
+		process.exit(1);
+	}
+	buildCli(noBuild);
+	ensureApp();
+	process.exit(
+		spawnSync('node', [distEntry, ...silkArgs], { cwd: appDir, stdio: 'inherit' }).status ?? 1
+	);
 }
 
 function printHelp() {
 	header('silk sandbox');
-	console.log('  Exercise the local silk build against a throwaway project.');
+	console.log('  Run the local silk build against a throwaway project and verify it works.');
 	console.log();
-	console.log(`  ${pc.cyan('bun run sandbox')}                  build + drop into a shell`);
-	console.log(`  ${pc.cyan('bun run sandbox <silk args>')}      run a silk command in the app`);
 	console.log(
-		`  ${pc.cyan('bun run sandbox scenario')}         scripted end-to-end with assertions`
+		`  ${pc.cyan('bun run sandbox')}                  run the full check suite (default)`
 	);
+	console.log(`  ${pc.cyan('bun run sandbox run <args>')}       run one silk command in the app`);
 	console.log(
 		`  ${pc.cyan('bun run sandbox reset [--bare]')}   recreate the app (bare omits peers)`
 	);
@@ -341,7 +439,8 @@ if (args[0] === '--no-build') {
 const command = args[0];
 switch (command) {
 	case undefined:
-		openShell(noBuild);
+	case 'verify':
+		verify(noBuild);
 		break;
 	case 'help':
 	case '--help':
@@ -358,15 +457,9 @@ switch (command) {
 			`reset app at ${path.relative(cliRoot, appDir)}${args.includes('--bare') ? ' (bare)' : ''}`
 		);
 		break;
-	case 'shell':
-		openShell(noBuild);
-		break;
-	case 'scenario':
-		runScenario(noBuild);
-		break;
 	case 'run':
-		runImplicit(args.slice(1), noBuild);
+		runOnce(args.slice(1), noBuild);
 		break;
 	default:
-		runImplicit(args, noBuild);
+		runOnce(args, noBuild);
 }

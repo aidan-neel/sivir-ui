@@ -99,21 +99,22 @@ bun run check            # tsc --noEmit
 
 ### Sandbox
 
-`bun run sandbox` builds the CLI and runs it against a throwaway, SvelteKit-shaped
-project under the gitignored `.sandbox/` directory — the fastest way to dogfood
-`init`/`add` against a fresh install without touching a real repo.
+`bun run sandbox` builds the CLI and verifies it works by running the real binary
+against a throwaway, SvelteKit-shaped project under the gitignored `.sandbox/`
+directory — a fresh install, without touching a real repo. The default command
+runs a suite of checks covering every command and guard, asserting on the result
+and exiting non-zero if anything fails:
 
 ```bash
-bun run sandbox                # build, scaffold an app, drop into a shell where
-                               # `silk` is the local build (type `exit` to leave)
-bun run sandbox add button     # run any silk command against the sandbox app
-bun run sandbox init -y        # the app accumulates across runs
-bun run sandbox scenario       # scripted init → add → theme → re-add, with
-                               # pass/fail assertions (exits non-zero on failure)
+bun run sandbox                # build, then run the full check suite (15 checks)
+bun run sandbox run add button # run one silk command in the app, to debug a check
 bun run sandbox reset --bare   # recreate the app without component peer deps,
-                               # to exercise the missing-peer warnings
+                               # to poke at the missing-peer warnings
 bun run sandbox clean          # delete .sandbox entirely
 ```
 
-Prepend `--no-build` to any command to skip rebuilding the CLI first
-(`bun run sandbox --no-build add card`).
+The suite exercises `init` (bootstrap + re-init guard), `add` (file install, import
+rewriting, version recording, transitive deps, internal deps, multiple targets,
+idempotent re-add, `--overwrite`), the error paths (add-before-init, unknown
+component suggestions, internal-target rejection), `add theme`, `list`, `--version`,
+and the missing-peer warning. Prepend `--no-build` to skip rebuilding the CLI first.
