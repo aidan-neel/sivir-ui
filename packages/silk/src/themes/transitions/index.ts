@@ -1,6 +1,7 @@
 import type { ThemeTransitionPreset, ThemeTransitionPresetSlug, ThemeMotion } from './types';
 
 import { preset as bounce } from './bounce';
+import { preset as cascade } from './cascade';
 import { preset as crisp } from './crisp';
 import { preset as defaultPreset } from './default';
 import { preset as dramatic } from './dramatic';
@@ -18,6 +19,7 @@ import { preset as swift } from './swift';
 // Vite -- the CLI registry build imports themeToCss under bun.
 export const transitionPresets: ThemeTransitionPreset[] = [
 	bounce,
+	cascade,
 	crisp,
 	defaultPreset,
 	dramatic,

@@ -65,6 +65,7 @@
 	import Minimize from '@lucide/svelte/icons/minimize-2';
 	import Layers2 from '@lucide/svelte/icons/layers-2';
 	import Wind from '@lucide/svelte/icons/wind';
+	import ChevronsDown from '@lucide/svelte/icons/chevrons-down';
 
 	import type { PageData } from './$types';
 	import StudioPreview from '$lib/components/themes/studio/studio-preview.svelte';
@@ -1219,6 +1220,20 @@
 			description: 'Sits in place, fades only.',
 			icon: Layers2,
 			motion: { panelX: 0, panelY: 0, panelScaleStart: 1, panelBlur: 0 }
+		},
+		{
+			slug: 'cascade',
+			name: 'Cascade',
+			description: 'Pronounced rise with a soft blur clearing -- the landing-page cascade feel.',
+			icon: ChevronsDown,
+			motion: {
+				panelX: 0,
+				panelY: 16,
+				panelScaleStart: 0.96,
+				panelBlur: 4,
+				panelPerspective: 0,
+				panelRotateX: 0
+			}
 		}
 	];
 
