@@ -51,6 +51,14 @@
 			description: 'Disable to force the user to confirm or exit explicitly.'
 		},
 		{
+			component: 'Content',
+			prop: 'variant',
+			type: '"default" | "spotlight"',
+			default: '"default"',
+			description:
+				'Surface treatment. "spotlight" is a focused, centered layout with full-width actions.'
+		},
+		{
 			component: 'Header',
 			prop: 'children',
 			type: 'Snippet',
@@ -300,6 +308,7 @@
 			<Tabs.List>
 				<Tabs.Trigger value="destructive">Destructive confirmation</Tabs.Trigger>
 				<Tabs.Trigger value="sign-out">Sign out</Tabs.Trigger>
+				<Tabs.Trigger value="spotlight">Spotlight</Tabs.Trigger>
 			</Tabs.List>
 
 			<div class="mt-3 grid gap-3 md:grid-cols-2">
@@ -383,6 +392,50 @@
     <AlertDialog.Footer>
       <AlertDialog.Exit>Stay</AlertDialog.Exit>
       <AlertDialog.Confirm>Sign out</AlertDialog.Confirm>
+    </AlertDialog.Footer>
+  </AlertDialog.Content>
+</AlertDialog.Root>`,
+								'svelte'
+							)}</code
+						></pre>
+				</Tabs.Content>
+
+				<Tabs.Content value="spotlight" class="contents">
+					<div
+						class="grid place-items-center rounded-[var(--radius-lg)] border border-border bg-card p-8"
+					>
+						<AlertDialog.Root>
+							<AlertDialog.Trigger>Show spotlight</AlertDialog.Trigger>
+							<AlertDialog.Content variant="spotlight">
+								<AlertDialog.Header>
+									<AlertDialog.Title>Are you sure you want to do this?</AlertDialog.Title>
+									<AlertDialog.Description>
+										A focused, centered take on the same composable parts — just pass
+										<code>variant="spotlight"</code> to Content.
+									</AlertDialog.Description>
+								</AlertDialog.Header>
+								<AlertDialog.Footer>
+									<AlertDialog.Exit>Cancel</AlertDialog.Exit>
+									<AlertDialog.Confirm>Continue</AlertDialog.Confirm>
+								</AlertDialog.Footer>
+							</AlertDialog.Content>
+						</AlertDialog.Root>
+					</div>
+					<pre
+						class="m-0 overflow-x-auto rounded-[var(--radius-lg)] border border-border bg-secondary/40 px-4 py-4 font-mono text-[0.78rem] leading-relaxed"><code
+							>{@html highlight(
+								`<AlertDialog.Root>
+  <AlertDialog.Trigger>Show spotlight</AlertDialog.Trigger>
+  <AlertDialog.Content variant="spotlight">
+    <AlertDialog.Header>
+      <AlertDialog.Title>Are you sure you want to do this?</AlertDialog.Title>
+      <AlertDialog.Description>
+        A high-contrast, centered take on the same parts.
+      </AlertDialog.Description>
+    </AlertDialog.Header>
+    <AlertDialog.Footer>
+      <AlertDialog.Exit>Cancel</AlertDialog.Exit>
+      <AlertDialog.Confirm>Continue</AlertDialog.Confirm>
     </AlertDialog.Footer>
   </AlertDialog.Content>
 </AlertDialog.Root>`,

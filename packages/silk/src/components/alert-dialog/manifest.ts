@@ -1,11 +1,21 @@
 import type { Manifest } from '@silk/ui/_manifest/types';
 
+/**
+ * Version history:
+ *   1.0.0 -- initial release.
+ *   1.1.0:
+ *           - Add `variant` to Content ("default" | "spotlight"). The
+ *             spotlight variant renders a focused, centered confirmation with
+ *             two full-width actions. Content broadcasts the variant through
+ *             context so Title/Description/Footer/Confirm/Exit adopt the
+ *             matching treatment. Default rendering is unchanged.
+ */
 export const manifest: Manifest = {
 	name: 'alert-dialog',
-	version: '1.0.0',
+	version: '1.1.0',
 	visibility: 'public',
 	description:
-		'Confirmation dialog with role="alertdialog", default allowClickOutside=false, and Exit/Confirm buttons (no Close).',
+		'Confirmation dialog with role="alertdialog", default allowClickOutside=false, and Exit/Confirm buttons (no Close). Content supports a "spotlight" variant -- a focused, centered layout with full-width actions.',
 	role: 'alertdialog',
 	files: [
 		'components/alert-dialog/alert-dialog.svelte',
