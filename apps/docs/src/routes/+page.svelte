@@ -66,36 +66,27 @@
   </Sheet.Content>
 </Sheet.Root>`;
 
-	type RevealParams = { delay?: number; threshold?: number; rootMargin?: string };
-
-	const revealOnScroll: Action<HTMLElement, RevealParams> = (node, params = {}) => {
-		let observer: IntersectionObserver | undefined;
-		const applyConfig = (config: RevealParams) => {
-			node.style.setProperty('--reveal-delay', `${config.delay ?? 0}ms`);
-			if (typeof window === 'undefined') return;
-			if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-				node.dataset.revealed = 'true';
-				return;
-			}
-			observer?.disconnect();
-			observer = new IntersectionObserver(
-				([entry]) => {
-					if (entry?.isIntersecting) {
-						node.dataset.revealed = 'true';
-						observer?.disconnect();
-					}
-				},
-				{ threshold: config.threshold ?? 0.15, rootMargin: config.rootMargin ?? '0px 0px -8% 0px' }
-			);
-			observer.observe(node);
-		};
-		applyConfig(params);
-		return {
-			update(p) {
-				applyConfig(p ?? {});
+	/** Adds the `in` class once the node scrolls into view, driving the
+	    `landing-reveal` / `reveal-line-scroll` transitions. */
+	const reveal: Action<HTMLElement, { rootMargin?: string } | undefined> = (node, params) => {
+		if (typeof window === 'undefined') return;
+		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+			node.classList.add('in');
+			return;
+		}
+		const observer = new IntersectionObserver(
+			([entry]) => {
+				if (entry?.isIntersecting) {
+					node.classList.add('in');
+					observer.disconnect();
+				}
 			},
+			{ threshold: 0.15, rootMargin: params?.rootMargin ?? '0px 0px -8% 0px' }
+		);
+		observer.observe(node);
+		return {
 			destroy() {
-				observer?.disconnect();
+				observer.disconnect();
 			}
 		};
 	};
@@ -109,26 +100,41 @@
 	/>
 </svelte:head>
 
+<!-- Renders `text` word-by-word inside clipping masks so each word slides up.
+     `scroll` picks the on-load animation (false) vs the scroll-triggered
+     transition (true); words stagger from `base` by `step` seconds. -->
+{#snippet cascade(text: string, base: number, step: number, scroll: boolean)}
+	<!-- eslint-disable-next-line svelte/no-useless-mustaches the literal space is a significant inter-word separator -->
+	{#each text.split(' ') as word, i (i)}{#if i > 0}{' '}{/if}<span class="reveal-mask-inline"
+			><span class={scroll ? 'reveal-line-scroll' : 'reveal-line'} style="--d: {base + i * step}s"
+				>{word}</span
+			></span
+		>{/each}
+{/snippet}
+
 <div class="page">
 	<!-- ═══════════════════ HERO ═══════════════════ -->
 	<section class="hero">
-		<div class="reveal" use:revealOnScroll={{ delay: 60 }}>
+		<div class="landing-enter" style="--d: 0.05s">
 			<span class="eyebrow">
 				<span class="eyebrow-dot"></span>
 				Silk UI · v1 release candidate
 			</span>
 		</div>
 
-		<h1 class="reveal headline" use:revealOnScroll={{ delay: 140 }}>
-			Forty Svelte 5 components.<br />
-			<span class="headline-accent">One theming system.</span>
+		<h1 class="headline">
+			<span class="headline-line"
+				>{@render cascade('Forty Svelte 5 components.', 0.12, 0.07, false)}</span
+			><span class="headline-line headline-accent"
+				>{@render cascade('One theming system.', 0.12 + 4 * 0.07, 0.07, false)}</span
+			>
 		</h1>
 
-		<p class="reveal lede" use:revealOnScroll={{ delay: 240 }}>
+		<p class="landing-enter lede" style="--d: 0.62s">
 			Token-first, accessible, source-distributed. Edit the tokens, the whole library follows.
 		</p>
 
-		<div class="reveal hero-cta" use:revealOnScroll={{ delay: 320 }}>
+		<div class="landing-enter hero-cta" style="--d: 0.72s">
 			<Button href="/docs/components/accordion">
 				Browse components
 				<ArrowRight size={14} />
@@ -140,11 +146,11 @@
 		</div>
 
 		<button
-			class="reveal install"
+			class="landing-enter install"
 			type="button"
 			onclick={copyInstall}
 			aria-label="Copy install command"
-			use:revealOnScroll={{ delay: 400 }}
+			style="--d: 0.8s"
 		>
 			<span class="install-prompt">$</span>
 			<span class="install-cmd">{installCommand}</span>
@@ -156,7 +162,7 @@
 
 	<!-- ═══════════════════ PREVIEW ═══════════════════ -->
 	<section class="showcase">
-		<div class="reveal showcase-grid" use:revealOnScroll={{ delay: 80 }}>
+		<div class="landing-reveal showcase-grid" use:reveal style="--d: 0.08s">
 			<div class="preview">
 				<!-- Top bar — search + breadcrumb-ish -->
 				<div class="preview-topbar">
@@ -308,9 +314,9 @@
 	</section>
 
 	<!-- ═══════════════════ STATS ═══════════════════ -->
-	<section class="stats-strip">
+	<section class="stats-strip" use:reveal>
 		{#each stats as s, i}
-			<div class="stat reveal" use:revealOnScroll={{ delay: 60 + i * 70 }}>
+			<div class="stat landing-reveal-child" style="--d: {0.06 + i * 0.07}s">
 				<span class="stat-value">{s.value}</span>
 				<span class="stat-label">{s.label}</span>
 			</div>
@@ -319,9 +325,11 @@
 
 	<!-- ═══════════════════ CODE × CALLOUTS ═══════════════════ -->
 	<section class="codeshow">
-		<div class="codeshow-intro reveal" use:revealOnScroll={{ delay: 60 }}>
+		<div class="codeshow-intro landing-reveal" use:reveal style="--d: 0.06s">
 			<span class="picker-eyebrow">Compound APIs</span>
-			<h2 class="section-title">Composable like you'd build it yourself.</h2>
+			<h2 class="section-title">
+				{@render cascade("Composable like you'd build it yourself.", 0.05, 0.05, true)}
+			</h2>
 			<p class="section-sub">
 				Each component splits into the parts you'd expect — <code>Root</code>, <code>Trigger</code>,
 				<code>Content</code>, <code>Header</code>. No magic, no hidden state. The markup reads like
@@ -329,7 +337,7 @@
 			</p>
 		</div>
 
-		<div class="codeshow-grid reveal" use:revealOnScroll={{ delay: 140 }}>
+		<div class="codeshow-grid landing-reveal" use:reveal style="--d: 0.14s">
 			<pre class="codeshow-code"><code>{@html highlight(sheetSource, 'svelte')}</code></pre>
 
 			<aside class="codeshow-callouts">
@@ -368,10 +376,12 @@
 	</section>
 
 	<!-- ═══════════════════ CLOSER (full-bleed) ═══════════════════ -->
-	<section class="closer reveal" use:revealOnScroll={{ delay: 60 }}>
+	<section class="closer landing-reveal" use:reveal style="--d: 0.06s">
 		<div class="closer-content">
 			<div class="closer-inner">
-				<h2 class="closer-title">Start from a stronger baseline.</h2>
+				<h2 class="closer-title">
+					{@render cascade('Start from a stronger baseline.', 0.05, 0.05, true)}
+				</h2>
 				<p class="closer-sub">
 					Open the docs, copy a component, restyle the whole library from the studio.
 				</p>
@@ -394,7 +404,11 @@
 		</div>
 	</section>
 
-	<footer class="footer reveal" use:revealOnScroll={{ delay: 80, rootMargin: '0px 0px 10% 0px' }}>
+	<footer
+		class="footer landing-reveal"
+		use:reveal={{ rootMargin: '0px 0px 10% 0px' }}
+		style="--d: 0.08s"
+	>
 		<div>
 			<p class="footer-mark">Silk UI</p>
 			<p class="footer-tag">Themed Svelte 5 components for teams that still want control.</p>
@@ -413,22 +427,6 @@
 		position: relative;
 		min-height: calc(100vh - 3.5rem);
 		padding-bottom: 6rem;
-	}
-
-	.reveal {
-		opacity: 0;
-		transform: translate3d(0, 18px, 0);
-		filter: blur(6px);
-		transition:
-			opacity 880ms cubic-bezier(0.16, 1, 0.3, 1),
-			transform 880ms cubic-bezier(0.16, 1, 0.3, 1),
-			filter 880ms cubic-bezier(0.16, 1, 0.3, 1);
-		transition-delay: var(--reveal-delay, 0ms);
-	}
-	:global(.reveal[data-revealed='true']) {
-		opacity: 1;
-		transform: none;
-		filter: none;
 	}
 
 	/* ─── Hero ─── */
@@ -479,7 +477,13 @@
 		max-width: 22ch;
 		text-wrap: balance;
 	}
-	.headline-accent {
+	.headline-line {
+		display: block;
+	}
+	/* Gradient lives on each sliding word (not the line) so background-clip:text
+	   stays on the same element as the text it clips — the masked translate can't
+	   detach the fill from the glyphs. */
+	.headline-accent :global(.reveal-line) {
 		background: linear-gradient(
 			90deg,
 			var(--color-foreground) 0%,
@@ -963,14 +967,5 @@
 	}
 	.footer-nav a:hover {
 		color: var(--color-foreground);
-	}
-
-	@media (prefers-reduced-motion: reduce) {
-		.reveal {
-			opacity: 1;
-			transform: none;
-			filter: none;
-			transition: none;
-		}
 	}
 </style>
