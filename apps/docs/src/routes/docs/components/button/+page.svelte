@@ -341,7 +341,9 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 	<DocSection icon={Sparkles} title="At a glance" id="overview">
 		<div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
 			{#each [{ icon: Layers, title: '10 variants', body: 'Semantic + status + neutral.' }, { icon: Type, title: '4 sizes', body: 'Token-driven height + padding.' }, { icon: Link, title: 'Polymorphic', body: 'Pass `href` to render an anchor.' }] as card}
-				<div class="flex flex-col gap-2 rounded-[var(--radius-lg)] border border-border bg-card p-4">
+				<div
+					class="flex flex-col gap-2 rounded-[var(--radius-lg)] border border-border bg-card p-4"
+				>
 					<span class="grid size-8 place-items-center rounded-md bg-secondary/60 text-foreground">
 						<card.icon size={14} />
 					</span>
@@ -368,7 +370,7 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 	<DocSection
 		icon={Layers}
 		title="Variants"
-		description={`Pick by intent. The same action ("Save") should always use the same variant across your product.`}
+		description="Pick by intent. The same action (Save) should always use the same variant across your product."
 		id="variants"
 	>
 		<div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">

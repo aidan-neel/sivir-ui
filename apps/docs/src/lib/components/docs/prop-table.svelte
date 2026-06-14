@@ -76,7 +76,9 @@
 					<p class="m-0 text-[0.78rem] leading-snug text-foreground-muted">{row.description}</p>
 				</div>
 				<div class="md:text-right">
-					<code class="inline-block rounded-md bg-secondary/40 px-2 py-1 font-mono text-[0.72rem] text-foreground">
+					<code
+						class="inline-block rounded-md bg-secondary/40 px-2 py-1 font-mono text-[0.72rem] text-foreground"
+					>
 						{row.default}
 					</code>
 				</div>

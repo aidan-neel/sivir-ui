@@ -88,8 +88,8 @@
 						<Accordion.Item value="item-1">
 							<Accordion.Trigger>Is it accessible?</Accordion.Trigger>
 							<Accordion.Content
-								>Yes — the trigger is a real button with `aria-expanded` and `aria-controls`, and the
-								content has `role="region"`.</Accordion.Content
+								>Yes — the trigger is a real button with `aria-expanded` and `aria-controls`, and
+								the content has `role="region"`.</Accordion.Content
 							>
 						</Accordion.Item>
 						<Accordion.Item value="item-2">
