@@ -96,3 +96,24 @@ bun run build            # snapshot + bundle dist/index.js
 bun run test             # bun test (resolver, rewriting, snapshot integrity)
 bun run check            # tsc --noEmit
 ```
+
+### Sandbox
+
+`bun run sandbox` builds the CLI and runs it against a throwaway, SvelteKit-shaped
+project under the gitignored `.sandbox/` directory — the fastest way to dogfood
+`init`/`add` against a fresh install without touching a real repo.
+
+```bash
+bun run sandbox                # build, scaffold an app, drop into a shell where
+                               # `silk` is the local build (type `exit` to leave)
+bun run sandbox add button     # run any silk command against the sandbox app
+bun run sandbox init -y        # the app accumulates across runs
+bun run sandbox scenario       # scripted init → add → theme → re-add, with
+                               # pass/fail assertions (exits non-zero on failure)
+bun run sandbox reset --bare   # recreate the app without component peer deps,
+                               # to exercise the missing-peer warnings
+bun run sandbox clean          # delete .sandbox entirely
+```
+
+Prepend `--no-build` to any command to skip rebuilding the CLI first
+(`bun run sandbox --no-build add card`).

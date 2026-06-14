@@ -22,6 +22,7 @@
 		"build": "bun run build:registry && bun build src/index.ts --outdir dist --target node --banner '#!/usr/bin/env node'",
 		"check": "tsc --noEmit",
 		"test": "bun run build:registry && bun test",
+		"sandbox": "bun scripts/sandbox.ts",
 		"lint": "prettier --check ."
 	},
 	"devDependencies": {

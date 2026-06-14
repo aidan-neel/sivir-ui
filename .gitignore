@@ -11,6 +11,7 @@ node_modules
 /build
 packages/cli/dist
 packages/cli/registry
+packages/cli/.sandbox
 
 # OS
 .DS_Store
