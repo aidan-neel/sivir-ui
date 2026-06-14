@@ -9,6 +9,13 @@ export type RegistryTheme = ThemeDraft & {
 
 const DEFAULT_REGISTRY_URL = 'http://localhost:4100';
 
+// Bound registry reads so an unreachable registry (e.g. not running in local
+// dev) fails fast and lets callers fall back, instead of hanging the request --
+// a dead local port doesn't always refuse promptly (notably under WSL2). The
+// registry is local, so a healthy instance answers in well under this; the
+// timeout is only ever paid when it's down, so keep it short.
+const REGISTRY_READ_TIMEOUT_MS = 1200;
+
 export class RegistryRequestError extends Error {
 	constructor(
 		public readonly status: number,
@@ -28,7 +35,9 @@ async function parseErrorMessage(response: Response) {
 }
 
 export async function listRegistryThemes(fetchImpl: typeof fetch) {
-	const response = await fetchImpl(`${getRegistryBaseUrl()}/themes`);
+	const response = await fetchImpl(`${getRegistryBaseUrl()}/themes`, {
+		signal: AbortSignal.timeout(REGISTRY_READ_TIMEOUT_MS)
+	});
 	if (!response.ok) {
 		throw new RegistryRequestError(response.status, await parseErrorMessage(response));
 	}
@@ -38,7 +47,9 @@ export async function listRegistryThemes(fetchImpl: typeof fetch) {
 }
 
 export async function getRegistryThemeBySlug(fetchImpl: typeof fetch, slug: string) {
-	const response = await fetchImpl(`${getRegistryBaseUrl()}/themes/${encodeURIComponent(slug)}`);
+	const response = await fetchImpl(`${getRegistryBaseUrl()}/themes/${encodeURIComponent(slug)}`, {
+		signal: AbortSignal.timeout(REGISTRY_READ_TIMEOUT_MS)
+	});
 	if (!response.ok) {
 		throw new RegistryRequestError(response.status, await parseErrorMessage(response));
 	}

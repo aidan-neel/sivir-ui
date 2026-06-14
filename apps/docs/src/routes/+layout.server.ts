@@ -7,7 +7,8 @@ const GITHUB_REPO = 'aidan-neel/ui';
 async function fetchStarCount(fetchImpl: typeof fetch): Promise<number | null> {
 	try {
 		const response = await fetchImpl(`https://api.github.com/repos/${GITHUB_REPO}`, {
-			headers: { accept: 'application/vnd.github+json' }
+			headers: { accept: 'application/vnd.github+json' },
+			signal: AbortSignal.timeout(3000)
 		});
 		if (!response.ok) return null;
 		const data = (await response.json()) as { stargazers_count?: number };
