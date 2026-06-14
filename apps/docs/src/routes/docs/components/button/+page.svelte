@@ -1,17 +1,18 @@
 <script lang="ts">
 	import { Button, type ButtonVariant } from '@silk/ui/components/button';
-	import { Badge } from '@silk/ui/components/badge';
 	import { highlight } from '$lib/highlight';
 	import * as Tabs from '@silk/ui/components/tabs';
-	import * as Tooltip from '@silk/ui/components/tooltip';
 	import * as Alert from '@silk/ui/components/alert';
 	import { toast } from '@silk/ui/components/toast';
-	import { components, sanitizeComponent } from '$lib/components';
+	import { createCopy } from '$lib/copy.svelte';
+	import DocHeader from '$lib/components/docs/doc-header.svelte';
+	import DocSection from '$lib/components/docs/doc-section.svelte';
+	import PropTable from '$lib/components/docs/prop-table.svelte';
+	import DocFooter from '$lib/components/docs/doc-footer.svelte';
+	import DocPager from '$lib/components/docs/doc-pager.svelte';
 
 	import Sparkles from '@lucide/svelte/icons/sparkles';
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
-	import ChevronLeft from '@lucide/svelte/icons/chevron-left';
-	import ChevronRight from '@lucide/svelte/icons/chevron-right';
 	import Copy from '@lucide/svelte/icons/copy';
 	import Check from '@lucide/svelte/icons/check';
 	import Component from '@lucide/svelte/icons/component';
@@ -29,11 +30,9 @@
 	import Hash from '@lucide/svelte/icons/hash';
 
 	const TITLE = 'Button';
-	const SOURCE = 'https://github.com/aidan-neel/silk/tree/main/registry/silk/default/button';
-
-	const curIndex = components.indexOf(TITLE.toLowerCase());
-	const prevComponent = components[curIndex - 1];
-	const nextComponent = components[curIndex + 1];
+	const SLUG = 'button';
+	const SOURCE = `https://github.com/aidan-neel/silk/tree/main/registry/silk/default/${SLUG}`;
+	const installCommand = `bunx @aidan-neel/ui add ${SLUG}`;
 
 	// ── Playground state ─────────────────────────────────────────────────
 	type Size = 'sm' | 'default' | 'lg' | 'icon';
@@ -187,17 +186,7 @@
 ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 </Button>`);
 
-	let copiedSnippet = $state<string | null>(null);
-	function copy(text: string, key: string) {
-		if (typeof navigator === 'undefined' || !navigator.clipboard) return;
-		void navigator.clipboard.writeText(text);
-		copiedSnippet = key;
-		setTimeout(() => {
-			if (copiedSnippet === key) copiedSnippet = null;
-		}, 1600);
-	}
-
-	const installCommand = 'bunx @aidan-neel/ui add button';
+	const clip = createCopy();
 
 	async function runLoadingDemo() {
 		pgLoading = true;
@@ -213,71 +202,20 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 </script>
 
 <svelte:head>
-	<title>Silk · Button</title>
+	<title>Silk · {TITLE}</title>
 	<meta
 		name="description"
 		content="Displays a button or a component that looks like a button. Ten variants, four sizes, polymorphic href."
 	/>
 </svelte:head>
 
-<!-- ─── Hero ─────────────────────────────────────────────────────── -->
-<header class="flex flex-col gap-5 border-b border-border/60 pb-10">
-	<div class="flex flex-wrap items-start justify-between gap-3">
-		<div class="flex flex-wrap items-center gap-2">
-			<Badge variant="outlined" icon={Component} iconSize={11} class="gap-1.5 text-[0.66rem]"
-				>Component</Badge
-			>
-			<Badge variant="outlined" class="text-[0.66rem]">v0.4.2</Badge>
-			<Badge variant="ghost" class="text-[0.66rem]">10 variants</Badge>
-			<Badge variant="ghost" class="text-[0.66rem]">4 sizes</Badge>
-		</div>
-		<a
-			href={SOURCE}
-			target="_blank"
-			rel="noreferrer noopener"
-			class="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2.5 py-1 text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted transition-colors hover:bg-secondary/60 hover:text-foreground"
-		>
-			View source
-			<External size={11} />
-		</a>
-	</div>
-
-	<div class="flex flex-col gap-3">
-		<h1
-			class="m-0 text-[2.6rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] leading-[1] tracking-[-0.035em] md:text-[3rem]"
-			style="font-family: var(--font-header);"
-		>
-			Button
-		</h1>
-		<p class="m-0 max-w-[42rem] text-[1rem] leading-relaxed text-foreground-muted">
-			The most touched piece of UI in your product. Silk's Button is built around semantic intent —
-			pick a variant for what the action means, not how it should look.
-		</p>
-	</div>
-
-	<div
-		class="flex max-w-[28rem] items-stretch overflow-hidden rounded-[var(--radius-md)] border border-border bg-card"
-	>
-		<div class="flex flex-1 items-center gap-3 px-3 py-2.5">
-			<span class="grid size-6 place-items-center rounded-md bg-secondary/70 text-foreground-muted">
-				<Hash size={12} />
-			</span>
-			<code class="flex-1 font-mono text-[0.82rem] text-foreground">{installCommand}</code>
-		</div>
-		<button
-			type="button"
-			onclick={() => copy(installCommand, 'install')}
-			class="border-l border-border bg-card px-3 text-[0.78rem] text-foreground-muted transition-colors hover:bg-secondary/50 hover:text-foreground"
-			aria-label="Copy install command"
-		>
-			{#if copiedSnippet === 'install'}
-				<Check size={14} class="text-[var(--color-success)]" />
-			{:else}
-				<Copy size={14} />
-			{/if}
-		</button>
-	</div>
-</header>
+<DocHeader
+	title={TITLE}
+	description="The most touched piece of UI in your product. Silk's Button is built around semantic intent — pick a variant for what the action means, not how it should look."
+	source={SOURCE}
+	install={installCommand}
+	pills={[{ label: 'v0.4.2', variant: 'outlined' }, { label: '10 variants' }, { label: '4 sizes' }]}
+/>
 
 <!-- ─── Playground (vertical layout) ───────────────────────────── -->
 <section class="pt-10">
@@ -378,10 +316,10 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 				</span>
 				<button
 					type="button"
-					onclick={() => copy(playgroundCode, 'playground')}
+					onclick={() => clip.copy(playgroundCode, 'playground')}
 					class="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2 py-1 text-[0.72rem] text-foreground-muted transition-colors hover:bg-secondary/60 hover:text-foreground"
 				>
-					{#if copiedSnippet === 'playground'}
+					{#if clip.copied('playground')}
 						<Check size={11} class="text-[var(--color-success)]" />
 						Copied
 					{:else}
@@ -400,24 +338,10 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 
 <!-- ─── Body sections ──────────────────────────────────────────── -->
 <div class="flex flex-col gap-16 pt-16">
-	<!-- OVERVIEW -->
-	<section id="overview" class="scroll-mt-20 flex flex-col gap-5">
-		<div class="flex items-center gap-2">
-			<span class="grid size-6 place-items-center rounded-md bg-primary/10 text-primary">
-				<Sparkles size={12} />
-			</span>
-			<h2
-				class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
-				style="font-family: var(--font-header);"
-			>
-				At a glance
-			</h2>
-		</div>
+	<DocSection icon={Sparkles} title="At a glance" id="overview">
 		<div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
 			{#each [{ icon: Layers, title: '10 variants', body: 'Semantic + status + neutral.' }, { icon: Type, title: '4 sizes', body: 'Token-driven height + padding.' }, { icon: Link, title: 'Polymorphic', body: 'Pass `href` to render an anchor.' }] as card}
-				<div
-					class="flex flex-col gap-2 rounded-[var(--radius-lg)] border border-border bg-card p-4"
-				>
+				<div class="flex flex-col gap-2 rounded-[var(--radius-lg)] border border-border bg-card p-4">
 					<span class="grid size-8 place-items-center rounded-md bg-secondary/60 text-foreground">
 						<card.icon size={14} />
 					</span>
@@ -439,28 +363,14 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 				follow — no styling overrides required.
 			</Alert.Description>
 		</Alert.Root>
-	</section>
+	</DocSection>
 
-	<!-- VARIANTS -->
-	<section id="variants" class="scroll-mt-20 flex flex-col gap-5">
-		<div class="flex flex-col gap-1">
-			<div class="flex items-center gap-2">
-				<span class="grid size-6 place-items-center rounded-md bg-primary/10 text-primary">
-					<Layers size={12} />
-				</span>
-				<h2
-					class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
-					style="font-family: var(--font-header);"
-				>
-					Variants
-				</h2>
-			</div>
-			<p class="m-0 max-w-[42rem] text-[0.86rem] text-foreground-muted">
-				Pick by intent. The same action ("Save") should always use the same variant across your
-				product.
-			</p>
-		</div>
-
+	<DocSection
+		icon={Layers}
+		title="Variants"
+		description={`Pick by intent. The same action ("Save") should always use the same variant across your product.`}
+		id="variants"
+	>
 		<div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
 			{#each variantList as v}
 				{@const code = `<Button${v.value !== 'primary' ? ` variant="${v.value}"` : ''}>${v.label}</Button>`}
@@ -481,11 +391,11 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 							</p>
 							<button
 								type="button"
-								onclick={() => copy(code, `var-${v.value}`)}
+								onclick={() => clip.copy(code, `var-${v.value}`)}
 								class="grid size-6 place-items-center rounded text-foreground-muted opacity-0 transition-opacity hover:bg-secondary/50 hover:text-foreground group-hover:opacity-100"
 								aria-label={`Copy ${v.label} snippet`}
 							>
-								{#if copiedSnippet === `var-${v.value}`}
+								{#if clip.copied(`var-${v.value}`)}
 									<Check size={12} class="text-[var(--color-success)]" />
 								{:else}
 									<Copy size={12} />
@@ -502,27 +412,14 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 				</div>
 			{/each}
 		</div>
-	</section>
+	</DocSection>
 
-	<!-- SIZES -->
-	<section id="sizes" class="scroll-mt-20 flex flex-col gap-5">
-		<div class="flex flex-col gap-1">
-			<div class="flex items-center gap-2">
-				<span class="grid size-6 place-items-center rounded-md bg-primary/10 text-primary">
-					<Type size={12} />
-				</span>
-				<h2
-					class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
-					style="font-family: var(--font-header);"
-				>
-					Sizes
-				</h2>
-			</div>
-			<p class="m-0 max-w-[42rem] text-[0.86rem] text-foreground-muted">
-				Sizes scale on a 4-unit baseline. Pick the smallest size that still feels clickable.
-			</p>
-		</div>
-
+	<DocSection
+		icon={Type}
+		title="Sizes"
+		description="Sizes scale on a 4-unit baseline. Pick the smallest size that still feels clickable."
+		id="sizes"
+	>
 		<div class="overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card">
 			<div
 				class="flex flex-wrap items-end justify-around gap-5 border-b border-border/70 bg-[linear-gradient(180deg,transparent,color-mix(in_srgb,var(--color-secondary)_45%,transparent))] px-6 py-8"
@@ -562,28 +459,14 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 				{/each}
 			</div>
 		</div>
-	</section>
+	</DocSection>
 
-	<!-- STATES -->
-	<section id="states" class="scroll-mt-20 flex flex-col gap-5">
-		<div class="flex flex-col gap-1">
-			<div class="flex items-center gap-2">
-				<span class="grid size-6 place-items-center rounded-md bg-primary/10 text-primary">
-					<Wand size={12} />
-				</span>
-				<h2
-					class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
-					style="font-family: var(--font-header);"
-				>
-					States
-				</h2>
-			</div>
-			<p class="m-0 max-w-[42rem] text-[0.86rem] text-foreground-muted">
-				The same Button renders five distinct states. All transitions are tied to your theme's
-				motion preset.
-			</p>
-		</div>
-
+	<DocSection
+		icon={Wand}
+		title="States"
+		description="The same Button renders five distinct states. All transitions are tied to your theme's motion preset."
+		id="states"
+	>
 		<div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
 			{#each [{ label: 'Resting', node: 'rest' }, { label: 'Hover', node: 'hover' }, { label: 'Focus', node: 'focus' }, { label: 'Active', node: 'active' }, { label: 'Disabled', node: 'disabled' }] as s}
 				<div
@@ -609,27 +492,14 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 				</div>
 			{/each}
 		</div>
-	</section>
+	</DocSection>
 
-	<!-- COMPOSITION -->
-	<section id="composition" class="scroll-mt-20 flex flex-col gap-5">
-		<div class="flex flex-col gap-1">
-			<div class="flex items-center gap-2">
-				<span class="grid size-6 place-items-center rounded-md bg-primary/10 text-primary">
-					<Component size={12} />
-				</span>
-				<h2
-					class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
-					style="font-family: var(--font-header);"
-				>
-					Composition
-				</h2>
-			</div>
-			<p class="m-0 max-w-[42rem] text-[0.86rem] text-foreground-muted">
-				Patterns we use in production. Copy any of these as a starting point.
-			</p>
-		</div>
-
+	<DocSection
+		icon={Component}
+		title="Composition"
+		description="Patterns we use in production. Copy any of these as a starting point."
+		id="composition"
+	>
 		<Tabs.Root value="leading">
 			<Tabs.List>
 				<Tabs.Trigger value="leading">Leading icon</Tabs.Trigger>
@@ -752,150 +622,21 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 				</Tabs.Content>
 			</div>
 		</Tabs.Root>
-	</section>
+	</DocSection>
 
-	<!-- API -->
-	<section id="api" class="scroll-mt-20 flex flex-col gap-5">
-		<div class="flex flex-col gap-1">
-			<div class="flex items-center gap-2">
-				<span class="grid size-6 place-items-center rounded-md bg-primary/10 text-primary">
-					<Hash size={12} />
-				</span>
-				<h2
-					class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
-					style="font-family: var(--font-header);"
-				>
-					API
-				</h2>
-			</div>
-			<p class="m-0 max-w-[42rem] text-[0.86rem] text-foreground-muted">
-				<code class="font-mono text-foreground">Button</code> is the only export. Every prop accepts the
-				underlying button/anchor attributes too.
-			</p>
-		</div>
-
-		<div class="overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card">
-			<div
-				class="grid grid-cols-[1fr_1.8fr_0.5fr] gap-3 border-b border-border bg-secondary/40 px-4 py-2.5 text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted max-md:hidden"
-			>
-				<span>Prop</span>
-				<span>Type</span>
-				<span class="text-right">Default</span>
-			</div>
-			<ul class="flex flex-col divide-y divide-border/60">
-				{#each apiRows as row}
-					<li class="grid grid-cols-[1fr_1.8fr_0.5fr] gap-3 px-4 py-3 max-md:grid-cols-1">
-						<div class="flex items-center gap-2">
-							<button
-								type="button"
-								onclick={() => copy(row.prop, `prop-${row.prop}`)}
-								class="group inline-flex items-center gap-1.5 rounded-md px-1 py-0.5 transition-colors hover:bg-secondary/60"
-							>
-								<code
-									class="font-mono text-[0.82rem] [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)] text-foreground"
-								>
-									{row.prop}
-								</code>
-								{#if copiedSnippet === `prop-${row.prop}`}
-									<Check size={11} class="text-[var(--color-success)]" />
-								{:else}
-									<Copy
-										size={11}
-										class="text-foreground-muted opacity-0 transition-opacity group-hover:opacity-100"
-									/>
-								{/if}
-							</button>
-						</div>
-						<div class="flex flex-col gap-1">
-							<code
-								class="overflow-x-auto rounded-md bg-secondary/40 px-2 py-1 font-mono text-[0.74rem] text-foreground"
-							>
-								{row.type}
-							</code>
-							<p class="m-0 text-[0.78rem] leading-snug text-foreground-muted">
-								{row.description}
-							</p>
-						</div>
-						<div class="md:text-right">
-							<code
-								class="inline-block rounded-md bg-secondary/40 px-2 py-1 font-mono text-[0.72rem] text-foreground"
-							>
-								{row.default}
-							</code>
-						</div>
-					</li>
-				{/each}
-			</ul>
-		</div>
-	</section>
-
-	<!-- FOOTER -->
-	<section
-		class="flex flex-col items-start justify-between gap-4 rounded-[var(--radius-lg)] border border-border bg-card p-6 sm:flex-row sm:items-center"
+	<DocSection
+		icon={Hash}
+		title="API"
+		description="Button is the only export. Every prop accepts the underlying button/anchor attributes too."
+		id="api"
 	>
-		<div class="flex flex-col gap-1">
-			<p
-				class="m-0 text-[1rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
-				style="font-family: var(--font-header);"
-			>
-				Want to make it yours?
-			</p>
-			<p class="m-0 text-[0.86rem] text-foreground-muted">
-				Every Button token lives in the studio — restyle it for your brand in seconds.
-			</p>
-		</div>
-		<div class="flex flex-wrap items-center gap-2">
-			<Button variant="ghost" href={SOURCE}>
-				<svg viewBox="0 0 24 24" aria-hidden="true" class="size-3.5 fill-current">
-					<path
-						d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.92.58.1.79-.25.79-.55v-1.94c-3.2.7-3.88-1.54-3.88-1.54-.52-1.32-1.28-1.67-1.28-1.67-1.05-.72.08-.7.08-.7 1.16.08 1.78 1.2 1.78 1.2 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.51-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 5.78 0c2.21-1.49 3.18-1.18 3.18-1.18.62 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.43-2.7 5.4-5.27 5.69.42.36.79 1.06.79 2.14v3.17c0 .31.21.66.8.55C20.21 21.38 23.5 17.07 23.5 12 23.5 5.65 18.35.5 12 .5z"
-					/>
-				</svg>
-				View source
-				<External size={11} class="text-foreground-muted" />
-			</Button>
-			<Tooltip.Root>
-				<Tooltip.Trigger>
-					<Button variant="outlined" href="/themes">
-						<Layers size={14} />
-						Browse themes
-					</Button>
-				</Tooltip.Trigger>
-				<Tooltip.Content>Community-published presets</Tooltip.Content>
-			</Tooltip.Root>
-			<Button href="/themes/studio">
-				Open studio
-				<ArrowRight size={14} />
-			</Button>
-		</div>
-	</section>
+		<PropTable rows={apiRows} />
+	</DocSection>
+
+	<DocFooter />
 </div>
 
-<!-- ─── Prev / next ─────────────────────────────────────────── -->
-{#if curIndex !== -1}
-	<div
-		class="mt-12 flex w-full items-center"
-		class:justify-between={prevComponent && nextComponent}
-		class:justify-end={!prevComponent && nextComponent}
-		class:justify-start={prevComponent && !nextComponent}
-	>
-		{#if prevComponent}
-			<Button href={`/docs/components/${prevComponent}`} variant="outlined" class="flex-shrink-0">
-				<ChevronLeft size={16} />
-				{sanitizeComponent(prevComponent)}
-			</Button>
-		{/if}
-		{#if prevComponent && nextComponent}
-			<div class="mx-4 w-full rounded-lg border-t"></div>
-		{/if}
-		{#if nextComponent}
-			<Button href={`/docs/components/${nextComponent}`} variant="outlined" class="flex-shrink-0">
-				{sanitizeComponent(nextComponent)}
-				<ChevronRight size={16} />
-			</Button>
-		{/if}
-	</div>
-{/if}
+<DocPager slug={SLUG} />
 
 <style>
 	.silk-checkbox {
