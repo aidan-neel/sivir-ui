@@ -1,5 +1,5 @@
 {
-	"name": "@silk-ui/cli",
+	"name": "@silk/cli",
 	"version": "0.1.0",
 	"description": "Install Silk UI components into your Svelte project. Owns-the-code distribution, shadcn style.",
 	"type": "module",

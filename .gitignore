@@ -12,6 +12,8 @@ node_modules
 packages/cli/dist
 packages/cli/registry
 packages/cli/.sandbox
+packages/silk/dist
+packages/silk/.svelte-kit
 
 # OS
 .DS_Store

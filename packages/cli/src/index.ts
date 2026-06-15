@@ -38,6 +38,16 @@ program
 		await add(names, { cwd, yes: options.yes, overwrite: options.overwrite });
 	});
 
+const theme = program.command('theme').description('manage the project theme');
+
+theme
+	.command('install')
+	.description('install a theme from a built-in preset, the registry, or a URL')
+	.argument('<source>', 'theme slug, or an https URL serving theme JSON or CSS')
+	.action(async (source: string) => {
+		await addTheme(source, { cwd: program.opts().cwd });
+	});
+
 program
 	.command('list')
 	.description('list every installable component and built-in theme')
