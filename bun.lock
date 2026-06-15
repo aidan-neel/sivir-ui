@@ -80,7 +80,7 @@
       },
     },
     "packages/cli": {
-      "name": "@silk-ui/cli",
+      "name": "@silk/cli",
       "version": "0.1.0",
       "bin": {
         "silk": "./dist/index.js",
@@ -387,7 +387,7 @@
 
     "@shikijs/vscode-textmate": ["@shikijs/vscode-textmate@10.0.2", "", {}, "sha512-83yeghZ2xxin3Nj8z1NMd/NCuca+gsYXswywDy5bHvwlWL8tpTQmzGeUuHd9FC3E/SBEMvzJRwWEOz5gGes9Qg=="],
 
-    "@silk-ui/cli": ["@silk-ui/cli@workspace:packages/cli"],
+    "@silk/cli": ["@silk/cli@workspace:packages/cli"],
 
     "@silk/ui": ["@silk/ui@workspace:packages/silk"],
 
