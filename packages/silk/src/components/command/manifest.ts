@@ -18,7 +18,7 @@ export const manifest: Manifest = {
 		'components/command/manifest.ts'
 	],
 	components: ['popover', 'button'],
-	shared: ['utils.cn', 'internals/state'],
+	shared: ['utils.cn', 'internals/state', 'internals/presence'],
 	peerDependencies: {
 		'@lucide/svelte': '^1.0.0',
 		clsx: '^2.0.0',

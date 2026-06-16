@@ -2,7 +2,7 @@
 	import { getContext, tick, type Snippet } from 'svelte';
 	import { states } from '@silk/ui/internals/state.svelte.ts';
 	import type { CommandState } from '.';
-	import { flyAndScale, themedFade } from '@silk/ui/internals/transition';
+	import { usePresence } from '@silk/ui/internals/presence.svelte.ts';
 	import { clickOutside, cn, trapFocus } from '@silk/ui/utils';
 
 	const key = getContext('key') as string;
@@ -19,6 +19,12 @@
 	let lastOpen = $state<boolean>(uiState.open);
 	let scrollY = $state(0);
 	const { children, class: className, allowClickOutside = true, ...rest }: Props = $props();
+
+	// Keep the palette mounted through its CSS exit animation.
+	const presence = usePresence(
+		() => uiState.open,
+		() => element
+	);
 
 	$effect(() => {
 		if (uiState.open !== lastOpen) {
@@ -46,31 +52,35 @@
 	});
 </script>
 
-{#if uiState.open}
+{#if presence.present}
 	<div
-		transition:themedFade={{ durationVar: '--motion-duration-overlay', fallback: 150 }}
+		data-ui="overlay-backdrop"
+		data-state={presence.status}
 		class="fixed inset-0 z-40 bg-[var(--color-overlay)]"
 	></div>
-	<div
-		bind:this={element}
-		transition:flyAndScale={{ durationVar: '--motion-duration-panel' }}
-		id={`${String(key)}-content`}
-		data-ui="command-content"
-		role="dialog"
-		aria-modal="true"
-		aria-labelledby={`${String(key)}-controls`}
-		tabindex="-1"
-		class={cn(
-			className,
-			'bg-[var(--color-overlay-bg)] text-[var(--color-panel-foreground)] border border-border rounded-[var(--radius-lg)] shadow-[inset_0_1px_0_var(--panel-highlight),var(--panel-shadow)] fixed top-[47%] left-1/2 z-50 m-auto flex max-h-[min(28rem,calc(100dvh-2rem))] min-h-[5rem] w-[calc(100%-1.5rem)] max-w-[35rem] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden duration-200 transition-all'
-		)}
-		use:clickOutside={() => {
-			if (allowClickOutside) {
-				uiState.open = false;
-			}
-		}}
-		{...rest}
-	>
-		{@render children?.()}
+	<!-- Flex centering wrapper so the panel animates its own transform. -->
+	<div class="pointer-events-none fixed inset-0 z-50 flex items-start justify-center p-3 pt-[12vh]">
+		<div
+			bind:this={element}
+			data-ui="command-content"
+			data-state={presence.status}
+			id={`${String(key)}-content`}
+			role="dialog"
+			aria-modal="true"
+			aria-labelledby={`${String(key)}-controls`}
+			tabindex="-1"
+			class={cn(
+				className,
+				'pointer-events-auto bg-[var(--color-overlay-bg)] text-[var(--color-panel-foreground)] border border-border rounded-[var(--radius-lg)] shadow-[inset_0_1px_0_var(--panel-highlight),var(--panel-shadow)] flex max-h-[min(28rem,calc(100dvh-2rem))] min-h-[5rem] w-full max-w-[35rem] flex-col overflow-hidden'
+			)}
+			use:clickOutside={() => {
+				if (allowClickOutside) {
+					uiState.open = false;
+				}
+			}}
+			{...rest}
+		>
+			{@render children?.()}
+		</div>
 	</div>
 {/if}

@@ -35,7 +35,7 @@ export const manifest: Manifest = {
 		'components/modal/manifest.ts'
 	],
 	components: ['button', '_internal/overlay'],
-	shared: ['utils.cn', 'internals/state', 'internals/transition'],
+	shared: ['utils.cn', 'internals/state', 'internals/presence'],
 	peerDependencies: {
 		clsx: '^2.0.0',
 		'tailwind-merge': '^3.0.0',
