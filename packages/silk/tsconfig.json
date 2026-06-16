@@ -1,0 +1,18 @@
+{
+	"compilerOptions": {
+		"moduleResolution": "bundler",
+		"module": "esnext",
+		"target": "esnext",
+		"lib": ["esnext", "DOM", "DOM.Iterable"],
+		"strict": true,
+		"skipLibCheck": true,
+		"isolatedModules": true,
+		"verbatimModuleSyntax": true,
+		"declaration": true,
+		"emitDeclarationOnly": true,
+		"paths": {
+			"@silk/ui/*": ["./src/*"]
+		}
+	},
+	"include": ["src/**/*"]
+}

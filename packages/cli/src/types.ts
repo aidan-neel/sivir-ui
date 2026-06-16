@@ -25,7 +25,7 @@ export type RegistryComponent = {
 };
 
 export type RegistryIndex = {
-	/** Version of the @silk-ui/cli package the snapshot was built with. */
+	/** Version of the @silk/cli package the snapshot was built with. */
 	cliVersion: string;
 	builtAt: string;
 	components: RegistryComponent[];

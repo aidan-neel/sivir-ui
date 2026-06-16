@@ -1,13 +1,16 @@
-# @silk-ui/cli
+# @silk/cli
 
 Install [Silk UI](https://silk-ui.dev) components into your Svelte project. Like shadcn:
 the CLI copies component source into your repo — you own the code, there is no runtime
 library dependency.
 
 ```bash
-npx @silk-ui/cli init
-npx @silk-ui/cli add button
+npx @silk/cli init
+npx @silk/cli add button
 ```
+
+> Prefer a runtime dependency instead of owning the code? Install the
+> [`@silk/ui`](../silk) library and `import { Button, Tabs } from '@silk/ui'`.
 
 ## Commands
 
@@ -53,6 +56,18 @@ silk add theme default
 ```
 
 Browse community themes at [silk-ui.dev/themes](https://silk-ui.dev/themes).
+
+### `silk theme install <source>`
+
+The same install as `add theme`, but `source` may also be an `https` URL. The CLI
+fetches it and writes `theme.css`. A URL may serve either a `ThemeDraft` JSON document
+(rendered to CSS) or ready-made CSS — the format is detected from the response.
+
+```bash
+silk theme install default                       # built-in preset (offline)
+silk theme install midnight                      # registry slug
+silk theme install https://themes.example.com/x  # JSON or CSS at a URL
+```
 
 ### `silk list`
 

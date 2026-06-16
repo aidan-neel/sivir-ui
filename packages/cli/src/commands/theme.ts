@@ -11,12 +11,57 @@ export type ThemeOptions = {
 	cwd: string;
 };
 
-/** Resolves a slug to theme CSS -- built-in presets first, registry after. */
-async function resolveThemeCss(slug: string, registry: string) {
-	const builtin = (await loadRegistryThemes()).find((theme) => theme.slug === slug);
+/** True when a theme source is an absolute http(s) URL rather than a slug. */
+export function looksLikeUrl(source: string) {
+	return /^https?:\/\//i.test(source.trim());
+}
+
+/**
+ * Turns a fetched theme response into CSS. Endpoints may serve either a
+ * `ThemeDraft` JSON document (rendered with `themeToCss`) or ready-made CSS.
+ * The format is decided by content-type, falling back to sniffing the body
+ * (a leading `{` means JSON).
+ */
+export function themeCssFromResponse(body: string, contentType: string) {
+	const isJson = /\bjson\b/i.test(contentType) || body.trimStart().startsWith('{');
+	if (!isJson) return body;
+	let draft: ThemeDraft;
+	try {
+		draft = JSON.parse(body) as ThemeDraft;
+	} catch {
+		throw new Error('theme source returned invalid JSON');
+	}
+	return themeToCss(draft);
+}
+
+/** Fetches and renders a theme served at an explicit URL. */
+async function resolveThemeFromUrl(url: string) {
+	let response: Response;
+	try {
+		response = await fetch(url);
+	} catch {
+		throw new Error(`theme source unreachable at ${url}`);
+	}
+	if (!response.ok) {
+		throw new Error(`theme source responded ${response.status} for ${url}`);
+	}
+	const body = await response.text();
+	const css = themeCssFromResponse(body, response.headers.get('content-type') ?? '');
+	return { css, source: url };
+}
+
+/**
+ * Resolves a theme source to CSS. A `http(s)` URL is fetched directly;
+ * otherwise the value is treated as a slug -- built-in presets first, then
+ * the configured registry.
+ */
+async function resolveThemeCss(source: string, registry: string) {
+	if (looksLikeUrl(source)) return resolveThemeFromUrl(source.trim());
+
+	const builtin = (await loadRegistryThemes()).find((theme) => theme.slug === source);
 	if (builtin) return { css: builtin.css, source: 'built-in preset' };
 
-	const url = `${registry.replace(/\/+$/, '')}/themes/${slug}`;
+	const url = `${registry.replace(/\/+$/, '')}/themes/${source}`;
 	let response: Response;
 	try {
 		response = await fetch(url);
@@ -24,7 +69,7 @@ async function resolveThemeCss(slug: string, registry: string) {
 		throw new Error(`theme registry unreachable at ${url}`);
 	}
 	if (response.status === 404) {
-		throw new Error(`no theme "${slug}" in the registry -- browse https://silk-ui.dev/themes`);
+		throw new Error(`no theme "${source}" in the registry -- browse https://silk-ui.dev/themes`);
 	}
 	if (!response.ok) {
 		throw new Error(`theme registry responded ${response.status} for ${url}`);
@@ -33,7 +78,8 @@ async function resolveThemeCss(slug: string, registry: string) {
 	return { css: themeToCss(draft), source: 'registry' };
 }
 
-export async function addTheme(slug: string, options: ThemeOptions) {
+/** Installs a theme by slug, registry lookup, or explicit URL. */
+export async function addTheme(source: string, options: ThemeOptions) {
 	const { cwd } = options;
 
 	const config = await loadConfig(cwd);
@@ -43,13 +89,13 @@ export async function addTheme(slug: string, options: ThemeOptions) {
 		return;
 	}
 
-	clack.intro(pc.bgMagenta(pc.black(' silk add theme ')));
+	clack.intro(pc.bgMagenta(pc.black(' silk theme install ')));
 	const spinner = clack.spinner();
-	spinner.start(`Resolving theme ${pc.cyan(slug)}`);
+	spinner.start(`Resolving theme ${pc.cyan(source)}`);
 
 	let resolved;
 	try {
-		resolved = await resolveThemeCss(slug, config.registry);
+		resolved = await resolveThemeCss(source, config.registry);
 	} catch (error) {
 		spinner.stop('Theme resolution failed', 1);
 		fail(error instanceof Error ? error.message : String(error));
@@ -59,8 +105,8 @@ export async function addTheme(slug: string, options: ThemeOptions) {
 
 	const target = path.join(cwd, config.dir, 'theme.css');
 	await mkdir(path.dirname(target), { recursive: true });
-	await writeFile(target, `/* silk theme: ${slug} */\n${resolved.css}\n`);
-	spinner.stop(`Fetched ${pc.cyan(slug)} (${resolved.source})`);
+	await writeFile(target, `/* silk theme: ${source} */\n${resolved.css}\n`);
+	spinner.stop(`Fetched ${pc.cyan(source)} (${resolved.source})`);
 
 	ok(`wrote ${pc.cyan(path.join(config.dir, 'theme.css'))}`);
 	console.log(`  import it ${pc.bold('after')} ${pc.cyan(`${config.dir}/ui.css`)} so it wins.`);
