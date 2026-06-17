@@ -3,7 +3,6 @@ import {
 	slugifyThemeName,
 	resolveSpacing,
 	resolveTypography,
-	resolveThemeMotion,
 	generatePaletteFromBase,
 	contrastRatio,
 	themeToCss,
@@ -88,36 +87,29 @@ describe('resolveTypography', () => {
 	});
 });
 
-describe('resolveThemeMotion', () => {
-	it('returns a complete ThemeMotion object for a known preset', () => {
-		const motion = resolveThemeMotion('default');
-		expect(motion).toBeDefined();
-		expect(typeof motion.panelDuration).toBe('string');
-		expect(typeof motion.panelY).toBe('number');
-		expect(motion).toHaveProperty('hoverDuration');
-		expect(motion).toHaveProperty('menuDuration');
-		expect(motion).toHaveProperty('panelDuration');
-		expect(motion).toHaveProperty('sheetDuration');
-		expect(motion).toHaveProperty('overlayDuration');
-		expect(motion).toHaveProperty('tooltipDuration');
-		expect(motion).toHaveProperty('toastInDuration');
-		expect(motion).toHaveProperty('toastOutDuration');
+describe('feel + animation', () => {
+	it('emits timing tokens from the selected feel', () => {
+		const css = themeToCss({ ...defaultPreset, feel: 'instant' });
+		expect(css).toContain('--motion-duration-panel: 110ms');
 	});
 
-	it('overrides individual motion fields', () => {
-		const motion = resolveThemeMotion('default', { panelDuration: '999ms' });
-		expect(motion.panelDuration).toBe('999ms');
+	it('falls back to the default feel for an unknown slug', () => {
+		const css = themeToCss({ ...defaultPreset, feel: 'nope' });
+		expect(css).toContain('--motion-duration-panel:');
 	});
 
-	it('falls back to default preset for unknown slug', () => {
-		const motion = resolveThemeMotion('nonexistent-slug' as never);
-		expect(motion).toBeDefined();
-		expect(typeof motion.panelDuration).toBe('string');
+	it('emits keyframe-name tokens from the selected animation', () => {
+		const css = themeToCss({ ...defaultPreset, animation: 'fade' });
+		expect(css).toContain('--silk-anim-panel-in: silk-fade-in');
 	});
 
-	it('honors null motion override', () => {
-		const motion = resolveThemeMotion('default', null);
-		expect(motion).toBeDefined();
+	it('emits cascade child-stagger CSS only for the cascade animation', () => {
+		expect(themeToCss({ ...defaultPreset, animation: 'cascade' })).toContain(
+			'silk-cascade-item-in'
+		);
+		expect(themeToCss({ ...defaultPreset, animation: 'default' })).not.toContain(
+			'silk-cascade-item-in'
+		);
 	});
 });
 
@@ -214,12 +206,9 @@ describe('themeToCss', () => {
 		expect(css).toContain('--font-sans: Inter, sans-serif');
 	});
 
-	it('propagates motion duration tokens', () => {
-		const css = themeToCss({
-			...defaultPreset,
-			motion: { ...defaultPreset.motion, panelDuration: '777ms' }
-		});
-		expect(css).toContain('--motion-duration-panel: 777ms');
+	it('propagates motion duration tokens from the feel', () => {
+		const css = themeToCss({ ...defaultPreset, feel: 'relaxed' });
+		expect(css).toContain('--motion-duration-panel: 380ms');
 	});
 
 	it('emits radius tokens', () => {
@@ -295,12 +284,9 @@ describe('themeToCss', () => {
 		expect(css).toContain('--motion-easing-hover:');
 	});
 
-	it('reflects a hoverEasing override', () => {
-		const css = themeToCss({
-			...defaultPreset,
-			motion: { ...defaultPreset.motion, hoverEasing: 'linear' }
-		});
-		expect(css).toContain('--motion-easing-hover: linear');
+	it('reflects the easing from the selected feel', () => {
+		const css = themeToCss({ ...defaultPreset, feel: 'balanced' });
+		expect(css).toContain('--motion-easing-hover: cubic-bezier(0.4, 0, 0.2, 1)');
 	});
 });
 

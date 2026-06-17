@@ -27,7 +27,6 @@
 	import {
 		type ThemePalette,
 		generatePaletteFromBase,
-		resolveThemeMotion,
 		slugifyThemeName,
 		themeToCss,
 		themeToTypeScriptPreset,
@@ -39,7 +38,8 @@
 		resolveSpacing,
 		type ThemeSpacing
 	} from '@silk/ui/themes/presets';
-	import { transitionPresets, type ThemeTransitionPresetSlug } from '@silk/ui/themes/transitions';
+	import { animations, getAnimation } from '@silk/ui/themes/animations';
+	import { feels, getFeel } from '@silk/ui/themes/feels';
 	import { stylePresets, getStyle, styleToCss } from '@silk/ui/themes/styles';
 	import { builtInThemePresets } from '@silk/ui/themes/builtin-presets';
 
@@ -58,14 +58,6 @@
 	import Sliders from '@lucide/svelte/icons/sliders-horizontal';
 	import X from '@lucide/svelte/icons/x';
 	import Trash from '@lucide/svelte/icons/trash-2';
-	import ArrowDown from '@lucide/svelte/icons/arrow-down';
-	import ArrowUp from '@lucide/svelte/icons/arrow-up';
-	import ArrowRight from '@lucide/svelte/icons/arrow-right';
-	import Maximize from '@lucide/svelte/icons/maximize-2';
-	import Minimize from '@lucide/svelte/icons/minimize-2';
-	import Layers2 from '@lucide/svelte/icons/layers-2';
-	import Wind from '@lucide/svelte/icons/wind';
-	import ChevronsDown from '@lucide/svelte/icons/chevrons-down';
 
 	import type { PageData } from './$types';
 	import StudioPreview from '$lib/components/themes/studio/studio-preview.svelte';
@@ -311,7 +303,6 @@
 	function applyStudioState(state: StudioSnapshot) {
 		selectedPresetSlug = state.selectedPresetSlug;
 		editorTheme = cloneTheme(state.editorTheme);
-		editorTheme.motion = resolveThemeMotion(editorTheme.durationPreset, editorTheme.motion);
 		editorName = state.editorName;
 		headerFontSelection = state.headerFontSelection;
 		bodyFontSelection = state.bodyFontSelection;
@@ -439,64 +430,13 @@
 		selectedPresetSlug = 'custom';
 	}
 
-	// ─── Easing ───
-	const defaultEasing = 'cubic-bezier(0.22,1,0.36,1)';
-	const easingOptions = [
-		{
-			label: 'Soft',
-			value: 'cubic-bezier(0.22,1,0.36,1)',
-			description: 'Gentle ease-out -- Silk default.'
-		},
-		{
-			label: 'Standard',
-			value: 'cubic-bezier(0.4,0,0.2,1)',
-			description: 'Material standard easing -- even acceleration, sharp landing.'
-		},
-		{
-			label: 'Sharp',
-			value: 'cubic-bezier(0.4,0,0.6,1)',
-			description: 'Quick start, smooth tail.'
-		},
-		{
-			label: 'Spring',
-			value: 'cubic-bezier(0.34,1.56,0.64,1)',
-			description: 'Overshoots a touch, springs back.'
-		},
-		{ label: 'Linear', value: 'linear', description: 'Constant velocity. Use sparingly.' },
-		{
-			label: 'Ease in-out',
-			value: 'cubic-bezier(0.65,0,0.35,1)',
-			description: 'Symmetric acceleration / deceleration.'
-		}
-	] as const;
-
-	const currentEasing = $derived(
-		easingOptions.find((o) => o.value === (editorTheme.motion.panelEasing ?? defaultEasing)) ?? {
-			label: 'Custom',
-			value: 'custom',
-			description: 'Custom cubic-bezier set via All motion options.'
-		}
-	);
-
-	function updateEasing(value: string) {
-		editorTheme.motion = { ...editorTheme.motion, panelEasing: value };
+	// ─── Animation (shape) + Feel (timing) ───
+	function updateAnimation(slug: string) {
+		editorTheme.animation = slug;
 		selectedPresetSlug = 'custom';
 	}
-
-	// Control (hover/press) easing -- decoupled from panel easing so buttons and
-	// fields can feel different from floating surfaces.
-	const defaultHoverEasing = 'cubic-bezier(0.25,0.1,0.25,1)';
-	const currentHoverEasing = $derived(
-		easingOptions.find(
-			(o) => o.value === (editorTheme.motion.hoverEasing ?? defaultHoverEasing)
-		) ?? {
-			label: 'Custom',
-			value: 'custom',
-			description: 'Custom control easing.'
-		}
-	);
-	function updateHoverEasing(value: string) {
-		editorTheme.motion = { ...editorTheme.motion, hoverEasing: value };
+	function updateFeel(slug: string) {
+		editorTheme.feel = slug;
 		selectedPresetSlug = 'custom';
 	}
 
@@ -568,27 +508,6 @@
 		selectedPresetSlug = 'custom';
 	}
 
-	function updateDurationPreset(next: ThemeTransitionPresetSlug) {
-		// Motion preset = durations only. Panel-shape fields (panelX, panelY,
-		// panelBlur, panelScaleStart, sheetOffset, overlayBlur, panelPerspective,
-		// panelRotateX, panelOpacityStart) stay put -- those are controlled by
-		// the Transition preset below.
-		editorTheme.durationPreset = next;
-		const preset = resolveThemeMotion(next);
-		editorTheme.motion = {
-			...editorTheme.motion,
-			hoverDuration: preset.hoverDuration,
-			menuDuration: preset.menuDuration,
-			panelDuration: preset.panelDuration,
-			sheetDuration: preset.sheetDuration,
-			overlayDuration: preset.overlayDuration,
-			tooltipDuration: preset.tooltipDuration,
-			toastInDuration: preset.toastInDuration,
-			toastOutDuration: preset.toastOutDuration
-		};
-		selectedPresetSlug = 'custom';
-	}
-
 	function shuffleTheme() {
 		function pick<T>(arr: T[]): T {
 			return arr[Math.floor(Math.random() * arr.length)];
@@ -611,14 +530,13 @@
 			border: pick(darkBorderOptions).value
 		};
 		const radius = pick(radiusOptions).value;
-		const duration = pick(transitionPresets).slug;
 		lightBasePalette = newLightBase;
 		darkBasePalette = newDarkBase;
 		editorTheme.light = generatePaletteFromBase(newLightBase, 'light');
 		editorTheme.dark = generatePaletteFromBase(newDarkBase, 'dark');
 		editorTheme.radiusBase = radius;
-		editorTheme.durationPreset = duration;
-		editorTheme.motion = resolveThemeMotion(duration);
+		editorTheme.animation = pick(animations).slug;
+		editorTheme.feel = pick(feels).slug;
 		selectedPresetSlug = 'custom';
 	}
 
@@ -725,6 +643,8 @@
 	let themesCatalog = $state<ThemeDraft[]>([...initialThemesCatalog]);
 	let selectedPresetSlug = $state(defaultTheme.slug);
 	let editorTheme = $state(cloneTheme(defaultTheme));
+	const currentAnimation = $derived(getAnimation(editorTheme.animation));
+	const currentFeel = $derived(getFeel(editorTheme.feel));
 	let editorName = $state(defaultTheme.name);
 	let copiedCss = $state(false);
 	let copiedTs = $state(false);
@@ -808,7 +728,6 @@
 	const generatedCss = $derived(
 		themeToCss({
 			...editorTheme,
-			motion: resolveThemeMotion(editorTheme.durationPreset, editorTheme.motion),
 			name: editorName,
 			slug: slugifyThemeName(editorName) || 'custom-theme'
 		}) + styleToCss(getStyle(selectedStyleSlug))
@@ -816,7 +735,6 @@
 	const generatedTypeScriptPreset = $derived(
 		themeToTypeScriptPreset({
 			...cloneTheme(editorTheme),
-			motion: resolveThemeMotion(editorTheme.durationPreset, editorTheme.motion),
 			name: editorName.trim() || editorTheme.name,
 			slug: slugifyThemeName(editorName) || 'custom-theme'
 		})
@@ -897,11 +815,6 @@
 		{ id: 'presets', label: 'Presets' }
 	] as const;
 
-	// Interactive state for the canvas playground
-	const activeMotionDescription = $derived(
-		transitionPresets.find((p) => p.slug === editorTheme.durationPreset)?.description ?? ''
-	);
-
 	let publishDialogOpen = $state(false);
 	let publishName = $state('');
 	let publishDescription = $state('');
@@ -973,310 +886,6 @@
 		advancedColorsOpen = true;
 	}
 
-	let advancedMotionOpen = $state(false);
-
-	type MotionDurationField = {
-		key:
-			| 'hoverDuration'
-			| 'menuDuration'
-			| 'panelDuration'
-			| 'sheetDuration'
-			| 'overlayDuration'
-			| 'tooltipDuration'
-			| 'toastInDuration'
-			| 'toastOutDuration';
-		label: string;
-		hint: string;
-		max: number;
-	};
-	type MotionNumberField = {
-		key:
-			| 'panelX'
-			| 'panelY'
-			| 'panelBlur'
-			| 'panelScaleStart'
-			| 'sheetOffset'
-			| 'overlayBlur'
-			| 'panelPerspective'
-			| 'panelRotateX'
-			| 'panelOpacityStart';
-		label: string;
-		hint: string;
-		min: number;
-		max: number;
-		step: number;
-		unit?: string;
-		format?: (value: number) => string;
-		experimental?: boolean;
-	};
-	const motionDurationFields: MotionDurationField[] = [
-		{ key: 'hoverDuration', label: 'Hover', hint: 'Buttons, links, ghost state', max: 500 },
-		{ key: 'menuDuration', label: 'Menu', hint: 'Dropdowns, select items', max: 500 },
-		{ key: 'panelDuration', label: 'Panel', hint: 'Popovers, dialogs', max: 700 },
-		{ key: 'sheetDuration', label: 'Sheet', hint: 'Side sheets, drawers', max: 800 },
-		{ key: 'overlayDuration', label: 'Overlay', hint: 'Modal backdrop fade', max: 500 },
-		{ key: 'tooltipDuration', label: 'Tooltip', hint: 'Hover hints', max: 400 },
-		{ key: 'toastInDuration', label: 'Toast in', hint: 'Notification entry', max: 900 },
-		{ key: 'toastOutDuration', label: 'Toast out', hint: 'Notification exit', max: 900 }
-	];
-	const motionNumberFields: MotionNumberField[] = [
-		{
-			key: 'panelX',
-			label: 'Panel X offset',
-			hint: 'Horizontal lift on entry',
-			min: -40,
-			max: 40,
-			step: 1,
-			unit: 'px'
-		},
-		{
-			key: 'panelY',
-			label: 'Panel Y offset',
-			hint: 'Vertical lift on entry',
-			min: -40,
-			max: 40,
-			step: 1,
-			unit: 'px'
-		},
-		{
-			key: 'panelBlur',
-			label: 'Panel blur',
-			hint: 'Backdrop blur',
-			min: 0,
-			max: 24,
-			step: 1,
-			unit: 'px'
-		},
-		{
-			key: 'panelScaleStart',
-			label: 'Panel start scale',
-			hint: 'Initial scale on enter',
-			min: 0.9,
-			max: 1,
-			step: 0.005,
-			format: (v) => v.toFixed(3)
-		},
-		{
-			key: 'sheetOffset',
-			label: 'Sheet offset',
-			hint: 'Slide distance',
-			min: 0,
-			max: 240,
-			step: 4,
-			unit: 'px'
-		},
-		{
-			key: 'overlayBlur',
-			label: 'Overlay blur',
-			hint: 'Modal backdrop blur',
-			min: 0,
-			max: 24,
-			step: 1,
-			unit: 'px'
-		},
-		{
-			key: 'panelPerspective',
-			label: 'Perspective',
-			hint: '3D depth. 0 = flat. Try 600-1200 for subtle tilt.',
-			min: 0,
-			max: 2000,
-			step: 50,
-			unit: 'px',
-			experimental: true
-		},
-		{
-			key: 'panelRotateX',
-			label: 'Rotate X',
-			hint: 'Entry tilt in degrees. Needs perspective > 0.',
-			min: -20,
-			max: 20,
-			step: 1,
-			unit: '°',
-			experimental: true
-		},
-		{
-			key: 'panelOpacityStart',
-			label: 'Opacity start',
-			hint: '0 = fade from invisible, 1 = no fade.',
-			min: 0,
-			max: 1,
-			step: 0.05,
-			format: (v) => v.toFixed(2),
-			experimental: true
-		}
-	];
-
-	function durationToMs(value: string) {
-		const parsed = Number.parseFloat(value);
-		return Number.isFinite(parsed) ? parsed : 0;
-	}
-
-	function updateMotionDuration(key: MotionDurationField['key'], rawValue: string | number) {
-		const ms = typeof rawValue === 'number' ? rawValue : Number.parseFloat(rawValue);
-		if (!Number.isFinite(ms)) return;
-		editorTheme.motion = { ...editorTheme.motion, [key]: `${Math.round(ms)}ms` };
-		selectedPresetSlug = 'custom';
-	}
-
-	function updateMotionNumber(key: MotionNumberField['key'], rawValue: string | number) {
-		const parsed = typeof rawValue === 'number' ? rawValue : Number.parseFloat(rawValue);
-		if (!Number.isFinite(parsed)) return;
-		editorTheme.motion = { ...editorTheme.motion, [key]: parsed };
-		selectedPresetSlug = 'custom';
-	}
-
-	function openAdvancedMotion() {
-		advancedMotionOpen = true;
-	}
-
-	type TransitionShape = {
-		slug: string;
-		name: string;
-		description: string;
-		icon: typeof ArrowDown;
-		motion: {
-			panelX: number;
-			panelY: number;
-			panelScaleStart: number;
-			panelBlur: number;
-			panelPerspective?: number;
-			panelRotateX?: number;
-		};
-	};
-	const transitionShapes: TransitionShape[] = [
-		{
-			slug: 'subtle',
-			name: 'Subtle',
-			description: 'Gentle lift -- Silk default.',
-			icon: ArrowDown,
-			motion: {
-				panelX: 0,
-				panelY: 5,
-				panelScaleStart: 0.99,
-				panelBlur: 0,
-				panelPerspective: 0,
-				panelRotateX: 0
-			}
-		},
-		{
-			slug: 'lift',
-			name: 'Lift',
-			description: 'Bigger rise with a soft blur.',
-			icon: ArrowUp,
-			motion: {
-				panelX: 0,
-				panelY: 12,
-				panelScaleStart: 0.97,
-				panelBlur: 2,
-				panelPerspective: 0,
-				panelRotateX: 0
-			}
-		},
-		{
-			slug: 'depth',
-			name: 'Depth',
-			description: '3D tilt -- perspective + rotateX. Experimental.',
-			icon: Layers2,
-			motion: {
-				panelX: 0,
-				panelY: 6,
-				panelScaleStart: 0.985,
-				panelBlur: 0,
-				panelPerspective: 800,
-				panelRotateX: -10
-			}
-		},
-		{
-			slug: 'slide',
-			name: 'Slide',
-			description: 'Enters from the right.',
-			icon: ArrowRight,
-			motion: { panelX: 14, panelY: 0, panelScaleStart: 1, panelBlur: 0 }
-		},
-		{
-			slug: 'scale',
-			name: 'Scale',
-			description: 'Grows in from smaller.',
-			icon: Maximize,
-			motion: { panelX: 0, panelY: 0, panelScaleStart: 0.94, panelBlur: 0 }
-		},
-		{
-			slug: 'pop',
-			name: 'Pop',
-			description: 'Shrinks down from larger.',
-			icon: Minimize,
-			motion: { panelX: 0, panelY: 0, panelScaleStart: 1.06, panelBlur: 0 }
-		},
-		{
-			slug: 'glide',
-			name: 'Glide',
-			description: 'Lift with backdrop blur.',
-			icon: Wind,
-			motion: { panelX: 0, panelY: 8, panelScaleStart: 0.98, panelBlur: 4 }
-		},
-		{
-			slug: 'stack',
-			name: 'Stack',
-			description: 'Sits in place, fades only.',
-			icon: Layers2,
-			motion: { panelX: 0, panelY: 0, panelScaleStart: 1, panelBlur: 0 }
-		},
-		{
-			slug: 'cascade',
-			name: 'Cascade',
-			description: 'Pronounced rise with a soft blur clearing -- the landing-page cascade feel.',
-			icon: ChevronsDown,
-			motion: {
-				panelX: 0,
-				panelY: 16,
-				panelScaleStart: 0.96,
-				panelBlur: 4,
-				panelPerspective: 0,
-				panelRotateX: 0
-			}
-		}
-	];
-
-	function approxEqual(a: number, b: number, eps = 0.005) {
-		return Math.abs(a - b) < eps;
-	}
-
-	const activeTransitionShape = $derived(
-		transitionShapes.find(
-			(shape) =>
-				approxEqual(shape.motion.panelX, editorTheme.motion.panelX) &&
-				approxEqual(shape.motion.panelY, editorTheme.motion.panelY) &&
-				approxEqual(shape.motion.panelScaleStart, editorTheme.motion.panelScaleStart) &&
-				approxEqual(shape.motion.panelBlur, editorTheme.motion.panelBlur) &&
-				approxEqual(shape.motion.panelPerspective ?? 0, editorTheme.motion.panelPerspective ?? 0) &&
-				approxEqual(shape.motion.panelRotateX ?? 0, editorTheme.motion.panelRotateX ?? 0)
-		) ?? null
-	);
-
-	function applyTransitionShape(shape: TransitionShape) {
-		editorTheme.motion = {
-			...editorTheme.motion,
-			panelX: shape.motion.panelX,
-			panelY: shape.motion.panelY,
-			panelScaleStart: shape.motion.panelScaleStart,
-			panelBlur: shape.motion.panelBlur,
-			panelPerspective: shape.motion.panelPerspective ?? 0,
-			panelRotateX: shape.motion.panelRotateX ?? 0
-		};
-		selectedPresetSlug = 'custom';
-	}
-
-	function resetMotionToPreset() {
-		editorTheme.motion = resolveThemeMotion(editorTheme.durationPreset);
-		selectedPresetSlug = editorTheme.durationPreset;
-		toast({
-			title: 'Motion reset',
-			description: 'Restored values from the selected preset.',
-			duration: 1800,
-			type: 'success'
-		});
-	}
-
 	let savedThemes = $state<SavedTheme[]>([]);
 	let activeSavedThemeId = $state<string | null>(null);
 
@@ -1311,7 +920,6 @@
 		const slug = slugifyThemeName(name) || 'custom-theme';
 		const payload: ThemeDraft = {
 			...cloneTheme(editorTheme),
-			motion: resolveThemeMotion(editorTheme.durationPreset, editorTheme.motion),
 			name,
 			slug
 		};
@@ -2263,189 +1871,52 @@
 
 						<div class="border-t border-border"></div>
 
+						<!-- Animation: the motion shape (CSS keyframes), decoupled from timing. -->
 						<section class="flex flex-col gap-2">
 							<p
 								class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
 							>
-								Motion preset
+								Animation
 							</p>
 							<div class="grid grid-cols-3 gap-1.5">
-								{#each transitionPresets as preset}
-									{@const active = editorTheme.durationPreset === preset.slug}
-									{@const speedDots =
-										preset.slug === 'none' || preset.slug === 'instant'
-											? 4
-											: preset.slug === 'swift' || preset.slug === 'snappy'
-												? 3
-												: preset.slug === 'crisp' || preset.slug === 'default'
-													? 2
-													: 1}
+								{#each animations as a (a.slug)}
+									{@const active = editorTheme.animation === a.slug}
 									<button
 										type="button"
-										onclick={() => updateDurationPreset(preset.slug)}
-										title={preset.description ?? preset.name}
-										class={`flex flex-col items-center gap-1.5 rounded-lg border p-2 text-[0.72rem] transition-colors ${active ? 'border-primary bg-primary/10 text-foreground' : 'border-border bg-background/40 text-foreground-muted hover:border-border-strong'}`}
+										onclick={() => updateAnimation(a.slug)}
+										title={a.description}
+										class={`rounded-lg border p-2 text-[0.72rem] [font-weight:var(--font-weight-label,500)] transition-colors ${active ? 'border-primary bg-primary/10 text-foreground' : 'border-border bg-background/40 text-foreground-muted hover:border-border-strong'}`}
 									>
-										<span class="flex items-center gap-0.5" aria-hidden="true">
-											{#each Array(4) as _, i}
-												<span
-													class={`size-1 rounded-full ${i < speedDots ? (active ? 'bg-primary' : 'bg-foreground-muted') : 'bg-border'}`}
-												></span>
-											{/each}
-										</span>
-										<span
-											class="[font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] {active
-												? 'text-foreground'
-												: ''}">{preset.name}</span
-										>
+										{a.name}
 									</button>
 								{/each}
 							</div>
-							{#if activeMotionDescription}
-								<p class="m-0 text-[0.72rem] text-foreground-muted">{activeMotionDescription}</p>
-							{/if}
+							<p class="m-0 text-[0.72rem] text-foreground-muted">{currentAnimation.description}</p>
 						</section>
 
 						<div class="border-t border-border"></div>
 
+						<!-- Feel: the motion timing (durations + easing), decoupled from shape. -->
 						<section class="flex flex-col gap-2">
-							<div class="flex items-baseline justify-between">
-								<p
-									class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
-								>
-									Transition preset
-								</p>
-								<span
-									class="text-[0.65rem] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted/70"
-								>
-									{activeTransitionShape?.name ?? 'Custom'}
-								</span>
-							</div>
-							<div class="grid grid-cols-3 gap-1.5">
-								{#each transitionShapes as shape (shape.slug)}
-									{@const active = activeTransitionShape?.slug === shape.slug}
-									<button
-										type="button"
-										onclick={() => applyTransitionShape(shape)}
-										title={shape.description}
-										class={`flex flex-col items-center gap-1.5 rounded-lg border p-2 text-[0.7rem] transition-colors ${active ? 'border-primary bg-primary/10 text-foreground' : 'border-border bg-background/40 text-foreground-muted hover:border-border-strong'}`}
-									>
-										<span
-											class={`grid size-6 place-items-center rounded-md ${active ? 'bg-primary/15 text-primary' : 'bg-secondary/60'}`}
-											aria-hidden="true"
-										>
-											<shape.icon size={12} />
-										</span>
-										<span
-											class={`[font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] ${active ? 'text-foreground' : ''}`}
-										>
-											{shape.name}
-										</span>
-									</button>
-								{/each}
-							</div>
-							{#if activeTransitionShape}
-								<p class="m-0 text-[0.72rem] text-foreground-muted">
-									{activeTransitionShape.description}
-								</p>
-							{:else}
-								<p class="m-0 text-[0.72rem] text-foreground-muted">
-									Custom transform — fine-tune with All motion options.
-								</p>
-							{/if}
-							<Button
-								variant="outlined"
-								size="sm"
-								class="h-8 gap-1.5 text-[0.78rem]"
-								onclick={openAdvancedMotion}
+							<p
+								class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
 							>
-								<Sliders size={13} />
-								All motion options
-							</Button>
-						</section>
-
-						<div class="border-t border-border"></div>
-
-						<section class="flex flex-col gap-2">
-							<div class="flex items-baseline justify-between">
-								<p
-									class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
-								>
-									Panel easing
-								</p>
-								<span
-									class="text-[0.65rem] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted/70"
-									>{currentEasing.label}</span
-								>
-							</div>
-							<Select.Root value={editorTheme.motion.panelEasing ?? defaultEasing} class="">
-								<Select.Trigger class="h-9 w-full text-[0.82rem]" variant="outlined">
-									{currentEasing.label}
-								</Select.Trigger>
-								<Select.Content class="max-h-72 overflow-y-auto">
-									{#each easingOptions as opt}
-										<Select.Item
-											value={opt.value}
-											label={opt.label}
-											class=""
-											onclick={() => updateEasing(opt.value)}
-										>
-											<span class="flex w-full items-center justify-between gap-3">
-												<span
-													class="[font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]"
-													>{opt.label}</span
-												>
-												<code class="font-mono text-[0.66rem] text-foreground-muted"
-													>{opt.value}</code
-												>
-											</span>
-										</Select.Item>
-									{/each}
-								</Select.Content>
-							</Select.Root>
-							<p class="m-0 text-[0.72rem] text-foreground-muted">{currentEasing.description}</p>
-						</section>
-
-						<section class="flex flex-col gap-2">
-							<div class="flex items-baseline justify-between">
-								<p
-									class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
-								>
-									Control easing
-								</p>
-								<span
-									class="text-[0.65rem] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted/70"
-									>{currentHoverEasing.label}</span
-								>
-							</div>
-							<Select.Root value={editorTheme.motion.hoverEasing ?? defaultHoverEasing} class="">
-								<Select.Trigger class="h-9 w-full text-[0.82rem]" variant="outlined">
-									{currentHoverEasing.label}
-								</Select.Trigger>
-								<Select.Content class="max-h-72 overflow-y-auto">
-									{#each easingOptions as opt}
-										<Select.Item
-											value={opt.value}
-											label={opt.label}
-											class=""
-											onclick={() => updateHoverEasing(opt.value)}
-										>
-											<span class="flex w-full items-center justify-between gap-3">
-												<span
-													class="[font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]"
-													>{opt.label}</span
-												>
-												<code class="font-mono text-[0.66rem] text-foreground-muted"
-													>{opt.value}</code
-												>
-											</span>
-										</Select.Item>
-									{/each}
-								</Select.Content>
-							</Select.Root>
-							<p class="m-0 text-[0.72rem] text-foreground-muted">
-								Hover / press easing for buttons and fields. {currentHoverEasing.description}
+								Feel
 							</p>
+							<div class="grid grid-cols-3 gap-1.5">
+								{#each feels as f (f.slug)}
+									{@const active = editorTheme.feel === f.slug}
+									<button
+										type="button"
+										onclick={() => updateFeel(f.slug)}
+										title={f.description}
+										class={`rounded-lg border p-2 text-[0.72rem] [font-weight:var(--font-weight-label,500)] transition-colors ${active ? 'border-primary bg-primary/10 text-foreground' : 'border-border bg-background/40 text-foreground-muted hover:border-border-strong'}`}
+									>
+										{f.name}
+									</button>
+								{/each}
+							</div>
+							<p class="m-0 text-[0.72rem] text-foreground-muted">{currentFeel.description}</p>
 						</section>
 					</Tabs.Content>
 
@@ -2806,120 +2277,6 @@
 					<Save size={13} />
 					Save & continue
 				</Button>
-			</div>
-		</Modal.Content>
-	</Modal.Root>
-
-	<!-- ─── All motion dialog ─── -->
-	<Modal.Root bind:open={advancedMotionOpen}>
-		<Modal.Content
-			class="flex w-full max-w-[min(36rem,calc(100vw-2rem))] flex-col gap-0 overflow-hidden p-0"
-		>
-			<div class="flex shrink-0 items-start justify-between px-5 py-4">
-				<div class="flex flex-col gap-1">
-					<Modal.Title>All motion tokens</Modal.Title>
-					<Modal.Description>
-						Hand-tune every duration and panel offset. Starts from the current preset.
-					</Modal.Description>
-				</div>
-				<Modal.Close variant="ghost" size="icon" class="size-8 shrink-0" aria-label="Close">
-					<X size={14} />
-				</Modal.Close>
-			</div>
-
-			<div class="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto px-5 py-4">
-				<section class="flex flex-col gap-2">
-					<p
-						class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
-					>
-						Durations
-					</p>
-					<div class="grid grid-cols-2 gap-x-4 gap-y-4 max-sm:grid-cols-1">
-						{#each motionDurationFields as field}
-							{@const value = durationToMs(editorTheme.motion[field.key])}
-							<label class="flex flex-col gap-1.5">
-								<div class="flex items-baseline justify-between gap-2">
-									<span
-										class="text-[0.74rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground"
-										>{field.label}</span
-									>
-									<span
-										class="rounded-md bg-secondary/60 px-1.5 py-0.5 font-mono text-[0.68rem] text-foreground"
-									>
-										{Math.round(value)}ms
-									</span>
-								</div>
-								<input
-									type="range"
-									min="0"
-									max={field.max}
-									step="10"
-									{value}
-									oninput={(e) =>
-										updateMotionDuration(field.key, (e.currentTarget as HTMLInputElement).value)}
-									class="silk-range"
-								/>
-								<span class="text-[0.66rem] text-foreground-muted">{field.hint}</span>
-							</label>
-						{/each}
-					</div>
-				</section>
-
-				<section class="flex flex-col gap-2">
-					<p
-						class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
-					>
-						Transition
-					</p>
-					<span class="-mt-1 text-[0.7rem] text-foreground-muted">
-						Per-surface transform & blur — shapes how panels enter the screen.
-					</span>
-					<div class="grid grid-cols-2 gap-x-4 gap-y-4 max-sm:grid-cols-1">
-						{#each motionNumberFields as field}
-							{@const numericValue = (editorTheme.motion[field.key] ?? 0) as number}
-							{@const display = field.format ? field.format(numericValue) : String(numericValue)}
-							<label class="flex flex-col gap-1.5">
-								<div class="flex items-baseline justify-between gap-2">
-									<span
-										class="flex items-center gap-1.5 text-[0.74rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground"
-									>
-										{field.label}
-										{#if field.experimental}
-											<span
-												class="rounded-full border border-border bg-secondary/40 px-1.5 py-0.5 text-[0.6rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted"
-											>
-												Experimental
-											</span>
-										{/if}
-									</span>
-									<span
-										class="rounded-md bg-secondary/60 px-1.5 py-0.5 font-mono text-[0.68rem] text-foreground"
-									>
-										{display}{field.unit ?? ''}
-									</span>
-								</div>
-								<input
-									type="range"
-									min={field.min}
-									max={field.max}
-									step={field.step}
-									value={numericValue}
-									oninput={(e) =>
-										updateMotionNumber(field.key, (e.currentTarget as HTMLInputElement).value)}
-									class="silk-range"
-								/>
-								<span class="text-[0.66rem] text-foreground-muted">{field.hint}</span>
-							</label>
-						{/each}
-					</div>
-				</section>
-			</div>
-
-			<div class="flex shrink-0 items-center justify-between gap-2 px-5 py-3">
-				<Button variant="ghost" size="sm" class="h-8 text-[0.8rem]" onclick={resetMotionToPreset}>
-					Reset to preset
-				</Button>
-				<Modal.Close variant="primary" size="sm" class="h-8 text-[0.8rem]">Done</Modal.Close>
 			</div>
 		</Modal.Content>
 	</Modal.Root>
