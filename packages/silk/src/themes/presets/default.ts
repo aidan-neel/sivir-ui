@@ -55,24 +55,8 @@ export const preset: ThemeDraft = {
 		modalSectionGap: 16,
 		sheetBodyPadding: 16
 	},
-	durationPreset: 'instant',
-	motion: {
-		hoverDuration: '120ms',
-		menuDuration: '90ms',
-		panelDuration: '170ms',
-		sheetDuration: '210ms',
-		overlayDuration: '100ms',
-		tooltipDuration: '90ms',
-		toastInDuration: '280ms',
-		toastOutDuration: '220ms',
-		panelX: 0,
-		panelY: 5,
-		panelBlur: 0,
-		panelScaleStart: 1,
-		sheetOffset: 132,
-		overlayBlur: 0,
-		panelEasing: 'cubic-bezier(0.34,1.56,0.64,1)'
-	},
+	animation: 'default',
+	feel: 'smooth',
 	light: {
 		background: '#ffffff',
 		border: '#e2e3e5',

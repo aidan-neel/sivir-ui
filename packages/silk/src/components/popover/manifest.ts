@@ -42,7 +42,7 @@ export const manifest: Manifest = {
 		'utils.clickOutside',
 		'utils.positionFloatingPanel',
 		'internals/state',
-		'internals/transition'
+		'internals/presence'
 	],
 	peerDependencies: {
 		'@floating-ui/dom': '^1.0.0',

@@ -46,7 +46,7 @@
 		aria-label="Previous page"
 		disabled={page <= 1}
 		onclick={() => go(page - 1)}
-		class="inline-flex size-8 items-center justify-center rounded-[var(--radius-md)] text-foreground-muted transition-colors hover:bg-secondary hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)] disabled:cursor-not-allowed disabled:opacity-40"
+		class="inline-flex size-[var(--size-icon-md)] items-center justify-center rounded-[var(--radius-md)] text-foreground-muted transition-colors hover:bg-secondary hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)] disabled:cursor-not-allowed disabled:opacity-40"
 	>
 		<ChevronLeft size={15} />
 	</button>
@@ -55,7 +55,7 @@
 		{#if p === 'ellipsis'}
 			<span
 				aria-hidden="true"
-				class="inline-flex size-8 items-center justify-center text-foreground-muted"
+				class="inline-flex size-[var(--size-icon-md)] items-center justify-center text-foreground-muted"
 			>
 				<MoreHorizontal size={14} />
 			</span>
@@ -65,7 +65,7 @@
 				aria-current={p === page ? 'page' : undefined}
 				onclick={() => go(p)}
 				class={cn(
-					'inline-flex size-8 items-center justify-center rounded-[var(--radius-md)] [font-size:calc(var(--font-size-button,14px)*0.937)] [font-weight:var(--font-weight-button,500)] [letter-spacing:var(--tracking-button,0em)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)]',
+					'inline-flex size-[var(--size-icon-md)] items-center justify-center rounded-[var(--radius-md)] [font-size:calc(var(--font-size-button,14px)*0.937)] [font-weight:var(--font-weight-button,500)] [letter-spacing:var(--tracking-button,0em)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)]',
 					p === page
 						? 'bg-primary text-foreground-opposite'
 						: 'text-foreground-muted hover:bg-secondary hover:text-foreground'
@@ -81,7 +81,7 @@
 		aria-label="Next page"
 		disabled={page >= total}
 		onclick={() => go(page + 1)}
-		class="inline-flex size-8 items-center justify-center rounded-[var(--radius-md)] text-foreground-muted transition-colors hover:bg-secondary hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)] disabled:cursor-not-allowed disabled:opacity-40"
+		class="inline-flex size-[var(--size-icon-md)] items-center justify-center rounded-[var(--radius-md)] text-foreground-muted transition-colors hover:bg-secondary hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)] disabled:cursor-not-allowed disabled:opacity-40"
 	>
 		<ChevronRight size={15} />
 	</button>

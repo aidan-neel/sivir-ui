@@ -560,7 +560,7 @@
 									</p>
 								</div>
 								<Badge variant="outlined" class="shrink-0 text-[0.66rem]">
-									{theme.durationPreset}
+									{theme.feel}
 								</Badge>
 							</div>
 							<p
@@ -849,7 +849,7 @@
 										Motion
 									</dt>
 									<dd class="m-0 inline-flex items-center gap-1 text-foreground">
-										<Zap size={11} class="text-foreground-muted" />{t.durationPreset}
+										<Zap size={11} class="text-foreground-muted" />{t.feel}
 									</dd>
 								</div>
 								<div class="flex flex-col gap-0.5">

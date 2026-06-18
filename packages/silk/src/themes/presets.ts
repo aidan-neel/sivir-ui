@@ -1,9 +1,5 @@
-import {
-	cloneTransitionMotion,
-	getTransitionPreset,
-	type ThemeMotion,
-	type ThemeTransitionPresetSlug
-} from './transitions';
+import { animationToCssVars, cascadeCss, getAnimation } from './animations';
+import { feelToCssVars, getFeel } from './feels';
 
 export type ThemePalette = {
 	background: string;
@@ -255,8 +251,10 @@ export type ThemeDraft = {
 	 * Default true.
 	 */
 	fancyBadges?: boolean;
-	durationPreset: ThemeTransitionPresetSlug;
-	motion: ThemeMotion;
+	/** Animation slug -- the motion *shape* (CSS keyframes). See themes/animations. */
+	animation: string;
+	/** Feel slug -- the motion *timing* (durations + easings). See themes/feels. */
+	feel: string;
 	light: ThemePalette;
 	dark: ThemePalette;
 	/** Per-element font weights. Optional -- partial overrides merge into `defaultTypography`. */
@@ -320,18 +318,6 @@ function palette(
 		destructive: values.destructive ?? '#fa4234',
 		overlay: values.overlay ?? 'rgb(0 0 0 / 0.52)',
 		ring: values.ring ?? 'rgb(21 94 239 / 0.18)'
-	};
-}
-
-/** Builds the motion token set from a named duration preset plus overrides. */
-function motionFromPreset(
-	slug: ThemeTransitionPresetSlug,
-	overrides: Partial<ThemeMotion> = {}
-): ThemeMotion {
-	const preset = getTransitionPreset(slug);
-	return {
-		...cloneTransitionMotion(preset.motion),
-		...overrides
 	};
 }
 
@@ -500,14 +486,6 @@ export function slugifyThemeName(name: string) {
 		.replace(/^-+|-+$/g, '');
 }
 
-/** Resolves a theme motion object against the selected preset. */
-export function resolveThemeMotion(
-	durationPreset: ThemeTransitionPresetSlug,
-	motion?: Partial<ThemeMotion> | null
-) {
-	return motionFromPreset(durationPreset, motion ?? {});
-}
-
 /** Chooses which palette should drive floating panel surfaces for a given mode. */
 function getPanelPalette(theme: ThemeDraft, mode: 'light' | 'dark') {
 	return mode === 'light' && theme.invertedPanels ? theme.dark : theme[mode];
@@ -604,7 +582,10 @@ export const preset: ThemeDraft = ${serializeTypeScriptValue(theme)};`;
 /** Converts a theme draft into the CSS shipped by the preset endpoints and studio. */
 export function themeToCss(theme: ThemeDraft) {
 	const radii = radiiFromBase(theme.radiusBase || theme.radiusMd);
-	const motion = resolveThemeMotion(theme.durationPreset, theme.motion);
+	const animation = getAnimation(theme.animation);
+	const feelVars = feelToCssVars(getFeel(theme.feel));
+	const animVars = animationToCssVars(animation);
+	const cascade = cascadeCss(animation);
 	const type = resolveTypography(theme.typography);
 	const fancyButtons = theme.fancyButtons !== false;
 	const fancyBadges = theme.fancyBadges !== false;
@@ -658,25 +639,8 @@ export function themeToCss(theme: ThemeDraft) {
 \t--radius-md: ${radii.md};
 \t--radius-lg: ${radii.lg};
 \t--radius-xl: ${radii.xl};
-\t--motion-duration-hover: ${motion.hoverDuration};
-\t--motion-duration-menu: ${motion.menuDuration};
-\t--motion-duration-panel: ${motion.panelDuration};
-\t--motion-duration-sheet: ${motion.sheetDuration};
-\t--motion-duration-overlay: ${motion.overlayDuration};
-\t--motion-duration-tooltip: ${motion.tooltipDuration};
-\t--motion-duration-toast-in: ${motion.toastInDuration};
-\t--motion-duration-toast-out: ${motion.toastOutDuration};
-\t--motion-panel-x: ${motion.panelX}px;
-\t--motion-panel-y: ${motion.panelY}px;
-\t--motion-panel-blur: ${motion.panelBlur}px;
-\t--motion-panel-scale-start: ${motion.panelScaleStart};
-\t--motion-sheet-offset: ${motion.sheetOffset}px;
-\t--motion-overlay-blur: ${motion.overlayBlur}px;
-\t--motion-panel-perspective: ${motion.panelPerspective ?? 0};
-\t--motion-panel-rotate-x: ${motion.panelRotateX ?? 0};
-\t--motion-panel-opacity-start: ${motion.panelOpacityStart ?? 0};
-\t--motion-panel-easing: ${motion.panelEasing ?? 'cubic-bezier(0.22,1,0.36,1)'};
-\t--motion-easing-hover: ${motion.hoverEasing ?? 'cubic-bezier(0.25,0.1,0.25,1)'};
+${feelVars}
+${animVars}
 \t--button-primary-border: ${theme.primaryButtonOutline ? `color-mix(in srgb, ${theme.light.primary} 76%, #1237b9)` : 'transparent'};
 \t--text-xs: 12px;
 \t--text-sm: 14px;${flatShadowOverrides}
@@ -707,41 +671,9 @@ ${panelTokensToCss(theme, 'light')}
 \t--radius-md: ${radii.md};
 \t--radius-lg: ${radii.lg};
 \t--radius-xl: ${radii.xl};
-\t--motion-duration-hover: ${motion.hoverDuration};
-\t--motion-duration-menu: ${motion.menuDuration};
-\t--motion-duration-panel: ${motion.panelDuration};
-\t--motion-duration-sheet: ${motion.sheetDuration};
-\t--motion-duration-overlay: ${motion.overlayDuration};
-\t--motion-duration-tooltip: ${motion.tooltipDuration};
-\t--motion-duration-toast-in: ${motion.toastInDuration};
-\t--motion-duration-toast-out: ${motion.toastOutDuration};
-\t--motion-panel-x: ${motion.panelX}px;
-\t--motion-panel-y: ${motion.panelY}px;
-\t--motion-panel-blur: ${motion.panelBlur}px;
-\t--motion-panel-scale-start: ${motion.panelScaleStart};
-\t--motion-sheet-offset: ${motion.sheetOffset}px;
-\t--motion-overlay-blur: ${motion.overlayBlur}px;
-\t--motion-panel-perspective: ${motion.panelPerspective ?? 0};
-\t--motion-panel-rotate-x: ${motion.panelRotateX ?? 0};
-\t--motion-panel-opacity-start: ${motion.panelOpacityStart ?? 0};
-\t--motion-panel-easing: ${motion.panelEasing ?? 'cubic-bezier(0.22,1,0.36,1)'};
-\t--motion-easing-hover: ${motion.hoverEasing ?? 'cubic-bezier(0.25,0.1,0.25,1)'};
+${feelVars}
 \t--button-primary-border: ${theme.primaryButtonOutline ? `color-mix(in srgb, ${theme.dark.primary} 76%, #7aa2ff)` : 'transparent'};${flatShadowOverrides}
 ${paletteToCss(theme.dark)}
 ${panelTokensToCss(theme, 'dark')}
-}${
-		theme.durationPreset === 'none'
-			? `
-
-/* "None" motion preset: zero out every transition and animation, including
-   component-level hardcoded durations that ignore --motion-duration-* vars. */
-*, *::before, *::after {
-\ttransition-duration: 0ms !important;
-\ttransition-delay: 0ms !important;
-\tanimation-duration: 0.01ms !important;
-\tanimation-delay: 0ms !important;
-\tanimation-iteration-count: 1 !important;
-}`
-			: ''
-	}`;
+}${cascade}`;
 }

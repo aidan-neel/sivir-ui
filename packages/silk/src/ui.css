@@ -63,13 +63,20 @@
 	--motion-duration-tooltip: 140ms;
 	--motion-duration-toast-in: 440ms;
 	--motion-duration-toast-out: 340ms;
-	--motion-panel-x: 0px;
-	--motion-panel-blur: 1px;
-	--motion-panel-scale-start: 0.96;
-	--motion-sheet-offset: 132px;
-	--motion-overlay-blur: 1px;
 	--motion-panel-easing: cubic-bezier(0.22, 1, 0.36, 1);
 	--motion-easing-hover: cubic-bezier(0.25, 0.1, 0.25, 1);
+
+	/* Animation (shape) -- keyframe names per surface, set by the active theme's
+	   animation. Defaults to the "Default" (flyAndScale) animation. `none`
+	   disables motion for a surface. Decoupled from the duration/easing tokens
+	   above (the "feel"). */
+	--silk-anim-panel-in: silk-panel-default-in;
+	--silk-anim-panel-out: silk-panel-default-out;
+	--silk-anim-overlay-in: silk-fade-in;
+	--silk-anim-overlay-out: silk-fade-out;
+	--silk-anim-sheet-in: silk-sheet-in;
+	--silk-anim-sheet-out: silk-sheet-out;
+	--silk-sheet-from: translateX(100%);
 
 	--border-size: 1px;
 
@@ -455,6 +462,200 @@
 	100% {
 		background-position: -200% 0;
 	}
+}
+
+/* ----------------------------------------------------------------------------
+   Motion: decoupled Animation (shape) + Feel (timing).
+
+   The `silk-*` keyframes below are the seven animations. Which pair runs on each
+   surface is chosen by the `--silk-anim-*` variables (the theme's animation);
+   the duration/easing come from `--motion-duration-*` / `--motion-*-easing` (the
+   theme's feel). Surfaces render with `data-ui` + `data-state` (open|closed) via
+   the presence rune; the rules here map state -> keyframe.
+   ------------------------------------------------------------------------- */
+@keyframes silk-panel-default-in {
+	from {
+		opacity: 0;
+		transform: translateY(6px) scale(0.96);
+	}
+	to {
+		opacity: 1;
+		transform: none;
+	}
+}
+@keyframes silk-panel-default-out {
+	from {
+		opacity: 1;
+		transform: none;
+	}
+	to {
+		opacity: 0;
+		transform: translateY(6px) scale(0.97);
+	}
+}
+@keyframes silk-panel-scale-in {
+	from {
+		opacity: 0;
+		transform: scale(0.94);
+	}
+	to {
+		opacity: 1;
+		transform: none;
+	}
+}
+@keyframes silk-panel-scale-out {
+	from {
+		opacity: 1;
+		transform: none;
+	}
+	to {
+		opacity: 0;
+		transform: scale(0.96);
+	}
+}
+@keyframes silk-panel-fly-in {
+	from {
+		opacity: 0;
+		transform: translateY(8px);
+	}
+	to {
+		opacity: 1;
+		transform: none;
+	}
+}
+@keyframes silk-panel-fly-out {
+	from {
+		opacity: 1;
+		transform: none;
+	}
+	to {
+		opacity: 0;
+		transform: translateY(8px);
+	}
+}
+@keyframes silk-panel-rise-in {
+	from {
+		opacity: 0;
+		transform: translateY(7px) scale(0.985);
+	}
+	to {
+		opacity: 1;
+		transform: none;
+	}
+}
+@keyframes silk-panel-rise-out {
+	from {
+		opacity: 1;
+		transform: none;
+	}
+	to {
+		opacity: 0;
+		transform: translateY(7px) scale(0.97);
+	}
+}
+@keyframes silk-panel-slide-in {
+	from {
+		opacity: 0;
+		transform: translateY(16px);
+	}
+	to {
+		opacity: 1;
+		transform: none;
+	}
+}
+@keyframes silk-panel-slide-out {
+	from {
+		opacity: 1;
+		transform: none;
+	}
+	to {
+		opacity: 0;
+		transform: translateY(12px);
+	}
+}
+@keyframes silk-fade-in {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+@keyframes silk-fade-out {
+	from {
+		opacity: 1;
+	}
+	to {
+		opacity: 0;
+	}
+}
+@keyframes silk-sheet-in {
+	from {
+		opacity: 0;
+		transform: var(--silk-sheet-from);
+	}
+	to {
+		opacity: 1;
+		transform: none;
+	}
+}
+@keyframes silk-sheet-out {
+	from {
+		opacity: 1;
+		transform: none;
+	}
+	to {
+		opacity: 0;
+		transform: var(--silk-sheet-from);
+	}
+}
+@keyframes silk-cascade-item-in {
+	from {
+		opacity: 0;
+		transform: translateY(4px);
+	}
+	to {
+		opacity: 1;
+		transform: none;
+	}
+}
+
+/* Panel surfaces (popover/menu/select/modal/alert-dialog/command). Tooltips and
+   hover-cards reuse the popover panel keyframes with the tooltip duration. */
+[data-ui='popover-content'][data-state='open'],
+[data-ui='dialog-content'][data-state='open'],
+[data-ui='alert-dialog-content'][data-state='open'],
+[data-ui='command-content'][data-state='open'] {
+	animation: var(--silk-anim-panel-in) var(--motion-duration-panel) var(--motion-panel-easing) both;
+}
+[data-ui='popover-content'][data-state='closed'],
+[data-ui='dialog-content'][data-state='closed'],
+[data-ui='alert-dialog-content'][data-state='closed'],
+[data-ui='command-content'][data-state='closed'] {
+	animation: var(--silk-anim-panel-out) var(--motion-duration-panel) var(--motion-panel-easing) both;
+}
+[data-ui='popover-content'][data-hoverable='true'][data-state] {
+	animation-duration: var(--motion-duration-tooltip);
+}
+
+[data-ui='overlay-backdrop'][data-state='open'] {
+	animation: var(--silk-anim-overlay-in) var(--motion-duration-overlay) linear both;
+}
+[data-ui='overlay-backdrop'][data-state='closed'] {
+	animation: var(--silk-anim-overlay-out) var(--motion-duration-overlay) linear both;
+}
+
+[data-ui='sheet-content'][data-state='open'] {
+	animation: var(--silk-anim-sheet-in) var(--motion-duration-sheet) var(--motion-panel-easing) both;
+}
+[data-ui='sheet-content'][data-state='closed'] {
+	animation: var(--silk-anim-sheet-out) var(--motion-duration-sheet) var(--motion-panel-easing) both;
+}
+[data-ui='sheet-content'][data-side='right'] {
+	--silk-sheet-from: translate3d(calc(100% + 1rem), 0, 0);
+}
+[data-ui='sheet-content'][data-side='left'] {
+	--silk-sheet-from: translate3d(calc(-100% - 1rem), 0, 0);
 }
 
 /* Reduced motion (P3-F14).

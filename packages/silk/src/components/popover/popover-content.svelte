@@ -59,7 +59,7 @@
 	import { onDestroy, onMount } from 'svelte';
 	import { states } from '@silk/ui/internals/state.svelte.ts';
 	import { clickOutside, cn, positionFloatingPanel } from '@silk/ui/utils';
-	import { flyAndScale } from '@silk/ui/internals/transition';
+	import { usePresence } from '@silk/ui/internals/presence.svelte.ts';
 	import { getContext } from 'svelte';
 	import type { ReferenceElement } from '@floating-ui/dom';
 	import type { PopoverContentProps, PopoverState } from '.';
@@ -81,7 +81,14 @@
 	const uiState = states[key].data as PopoverState;
 
 	let popover = $state<HTMLElement | undefined>();
+	let content = $state<HTMLElement | undefined>();
 	let clickOutsideCleanup: (() => void) | undefined;
+
+	// Keep the content mounted through its CSS exit animation.
+	const presence = usePresence(
+		() => uiState?.open ?? false,
+		() => content
+	);
 
 	function handleKeydown(event: KeyboardEvent) {
 		if (event.key === 'Escape') {
@@ -209,10 +216,11 @@
 		}
 	}}
 >
-	{#if uiState?.open}
+	{#if presence.present}
 		<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
 		<div
 			{...rest}
+			bind:this={content}
 			id={id ?? `popover-${String(key)}-content`}
 			{role}
 			aria-modal={ariaModalProp ??
@@ -223,7 +231,8 @@
 					? `popover-${String(key)}-title`
 					: undefined}
 			{tabindex}
-			transition:flyAndScale={{ durationVar: '--motion-duration-panel' }}
+			data-state={presence.status}
+			data-hoverable={uiState?.hoverable ? 'true' : undefined}
 			data-ui="popover-content"
 			class={cn(
 				classProp,

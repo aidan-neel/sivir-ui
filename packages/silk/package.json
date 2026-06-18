@@ -40,6 +40,11 @@
 			"svelte": "./dist/internals/state.svelte.js",
 			"default": "./dist/internals/state.svelte.js"
 		},
+		"./internals/presence.svelte.ts": {
+			"types": "./dist/internals/presence.svelte.d.ts",
+			"svelte": "./dist/internals/presence.svelte.js",
+			"default": "./dist/internals/presence.svelte.js"
+		},
 		"./_manifest/types": {
 			"types": "./dist/_manifest/types.d.ts",
 			"default": "./dist/_manifest/types.js"
