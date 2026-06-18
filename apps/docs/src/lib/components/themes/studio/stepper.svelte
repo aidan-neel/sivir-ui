@@ -61,45 +61,50 @@
 
 	const atMin = $derived(round(value) <= min);
 	const atMax = $derived(round(value) >= max);
+	// Size the field to its longest possible value so "36px" stays centered and
+	// the control doesn't reflow as digits change.
+	const fieldCh = $derived(Math.max(String(max).length, String(min).length, 2));
 </script>
 
 <div
-	class="group flex h-8 items-stretch overflow-hidden rounded-[var(--radius-md)] border border-border bg-card transition-colors focus-within:border-[var(--color-primary)] focus-within:ring-2 focus-within:ring-[var(--color-ring)] hover:border-border-strong"
+	class="flex h-7 items-stretch overflow-hidden rounded-[var(--radius-md)] border border-border bg-card transition-colors focus-within:border-[var(--color-primary)] focus-within:ring-2 focus-within:ring-[var(--color-ring)] hover:border-border-strong"
 >
 	<button
 		type="button"
-		class="flex w-7 shrink-0 items-center justify-center text-foreground-muted transition-colors hover:bg-secondary hover:text-foreground disabled:pointer-events-none disabled:opacity-35"
+		class="flex w-6 shrink-0 items-center justify-center text-foreground-muted transition-colors hover:bg-secondary hover:text-foreground disabled:pointer-events-none disabled:opacity-30"
 		onclick={() => commit(value - step)}
 		disabled={atMin}
 		aria-label={`Decrease ${label}`}
 		tabindex="-1"
 	>
-		<Minus size={13} />
+		<Minus size={12} />
 	</button>
-	<input
-		type="text"
-		inputmode="decimal"
-		value={text}
-		oninput={onInput}
-		onblur={onBlur}
-		onkeydown={onKeydown}
-		onfocus={(e) => (e.currentTarget as HTMLInputElement).select()}
-		aria-label={label}
-		class="min-w-0 flex-1 border-x border-border bg-transparent text-center font-mono text-[0.74rem] tabular-nums text-foreground outline-none [appearance:textfield]"
-	/>
-	<div class="flex items-center">
+	<!-- Number + unit read as one token ("36px"), centered between the buttons. -->
+	<label class="flex flex-1 items-baseline justify-center gap-px px-1 leading-none">
+		<input
+			type="text"
+			inputmode="decimal"
+			value={text}
+			oninput={onInput}
+			onblur={onBlur}
+			onkeydown={onKeydown}
+			onfocus={(e) => (e.currentTarget as HTMLInputElement).select()}
+			aria-label={label}
+			style={`width:${fieldCh}ch`}
+			class="bg-transparent text-right font-mono text-[0.74rem] tabular-nums text-foreground outline-none [appearance:textfield]"
+		/>
 		{#if unit}
-			<span class="pl-1.5 pr-0.5 font-mono text-[0.62rem] text-foreground-muted/70">{unit}</span>
+			<span class="font-mono text-[0.7rem] text-foreground-muted/80">{unit}</span>
 		{/if}
-		<button
-			type="button"
-			class="flex w-7 shrink-0 items-center justify-center text-foreground-muted transition-colors hover:bg-secondary hover:text-foreground disabled:pointer-events-none disabled:opacity-35"
-			onclick={() => commit(value + step)}
-			disabled={atMax}
-			aria-label={`Increase ${label}`}
-			tabindex="-1"
-		>
-			<Plus size={13} />
-		</button>
-	</div>
+	</label>
+	<button
+		type="button"
+		class="flex w-6 shrink-0 items-center justify-center text-foreground-muted transition-colors hover:bg-secondary hover:text-foreground disabled:pointer-events-none disabled:opacity-30"
+		onclick={() => commit(value + step)}
+		disabled={atMax}
+		aria-label={`Increase ${label}`}
+		tabindex="-1"
+	>
+		<Plus size={12} />
+	</button>
 </div>

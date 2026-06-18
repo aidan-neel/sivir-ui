@@ -53,6 +53,10 @@
 	import ChevronDown from '@lucide/svelte/icons/chevron-down';
 	import Send from '@lucide/svelte/icons/send';
 	import Sparkles from '@lucide/svelte/icons/sparkles';
+	import Palette from '@lucide/svelte/icons/palette';
+	import CaseSensitive from '@lucide/svelte/icons/case-sensitive';
+	import Shapes from '@lucide/svelte/icons/shapes';
+	import Ruler from '@lucide/svelte/icons/ruler';
 	import Save from '@lucide/svelte/icons/save';
 	import Sliders from '@lucide/svelte/icons/sliders-horizontal';
 	import X from '@lucide/svelte/icons/x';
@@ -832,11 +836,11 @@
 	});
 
 	const tabs = [
-		{ id: 'colors', label: 'Colors' },
-		{ id: 'type', label: 'Type' },
-		{ id: 'shape', label: 'Shape' },
-		{ id: 'padding', label: 'Padding' },
-		{ id: 'presets', label: 'Presets' }
+		{ id: 'colors', label: 'Colors', icon: Palette },
+		{ id: 'type', label: 'Type', icon: CaseSensitive },
+		{ id: 'shape', label: 'Shape', icon: Shapes },
+		{ id: 'padding', label: 'Padding', icon: Ruler },
+		{ id: 'presets', label: 'Presets', icon: Sparkles }
 	] as const;
 
 	let publishDialogOpen = $state(false);
@@ -1359,14 +1363,33 @@
 				<span class="h-1 w-10 rounded-full bg-border"></span>
 			</div>
 			<Tabs.Root bind:value={inspectorTab} class="flex h-full flex-col">
-				<div class="flex justify-center border-b border-border p-2.5">
-					<Tabs.List class="flex w-full">
-						{#each tabs as t}
-							<Tabs.Trigger value={t.id} class="flex-1 min-w-0 text-[0.76rem] px-2">
-								{t.label}
-							</Tabs.Trigger>
+				<div class="border-b border-border p-2">
+					<!-- Segmented control: icon + label, active segment lifts onto a card. -->
+					<div
+						role="tablist"
+						aria-label="Inspector sections"
+						class="flex gap-0.5 rounded-[var(--radius-md)] bg-[color-mix(in_srgb,var(--color-secondary)_55%,transparent)] p-0.5"
+					>
+						{#each tabs as t (t.id)}
+							{@const Icon = t.icon}
+							{@const active = inspectorTab === t.id}
+							<button
+								type="button"
+								role="tab"
+								aria-selected={active}
+								aria-label={t.label}
+								onclick={() => (inspectorTab = t.id)}
+								class={`flex flex-1 flex-col items-center gap-1 rounded-[calc(var(--radius-md)-2px)] py-1.5 text-[0.66rem] [font-weight:var(--font-weight-label,500)] transition-colors ${
+									active
+										? 'bg-card text-foreground shadow-[0_1px_2px_rgb(0_0_0/0.06)]'
+										: 'text-foreground-muted hover:text-foreground'
+								}`}
+							>
+								<Icon size={15} strokeWidth={2} />
+								<span>{t.label}</span>
+							</button>
 						{/each}
-					</Tabs.List>
+					</div>
 				</div>
 
 				<div class="min-h-0 flex-1 overflow-y-auto">
@@ -1886,25 +1909,23 @@
 					</Tabs.Content>
 
 					<!-- PADDING TAB -->
-					<Tabs.Content value="padding" class="flex flex-col gap-5 p-3.5">
-						<div class="flex flex-col gap-1">
-							<p
-								class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
-							>
-								Spacing & sizing
-							</p>
-						</div>
+					<Tabs.Content value="padding" class="flex flex-col gap-4 p-3.5">
+						<p
+							class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+						>
+							Spacing & sizing
+						</p>
 
 						{#each spacingGroups as group, gi (group.title)}
 							{#if gi > 0}
 								<div class="studio-divider"></div>
 							{/if}
-							<section class="flex flex-col gap-2.5">
+							<section class="flex flex-col gap-2">
 								<span
 									class="text-[0.68rem] uppercase tracking-wider [font-weight:var(--font-weight-label,500)] text-foreground-muted/80"
 									>{group.title}</span
 								>
-								<div class="flex flex-col gap-2">
+								<div class="flex flex-col gap-1">
 									{#each group.fields as field (field.key)}
 										{@const spacing = resolveSpacing(editorTheme.spacing)}
 										{@const value = spacing[field.key]}
@@ -1912,7 +1933,7 @@
 											<span class="min-w-0 flex-1 truncate text-[0.78rem] text-foreground"
 												>{field.label}</span
 											>
-											<div class="w-[7.25rem] shrink-0">
+											<div class="w-[5.5rem] shrink-0">
 												<Stepper
 													{value}
 													min={field.min}
