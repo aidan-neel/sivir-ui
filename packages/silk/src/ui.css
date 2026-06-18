@@ -161,36 +161,30 @@
 	/* Auto-adaptive: darken light primaries, lighten dark ones (e.g. near-black)
 	   so the hover is always visible. sign() flips the shift at L≈0.4. */
 	--button-primary-hover-bg: oklch(from var(--color-primary) calc(l + 0.1 * sign(0.4 - l)) c h);
-	--button-primary-shadow:
-		0 1px 2px 0 rgb(10 13 18 / 0.05), inset 0 -2px 0 0 rgb(0 0 0 / 0.05),
-		inset 0 0 0 1px rgb(0 0 0 / 0.25);
+	/* Shared clean treatment for every filled button: soft drop, a 1px inner
+	   definition ring, and a faint top highlight. Reads well on any fill. */
+	--button-solid-shadow:
+		0 1px 2px 0 rgb(16 24 40 / 0.08), inset 0 0 0 1px rgb(0 0 0 / 0.1),
+		inset 0 1px 0 0 rgb(255 255 255 / 0.16);
+	--button-primary-shadow: var(--button-solid-shadow);
 
 	--button-success-bg: var(--color-success);
 	--button-success-border: color-mix(in srgb, var(--color-success) 80%, #2f7a4e);
 	--button-success-foreground: #f0fff5;
 	--button-success-hover-bg: color-mix(in srgb, var(--color-success) 88%, #2f7a4e);
-	--button-success-shadow:
-		0 1px 2px 0 color-mix(in srgb, var(--color-success) 28%, rgb(10 13 18 / 0.08)),
-		inset 0 -2px 0 0 rgb(0 0 0 / 0.06),
-		inset 0 0 0 1px color-mix(in srgb, var(--color-success) 55%, #0d3a23);
+	--button-success-shadow: var(--button-solid-shadow);
 
 	--button-warning-bg: var(--color-warning);
 	--button-warning-border: color-mix(in srgb, var(--color-warning) 82%, #a06800);
 	--button-warning-foreground: #fff8ef;
 	--button-warning-hover-bg: color-mix(in srgb, var(--color-warning) 88%, #a06800);
-	--button-warning-shadow:
-		0 1px 2px 0 color-mix(in srgb, var(--color-warning) 30%, rgb(10 13 18 / 0.08)),
-		inset 0 -2px 0 0 rgb(0 0 0 / 0.06),
-		inset 0 0 0 1px color-mix(in srgb, var(--color-warning) 55%, #4a2900);
+	--button-warning-shadow: var(--button-solid-shadow);
 
 	--button-error-bg: var(--color-error);
 	--button-error-border: color-mix(in srgb, var(--color-error) 80%, #8b2222);
 	--button-error-foreground: #fff5f5;
 	--button-error-hover-bg: color-mix(in srgb, var(--color-error) 88%, #8b2222);
-	--button-error-shadow:
-		0 1px 2px 0 color-mix(in srgb, var(--color-error) 28%, rgb(10 13 18 / 0.08)),
-		inset 0 -2px 0 0 rgb(0 0 0 / 0.06),
-		inset 0 0 0 1px color-mix(in srgb, var(--color-error) 55%, #4a0e0e);
+	--button-error-shadow: var(--button-solid-shadow);
 
 	--button-secondary-bg: var(--color-secondary);
 	--button-secondary-border: var(--color-border);
@@ -229,10 +223,7 @@
 	--button-destructive-border: color-mix(in srgb, var(--color-destructive) 80%, #8b0000);
 	--button-destructive-foreground: var(--color-foreground-btn);
 	--button-destructive-hover-bg: color-mix(in srgb, var(--color-destructive) 88%, #8b0000);
-	--button-destructive-shadow:
-		0 1px 2px 0 color-mix(in srgb, var(--color-destructive) 30%, rgb(10 13 18 / 0.08)),
-		inset 0 -2px 0 0 rgb(0 0 0 / 0.06),
-		inset 0 0 0 1px color-mix(in srgb, var(--color-destructive) 55%, #4a0000);
+	--button-destructive-shadow: var(--button-solid-shadow);
 
 	--badge-padding-x: 0.55rem;
 	--badge-padding-y: 0.25rem;
@@ -344,33 +335,25 @@
 	--floating-panel-highlight: var(--panel-highlight);
 	--button-primary-border: transparent;
 	--button-primary-hover-bg: oklch(from var(--color-primary) calc(l + 0.1 * sign(0.4 - l)) c h);
-	--button-primary-shadow:
-		0 1px 2px 0 rgb(0 0 0 / 0.18), inset 0 -2px 0 0 rgb(0 0 0 / 0.12),
-		inset 0 0 0 1px rgb(255 255 255 / 0.12);
+	--button-solid-shadow:
+		0 1px 2px 0 rgb(0 0 0 / 0.3), inset 0 0 0 1px rgb(0 0 0 / 0.22),
+		inset 0 1px 0 0 rgb(255 255 255 / 0.1);
+	--button-primary-shadow: var(--button-solid-shadow);
 	--button-secondary-bg: var(--color-secondary);
 	--button-secondary-border: var(--color-border);
 	--button-secondary-hover-bg: color-mix(in srgb, var(--color-secondary) 72%, var(--color-border));
 	--button-success-border: color-mix(in srgb, var(--color-success) 80%, #78d092);
 	--button-success-foreground: #f0fff5;
 	--button-success-hover-bg: color-mix(in srgb, var(--color-success) 88%, #78d092);
-	--button-success-shadow:
-		0 1px 2px 0 color-mix(in srgb, var(--color-success) 32%, rgb(0 0 0 / 0.22)),
-		inset 0 -2px 0 0 rgb(0 0 0 / 0.14),
-		inset 0 0 0 1px color-mix(in srgb, var(--color-success) 55%, #ffffff);
+	--button-success-shadow: var(--button-solid-shadow);
 	--button-warning-border: color-mix(in srgb, var(--color-warning) 80%, #ffc46b);
 	--button-warning-foreground: #fff8ef;
 	--button-warning-hover-bg: color-mix(in srgb, var(--color-warning) 88%, #ffc46b);
-	--button-warning-shadow:
-		0 1px 2px 0 color-mix(in srgb, var(--color-warning) 32%, rgb(0 0 0 / 0.22)),
-		inset 0 -2px 0 0 rgb(0 0 0 / 0.14),
-		inset 0 0 0 1px color-mix(in srgb, var(--color-warning) 55%, #ffffff);
+	--button-warning-shadow: var(--button-solid-shadow);
 	--button-error-border: color-mix(in srgb, var(--color-error) 80%, #ffaaa8);
 	--button-error-foreground: #fff4f4;
 	--button-error-hover-bg: color-mix(in srgb, var(--color-error) 88%, #ffaaa8);
-	--button-error-shadow:
-		0 1px 2px 0 color-mix(in srgb, var(--color-error) 32%, rgb(0 0 0 / 0.22)),
-		inset 0 -2px 0 0 rgb(0 0 0 / 0.14),
-		inset 0 0 0 1px color-mix(in srgb, var(--color-error) 55%, #ffffff);
+	--button-error-shadow: var(--button-solid-shadow);
 	--button-flat-foreground: color-mix(in srgb, var(--color-primary) 90%, white);
 	--button-outlined-hover-bg: color-mix(
 		in srgb,
@@ -390,10 +373,7 @@
 	--button-destructive-border: color-mix(in srgb, var(--color-destructive) 80%, #ff6b6b);
 	--button-destructive-foreground: #ffffff;
 	--button-destructive-hover-bg: color-mix(in srgb, var(--color-destructive) 88%, #ff6b6b);
-	--button-destructive-shadow:
-		0 1px 2px 0 color-mix(in srgb, var(--color-destructive) 34%, rgb(0 0 0 / 0.22)),
-		inset 0 -2px 0 0 rgb(0 0 0 / 0.14),
-		inset 0 0 0 1px color-mix(in srgb, var(--color-destructive) 55%, #ffffff);
+	--button-destructive-shadow: var(--button-solid-shadow);
 	--floating-menu-item-foreground: var(--color-foreground);
 	--menu-item-hover-bg: color-mix(in srgb, var(--color-foreground) 7%, transparent);
 	--floating-menu-item-hover-bg: var(--menu-item-hover-bg);
