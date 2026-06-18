@@ -34,7 +34,7 @@
 	}}
 	class={cn(
 		className,
-		'[--button-height:var(--menu-item-height)] h-[var(--menu-item-height)] px-[var(--menu-item-padding-x)] py-0 rounded-[var(--radius-lg)] text-[var(--menu-item-foreground)] border border-transparent transition-[background-color,border-color,color,box-shadow] hover:bg-[var(--menu-item-hover-bg)] data-[active=true]:bg-[var(--menu-item-hover-bg)] data-[selected=true]:bg-[var(--menu-item-active-bg)] w-full [font-size:var(--font-size-button,14px)] hover:cursor-default flex-row items-center justify-between gap-3 text-left'
+		'[--button-height:var(--menu-item-height)] h-[var(--menu-item-height)] px-[var(--menu-item-padding-x)] py-0 rounded-[var(--radius-md)] text-[var(--menu-item-foreground)] border border-transparent transition-[background-color,border-color,color,box-shadow] hover:bg-[var(--menu-item-hover-bg)] data-[active=true]:bg-[var(--menu-item-hover-bg)] data-[selected=true]:bg-[var(--menu-item-active-bg)] w-full [font-size:var(--font-size-button,14px)] hover:cursor-default flex-row items-center justify-between gap-3 text-left'
 	)}
 	variant={'ghost'}
 >
