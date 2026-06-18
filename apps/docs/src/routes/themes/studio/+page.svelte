@@ -6,7 +6,6 @@
 	import { Button } from '@silk/ui/components/button';
 	import { Input } from '@silk/ui/components/input';
 	import { Switch } from '@silk/ui/components/switch';
-	import { Slider } from '@silk/ui/components/slider';
 	import { ColorPicker, type ColorOption } from '@silk/ui/components/color-picker';
 	import * as Select from '@silk/ui/components/select';
 	import * as Tabs from '@silk/ui/components/tabs';
@@ -38,8 +37,8 @@
 		resolveSpacing,
 		type ThemeSpacing
 	} from '@silk/ui/themes/presets';
-	import { animations, getAnimation } from '@silk/ui/themes/animations';
-	import { feels, getFeel } from '@silk/ui/themes/feels';
+	import { animations } from '@silk/ui/themes/animations';
+	import { feels } from '@silk/ui/themes/feels';
 	import { stylePresets, getStyle, styleToCss } from '@silk/ui/themes/styles';
 	import { builtInThemePresets } from '@silk/ui/themes/builtin-presets';
 
@@ -62,6 +61,8 @@
 	import type { PageData } from './$types';
 	import StudioPreview from '$lib/components/themes/studio/studio-preview.svelte';
 	import ContrastChecker from '$lib/components/themes/studio/contrast-checker.svelte';
+	import Stepper from '$lib/components/themes/studio/stepper.svelte';
+	import ChipGroup, { type ChipOption } from '$lib/components/themes/studio/chip-group.svelte';
 	import { spacingGroups } from '$lib/components/themes/studio/spacing-fields';
 
 	const { data = { themes: builtInThemePresets } as PageData }: { data?: PageData } = $props();
@@ -643,8 +644,31 @@
 	let themesCatalog = $state<ThemeDraft[]>([...initialThemesCatalog]);
 	let selectedPresetSlug = $state(defaultTheme.slug);
 	let editorTheme = $state(cloneTheme(defaultTheme));
-	const currentAnimation = $derived(getAnimation(editorTheme.animation));
-	const currentFeel = $derived(getFeel(editorTheme.feel));
+
+	// Chip-group option sets for the Shape tab pickers.
+	const animationChips: ChipOption[] = animations.map((a) => ({
+		value: a.slug,
+		label: a.name,
+		description: a.description
+	}));
+	const feelChips: ChipOption[] = feels.map((f) => ({
+		value: f.slug,
+		label: f.name,
+		description: f.description
+	}));
+	const styleChips = $derived<ChipOption[]>([
+		{
+			value: 'none',
+			label: 'Default',
+			description:
+				'Theme defaults. Pick a style to apply a coherent radius/elevation language across the reference components.'
+		},
+		...stylePresets.map((s) => ({ value: s.slug, label: s.name, description: s.description }))
+	]);
+	const radiusChips: ChipOption[] = radiusOptions.map((opt) => ({
+		value: opt.value,
+		label: opt.label
+	}));
 	let editorName = $state(defaultTheme.name);
 	let copiedCss = $state(false);
 	let copiedTs = $state(false);
@@ -1782,141 +1806,82 @@
 					</Tabs.Content>
 
 					<!-- SHAPE TAB -->
-					<Tabs.Content value="shape" class="flex flex-col gap-4 p-3.5">
+					<Tabs.Content value="shape" class="flex flex-col gap-5 p-3.5">
 						<!-- Style: coherent token-bundle presets (Flat / Soft / Sharp) -->
-						<section class="flex flex-col gap-2" data-ui="style-picker">
+						<section class="flex flex-col gap-2.5" data-ui="style-picker">
 							<div class="flex items-baseline justify-between">
-								<p
-									class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
-								>
-									Style
-								</p>
-								<span
-									class="text-[0.65rem] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted/70"
-									>coherent token bundle</span
-								>
+								<p class="studio-label">Style</p>
+								<span class="studio-hint">coherent token bundle</span>
 							</div>
-							<div class="grid grid-cols-2 gap-1.5">
-								<button
-									type="button"
-									onclick={() => selectStyle('none')}
-									aria-pressed={selectedStyleSlug === 'none'}
-									class={`rounded-[var(--radius-md)] border px-2.5 py-1.5 text-[0.8rem] transition-colors ${selectedStyleSlug === 'none' ? 'border-primary bg-primary/10 text-foreground' : 'border-border bg-background text-foreground-muted hover:bg-secondary'}`}
-								>
-									Default
-								</button>
-								{#each stylePresets as s (s.slug)}
-									<button
-										type="button"
-										onclick={() => selectStyle(s.slug)}
-										aria-pressed={selectedStyleSlug === s.slug}
-										title={s.description}
-										class={`rounded-[var(--radius-md)] border px-2.5 py-1.5 text-[0.8rem] transition-colors ${selectedStyleSlug === s.slug ? 'border-primary bg-primary/10 text-foreground' : 'border-border bg-background text-foreground-muted hover:bg-secondary'}`}
-									>
-										{s.name}
-									</button>
-								{/each}
-							</div>
-							<p class="m-0 text-[0.72rem] text-foreground-muted">
-								{getStyle(selectedStyleSlug)?.description ??
-									'Theme defaults. Pick a style to apply a coherent radius/elevation language across the reference components.'}
-							</p>
-						</section>
-
-						<section class="flex flex-col gap-2">
-							<div class="flex items-baseline justify-between">
-								<p
-									class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
-								>
-									Radius
-								</p>
-								<span
-									class="rounded-md bg-secondary/60 px-1.5 py-0.5 font-mono text-[0.66rem] text-foreground"
-								>
-									{Number.parseFloat(editorTheme.radiusBase).toFixed(2)}rem
-								</span>
-							</div>
-							<div class="grid grid-cols-4 gap-1.5">
-								{#each radiusOptions as opt}
-									<button
-										type="button"
-										onclick={() => updateRadius(opt.value)}
-										class={`flex flex-col items-center gap-1.5 rounded-lg border p-2 text-[0.68rem] transition-colors ${editorTheme.radiusBase === opt.value ? 'border-primary bg-primary/10 text-primary' : 'border-border bg-background/40 text-foreground-muted hover:border-border-strong'}`}
-									>
-										<span
-											class="block size-6 border border-current"
-											style={`border-radius:${opt.value};`}
-											aria-hidden="true"
-										></span>
-										<span>{opt.label}</span>
-									</button>
-								{/each}
-							</div>
-							<input
-								type="range"
-								min="0.14"
-								max="1.2"
-								step="0.01"
-								value={Number.parseFloat(editorTheme.radiusBase) || 0.45}
-								oninput={(e) =>
-									updateRadius(
-										`${Number.parseFloat((e.currentTarget as HTMLInputElement).value).toFixed(2)}rem`
-									)}
-								class="silk-range mt-1"
+							<ChipGroup
+								options={styleChips}
+								value={selectedStyleSlug ?? 'none'}
+								onselect={selectStyle}
+								columns={3}
+								ariaLabel="Style"
 							/>
-							<span class="text-[0.66rem] text-foreground-muted">
-								Drag to fine-tune between presets.
-							</span>
 						</section>
 
-						<div class="border-t border-border"></div>
+						<div class="studio-divider"></div>
+
+						<section class="flex flex-col gap-2.5">
+							<div class="flex items-baseline justify-between">
+								<p class="studio-label">Radius</p>
+								<span class="studio-value"
+									>{Number.parseFloat(editorTheme.radiusBase).toFixed(2)}rem</span
+								>
+							</div>
+							<ChipGroup
+								options={radiusChips}
+								value={editorTheme.radiusBase}
+								onselect={(v) => updateRadius(v)}
+								columns={4}
+								ariaLabel="Radius preset"
+								showDescription={false}
+							/>
+							<div class="flex items-center justify-between gap-3 pt-0.5">
+								<span class="studio-hint">Fine-tune</span>
+								<div class="w-32">
+									<Stepper
+										value={Number.parseFloat(editorTheme.radiusBase) || 0.45}
+										min={0.14}
+										max={1.2}
+										step={0.05}
+										precision={2}
+										unit="rem"
+										label="Radius"
+										onchange={(v) => updateRadius(`${v}rem`)}
+									/>
+								</div>
+							</div>
+						</section>
+
+						<div class="studio-divider"></div>
 
 						<!-- Animation: the motion shape (CSS keyframes), decoupled from timing. -->
-						<section class="flex flex-col gap-2">
-							<p
-								class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
-							>
-								Animation
-							</p>
-							<div class="grid grid-cols-3 gap-1.5">
-								{#each animations as a (a.slug)}
-									{@const active = editorTheme.animation === a.slug}
-									<button
-										type="button"
-										onclick={() => updateAnimation(a.slug)}
-										title={a.description}
-										class={`rounded-lg border p-2 text-[0.72rem] [font-weight:var(--font-weight-label,500)] transition-colors ${active ? 'border-primary bg-primary/10 text-foreground' : 'border-border bg-background/40 text-foreground-muted hover:border-border-strong'}`}
-									>
-										{a.name}
-									</button>
-								{/each}
-							</div>
-							<p class="m-0 text-[0.72rem] text-foreground-muted">{currentAnimation.description}</p>
+						<section class="flex flex-col gap-2.5">
+							<p class="studio-label">Animation</p>
+							<ChipGroup
+								options={animationChips}
+								value={editorTheme.animation}
+								onselect={updateAnimation}
+								columns={3}
+								ariaLabel="Animation"
+							/>
 						</section>
 
-						<div class="border-t border-border"></div>
+						<div class="studio-divider"></div>
 
 						<!-- Feel: the motion timing (durations + easing), decoupled from shape. -->
-						<section class="flex flex-col gap-2">
-							<p
-								class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
-							>
-								Feel
-							</p>
-							<div class="grid grid-cols-3 gap-1.5">
-								{#each feels as f (f.slug)}
-									{@const active = editorTheme.feel === f.slug}
-									<button
-										type="button"
-										onclick={() => updateFeel(f.slug)}
-										title={f.description}
-										class={`rounded-lg border p-2 text-[0.72rem] [font-weight:var(--font-weight-label,500)] transition-colors ${active ? 'border-primary bg-primary/10 text-foreground' : 'border-border bg-background/40 text-foreground-muted hover:border-border-strong'}`}
-									>
-										{f.name}
-									</button>
-								{/each}
-							</div>
-							<p class="m-0 text-[0.72rem] text-foreground-muted">{currentFeel.description}</p>
+						<section class="flex flex-col gap-2.5">
+							<p class="studio-label">Feel</p>
+							<ChipGroup
+								options={feelChips}
+								value={editorTheme.feel}
+								onselect={updateFeel}
+								columns={3}
+								ariaLabel="Feel"
+							/>
 						</section>
 					</Tabs.Content>
 
@@ -1932,36 +1897,33 @@
 
 						{#each spacingGroups as group, gi (group.title)}
 							{#if gi > 0}
-								<div class="border-t border-border/60"></div>
+								<div class="studio-divider"></div>
 							{/if}
-							<section class="flex flex-col gap-3">
-								<div class="flex items-center justify-between">
-									<span
-										class="text-[0.7rem] uppercase [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted/80"
-										>{group.title}</span
-									>
-									<span class="text-[0.62rem] font-mono text-foreground-muted/60">px</span>
-								</div>
-								<div class="flex flex-col gap-3">
+							<section class="flex flex-col gap-2.5">
+								<span
+									class="text-[0.68rem] uppercase tracking-wider [font-weight:var(--font-weight-label,500)] text-foreground-muted/80"
+									>{group.title}</span
+								>
+								<div class="flex flex-col gap-2">
 									{#each group.fields as field (field.key)}
 										{@const spacing = resolveSpacing(editorTheme.spacing)}
 										{@const value = spacing[field.key]}
-										<div class="flex flex-col gap-2">
-											<div class="flex items-baseline justify-between gap-2">
-												<span class="text-[0.76rem] text-foreground">{field.label}</span>
-												<span
-													class="rounded bg-secondary/60 px-1.5 py-0.5 font-mono text-[0.66rem] text-foreground-muted"
-													>{value}</span
-												>
+										<div class="flex items-center justify-between gap-3">
+											<span class="min-w-0 flex-1 truncate text-[0.78rem] text-foreground"
+												>{field.label}</span
+											>
+											<div class="w-[7.25rem] shrink-0">
+												<Stepper
+													{value}
+													min={field.min}
+													max={field.max}
+													step={1}
+													precision={0}
+													unit={field.unit ?? 'px'}
+													label={field.label}
+													onchange={(v) => updateSpacing(field.key, v)}
+												/>
 											</div>
-											<Slider
-												min={field.min}
-												max={field.max}
-												step={1}
-												{value}
-												onValueChange={(v: number) => updateSpacing(field.key, v)}
-												label={field.label}
-											/>
 										</div>
 									{/each}
 								</div>
@@ -2306,43 +2268,27 @@
 		line-height: 1;
 	}
 
-	.silk-range {
-		appearance: none;
-		width: 100%;
-		height: 4px;
-		background: var(--color-secondary);
-		border-radius: 9999px;
-		outline: none;
-		cursor: pointer;
-		transition: background-color 150ms ease;
+	/* Shared inspector control chrome. */
+	.studio-label {
+		margin: 0;
+		font-size: 0.78rem;
+		font-weight: var(--font-weight-label, 500);
+		letter-spacing: var(--tracking-label, 0em);
+		color: var(--color-foreground-muted);
 	}
-	.silk-range:hover {
-		background: color-mix(in srgb, var(--color-secondary) 60%, var(--color-border-strong));
+	.studio-hint {
+		font-size: 0.65rem;
+		color: color-mix(in srgb, var(--color-foreground-muted) 70%, transparent);
 	}
-	.silk-range::-webkit-slider-thumb {
-		appearance: none;
-		width: 14px;
-		height: 14px;
-		background: var(--color-primary);
-		border: 2px solid var(--color-background);
-		border-radius: 9999px;
-		cursor: pointer;
-		box-shadow: 0 1px 3px rgb(0 0 0 / 0.18);
-		transition: transform 150ms ease;
+	.studio-value {
+		border-radius: var(--radius-sm);
+		background: color-mix(in srgb, var(--color-secondary) 60%, transparent);
+		padding: 0.1rem 0.4rem;
+		font-family: var(--font-mono), monospace;
+		font-size: 0.66rem;
+		color: var(--color-foreground);
 	}
-	.silk-range::-webkit-slider-thumb:hover {
-		transform: scale(1.1);
-	}
-	.silk-range::-moz-range-thumb {
-		width: 14px;
-		height: 14px;
-		background: var(--color-primary);
-		border: 2px solid var(--color-background);
-		border-radius: 9999px;
-		cursor: pointer;
-		box-shadow: 0 1px 3px rgb(0 0 0 / 0.18);
-	}
-	.silk-range:focus-visible {
-		box-shadow: 0 0 0 3px var(--color-ring);
+	.studio-divider {
+		border-top: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
 	}
 </style>
