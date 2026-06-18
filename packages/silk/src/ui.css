@@ -5,38 +5,38 @@
 /* Chosen Theme */
 @theme {
 	/* Fonts */
-	--font-sans: 'Geist', sans-serif;
+	--font-sans: 'Inter', sans-serif;
 	--font-mono: 'Geist Mono', monospace;
 	--font-header: var(--font-sans);
 
 	/* Core colors */
-	--color-background: #fafafa;
+	--color-background: #ffffff;
 	/* Background for floating overlays (Modal/Dialog/Sheet/Command). Themes
 	   override this to either --color-background or --color-card based on the
 	   `overlaysOnSurface` flag. */
-	--color-overlay-bg: var(--color-background);
-	--color-border: #e5e5e5;
-	--color-border-strong: #d0d0d0;
-	--color-input: #d0d0d0;
-	--color-primary: #5e6ad2;
-	--color-info: #5e6ad2;
+	--color-overlay-bg: var(--color-card);
+	--color-border: #e8eaee;
+	--color-border-strong: #d3d7df;
+	--color-input: #d3d7df;
+	--color-primary: #2f6bed;
+	--color-info: #2f6bed;
 	--color-foreground-opposite: #ffffff;
-	--color-foreground: #0f0f10;
-	--color-muted: #f5f5f5;
+	--color-foreground: #171a1f;
+	--color-muted: #f1f2f5;
 	--color-panel: #ffffff;
 	--color-modal: #ffffff;
-	--color-foreground-muted: #8a8a8a;
+	--color-foreground-muted: #6b7280;
 	--color-foreground-btn: #ffffff;
-	--color-secondary: #f2f2f2;
+	--color-secondary: #f5f6f8;
 	--color-card: #ffffff;
-	--color-accent: #ffffff;
-	--color-alternate: #1a1a1b;
-	--color-success: #4caf7d;
-	--color-warning: #f5a623;
-	--color-error: #eb5757;
-	--color-destructive: #e03f3f;
-	--color-overlay: rgb(15 15 16 / 0.18);
-	--color-ring: rgb(94 106 210 / 0.22);
+	--color-accent: #f7f8fa;
+	--color-alternate: #1c2026;
+	--color-success: #2f9e63;
+	--color-warning: #e09a2d;
+	--color-error: #e2544b;
+	--color-destructive: #d83b3b;
+	--color-overlay: rgb(16 18 24 / 0.42);
+	--color-ring: rgb(47 107 237 / 0.2);
 
 	/* Semantic aliases */
 	--color-panel-foreground: var(--color-foreground);
@@ -50,11 +50,11 @@
 	--color-field-foreground: var(--color-foreground);
 	--color-field-placeholder: color-mix(in srgb, var(--color-foreground) 42%, transparent);
 
-	/* Border radius */
-	--radius-sm: 0.2rem;
-	--radius-md: 0.3rem;
-	--radius-lg: 0.4rem;
-	--radius-xl: 0.6rem;
+	/* Border radius (8px base scale) */
+	--radius-sm: 0.26rem;
+	--radius-md: 0.5rem;
+	--radius-lg: 0.6rem;
+	--radius-xl: 0.72rem;
 	--motion-duration-hover: 240ms;
 	--motion-duration-menu: 150ms;
 	--motion-duration-panel: 240ms;
@@ -289,33 +289,33 @@
 
 .dark {
 	/* Fonts */
-	--font-sans: 'Geist', sans-serif;
+	--font-sans: 'Inter', sans-serif;
 	--font-mono: 'Geist Mono', monospace;
 
 	/* Core colors */
-	--color-background: #141516;
-	--color-border: #252526;
-	--color-border-strong: #303031;
-	--color-input: #303031;
-	--color-primary: #5e6ad2;
-	--color-info: #7b8cf7;
+	--color-background: #0c0e12;
+	--color-border: #23262e;
+	--color-border-strong: #30343d;
+	--color-input: #30343d;
+	--color-primary: #5288f5;
+	--color-info: #6f9dff;
 	--color-foreground-opposite: #ffffff;
-	--color-foreground: #e8e8e8;
-	--color-muted: #1c1c1d;
-	--color-panel: #1f2023;
-	--color-modal: #24262a;
-	--color-foreground-muted: #717171;
+	--color-foreground: #eceef2;
+	--color-muted: #15171c;
+	--color-panel: #16191f;
+	--color-modal: #1b1e25;
+	--color-foreground-muted: #969ba6;
 	--color-foreground-btn: #ffffff;
-	--color-secondary: #1e1e1f;
-	--color-card: #1c1c1d;
-	--color-accent: #222224;
-	--color-alternate: #e8e8e8;
-	--color-success: #4caf7d;
-	--color-warning: #f5a623;
-	--color-error: #eb5757;
-	--color-destructive: #c53030;
-	--color-overlay: rgb(0 0 0 / 0.68);
-	--color-ring: rgb(94 106 210 / 0.28);
+	--color-secondary: #181b20;
+	--color-card: #15171c;
+	--color-accent: #1c2026;
+	--color-alternate: #eceef2;
+	--color-success: #3fb074;
+	--color-warning: #e3a648;
+	--color-error: #e8635b;
+	--color-destructive: #df4747;
+	--color-overlay: rgb(0 0 0 / 0.6);
+	--color-ring: rgb(82 136 245 / 0.3);
 
 	/* Semantic aliases */
 	--color-panel-foreground: var(--color-foreground);
