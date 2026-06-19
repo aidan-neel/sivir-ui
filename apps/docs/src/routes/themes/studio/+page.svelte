@@ -38,7 +38,13 @@
 		type ThemeSpacing
 	} from '@silk/ui/themes/presets';
 	import { animations } from '@silk/ui/themes/animations';
-	import { feels } from '@silk/ui/themes/feels';
+	import {
+		feels,
+		getFeel,
+		applyFeelOverrides,
+		type FeelDurations,
+		type FeelOverrides
+	} from '@silk/ui/themes/feels';
 	import { stylePresets, getStyle, styleToCss } from '@silk/ui/themes/styles';
 	import { builtInThemePresets } from '@silk/ui/themes/builtin-presets';
 
@@ -445,6 +451,17 @@
 		selectedPresetSlug = 'custom';
 	}
 
+	const feelDurationFields: { key: keyof FeelDurations; label: string }[] = [
+		{ key: 'hover', label: 'Hover & press' },
+		{ key: 'menu', label: 'Menu items' },
+		{ key: 'panel', label: 'Panels' },
+		{ key: 'sheet', label: 'Sheet' },
+		{ key: 'overlay', label: 'Overlay' },
+		{ key: 'tooltip', label: 'Tooltip' },
+		{ key: 'toastIn', label: 'Toast in' },
+		{ key: 'toastOut', label: 'Toast out' }
+	];
+
 	const weightFields: {
 		key: keyof ThemeTypography;
 		trackingKey: keyof ThemeTypography;
@@ -741,6 +758,28 @@
 	const pointerCursorOn = $derived(editorTheme.pointerCursor !== false);
 	function togglePointerCursor() {
 		editorTheme.pointerCursor = !pointerCursorOn;
+		selectedPresetSlug = 'custom';
+	}
+
+	// ─── Feel & transitions customizer (modal) ───
+	// Lets the user override individual motion tokens on top of the chosen feel
+	// preset, instead of being limited to the five presets.
+	let feelModalOpen = $state(false);
+	const effectiveFeel = $derived(
+		applyFeelOverrides(getFeel(editorTheme.feel), editorTheme.feelOverrides)
+	);
+	const hasFeelOverrides = $derived(
+		!!editorTheme.feelOverrides && Object.keys(editorTheme.feelOverrides).length > 0
+	);
+	function setFeelOverride(key: keyof FeelOverrides, value: string) {
+		const next: FeelOverrides = { ...(editorTheme.feelOverrides ?? {}) };
+		if (value.trim() === '') delete next[key];
+		else next[key] = value;
+		editorTheme.feelOverrides = Object.keys(next).length ? next : undefined;
+		selectedPresetSlug = 'custom';
+	}
+	function resetFeelOverrides() {
+		editorTheme.feelOverrides = undefined;
 		selectedPresetSlug = 'custom';
 	}
 
@@ -1321,6 +1360,95 @@
 					</div>
 				</Modal.Content>
 			</Modal.Root>
+
+			<!-- Feel & transitions customizer -->
+			<Modal.Root bind:open={feelModalOpen}>
+				<Modal.Content class="w-full max-w-[min(34rem,calc(100vw-2rem))] gap-0 overflow-hidden p-0">
+					<div class="flex items-start justify-between gap-3 border-b border-border p-4">
+						<div class="flex flex-col gap-1">
+							<Modal.Title>Feel &amp; transitions</Modal.Title>
+							<Modal.Description>
+								Override any motion token on top of the “{effectiveFeel.name}” preset. Leave a field
+								blank to keep the preset value.
+							</Modal.Description>
+						</div>
+						<Modal.Close variant="ghost" size="icon" class="size-8 shrink-0" aria-label="Close">
+							<X size={16} />
+						</Modal.Close>
+					</div>
+
+					<div class="flex max-h-[60vh] flex-col gap-5 overflow-y-auto p-4">
+						<section class="flex flex-col gap-2">
+							<p class="studio-label">Durations</p>
+							<div class="grid grid-cols-2 gap-2.5">
+								{#each feelDurationFields as field (field.key)}
+									<label class="flex flex-col gap-1">
+										<span class="text-[0.72rem] text-foreground">{field.label}</span>
+										<Input
+											value={editorTheme.feelOverrides?.[field.key] ?? ''}
+											placeholder={effectiveFeel.durations[field.key]}
+											oninput={(e) => setFeelOverride(field.key, e.currentTarget.value)}
+											class="h-8 font-mono text-[0.74rem]"
+										/>
+									</label>
+								{/each}
+							</div>
+						</section>
+
+						<section class="flex flex-col gap-2">
+							<p class="studio-label">Easing</p>
+							<label class="flex flex-col gap-1">
+								<span class="text-[0.72rem] text-foreground">Panels &amp; overlays</span>
+								<Input
+									value={editorTheme.feelOverrides?.easing ?? ''}
+									placeholder={effectiveFeel.easing}
+									oninput={(e) => setFeelOverride('easing', e.currentTarget.value)}
+									class="h-8 font-mono text-[0.72rem]"
+								/>
+							</label>
+							<label class="flex flex-col gap-1">
+								<span class="text-[0.72rem] text-foreground">Hover &amp; press</span>
+								<Input
+									value={editorTheme.feelOverrides?.easingHover ?? ''}
+									placeholder={effectiveFeel.easingHover}
+									oninput={(e) => setFeelOverride('easingHover', e.currentTarget.value)}
+									class="h-8 font-mono text-[0.72rem]"
+								/>
+							</label>
+						</section>
+
+						<section class="flex flex-col gap-3">
+							<p class="studio-label">Interaction feel</p>
+							<Switch
+								switched={hapticPressOn}
+								onclick={toggleHapticPress}
+								label="Haptic press"
+								description="Buttons nudge down 1px when pressed."
+								aria-label="Toggle haptic press"
+							/>
+							<Switch
+								switched={pointerCursorOn}
+								onclick={togglePointerCursor}
+								label="Pointer cursor"
+								description="Interactive surfaces show a pointer on hover."
+								aria-label="Toggle pointer cursor"
+							/>
+						</section>
+					</div>
+
+					<Modal.Footer class="flex items-center justify-between gap-2 border-t border-border p-3">
+						<Button
+							variant="ghost"
+							size="sm"
+							onclick={resetFeelOverrides}
+							disabled={!hasFeelOverrides}
+						>
+							Reset to preset
+						</Button>
+						<Modal.Close variant="primary" size="sm">Done</Modal.Close>
+					</Modal.Footer>
+				</Modal.Content>
+			</Modal.Root>
 		</div>
 	</header>
 
@@ -1330,16 +1458,15 @@
 		<StudioPreview />
 
 		<!-- Mobile drawer toggle (lg-: floating button, lg+: hidden) -->
-		<button
-			type="button"
+		<Button
 			onclick={() => (mobileInspectorOpen = !mobileInspectorOpen)}
-			class="lg:hidden fixed bottom-4 right-4 z-40 inline-flex h-11 items-center gap-2 rounded-full border border-border bg-primary px-4 text-[0.82rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-opposite shadow-[0_8px_24px_-6px_color-mix(in_srgb,var(--color-primary)_45%,transparent)]"
+			class="lg:hidden fixed bottom-4 right-4 z-40 h-11 rounded-full px-4 shadow-[0_8px_24px_-6px_color-mix(in_srgb,var(--color-primary)_45%,transparent)]"
 			aria-expanded={mobileInspectorOpen}
 			aria-controls="studio-inspector"
 		>
 			<Sliders size={14} />
 			{mobileInspectorOpen ? 'Close' : 'Tweak theme'}
-		</button>
+		</Button>
 
 		<!-- Mobile backdrop when drawer is open -->
 		{#if mobileInspectorOpen}
@@ -1905,6 +2032,31 @@
 								columns={3}
 								ariaLabel="Feel"
 							/>
+						</section>
+
+						<div class="studio-divider"></div>
+
+						<!-- Full per-token customization of feel + transitions via a modal. -->
+						<section class="flex flex-col gap-2.5">
+							<div class="flex items-center justify-between gap-2">
+								<p class="studio-label m-0">Transitions</p>
+								{#if hasFeelOverrides}
+									<Badge variant="ghost" class="text-[0.56rem] uppercase tracking-wide"
+										>Customized</Badge
+									>
+								{/if}
+							</div>
+							<Button
+								variant="outlined"
+								size="sm"
+								class="w-full justify-between"
+								onclick={() => (feelModalOpen = true)}
+							>
+								<span class="flex items-center gap-2">
+									<Sliders size={13} /> Customize feel & transitions
+								</span>
+								<ChevronDown size={14} class="-rotate-90 text-foreground-muted" />
+							</Button>
 						</section>
 					</Tabs.Content>
 

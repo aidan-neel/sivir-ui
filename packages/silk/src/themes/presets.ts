@@ -1,5 +1,5 @@
 import { animationToCssVars, cascadeCss, getAnimation } from './animations';
-import { feelToCssVars, getFeel } from './feels';
+import { applyFeelOverrides, feelToCssVars, getFeel, type FeelOverrides } from './feels';
 
 export type ThemePalette = {
 	background: string;
@@ -255,6 +255,12 @@ export type ThemeDraft = {
 	animation: string;
 	/** Feel slug -- the motion *timing* (durations + easings). See themes/feels. */
 	feel: string;
+	/**
+	 * Per-token overrides layered on top of the resolved `feel` preset, letting
+	 * the Studio fully customize individual durations/easings without defining a
+	 * whole new preset. Empty/omitted keys fall back to the preset.
+	 */
+	feelOverrides?: FeelOverrides;
 	light: ThemePalette;
 	dark: ThemePalette;
 	/** Per-element font weights. Optional -- partial overrides merge into `defaultTypography`. */
@@ -583,7 +589,7 @@ export const preset: ThemeDraft = ${serializeTypeScriptValue(theme)};`;
 export function themeToCss(theme: ThemeDraft) {
 	const radii = radiiFromBase(theme.radiusBase || theme.radiusMd);
 	const animation = getAnimation(theme.animation);
-	const feelVars = feelToCssVars(getFeel(theme.feel));
+	const feelVars = feelToCssVars(applyFeelOverrides(getFeel(theme.feel), theme.feelOverrides));
 	const animVars = animationToCssVars(animation);
 	const cascade = cascadeCss(animation);
 	const type = resolveTypography(theme.typography);

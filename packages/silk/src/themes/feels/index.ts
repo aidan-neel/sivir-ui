@@ -1,4 +1,4 @@
-import type { Feel } from './types';
+import type { Feel, FeelDurations } from './types';
 
 import { feel as balanced } from './balanced';
 import { feel as instant } from './instant';
@@ -36,4 +36,30 @@ export function feelToCssVars(feel: Feel): string {
 	].join('\n');
 }
 
-export type { Feel };
+/** Per-token overrides layered on top of a resolved feel preset. */
+export type FeelOverrides = Partial<FeelDurations> & {
+	easing?: string;
+	easingHover?: string;
+};
+
+/**
+ * Merges custom per-token overrides onto a resolved feel. Empty/undefined
+ * values fall back to the preset, so a partial customization (e.g. only the
+ * panel duration) keeps the rest of the preset intact.
+ */
+export function applyFeelOverrides(feel: Feel, overrides?: FeelOverrides | null): Feel {
+	if (!overrides) return feel;
+	const { easing, easingHover, ...durationOverrides } = overrides;
+	const durations = { ...feel.durations };
+	for (const [key, value] of Object.entries(durationOverrides)) {
+		if (value != null && value !== '') durations[key as keyof FeelDurations] = value;
+	}
+	return {
+		...feel,
+		durations,
+		easing: easing && easing !== '' ? easing : feel.easing,
+		easingHover: easingHover && easingHover !== '' ? easingHover : feel.easingHover
+	};
+}
+
+export type { Feel, FeelDurations };
