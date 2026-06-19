@@ -6,8 +6,10 @@
 	let { class: className, children, ...rest }: BreadcrumbSeparatorProps = $props();
 </script>
 
-{#if children}
-	{@render children?.()}
-{:else}
-	<ChevronRight {...rest} size={14} class={cn(className, `text-foreground-muted`)} />
-{/if}
+<span aria-hidden="true" role="presentation" class="inline-flex items-center">
+	{#if children}
+		{@render children?.()}
+	{:else}
+		<ChevronRight {...rest} size={14} class={cn(className, `text-foreground-muted`)} />
+	{/if}
+</span>

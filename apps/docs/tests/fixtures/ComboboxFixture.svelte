@@ -13,11 +13,8 @@
 </script>
 
 <Combobox.Root>
-	<Combobox.Trigger>
-		<span data-testid="combobox-trigger">Pick fruit</span>
-	</Combobox.Trigger>
+	<Combobox.Trigger placeholder="Search fruits" data-testid="combobox-trigger" class="w-60" />
 	<Combobox.Content>
-		<Combobox.Search placeholder="Search fruits" />
 		<Combobox.Results>
 			<Combobox.Item value="apple" label="Apple" callback={onApple}>
 				<span data-testid="combo-apple">Apple</span>

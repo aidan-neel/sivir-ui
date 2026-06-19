@@ -9,11 +9,15 @@
 	let listEl = $state<HTMLDivElement | undefined>(undefined);
 	let indicator = $state<{ left: number; top: number; width: number; height: number } | null>(null);
 	let ready = $state(false);
+	// The triggers are ghost buttons; one background pill slides to whichever tab
+	// is hovered, falling back to the active tab when the pointer leaves.
+	let hoveredEl = $state<HTMLElement | null>(null);
 
 	function measureIndicator() {
 		if (!listEl) return;
-		const active = listEl.querySelector<HTMLElement>('[role="tab"][data-state="active"]');
-		if (!active) {
+		const target =
+			hoveredEl ?? listEl.querySelector<HTMLElement>('[role="tab"][data-state="active"]');
+		if (!target) {
 			indicator = null;
 			return;
 		}
@@ -21,16 +25,17 @@
 		// exactly where `position:absolute` with `left/top:0` is anchored -- using
 		// getBoundingClientRect diffs is off by the list's border width.
 		indicator = {
-			left: active.offsetLeft,
-			top: active.offsetTop,
-			width: active.offsetWidth,
-			height: active.offsetHeight
+			left: target.offsetLeft,
+			top: target.offsetTop,
+			width: target.offsetWidth,
+			height: target.offsetHeight
 		};
 	}
 
 	$effect(() => {
-		// re-measure whenever the active value changes
+		// re-measure whenever the active value or the hovered trigger changes
 		const _ = tabsState.value;
+		const __ = hoveredEl;
 		untrack(() => {
 			// allow DOM to update first
 			queueMicrotask(() => {
@@ -39,6 +44,13 @@
 			});
 		});
 	});
+
+	function handlePointerOver(event: PointerEvent) {
+		const tab = (event.target as HTMLElement | null)?.closest<HTMLElement>(
+			'[role="tab"]:not([disabled])'
+		);
+		if (tab && listEl?.contains(tab)) hoveredEl = tab;
+	}
 
 	$effect(() => {
 		if (!listEl) return;
@@ -110,13 +122,15 @@
 		'relative inline-flex items-center rounded-[var(--radius-lg)] border border-border bg-secondary/40 p-[var(--tabs-list-padding)] shadow-[var(--outline-shadow)]'
 	)}
 	onkeydown={handleKeydown}
+	onpointerover={handlePointerOver}
+	onpointerleave={() => (hoveredEl = null)}
 	{...rest}
 >
 	{#if indicator}
 		<div
 			aria-hidden="true"
 			class="pointer-events-none absolute rounded-[calc(var(--radius-lg)-4px)] bg-secondary shadow-[var(--outline-shadow)]"
-			style={`left:${indicator.left}px;top:${indicator.top}px;width:${indicator.width}px;height:${indicator.height}px;transition:${ready ? 'left var(--motion-duration-panel) cubic-bezier(0.4,0,0.2,1),top var(--motion-duration-panel) cubic-bezier(0.4,0,0.2,1),width var(--motion-duration-panel) cubic-bezier(0.4,0,0.2,1),height var(--motion-duration-panel) cubic-bezier(0.4,0,0.2,1)' : 'none'};`}
+			style={`left:${indicator.left}px;top:${indicator.top}px;width:${indicator.width}px;height:${indicator.height}px;transition:${ready ? 'left var(--motion-duration-panel) cubic-bezier(0.16,1,0.3,1),top var(--motion-duration-panel) cubic-bezier(0.16,1,0.3,1),width var(--motion-duration-panel) cubic-bezier(0.16,1,0.3,1),height var(--motion-duration-panel) cubic-bezier(0.16,1,0.3,1)' : 'none'};`}
 		></div>
 	{/if}
 	{@render children?.()}

@@ -226,13 +226,13 @@
 	--button-alternate-hover-bg: color-mix(in srgb, var(--color-alternate) 90%, #ffffff);
 
 	--button-destructive-bg: var(--color-destructive);
-	--button-destructive-border: color-mix(in srgb, var(--color-destructive) 80%, #8b0000);
-	--button-destructive-foreground: var(--color-foreground-btn);
-	--button-destructive-hover-bg: color-mix(in srgb, var(--color-destructive) 88%, #8b0000);
+	--button-destructive-border: color-mix(in srgb, var(--color-destructive) 82%, #7a1414);
+	--button-destructive-foreground: #fff5f5;
+	--button-destructive-hover-bg: color-mix(in srgb, var(--color-destructive) 90%, #7a1414);
 	--button-destructive-shadow:
-		0 1px 2px 0 color-mix(in srgb, var(--color-destructive) 30%, rgb(10 13 18 / 0.08)),
+		0 1px 2px 0 color-mix(in srgb, var(--color-destructive) 28%, rgb(10 13 18 / 0.08)),
 		inset 0 -2px 0 0 rgb(0 0 0 / 0.06),
-		inset 0 0 0 1px color-mix(in srgb, var(--color-destructive) 55%, #4a0000);
+		inset 0 0 0 1px color-mix(in srgb, var(--color-destructive) 58%, #5a1212);
 
 	--badge-padding-x: 0.55rem;
 	--badge-padding-y: 0.25rem;
@@ -387,13 +387,13 @@
 	--button-alternate-border: var(--color-foreground);
 	--button-alternate-foreground: var(--color-background);
 	--button-alternate-hover-bg: color-mix(in srgb, var(--color-foreground) 88%, transparent);
-	--button-destructive-border: color-mix(in srgb, var(--color-destructive) 80%, #ff6b6b);
-	--button-destructive-foreground: #ffffff;
-	--button-destructive-hover-bg: color-mix(in srgb, var(--color-destructive) 88%, #ff6b6b);
+	--button-destructive-border: color-mix(in srgb, var(--color-destructive) 82%, #ff9b9b);
+	--button-destructive-foreground: #fff5f5;
+	--button-destructive-hover-bg: color-mix(in srgb, var(--color-destructive) 90%, #ff9b9b);
 	--button-destructive-shadow:
 		0 1px 2px 0 color-mix(in srgb, var(--color-destructive) 34%, rgb(0 0 0 / 0.22)),
 		inset 0 -2px 0 0 rgb(0 0 0 / 0.14),
-		inset 0 0 0 1px color-mix(in srgb, var(--color-destructive) 55%, #ffffff);
+		inset 0 0 0 1px color-mix(in srgb, var(--color-destructive) 72%, #ff9b9b);
 	--floating-menu-item-foreground: var(--color-foreground);
 	--menu-item-hover-bg: color-mix(in srgb, var(--color-foreground) 7%, transparent);
 	--floating-menu-item-hover-bg: var(--menu-item-hover-bg);

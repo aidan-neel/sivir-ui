@@ -34,6 +34,7 @@
 </script>
 
 <div
+	aria-hidden="true"
 	{...rest}
 	class={cn(classProp, 'animate-[skeleton-loading_2s_infinite_ease-in-out] rounded-lg')}
 	style={`height: ${height}${unit}; width: ${width}${unit}; background: linear-gradient(90deg, var(--skeleton-base) 0%, var(--skeleton-highlight) 50%, var(--skeleton-base) 100%); background-size: 200% 100%;`}

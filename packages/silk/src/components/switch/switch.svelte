@@ -20,14 +20,15 @@
 	const labelId = `${uiState.key}-label`;
 	const descriptionId = `${uiState.key}-description`;
 
-	const trackTransition =
-		'background-color var(--motion-duration-panel, 220ms) cubic-bezier(0.4, 0, 0.2, 1),' +
-		' border-color var(--motion-duration-panel, 220ms) cubic-bezier(0.4, 0, 0.2, 1),' +
-		' box-shadow var(--motion-duration-panel, 220ms) cubic-bezier(0.4, 0, 0.2, 1)';
+	// Silk's house easing — the decisive ease-out shared across the design
+	// system's transitions (rise-in, dialog-in, landing reveals). Keeps the
+	// switch feeling consistent with every other animated surface.
+	const ease = 'cubic-bezier(0.16, 1, 0.3, 1)';
+	const dur = 'var(--motion-duration-panel, 220ms)';
 
-	const thumbTransition =
-		'transform var(--motion-duration-panel, 220ms) cubic-bezier(0.34, 1.4, 0.5, 1),' +
-		' box-shadow var(--motion-duration-panel, 220ms) cubic-bezier(0.34, 1.4, 0.5, 1)';
+	const trackTransition = `background-color ${dur} ${ease}, border-color ${dur} ${ease}, box-shadow ${dur} ${ease}`;
+
+	const thumbTransition = `transform ${dur} ${ease}, box-shadow ${dur} ${ease}`;
 
 	const thumbOnOffset =
 		'calc(var(--size-switch-track) - var(--size-switch-thumb) - (var(--switch-track-padding) * 2) - (var(--border-size) * 2))';

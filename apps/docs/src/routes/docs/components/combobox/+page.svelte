@@ -35,31 +35,24 @@
 		},
 		{
 			component: 'Trigger',
-			prop: '...ButtonProps',
-			type: '--',
-			default: '--',
-			description: 'Renders as a Button.'
+			prop: 'placeholder',
+			type: 'string',
+			default: '"Search..."',
+			description: 'Inline search field — type directly into the trigger to filter.'
+		},
+		{
+			component: 'Trigger',
+			prop: 'threshold',
+			type: 'number',
+			default: '0.5',
+			description: 'Fuzzy-match tolerance (0-1, lower = stricter).'
 		},
 		{
 			component: 'Content',
 			prop: 'children',
 			type: 'Snippet',
 			default: '--',
-			description: 'Floating popover containing search + results.'
-		},
-		{
-			component: 'Search',
-			prop: 'placeholder',
-			type: 'string',
-			default: '"Search..."',
-			description: 'Filter input.'
-		},
-		{
-			component: 'Search',
-			prop: 'threshold',
-			type: 'number',
-			default: '0.4',
-			description: 'Fuzzy-match tolerance (0-1, higher = stricter).'
+			description: 'Floating popover with the results list, sized to the trigger.'
 		},
 		{
 			component: 'Results',
@@ -126,33 +119,34 @@
 			<div
 				class="grid min-h-[12rem] place-items-center border-b border-border/70 bg-[linear-gradient(135deg,color-mix(in_srgb,var(--color-secondary)_60%,transparent),transparent_70%)] p-8"
 			>
-				<Combobox.Root>
-					<Combobox.Trigger variant="outlined" class="h-9 w-60 gap-2 px-3 text-[0.82rem]">
-						{selectedFramework.label}
-					</Combobox.Trigger>
-					<Combobox.Content>
-						<Combobox.Search placeholder="Search frameworks…" />
-						<Combobox.Results>
-							{#each frameworks as fw}
-								<Combobox.Item
-									value={fw.value}
-									label={fw.label}
-									callback={() => (selected = fw.value)}
-								>
-									{fw.label}
-								</Combobox.Item>
-							{/each}
-						</Combobox.Results>
-					</Combobox.Content>
-				</Combobox.Root>
+				<div class="flex flex-col items-center gap-3">
+					<Combobox.Root>
+						<Combobox.Trigger placeholder="Search frameworks…" class="w-60" />
+						<Combobox.Content>
+							<Combobox.Results>
+								{#each frameworks as fw}
+									<Combobox.Item
+										value={fw.value}
+										label={fw.label}
+										callback={() => (selected = fw.value)}
+									>
+										{fw.label}
+									</Combobox.Item>
+								{/each}
+							</Combobox.Results>
+						</Combobox.Content>
+					</Combobox.Root>
+					<p class="m-0 text-[0.8rem] text-foreground-muted">
+						Selected: <code class="font-mono text-foreground">{selectedFramework.label}</code>
+					</p>
+				</div>
 			</div>
 			<pre
 				class="m-0 overflow-x-auto bg-secondary/40 px-6 py-4 font-mono text-[0.78rem] leading-relaxed text-foreground"><code
 					>{@html highlight(
 						`<Combobox.Root>
-  <Combobox.Trigger>{label}</Combobox.Trigger>
+  <Combobox.Trigger placeholder="Search frameworks…" />
   <Combobox.Content>
-    <Combobox.Search placeholder="Search frameworks…" />
     <Combobox.Results>
       {#each frameworks as fw}
         <Combobox.Item value={fw.value} label={fw.label}

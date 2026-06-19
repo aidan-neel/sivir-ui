@@ -23,7 +23,7 @@
 	data-ui="combobox-content"
 	class={cn(
 		className,
-		'bg-[var(--color-panel)] text-[var(--color-panel-foreground)] border border-border rounded-[var(--radius-lg)] shadow-[var(--panel-shadow)] p-0 overflow-y-auto'
+		'w-[var(--popover-trigger-width)] bg-[var(--color-panel)] text-[var(--color-panel-foreground)] border border-border rounded-[var(--radius-lg)] shadow-[var(--panel-shadow)] p-0 overflow-y-auto'
 	)}
 >
 	{@render children?.()}
