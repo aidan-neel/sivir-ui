@@ -64,10 +64,6 @@
 			description: 'Wraps the trigger container -- set `w-44` for fixed width.'
 		}
 	];
-
-	const playgroundCode = $derived(
-		`<ColorPicker value="${pgValue}" onValueChange={(v) => (color = v)} />`
-	);
 </script>
 
 <svelte:head>
@@ -86,7 +82,7 @@
 	pills={[{ label: 'v0.4.2', variant: 'outlined' }, { label: 'HSV + HSL' }, { label: 'Hex input' }]}
 />
 
-<!-- Playground -->
+<!-- Preview -->
 <section class="pt-10">
 	<div class="relative">
 		<div
@@ -111,7 +107,10 @@
 			</div>
 			<pre
 				class="m-0 overflow-x-auto bg-secondary/40 px-6 py-4 font-mono text-[0.78rem] leading-relaxed text-foreground"><code
-					>{@html highlight(playgroundCode, 'svelte')}</code
+					>{@html highlight(
+						`<ColorPicker value="#5e6ad2" onValueChange={(v) => (color = v)} />`,
+						'svelte'
+					)}</code
 				></pre>
 		</div>
 	</div>

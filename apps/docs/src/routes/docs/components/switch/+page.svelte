@@ -1,25 +1,19 @@
 <script lang="ts">
 	import { highlight } from '$lib/highlight';
 	import { Switch } from '@silk/ui/components/switch';
-	import { createCopy } from '$lib/copy.svelte';
 	import DocHeader from '$lib/components/docs/doc-header.svelte';
 	import DocSection from '$lib/components/docs/doc-section.svelte';
 	import PropTable from '$lib/components/docs/prop-table.svelte';
 	import DocFooter from '$lib/components/docs/doc-footer.svelte';
 	import DocPager from '$lib/components/docs/doc-pager.svelte';
 
-	import Copy from '@lucide/svelte/icons/copy';
-	import Check from '@lucide/svelte/icons/check';
 	import Hash from '@lucide/svelte/icons/hash';
+	import ToggleRight from '@lucide/svelte/icons/toggle-right';
 
 	const TITLE = 'Switch';
 	const SLUG = 'switch';
 	const SOURCE = `https://github.com/aidan-neel/silk/tree/main/registry/silk/default/${SLUG}`;
 	const installCommand = `bunx @aidan-neel/ui add ${SLUG}`;
-
-	let pgOn = $state(true);
-	let pgLabel = $state('Push notifications');
-	let pgDesc = $state('We will only ping you for mentions and replies.');
 
 	const apiRows = [
 		{ prop: 'switched', type: 'boolean', default: 'false', description: 'Bindable on/off state.' },
@@ -49,11 +43,12 @@
 		}
 	];
 
-	const playgroundCode = $derived(
-		`<Switch bind:switched={value} label="${pgLabel}" description="${pgDesc}" />`
-	);
-
-	const clip = createCopy();
+	const examples: { label: string; node: 'full' | 'label' | 'on' | 'disabled' }[] = [
+		{ label: 'Label + description', node: 'full' },
+		{ label: 'Label only', node: 'label' },
+		{ label: 'Default on', node: 'on' },
+		{ label: 'Disabled', node: 'disabled' }
+	];
 </script>
 
 <svelte:head>
@@ -69,75 +64,66 @@
 	pills={[{ label: 'v0.4.2', variant: 'outlined' }, { label: 'Bindable' }]}
 />
 
+<!-- Preview -->
 <section class="pt-10">
-	<div class="relative">
+	<div
+		class="overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card shadow-[var(--shadow-sm)]"
+	>
 		<div
-			class="absolute inset-x-10 -top-4 -z-10 h-32 rounded-full bg-[radial-gradient(60%_60%_at_50%_50%,color-mix(in_srgb,var(--color-primary)_18%,transparent),transparent_70%)] blur-2xl"
-		></div>
-		<div
-			class="overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card shadow-[var(--shadow-sm)]"
+			class="grid min-h-[10rem] place-items-center border-b border-border/70 bg-secondary/30 p-8"
 		>
-			<div
-				class="grid min-h-[10rem] place-items-center border-b border-border/70 bg-secondary/30 p-8"
-			>
-				<Switch bind:switched={pgOn} label={pgLabel} description={pgDesc} />
-			</div>
-
-			<div class="flex flex-col divide-y divide-border/60">
-				<div class="flex flex-col gap-2 px-6 py-4">
-					<label
-						for="pg-label"
-						class="text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted"
-						>Label</label
-					>
-					<input
-						id="pg-label"
-						bind:value={pgLabel}
-						class="h-9 w-full max-w-[28rem] rounded-[var(--radius-md)] border border-border bg-[var(--color-field)] px-3 text-[0.86rem] text-foreground outline-none focus:border-[var(--field-focus-border)] focus:shadow-[0_0_0_3px_var(--color-ring)]"
-					/>
-				</div>
-				<div class="flex flex-col gap-2 px-6 py-4">
-					<label
-						for="pg-desc"
-						class="text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted"
-						>Description</label
-					>
-					<input
-						id="pg-desc"
-						bind:value={pgDesc}
-						class="h-9 w-full rounded-[var(--radius-md)] border border-border bg-[var(--color-field)] px-3 text-[0.86rem] text-foreground outline-none focus:border-[var(--field-focus-border)] focus:shadow-[0_0_0_3px_var(--color-ring)]"
-					/>
-				</div>
-			</div>
-
-			<div
-				class="flex items-center justify-between gap-2 border-t border-border/70 bg-secondary/40 px-6 py-2.5"
-			>
-				<span
-					class="text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted"
-					>Snippet</span
-				>
-				<button
-					type="button"
-					onclick={() => clip.copy(playgroundCode, 'playground')}
-					class="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2 py-1 text-[0.72rem] text-foreground-muted transition-colors hover:bg-secondary/60 hover:text-foreground"
-				>
-					{#if clip.copied('playground')}<Check
-							size={11}
-							class="text-[var(--color-success)]"
-						/>Copied{:else}<Copy size={11} />Copy code{/if}
-				</button>
-			</div>
-			<pre
-				class="m-0 overflow-x-auto bg-secondary/40 px-6 py-4 font-mono text-[0.78rem] leading-relaxed text-foreground"><code
-					>{@html highlight(playgroundCode, 'svelte')}</code
-				></pre>
+			<Switch
+				switched
+				label="Push notifications"
+				description="We'll only ping you for mentions and replies."
+			/>
 		</div>
+		<pre
+			class="m-0 overflow-x-auto bg-secondary/40 px-6 py-4 font-mono text-[0.78rem] leading-relaxed text-foreground"><code
+				>{@html highlight(
+					`<Switch
+  label="Push notifications"
+  description="We'll only ping you for mentions and replies."
+/>`,
+					'svelte'
+				)}</code
+			></pre>
 	</div>
 </section>
 
 <div class="flex flex-col gap-16 pt-16">
-	<DocSection icon={Hash} title="API">
+	<DocSection
+		icon={ToggleRight}
+		title="Examples"
+		description="Every switch is independently toggleable — each transition is driven by your theme's motion preset."
+		id="examples"
+	>
+		<div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+			{#each examples as ex (ex.label)}
+				<div
+					class="flex flex-col gap-4 rounded-[var(--radius-lg)] border border-border bg-card p-5"
+				>
+					<p
+						class="m-0 text-[0.82rem] [font-weight:var(--font-weight-header,640)] text-foreground"
+						style="font-family: var(--font-header);"
+					>
+						{ex.label}
+					</p>
+					{#if ex.node === 'full'}
+						<Switch label="Auto-save" description="Save changes as you type." />
+					{:else if ex.node === 'label'}
+						<Switch label="Wi-Fi" />
+					{:else if ex.node === 'on'}
+						<Switch switched label="Dark mode" />
+					{:else}
+						<Switch disabled label="Read receipts" description="Upgrade your plan to enable." />
+					{/if}
+				</div>
+			{/each}
+		</div>
+	</DocSection>
+
+	<DocSection icon={Hash} title="API" id="api">
 		<PropTable rows={apiRows} />
 	</DocSection>
 

@@ -21,11 +21,6 @@
 	const installCommand = `bunx @aidan-neel/ui add ${SLUG}`;
 
 	type Variant = 'info' | 'success' | 'warning' | 'error';
-	let pgVariant = $state<Variant>('info');
-	let pgTitle = $state('Verify your email');
-	let pgDescription = $state(
-		'We just sent a verification link. Confirm it to keep using your account.'
-	);
 
 	const variantList: { value: Variant; label: string; tone: string; use: string }[] = [
 		{
@@ -85,14 +80,6 @@
 		}
 	];
 
-	const playgroundCode =
-		$derived(`<Alert.Root${pgVariant !== 'info' ? ` variant="${pgVariant}"` : ''}>
-  <Alert.Title>${pgTitle || 'Title'}</Alert.Title>
-  <Alert.Description>
-    ${pgDescription || 'Description'}
-  </Alert.Description>
-</Alert.Root>`);
-
 	const clip = createCopy();
 </script>
 
@@ -116,98 +103,35 @@
 	]}
 />
 
-<!-- ─── Playground ──────────────────────────────────────────────── -->
+<!-- ─── Preview ──────────────────────────────────────────────── -->
 <section class="pt-10">
-	<div class="relative">
+	<div
+		class="overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card shadow-[var(--shadow-sm)]"
+	>
 		<div
-			class="absolute inset-x-10 -top-4 -z-10 h-32 rounded-full bg-[radial-gradient(60%_60%_at_50%_50%,color-mix(in_srgb,var(--color-primary)_18%,transparent),transparent_70%)] blur-2xl"
-		></div>
-		<div
-			class="overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card shadow-[var(--shadow-sm)]"
+			class="grid min-h-[10rem] place-items-center border-b border-border/70 bg-secondary/30 p-8"
 		>
-			<div
-				class="grid min-h-[10rem] place-items-center border-b border-border/70 bg-secondary/30 p-8"
-			>
-				<div class="w-full max-w-[28rem]">
-					<Alert.Root variant={pgVariant}>
-						<Alert.Title>{pgTitle || 'Title'}</Alert.Title>
-						<Alert.Description>{pgDescription || 'Description'}</Alert.Description>
-					</Alert.Root>
-				</div>
+			<div class="w-full max-w-[28rem]">
+				<Alert.Root>
+					<Alert.Title>Verify your email</Alert.Title>
+					<Alert.Description>
+						We just sent a verification link. Confirm it to keep using your account.
+					</Alert.Description>
+				</Alert.Root>
 			</div>
-
-			<div class="flex flex-col divide-y divide-border/60">
-				<div class="flex flex-col gap-2 px-6 py-4">
-					<label
-						for="pg-title"
-						class="text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted"
-						>Title</label
-					>
-					<input
-						id="pg-title"
-						bind:value={pgTitle}
-						class="h-9 w-full max-w-[28rem] rounded-[var(--radius-md)] border border-border bg-[var(--color-field)] px-3 text-[0.86rem] text-foreground outline-none transition-[border-color,box-shadow] placeholder:text-foreground-muted focus:border-[var(--field-focus-border)] focus:shadow-[0_0_0_3px_var(--color-ring)]"
-					/>
-				</div>
-
-				<div class="flex flex-col gap-2 px-6 py-4">
-					<label
-						for="pg-desc"
-						class="text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted"
-						>Description</label
-					>
-					<input
-						id="pg-desc"
-						bind:value={pgDescription}
-						class="h-9 w-full rounded-[var(--radius-md)] border border-border bg-[var(--color-field)] px-3 text-[0.86rem] text-foreground outline-none transition-[border-color,box-shadow] placeholder:text-foreground-muted focus:border-[var(--field-focus-border)] focus:shadow-[0_0_0_3px_var(--color-ring)]"
-					/>
-				</div>
-
-				<div class="flex flex-col gap-2 px-6 py-4">
-					<span
-						class="text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted"
-						>Variant</span
-					>
-					<div class="flex flex-wrap gap-1.5">
-						{#each variantList as v}
-							<button
-								type="button"
-								onclick={() => (pgVariant = v.value)}
-								class={`rounded-full border px-2.5 py-1 text-[0.74rem] transition-colors ${pgVariant === v.value ? 'border-primary bg-primary/10 text-foreground' : 'border-border bg-card text-foreground-muted hover:border-border-strong'}`}
-							>
-								{v.label}
-							</button>
-						{/each}
-					</div>
-				</div>
-			</div>
-
-			<div
-				class="flex items-center justify-between gap-2 border-t border-border/70 bg-secondary/40 px-6 py-2.5"
-			>
-				<span
-					class="text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted"
-					>Snippet</span
-				>
-				<button
-					type="button"
-					onclick={() => clip.copy(playgroundCode, 'playground')}
-					class="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2 py-1 text-[0.72rem] text-foreground-muted transition-colors hover:bg-secondary/60 hover:text-foreground"
-				>
-					{#if clip.copied('playground')}
-						<Check size={11} class="text-[var(--color-success)]" />
-						Copied
-					{:else}
-						<Copy size={11} />
-						Copy code
-					{/if}
-				</button>
-			</div>
-			<pre
-				class="m-0 overflow-x-auto bg-secondary/40 px-6 py-4 font-mono text-[0.78rem] leading-relaxed text-foreground"><code
-					>{@html highlight(playgroundCode, 'svelte')}</code
-				></pre>
 		</div>
+		<pre
+			class="m-0 overflow-x-auto bg-secondary/40 px-6 py-4 font-mono text-[0.78rem] leading-relaxed text-foreground"><code
+				>{@html highlight(
+					`<Alert.Root>
+  <Alert.Title>Verify your email</Alert.Title>
+  <Alert.Description>
+    We just sent a verification link. Confirm it to keep using your account.
+  </Alert.Description>
+</Alert.Root>`,
+					'svelte'
+				)}</code
+			></pre>
 	</div>
 </section>
 
