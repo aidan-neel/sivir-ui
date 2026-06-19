@@ -63,7 +63,7 @@
 			class="overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card shadow-[var(--shadow-sm)]"
 		>
 			<div
-				class="flex min-h-[10rem] flex-col items-center justify-center gap-6 border-b border-border/70 bg-[linear-gradient(135deg,color-mix(in_srgb,var(--color-secondary)_60%,transparent),transparent_70%)] p-8"
+				class="flex min-h-[10rem] flex-col items-center justify-center gap-6 border-b border-border/70 bg-secondary/30 p-8"
 			>
 				<div class="flex w-full max-w-md flex-col gap-2">
 					<div class="flex items-center justify-between text-[0.78rem] text-foreground-muted">

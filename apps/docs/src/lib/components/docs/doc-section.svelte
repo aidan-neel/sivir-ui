@@ -29,7 +29,7 @@
 				<Icon size={12} />
 			</span>
 			<h2
-				class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
+				class="m-0 text-[1.18rem] [font-weight:var(--font-weight-header,640)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
 				style="font-family: var(--font-header);"
 			>
 				{title}

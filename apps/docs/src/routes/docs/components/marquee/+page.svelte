@@ -83,7 +83,7 @@
 			class="overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card shadow-[var(--shadow-sm)]"
 		>
 			<div
-				class="relative flex min-h-[10rem] items-center border-b border-border/70 bg-[linear-gradient(135deg,color-mix(in_srgb,var(--color-secondary)_60%,transparent),transparent_70%)]"
+				class="relative flex min-h-[10rem] items-center border-b border-border/70 bg-secondary/30"
 			>
 				<Marquee pauseOnHover duration="28s" class="py-8">
 					{#each logos as logo}

@@ -86,9 +86,7 @@
 		<div
 			class="overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card shadow-[var(--shadow-sm)]"
 		>
-			<div
-				class="grid min-h-[14rem] place-items-center bg-[linear-gradient(135deg,color-mix(in_srgb,var(--color-secondary)_60%,transparent),transparent_70%)] p-8"
-			>
+			<div class="grid min-h-[14rem] place-items-center bg-secondary/30 p-8">
 				<Card.Root class="w-full max-w-[24rem]">
 					<Card.Header>
 						<Card.Title>Account settings</Card.Title>

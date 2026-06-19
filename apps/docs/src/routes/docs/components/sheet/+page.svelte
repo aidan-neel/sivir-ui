@@ -88,7 +88,7 @@
 			class="overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card shadow-[var(--shadow-sm)]"
 		>
 			<div
-				class="flex min-h-[10rem] items-center justify-center gap-3 border-b border-border/70 bg-[linear-gradient(135deg,color-mix(in_srgb,var(--color-secondary)_60%,transparent),transparent_70%)] p-8"
+				class="flex min-h-[10rem] items-center justify-center gap-3 border-b border-border/70 bg-secondary/30 p-8"
 			>
 				<Sheet.Root>
 					<Sheet.Trigger variant="outlined">

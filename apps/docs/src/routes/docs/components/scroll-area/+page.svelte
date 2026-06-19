@@ -49,7 +49,7 @@
 			class="overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card shadow-[var(--shadow-sm)]"
 		>
 			<div
-				class="flex min-h-[12rem] items-center justify-center border-b border-border/70 bg-[linear-gradient(135deg,color-mix(in_srgb,var(--color-secondary)_60%,transparent),transparent_70%)] p-8"
+				class="flex min-h-[12rem] items-center justify-center border-b border-border/70 bg-secondary/30 p-8"
 			>
 				<ScrollArea class="h-48 w-64 rounded-[var(--radius-md)] border border-border bg-background">
 					<div class="flex flex-col">

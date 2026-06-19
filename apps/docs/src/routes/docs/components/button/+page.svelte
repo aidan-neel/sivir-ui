@@ -3,7 +3,6 @@
 	import { highlight } from '$lib/highlight';
 	import * as Tabs from '@silk/ui/components/tabs';
 	import * as Alert from '@silk/ui/components/alert';
-	import { toast } from '@silk/ui/components/toast';
 	import { createCopy } from '$lib/copy.svelte';
 	import DocHeader from '$lib/components/docs/doc-header.svelte';
 	import DocSection from '$lib/components/docs/doc-section.svelte';
@@ -34,13 +33,7 @@
 	const SOURCE = `https://github.com/aidan-neel/silk/tree/main/registry/silk/default/${SLUG}`;
 	const installCommand = `bunx @aidan-neel/ui add ${SLUG}`;
 
-	// ── Playground state ─────────────────────────────────────────────────
 	type Size = 'sm' | 'default' | 'lg' | 'icon';
-	let pgVariant = $state<ButtonVariant>('primary');
-	let pgSize = $state<Size>('default');
-	let pgLabel = $state('Get started');
-	let pgIcon = $state(true);
-	let pgLoading = $state(false);
 
 	const variantList: { value: ButtonVariant; label: string; tone: string; use: string }[] = [
 		{
@@ -181,24 +174,7 @@
 		}
 	];
 
-	const playgroundCode =
-		$derived(`<Button${pgVariant !== 'primary' ? ` variant="${pgVariant}"` : ''}${pgSize !== 'default' ? ` size="${pgSize}"` : ''}>
-${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
-</Button>`);
-
 	const clip = createCopy();
-
-	async function runLoadingDemo() {
-		pgLoading = true;
-		await new Promise((r) => setTimeout(r, 1400));
-		pgLoading = false;
-		toast({
-			title: 'Saved',
-			description: 'Loading state stayed in sync with the click.',
-			duration: 1600,
-			type: 'success'
-		});
-	}
 </script>
 
 <svelte:head>
@@ -217,122 +193,31 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 	pills={[{ label: 'v0.4.2', variant: 'outlined' }, { label: '10 variants' }, { label: '4 sizes' }]}
 />
 
-<!-- ─── Playground (vertical layout) ───────────────────────────── -->
+<!-- ─── Preview ───────────────────────────── -->
 <section class="pt-10">
-	<div class="relative">
+	<div
+		class="overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card shadow-[var(--shadow-sm)]"
+	>
 		<div
-			class="absolute inset-x-10 -top-4 -z-10 h-32 rounded-full bg-[radial-gradient(60%_60%_at_50%_50%,color-mix(in_srgb,var(--color-primary)_18%,transparent),transparent_70%)] blur-2xl"
-		></div>
-		<div
-			class="overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card shadow-[var(--shadow-sm)]"
+			class="flex min-h-[12rem] flex-wrap items-center justify-center gap-3 border-b border-border/70 bg-secondary/30 p-10"
 		>
-			<div
-				class="grid min-h-[12rem] place-items-center border-b border-border/70 bg-[linear-gradient(135deg,color-mix(in_srgb,var(--color-secondary)_60%,transparent),transparent_70%)] p-10"
-			>
-				<Button variant={pgVariant} size={pgSize} disabled={pgLoading} onclick={runLoadingDemo}>
-					{#if pgLoading}
-						<Loader size={14} class="animate-spin" />
-					{:else if pgIcon}
-						<ArrowRight size={14} />
-					{/if}
-					{pgSize === 'icon' ? '' : pgLabel || 'Button'}
-				</Button>
-			</div>
-
-			<div class="flex flex-col divide-y divide-border/60">
-				<div class="flex flex-col gap-2 px-6 py-4">
-					<label
-						for="pg-label"
-						class="text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted"
-					>
-						Label
-					</label>
-					<input
-						id="pg-label"
-						bind:value={pgLabel}
-						class="h-9 w-full max-w-[28rem] rounded-[var(--radius-md)] border border-border bg-[var(--color-field)] px-3 text-[0.86rem] text-foreground outline-none transition-[border-color,box-shadow] placeholder:text-foreground-muted focus:border-[var(--field-focus-border)] focus:shadow-[0_0_0_3px_var(--color-ring)]"
-						placeholder="Button"
-					/>
-				</div>
-
-				<div class="flex flex-col gap-2 px-6 py-4">
-					<span
-						class="text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted"
-					>
-						Variant
-					</span>
-					<div class="flex flex-wrap gap-1.5">
-						{#each variantList as v}
-							<button
-								type="button"
-								onclick={() => (pgVariant = v.value)}
-								class={`rounded-full border px-2.5 py-1 text-[0.74rem] transition-colors ${pgVariant === v.value ? 'border-primary bg-primary/10 text-foreground' : 'border-border bg-card text-foreground-muted hover:border-border-strong'}`}
-							>
-								{v.label}
-							</button>
-						{/each}
-					</div>
-				</div>
-
-				<div class="flex flex-col gap-2 px-6 py-4">
-					<span
-						class="text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted"
-					>
-						Size
-					</span>
-					<div class="flex flex-wrap gap-1.5">
-						{#each sizeList as s}
-							<button
-								type="button"
-								onclick={() => (pgSize = s.value)}
-								class={`rounded-full border px-2.5 py-1 font-mono text-[0.72rem] transition-colors ${pgSize === s.value ? 'border-primary bg-primary/10 text-foreground' : 'border-border bg-card text-foreground-muted hover:border-border-strong'}`}
-							>
-								{s.label}
-							</button>
-						{/each}
-					</div>
-				</div>
-
-				<div class="flex flex-col gap-2 px-6 py-4">
-					<span
-						class="text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted"
-					>
-						Options
-					</span>
-					<label class="flex items-center gap-2">
-						<input type="checkbox" bind:checked={pgIcon} class="silk-checkbox" />
-						<span class="text-[0.82rem] text-foreground">With leading icon</span>
-					</label>
-				</div>
-			</div>
-
-			<div
-				class="flex items-center justify-between gap-2 border-t border-border/70 bg-secondary/40 px-6 py-2.5"
-			>
-				<span
-					class="text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted"
-				>
-					Snippet
-				</span>
-				<button
-					type="button"
-					onclick={() => clip.copy(playgroundCode, 'playground')}
-					class="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2 py-1 text-[0.72rem] text-foreground-muted transition-colors hover:bg-secondary/60 hover:text-foreground"
-				>
-					{#if clip.copied('playground')}
-						<Check size={11} class="text-[var(--color-success)]" />
-						Copied
-					{:else}
-						<Copy size={11} />
-						Copy code
-					{/if}
-				</button>
-			</div>
-			<pre
-				class="m-0 overflow-x-auto bg-secondary/40 px-6 py-4 font-mono text-[0.78rem] leading-relaxed text-foreground"><code
-					>{@html highlight(playgroundCode, 'svelte')}</code
-				></pre>
+			<Button>
+				<ArrowRight size={14} />
+				Get started
+			</Button>
+			<Button variant="secondary">Secondary</Button>
+			<Button variant="outlined">Outlined</Button>
 		</div>
+		<pre
+			class="m-0 overflow-x-auto bg-secondary/40 px-6 py-4 font-mono text-[0.78rem] leading-relaxed text-foreground"><code
+				>{@html highlight(
+					`<Button>
+  <ArrowRight size={14} />
+  Get started
+</Button>`,
+					'svelte'
+				)}</code
+			></pre>
 	</div>
 </section>
 
@@ -639,41 +524,3 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 </div>
 
 <DocPager slug={SLUG} />
-
-<style>
-	.silk-checkbox {
-		appearance: none;
-		width: 14px;
-		height: 14px;
-		border: 1.5px solid var(--color-border-strong);
-		border-radius: 3px;
-		background: var(--color-background);
-		cursor: pointer;
-		position: relative;
-		transition:
-			background-color 150ms ease,
-			border-color 150ms ease;
-	}
-	.silk-checkbox:hover {
-		border-color: var(--color-primary);
-	}
-	.silk-checkbox:checked {
-		background: var(--color-primary);
-		border-color: var(--color-primary);
-	}
-	.silk-checkbox:checked::after {
-		content: '';
-		position: absolute;
-		left: 3px;
-		top: 0px;
-		width: 4px;
-		height: 8px;
-		border: solid white;
-		border-width: 0 1.5px 1.5px 0;
-		transform: rotate(45deg);
-	}
-	.silk-checkbox:focus-visible {
-		outline: none;
-		box-shadow: 0 0 0 3px var(--color-ring);
-	}
-</style>

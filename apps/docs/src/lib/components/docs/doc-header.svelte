@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { Badge } from '@silk/ui/components/badge';
+	import { Button } from '@silk/ui/components/button';
 	import Component from '@lucide/svelte/icons/component';
 	import External from '@lucide/svelte/icons/external-link';
 	import Hash from '@lucide/svelte/icons/hash';
@@ -41,20 +42,22 @@
 				<Badge variant={pill.variant ?? 'ghost'} class="text-[0.66rem]">{pill.label}</Badge>
 			{/each}
 		</div>
-		<a
+		<Button
 			href={source}
+			variant="outlined"
+			size="sm"
 			target="_blank"
 			rel="noreferrer noopener"
-			class="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2.5 py-1 text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted transition-colors hover:bg-secondary/60 hover:text-foreground"
+			class="text-[0.72rem] text-foreground-muted hover:text-foreground"
 		>
 			View source
-			<External size={11} />
-		</a>
+			<External size={12} />
+		</Button>
 	</div>
 
 	<div class="flex flex-col gap-3">
 		<h1
-			class="m-0 text-[2.6rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] leading-[1] tracking-[-0.035em] md:text-[3rem]"
+			class="m-0 text-[2.05rem] [font-weight:var(--font-weight-header,640)] [letter-spacing:var(--tracking-label,0em)] leading-[1.05] tracking-[-0.035em] md:text-[2.35rem]"
 			style="font-family: var(--font-header);"
 		>
 			{title}
@@ -73,17 +76,17 @@
 			</span>
 			<code class="flex-1 font-mono text-[0.82rem] text-foreground">{install}</code>
 		</div>
-		<button
-			type="button"
+		<Button
+			variant="ghost"
 			onclick={() => clip.copy(install, 'install')}
-			class="border-l border-border bg-card px-3 text-[0.78rem] text-foreground-muted transition-colors hover:bg-secondary/50 hover:text-foreground"
 			aria-label="Copy install command"
+			class="h-auto self-stretch rounded-none border-l border-border px-3 text-foreground-muted hover:text-foreground"
 		>
 			{#if clip.copied('install')}
 				<Check size={14} class="text-[var(--color-success)]" />
 			{:else}
 				<Copy size={14} />
 			{/if}
-		</button>
+		</Button>
 	</div>
 </header>
