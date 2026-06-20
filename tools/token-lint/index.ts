@@ -13,6 +13,10 @@ const RULES: { rule: string; re: RegExp }[] = [
 ];
 
 export function lintSource(file: string, source: string): Violation[] {
+	// File-level opt-out: a `token-lint-disable-file` directive anywhere skips the
+	// whole file. For components inherently built on raw literals (e.g. a color
+	// picker manipulating hex/gradient values) per-line annotations are noise.
+	if (source.includes('token-lint-disable-file')) return [];
 	const out: Violation[] = [];
 	const lines = source.split('\n');
 	const disabledFor = (line: string, prev: string, rule: string) => {

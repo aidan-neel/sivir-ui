@@ -47,6 +47,14 @@ describe('lintSource', () => {
 		expect(v).toEqual([]);
 	});
 
+	it('skips the whole file when token-lint-disable-file is present', () => {
+		const v = lintSource(
+			'a.svelte',
+			'<!-- token-lint-disable-file -->\nclass="bg-[#ff0000] h-[2px]"'
+		);
+		expect(v).toEqual([]);
+	});
+
 	it('DOES flag real primitive families', () => {
 		for (const p of ['--silk-neutral-200', '--silk-blue-500', '--silk-space-4']) {
 			expect(
