@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
+import { resolve } from 'node:path';
 
-const css = readFileSync(fileURLToPath(new URL('../ui.css', import.meta.url)), 'utf8');
+const css = readFileSync(resolve(process.cwd(), '../../packages/silk/src/ui.css'), 'utf8');
 
 describe('ui.css Tier 1 primitives', () => {
 	it('defines the 13-step neutral ramp', () => {
