@@ -34,10 +34,23 @@ export function lintSource(file: string, source: string): Violation[] {
 		};
 		return (onLine && appliesTo(line)) || (onPrev && appliesTo(prev));
 	};
+	// Remove var(...) groups (innermost-first to handle nesting) so a length/color
+	// that only appears as a var() FALLBACK -- e.g. var(--font-size-body, 16px) --
+	// is not treated as a hardcoded literal. Primitive-leak still tests the raw line.
+	const stripVars = (s: string) => {
+		let prev;
+		do {
+			prev = s;
+			s = s.replace(/var\([^()]*\)/g, '');
+		} while (s !== prev);
+		return s;
+	};
 	lines.forEach((text, i) => {
 		const prev = i > 0 ? lines[i - 1] : '';
+		const stripped = stripVars(text);
 		for (const { rule, re } of RULES) {
-			if (re.test(text) && !disabledFor(text, prev, rule))
+			const target = rule === 'no-primitive-leak' ? text : stripped;
+			if (re.test(target) && !disabledFor(text, prev, rule))
 				out.push({ file, line: i + 1, rule, text: text.trim() });
 		}
 	});

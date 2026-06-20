@@ -29,6 +29,19 @@ describe('lintSource', () => {
 		expect(v[0].line).toBe(2);
 	});
 
+	it('does NOT flag a length that only appears as a var() fallback', () => {
+		expect(lintSource('a.svelte', 'class="[font-size:var(--font-size-body,16px)]"')).toEqual([]);
+	});
+
+	it('does NOT flag a color that only appears as a var() fallback', () => {
+		expect(lintSource('a.svelte', 'class="border-[var(--x,#ffffff)]"')).toEqual([]);
+	});
+
+	it('still flags a real length literal sitting outside var()', () => {
+		const v = lintSource('a.svelte', 'class="shadow-[0_0_0_3px_var(--color-ring)]"');
+		expect(v.map((x) => x.rule)).toContain('no-literal-length');
+	});
+
 	it('does NOT flag component-scoped --silk-<name>- vars (only primitive families)', () => {
 		const v = lintSource('a.svelte', 'animation: x var(--silk-marquee-duration) linear;');
 		expect(v).toEqual([]);
