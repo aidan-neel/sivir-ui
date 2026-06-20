@@ -166,7 +166,7 @@
 			     is the list's bottom padding (pb-3 below), so it reads as a real underline -->
 			<div
 				aria-hidden="true"
-				class="pointer-events-none absolute bottom-0 h-[2px] rounded-full bg-foreground"
+				class="pointer-events-none absolute bottom-0 h-[var(--tabs-indicator-height)] rounded-full bg-foreground"
 				style={`left:${indicator.left}px;width:${indicator.width}px;transition:${ready ? 'left var(--motion-duration-panel) var(--ease-out),width var(--motion-duration-panel) var(--ease-out)' : 'none'};`}
 			></div>
 		{:else if variant === 'outlined'}
