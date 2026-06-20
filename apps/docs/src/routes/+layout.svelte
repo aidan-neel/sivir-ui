@@ -1,9 +1,7 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import { Toaster } from '@silk/ui/components/toast';
 	import Navbar from '$lib/components/navbar.svelte';
 	import { ModeWatcher } from 'mode-watcher';
-	import { hydrateLiveThemeCss } from '@silk/ui/themes/live';
 	import '@silk/ui/ui.css';
 	import '../app.css';
 	import type { Snippet } from 'svelte';
@@ -13,9 +11,10 @@
 
 	const { children, data }: { children: Snippet; data: LayoutData } = $props();
 
-	onMount(() => {
-		hydrateLiveThemeCss();
-	});
+	// NOTE: the global docs no longer re-apply a persisted Studio theme on load.
+	// That override (stored as `silk-live-theme-css`) was masking the baked
+	// default theme from ui.css "no matter what". Live theming is a Studio-only
+	// concern now (rebuilt in Plan 3); docs always render the shipped default.
 </script>
 
 <svelte:head>
