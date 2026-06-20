@@ -364,11 +364,11 @@ describe('resolveSpacing -- Phase 1 fields', () => {
 // unconsumed" gap). Variant builders return the class string statically, so we
 // can assert token references without rendering.
 describe('component variants consume their tokens', () => {
-	it('button reads padding, gap, and the hover easing token', () => {
+	it('button reads padding, gap, and the press easing token', () => {
 		const cls = button({ variant: 'primary', size: 'md' });
 		expect(cls).toContain('var(--button-padding-x)');
 		expect(cls).toContain('var(--button-gap)');
-		expect(cls).toContain('var(--motion-easing-hover');
+		expect(cls).toContain('var(--ease-out');
 	});
 
 	it('button sm/lg derive padding from the themed base (no longer shadow it)', () => {
