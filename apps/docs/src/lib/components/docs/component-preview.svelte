@@ -24,23 +24,23 @@
 </script>
 
 <div class="flex flex-col gap-3.5" data-component-preview>
-	<!-- Tabs (detached from the panel below) -->
-	<div class="flex flex-row gap-6 px-1">
+	<!-- Tabs (ghost segmented control — active tab always has a visible bg) -->
+	<div class="flex w-fit flex-row gap-1">
 		<button
 			onclick={() => (selectedTab = 1)}
-			class="pb-2 text-sm [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] transition-colors {selectedTab ===
+			class="rounded-[var(--radius-md)] px-2.5 py-1 text-sm [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] transition-[background-color,color] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-out)] {selectedTab ===
 			1
-				? 'border-b-2 border-foreground text-foreground'
-				: 'border-b-2 border-transparent text-foreground-muted hover:text-foreground'}"
+				? 'bg-secondary text-foreground'
+				: 'text-foreground-muted hover:bg-secondary/50 hover:text-foreground'}"
 		>
 			Preview
 		</button>
 		<button
 			onclick={() => (selectedTab = 2)}
-			class="pb-2 text-sm [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] transition-colors {selectedTab ===
+			class="rounded-[var(--radius-md)] px-2.5 py-1 text-sm [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] transition-[background-color,color] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-out)] {selectedTab ===
 			2
-				? 'border-b-2 border-foreground text-foreground'
-				: 'border-b-2 border-transparent text-foreground-muted hover:text-foreground'}"
+				? 'bg-secondary text-foreground'
+				: 'text-foreground-muted hover:bg-secondary/50 hover:text-foreground'}"
 		>
 			Code
 		</button>
@@ -51,10 +51,10 @@
 		{...rest}
 		class={cn(
 			classProp,
-			`border border-border rounded-[var(--radius-lg)] bg-card overflow-hidden w-full flex flex-col ${
+			`border border-border rounded-[var(--radius-lg)] bg-card w-full flex flex-col min-h-[20rem] max-h-[40rem] ${
 				selectedTab === 1
-					? 'items-center justify-center min-h-[22rem] p-10'
-					: 'items-start justify-start relative'
+					? 'items-center justify-center overflow-hidden p-10'
+					: 'items-stretch justify-start overflow-auto relative'
 			}`
 		)}
 	>

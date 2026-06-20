@@ -2,7 +2,6 @@
 	import { Button, type ButtonVariant } from '@silk/ui/components/button';
 	import { ComponentPreview, Steps } from '$lib/components/docs';
 	import { highlight } from '$lib/highlight';
-	import * as Tabs from '@silk/ui/components/tabs';
 	import * as Tooltip from '@silk/ui/components/tooltip';
 
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
@@ -264,250 +263,139 @@
 		</div>
 
 		<!-- Variants — each its own example piece -->
-		<div class="flex flex-col gap-8">
-			<div class="flex flex-col gap-2">
+		{#each variantList as v (v.value)}
+			{@const code = `<Button${v.value !== 'primary' ? ` variant="${v.value}"` : ''}>${v.label}</Button>`}
+			<div id={`variant-${v.value}`} class="scroll-mt-20 flex flex-col gap-3">
 				<h3
 					class="text-[1rem] font-[var(--font-weight-header,600)] tracking-tight text-foreground docs-subsection-heading"
 				>
-					Variants
+					{v.label}
 				</h3>
-				<p class="text-sm text-foreground-muted">
-					Pick by intent. The same action should always use the same variant across your product.
-				</p>
+				<ComponentPreview {code}>
+					<Button variant={v.value}>{v.label}</Button>
+				</ComponentPreview>
 			</div>
-			{#each variantList as v (v.value)}
-				{@const code = `<Button${v.value !== 'primary' ? ` variant="${v.value}"` : ''}>${v.label}</Button>`}
-				<div class="flex flex-col gap-2.5">
-					<p class="text-[0.82rem] font-[var(--font-weight-label,500)] text-foreground-muted">
-						{v.label}
-					</p>
-					<ComponentPreview {code}>
-						<Button variant={v.value}>{v.label}</Button>
-					</ComponentPreview>
-				</div>
-			{/each}
-		</div>
+		{/each}
 
-		<!-- Sizes -->
-		<div class="flex flex-col gap-4">
+		<!-- Sizes (consolidated) -->
+		<div id="sizes" class="scroll-mt-20 flex flex-col gap-3">
 			<h3
 				class="text-[1rem] font-[var(--font-weight-header,600)] tracking-tight text-foreground docs-subsection-heading"
 			>
 				Sizes
 			</h3>
-			<p class="text-sm text-foreground-muted">
-				Four sizes on a 4-unit baseline. Pick the smallest size that still feels clickable.
-			</p>
-			<div class="overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card">
-				<div
-					class="flex flex-wrap items-end justify-around gap-5 border-b border-border/70 bg-[linear-gradient(180deg,transparent,color-mix(in_srgb,var(--color-secondary)_45%,transparent))] px-6 py-8"
-				>
+			<ComponentPreview
+				code={`<Button size="sm">Small</Button>\n<Button>Medium</Button>\n<Button size="lg">Large</Button>\n<Button size="icon"><Heart size={14} /></Button>`}
+			>
+				<div class="flex flex-wrap items-center justify-center gap-4">
 					{#each sizeList as s (s.value)}
-						<div class="flex flex-col items-center gap-2">
-							<Button size={s.value} variant="primary">
-								{#if s.value === 'icon'}
-									<Heart size={14} />
-								{:else}
-									{s.label}
-								{/if}
-							</Button>
-							<span class="font-mono text-[0.7rem] text-foreground-muted">{s.label}</span>
-						</div>
-					{/each}
-				</div>
-				<div
-					class="grid grid-cols-1 divide-y divide-border/60 sm:grid-cols-2 lg:grid-cols-4 lg:divide-x lg:divide-y-0"
-				>
-					{#each sizeList as s (s.value)}
-						<div class="flex flex-col gap-1 p-4">
-							<p
-								class="m-0 font-mono text-[0.78rem] font-[var(--font-weight-label,600)] tracking-tight"
-							>
+						<Button size={s.value} variant="primary">
+							{#if s.value === 'icon'}
+								<Heart size={14} />
+							{:else}
 								{s.label}
-							</p>
-							<div class="flex items-center gap-3 text-[0.72rem] text-foreground-muted">
-								<span class="font-mono">{s.height}</span>
-								<span aria-hidden="true">·</span>
-								<span class="font-mono">{s.padX}</span>
-							</div>
-							<p class="m-0 mt-1 text-[0.74rem] leading-snug text-foreground-muted">
-								{s.usage}
-							</p>
-						</div>
+							{/if}
+						</Button>
 					{/each}
 				</div>
-			</div>
+			</ComponentPreview>
 		</div>
 
-		<!-- States -->
-		<div class="flex flex-col gap-4">
+		<!-- Disabled -->
+		<div id="disabled" class="scroll-mt-20 flex flex-col gap-3">
 			<h3
 				class="text-[1rem] font-[var(--font-weight-header,600)] tracking-tight text-foreground docs-subsection-heading"
 			>
-				States
+				Disabled
 			</h3>
-			<p class="text-sm text-foreground-muted">
-				All transitions are tied to your theme's motion preset.
-			</p>
-			<div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-				{#each [{ label: 'Resting', node: 'rest' }, { label: 'Hover', node: 'hover' }, { label: 'Focus', node: 'focus' }, { label: 'Active', node: 'active' }, { label: 'Disabled', node: 'disabled' }] as s (s.node)}
-					<div
-						class="flex flex-col items-center gap-3 rounded-[var(--radius-lg)] border border-border bg-card p-4"
-					>
-						<div class="grid min-h-[4.5rem] place-items-center">
-							{#if s.node === 'disabled'}
-								<Button disabled>Disabled</Button>
-							{:else if s.node === 'focus'}
-								<Button class="ring-[3px] ring-[var(--color-ring)]">Focus</Button>
-							{:else if s.node === 'active'}
-								<Button class="translate-y-px">Active</Button>
-							{:else if s.node === 'hover'}
-								<Button class="brightness-110">Hover</Button>
-							{:else}
-								<Button>Rest</Button>
-							{/if}
-						</div>
-						<span class="text-[0.74rem] font-[var(--font-weight-label,500)] text-foreground-muted"
-							>{s.label}</span
-						>
-					</div>
-				{/each}
-			</div>
+			<ComponentPreview code="<Button disabled>Disabled</Button>">
+				<Button disabled>Disabled</Button>
+			</ComponentPreview>
 		</div>
 
 		<!-- Composition -->
-		<div class="flex flex-col gap-4">
+		<!-- Leading icon -->
+		<div id="comp-leading" class="scroll-mt-20 flex flex-col gap-3">
 			<h3
 				class="text-[1rem] font-[var(--font-weight-header,600)] tracking-tight text-foreground docs-subsection-heading"
 			>
-				Composition
+				Leading icon
 			</h3>
-			<p class="text-sm text-foreground-muted">
-				Patterns we use in production. Copy any of these as a starting point.
-			</p>
+			<ComponentPreview code={`<Button>\n  <Plus size={14} />\n  New project\n</Button>`}>
+				<Button>
+					<Plus size={14} />
+					New project
+				</Button>
+			</ComponentPreview>
+		</div>
 
-			<Tabs.Root value="leading" variant="outlined">
-				<Tabs.List>
-					<Tabs.Trigger value="leading">Leading icon</Tabs.Trigger>
-					<Tabs.Trigger value="trailing">Trailing icon</Tabs.Trigger>
-					<Tabs.Trigger value="loading">Loading</Tabs.Trigger>
-					<Tabs.Trigger value="link">As link</Tabs.Trigger>
-					<Tabs.Trigger value="group">Group</Tabs.Trigger>
-				</Tabs.List>
+		<!-- Trailing icon -->
+		<div id="comp-trailing" class="scroll-mt-20 flex flex-col gap-3">
+			<h3
+				class="text-[1rem] font-[var(--font-weight-header,600)] tracking-tight text-foreground docs-subsection-heading"
+			>
+				Trailing icon
+			</h3>
+			<ComponentPreview
+				code={`<Button variant="secondary">\n  Continue\n  <ArrowRight size={14} />\n</Button>`}
+			>
+				<Button variant="secondary">
+					Continue
+					<ArrowRight size={14} />
+				</Button>
+			</ComponentPreview>
+		</div>
 
-				<div class="mt-3 grid gap-3 md:grid-cols-2">
-					<Tabs.Content value="leading" class="contents">
-						<div
-							class="grid place-items-center rounded-[var(--radius-lg)] border border-border bg-card p-8"
-						>
-							<Button>
-								<Plus size={14} />
-								New project
-							</Button>
-						</div>
-						<pre
-							class="m-0 overflow-x-auto rounded-[var(--radius-lg)] border border-border bg-secondary/40 px-4 py-4 font-mono text-[0.78rem] leading-relaxed"><code
-								>{@html highlight(
-									`<Button>
-  <Plus size={14} />
-  New project
-</Button>`,
-									'svelte'
-								)}</code
-							></pre>
-					</Tabs.Content>
+		<!-- Loading -->
+		<div id="comp-loading" class="scroll-mt-20 flex flex-col gap-3">
+			<h3
+				class="text-[1rem] font-[var(--font-weight-header,600)] tracking-tight text-foreground docs-subsection-heading"
+			>
+				Loading
+			</h3>
+			<ComponentPreview
+				code={`<Button disabled>\n  <Loader size={14} class="animate-spin" />\n  Saving…\n</Button>`}
+			>
+				<Button disabled>
+					<Loader size={14} class="animate-spin" />
+					Saving…
+				</Button>
+			</ComponentPreview>
+		</div>
 
-					<Tabs.Content value="trailing" class="contents">
-						<div
-							class="grid place-items-center rounded-[var(--radius-lg)] border border-border bg-card p-8"
-						>
-							<Button variant="secondary">
-								Continue
-								<ArrowRight size={14} />
-							</Button>
-						</div>
-						<pre
-							class="m-0 overflow-x-auto rounded-[var(--radius-lg)] border border-border bg-secondary/40 px-4 py-4 font-mono text-[0.78rem] leading-relaxed"><code
-								>{@html highlight(
-									`<Button variant="secondary">
-  Continue
-  <ArrowRight size={14} />
-</Button>`,
-									'svelte'
-								)}</code
-							></pre>
-					</Tabs.Content>
+		<!-- As link -->
+		<div id="comp-link" class="scroll-mt-20 flex flex-col gap-3">
+			<h3
+				class="text-[1rem] font-[var(--font-weight-header,600)] tracking-tight text-foreground docs-subsection-heading"
+			>
+				As link
+			</h3>
+			<ComponentPreview
+				code={`<Button href="/docs" variant="outline">\n  <External size={13} />\n  Open docs\n</Button>`}
+			>
+				<Button href="https://silk.dev" variant="outline">
+					<External size={13} />
+					Open docs
+				</Button>
+			</ComponentPreview>
+		</div>
 
-					<Tabs.Content value="loading" class="contents">
-						<div
-							class="grid place-items-center rounded-[var(--radius-lg)] border border-border bg-card p-8"
-						>
-							<Button disabled>
-								<Loader size={14} class="animate-spin" />
-								Saving…
-							</Button>
-						</div>
-						<pre
-							class="m-0 overflow-x-auto rounded-[var(--radius-lg)] border border-border bg-secondary/40 px-4 py-4 font-mono text-[0.78rem] leading-relaxed"><code
-								>{@html highlight(
-									`<Button disabled={busy}>
-  {#if busy}
-    <Loader size={14} class="animate-spin" />
-    Saving…
-  {:else}
-    Save
-  {/if}
-</Button>`,
-									'svelte'
-								)}</code
-							></pre>
-					</Tabs.Content>
-
-					<Tabs.Content value="link" class="contents">
-						<div
-							class="grid place-items-center rounded-[var(--radius-lg)] border border-border bg-card p-8"
-						>
-							<Button href="https://silk.dev" variant="outline">
-								<External size={13} />
-								Open docs
-							</Button>
-						</div>
-						<pre
-							class="m-0 overflow-x-auto rounded-[var(--radius-lg)] border border-border bg-secondary/40 px-4 py-4 font-mono text-[0.78rem] leading-relaxed"><code
-								>{@html highlight(
-									`<Button href="/docs" variant="outline">
-  <External size={13} />
-  Open docs
-</Button>`,
-									'svelte'
-								)}</code
-							></pre>
-					</Tabs.Content>
-
-					<Tabs.Content value="group" class="contents">
-						<div
-							class="grid place-items-center rounded-[var(--radius-lg)] border border-border bg-card p-8"
-						>
-							<div class="flex items-center gap-2">
-								<Button variant="ghost"><Download size={14} /></Button>
-								<Button variant="ghost"><Send size={14} /></Button>
-								<Button variant="ghost"><Trash size={14} /></Button>
-							</div>
-						</div>
-						<pre
-							class="m-0 overflow-x-auto rounded-[var(--radius-lg)] border border-border bg-secondary/40 px-4 py-4 font-mono text-[0.78rem] leading-relaxed"><code
-								>{@html highlight(
-									`<div class="flex items-center gap-2">
-  <Button variant="ghost"><Download size={14} /></Button>
-  <Button variant="ghost"><Send size={14} /></Button>
-  <Button variant="ghost"><Trash size={14} /></Button>
-</div>`,
-									'svelte'
-								)}</code
-							></pre>
-					</Tabs.Content>
+		<!-- Icon group -->
+		<div id="comp-group" class="scroll-mt-20 flex flex-col gap-3">
+			<h3
+				class="text-[1rem] font-[var(--font-weight-header,600)] tracking-tight text-foreground docs-subsection-heading"
+			>
+				Icon group
+			</h3>
+			<ComponentPreview
+				code={`<div class="flex items-center gap-2">\n  <Button variant="ghost"><Download size={14} /></Button>\n  <Button variant="ghost"><Send size={14} /></Button>\n  <Button variant="ghost"><Trash size={14} /></Button>\n</div>`}
+			>
+				<div class="flex items-center gap-2">
+					<Button variant="ghost"><Download size={14} /></Button>
+					<Button variant="ghost"><Send size={14} /></Button>
+					<Button variant="ghost"><Trash size={14} /></Button>
 				</div>
-			</Tabs.Root>
+			</ComponentPreview>
 		</div>
 	</section>
 
