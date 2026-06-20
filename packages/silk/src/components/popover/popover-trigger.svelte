@@ -44,7 +44,7 @@
 		}
 	}
 
-	function closePopover(delay = 150) {
+	function closePopover(delay = 180) {
 		if (!uiState.data) return;
 		if (uiState.data.closeTimeout) clearTimeout(uiState.data.closeTimeout);
 
@@ -84,7 +84,7 @@
 				clearTimeout(uiState.data.hoverTimeout);
 				uiState.data.hoverTimeout = undefined;
 			}
-			closePopover(uiState?.data?.closeDelay ?? 150);
+			closePopover(uiState?.data?.closeDelay ?? 180);
 			uiState.data.hovering = false;
 		}
 	}

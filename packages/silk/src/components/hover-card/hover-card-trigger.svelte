@@ -33,7 +33,8 @@
 
 	function close() {
 		clearTimers();
-		const closeDelay = uiState.data.closeDelay ?? 150;
+		// Use --motion-duration-panel (default 180ms) for close delay consistency with panel motion
+		const closeDelay = uiState.data.closeDelay ?? 180;
 		uiState.data.closeTimeout = setTimeout(() => {
 			uiState.data.open = false;
 			uiState.data.hovering = false;
