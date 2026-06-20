@@ -61,7 +61,7 @@ describe('Input -- type prop wiring', () => {
 });
 
 describe('Input -- variant prop wiring', () => {
-	it.each(['primary', 'outlined', 'secondary'] as const)(
+	it.each(['outlined', 'secondary'] as const)(
 		'renders the %s variant with data-variant attribute',
 		(variant) => {
 			const { container } = render(Input, { props: { variant } });
@@ -70,10 +70,10 @@ describe('Input -- variant prop wiring', () => {
 		}
 	);
 
-	it('defaults to variant="primary"', () => {
+	it('defaults to variant="outlined"', () => {
 		const { container } = render(Input);
 		const input = container.querySelector('input');
-		expect(input?.getAttribute('data-variant')).toBe('primary');
+		expect(input?.getAttribute('data-variant')).toBe('outlined');
 	});
 
 	it('always sets data-ui="input" for downstream styling hooks', () => {

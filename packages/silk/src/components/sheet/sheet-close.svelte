@@ -12,7 +12,7 @@
 </script>
 
 <Button
-	variant="outlined"
+	variant="outline"
 	onclick={() => {
 		uiState.open = false;
 	}}

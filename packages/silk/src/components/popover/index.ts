@@ -35,7 +35,7 @@ export type PopoverProps = {
 export type PopoverTriggerProps = {
 	icon?: boolean;
 	variant?: ButtonVariant;
-	size?: 'sm' | 'default' | 'lg' | 'icon';
+	size?: 'sm' | 'md' | 'lg' | 'icon';
 	children?: Snippet;
 	class?: string;
 	element?: HTMLButtonElement | HTMLAnchorElement | undefined;

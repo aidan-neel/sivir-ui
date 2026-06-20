@@ -22,7 +22,7 @@
 		uiState.open = false;
 		onclick?.();
 	}}
-	variant="outlined"
+	variant="outline"
 	{...rest}
 	class={cn(className, `flex sm:w-fit w-full flex-row gap-2 justify-center items-center`)}
 >

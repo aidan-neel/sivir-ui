@@ -26,7 +26,7 @@ describe('Textarea -- basic rendering', () => {
 });
 
 describe('Textarea -- variants', () => {
-	it.each(['primary', 'outlined', 'secondary'] as const)(
+	it.each(['outlined', 'secondary'] as const)(
 		'accepts variant="%s" without throwing',
 		(variant) => {
 			const { container } = render(Textarea, { props: { variant } });

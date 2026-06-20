@@ -36,18 +36,7 @@ describe('Button -- rendering and DOM element selection', () => {
 });
 
 describe('Button -- variant prop wiring', () => {
-	const variants = [
-		'primary',
-		'success',
-		'warning',
-		'error',
-		'flat',
-		'outlined',
-		'secondary',
-		'ghost',
-		'alternate',
-		'destructive'
-	] as const;
+	const variants = ['primary', 'secondary', 'ghost', 'outline', 'destructive'] as const;
 
 	for (const variant of variants) {
 		it(`renders the "${variant}" variant without throwing`, () => {
@@ -65,7 +54,7 @@ describe('Button -- variant prop wiring', () => {
 });
 
 describe('Button -- size prop wiring', () => {
-	const sizes = ['sm', 'default', 'lg', 'icon'] as const;
+	const sizes = ['sm', 'md', 'lg', 'icon'] as const;
 
 	for (const size of sizes) {
 		it(`renders the "${size}" size`, () => {

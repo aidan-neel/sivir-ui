@@ -11,7 +11,7 @@
 		variant = 'primary',
 		children,
 		class: classProp,
-		size = 'default',
+		size = 'md',
 		element = $bindable(),
 		onclick,
 		...rest

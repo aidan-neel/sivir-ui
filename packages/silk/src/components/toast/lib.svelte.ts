@@ -20,7 +20,7 @@ export interface ToastUIState {
 
 export interface ToastAction {
 	label: string;
-	variant?: 'primary' | 'secondary' | 'ghost' | 'outlined';
+	variant?: 'primary' | 'secondary' | 'ghost' | 'outline';
 	callback: () => void;
 }
 

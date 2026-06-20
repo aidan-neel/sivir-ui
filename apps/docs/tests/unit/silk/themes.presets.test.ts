@@ -365,7 +365,7 @@ describe('resolveSpacing -- Phase 1 fields', () => {
 // can assert token references without rendering.
 describe('component variants consume their tokens', () => {
 	it('button reads padding, gap, and the hover easing token', () => {
-		const cls = button({ variant: 'primary', size: 'default' });
+		const cls = button({ variant: 'primary', size: 'md' });
 		expect(cls).toContain('var(--button-padding-x)');
 		expect(cls).toContain('var(--button-gap)');
 		expect(cls).toContain('var(--motion-easing-hover');
@@ -379,7 +379,7 @@ describe('component variants consume their tokens', () => {
 	});
 
 	it('input/textarea read the vertical field padding token', () => {
-		const cls = input({ variant: 'primary' });
+		const cls = input({ variant: 'outlined' });
 		expect(cls).toContain('var(--field-padding-y)');
 	});
 });

@@ -27,10 +27,10 @@ import type { Manifest } from '@silk/ui/_manifest/types';
  */
 export const manifest: Manifest = {
 	name: 'button',
-	version: '3.0.0',
+	version: '3.1.0',
 	visibility: 'public',
 	description:
-		'Click target with 10 variants and 4 sizes. Renders as <button> by default; renders as <a> when `href` is provided. Universal trigger primitive -- pulled by every interactive silk component.',
+		'Click target with 5 intent variants and 4 sizes. Renders as <button> by default; renders as <a> when `href` is provided. Universal trigger primitive -- pulled by every interactive silk component.',
 	files: [
 		'components/button/button.svelte',
 		'components/button/index.ts',

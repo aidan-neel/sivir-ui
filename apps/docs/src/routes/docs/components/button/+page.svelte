@@ -36,9 +36,9 @@
 	const nextComponent = components[curIndex + 1];
 
 	// ── Playground state ─────────────────────────────────────────────────
-	type Size = 'sm' | 'default' | 'lg' | 'icon';
+	type Size = 'sm' | 'md' | 'lg' | 'icon';
 	let pgVariant = $state<ButtonVariant>('primary');
-	let pgSize = $state<Size>('default');
+	let pgSize = $state<Size>('md');
 	let pgLabel = $state('Get started');
 	let pgIcon = $state(true);
 	let pgLoading = $state(false);
@@ -57,46 +57,16 @@
 			use: 'Pairs with Primary when you need two equally valid choices.'
 		},
 		{
-			value: 'outlined',
-			label: 'Outlined',
+			value: 'outline',
+			label: 'Outline',
 			tone: 'Neutral container',
 			use: 'Toolbar actions, in-line controls, anything that should defer to content.'
-		},
-		{
-			value: 'flat',
-			label: 'Flat',
-			tone: 'Primary-tinted ghost',
-			use: 'Soft emphasis without a full background.'
 		},
 		{
 			value: 'ghost',
 			label: 'Ghost',
 			tone: 'Invisible until hovered',
 			use: 'Dense menus, icon buttons, anywhere chrome should disappear.'
-		},
-		{
-			value: 'alternate',
-			label: 'Alternate',
-			tone: 'Inverted contrast',
-			use: 'Stands out against busy surfaces -- perfect on hero sections.'
-		},
-		{
-			value: 'success',
-			label: 'Success',
-			tone: 'Positive confirmation',
-			use: '"Confirm payment", "Approve", "Save".'
-		},
-		{
-			value: 'warning',
-			label: 'Warning',
-			tone: 'Careful, not scary',
-			use: 'Reversible but consequential actions.'
-		},
-		{
-			value: 'error',
-			label: 'Error',
-			tone: 'Trouble ahead',
-			use: 'Failure recovery, retry flows, error-state CTAs.'
 		},
 		{
 			value: 'destructive',
@@ -115,8 +85,8 @@
 			usage: 'Toolbars, dense tables, inline filters.'
 		},
 		{
-			value: 'default',
-			label: 'default',
+			value: 'md',
+			label: 'md',
 			height: '36 px',
 			padX: '12 px',
 			usage: 'Forms, dialogs, page CTAs.'
@@ -183,7 +153,7 @@
 	];
 
 	const playgroundCode =
-		$derived(`<Button${pgVariant !== 'primary' ? ` variant="${pgVariant}"` : ''}${pgSize !== 'default' ? ` size="${pgSize}"` : ''}>
+		$derived(`<Button${pgVariant !== 'primary' ? ` variant="${pgVariant}"` : ''}${pgSize !== 'md' ? ` size="${pgSize}"` : ''}>
 ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 </Button>`);
 
@@ -231,15 +201,16 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 			<Badge variant="ghost" class="text-[0.66rem]">10 variants</Badge>
 			<Badge variant="ghost" class="text-[0.66rem]">4 sizes</Badge>
 		</div>
-		<a
+		<Button
 			href={SOURCE}
+			variant="outline"
+			class="h-auto gap-1.5 px-[var(--badge-padding-x)] py-[var(--badge-padding-y)] text-[0.66rem] leading-[1.2]"
 			target="_blank"
 			rel="noreferrer noopener"
-			class="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2.5 py-1 text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted transition-colors hover:bg-secondary/60 hover:text-foreground"
 		>
 			View source
 			<External size={11} />
-		</a>
+		</Button>
 	</div>
 
 	<div class="flex flex-col gap-3">
@@ -256,7 +227,7 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 	</div>
 
 	<div
-		class="flex max-w-[28rem] items-stretch overflow-hidden rounded-[var(--radius-md)] border border-border bg-card"
+		class="flex items-stretch overflow-hidden rounded-[var(--radius-md)] border border-border bg-card"
 	>
 		<div class="flex flex-1 items-center gap-3 px-3 py-2.5">
 			<span class="grid size-6 place-items-center rounded-md bg-secondary/70 text-foreground-muted">
@@ -711,7 +682,7 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 					<div
 						class="grid place-items-center rounded-[var(--radius-lg)] border border-border bg-card p-8"
 					>
-						<Button href="https://silk.dev" variant="outlined">
+						<Button href="https://silk.dev" variant="outline">
 							<External size={13} />
 							Open docs
 						</Button>
@@ -719,7 +690,7 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 					<pre
 						class="m-0 overflow-x-auto rounded-[var(--radius-lg)] border border-border bg-secondary/40 px-4 py-4 font-mono text-[0.78rem] leading-relaxed"><code
 							>{@html highlight(
-								`<Button href="/docs" variant="outlined">
+								`<Button href="/docs" variant="outline">
   <External size={13} />
   Open docs
 </Button>`,
@@ -856,7 +827,7 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 			</Button>
 			<Tooltip.Root>
 				<Tooltip.Trigger>
-					<Button variant="outlined" href="/themes">
+					<Button variant="outline" href="/themes">
 						<Layers size={14} />
 						Browse themes
 					</Button>
@@ -880,7 +851,7 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 		class:justify-start={prevComponent && !nextComponent}
 	>
 		{#if prevComponent}
-			<Button href={`/docs/components/${prevComponent}`} variant="outlined" class="flex-shrink-0">
+			<Button href={`/docs/components/${prevComponent}`} variant="outline" class="flex-shrink-0">
 				<ChevronLeft size={16} />
 				{sanitizeComponent(prevComponent)}
 			</Button>
@@ -889,7 +860,7 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 			<div class="mx-4 w-full rounded-lg border-t"></div>
 		{/if}
 		{#if nextComponent}
-			<Button href={`/docs/components/${nextComponent}`} variant="outlined" class="flex-shrink-0">
+			<Button href={`/docs/components/${nextComponent}`} variant="outline" class="flex-shrink-0">
 				{sanitizeComponent(nextComponent)}
 				<ChevronRight size={16} />
 			</Button>

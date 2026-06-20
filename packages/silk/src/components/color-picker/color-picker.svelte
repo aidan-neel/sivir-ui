@@ -16,7 +16,7 @@
 		onValueChange?: (value: string) => void;
 		options?: ColorOption[];
 		/** Trigger style -- matches Button variants. Defaults to outlined. */
-		variant?: 'outlined' | 'secondary' | 'ghost';
+		variant?: 'outline' | 'secondary' | 'ghost';
 		/** @deprecated no-op */
 		showSelect?: boolean;
 		class?: string;
@@ -27,7 +27,7 @@
 		value,
 		onValueChange,
 		options = [],
-		variant = 'outlined',
+		variant = 'outline',
 		class: className
 	}: Props = $props();
 

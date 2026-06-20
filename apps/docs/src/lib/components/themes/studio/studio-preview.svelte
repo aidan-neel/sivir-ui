@@ -354,7 +354,7 @@
 						</div>
 
 						<div class="grid grid-cols-2 gap-2.5">
-							<Button variant="outlined" class="gap-2 border-border">
+							<Button variant="outline" class="gap-2 border-border">
 								<svg viewBox="0 0 48 48" class="size-4" aria-hidden="true">
 									<path
 										fill="#FFC107"
@@ -375,7 +375,7 @@
 								</svg>
 								Google
 							</Button>
-							<Button variant="outlined" class="gap-2 border-border">
+							<Button variant="outline" class="gap-2 border-border">
 								<svg viewBox="0 0 16 16" class="size-4" fill="currentColor" aria-hidden="true">
 									<path
 										d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"
@@ -423,7 +423,7 @@
 
 							<Command.Root>
 								<Command.Trigger
-									variant="outlined"
+									variant="outline"
 									class="gap-1.5 text-[0.82rem]"
 									aria-label="Open command palette"
 								>
@@ -516,7 +516,7 @@
 												Team
 											</span>
 											<Select.Root value={newProjectTeam}>
-												<Select.Trigger class="w-full" variant="outlined">
+												<Select.Trigger class="w-full" variant="outline">
 													{newProjectTeam.charAt(0).toUpperCase() + newProjectTeam.slice(1)}
 												</Select.Trigger>
 												<Select.Content>
@@ -569,15 +569,15 @@
 						<div class="flex flex-wrap items-center gap-2">
 							<Button>Primary</Button>
 							<Button variant="secondary">Secondary</Button>
-							<Button variant="outlined">Outlined</Button>
+							<Button variant="outline">Outline</Button>
 							<Button variant="ghost">Ghost</Button>
-							<Button variant="flat">Flat</Button>
+							<Button variant="ghost">Ghost</Button>
 							<Button variant="destructive">Destructive</Button>
 						</div>
 						<div class="flex flex-wrap items-center gap-2">
-							<Button variant="success">Success</Button>
-							<Button variant="warning">Warning</Button>
-							<Button variant="error">Error</Button>
+							<Button variant="primary">Primary</Button>
+							<Button variant="primary">Primary</Button>
+							<Button variant="destructive">Destructive</Button>
 							<Button disabled>Disabled</Button>
 							<Button size="sm">Small</Button>
 							<Button size="lg">Large</Button>
@@ -600,7 +600,7 @@
 							{#snippet inputsTile()}
 								<Input variant="outlined" label="Full name" placeholder="Alex Johnson" />
 								<Select.Root value={pgRole}>
-									<Select.Trigger class="w-full" variant="outlined">
+									<Select.Trigger class="w-full" variant="outline">
 										{pgRole.charAt(0).toUpperCase() + pgRole.slice(1)}
 									</Select.Trigger>
 									<Select.Content>
@@ -683,7 +683,7 @@
 							{#snippet overlayTile()}
 								<div class="flex flex-wrap items-center gap-2">
 									<DropdownMenu.Root>
-										<DropdownMenu.Trigger variant="outlined">Dropdown</DropdownMenu.Trigger>
+										<DropdownMenu.Trigger variant="outline">Dropdown</DropdownMenu.Trigger>
 										<DropdownMenu.Content>
 											<DropdownMenu.Label>Sort by</DropdownMenu.Label>
 											<DropdownMenu.Item><span>Recently updated</span></DropdownMenu.Item>
@@ -693,7 +693,7 @@
 										</DropdownMenu.Content>
 									</DropdownMenu.Root>
 									<Popover.Root placement="bottom">
-										<Popover.Trigger variant="outlined">Popover</Popover.Trigger>
+										<Popover.Trigger variant="outline">Popover</Popover.Trigger>
 										<Popover.Content class="w-64">
 											<Popover.Title>Floating panel</Popover.Title>
 											<p class="text-[0.85rem] text-foreground-muted">
@@ -703,7 +703,7 @@
 									</Popover.Root>
 									<Tooltip.Root>
 										<Tooltip.Trigger>
-											<Button variant="outlined" size="sm" class="gap-1.5">
+											<Button variant="outline" size="sm" class="gap-1.5">
 												<Info size={12} />
 												Tooltip
 											</Button>
@@ -712,7 +712,7 @@
 									</Tooltip.Root>
 									<HoverCard.Root>
 										<HoverCard.Trigger>
-											<Button variant="outlined" size="sm">Hover card</Button>
+											<Button variant="outline" size="sm">Hover card</Button>
 										</HoverCard.Trigger>
 										<HoverCard.Content class="w-64">
 											<HoverCard.Title>Transient surface</HoverCard.Title>
@@ -720,7 +720,7 @@
 										</HoverCard.Content>
 									</HoverCard.Root>
 									<AlertDialog.Root>
-										<AlertDialog.Trigger variant="outlined">Alert dialog</AlertDialog.Trigger>
+										<AlertDialog.Trigger variant="outline">Alert dialog</AlertDialog.Trigger>
 										<AlertDialog.Content>
 											<AlertDialog.Header>
 												<AlertDialog.Title>Delete this project?</AlertDialog.Title>
@@ -815,7 +815,7 @@
 									</div>
 								</Card.Content>
 								<Card.Footer class="gap-2">
-									<Button variant="outlined" size="sm">Replace</Button>
+									<Button variant="outline" size="sm">Replace</Button>
 									<Button variant="ghost" size="sm">Remove</Button>
 								</Card.Footer>
 							</Card.Root>
@@ -899,7 +899,7 @@
 						<div class="flex items-center justify-between gap-3">
 							{@render sectionHead('Analytics', 'Revenue this year')}
 							<DropdownMenu.Root>
-								<DropdownMenu.Trigger variant="outlined" size="sm"
+								<DropdownMenu.Trigger variant="outline" size="sm"
 									>Last 12 months</DropdownMenu.Trigger
 								>
 								<DropdownMenu.Content>
@@ -1016,7 +1016,7 @@
 						<div class="flex items-center gap-4">
 							<Avatar.Root size="lg"><Avatar.Fallback>AN</Avatar.Fallback></Avatar.Root>
 							<div class="flex flex-col gap-1.5">
-								<Button variant="outlined" size="sm">Change photo</Button>
+								<Button variant="outline" size="sm">Change photo</Button>
 								<span class="text-[0.74rem] text-foreground-muted">JPG, PNG or GIF · max 2MB</span>
 							</div>
 						</div>
@@ -1031,7 +1031,7 @@
 								Default role
 							</span>
 							<Select.Root value={pgRole}>
-								<Select.Trigger class="w-full" variant="outlined">
+								<Select.Trigger class="w-full" variant="outline">
 									{pgRole.charAt(0).toUpperCase() + pgRole.slice(1)}
 								</Select.Trigger>
 								<Select.Content>
@@ -1111,7 +1111,7 @@
 							</Alert.Description>
 						</Alert.Root>
 						<div class="flex items-center justify-end gap-2">
-							<Button variant="outlined" size="sm">Archive</Button>
+							<Button variant="outline" size="sm">Archive</Button>
 							<Button variant="destructive" size="sm">Delete workspace</Button>
 						</div>
 					</section>
@@ -1219,7 +1219,7 @@
 									<Send size={13} />
 									Reply
 								</Button>
-								<Button variant="outlined" size="sm">Forward</Button>
+								<Button variant="outline" size="sm">Forward</Button>
 								<Button variant="ghost" size="sm">Mark unread</Button>
 								<Button variant="ghost" size="sm" class="text-[var(--color-destructive)]"
 									>Delete</Button
