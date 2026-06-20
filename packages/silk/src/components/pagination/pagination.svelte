@@ -65,7 +65,6 @@
 				aria-current={p === page ? 'page' : undefined}
 				onclick={() => go(p)}
 				class={cn(
-					// token-lint-disable-next-line no-literal-length: pagination button text size (0.82rem) is inherent to paging button layout
 					'inline-flex size-[var(--size-icon-md)] items-center justify-center rounded-[var(--radius-md)] text-[0.82rem] [font-weight:var(--font-weight-button,500)] [letter-spacing:var(--tracking-button,0em)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)]',
 					p === page
 						? 'bg-primary text-foreground-opposite'

@@ -62,7 +62,6 @@
 		tabindex="-1"
 		class={cn(
 			className,
-			// token-lint-disable-next-line no-literal-length: command dialog positioning (top-47%, 2rem viewport margin, 5rem min-height) inherent to modal layout
 			'bg-[var(--color-overlay-bg)] text-[var(--color-panel-foreground)] border border-border rounded-[var(--radius-lg)] shadow-[inset_0_1px_0_var(--panel-highlight),var(--panel-shadow)] fixed top-[47%] left-1/2 z-50 m-auto flex max-h-[min(var(--command-dialog-max-height),calc(100dvh-2rem))] min-h-[5rem] w-[calc(100%-2*var(--command-dialog-width-margin))] max-w-[var(--command-dialog-max-width)] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden duration-200 transition-all'
 		)}
 		use:clickOutside={() => {

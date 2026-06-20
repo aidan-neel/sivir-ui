@@ -18,10 +18,8 @@ export const button = tv({
 				'bg-[var(--button-destructive-bg)] text-[var(--button-destructive-foreground)] hover:bg-[var(--button-destructive-hover-bg)]'
 		},
 		size: {
-			// token-lint-disable-next-line no-literal-length: sub-pixel padding adjustment (±0.125rem) for optical balance on sm/lg sizes
 			sm: '[--button-height:var(--size-control-sm)] px-[calc(var(--button-padding-x)_-_0.125rem)]',
 			md: '[--button-height:var(--size-control-md)]',
-			// token-lint-disable-next-line no-literal-length: sub-pixel padding adjustment (±0.125rem) for optical balance on sm/lg sizes
 			lg: '[--button-height:var(--size-control-lg)] px-[calc(var(--button-padding-x)_+_0.125rem)]',
 			icon: 'h-[var(--size-icon-md)] w-[var(--size-icon-md)] min-w-[var(--size-icon-md)] justify-center px-0'
 		}
