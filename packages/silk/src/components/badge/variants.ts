@@ -1,5 +1,4 @@
 import { tv } from 'tailwind-variants';
-import { INTENTS, STATUSES } from '@silk/ui/internals/variants';
 
 export const badge = tv({
 	base: 'flex items-center justify-center rounded-[var(--radius-lg)] px-[var(--badge-padding-x)] py-[var(--badge-padding-y)] [font-size:var(--font-size-badge,12px)] leading-[1.2] [font-weight:var(--font-weight-badge,500)] [letter-spacing:var(--tracking-badge,0em)] transition-[background-color,border-color,color] [transition-duration:var(--motion-duration-hover)] ease-in-out hover:cursor-default disabled:cursor-not-allowed disabled:opacity-50', // token-lint-disable-line no-literal-length
