@@ -5,9 +5,9 @@ export const input = tv({
 	variants: {
 		variant: {
 			outline:
-				'bg-[var(--field-bg)] border-[var(--color-input)] shadow-[inset_0_0_0_1px_var(--color-border)] hover:bg-[var(--color-field-hover)] focus-visible:shadow-[var(--focus-ring),inset_0_0_0_1px_var(--field-focus-border)]', // token-lint-disable-line no-literal-length
+				'bg-[var(--field-bg)] border-[var(--color-input)] hover:bg-[var(--color-field-hover)] focus-visible:shadow-[var(--focus-ring)]',
 			secondary:
-				'[--ui-field-bg:var(--color-secondary)] [--ui-field-hover-bg:color-mix(in_srgb,var(--color-secondary)_88%,var(--color-border))] [--ui-field-focus-border:color-mix(in_srgb,var(--color-secondary)_45%,var(--color-primary))] border-transparent shadow-[inset_0_0_0_1px_var(--color-border)] focus-visible:shadow-[var(--focus-ring),inset_0_0_0_1px_var(--ui-field-focus-border)]' // token-lint-disable-line no-literal-length
+				'[--ui-field-bg:var(--color-secondary)] [--ui-field-hover-bg:color-mix(in_srgb,var(--color-secondary)_88%,var(--color-border))] [--ui-field-focus-border:color-mix(in_srgb,var(--color-secondary)_45%,var(--color-primary))] border-transparent focus-visible:shadow-[var(--focus-ring)]'
 		}
 	},
 	defaultVariants: {

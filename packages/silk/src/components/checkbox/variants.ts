@@ -12,10 +12,19 @@ export const checkbox = tv({
 			false: ''
 		},
 		checked: {
-			true: 'bg-primary/10 border-primary/30 focus-within:bg-primary/20 hover:bg-primary/20',
+			true: '',
 			false: ''
 		}
-	}
+	},
+	// The checked tint is only for the card-style `primary` variant; a plain
+	// `default` checkbox must NOT get a tinted row background when checked.
+	compoundVariants: [
+		{
+			variant: 'primary',
+			checked: true,
+			class: 'bg-primary/10 border-primary/30 focus-within:bg-primary/20 hover:bg-primary/20'
+		}
+	]
 });
 
 export const checkboxBox = tv({
