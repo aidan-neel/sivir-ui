@@ -120,7 +120,7 @@
 			>
 				<div class="flex w-64 flex-col gap-1.5">
 					<Label for="demo-email">Email address</Label>
-					<Input id="demo-email" type="email" placeholder="you@silk-ui.dev" variant="outlined" />
+					<Input id="demo-email" type="email" placeholder="you@silk-ui.dev" variant="outline" />
 				</div>
 			</div>
 			<pre

@@ -268,7 +268,7 @@
 						class="pointer-events-none absolute left-3 top-1/2 z-10 -translate-y-1/2 text-foreground-muted"
 					/>
 					<Input
-						variant="outlined"
+						variant="outline"
 						class="pl-9"
 						placeholder="Search themes, authors, descriptions…"
 						bind:value={searchQuery}

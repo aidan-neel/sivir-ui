@@ -379,7 +379,7 @@ describe('component variants consume their tokens', () => {
 	});
 
 	it('input/textarea read the vertical field padding token', () => {
-		const cls = input({ variant: 'outlined' });
+		const cls = input({ variant: 'outline' });
 		expect(cls).toContain('var(--field-padding-y)');
 	});
 });

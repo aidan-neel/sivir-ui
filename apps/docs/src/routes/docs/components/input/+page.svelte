@@ -22,16 +22,16 @@
 	const prevComponent = components[curIndex - 1];
 	const nextComponent = components[curIndex + 1];
 
-	type Variant = 'secondary' | 'outlined';
-	let pgVariant = $state<Variant>('outlined');
+	type Variant = 'secondary' | 'outline';
+	let pgVariant = $state<Variant>('outline');
 	let pgValue = $state('');
 	let pgLabel = $state('Email');
 	let pgPlaceholder = $state('you@silk-ui.dev');
 
 	const variantList: { value: Variant; label: string; use: string }[] = [
 		{
-			value: 'outlined',
-			label: 'Outlined',
+			value: 'outline',
+			label: 'Outline',
 			use: 'The default -- neutral border, sits well anywhere.'
 		},
 		{ value: 'secondary', label: 'Secondary', use: 'Subtle tinted background.' }
@@ -40,8 +40,8 @@
 	const apiRows = [
 		{
 			prop: 'variant',
-			type: '"secondary" | "outlined"',
-			default: '"outlined"',
+			type: '"outline" | "secondary"',
+			default: '"outline"',
 			description: 'Visual treatment.'
 		},
 		{ prop: 'value', type: 'string', default: '--', description: 'Bindable with `bind:value`.' },

@@ -1570,7 +1570,7 @@
 					<div class="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto px-5 py-4">
 						<Input
 							label="Theme name"
-							variant="outlined"
+							variant="outline"
 							placeholder="e.g. Soft Aurora"
 							bind:value={publishName}
 						/>
@@ -1595,7 +1595,7 @@
 						</div>
 						<Input
 							label="Publisher"
-							variant="outlined"
+							variant="outline"
 							placeholder="Your name or handle"
 							bind:value={publishPublisher}
 						/>
@@ -2432,7 +2432,7 @@
 								<Badge variant="secondary">Draft</Badge>
 								<Badge variant="outline">Beta</Badge>
 							</div>
-							<Input placeholder="Field preview" variant="outlined" />
+							<Input placeholder="Field preview" variant="outline" />
 							<div
 								class="flex items-center justify-between rounded-[var(--radius-md)] border border-border bg-card px-3 py-2"
 							>

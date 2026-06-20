@@ -10,10 +10,14 @@ import type { Manifest } from '@silk/ui/_manifest/types';
  *        bind:checked only.
  * 3.0.0: removed the `primary` variant (it duplicated the base field look).
  *        Default variant is now `outlined`.
+ * 4.0.0: renamed variant `outlined` → `outline` to align with field taxonomy.
+ *        `outline` now uses `--field-*` tokens instead of `--button-outlined-*`.
+ *        Motion tokens (`--motion-duration-hover`, `--motion-easing-hover`)
+ *        replace hard-coded CSS values. Default remains `outline`.
  */
 export const manifest: Manifest = {
 	name: 'input',
-	version: '3.0.0',
+	version: '4.0.0',
 	visibility: 'public',
 	description:
 		'Text input wrapping a native <input>. 2 variants. Forwards file/checkbox/text/number/etc. types.',

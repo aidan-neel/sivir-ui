@@ -8,7 +8,7 @@
 		placeholder,
 		label,
 		description,
-		variant = 'outlined',
+		variant = 'outline',
 		class: classProp,
 		element = $bindable<HTMLTextAreaElement>(),
 		value = $bindable<string | number | null | undefined>(),
@@ -17,7 +17,7 @@
 		placeholder?: string;
 		label?: string;
 		description?: string;
-		variant?: 'outlined' | 'secondary';
+		variant?: 'outline' | 'secondary';
 		class?: string;
 		element?: HTMLTextAreaElement | undefined;
 		value?: string | number | null | undefined;

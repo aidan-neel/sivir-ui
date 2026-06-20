@@ -299,7 +299,7 @@
 								<Input
 									id="login-email"
 									type="email"
-									variant="outlined"
+									variant="outline"
 									placeholder="you@company.com"
 									bind:value={loginEmail}
 								/>
@@ -322,7 +322,7 @@
 									<Input
 										id="login-password"
 										type="password"
-										variant="outlined"
+										variant="outline"
 										placeholder="••••••••"
 										class="pl-9"
 										bind:value={loginPassword}
@@ -505,7 +505,7 @@
 									<div class="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto px-5 py-4">
 										<Input
 											label="Project name"
-											variant="outlined"
+											variant="outline"
 											placeholder="e.g. Marketing site refresh"
 											bind:value={newProjectName}
 										/>
@@ -598,7 +598,7 @@
 						{@render sectionHead('Library', 'Every component, themed live')}
 						<div class="mt-4 grid grid-cols-2 gap-3 max-md:grid-cols-1">
 							{#snippet inputsTile()}
-								<Input variant="outlined" label="Full name" placeholder="Alex Johnson" />
+								<Input variant="outline" label="Full name" placeholder="Alex Johnson" />
 								<Select.Root value={pgRole}>
 									<Select.Trigger class="w-full" variant="outline">
 										{pgRole.charAt(0).toUpperCase() + pgRole.slice(1)}
@@ -1021,8 +1021,8 @@
 							</div>
 						</div>
 						<div class="grid grid-cols-2 gap-3 max-sm:grid-cols-1">
-							<Input label="Display name" variant="outlined" bind:value={pgInputName} />
-							<Input label="Email" type="email" variant="outlined" bind:value={pgInputEmail} />
+							<Input label="Display name" variant="outline" bind:value={pgInputName} />
+							<Input label="Email" type="email" variant="outline" bind:value={pgInputEmail} />
 						</div>
 						<div class="flex flex-col gap-1.5">
 							<span

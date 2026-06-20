@@ -26,13 +26,10 @@ describe('Textarea -- basic rendering', () => {
 });
 
 describe('Textarea -- variants', () => {
-	it.each(['outlined', 'secondary'] as const)(
-		'accepts variant="%s" without throwing',
-		(variant) => {
-			const { container } = render(Textarea, { props: { variant } });
-			expect(container.querySelector('textarea')).toBeInTheDocument();
-		}
-	);
+	it.each(['outline', 'secondary'] as const)('accepts variant="%s" without throwing', (variant) => {
+		const { container } = render(Textarea, { props: { variant } });
+		expect(container.querySelector('textarea')).toBeInTheDocument();
+	});
 });
 
 describe('Textarea -- value binding', () => {
