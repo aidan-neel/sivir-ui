@@ -2,6 +2,7 @@
 	import { cn } from '@silk/ui/utils';
 	import Check from '@lucide/svelte/icons/check';
 	import { scaleFade } from '@silk/ui/internals/transition';
+	import { checkbox, checkboxBox, checkboxText } from './variants';
 
 	let {
 		checked = $bindable<boolean>(),
@@ -25,7 +26,7 @@
 	{...rest}
 	class={cn(
 		classProp,
-		`${disabled ? 'opacity-60' : ''} group ${variant === 'primary' ? 'p-4 rounded-lg border focus-within:bg-secondary hover:bg-secondary' : ''} duration-200 ${variant === 'primary' && checked === true ? 'bg-primary/10 border-primary/30 focus-within:bg-primary/20 hover:bg-primary/20' : ''} flex flex-row items-start gap-3`
+		checkbox({ variant, disabled: disabled ?? false, checked: checked ?? false })
 	)}
 >
 	{#if disabled}
@@ -46,21 +47,20 @@
 	{#if checked}
 		<div
 			in:scaleFade={{ duration: 200, durationVar: '--motion-duration-hover' }}
-			class="flex h-[var(--checkbox-size)] w-[var(--checkbox-size)] items-center justify-center rounded-[var(--radius-sm)] bg-[var(--checkbox-checked-bg)] p-0 ring-offset-2 transition-[box-shadow,transform] peer-focus-visible:ring-2 peer-focus-visible:ring-[var(--color-ring)] peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-background"
+			class={checkboxBox({ checked: true })}
 		>
 			<Check size="12" class="text-[var(--checkbox-checked-foreground)]" />
 		</div>
 	{:else}
 		<div
 			in:scaleFade={{ duration: 200, durationVar: '--motion-duration-hover' }}
-			class="flex h-[var(--checkbox-size)] w-[var(--checkbox-size)] items-center justify-center rounded-[var(--radius-sm)] border bg-[var(--checkbox-bg)] p-0 duration-[var(--motion-duration-hover)] transition-[background-color,box-shadow,transform] peer-hover:bg-[var(--color-field-hover)] peer-focus-visible:bg-[var(--color-field-hover)] peer-focus-visible:ring-2 peer-focus-visible:ring-[var(--color-ring)] peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-background"
+			class={checkboxBox({ checked: false })}
 		></div>
 	{/if}
 	{#if label}
 		<div class="flex flex-col justify-center">
-			<span
-				class="text-text [font-size:var(--font-size-body,16px)] mt-[-0.2rem] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)]"
-			>
+			<!-- token-lint-disable-next-line no-literal-length: fine-tuning vertical alignment of label -->
+			<span class={cn(checkboxText(), 'mt-[-0.2rem]')} role="presentation">
 				{label}
 			</span>
 			{#if description}
