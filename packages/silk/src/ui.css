@@ -189,10 +189,11 @@
 	--button-outlined-foreground: var(--color-foreground);
 	--button-outlined-hover-bg: var(--color-muted);
 	--button-outlined-flat-shadow: inset 0 0 0 1px var(--color-border);
-	/* INNER shadow look (by request): hairline edge + subtle inset bottom depth. */
+	/* The original outlined-button lift (from main), dialed WAY down: hairline
+	   edge + a whisper of outer drop. */
 	--button-outline-shadow:
-		inset 0 0 0 1px var(--color-border), inset 0 -2px 1px -1px rgb(0 0 0 / 0.06),
-		inset 0 1px 0 0 rgb(255 255 255 / 0.5);
+		inset 0 0 0 1px var(--color-border), 0 1px 2px -1px rgb(15 15 16 / 0.06),
+		0 2px 6px -3px rgb(15 15 16 / 0.06);
 	--button-outlined-fancy-shadow: var(--button-outline-shadow);
 	--button-destructive-bg: var(--color-error);
 	--button-destructive-foreground: #ffffff;
@@ -373,10 +374,10 @@
 	--card-shadow: var(--elevation-1);
 	--panel-shadow: var(--elevation-float);
 	--switch-track-bg: color-mix(in srgb, var(--color-foreground) 24%, var(--color-background));
-	/* Outline INNER shadow, tuned for dark. */
+	/* Original outlined-button lift (from main), dialed WAY down for dark. */
 	--button-outline-shadow:
-		inset 0 0 0 1px var(--color-border), inset 0 -2px 1px -1px rgb(0 0 0 / 0.4),
-		inset 0 1px 0 0 rgb(255 255 255 / 0.04);
+		inset 0 0 0 1px var(--color-border), 0 1px 2px -1px rgb(0 0 0 / 0.3),
+		0 3px 8px -4px rgb(0 0 0 / 0.22);
 }
 
 @layer base {
