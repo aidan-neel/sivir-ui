@@ -153,14 +153,16 @@
 		</Button>
 	</div>
 
-	<div class="flex flex-col gap-3">
+	<div class="flex flex-col gap-1.5">
 		<h1
-			class="m-0 text-[2.6rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] leading-[1] tracking-[-0.035em] md:text-[3rem]"
+			class="m-0 text-[1.0625rem] [font-weight:var(--font-weight-header,600)] [letter-spacing:var(--tracking-header,-0.015em)] leading-[1.4] text-foreground"
 			style="font-family: var(--font-header);"
 		>
 			Alert Dialog
 		</h1>
-		<p class="m-0 max-w-[42rem] text-[1rem] leading-relaxed text-foreground-muted">
+		<p
+			class="m-0 max-w-[44rem] text-[1.0625rem] leading-[1.5] [font-weight:var(--font-weight-description,450)] text-foreground-muted"
+		>
 			A modal that stops everything to ask one question. Reach for it when an action is expensive,
 			irreversible, or affects other people. If the user can shrug and undo, use a Toast instead.
 		</p>

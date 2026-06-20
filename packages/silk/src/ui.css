@@ -50,17 +50,18 @@
 	--silk-space-8: calc(var(--silk-space-unit) * 8);
 	--silk-space-10: calc(var(--silk-space-unit) * 10);
 
-	/* Radius scale (default) */
-	--radius-sm: 4px;
-	--radius-md: 6px;
-	--radius-lg: 8px;
-	--radius-xl: 12px;
+	/* Radius scale (default) — softened a step for a gentler feel */
+	--radius-sm: 6px;
+	--radius-md: 8px;
+	--radius-lg: 10px;
+	--radius-xl: 14px;
 
-	/* Type scale */
+	/* Type scale — smaller headers; the title/description pattern pairs a
+	   semibold header with a same-size MEDIUM, muted description. */
 	--text-xs: 12px;
 	--text-sm: 14px;
 	--text-base: 14px;
-	--font-size-header: 18px;
+	--font-size-header: 16px;
 	--font-size-body: 14px;
 	--font-size-label: 13px;
 	--font-size-button: 14px;
@@ -70,6 +71,8 @@
 	--font-weight-label: 500;
 	--font-weight-button: 500;
 	--font-weight-badge: 500;
+	/* Weight for description text paired with a header (same size, medium). */
+	--font-weight-description: 450;
 	--tracking-header: -0.015em;
 	--tracking-body: 0em;
 	--tracking-label: 0em;
@@ -96,8 +99,15 @@
 	--motion-panel-scale-start: 0.99;
 	--motion-sheet-offset: 132px;
 	--motion-overlay-blur: 0px;
-	--motion-panel-easing: cubic-bezier(0.22, 1, 0.36, 1);
-	--motion-easing-hover: cubic-bezier(0.22, 1, 0.36, 1);
+	/* Custom easing curves (stronger than CSS built-ins). */
+	--ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+	--ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+	--ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+	--motion-panel-easing: var(--ease-out);
+	--motion-easing-hover: var(--ease-out);
+	/* Press feedback (buttons & pressable controls). */
+	--motion-press-scale: 0.97;
+	--motion-duration-press: 140ms;
 
 	--border-size: 1px;
 	--ui-cursor-interactive: pointer;
@@ -110,11 +120,12 @@
 	--color-panel: var(--silk-neutral-0);
 	--color-muted: var(--silk-neutral-50);
 	--color-secondary: var(--silk-neutral-100);
-	--color-border: var(--silk-neutral-200);
+	/* Softer hairline; dark mode re-strengthens it (it has no shadow to lean on). */
+	--color-border: var(--silk-neutral-150);
 	--color-border-strong: var(--silk-neutral-300);
 	--color-input: var(--silk-neutral-300);
 	--color-foreground: var(--silk-neutral-900);
-	--color-foreground-muted: var(--silk-neutral-500);
+	--color-foreground-muted: var(--silk-neutral-600);
 	--color-foreground-opposite: var(--silk-neutral-0);
 	--color-foreground-btn: #ffffff;
 	--color-primary: var(--silk-blue-500);
@@ -122,6 +133,7 @@
 	--color-on-primary: #ffffff;
 	--color-accent-tint: var(--silk-blue-50);
 	--color-ring: var(--silk-blue-ring);
+	--focus-ring: 0 0 0 3px var(--color-ring);
 	--color-success: var(--silk-success);
 	--color-warning: var(--silk-warning);
 	--color-error: var(--silk-error);
@@ -173,11 +185,15 @@
 	--button-ghost-border: transparent;
 	--button-ghost-foreground: var(--color-foreground);
 	--button-ghost-hover-bg: color-mix(in srgb, var(--color-foreground) 6%, transparent);
-	--button-outlined-bg: transparent;
+	--button-outlined-bg: var(--color-card);
 	--button-outlined-foreground: var(--color-foreground);
 	--button-outlined-hover-bg: var(--color-muted);
 	--button-outlined-flat-shadow: inset 0 0 0 1px var(--color-border);
-	--button-outlined-fancy-shadow: var(--button-outlined-flat-shadow);
+	/* The soft raised look (kept by request) — a gentle lift + hairline edge. */
+	--button-outline-shadow:
+		0 10px 24px -10px rgb(15 15 16 / 0.14), 0 3px 8px -4px rgb(15 15 16 / 0.1),
+		0 1px 2px rgb(15 15 16 / 0.05), inset 0 0 0 1px var(--color-border);
+	--button-outlined-fancy-shadow: var(--button-outline-shadow);
 	--button-destructive-bg: var(--color-error);
 	--button-destructive-foreground: #ffffff;
 	--button-destructive-border: transparent;
@@ -350,11 +366,17 @@
 	--color-tooltip-foreground: var(--silk-neutral-0);
 	--color-field: var(--color-secondary);
 
-	/* Borders-first dark: flat cards/panels, float only on overlays */
-	--elevation-1: none;
-	--card-shadow: var(--elevation-0);
+	/* Dark borders re-strengthened (no shadow to lean on). */
+	--color-border: var(--silk-neutral-300);
+	/* Dark cards keep a whisper of lift instead of a hard border. */
+	--elevation-1: 0 1px 2px rgb(0 0 0 / 0.4);
+	--card-shadow: var(--elevation-1);
 	--panel-shadow: var(--elevation-float);
 	--switch-track-bg: color-mix(in srgb, var(--color-foreground) 24%, var(--color-background));
+	/* Outline raised shadow, tuned for dark. */
+	--button-outline-shadow:
+		0 12px 28px -12px rgb(0 0 0 / 0.6), 0 3px 8px -4px rgb(0 0 0 / 0.4),
+		inset 0 0 0 1px var(--color-border);
 }
 
 @layer base {
