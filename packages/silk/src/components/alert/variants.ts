@@ -1,22 +1,21 @@
 import { tv } from 'tailwind-variants';
 
 /**
- * Neutral card-style surface -- no variant tinting at all. Status is conveyed by
- * a thin left accent strip + icon chip, so the alert reads correctly with any
- * primary color (including extreme cases like pure black or white).
+ * Soft status callout: a gentle status-tinted surface + subtle status border +
+ * a matching colored icon. No left accent strip — status reads from the tint and
+ * icon, which stays calm and on-brand in light and dark.
  */
 export const alert = tv({
-	base: 'relative flex flex-row gap-3 overflow-hidden rounded-[var(--radius-md)] border border-border bg-[var(--color-card)] px-3.5 py-3 pl-4 text-[var(--color-foreground)] shadow-[var(--shadow-xs)]'
-});
-
-export const alertAccent = tv({
-	base: 'absolute inset-y-0 left-0 w-[3px]', // token-lint-disable-line no-literal-length
+	base: 'flex flex-row gap-3 rounded-[var(--radius-lg)] border px-4 py-3 text-[var(--color-foreground)]',
 	variants: {
 		variant: {
-			info: 'bg-[var(--color-info)]',
-			error: 'bg-[var(--color-error)]',
-			warning: 'bg-[var(--color-warning)]',
-			success: 'bg-[var(--color-success)]'
+			info: 'border-[color-mix(in_srgb,var(--color-info)_22%,transparent)] bg-[color-mix(in_srgb,var(--color-info)_7%,var(--color-card))]',
+			error:
+				'border-[color-mix(in_srgb,var(--color-error)_22%,transparent)] bg-[color-mix(in_srgb,var(--color-error)_7%,var(--color-card))]',
+			warning:
+				'border-[color-mix(in_srgb,var(--color-warning)_22%,transparent)] bg-[color-mix(in_srgb,var(--color-warning)_7%,var(--color-card))]',
+			success:
+				'border-[color-mix(in_srgb,var(--color-success)_22%,transparent)] bg-[color-mix(in_srgb,var(--color-success)_7%,var(--color-card))]'
 		}
 	},
 	defaultVariants: {
@@ -24,17 +23,14 @@ export const alertAccent = tv({
 	}
 });
 
-export const alertChip = tv({
-	base: 'mt-[1px] grid size-6 shrink-0 place-items-center rounded-full ring-1', // token-lint-disable-line no-literal-length
+export const alertIcon = tv({
+	base: 'mt-px shrink-0',
 	variants: {
 		variant: {
-			info: 'bg-[color-mix(in_srgb,var(--color-info)_16%,var(--color-card))] text-[var(--color-info)] ring-[color-mix(in_srgb,var(--color-info)_28%,transparent)]',
-			error:
-				'bg-[color-mix(in_srgb,var(--color-error)_16%,var(--color-card))] text-[var(--color-error)] ring-[color-mix(in_srgb,var(--color-error)_28%,transparent)]',
-			warning:
-				'bg-[color-mix(in_srgb,var(--color-warning)_16%,var(--color-card))] text-[var(--color-warning)] ring-[color-mix(in_srgb,var(--color-warning)_28%,transparent)]',
-			success:
-				'bg-[color-mix(in_srgb,var(--color-success)_16%,var(--color-card))] text-[var(--color-success)] ring-[color-mix(in_srgb,var(--color-success)_28%,transparent)]'
+			info: 'text-[var(--color-info)]',
+			error: 'text-[var(--color-error)]',
+			warning: 'text-[var(--color-warning)]',
+			success: 'text-[var(--color-success)]'
 		}
 	},
 	defaultVariants: {

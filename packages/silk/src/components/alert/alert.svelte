@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { alert, alertAccent, alertChip } from './variants';
+	import { alert, alertIcon } from './variants';
 	import { cn } from '@silk/ui/utils';
 	import Check from '@lucide/svelte/icons/circle-check';
 	import X from '@lucide/svelte/icons/circle-x';
@@ -25,12 +25,9 @@
 	);
 </script>
 
-<div role="alert" {...rest} class={cn(classProp, alert())}>
-	<span class={alertAccent({ variant })} aria-hidden="true"></span>
-	<span class={alertChip({ variant })} aria-hidden="true">
-		<Icon size={13} strokeWidth={2.25} />
-	</span>
-	<div class="flex min-w-0 flex-1 flex-col gap-0.5 pt-px">
+<div role="alert" {...rest} class={cn(classProp, alert({ variant }))}>
+	<Icon class={alertIcon({ variant })} size={16} strokeWidth={2.25} aria-hidden="true" />
+	<div class="flex min-w-0 flex-1 flex-col gap-0.5">
 		{@render children?.()}
 	</div>
 </div>
