@@ -106,7 +106,7 @@
 	--motion-panel-easing: var(--ease-out);
 	--motion-easing-hover: var(--ease-out);
 	/* Press feedback (buttons & pressable controls). */
-	--motion-press-scale: 0.97;
+	--motion-press-scale: 0.99;
 	--motion-duration-press: 140ms;
 
 	--border-size: 1px;
