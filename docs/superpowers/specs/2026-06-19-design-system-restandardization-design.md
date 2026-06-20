@@ -28,14 +28,17 @@ Silk became _too customizable_, and the result is inconsistent and visually inco
 
 ## 2. Decisions (locked)
 
-| #   | Decision            | Choice                                                                              |
-| --- | ------------------- | ----------------------------------------------------------------------------------- |
-| 1   | Theme Studio's role | **Keep, but constrain hard** — ~6 high-level controls, everything else derived      |
-| 2   | Default aesthetic   | **Notion-like** — neutral grayscale foundation, light-blue primary used _rarely_    |
-| 3   | Token architecture  | **Strict 3-tier derivation** (primitive → semantic → component)                     |
-| 4   | First deliverable   | **This full written spec** (approve before any code)                                |
-| 5   | Cull scope          | **Aggressive** — delete styles layer; transitions → 4 motion levels; 6 presets → ~3 |
-| 6   | Elevation           | **Borders-first, both modes** — shadows only on truly-floating layers, very soft    |
+| #   | Decision            | Choice                                                                                                  |
+| --- | ------------------- | ------------------------------------------------------------------------------------------------------- |
+| 1   | Theme Studio's role | **Keep, but constrain hard** — ~6 high-level controls, everything else derived                          |
+| 2   | Default aesthetic   | **Notion-like** — neutral grayscale foundation, light-blue primary used _rarely_                        |
+| 3   | Token architecture  | **Strict 3-tier derivation** (primitive → semantic → component)                                         |
+| 4   | First deliverable   | **This full written spec** (approve before any code)                                                    |
+| 5   | Cull scope          | **Aggressive** — delete styles layer; transitions → 4 motion levels; **6 presets → 1 (single default)** |
+| 6   | Elevation           | **Borders-first, both modes** — shadows only on truly-floating layers, very soft                        |
+| 7   | Default font        | **Inter** (sans + header); mono `Geist Mono`                                                            |
+| 8   | Body text size      | **14px** (down from 16px)                                                                               |
+| 9   | Registry themes     | **Discard** existing user-published themes; no migration                                                |
 
 ---
 
@@ -159,7 +162,7 @@ Driven by a single Studio "radius" control (3 presets). No `radiusBase` math + e
 | `--text-badge`   | 12px | 500    | 0        | 1           |
 | `--text-mono`    | 13px | 400    | 0        | 1.5         |
 
-> Body drops from today's 16px to **14px** to match the dense Notion reference. Fonts: default sans `Geist` (or Studio-selectable), mono `Geist Mono`. The 15 independent typography sliders collapse to the type scale + a font-family picker.
+> Body drops from today's 16px to **14px** to match the dense Notion reference. Fonts: default sans + header `Inter`, mono `Geist Mono` (Studio-selectable). The 15 independent typography sliders collapse to the type scale + a font-family picker.
 
 #### Elevation scale (borders-first)
 
@@ -327,16 +330,16 @@ A full row-per-component checklist (variants × sizes × tokens-consumed) will b
 
 ## 8. Cull list (aggressive)
 
-| Item                                                                                                                                       | Fate                                                                                                                                                               |
-| ------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `themes/styles/` (flat, soft, sharp, index, types)                                                                                         | **Delete.** Replaced by radius + density + the flat default.                                                                                                       |
-| `themes/transitions/` (13 presets)                                                                                                         | **Reduce to 4** motion-feel levels (None/Subtle/Default/Expressive) inlined in the motion scale. Delete the 13 individual files.                                   |
-| `themes/presets/` (6 presets)                                                                                                              | **Collapse to ~3** (e.g. `default`, a warm/editorial, a dense/technical) regenerated from the new ~10-field `ThemeDraft`.                                          |
-| Boolean flags: `fancyButtons`, `fancyBadges`, `fancyShadows`, `hapticPress`, `primaryButtonOutline`, `invertedPanels`, `overlaysOnSurface` | **Delete.** Folded into opinionated flat defaults.                                                                                                                 |
-| `--button-*-shadow`, `--button-fancy-highlight`, `--haptic-press-y`, button `before:` highlight                                            | **Delete.**                                                                                                                                                        |
-| `--color-field-*` family, `--color-info`, `--color-alternate`, `--color-modal`, `--color-destructive`                                      | **Delete / alias** per §4.2.                                                                                                                                       |
-| 39 spacing fields, 17 motion fields, 15 typography fields in `ThemeDraft`                                                                  | **Replace** with scales driven by the ~6 Studio controls.                                                                                                          |
-| Registry (`apps/registry`) publish/persist                                                                                                 | Keep the API, but persisted theme shape changes to the new ~10-field `ThemeDraft`. Migration of any existing stored themes is out of scope (regenerate built-ins). |
+| Item                                                                                                                                       | Fate                                                                                                                                                                  |
+| ------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `themes/styles/` (flat, soft, sharp, index, types)                                                                                         | **Delete.** Replaced by radius + density + the flat default.                                                                                                          |
+| `themes/transitions/` (13 presets)                                                                                                         | **Reduce to 4** motion-feel levels (None/Subtle/Default/Expressive) inlined in the motion scale. Delete the 13 individual files.                                      |
+| `themes/presets/` (6 presets)                                                                                                              | **Collapse to 1** — a single `default` theme (the Notion-like system) regenerated from the new ~10-field `ThemeDraft`. No other curated presets ship.                 |
+| Boolean flags: `fancyButtons`, `fancyBadges`, `fancyShadows`, `hapticPress`, `primaryButtonOutline`, `invertedPanels`, `overlaysOnSurface` | **Delete.** Folded into opinionated flat defaults.                                                                                                                    |
+| `--button-*-shadow`, `--button-fancy-highlight`, `--haptic-press-y`, button `before:` highlight                                            | **Delete.**                                                                                                                                                           |
+| `--color-field-*` family, `--color-info`, `--color-alternate`, `--color-modal`, `--color-destructive`                                      | **Delete / alias** per §4.2.                                                                                                                                          |
+| 39 spacing fields, 17 motion fields, 15 typography fields in `ThemeDraft`                                                                  | **Replace** with scales driven by the ~6 Studio controls.                                                                                                             |
+| Registry (`apps/registry`) publish/persist                                                                                                 | Keep the API; persisted theme shape changes to the new ~10-field `ThemeDraft`. **Discard** existing user-published themes — no migration; reseed the single built-in. |
 
 ---
 
@@ -365,9 +368,9 @@ A full row-per-component checklist (variants × sizes × tokens-consumed) will b
 
 ---
 
-## 11. Open questions for reviewer
+## 11. Reviewer decisions (resolved)
 
-1. **Default font** — keep `Geist`, or switch to an Inter/`-apple-system` stack closer to Notion? (Spec assumes Geist retained.)
-2. **Body size 14px** — confirm the drop from 16px (denser, matches reference) is desired.
-3. **Surviving presets** — which ~3 themes do you want kept/curated?
-4. **Registry stored themes** — confirm we can discard any existing user-published themes (schema changes), or do we need a migration?
+1. **Default font** — **Inter** for sans + header; `Geist Mono` for mono.
+2. **Body size** — **14px** confirmed (down from 16px).
+3. **Surviving presets** — **none.** Ship a single `default` theme only; no curated alternates.
+4. **Registry stored themes** — **discard**; no migration. Reseed the single built-in.
