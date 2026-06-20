@@ -31,7 +31,7 @@
 		data-ui="radio-group-item"
 		data-state={selected ? 'checked' : 'unchecked'}
 		class={cn(
-			'mt-0.5 flex size-4 shrink-0 items-center justify-center rounded-full border border-border bg-background transition-colors',
+			'mt-0.5 flex size-4 shrink-0 items-center justify-center rounded-full border border-border bg-background transition-[border-color,box-shadow,transform] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-out)] active:scale-[var(--motion-press-scale)] focus-visible:shadow-[var(--focus-ring)]',
 			selected && 'border-primary',
 			!isDisabled && 'hover:border-primary'
 		)}

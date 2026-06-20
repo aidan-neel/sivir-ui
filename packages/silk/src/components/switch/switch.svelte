@@ -21,13 +21,13 @@
 	const descriptionId = `${uiState.key}-description`;
 
 	const trackTransition =
-		'background-color var(--motion-duration-panel, 220ms) cubic-bezier(0.4, 0, 0.2, 1),' +
-		' border-color var(--motion-duration-panel, 220ms) cubic-bezier(0.4, 0, 0.2, 1),' +
-		' box-shadow var(--motion-duration-panel, 220ms) cubic-bezier(0.4, 0, 0.2, 1)';
+		'background-color var(--motion-duration-hover, 140ms) var(--ease-out),' +
+		' border-color var(--motion-duration-hover, 140ms) var(--ease-out),' +
+		' box-shadow var(--motion-duration-hover, 140ms) var(--ease-out)';
 
 	const thumbTransition =
-		'transform var(--motion-duration-panel, 220ms) cubic-bezier(0.34, 1.4, 0.5, 1),' +
-		' box-shadow var(--motion-duration-panel, 220ms) cubic-bezier(0.34, 1.4, 0.5, 1)';
+		'transform var(--motion-duration-hover, 140ms) var(--ease-out),' +
+		' box-shadow var(--motion-duration-hover, 140ms) var(--ease-out)';
 
 	const thumbOnOffset =
 		'calc(var(--size-switch-track) - var(--size-switch-thumb) - (var(--switch-track-padding) * 2) - (var(--border-size) * 2))';

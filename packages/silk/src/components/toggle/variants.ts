@@ -1,7 +1,7 @@
 import { tv } from 'tailwind-variants';
 
 export const toggle = tv({
-	base: 'inline-flex items-center justify-center gap-1.5 rounded-[var(--radius-md)] [font-weight:var(--font-weight-button,500)] [letter-spacing:var(--tracking-button,0em)] transition-[background-color,color,box-shadow] [transition-duration:var(--motion-duration-hover)] ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)] disabled:cursor-not-allowed disabled:opacity-50',
+	base: 'inline-flex items-center justify-center gap-1.5 rounded-[var(--radius-md)] [font-weight:var(--font-weight-button,500)] [letter-spacing:var(--tracking-button,0em)] transition-[background-color,color,box-shadow,transform] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-out)] active:scale-[var(--motion-press-scale)] focus-visible:outline-none focus-visible:shadow-[var(--focus-ring)] disabled:cursor-not-allowed disabled:opacity-50',
 	variants: {
 		variant: {
 			default: '',
