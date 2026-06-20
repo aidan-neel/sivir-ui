@@ -46,7 +46,16 @@ Per-component page structure:
 - DOCS: apply the new flow to all ~40 component pages + restyle shared primitives (component-preview, steps, api-reference). Remove breadcrumb everywhere.
 - Keep token-lint clean on components; final enforcement test.
 
-## Status (update as we go)
+## Status (updated 2026-06-20, late)
+
+- ✅ Plan 1 tokens + theme engine; theme-override fix (docs always show Notion/Inter default, verified).
+- ✅ Token direction: softer radius/border, smaller header, easing tokens, --focus-ring, press 0.99, outline INNER shadow, type pattern.
+- ✅ ALL components style+motion revamped: button, input, badge, select, modal, tabs, toast, checkbox, switch, toggle, toggle-group, radio-group, accordion, collapsible, tooltip, popover, dropdown-menu, context-menu, combobox, command, hover-card, sheet, alert-dialog (+ display components token-migrated).
+- ✅ ALL 38 component docs pages on the FINAL template (4 batches): no breadcrumb, titled example pieces, ghost-tab Preview/Code with consistent height+scroll. Visual-verified (select/button) on a clean dev server.
+- ⚠️ token-lint: REPORT MODE (36 violations remain, mostly inherent color-picker gradients + a few one-offs). Enforcement test NOT added (forcing 0 caused breakage; not a user requirement). Future: add file-level `token-lint-disable-file` support + mark color-picker, then enforce.
+- TODO: getting-started docs pages (introduction/installation/theming/changelog/styling) header/softness polish; Plan 3 (constrained Studio rebuild + cull of old 91-field engine) — large separate phase, flag for user.
+
+## Status (historical)
 
 - DONE: Plan 1 tokens; token-lint tool; Badge/Input/Textarea/form-controls/overlays/dialogs+display token migrations; Button revamp; Input revamp; theme-override fix (docs always show Notion default); softer token direction; outline inner shadow; press 0.99.
 - IN PROGRESS: docs button-page template (agent) — needs user feedback applied (remove breadcrumb, no text under preview button, gap below tabs, per-variant examples, less shadcny).
