@@ -50,7 +50,7 @@
 
 	// Slide geometry + (optionally) fade, driven by the theme's panel duration.
 	const SLIDE =
-		'left var(--motion-duration-panel) cubic-bezier(0.4,0,0.2,1),top var(--motion-duration-panel) cubic-bezier(0.4,0,0.2,1),width var(--motion-duration-panel) cubic-bezier(0.4,0,0.2,1),height var(--motion-duration-panel) cubic-bezier(0.4,0,0.2,1)';
+		'left var(--motion-duration-panel) var(--ease-out),top var(--motion-duration-panel) var(--ease-out),width var(--motion-duration-panel) var(--ease-out),height var(--motion-duration-panel) var(--ease-out)';
 
 	$effect(() => {
 		// re-measure whenever the active value changes
@@ -167,7 +167,7 @@
 			<div
 				aria-hidden="true"
 				class="pointer-events-none absolute bottom-0 h-[2px] rounded-full bg-foreground"
-				style={`left:${indicator.left}px;width:${indicator.width}px;transition:${ready ? 'left var(--motion-duration-panel) cubic-bezier(0.4,0,0.2,1),width var(--motion-duration-panel) cubic-bezier(0.4,0,0.2,1)' : 'none'};`}
+				style={`left:${indicator.left}px;width:${indicator.width}px;transition:${ready ? 'left var(--motion-duration-panel) var(--ease-out),width var(--motion-duration-panel) var(--ease-out)' : 'none'};`}
 			></div>
 		{:else if variant === 'outlined'}
 			<!-- filled pill inside the bordered container -->

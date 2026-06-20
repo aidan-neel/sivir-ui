@@ -108,7 +108,7 @@
 				onclick={() => dismissToast(toast.id!)}
 				class={cn(
 					'mt-0.5 inline-flex size-[var(--toast-close-size)] shrink-0 items-center justify-center rounded-md',
-					'text-foreground-muted opacity-0 transition-all duration-200',
+					'text-foreground-muted opacity-0 transition-[opacity,background-color,color] [transition-duration:var(--motion-duration-hover)] ease-[var(--ease-out)]',
 					'hover:bg-secondary/50 hover:text-foreground',
 					'group-hover:opacity-100'
 				)}
