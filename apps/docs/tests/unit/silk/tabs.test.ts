@@ -114,12 +114,12 @@ describe('Tabs -- variants', () => {
 		expect(list.className).not.toContain('border-border');
 	});
 
-	it('default renders a 2px underline as the active indicator', async () => {
+	it('default renders the tokenized underline as the active indicator', async () => {
 		render(TabsFixture, { props: { value: 'one', variant: 'default' } });
 		await waitFor(() => {
 			const list = document.querySelector('[data-ui="tabs-list"]')!;
 			const indicator = list.querySelector('div[aria-hidden="true"]');
-			expect(indicator?.className).toContain('h-[2px]');
+			expect(indicator?.className).toContain('h-[var(--tabs-indicator-height)]');
 		});
 	});
 
