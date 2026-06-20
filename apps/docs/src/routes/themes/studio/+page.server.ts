@@ -1,4 +1,4 @@
-import { builtInThemePresets } from '@silk/ui/themes/builtin-presets';
+import { themesV2 } from '@silk/ui/themes/builtin-presets';
 import { listRegistryThemes } from '$lib/server/theme-registry';
 import type { PageServerLoad } from './$types';
 
@@ -8,16 +8,14 @@ export const load: PageServerLoad = async ({ fetch }) => {
 		return {
 			themes: themes.length
 				? [
-						...builtInThemePresets,
-						...themes.filter(
-							(theme) => !builtInThemePresets.some((preset) => preset.slug === theme.slug)
-						)
+						...themesV2,
+						...themes.filter((theme) => !themesV2.some((preset) => preset.slug === theme.slug))
 					]
-				: builtInThemePresets
+				: themesV2
 		};
 	} catch {
 		return {
-			themes: builtInThemePresets
+			themes: themesV2
 		};
 	}
 };

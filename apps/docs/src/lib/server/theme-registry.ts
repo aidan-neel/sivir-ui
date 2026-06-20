@@ -1,7 +1,7 @@
 import { env } from '$env/dynamic/private';
-import type { ThemeDraft } from '@silk/ui/themes/presets';
+import type { Theme } from '@silk/ui/themes/theme';
 
-export type RegistryTheme = ThemeDraft & {
+export type RegistryTheme = Theme & {
 	id: string;
 	createdAt: string;
 	updatedAt: string;
@@ -46,7 +46,7 @@ export async function getRegistryThemeBySlug(fetchImpl: typeof fetch, slug: stri
 	return (await response.json()) as RegistryTheme;
 }
 
-export async function publishRegistryTheme(fetchImpl: typeof fetch, theme: ThemeDraft) {
+export async function publishRegistryTheme(fetchImpl: typeof fetch, theme: Theme) {
 	const response = await fetchImpl(`${getRegistryBaseUrl()}/themes`, {
 		method: 'POST',
 		headers: {
