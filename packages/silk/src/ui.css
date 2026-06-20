@@ -102,6 +102,50 @@
 	--border-size: 1px;
 	--ui-cursor-interactive: pointer;
 
+	/* ============================================================
+	   TIER 2 — SEMANTIC (public names; the component contract)
+	   ============================================================ */
+	--color-background: var(--silk-neutral-25);
+	--color-card: var(--silk-neutral-0);
+	--color-panel: var(--silk-neutral-0);
+	--color-muted: var(--silk-neutral-50);
+	--color-secondary: var(--silk-neutral-100);
+	--color-border: var(--silk-neutral-200);
+	--color-border-strong: var(--silk-neutral-300);
+	--color-input: var(--silk-neutral-300);
+	--color-foreground: var(--silk-neutral-900);
+	--color-foreground-muted: var(--silk-neutral-500);
+	--color-foreground-opposite: var(--silk-neutral-0);
+	--color-foreground-btn: #ffffff;
+	--color-primary: var(--silk-blue-500);
+	--color-primary-hover: var(--silk-blue-600);
+	--color-on-primary: #ffffff;
+	--color-accent-tint: var(--silk-blue-50);
+	--color-ring: var(--silk-blue-ring);
+	--color-success: var(--silk-success);
+	--color-warning: var(--silk-warning);
+	--color-error: var(--silk-error);
+	--color-overlay: rgb(20 20 20 / 0.2);
+
+	/* Retired-name aliases (so existing components keep resolving) */
+	--color-destructive: var(--color-error);
+	--color-modal: var(--color-panel);
+	--color-info: var(--color-primary);
+	--color-alternate: var(--silk-neutral-800);
+	--color-accent: var(--color-muted);
+	--color-floating-panel: var(--color-panel);
+	--color-floating-panel-foreground: var(--color-foreground);
+	--color-panel-foreground: var(--color-foreground);
+	--color-overlay-bg: var(--color-background);
+	--color-tooltip: var(--silk-neutral-900);
+	--color-tooltip-foreground: var(--silk-neutral-0);
+	--color-field: var(--color-card);
+	--color-field-hover: var(--color-muted);
+	--color-field-focus: var(--color-card);
+	--color-field-foreground: var(--color-foreground);
+	--color-field-placeholder: var(--color-foreground-muted);
+}
+
 .dark {
 	/* TIER 1 — dark neutral ramp + accent */
 	--silk-neutral-0: #0d0d0d;
@@ -127,3 +171,16 @@
 	--silk-success: #4caf7d;
 	--silk-warning: #e0a23c;
 	--silk-error: #e06464;
+
+	/* TIER 2 — dark semantic remap */
+	--color-background: var(--silk-neutral-25);
+	--color-card: var(--silk-neutral-50);
+	--color-panel: var(--silk-neutral-100);
+	--color-muted: var(--silk-neutral-0);
+	--color-secondary: var(--silk-neutral-100);
+	--color-foreground-opposite: var(--silk-neutral-0);
+	--color-overlay: rgb(0 0 0 / 0.55);
+	--color-tooltip: var(--silk-neutral-900);
+	--color-tooltip-foreground: var(--silk-neutral-0);
+	--color-field: var(--color-secondary);
+}
