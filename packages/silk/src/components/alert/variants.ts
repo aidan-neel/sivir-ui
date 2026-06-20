@@ -10,6 +10,7 @@ export const alert = tv({
 });
 
 export const alertAccent = tv({
+	// token-lint-disable-next-line no-literal-length: alert accent strip width (3px) is inherent to alert design
 	base: 'absolute inset-y-0 left-0 w-[3px]',
 	variants: {
 		variant: {
@@ -25,6 +26,7 @@ export const alertAccent = tv({
 });
 
 export const alertChip = tv({
+	// token-lint-disable-next-line no-literal-length: alert icon chip margin-top (1px) is inherent to vertical alignment fine-tuning
 	base: 'mt-[1px] grid size-6 shrink-0 place-items-center rounded-full ring-1',
 	variants: {
 		variant: {

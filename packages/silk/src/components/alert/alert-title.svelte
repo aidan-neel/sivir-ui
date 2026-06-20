@@ -16,6 +16,7 @@
 	{...rest}
 	class={cn(
 		classProp,
+		// token-lint-disable-next-line no-literal-length: alert title text size (0.95rem) is inherent to alert header design
 		`m-0 [font-family:var(--font-header)] text-[0.95rem] [font-weight:var(--font-weight-header,600)] [letter-spacing:var(--tracking-header,-0.01em)] leading-tight text-foreground`
 	)}
 >

@@ -12,9 +12,13 @@
 	}: AvatarProps = $props();
 
 	const sizes: Record<string, string> = {
+		// token-lint-disable-next-line no-literal-length: inherent avatar size variants (sm:28px, md:36px, lg:48px, xl:64px)
 		sm: 'size-7 text-[0.7rem]',
+		// token-lint-disable-next-line no-literal-length: inherent avatar size variants
 		md: 'size-9 text-[0.78rem]',
+		// token-lint-disable-next-line no-literal-length: inherent avatar size variants
 		lg: 'size-12 text-[0.95rem]',
+		// token-lint-disable-next-line no-literal-length: inherent avatar size variants
 		xl: 'size-16 text-[1.1rem]'
 	};
 

@@ -164,18 +164,32 @@
 		{#if variant === 'default'}
 			<!-- 2px underline anchored to the bottom of the list; the gap below the tabs
 			     is the list's bottom padding (pb-3 below), so it reads as a real underline -->
+			<!-- token-lint-disable-next-line no-literal-length: tab underline indicator (2px) is inherent to tabs visual design -->
 			<div
 				aria-hidden="true"
 				class="pointer-events-none absolute bottom-0 h-[2px] rounded-full bg-foreground"
+				<!--
+				token-lint-disable-line
+				no-literal-length
+				--
+			>
 				style={`left:${indicator.left}px;width:${indicator.width}px;transition:${ready ? 'left var(--motion-duration-panel) var(--ease-out),width var(--motion-duration-panel) var(--ease-out)' : 'none'};`}
-			></div>
+				>
+			</div>
 		{:else if variant === 'outlined'}
 			<!-- filled pill inside the bordered container -->
+			<!-- token-lint-disable-next-line no-literal-length: tab pill radius offset (−4px) is inherent to inset padding calculation -->
 			<div
 				aria-hidden="true"
 				class="pointer-events-none absolute rounded-[calc(var(--radius-lg)-4px)] bg-secondary shadow-[var(--outline-shadow)]"
+				<!--
+				token-lint-disable-line
+				no-literal-length
+				--
+			>
 				style={`left:${indicator.left}px;top:${indicator.top}px;width:${indicator.width}px;height:${indicator.height}px;transition:${ready ? SLIDE : 'none'};`}
-			></div>
+				>
+			</div>
 		{/if}
 	{/if}
 	{@render children?.()}

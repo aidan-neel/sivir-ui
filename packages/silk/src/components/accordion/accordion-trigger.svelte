@@ -21,6 +21,7 @@
 	disabled={item.disabled}
 	onclick={() => ctx.toggle(item.value)}
 	class={cn(
+		// token-lint-disable-next-line no-literal-length: accordion trigger text size (0.95rem) and padding (py-4) are inherent to accordion trigger design
 		'flex w-full items-center justify-between gap-3 py-4 text-left text-[0.95rem] [font-weight:var(--font-weight-button,500)] [letter-spacing:var(--tracking-button,0em)] text-foreground transition-[colors,transform] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-out)] active:scale-[var(--motion-press-scale)] hover:underline focus-visible:outline-none focus-visible:shadow-[var(--focus-ring)] disabled:cursor-not-allowed disabled:opacity-50',
 		className
 	)}
