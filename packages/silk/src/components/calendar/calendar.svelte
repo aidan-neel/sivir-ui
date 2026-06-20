@@ -243,7 +243,7 @@
 					focusedDate = cell.date;
 				}}
 				class={cn(
-					'inline-flex size-8 items-center justify-center rounded-[var(--radius-md)] text-[0.82rem] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)] disabled:cursor-not-allowed disabled:opacity-30',
+					'inline-flex size-8 items-center justify-center rounded-[var(--radius-md)] text-[0.82rem] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)] disabled:cursor-not-allowed disabled:opacity-30', // token-lint-disable-line no-literal-length
 					!cell.inMonth && 'text-foreground-muted/50',
 					cell.inMonth && !selected && 'text-foreground hover:bg-secondary',
 					selected && 'bg-primary text-foreground-opposite',

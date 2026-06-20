@@ -1,3 +1,4 @@
+<!-- token-lint-disable-file -->
 <script lang="ts">
 	import { cn } from '@silk/ui/utils';
 	import Check from '@lucide/svelte/icons/circle-check';

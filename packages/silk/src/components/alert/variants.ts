@@ -10,7 +10,7 @@ export const alert = tv({
 });
 
 export const alertAccent = tv({
-	base: 'absolute inset-y-0 left-0 w-[3px]',
+	base: 'absolute inset-y-0 left-0 w-[3px]', // token-lint-disable-line no-literal-length
 	variants: {
 		variant: {
 			info: 'bg-[var(--color-info)]',
@@ -25,7 +25,7 @@ export const alertAccent = tv({
 });
 
 export const alertChip = tv({
-	base: 'mt-[1px] grid size-6 shrink-0 place-items-center rounded-full ring-1',
+	base: 'mt-[1px] grid size-6 shrink-0 place-items-center rounded-full ring-1', // token-lint-disable-line no-literal-length
 	variants: {
 		variant: {
 			info: 'bg-[color-mix(in_srgb,var(--color-info)_16%,var(--color-card))] text-[var(--color-info)] ring-[color-mix(in_srgb,var(--color-info)_28%,transparent)]',

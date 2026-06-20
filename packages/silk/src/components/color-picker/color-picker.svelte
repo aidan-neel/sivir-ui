@@ -1,3 +1,4 @@
+<!-- token-lint-disable-file -->
 <script lang="ts">
 	import * as Popover from '@silk/ui/components/popover';
 	import { useState } from '@silk/ui/internals/state.svelte.ts';

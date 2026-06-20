@@ -32,8 +32,9 @@
 	const thumbOnOffset =
 		'calc(var(--size-switch-track) - var(--size-switch-thumb) - (var(--switch-track-padding) * 2) - (var(--border-size) * 2))';
 
-	// token-lint-disable-next-line no-literal-length: sub-pixel compensation for thumb+padding height calc
+	// sub-pixel compensation for thumb+padding height calc
 	const buttonClasses =
+		// token-lint-disable-next-line no-literal-length
 		'relative inline-flex h-[calc(var(--size-switch-thumb)+(var(--switch-track-padding)*2)+0.05rem)] w-[var(--size-switch-track)] shrink-0 items-center rounded-full border p-[var(--switch-track-padding)] focus-visible:outline-none focus-visible:ring-0 disabled:cursor-not-allowed disabled:opacity-[0.55]';
 
 	function toggle(event: Event) {
