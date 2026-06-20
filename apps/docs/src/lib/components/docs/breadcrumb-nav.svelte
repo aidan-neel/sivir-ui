@@ -1,6 +1,5 @@
 <script lang="ts">
 	import * as Breadcrumb from '@silk/ui/components/breadcrumb';
-	import { goto } from '$app/navigation';
 
 	let {
 		items = [],
@@ -15,11 +14,7 @@
 	{#each items as item, index (item.label)}
 		<Breadcrumb.Item>
 			{#if item.href && index < items.length - 1}
-				<a
-					href={item.href}
-					class="transition-colors hover:text-foreground"
-					on:click={() => goto(item.href || '')}
-				>
+				<a href={item.href} class="transition-colors hover:text-foreground">
 					{item.label}
 				</a>
 			{:else}

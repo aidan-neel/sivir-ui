@@ -41,6 +41,7 @@
 	}
 
 	const installCommand = 'bunx @aidan-neel/ui add button';
+	const heroCode = '<Button>Get started</Button>';
 
 	// ── Variant metadata ────────────────────────────────────────────
 	const variantList: { value: ButtonVariant; label: string; tone: string; use: string }[] = [
@@ -194,7 +195,6 @@
 
 	<!-- ─── Hero Example ──────────────────────────────────────────── -->
 	<section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-		{@const heroCode = `<Button>Get started</Button>`}
 		<ComponentPreview code={heroCode}>
 			<div class="flex flex-col items-center gap-4">
 				<Button>Get started</Button>
