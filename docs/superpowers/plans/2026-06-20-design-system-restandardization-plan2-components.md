@@ -37,6 +37,8 @@
 
 All styled components use `tailwind-variants` (`tv`).
 
+> **User decisions (2026-06-20):** (1) **Full rename now** — apply the canonical names (e.g. `outlined`→`outline`) across ALL usages including the ~80 docs references, in this plan (not deferred). (2) **Editing user WIP is authorized** — subagents MAY modify and commit the user's uncommitted doc/app files as needed to keep the build green and complete the migration. (Stage only files relevant to the task; still avoid `git add -A`.)
+
 ---
 
 ## Task 0: Refine token-lint (remove false positives, add inline-disable)
