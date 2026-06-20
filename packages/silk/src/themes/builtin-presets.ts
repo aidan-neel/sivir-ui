@@ -1,9 +1,31 @@
+import type { ThemeDraft } from '@silk/ui/themes/presets';
 import { DEFAULT_THEME, type Theme } from './theme';
 
-/** Plan 3: v2 only. Old presets (.ts files) deleted. */
+type ThemePresetModule = {
+	defaultTheme?: ThemeDraft;
+	theme?: ThemeDraft;
+	preset?: ThemeDraft;
+};
+
+const presetModules = import.meta.glob('./presets/*.ts', { eager: true }) as Record<
+	string,
+	ThemePresetModule
+>;
+
+const loadedPresets = Object.entries(presetModules)
+	.map(([path, module]) => module.defaultTheme ?? module.theme ?? module.preset ?? null)
+	.filter((theme): theme is ThemeDraft => Boolean(theme))
+	.sort((left, right) => {
+		if (left.slug === 'default') return -1;
+		if (right.slug === 'default') return 1;
+		return left.name.localeCompare(right.name);
+	});
+
+// Old engine exports (for restored studio)
+export const builtInThemePresets = loadedPresets;
+export const defaultTheme =
+	builtInThemePresets.find((theme) => theme.slug === 'default') ?? builtInThemePresets[0];
+
+// v2 exports (for new docs gallery)
 export const themesV2: Theme[] = [DEFAULT_THEME];
 export const defaultThemeV2: Theme = DEFAULT_THEME;
-
-// Aliases for backward compat (if any old non-deleted consumer needs them)
-export const defaultTheme = defaultThemeV2;
-export const builtInThemePresets = themesV2;
