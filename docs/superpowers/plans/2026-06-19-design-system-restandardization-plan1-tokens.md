@@ -8,7 +8,15 @@
 
 **Tech Stack:** Svelte 5, Tailwind v4 (`@theme`), `tailwind-variants`, TypeScript, Vitest, Bun.
 
-**Build-safety rule for this plan:** Every task must leave `bun run check` (turbo type-check) green. We only _change CSS values_ and _add_ TS; we do **not** delete any exported TS symbol in Plan 1. The aggressive cull (spec §8: delete styles/transitions/old presets) lands in Plan 3.
+**Build-safety rule for this plan:** Every task must leave `bun run check` (turbo type-check) with **no new errors beyond the documented baseline**. We only _change CSS values_ and _add_ TS; we do **not** delete any exported TS symbol in Plan 1. The aggressive cull (spec §8: delete styles/transitions/old presets) lands in Plan 3.
+
+> **Baseline (captured 2026-06-20, commit `3ad4c63`):** `bun run check` already reports **3 errors**, all caused by the user's uncommitted WIP removing the `primary` variant from `input/variants.ts`:
+>
+> - `apps/docs/tests/unit/silk/input.test.ts:67` — `variant: 'primary'` not assignable
+> - `apps/docs/tests/unit/silk/themes.presets.test.ts:382` — `input({ variant: 'primary' })` not assignable
+> - (one more from the same root cause)
+>
+> These are **not** ours to fix in Plan 1 (input is migrated in Plan 2; the input `primary`→`outline`/`ghost` change is the user's in-flight work). A task is build-safe if it does not push the error count above 3. Task 7 may incidentally resolve the `themes.presets.test.ts:382` one while loosening that file.
 
 **Reference:** spec at `docs/superpowers/specs/2026-06-19-design-system-restandardization-design.md` (§4 tokens, §6 engine, §9 sequencing).
 
@@ -28,6 +36,8 @@
 | `apps/docs/tests/unit/silk/themes.presets.test.ts`  | Loosen assertions tied to retired default values                                     | **Modify**  |
 
 > `ui.css` stays a single file (matches the existing pattern; splitting `@theme` across `@import`ed files adds Tailwind-v4 build risk for no real gain here). Tiers are delineated by comment banners inside it.
+
+> **TEST LOCATION (corrected 2026-06-20):** All Vitest tests for `@silk/ui` MUST live under `apps/docs/tests/unit/silk/` — that's the only path the vitest `unit` project scans (`tests/unit/**/*.test.ts`, cwd = `apps/docs`). Tests placed under `packages/silk/src/**` are silently NOT collected. So: `ui-css.test.ts` → `apps/docs/tests/unit/silk/ui-css.test.ts`; `theme.test.ts` → `apps/docs/tests/unit/silk/theme.test.ts`; `builtin-presets.test.ts` → `apps/docs/tests/unit/silk/builtin-presets.test.ts`. Tests that read a source file as text resolve it via `resolve(process.cwd(), '../../packages/silk/src/<file>')`; tests that import code use the `@silk/ui/...` alias (e.g. `@silk/ui/themes/theme`). Run with `cd apps/docs && bunx vitest run --project unit`.
 
 ---
 
@@ -69,9 +79,9 @@ describe('lintSource', () => {
 		expect(v).toEqual([]);
 	});
 
-	it('ignores px inside comments-free non-class strings it was not given', () => {
-		// only scans the text it is handed; reports line numbers
-		const v = lintSource('a.svelte', 'line1\nclass="size-8"');
+	it('reports the correct line number for a violation on a later line', () => {
+		// only scans the text it is handed; reports 1-based line numbers
+		const v = lintSource('a.svelte', 'line1\nclass="h-[8px]"');
 		expect(v[0].line).toBe(2);
 	});
 });
@@ -695,14 +705,14 @@ The ~10-field `Theme` type + `themeToCss` v2 that emits _override_ CSS from the 
 **Files:**
 
 - Create: `packages/silk/src/themes/theme.ts`
-- Test: `packages/silk/src/themes/theme.test.ts`
+- Test: `apps/docs/tests/unit/silk/theme.test.ts` (vitest unit project — see TEST LOCATION note)
 
 - [ ] **Step 1: Write the failing tests**
 
 ```ts
-// packages/silk/src/themes/theme.test.ts
+// apps/docs/tests/unit/silk/theme.test.ts
 import { describe, expect, it } from 'vitest';
-import { DEFAULT_THEME, themeToCss } from './theme';
+import { DEFAULT_THEME, themeToCss } from '@silk/ui/themes/theme';
 
 describe('DEFAULT_THEME', () => {
 	it('uses Inter, soft blue brand, default scales', () => {
@@ -752,7 +762,7 @@ describe('themeToCss', () => {
 
 - [ ] **Step 2: Run to verify it fails**
 
-Run: `cd /home/aidan/silk/apps/docs && bunx vitest run ../../packages/silk/src/themes/theme.test.ts`
+Run: `cd /home/aidan/silk/apps/docs && bunx vitest run --project unit silk/theme.test.ts`
 Expected: FAIL — `Cannot find module './theme'`.
 
 - [ ] **Step 3: Implement `theme.ts`**
@@ -937,14 +947,14 @@ export function themeToCss(theme: Theme): string {
 
 - [ ] **Step 4: Run tests to verify pass**
 
-Run: `cd /home/aidan/silk/apps/docs && bunx vitest run ../../packages/silk/src/themes/theme.test.ts`
+Run: `cd /home/aidan/silk/apps/docs && bunx vitest run --project unit silk/theme.test.ts`
 Expected: PASS (all cases).
 
 - [ ] **Step 5: Commit**
 
 ```bash
 cd /home/aidan/silk
-git add packages/silk/src/themes/theme.ts packages/silk/src/themes/theme.test.ts
+git add packages/silk/src/themes/theme.ts apps/docs/tests/unit/silk/theme.test.ts
 git commit -m "feat(themes): constrained Theme engine (themeToCss v2), additive"
 ```
 
@@ -979,9 +989,9 @@ export const themesV2: Theme[] = [DEFAULT_THEME];
 - [ ] **Step 3: Write a test pinning the single built-in**
 
 ```ts
-// packages/silk/src/themes/builtin-presets.test.ts  (create)
+// apps/docs/tests/unit/silk/builtin-presets.test.ts  (create)
 import { describe, expect, it } from 'vitest';
-import { themesV2 } from './builtin-presets';
+import { themesV2 } from '@silk/ui/themes/builtin-presets';
 
 describe('themesV2', () => {
 	it('ships exactly one default theme', () => {
@@ -993,7 +1003,7 @@ describe('themesV2', () => {
 
 - [ ] **Step 4: Run it**
 
-Run: `cd /home/aidan/silk/apps/docs && bunx vitest run ../../packages/silk/src/themes/builtin-presets.test.ts`
+Run: `cd /home/aidan/silk/apps/docs && bunx vitest run --project unit silk/builtin-presets.test.ts`
 Expected: PASS.
 
 - [ ] **Step 5: Point the live CSS route at v2 when given a v2 theme**
@@ -1026,13 +1036,15 @@ Expected: green (no TS errors). If the route file’s `@silk/ui/themes/theme` im
 
 ```bash
 cd /home/aidan/silk
-git add packages/silk/src/themes/builtin-presets.ts packages/silk/src/themes/builtin-presets.test.ts "apps/docs/src/routes/themes/[name].css/+server.ts"
+git add packages/silk/src/themes/builtin-presets.ts apps/docs/tests/unit/silk/builtin-presets.test.ts "apps/docs/src/routes/themes/[name].css/+server.ts"
 git commit -m "feat(themes): reseed single default; serve default via v2 engine"
 ```
 
 ---
 
 ## Task 7: Reconcile existing engine tests with the new default
+
+> **RESOLUTION (2026-06-20): No code change required.** This task assumed changing the default would break `themes.presets.test.ts`. It does not — Plan 1 left the v1 engine (`presets.ts`) and its default preset **untouched** (additive approach), so all v1 engine tests still pass. Verified: full unit suite = **527 passed, 1 failed**, and the single failure (`input.test.ts > defaults to variant="primary"`) is the user's _uncommitted_ WIP removing the `primary` input variant — confirmed by stashing that WIP (suite then 100% green). That failure is Plan 2 / user territory, not Plan 1's to fix. Task closed as verified.
 
 The old default theme values changed (Linear indigo → soft blue, 16px → 14px, fancy → flat). Tests that assert the _old_ default values must be loosened to assert _structure_, not retired values. Do **not** delete the styles/transitions tests (their code still exists in Plan 1).
 
@@ -1144,4 +1156,9 @@ git commit -m "docs(plan): record Plan 2 carry-over from visual verification"
 
 ## Plan 2 carry-over
 
-_(populated during Task 8 visual verification)_
+Recorded during Task 8 visual verification (2026-06-20). The Notion-like default renders correctly in light + dark with **no broken components** (flat fallbacks resolve cleanly). Items for Plan 2 (component standardization):
+
+1. **Button still ships the old 10-variant taxonomy** — the showcase shows Primary, Secondary, Outlined, Flat, Ghost, Alternate, Success, Warning, Error, Destructive, and size `default`. Plan 1 deliberately did not touch components. Plan 2 unifies to `primary | secondary | ghost | outline | destructive` (+ status only where semantic), renames `Outlined`→`outline`, size `default`→`md`, and removes `flat`/`alternate` (spec §5).
+2. **token-lint baseline: 120 violations** across `packages/silk/src/components` (captured at `/tmp/token-lint-baseline.txt` during Task 1; regenerate with `bun tools/token-lint/index.ts packages/silk/src/components`). These hardcoded color/length literals + any Tier-1 leaks are the Plan 2 worklist; enable lint enforcement once cleared.
+3. **Verified resolved default tokens** (light): `--color-background #fbfbfa`, `--color-card #ffffff`, `--color-foreground #1c1c19`, `--color-primary #4a8cff`, `--color-border #e2e2df`, `--font-sans Inter`, `--font-size-body 14px`, `--radius-lg 8px`, `--button-primary-shadow` = (unset/flat). Matches spec §3/§4.
+4. **Dark mode is borders-first** as intended: cards/panels render flat with 1px borders, no drop shadow; only floating layers carry `--elevation-float`.
