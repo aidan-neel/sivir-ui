@@ -70,10 +70,12 @@ export function lintTree(root: string): Violation[] {
 	return walk(root).flatMap((f) => lintSource(f, readFileSync(f, 'utf8')));
 }
 
-// `bun tools/token-lint/index.ts <root>` prints violations; exits 0 in report mode.
+// `bun tools/token-lint/index.ts [root...]` prints violations; exits 0 in report mode.
+// Accepts MULTIPLE roots so batch checks cover every directory passed (not just the first).
 if (import.meta.main) {
-	const root = process.argv[2] ?? 'packages/silk/src/components';
-	const v = lintTree(root);
+	const roots = process.argv.slice(2);
+	if (roots.length === 0) roots.push('packages/silk/src/components');
+	const v = roots.flatMap((r) => lintTree(r));
 	for (const x of v) console.log(`${x.file}:${x.line} [${x.rule}] ${x.text}`);
 	console.log(`\n${v.length} violations (report mode — enforced in Plan 2)`);
 }
