@@ -55,6 +55,19 @@ Per-component page structure:
 - ⚠️ token-lint: REPORT MODE (36 violations remain, mostly inherent color-picker gradients + a few one-offs). Enforcement test NOT added (forcing 0 caused breakage; not a user requirement). Future: add file-level `token-lint-disable-file` support + mark color-picker, then enforce.
 - TODO: getting-started docs pages (introduction/installation/theming/changelog/styling) header/softness polish; Plan 3 (constrained Studio rebuild + cull of old 91-field engine) — large separate phase, flag for user.
 
+## Plan 3 — constrained Studio rebuild + cull (IN PROGRESS)
+
+Goal: replace the old ~91-field `ThemeDraft` engine + 153-knob Studio with the v2 `Theme` (~10 fields) + ~6 controls, and delete the old engine. Execute in build-green phases (verify `bun run build` + `bun run check` + unit tests after each; never commit broken):
+
+- **Phase A — Rebuild Studio/gallery/route on v2 (old engine stays):**
+  - Rewrite `apps/docs/src/routes/themes/studio/+page.svelte` SMALL: ~6 controls → v2 `Theme` (brand color, neutral temp, radius, density, motion, fonts) → `themeToCss(theme)` live preview via `applyLiveThemeCss`. KEEP `studio-preview.svelte` (canvas, no old imports). Replace/retire `studio-sidebar.svelte`, `studio-palette-sidebar.svelte`, `spacing-fields.ts` (old 153-knob model).
+  - Add v2 studio-state helpers to `live.ts` (additively; keep old types until Phase C).
+  - `[name].css/+server.ts` → v2 `themeToCss` only. `/themes` gallery → v2 (`themesV2`). Update/delete studio-related tests.
+- **Phase B — Registry/built-ins to v2:** `apps/registry/src/services/themes/model.ts` schema → the ~10-field `Theme`; `builtin-presets.ts` exports only v2 `Theme[]` (the single default). Discard old stored themes (user-approved).
+- **Phase C — Cull:** delete `themes/styles/`, `themes/transitions/`, `themes/presets/*.ts`, the old `ThemeDraft`/v1 surface in `presets.ts`, old types in `live.ts`; delete dead tests (`themes.presets`, `themes.density`, `themes.styles`, `themes.transitions`, `studio-spacing-fields`). Keep `theme.test.ts` + `studio-preview.test.ts`.
+
+Key facts: v2 engine (`theme.ts`) is ready (`Theme`, `DEFAULT_THEME`, `themeToCss`). `[name].css` already branches default→v2. `studio-preview.svelte` has NO old imports (keep). Registry mirrors `ThemeDraft` via its own Elysia schema (not a @silk import).
+
 ## Status (historical)
 
 - DONE: Plan 1 tokens; token-lint tool; Badge/Input/Textarea/form-controls/overlays/dialogs+display token migrations; Button revamp; Input revamp; theme-override fix (docs always show Notion default); softer token direction; outline inner shadow; press 0.99.
