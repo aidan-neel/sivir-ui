@@ -23,33 +23,38 @@
 	let copying = $state<boolean>(false);
 </script>
 
-<div class="flex flex-col gap-3" data-component-preview>
-	<div class="flex flex-row gap-4 px-1">
+<div class="flex flex-col gap-0" data-component-preview>
+	<!-- Tabs -->
+	<div class="flex flex-row gap-8 border-b border-border px-1">
 		<button
 			onclick={() => (selectedTab = 1)}
-			class="{selectedTab === 1
-				? 'text-foreground'
-				: 'text-foreground-muted'} text-sm [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] duration-200"
+			class="pb-2 text-sm [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] transition-colors {selectedTab ===
+			1
+				? 'border-b-2 border-foreground text-foreground'
+				: 'border-b-2 border-transparent text-foreground-muted hover:text-foreground'}"
 		>
 			Preview
 		</button>
 		<button
 			onclick={() => (selectedTab = 2)}
-			class="{selectedTab === 2
-				? 'text-foreground'
-				: 'text-foreground-muted'} text-sm [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] duration-200"
+			class="pb-2 text-sm [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] transition-colors {selectedTab ===
+			2
+				? 'border-b-2 border-foreground text-foreground'
+				: 'border-b-2 border-transparent text-foreground-muted hover:text-foreground'}"
 		>
 			Code
 		</button>
 	</div>
+
+	<!-- Content -->
 	<div
 		{...rest}
 		class={cn(
 			classProp,
-			`bg-[var(--card-bg)] dark:bg-background border border-border border-dashed rounded-[var(--radius-lg)] shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)] w-full rounded-lg flex flex-col overflow-hidden max-w-full ${
+			`border border-t-0 border-border rounded-b-[var(--radius-lg)] bg-card overflow-hidden w-full flex flex-col ${
 				selectedTab === 1
-					? 'items-center justify-center min-h-[20rem] px-6 py-16 md:px-10 md:py-20 bg-card/82'
-					: 'items-start justify-start bg-card/82'
+					? 'items-center justify-center min-h-[22rem] p-10'
+					: 'items-start justify-start relative'
 			}`
 		)}
 	>
@@ -61,7 +66,7 @@
 					<Tooltip.Trigger class="z-50 absolute top-3 right-3">
 						<button
 							type="button"
-							class="inline-flex size-8 items-center justify-center rounded-lg border border-transparent bg-[var(--button-ghost-bg)] text-[var(--button-ghost-foreground)] transition-[background-color,border-color,color,box-shadow,transform] duration-240 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-[var(--button-ghost-hover-bg)] focus-visible:translate-y-px focus-visible:outline-none focus-visible:ring-0 focus-visible:shadow-[0_0_0_3px_var(--color-ring)]"
+							class="inline-flex size-[var(--size-icon-md)] items-center justify-center rounded-lg border border-transparent text-foreground-muted transition-[background-color,border-color,color,box-shadow,transform] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-out)] hover:bg-secondary/50 hover:text-foreground focus-visible:outline-none focus-visible:shadow-[var(--focus-ring)]"
 							onclick={() => {
 								copying = true;
 								navigator.clipboard.writeText(code);
@@ -72,11 +77,11 @@
 						>
 							{#if copying}
 								<div in:flyAndScale={{ duration: 400 }}>
-									<Check size={18} class="text-foreground-muted" />
+									<Check size={16} class="text-[var(--color-success)]" />
 								</div>
 							{:else}
 								<div in:flyAndScale={{ duration: 400 }}>
-									<Copy size={18} class="text-foreground-muted" />
+									<Copy size={16} />
 								</div>
 							{/if}
 						</button>
