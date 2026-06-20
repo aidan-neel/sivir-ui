@@ -177,10 +177,10 @@
 	--button-primary-foreground: var(--color-on-primary);
 	--button-primary-hover-bg: var(--color-primary-hover);
 	--button-primary-border: transparent;
-	--button-secondary-bg: var(--color-secondary);
+	--button-secondary-bg: var(--color-muted);
 	--button-secondary-foreground: var(--color-foreground);
 	--button-secondary-border: var(--color-border);
-	--button-secondary-hover-bg: var(--color-border);
+	--button-secondary-hover-bg: var(--color-secondary);
 	--button-ghost-bg: transparent;
 	--button-ghost-border: transparent;
 	--button-ghost-foreground: var(--color-foreground);
@@ -189,11 +189,10 @@
 	--button-outlined-foreground: var(--color-foreground);
 	--button-outlined-hover-bg: var(--color-muted);
 	--button-outlined-flat-shadow: inset 0 0 0 1px var(--color-border);
-	/* The original outlined-button lift (from main), dialed WAY down: hairline
-	   edge + a whisper of outer drop. */
+	/* Subtle INNER (inset) shadow: hairline edge + soft inset depth, no outer drop. */
 	--button-outline-shadow:
-		inset 0 0 0 1px var(--color-border), 0 1px 2px -1px rgb(15 15 16 / 0.06),
-		0 2px 6px -3px rgb(15 15 16 / 0.06);
+		inset 0 0 0 1px var(--color-border), inset 0 -2px 3px -2px rgb(15 15 16 / 0.08),
+		inset 0 1px 0 0 rgb(255 255 255 / 0.4);
 	--button-outlined-fancy-shadow: var(--button-outline-shadow);
 	--button-destructive-bg: var(--color-error);
 	--button-destructive-foreground: #ffffff;
@@ -376,8 +375,8 @@
 	--switch-track-bg: color-mix(in srgb, var(--color-foreground) 24%, var(--color-background));
 	/* Original outlined-button lift (from main), dialed WAY down for dark. */
 	--button-outline-shadow:
-		inset 0 0 0 1px var(--color-border), 0 1px 2px -1px rgb(0 0 0 / 0.3),
-		0 3px 8px -4px rgb(0 0 0 / 0.22);
+		inset 0 0 0 1px var(--color-border), inset 0 -2px 3px -2px rgb(0 0 0 / 0.32),
+		inset 0 1px 0 0 rgb(255 255 255 / 0.05);
 }
 
 @layer base {
