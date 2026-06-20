@@ -1,5 +1,7 @@
 # Revamp Execution Notes (autonomous /loop — apply to EVERYTHING)
 
+> **PROJECT COMPLETE (2026-06-20):** Plans 1–3 done + token-lint enforced (0 violations, guard test). All components (style+motion), all 43 docs pages, constrained 6-control Studio, old 91-field engine culled. Build green: check=0, build 4/4, unit suite green. Sole optional follow-up: migrate the independent `apps/registry` backend schema to the v2 `Theme` shape (DB-coupled — left for an explicit task).
+
 User is AFK. Standing order: apply the established design language + docs flow to **every component and every docs page**, loop until completely done, **ask no more questions**. Keep each step build-green (`bun run check` = 0, unit suite green). Commit per logical chunk. Screenshots go in `silk/temp/screenshots/` (gitignored).
 
 ## Design language (components) — established on Button + Input
