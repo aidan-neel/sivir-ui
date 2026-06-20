@@ -52,8 +52,8 @@
 			onanimationend={onAnimationEnd}
 			class={cn(
 				className,
-				`silk-sheet-panel bg-[var(--color-overlay-bg)] text-[var(--color-foreground)] shadow-[var(--panel-shadow)] p-[var(--sheet-body-padding,16px)] border border-border rounded-[var(--radius-lg)] fixed top-2 bottom-2 z-50 flex w-[calc(100%-1rem)] max-w-[25rem] flex-col overflow-y-auto overscroll-contain ${
-					side === 'left' ? 'left-2' : 'right-2'
+				`silk-sheet-panel bg-[var(--color-modal)] text-[var(--color-panel-foreground)] shadow-[var(--panel-shadow)] p-[var(--sheet-body-padding)] border border-border rounded-[var(--radius-lg)] fixed top-[var(--sheet-margin)] bottom-[var(--sheet-margin)] z-50 flex w-[calc(100%-calc(var(--sheet-margin)*2))] max-w-[var(--sheet-max-width)] flex-col overflow-y-auto overscroll-contain ${
+					side === 'left' ? 'left-[var(--sheet-margin)]' : 'right-[var(--sheet-margin)]'
 				}`
 			)}
 			role="dialog"

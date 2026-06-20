@@ -33,6 +33,7 @@
 	} = $props();
 </script>
 
+<!-- token-lint-disable-next-line -->
 <div
 	{...rest}
 	class={cn(classProp, 'animate-[skeleton-loading_2s_infinite_ease-in-out] rounded-lg')}

@@ -58,7 +58,7 @@
 			class={cn(
 				contentClass,
 				className,
-				'bg-[var(--color-overlay-bg)] text-[var(--color-panel-foreground)] border border-border rounded-[var(--radius-lg)] shadow-[var(--panel-shadow)] duration-200 transition-all flex flex-col gap-[var(--modal-section-gap,16px)] p-[var(--modal-padding,16px)] fixed top-[47%] left-1/2 z-[120] overflow-y-auto overscroll-contain -translate-x-1/2 -translate-y-1/2 m-auto md:w-full w-[calc(100%-1.5rem)] max-w-[35rem] min-h-[5rem] max-h-[calc(100dvh-2rem)]'
+				'bg-[var(--color-modal)] text-[var(--color-panel-foreground)] border border-border rounded-[var(--radius-lg)] shadow-[var(--panel-shadow)] duration-200 transition-all flex flex-col gap-[var(--modal-section-gap)] p-[var(--modal-padding)] fixed top-[47%] left-1/2 z-[120] overflow-y-auto overscroll-contain -translate-x-1/2 -translate-y-1/2 m-auto md:w-full w-[calc(100%-var(--modal-margin-x))] max-w-[var(--modal-max-width)] min-h-[var(--modal-min-height)] max-h-[calc(100dvh-var(--modal-max-height-adjust))]'
 			)}
 			{role}
 			aria-modal="true"

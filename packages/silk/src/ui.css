@@ -288,8 +288,14 @@
 	--modal-padding: var(--silk-space-4);
 	--modal-title-description-gap: var(--silk-space-1);
 	--modal-section-gap: var(--silk-space-4);
+	--modal-max-width: 35rem;
+	--modal-min-height: 5rem;
+	--modal-margin-x: 1.5rem;
+	--modal-max-height-adjust: 2rem;
 	--sheet-body-padding: var(--silk-space-4);
 	--sheet-header-padding-bottom: var(--silk-space-6);
+	--sheet-max-width: 25rem;
+	--sheet-margin: 0.5rem;
 	--textarea-min-height: 7rem;
 	--textarea-padding-y: var(--silk-space-2);
 	--breadcrumb-gap: var(--silk-space-2);
