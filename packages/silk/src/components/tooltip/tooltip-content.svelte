@@ -18,7 +18,7 @@
 	aria-label="Tooltip"
 	class={cn(
 		className,
-		'bg-[var(--color-tooltip)] text-[var(--color-tooltip-foreground)] max-w-[18rem] rounded-md border border-border px-[var(--tooltip-padding-x)] py-[var(--tooltip-padding-y)] [font-size:var(--font-size-label,14px)] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] shadow-[var(--tooltip-shadow,var(--shadow-sm))]'
+		'bg-[var(--color-tooltip)] text-[var(--color-tooltip-foreground)] max-w-[var(--tooltip-max-width)] rounded-[var(--radius-lg)] border border-border px-[var(--tooltip-padding-x)] py-[var(--tooltip-padding-y)] [font-size:var(--font-size-label,14px)] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] shadow-[var(--tooltip-shadow,var(--shadow-sm))]'
 	)}
 >
 	<div role="tooltip">

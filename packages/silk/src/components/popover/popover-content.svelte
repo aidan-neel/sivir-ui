@@ -196,7 +196,7 @@
 	role="presentation"
 	data-floating-content
 	class={cn(
-		'absolute left-0 top-0 z-[130] flex max-w-[calc(100vw-1rem)] max-h-[calc(100vh-1rem)] items-center justify-center'
+		'absolute left-0 top-0 z-[130] flex max-w-[calc(100vw-2*var(--popover-viewport-margin))] max-h-[calc(100vh-2*var(--popover-viewport-margin))] items-center justify-center'
 	)}
 	bind:this={popover as HTMLElement}
 	onmouseenter={cancelClose}
@@ -227,7 +227,7 @@
 			data-ui="popover-content"
 			class={cn(
 				classProp,
-				`bg-[var(--color-panel)] text-[var(--color-panel-foreground)] border border-border rounded-[var(--radius-lg)] shadow-[var(--panel-shadow)] p-[var(--panel-padding)] text-sm m-auto max-w-[min(var(--popover-available-width,calc(100vw-1rem)),calc(100vw-1rem))] max-h-[min(var(--popover-available-height,calc(100vh-1rem)),calc(100vh-1rem))] overflow-auto`
+				`bg-[var(--color-panel)] text-[var(--color-panel-foreground)] border border-border rounded-[var(--radius-lg)] shadow-[var(--panel-shadow)] p-[var(--panel-padding)] text-sm m-auto max-w-[min(var(--popover-available-width,calc(100vw-2*var(--popover-viewport-margin))),calc(100vw-2*var(--popover-viewport-margin)))] max-h-[min(var(--popover-available-height,calc(100vh-2*var(--popover-viewport-margin))),calc(100vh-2*var(--popover-viewport-margin)))] overflow-auto`
 			)}
 		>
 			{@render children?.()}

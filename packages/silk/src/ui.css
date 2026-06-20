@@ -244,6 +244,14 @@
 	--menu-search-padding: var(--silk-space-3);
 	--menu-label-padding-x: var(--silk-space-2);
 	--menu-label-padding-y: var(--silk-space-1);
+	--menu-separator-margin-x: var(--silk-space-4);
+	--menu-submenu-min-width: 11rem;
+	--command-dialog-max-width: 35rem;
+	--command-dialog-max-height: 28rem;
+	--command-dialog-width-margin: 1.5rem;
+	--tooltip-max-width: 18rem;
+	--hover-card-width: 16rem;
+	--popover-viewport-margin: 1rem;
 
 	/* Controls: switch / checkbox / separator / skeleton */
 	--separator-color: var(--color-border);
