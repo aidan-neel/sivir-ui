@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Button, type ButtonVariant } from '@silk/ui/components/button';
-	import { BreadcrumbNav, ComponentPreview, Steps } from '$lib/components/docs';
+	import { ComponentPreview, Steps } from '$lib/components/docs';
 	import { highlight } from '$lib/highlight';
 	import * as Tabs from '@silk/ui/components/tabs';
 	import * as Tooltip from '@silk/ui/components/tooltip';
@@ -165,16 +165,6 @@
 </svelte:head>
 
 <div data-docs-page class="flex flex-col gap-10">
-	<!-- ─── Breadcrumb ────────────────────────────────────────────── -->
-	<BreadcrumbNav
-		items={[
-			{ label: 'Docs', href: '/docs' },
-			{ label: 'Components', href: '/docs/components' },
-			{ label: 'Button' }
-		]}
-		class="text-xs"
-	/>
-
 	<!-- ─── Header ────────────────────────────────────────────────── -->
 	<header class="flex flex-col gap-4">
 		<div>
@@ -196,12 +186,7 @@
 	<!-- ─── Hero Example ──────────────────────────────────────────── -->
 	<section id="hero" class="scroll-mt-20 flex flex-col gap-4">
 		<ComponentPreview code={heroCode}>
-			<div class="flex flex-col items-center gap-4">
-				<Button>Get started</Button>
-				<p class="text-xs text-foreground-muted">
-					The primary button. The hero action on any surface.
-				</p>
-			</div>
+			<Button>Get started</Button>
 		</ComponentPreview>
 	</section>
 
@@ -278,55 +263,29 @@
 			</p>
 		</div>
 
-		<!-- Variants -->
-		<div class="flex flex-col gap-4">
-			<h3
-				class="text-[1rem] font-[var(--font-weight-header,600)] tracking-tight text-foreground docs-subsection-heading"
-			>
-				Variants
-			</h3>
-			<p class="text-sm text-foreground-muted">
-				Pick by intent. The same action should always use the same variant across your product.
-			</p>
-			<div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-				{#each variantList as v (v.value)}
-					{@const code = `<Button${v.value !== 'primary' ? ` variant="${v.value}"` : ''}>${v.label}</Button>`}
-					<div
-						class="group flex flex-col overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card transition-[border-color,box-shadow,transform] [transition-duration:var(--motion-duration-hover)] [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:border-border-strong hover:shadow-[var(--shadow-sm)]"
-					>
-						<div
-							class="grid min-h-[6.5rem] place-items-center bg-[linear-gradient(135deg,color-mix(in_srgb,var(--color-secondary)_50%,transparent),transparent_75%)] p-4"
-						>
-							<Button variant={v.value}>{v.label}</Button>
-						</div>
-						<div class="flex flex-col gap-1 border-t border-border/70 px-4 py-3">
-							<div class="flex items-center justify-between gap-2">
-								<p class="m-0 text-[0.86rem] font-[var(--font-weight-label,600)] tracking-tight">
-									{v.label}
-								</p>
-								<button
-									type="button"
-									onclick={() => copy(code, `var-${v.value}`)}
-									class="grid size-6 place-items-center rounded text-foreground-muted opacity-0 transition-opacity hover:bg-secondary/50 hover:text-foreground group-hover:opacity-100"
-									aria-label={`Copy ${v.label} snippet`}
-								>
-									{#if copiedSnippet === `var-${v.value}`}
-										<Check size={12} class="text-[var(--color-success)]" />
-									{:else}
-										<Copy size={12} />
-									{/if}
-								</button>
-							</div>
-							<p
-								class="m-0 text-[0.72rem] font-[var(--font-weight-label,500)] text-foreground-muted"
-							>
-								{v.tone}
-							</p>
-							<p class="m-0 text-[0.74rem] leading-snug text-foreground-muted">{v.use}</p>
-						</div>
-					</div>
-				{/each}
+		<!-- Variants — each its own example piece -->
+		<div class="flex flex-col gap-8">
+			<div class="flex flex-col gap-2">
+				<h3
+					class="text-[1rem] font-[var(--font-weight-header,600)] tracking-tight text-foreground docs-subsection-heading"
+				>
+					Variants
+				</h3>
+				<p class="text-sm text-foreground-muted">
+					Pick by intent. The same action should always use the same variant across your product.
+				</p>
 			</div>
+			{#each variantList as v (v.value)}
+				{@const code = `<Button${v.value !== 'primary' ? ` variant="${v.value}"` : ''}>${v.label}</Button>`}
+				<div class="flex flex-col gap-2.5">
+					<p class="text-[0.82rem] font-[var(--font-weight-label,500)] text-foreground-muted">
+						{v.label}
+					</p>
+					<ComponentPreview {code}>
+						<Button variant={v.value}>{v.label}</Button>
+					</ComponentPreview>
+				</div>
+			{/each}
 		</div>
 
 		<!-- Sizes -->

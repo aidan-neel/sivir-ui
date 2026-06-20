@@ -23,9 +23,9 @@
 	let copying = $state<boolean>(false);
 </script>
 
-<div class="flex flex-col gap-0" data-component-preview>
-	<!-- Tabs -->
-	<div class="flex flex-row gap-8 border-b border-border px-1">
+<div class="flex flex-col gap-3.5" data-component-preview>
+	<!-- Tabs (detached from the panel below) -->
+	<div class="flex flex-row gap-6 px-1">
 		<button
 			onclick={() => (selectedTab = 1)}
 			class="pb-2 text-sm [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] transition-colors {selectedTab ===
@@ -51,7 +51,7 @@
 		{...rest}
 		class={cn(
 			classProp,
-			`border border-t-0 border-border rounded-b-[var(--radius-lg)] bg-card overflow-hidden w-full flex flex-col ${
+			`border border-border rounded-[var(--radius-lg)] bg-card overflow-hidden w-full flex flex-col ${
 				selectedTab === 1
 					? 'items-center justify-center min-h-[22rem] p-10'
 					: 'items-start justify-start relative'
