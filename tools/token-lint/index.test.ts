@@ -29,4 +29,33 @@ describe('lintSource', () => {
 		const v = lintSource('a.svelte', 'line1\nclass="h-[8px]"');
 		expect(v[0].line).toBe(2);
 	});
+
+	it('does NOT flag component-scoped --silk-<name>- vars (only primitive families)', () => {
+		const v = lintSource('a.svelte', 'animation: x var(--silk-marquee-duration) linear;');
+		expect(v).toEqual([]);
+	});
+
+	it('DOES flag real primitive families', () => {
+		for (const p of ['--silk-neutral-200', '--silk-blue-500', '--silk-space-4']) {
+			expect(
+				lintSource('a.svelte', `x: var(${p})`).some((y) => y.rule === 'no-primitive-leak')
+			).toBe(true);
+		}
+	});
+
+	it('honors an inline disable directive on the same line', () => {
+		const v = lintSource(
+			'a.svelte',
+			'style="background:#000000" /* token-lint-disable-line no-literal-color */'
+		);
+		expect(v).toEqual([]);
+	});
+
+	it('honors a disable-next-line directive', () => {
+		const v = lintSource(
+			'a.svelte',
+			'<!-- token-lint-disable-next-line -->\nstyle="background:#000"'
+		);
+		expect(v).toEqual([]);
+	});
 });

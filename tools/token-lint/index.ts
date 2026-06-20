@@ -8,15 +8,37 @@ const RULES: { rule: string; re: RegExp }[] = [
 	{ rule: 'no-literal-color', re: /#[0-9a-fA-F]{3,8}\b/ },
 	// px/rem/em literals inside a Tailwind arbitrary value: [...2px...] / [...0.5rem...]
 	{ rule: 'no-literal-length', re: /\[[^\]]*\d+(?:\.\d+)?(?:px|rem|em)[^\]]*\]/ },
-	// direct Tier-1 primitive reference
-	{ rule: 'no-primitive-leak', re: /var\(\s*--silk-[a-z0-9-]+/ }
+	// direct Tier-1 primitive reference (only neutral, blue, space, success, warning, error)
+	{ rule: 'no-primitive-leak', re: /var\(\s*--silk-(?:neutral|blue|space|success|warning|error)\b/ }
 ];
 
 export function lintSource(file: string, source: string): Violation[] {
 	const out: Violation[] = [];
-	source.split('\n').forEach((text, i) => {
+	const lines = source.split('\n');
+	const disabledFor = (line: string, prev: string, rule: string) => {
+		const onLine = line.includes('token-lint-disable-line');
+		const onPrev = prev.includes('token-lint-disable-next-line');
+		const appliesTo = (s: string) => {
+			if (!s.includes('token-lint-disable')) return false;
+			// Check if it explicitly names this rule
+			if (new RegExp(`token-lint-disable[a-z-]*\\s+[^\\n]*\\b${rule}\\b`).test(s)) return true;
+			// Check if it names ANY rule: look for pattern like "disable-line no-something"
+			// Extract what comes after the directive - should be a valid rule name pattern
+			const match = s.match(/token-lint-disable[a-z-]*\s+([a-z][a-z0-9-]*)/);
+			if (match && match[1]) {
+				// It looks like a rule name, and it doesn't match our rule, so not disabled
+				return false;
+			}
+			// Otherwise it's a global disable
+			return true;
+		};
+		return (onLine && appliesTo(line)) || (onPrev && appliesTo(prev));
+	};
+	lines.forEach((text, i) => {
+		const prev = i > 0 ? lines[i - 1] : '';
 		for (const { rule, re } of RULES) {
-			if (re.test(text)) out.push({ file, line: i + 1, rule, text: text.trim() });
+			if (re.test(text) && !disabledFor(text, prev, rule))
+				out.push({ file, line: i + 1, rule, text: text.trim() });
 		}
 	});
 	return out;
