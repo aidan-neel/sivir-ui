@@ -33,3 +33,21 @@ describe('ui.css Tier 2 semantic', () => {
 		expect(css).toContain('--color-info: var(--color-primary)');
 	});
 });
+
+describe('ui.css Tier 3 + structure', () => {
+	it('derives button tokens from semantic tokens (no fancy shadow tokens)', () => {
+		expect(css).toContain('--button-primary-bg: var(--color-primary)');
+		expect(css).toContain('--button-secondary-bg: var(--color-secondary)');
+		expect(css).not.toContain('--button-primary-shadow');
+		expect(css).not.toContain('--button-fancy-highlight');
+	});
+	it('sizes controls from the spacing scale', () => {
+		expect(css).toMatch(/--size-control-md:.*var\(--silk-space-/);
+		expect(css).toContain('--button-height: var(--size-control-md)');
+	});
+	it('keeps base layer, keyframes and reduced-motion', () => {
+		expect(css).toContain('@layer base');
+		expect(css).toContain('@keyframes skeleton-loading');
+		expect(css).toContain('prefers-reduced-motion: reduce');
+	});
+});

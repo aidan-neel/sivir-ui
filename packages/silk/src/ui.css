@@ -144,6 +144,136 @@
 	--color-field-focus: var(--color-card);
 	--color-field-foreground: var(--color-foreground);
 	--color-field-placeholder: var(--color-foreground-muted);
+
+	/* ============================================================
+	   TIER 3 — COMPONENT TOKENS (DERIVED from Tier 2 by recipe)
+	   ============================================================ */
+	/* Control sizing (from spacing scale) */
+	--size-control-sm: var(--silk-space-8); /* 32px */
+	--size-control-md: calc(var(--silk-space-8) + var(--silk-space-1)); /* 36px */
+	--size-control-lg: var(--silk-space-10); /* 40px */
+	--size-icon-md: var(--silk-space-8);
+	--space-control-x: var(--silk-space-3);
+	--space-panel: var(--silk-space-3);
+	--space-menu-item-x: var(--silk-space-2);
+
+	/* Button */
+	--button-height: var(--size-control-md);
+	--button-padding-x: var(--silk-space-4);
+	--button-gap: var(--silk-space-2);
+	--button-primary-bg: var(--color-primary);
+	--button-primary-foreground: var(--color-on-primary);
+	--button-primary-hover-bg: var(--color-primary-hover);
+	--button-primary-border: transparent;
+	--button-secondary-bg: var(--color-secondary);
+	--button-secondary-foreground: var(--color-foreground);
+	--button-secondary-border: var(--color-border);
+	--button-secondary-hover-bg: var(--color-border);
+	--button-ghost-bg: transparent;
+	--button-ghost-border: transparent;
+	--button-ghost-foreground: var(--color-foreground);
+	--button-ghost-hover-bg: color-mix(in srgb, var(--color-foreground) 6%, transparent);
+	--button-outlined-bg: transparent;
+	--button-outlined-foreground: var(--color-foreground);
+	--button-outlined-hover-bg: var(--color-muted);
+	--button-outlined-flat-shadow: inset 0 0 0 1px var(--color-border);
+	--button-outlined-fancy-shadow: var(--button-outlined-flat-shadow);
+	--button-destructive-bg: var(--color-error);
+	--button-destructive-foreground: #ffffff;
+	--button-destructive-border: transparent;
+	--button-destructive-hover-bg: color-mix(in srgb, var(--color-error) 88%, black);
+	/* haptic retired -> flat */
+	--haptic-press-y: 0px;
+
+	/* Badge */
+	--badge-padding-x: var(--silk-space-2);
+	--badge-padding-y: 2px;
+
+	/* Field / input */
+	--field-height: var(--size-control-md);
+	--field-padding-x: var(--silk-space-3);
+	--field-padding-y: 0rem;
+	--field-bg: var(--color-card);
+	--field-border: var(--color-input);
+	--field-focus-border: var(--color-primary);
+	--field-placeholder: var(--color-foreground-muted);
+	--field-disabled-opacity: 0.55;
+	--field-outlined-shadow: inset 0 0 0 1px var(--color-border);
+
+	/* Panel / card / menu / tooltip */
+	--panel-padding: var(--silk-space-3);
+	--panel-shadow: var(--elevation-float);
+	--card-padding: var(--silk-space-6);
+	--card-bg: var(--color-card);
+	--card-shadow: var(--elevation-1);
+	--tooltip-padding-y: var(--silk-space-1);
+	--tooltip-padding-x: var(--silk-space-2);
+	--tooltip-shadow: var(--elevation-float);
+	--menu-item-height: var(--silk-space-8);
+	--menu-item-padding-x: var(--space-menu-item-x);
+	--menu-item-foreground: var(--color-foreground);
+	--floating-menu-item-foreground: var(--color-foreground);
+	--menu-item-hover-bg: color-mix(in srgb, var(--color-foreground) 6%, transparent);
+	--floating-menu-item-hover-bg: var(--menu-item-hover-bg);
+	--menu-item-active-bg: var(--color-accent-tint);
+	--floating-menu-item-active-bg: var(--menu-item-active-bg);
+	--menu-label-foreground: var(--color-foreground-muted);
+	--menu-padding: var(--silk-space-1);
+	--menu-search-padding: var(--silk-space-3);
+	--menu-label-padding-x: var(--silk-space-2);
+	--menu-label-padding-y: var(--silk-space-1);
+
+	/* Controls: switch / checkbox / separator / skeleton */
+	--separator-color: var(--color-border);
+	--separator-thickness: 1px;
+	--switch-track-bg: color-mix(in srgb, var(--color-foreground) 18%, var(--color-background));
+	--switch-track-active-bg: var(--color-primary);
+	--switch-thumb-bg: #ffffff;
+	--size-switch-track: var(--silk-space-10);
+	--size-switch-thumb: 14px;
+	--switch-track-padding: 2px;
+	--checkbox-size: var(--silk-space-4);
+	--checkbox-bg: var(--color-field);
+	--checkbox-checked-bg: var(--color-primary);
+	--checkbox-checked-foreground: var(--color-on-primary);
+	--toast-bg: var(--color-panel);
+	--toast-shadow: var(--elevation-float);
+	--skeleton-base: var(--color-secondary);
+	--skeleton-highlight: var(--color-muted);
+
+	/* Component padding carried for existing components (Plan 2 tokenizes the rest) */
+	--tabs-trigger-padding-x: var(--silk-space-3);
+	--tabs-trigger-padding-y: var(--silk-space-2);
+	--tabs-list-padding: 3px;
+	--tabs-indicator-height: 2px;
+	--progress-height: var(--silk-space-2);
+	--toast-padding-x: var(--silk-space-4);
+	--toast-padding-y: var(--silk-space-4);
+	--toast-progress-height: 2px;
+	--calendar-padding: var(--silk-space-3);
+	--calendar-grid-gap: var(--silk-space-1);
+	--color-picker-padding: var(--silk-space-2);
+	--color-picker-width: 244px;
+	--color-picker-area-height: 148px;
+	--modal-padding: var(--silk-space-4);
+	--modal-title-description-gap: var(--silk-space-1);
+	--modal-section-gap: var(--silk-space-4);
+	--sheet-body-padding: var(--silk-space-4);
+	--sheet-header-padding-bottom: var(--silk-space-6);
+	--textarea-min-height: 7rem;
+	--textarea-padding-y: var(--silk-space-2);
+	--breadcrumb-gap: var(--silk-space-2);
+	--toggle-padding-sm: var(--silk-space-2);
+	--toggle-padding-md: var(--silk-space-3);
+	--toggle-padding-lg: var(--silk-space-4);
+	--shortcut-font-size: 11px;
+	--slider-thumb-size: 16px;
+	--slider-thumb-border: 2px;
+	--slider-track-height: var(--silk-space-1);
+	--slider-transition-duration: 120ms;
+	--toast-icon-size: var(--silk-space-6);
+	--toast-close-size: var(--silk-space-5);
+	--outline-shadow: none;
 }
 
 .dark {
@@ -183,4 +313,92 @@
 	--color-tooltip: var(--silk-neutral-900);
 	--color-tooltip-foreground: var(--silk-neutral-0);
 	--color-field: var(--color-secondary);
+
+	/* Borders-first dark: flat cards/panels, float only on overlays */
+	--elevation-1: none;
+	--card-shadow: var(--elevation-0);
+	--panel-shadow: var(--elevation-float);
+	--switch-track-bg: color-mix(in srgb, var(--color-foreground) 24%, var(--color-background));
+}
+
+@layer base {
+	* {
+		border-color: var(--color-border);
+	}
+
+	.border {
+		border-width: var(--border-size) !important;
+	}
+
+	[data-ui='button'],
+	[data-ui='input'],
+	[data-ui='textarea'],
+	[data-ui='switch'],
+	[data-ui='switch'] > div[aria-hidden='true'] {
+		transition-duration: var(--motion-duration-hover) !important;
+	}
+
+	[data-ui='dialog-content'],
+	[data-ui='alert-dialog-content'],
+	[data-ui='command-content'],
+	[data-ui='popover-content'] {
+		transition-duration: var(--motion-duration-panel) !important;
+		transition-timing-function: var(--motion-panel-easing);
+	}
+
+	/* Menu items: every item-style row in popover-based menus collapses to
+	   --menu-item-height, regardless of content. Targets roles set on items
+	   by DropdownMenu, ContextMenu, Select, Combobox, Command, and their
+	   sub-triggers. */
+	[role='menuitem'],
+	[role='menuitemcheckbox'],
+	[role='menuitemradio'],
+	[role='option'],
+	[data-ui='dropdown-menu-content'] [data-ui='popover-trigger'],
+	[data-ui='context-menu-content'] [data-ui='popover-trigger'],
+	[data-ui='dropdown-submenu-content'] [data-ui='popover-trigger'],
+	[data-ui='context-submenu-content'] [data-ui='popover-trigger'] {
+		height: var(--menu-item-height) !important;
+		min-height: var(--menu-item-height) !important;
+		padding-top: 0 !important;
+		padding-bottom: 0 !important;
+	}
+}
+
+@keyframes skeleton-loading {
+	0% {
+		background-position: 200% 0;
+	}
+
+	100% {
+		background-position: -200% 0;
+	}
+}
+
+/* Reduced motion (P3-F14).
+   When the user opts out of motion, zero every silk motion duration so
+   transitions complete in one frame. Consumers who want to keep some
+   motion under reduced-motion can override these variables in their
+   own stylesheet. */
+@media (prefers-reduced-motion: reduce) {
+	:root {
+		--motion-duration-hover: 0ms;
+		--motion-duration-menu: 0ms;
+		--motion-duration-panel: 0ms;
+		--motion-duration-sheet: 0ms;
+		--motion-duration-overlay: 0ms;
+		--motion-duration-tooltip: 0ms;
+		--motion-duration-toast-in: 0ms;
+		--motion-duration-toast-out: 0ms;
+	}
+}
+
+/* Buttons (and role="button") follow the --ui-cursor-interactive token on
+   hover. The themeStudio's "Pointer cursor" toggle flips this variable
+   between `pointer` and `default`, so every button on the page tracks it
+   without needing to opt in. !important keeps it ahead of utility classes
+   like `hover:cursor-pointer`. */
+button:not(:disabled):hover,
+[role='button']:not([aria-disabled='true']):hover {
+	cursor: var(--ui-cursor-interactive, pointer) !important;
 }
