@@ -252,7 +252,7 @@
 				Radius
 			</p>
 			<Select.Root value={activeRadius} class="">
-				<Select.Trigger class="w-full" variant="outlined">{activeRadius}</Select.Trigger>
+				<Select.Trigger class="w-full" variant="outline">{activeRadius}</Select.Trigger>
 				<Select.Content class="">
 					{#each radiusOptions as option (option.value)}
 						<Select.Item value={option.label} onclick={() => updateRadius(option.value)}>
@@ -284,7 +284,7 @@
 						Heading
 					</p>
 					<Combobox.Root>
-						<Combobox.Trigger variant="outlined" class="w-full"
+						<Combobox.Trigger variant="outline" class="w-full"
 							>{headerFontSelection}</Combobox.Trigger
 						>
 						<Combobox.Content class="w-full min-w-[var(--button-width,auto)]">
@@ -315,8 +315,7 @@
 						Body
 					</p>
 					<Combobox.Root>
-						<Combobox.Trigger variant="outlined" class="w-full"
-							>{bodyFontSelection}</Combobox.Trigger
+						<Combobox.Trigger variant="outline" class="w-full">{bodyFontSelection}</Combobox.Trigger
 						>
 						<Combobox.Content class="w-full min-w-[var(--button-width,auto)]">
 							<Combobox.Search placeholder="Search fonts..." />
@@ -350,7 +349,7 @@
 				Motion
 			</p>
 			<Select.Root value={activeDurationName} class="">
-				<Select.Trigger class="w-full" variant="outlined">{activeDurationName}</Select.Trigger>
+				<Select.Trigger class="w-full" variant="outline">{activeDurationName}</Select.Trigger>
 				<Select.Content class="">
 					{#each transitionPresets as preset (preset.slug)}
 						<Select.Item value={preset.name} onclick={() => updateDurationPreset(preset.slug)}>
@@ -452,7 +451,7 @@
 				aria-label="Theme name"
 			/>
 		</div>
-		<Button variant="outlined" class="w-full gap-2 border-border" onclick={copyGeneratedCss}>
+		<Button variant="outline" class="w-full gap-2 border-border" onclick={copyGeneratedCss}>
 			{#if copiedCss}
 				<Check size={15} />
 				Copied
@@ -461,7 +460,7 @@
 				Copy CSS
 			{/if}
 		</Button>
-		<Button variant="outlined" class="w-full gap-2 border-border" onclick={copyTypeScriptPreset}>
+		<Button variant="outline" class="w-full gap-2 border-border" onclick={copyTypeScriptPreset}>
 			{#if copiedTypeScriptPreset}
 				<Check size={15} />
 				Copied

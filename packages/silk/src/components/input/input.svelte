@@ -9,7 +9,7 @@
 		label,
 		description,
 		type = 'text',
-		variant = 'primary',
+		variant = 'outlined',
 		children,
 		class: classProp,
 		element = $bindable<HTMLInputElement>(),
@@ -24,7 +24,7 @@
 		label?: string;
 		description?: string;
 		type?: string;
-		variant?: 'primary' | 'outlined' | 'secondary';
+		variant?: 'outlined' | 'secondary';
 		class?: string;
 		element?: HTMLInputElement | undefined;
 		value?: string | number | boolean | FileList | undefined;

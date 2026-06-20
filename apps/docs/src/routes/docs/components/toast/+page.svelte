@@ -69,10 +69,10 @@
 <header class="flex flex-col gap-5 border-b border-border/60 pb-10">
 	<div class="flex flex-wrap items-start justify-between gap-3">
 		<div class="flex flex-wrap items-center gap-2">
-			<Badge variant="outlined" icon={Component} iconSize={11} class="gap-1.5 text-[0.66rem]"
+			<Badge variant="outline" icon={Component} iconSize={11} class="gap-1.5 text-[0.66rem]"
 				>Component</Badge
 			>
-			<Badge variant="outlined" class="text-[0.66rem]">v0.4.2</Badge>
+			<Badge variant="outline" class="text-[0.66rem]">v0.4.2</Badge>
 			<Badge variant="ghost" class="text-[0.66rem]">Imperative API</Badge>
 		</div>
 		<Button

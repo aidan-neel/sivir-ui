@@ -22,7 +22,7 @@
 	const prevComponent = components[curIndex - 1];
 	const nextComponent = components[curIndex + 1];
 
-	type Variant = 'primary' | 'secondary' | 'outlined';
+	type Variant = 'secondary' | 'outlined';
 	let pgVariant = $state<Variant>('outlined');
 	let pgValue = $state('');
 	let pgLabel = $state('Email');
@@ -34,14 +34,13 @@
 			label: 'Outlined',
 			use: 'The default -- neutral border, sits well anywhere.'
 		},
-		{ value: 'secondary', label: 'Secondary', use: 'Subtle tinted background.' },
-		{ value: 'primary', label: 'Primary', use: 'Highest-emphasis field -- uses primary accent.' }
+		{ value: 'secondary', label: 'Secondary', use: 'Subtle tinted background.' }
 	];
 
 	const apiRows = [
 		{
 			prop: 'variant',
-			type: '"primary" | "secondary" | "outlined"',
+			type: '"secondary" | "outlined"',
 			default: '"outlined"',
 			description: 'Visual treatment.'
 		},
@@ -103,28 +102,29 @@
 	<title>Silk · Input</title>
 	<meta
 		name="description"
-		content="Text input with labels, helper text, and three visual variants."
+		content="Text input with labels, helper text, and two visual variants."
 	/>
 </svelte:head>
 
 <header class="flex flex-col gap-5 border-b border-border/60 pb-10">
 	<div class="flex flex-wrap items-start justify-between gap-3">
 		<div class="flex flex-wrap items-center gap-2">
-			<Badge variant="outlined" icon={Component} iconSize={11} class="gap-1.5 text-[0.66rem]"
+			<Badge variant="outline" icon={Component} iconSize={11} class="gap-1.5 text-[0.66rem]"
 				>Component</Badge
 			>
-			<Badge variant="outlined" class="text-[0.66rem]">v0.4.2</Badge>
-			<Badge variant="ghost" class="text-[0.66rem]">3 variants</Badge>
+			<Badge variant="outline" class="text-[0.66rem]">v0.4.2</Badge>
+			<Badge variant="ghost" class="text-[0.66rem]">2 variants</Badge>
 		</div>
-		<a
+		<Button
 			href={SOURCE}
+			variant="outline"
+			class="h-auto gap-1.5 px-[var(--badge-padding-x)] py-[var(--badge-padding-y)] text-[0.66rem] leading-[1.2]"
 			target="_blank"
 			rel="noreferrer noopener"
-			class="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2.5 py-1 text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted transition-colors hover:bg-secondary/60 hover:text-foreground"
 		>
 			View source
 			<External size={11} />
-		</a>
+		</Button>
 	</div>
 
 	<div class="flex flex-col gap-3">
@@ -135,13 +135,13 @@
 			Input
 		</h1>
 		<p class="m-0 max-w-[42rem] text-[1rem] leading-relaxed text-foreground-muted">
-			The workhorse of every form. Three variants for different surface densities; bindable value
-			and full passthrough to the underlying `&lt;input&gt;`.
+			The workhorse of every form. Two variants for different surface densities; bindable value and
+			full passthrough to the underlying `&lt;input&gt;`.
 		</p>
 	</div>
 
 	<div
-		class="flex max-w-[28rem] items-stretch overflow-hidden rounded-[var(--radius-md)] border border-border bg-card"
+		class="flex items-stretch overflow-hidden rounded-[var(--radius-md)] border border-border bg-card"
 	>
 		<div class="flex flex-1 items-center gap-3 px-3 py-2.5">
 			<span class="grid size-6 place-items-center rounded-md bg-secondary/70 text-foreground-muted"
@@ -299,7 +299,7 @@
 
 		<div class="overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card">
 			<ul class="flex flex-col divide-y divide-border/60">
-				{#each apiRows as row (row.prop)}
+				{#each apiRows as row, i (i)}
 					<li class="grid grid-cols-[1fr_1.6fr_0.5fr] gap-3 px-4 py-3 max-md:grid-cols-1">
 						<code
 							class="font-mono text-[0.82rem] [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)]"
@@ -351,13 +351,13 @@
 	>
 		{#if prevComponent}<Button
 				href={`/docs/components/${prevComponent}`}
-				variant="outlined"
+				variant="outline"
 				class="flex-shrink-0"><ChevronLeft size={16} />{sanitizeComponent(prevComponent)}</Button
 			>{/if}
 		{#if prevComponent && nextComponent}<div class="mx-4 w-full rounded-lg border-t"></div>{/if}
 		{#if nextComponent}<Button
 				href={`/docs/components/${nextComponent}`}
-				variant="outlined"
+				variant="outline"
 				class="flex-shrink-0">{sanitizeComponent(nextComponent)}<ChevronRight size={16} /></Button
 			>{/if}
 	</div>

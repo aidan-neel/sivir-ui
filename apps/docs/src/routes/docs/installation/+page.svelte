@@ -74,7 +74,7 @@
 
 <header class="flex flex-col gap-5 border-b border-border/60 pb-10">
 	<div class="flex flex-wrap items-center gap-2">
-		<Badge variant="outlined" class="gap-1.5 text-[0.66rem]">
+		<Badge variant="outline" class="gap-1.5 text-[0.66rem]">
 			<Download size={11} class="text-primary" />
 			Installation
 		</Badge>
@@ -189,7 +189,7 @@
 		</p>
 	</div>
 	<div class="flex flex-wrap items-center gap-2">
-		<Button href="/docs/components" variant="outlined">
+		<Button href="/docs/components" variant="outline">
 			<Sparkles size={14} />
 			Components
 		</Button>

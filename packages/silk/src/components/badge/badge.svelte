@@ -4,7 +4,7 @@
 	import { cn } from '@silk/ui/utils';
 
 	let {
-		variant = 'primary',
+		variant = 'secondary',
 		children,
 		class: classProp,
 		href,
@@ -12,7 +12,16 @@
 		iconSize = 13,
 		...rest
 	}: {
-		variant?: 'primary' | 'flat' | 'outlined' | 'secondary' | 'ghost' | 'alternate' | 'destructive';
+		variant?:
+			| 'primary'
+			| 'secondary'
+			| 'ghost'
+			| 'outline'
+			| 'destructive'
+			| 'info'
+			| 'success'
+			| 'warning'
+			| 'error';
 		children?: Snippet;
 		class?: string;
 		href?: string;

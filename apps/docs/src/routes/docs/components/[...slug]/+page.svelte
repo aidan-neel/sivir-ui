@@ -65,7 +65,7 @@
 				{#if prevComponent}
 					<Button
 						href={`/docs/components/${prevComponent}`}
-						variant="outlined"
+						variant="outline"
 						class="flex-shrink-0"
 					>
 						<ChevronLeft size={18} />
@@ -78,7 +78,7 @@
 				{#if nextComponent}
 					<Button
 						href={`/docs/components/${nextComponent}`}
-						variant="outlined"
+						variant="outline"
 						class="flex-shrink-0"
 					>
 						{sanitizeComponent(nextComponent)}

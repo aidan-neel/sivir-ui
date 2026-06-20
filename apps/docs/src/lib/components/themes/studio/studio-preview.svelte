@@ -585,11 +585,11 @@
 						<div class="flex flex-wrap items-center gap-1.5">
 							<Badge>Primary</Badge>
 							<Badge variant="secondary">Secondary</Badge>
-							<Badge variant="outlined">Outlined</Badge>
-							<Badge variant="flat">Flat</Badge>
+							<Badge variant="outline">Outlined</Badge>
+							<Badge variant="ghost">Ghost</Badge>
 							<Badge variant="ghost">Ghost</Badge>
 							<Badge variant="destructive">Destructive</Badge>
-							<Badge variant="alternate">Alternate</Badge>
+							<Badge variant="info">Info</Badge>
 						</div>
 					</section>
 
@@ -1130,7 +1130,7 @@
 								>
 									All mail
 								</span>
-								<Badge variant="outlined" class="text-[0.66rem]">5 messages</Badge>
+								<Badge variant="outline" class="text-[0.66rem]">5 messages</Badge>
 							</div>
 							<div class="flex min-h-0 flex-1 flex-col overflow-y-auto">
 								{#each mailMessages as msg (msg.id)}

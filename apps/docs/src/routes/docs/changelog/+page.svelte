@@ -174,7 +174,7 @@
 <!-- ─── Hero ─────────────────────────────────────────────────────── -->
 <header class="flex flex-col gap-5 border-b border-border/60 pb-10">
 	<div class="flex flex-wrap items-center gap-2">
-		<Badge variant="outlined" icon={History} iconSize={11} class="gap-1.5 text-[0.66rem]">
+		<Badge variant="outline" icon={History} iconSize={11} class="gap-1.5 text-[0.66rem]">
 			Changelog
 		</Badge>
 		<Badge variant="ghost" class="text-[0.66rem]">{releases.length} releases</Badge>
@@ -210,7 +210,7 @@
 					<span class="text-[0.74rem] text-foreground-muted">{formatDate(release.date)}</span>
 					{#if idx === 0}
 						<Badge
-							variant="outlined"
+							variant="outline"
 							class="border-[color-mix(in_srgb,var(--color-primary)_50%,var(--color-border))] text-[0.62rem] uppercase tracking-wide"
 						>
 							Latest
@@ -278,7 +278,7 @@
 		</p>
 	</div>
 	<div class="flex flex-wrap items-center gap-2">
-		<Button href="https://github.com/aidan-neel/ui" variant="outlined">GitHub</Button>
+		<Button href="https://github.com/aidan-neel/ui" variant="outline">GitHub</Button>
 		<Button href="/docs/components">
 			Components
 			<ArrowRight size={14} />

@@ -17,7 +17,7 @@
 <header class="pb-6" data-page-header>
 	<div class="flex flex-col gap-4">
 		{#if eyebrow}
-			<Badge variant="outlined" class="w-fit px-3 text-[0.76rem]">
+			<Badge variant="outline" class="w-fit px-3 text-[0.76rem]">
 				{eyebrow}
 			</Badge>
 		{/if}

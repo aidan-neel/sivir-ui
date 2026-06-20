@@ -41,7 +41,7 @@
 <!-- ─── Hero ─────────────────────────────────────────────────────── -->
 <header class="flex flex-col gap-5 border-b border-border/60 pb-10">
 	<div class="flex flex-wrap items-center gap-2">
-		<Badge variant="outlined" class="gap-1.5 text-[0.66rem]">
+		<Badge variant="outline" class="gap-1.5 text-[0.66rem]">
 			<Sparkles size={11} class="text-primary" />
 			Introduction
 		</Badge>
@@ -64,7 +64,7 @@
 	</div>
 
 	<div
-		class="flex max-w-[28rem] items-stretch overflow-hidden rounded-[var(--radius-md)] border border-border bg-card"
+		class="flex items-stretch overflow-hidden rounded-[var(--radius-md)] border border-border bg-card"
 	>
 		<div class="flex flex-1 items-center gap-3 px-3 py-2.5">
 			<span class="grid size-6 place-items-center rounded-md bg-secondary/70 text-foreground-muted">
@@ -224,6 +224,6 @@
 			Install Silk
 			<ArrowRight size={14} />
 		</Button>
-		<Button href="/themes/studio" variant="outlined">Open theme studio</Button>
+		<Button href="/themes/studio" variant="outline">Open theme studio</Button>
 	</div>
 </section>

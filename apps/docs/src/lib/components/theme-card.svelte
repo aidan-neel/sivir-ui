@@ -78,6 +78,6 @@
 	</div>
 	<div class="flex flex-row gap-3">
 		<Button onclick={clicked} variant="primary" class="w-full">Preview</Button>
-		<Button onclick={copyCode} variant="outlined" class="w-full">Copy Code</Button>
+		<Button onclick={copyCode} variant="outline" class="w-full">Copy Code</Button>
 	</div>
 </button>

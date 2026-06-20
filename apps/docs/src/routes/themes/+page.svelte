@@ -276,7 +276,7 @@
 				</div>
 				<div class="flex items-center gap-2">
 					<Select.Root value={sortBy} class="">
-						<Select.Trigger class="h-9 min-w-[10rem] gap-1.5 text-[0.82rem]" variant="outlined">
+						<Select.Trigger class="h-9 min-w-[10rem] gap-1.5 text-[0.82rem]" variant="outline">
 							{sortLabels[sortBy]}
 						</Select.Trigger>
 						<Select.Content class="">
@@ -560,7 +560,7 @@
 										{theme.slug}
 									</p>
 								</div>
-								<Badge variant="outlined" class="shrink-0 text-[0.66rem]">
+								<Badge variant="outline" class="shrink-0 text-[0.66rem]">
 									{theme.durationPreset}
 								</Badge>
 							</div>
@@ -598,7 +598,7 @@
 								Apply
 							</Button>
 							<Button
-								variant="outlined"
+								variant="outline"
 								size="sm"
 								class="h-8 gap-1.5 text-[0.78rem]"
 								onclick={() => openInStudio(theme)}
@@ -758,8 +758,7 @@
 										<Button size="sm" variant="secondary" class="h-7 text-[0.74rem]"
 											>Secondary</Button
 										>
-										<Button size="sm" variant="outlined" class="h-7 text-[0.74rem]">Outlined</Button
-										>
+										<Button size="sm" variant="outline" class="h-7 text-[0.74rem]">Outline</Button>
 										<Button size="sm" variant="ghost" class="h-7 text-[0.74rem]">Ghost</Button>
 									</div>
 									<div
@@ -770,7 +769,7 @@
 									</div>
 									<div class="flex flex-wrap gap-1.5">
 										<Badge variant="primary" class="px-2 text-[0.66rem]">Primary</Badge>
-										<Badge variant="outlined" class="px-2 text-[0.66rem]">Outlined</Badge>
+										<Badge variant="outline" class="px-2 text-[0.66rem]">Outlined</Badge>
 										<Badge variant="ghost" class="px-2 text-[0.66rem]">Ghost</Badge>
 										<Badge variant="destructive" class="px-2 text-[0.66rem]">Destructive</Badge>
 									</div>
@@ -883,7 +882,7 @@
 									Apply theme
 								</Button>
 								<Button
-									variant="outlined"
+									variant="outline"
 									class="justify-start gap-2"
 									onclick={() => openInStudio(t)}
 								>

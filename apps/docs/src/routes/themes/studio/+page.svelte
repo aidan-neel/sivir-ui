@@ -1510,7 +1510,7 @@
 
 			<DropdownMenu.Root>
 				<DropdownMenu.Trigger
-					variant="outlined"
+					variant="outline"
 					size="sm"
 					class="h-8 gap-1.5 text-[0.78rem]"
 					aria-label="Export menu"
@@ -1912,7 +1912,7 @@
 						</section>
 
 						<Button
-							variant="outlined"
+							variant="outline"
 							size="sm"
 							class="h-8 gap-1.5 text-[0.78rem]"
 							onclick={openAdvancedColors}
@@ -1931,7 +1931,7 @@
 								Header font
 							</p>
 							<Select.Root value={headerFontSelection}>
-								<Select.Trigger class="h-9 w-full" variant="outlined">
+								<Select.Trigger class="h-9 w-full" variant="outline">
 									{headerFontSelection}
 								</Select.Trigger>
 								<Select.Content class="max-h-72 overflow-y-auto">
@@ -1953,7 +1953,7 @@
 								Body font
 							</p>
 							<Select.Root value={bodyFontSelection}>
-								<Select.Trigger class="h-9 w-full" variant="outlined">
+								<Select.Trigger class="h-9 w-full" variant="outline">
 									{bodyFontSelection}
 								</Select.Trigger>
 								<Select.Content class="max-h-72 overflow-y-auto">
@@ -1992,7 +1992,7 @@
 										<span class="text-[0.74rem] text-foreground-muted">{field.label}</span>
 										<div class="grid grid-cols-3 gap-1.5">
 											<Select.Root value={String(currentSize)} class="">
-												<Select.Trigger class="h-8 w-full text-[0.78rem]" variant="outlined">
+												<Select.Trigger class="h-8 w-full text-[0.78rem]" variant="outline">
 													<span class="block min-w-0 flex-1 truncate text-left"
 														>{sizeLabelFor(currentSize)}</span
 													>
@@ -2017,7 +2017,7 @@
 												</Select.Content>
 											</Select.Root>
 											<Select.Root value={String(currentWeight)} class="">
-												<Select.Trigger class="h-8 w-full text-[0.78rem]" variant="outlined">
+												<Select.Trigger class="h-8 w-full text-[0.78rem]" variant="outline">
 													<span class="block min-w-0 flex-1 truncate text-left"
 														>{weightLabel(currentWeight)}</span
 													>
@@ -2042,7 +2042,7 @@
 												</Select.Content>
 											</Select.Root>
 											<Select.Root value={String(currentTracking)} class="">
-												<Select.Trigger class="h-8 w-full text-[0.78rem]" variant="outlined">
+												<Select.Trigger class="h-8 w-full text-[0.78rem]" variant="outline">
 													<span class="block min-w-0 flex-1 truncate text-left"
 														>{trackingLabelFor(currentTracking)}</span
 													>
@@ -2227,7 +2227,7 @@
 								</p>
 							{/if}
 							<Button
-								variant="outlined"
+								variant="outline"
 								size="sm"
 								class="h-8 gap-1.5 text-[0.78rem]"
 								onclick={openAdvancedMotion}
@@ -2252,7 +2252,7 @@
 								>
 							</div>
 							<Select.Root value={editorTheme.motion.panelEasing ?? defaultEasing} class="">
-								<Select.Trigger class="h-9 w-full text-[0.82rem]" variant="outlined">
+								<Select.Trigger class="h-9 w-full text-[0.82rem]" variant="outline">
 									{currentEasing.label}
 								</Select.Trigger>
 								<Select.Content class="max-h-72 overflow-y-auto">
@@ -2292,7 +2292,7 @@
 								>
 							</div>
 							<Select.Root value={editorTheme.motion.hoverEasing ?? defaultHoverEasing} class="">
-								<Select.Trigger class="h-9 w-full text-[0.82rem]" variant="outlined">
+								<Select.Trigger class="h-9 w-full text-[0.82rem]" variant="outline">
 									{currentHoverEasing.label}
 								</Select.Trigger>
 								<Select.Content class="max-h-72 overflow-y-auto">
@@ -2430,7 +2430,7 @@
 							<div class="flex flex-wrap items-center gap-1.5">
 								<Badge>Live</Badge>
 								<Badge variant="secondary">Draft</Badge>
-								<Badge variant="outlined">Beta</Badge>
+								<Badge variant="outline">Beta</Badge>
 							</div>
 							<Input placeholder="Field preview" variant="outlined" />
 							<div
@@ -2718,7 +2718,7 @@
 				<Button variant="ghost" size="sm" class="h-8 text-[0.8rem]" onclick={cancelPendingLoad}>
 					Cancel
 				</Button>
-				<Button variant="outlined" size="sm" class="h-8 text-[0.8rem]" onclick={discardAndContinue}>
+				<Button variant="outline" size="sm" class="h-8 text-[0.8rem]" onclick={discardAndContinue}>
 					Discard
 				</Button>
 				<Button

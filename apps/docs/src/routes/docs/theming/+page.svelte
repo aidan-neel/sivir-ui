@@ -150,7 +150,7 @@
 
 <header class="flex flex-col gap-5 border-b border-border/60 pb-10">
 	<div class="flex flex-wrap items-center gap-2">
-		<Badge variant="outlined" class="gap-1.5 text-[0.66rem]">
+		<Badge variant="outline" class="gap-1.5 text-[0.66rem]">
 			<Palette size={11} class="text-primary" />
 			Theming
 		</Badge>
@@ -176,7 +176,7 @@
 			Open theme studio
 			<ArrowRight size={14} />
 		</Button>
-		<Button href="/themes" variant="outlined">Browse presets</Button>
+		<Button href="/themes" variant="outline">Browse presets</Button>
 	</div>
 </header>
 
@@ -370,7 +370,7 @@
 		<div class="flex flex-col gap-3 rounded-[var(--radius-lg)] border border-border bg-card p-5">
 			<div class="flex items-center justify-between">
 				<Badge variant="ghost">Visual</Badge>
-				<Badge variant="outlined" class="text-[0.62rem]">/themes/studio</Badge>
+				<Badge variant="outline" class="text-[0.62rem]">/themes/studio</Badge>
 			</div>
 			<p
 				class="m-0 text-[1rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
@@ -383,7 +383,7 @@
 				component side-by-side. Export when it's right.
 			</p>
 			<div class="pt-1">
-				<Button href="/themes/studio" variant="outlined" class="w-full justify-center">
+				<Button href="/themes/studio" variant="outline" class="w-full justify-center">
 					Open studio
 					<ArrowRight size={14} />
 				</Button>
@@ -393,7 +393,7 @@
 		<div class="flex flex-col gap-3 rounded-[var(--radius-lg)] border border-border bg-card p-5">
 			<div class="flex items-center justify-between">
 				<Badge variant="ghost">Code</Badge>
-				<Badge variant="outlined" class="text-[0.62rem]">@theme + .dark</Badge>
+				<Badge variant="outline" class="text-[0.62rem]">@theme + .dark</Badge>
 			</div>
 			<p
 				class="m-0 text-[1rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
@@ -407,9 +407,7 @@
 				<code class="font-mono text-foreground">.dark</code>. That's the whole API.
 			</p>
 			<div class="pt-1">
-				<Button href="#layers" variant="outlined" class="w-full justify-center">
-					See examples
-				</Button>
+				<Button href="#layers" variant="outline" class="w-full justify-center">See examples</Button>
 			</div>
 		</div>
 	</div>
@@ -509,7 +507,7 @@
 		</p>
 	</div>
 	<div class="flex flex-wrap items-center gap-2">
-		<Button href="/docs/styling" variant="outlined">Styling guide</Button>
+		<Button href="/docs/styling" variant="outline">Styling guide</Button>
 		<Button href="/themes/studio">
 			Theme studio
 			<ArrowRight size={14} />

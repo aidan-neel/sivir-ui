@@ -25,29 +25,37 @@
 	type Variant =
 		| 'primary'
 		| 'secondary'
-		| 'outlined'
-		| 'flat'
 		| 'ghost'
-		| 'alternate'
-		| 'destructive';
-	let pgVariant = $state<Variant>('primary');
+		| 'outline'
+		| 'destructive'
+		| 'info'
+		| 'success'
+		| 'warning'
+		| 'error';
+	let pgVariant = $state<Variant>('secondary');
 	let pgLabel = $state('New');
 
 	const variantList: { value: Variant; label: string; use: string }[] = [
-		{ value: 'primary', label: 'Primary', use: 'Highlight + status -- pair with a hero action.' },
-		{ value: 'secondary', label: 'Secondary', use: 'Neutral label or metadata.' },
-		{ value: 'outlined', label: 'Outlined', use: 'Quiet container that defers to content.' },
-		{ value: 'flat', label: 'Flat', use: 'Soft primary tint -- works inside cards.' },
+		{
+			value: 'primary',
+			label: 'Primary',
+			use: 'Highlight & hero placements -- pair with actions.'
+		},
+		{ value: 'secondary', label: 'Secondary', use: 'Neutral label or metadata (default).' },
 		{ value: 'ghost', label: 'Ghost', use: 'Invisible chrome -- counts, low-emphasis tags.' },
-		{ value: 'alternate', label: 'Alternate', use: 'High-contrast accent for hero placements.' },
-		{ value: 'destructive', label: 'Destructive', use: '"Failing", "Blocked", "Past due".' }
+		{ value: 'outline', label: 'Outline', use: 'Quiet container that defers to content.' },
+		{ value: 'destructive', label: 'Destructive', use: '"Failing", "Blocked", "Past due".' },
+		{ value: 'info', label: 'Info', use: 'Informational status tint.' },
+		{ value: 'success', label: 'Success', use: 'Success or positive status.' },
+		{ value: 'warning', label: 'Warning', use: 'Warning or attention-needed status.' },
+		{ value: 'error', label: 'Error', use: 'Error or critical status.' }
 	];
 
 	const apiRows = [
 		{
 			prop: 'variant',
-			type: '"primary" | "secondary" | "outlined" | "flat" | "ghost" | "alternate" | "destructive"',
-			default: '"primary"',
+			type: '"primary" | "secondary" | "ghost" | "outline" | "destructive" | "info" | "success" | "warning" | "error"',
+			default: '"secondary"',
 			description: 'Visual treatment.'
 		},
 		{
@@ -95,21 +103,22 @@
 <header class="flex flex-col gap-5 border-b border-border/60 pb-10">
 	<div class="flex flex-wrap items-start justify-between gap-3">
 		<div class="flex flex-wrap items-center gap-2">
-			<Badge variant="outlined" icon={Component} iconSize={11} class="gap-1.5 text-[0.66rem]"
+			<Badge variant="outline" icon={Component} iconSize={11} class="gap-1.5 text-[0.66rem]"
 				>Component</Badge
 			>
-			<Badge variant="outlined" class="text-[0.66rem]">v0.4.2</Badge>
-			<Badge variant="ghost" class="text-[0.66rem]">7 variants</Badge>
+			<Badge variant="outline" class="text-[0.66rem]">v0.4.2</Badge>
+			<Badge variant="ghost" class="text-[0.66rem]">9 variants</Badge>
 		</div>
-		<a
+		<Button
 			href={SOURCE}
+			variant="outline"
+			class="h-auto gap-1.5 px-[var(--badge-padding-x)] py-[var(--badge-padding-y)] text-[0.66rem] leading-[1.2]"
 			target="_blank"
 			rel="noreferrer noopener"
-			class="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2.5 py-1 text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted transition-colors hover:bg-secondary/60 hover:text-foreground"
 		>
 			View source
 			<External size={11} />
-		</a>
+		</Button>
 	</div>
 
 	<div class="flex flex-col gap-3">
@@ -126,7 +135,7 @@
 	</div>
 
 	<div
-		class="flex max-w-[28rem] items-stretch overflow-hidden rounded-[var(--radius-md)] border border-border bg-card"
+		class="flex items-stretch overflow-hidden rounded-[var(--radius-md)] border border-border bg-card"
 	>
 		<div class="flex flex-1 items-center gap-3 px-3 py-2.5">
 			<span class="grid size-6 place-items-center rounded-md bg-secondary/70 text-foreground-muted">
@@ -304,7 +313,7 @@
 					class="text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted"
 					>Status pill</span
 				>
-				<Badge variant="flat">
+				<Badge variant="ghost">
 					<span class="mr-1.5 inline-block size-1.5 rounded-full bg-primary"></span>
 					Active
 				</Badge>
@@ -325,7 +334,7 @@
 					class="text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted"
 					>Tag</span
 				>
-				<Badge variant="outlined">design</Badge>
+				<Badge variant="outline">design</Badge>
 			</div>
 		</div>
 	</section>
@@ -399,7 +408,7 @@
 		class:justify-start={prevComponent && !nextComponent}
 	>
 		{#if prevComponent}
-			<Button href={`/docs/components/${prevComponent}`} variant="outlined" class="flex-shrink-0">
+			<Button href={`/docs/components/${prevComponent}`} variant="outline" class="flex-shrink-0">
 				<ChevronLeft size={16} />
 				{sanitizeComponent(prevComponent)}
 			</Button>
@@ -408,7 +417,7 @@
 			<div class="mx-4 w-full rounded-lg border-t"></div>
 		{/if}
 		{#if nextComponent}
-			<Button href={`/docs/components/${nextComponent}`} variant="outlined" class="flex-shrink-0">
+			<Button href={`/docs/components/${nextComponent}`} variant="outline" class="flex-shrink-0">
 				{sanitizeComponent(nextComponent)}
 				<ChevronRight size={16} />
 			</Button>

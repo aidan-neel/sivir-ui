@@ -41,6 +41,7 @@
 	let scrolled = $state(false);
 	let mobileMenuOpen = $state(false);
 	const isStudio = $derived($page.url.pathname.startsWith('/themes/studio'));
+	const isHome = $derived($page.url.pathname === '/');
 
 	const navItems = [
 		{ href: '/', label: 'Home' },
@@ -157,7 +158,11 @@
 >
 	<div
 		class={`relative mx-auto flex h-16 w-full items-center justify-between ${
-			isStudio ? 'max-w-none px-4' : 'max-w-[1440px] px-4 md:px-8'
+			isStudio
+				? 'max-w-none px-4'
+				: isHome
+					? 'max-w-none px-[clamp(1.5rem,4vw,4rem)]'
+					: 'max-w-[1440px] px-4 md:px-8'
 		}`}
 	>
 		<Command.Root>
@@ -186,7 +191,7 @@
 				<div class="hidden md:block">
 					<Command.Trigger
 						class="h-8 w-60 justify-between rounded-md px-2 text-[0.78rem] text-foreground-muted"
-						variant="outlined"
+						variant="outline"
 					>
 						Search docs...
 						<Shortcut shortcut="/">/</Shortcut>
@@ -329,7 +334,7 @@
 						<div class="flex items-center gap-2">
 							<Button
 								class="h-10 flex-1 justify-center rounded-lg"
-								variant="outlined"
+								variant="outline"
 								onclick={() => {
 									window.open('https://github.com/aidan-neel/ui', '_blank', 'noopener,noreferrer');
 									closeMobileMenu();

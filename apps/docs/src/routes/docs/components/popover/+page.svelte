@@ -74,21 +74,22 @@
 <header class="flex flex-col gap-5 border-b border-border/60 pb-10">
 	<div class="flex flex-wrap items-start justify-between gap-3">
 		<div class="flex flex-wrap items-center gap-2">
-			<Badge variant="outlined" icon={Component} iconSize={11} class="gap-1.5 text-[0.66rem]"
+			<Badge variant="outline" icon={Component} iconSize={11} class="gap-1.5 text-[0.66rem]"
 				>Component</Badge
 			>
-			<Badge variant="outlined" class="text-[0.66rem]">v0.4.2</Badge>
+			<Badge variant="outline" class="text-[0.66rem]">v0.4.2</Badge>
 			<Badge variant="ghost" class="text-[0.66rem]">Floating UI</Badge>
 		</div>
-		<a
+		<Button
 			href={SOURCE}
+			variant="outline"
+			class="h-auto gap-1.5 px-[var(--badge-padding-x)] py-[var(--badge-padding-y)] text-[0.66rem] leading-[1.2]"
 			target="_blank"
 			rel="noreferrer noopener"
-			class="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2.5 py-1 text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted transition-colors hover:bg-secondary/60 hover:text-foreground"
 		>
 			View source
 			<External size={11} />
-		</a>
+		</Button>
 	</div>
 
 	<div class="flex flex-col gap-3">
@@ -105,7 +106,7 @@
 	</div>
 
 	<div
-		class="flex max-w-[28rem] items-stretch overflow-hidden rounded-[var(--radius-md)] border border-border bg-card"
+		class="flex items-stretch overflow-hidden rounded-[var(--radius-md)] border border-border bg-card"
 	>
 		<div class="flex flex-1 items-center gap-3 px-3 py-2.5">
 			<span class="grid size-6 place-items-center rounded-md bg-secondary/70 text-foreground-muted"
@@ -139,7 +140,7 @@
 				class="grid min-h-[12rem] place-items-center border-b border-border/70 bg-[linear-gradient(135deg,color-mix(in_srgb,var(--color-secondary)_60%,transparent),transparent_70%)] p-8"
 			>
 				<Popover.Root placement="bottom">
-					<Popover.Trigger variant="outlined">
+					<Popover.Trigger variant="outline">
 						<Bell size={14} />
 						Notifications
 					</Popover.Trigger>
@@ -162,7 +163,7 @@
 				class="m-0 overflow-x-auto bg-secondary/40 px-6 py-4 font-mono text-[0.78rem] leading-relaxed text-foreground"><code
 					>{@html highlight(
 						`<Popover.Root placement="bottom">
-  <Popover.Trigger variant="outlined">
+  <Popover.Trigger variant="outline">
     <Bell size={14} /> Notifications
   </Popover.Trigger>
   <Popover.Content class="w-72">
@@ -192,7 +193,7 @@
 
 		<div class="overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card">
 			<ul class="flex flex-col divide-y divide-border/60">
-				{#each apiRows as row (row.prop)}
+				{#each apiRows as row, i (i)}
 					<li class="grid grid-cols-[1fr_1.4fr_0.6fr] gap-3 px-4 py-3 max-md:grid-cols-1">
 						<div class="flex flex-col gap-1">
 							<code class="font-mono text-[0.7rem] text-foreground-muted"
@@ -248,13 +249,13 @@
 	>
 		{#if prevComponent}<Button
 				href={`/docs/components/${prevComponent}`}
-				variant="outlined"
+				variant="outline"
 				class="flex-shrink-0"><ChevronLeft size={16} />{sanitizeComponent(prevComponent)}</Button
 			>{/if}
 		{#if prevComponent && nextComponent}<div class="mx-4 w-full rounded-lg border-t"></div>{/if}
 		{#if nextComponent}<Button
 				href={`/docs/components/${nextComponent}`}
-				variant="outlined"
+				variant="outline"
 				class="flex-shrink-0">{sanitizeComponent(nextComponent)}<ChevronRight size={16} /></Button
 			>{/if}
 	</div>
