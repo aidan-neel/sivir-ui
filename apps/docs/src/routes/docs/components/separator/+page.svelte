@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { Button } from '@silk/ui/components/button';
-	import { Separator } from '@silk/ui/components/separator';
-	import { ComponentPreview, Steps } from '$lib/components/docs';
-	import { highlight } from '$lib/highlight';
+	import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+	import { CodeBlock } from '@silk/ui/components/code-block';
 	import { components, sanitizeComponent } from '$lib/components';
 
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
@@ -10,8 +9,14 @@
 	import ChevronRight from '@lucide/svelte/icons/chevron-right';
 	import Copy from '@lucide/svelte/icons/copy';
 	import Check from '@lucide/svelte/icons/check';
-	import Hash from '@lucide/svelte/icons/hash';
 	import External from '@lucide/svelte/icons/external-link';
+
+	import Hero from './examples/hero.svelte';
+	import HeroSrc from './examples/hero.svelte?raw';
+	import Horizontal from './examples/horizontal.svelte';
+	import HorizontalSrc from './examples/horizontal.svelte?raw';
+	import Vertical from './examples/vertical.svelte';
+	import VerticalSrc from './examples/vertical.svelte?raw';
 
 	const TITLE = 'Separator';
 	const SLUG = 'separator';
@@ -48,7 +53,6 @@
 	}
 
 	const installCommand = `bunx @aidan-neel/ui add ${SLUG}`;
-	const heroCode = '<Separator />';
 </script>
 
 <svelte:head>
@@ -77,12 +81,8 @@
 
 	<!-- ─── Hero Example ──────────────────────────────────────────── -->
 	<section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-		<ComponentPreview code={heroCode}>
-			<div class="flex flex-col items-center gap-3">
-				<span>Silk UI</span>
-				<Separator class="w-40" />
-				<span class="text-foreground-muted">A theme-first component library</span>
-			</div>
+		<ComponentPreview code={HeroSrc}>
+			<Hero />
 		</ComponentPreview>
 	</section>
 
@@ -93,40 +93,7 @@
 		>
 			Installation
 		</h2>
-		<p class="text-sm text-foreground-muted">Install the Separator component with the CLI:</p>
-		<Steps
-			steps={[
-				{
-					title: 'Run the CLI',
-					description: 'Copy the command below and run it in your terminal.'
-				}
-			]}
-		>
-			<div
-				class="flex items-stretch overflow-hidden rounded-[var(--radius-md)] border border-border bg-card"
-			>
-				<div class="flex flex-1 items-center gap-3 px-3 py-2.5">
-					<span
-						class="grid size-6 place-items-center rounded-md bg-secondary/70 text-foreground-muted"
-					>
-						<Hash size={12} />
-					</span>
-					<code class="flex-1 font-mono text-[0.82rem] text-foreground">{installCommand}</code>
-				</div>
-				<button
-					type="button"
-					onclick={() => copy(installCommand, 'install')}
-					class="border-l border-border bg-card px-3 text-[0.78rem] text-foreground-muted transition-colors hover:bg-secondary/50 hover:text-foreground"
-					aria-label="Copy install command"
-				>
-					{#if copiedSnippet === 'install'}
-						<Check size={14} class="text-[var(--color-success)]" />
-					{:else}
-						<Copy size={14} />
-					{/if}
-				</button>
-			</div>
-		</Steps>
+		<InstallCommand command={installCommand} />
 	</section>
 
 	<!-- ─── Usage ─────────────────────────────────────────────────── -->
@@ -137,13 +104,11 @@
 			Usage
 		</h2>
 		<p class="text-sm text-foreground-muted">Import Separator and use it to divide content:</p>
-		<pre
-			class="m-0 overflow-x-auto bg-secondary/40 rounded-[var(--radius-md)] border border-border px-4 py-3 font-mono text-[0.85rem] leading-relaxed text-foreground"><code
-				>{@html highlight(
-					`import { Separator } from '@silk/ui/components/separator';\n\n<Separator />\n<Separator orientation="vertical" />`,
-					'svelte'
-				)}</code
-			></pre>
+		<CodeBlock
+			code={`import { Separator } from '@silk/ui/components/separator';\n\n<Separator />\n<Separator orientation="vertical" />`}
+			lang="svelte"
+			copy="overlay"
+		/>
 	</section>
 
 	<!-- ─── Examples ──────────────────────────────────────────────── -->
@@ -166,12 +131,8 @@
 			>
 				Horizontal
 			</h3>
-			<ComponentPreview code="<Separator />">
-				<div class="flex flex-col items-center gap-3 text-[0.88rem]">
-					<span>Section A</span>
-					<Separator class="w-40" />
-					<span class="text-foreground-muted">Section B</span>
-				</div>
+			<ComponentPreview code={HorizontalSrc}>
+				<Horizontal />
 			</ComponentPreview>
 		</div>
 
@@ -182,14 +143,8 @@
 			>
 				Vertical
 			</h3>
-			<ComponentPreview code="<Separator orientation=&quot;vertical&quot; />">
-				<div class="flex h-12 items-center gap-3 text-[0.78rem]">
-					<span>Item A</span>
-					<Separator orientation="vertical" />
-					<span>Item B</span>
-					<Separator orientation="vertical" />
-					<span>Item C</span>
-				</div>
+			<ComponentPreview code={VerticalSrc}>
+				<Vertical />
 			</ComponentPreview>
 		</div>
 	</section>

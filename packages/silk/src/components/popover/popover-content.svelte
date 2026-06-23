@@ -58,10 +58,9 @@
 <script lang="ts">
 	import { onDestroy, onMount } from 'svelte';
 	import { states } from '@silk/ui/internals/state.svelte.ts';
-	import { clickOutside, cn, positionFloatingPanel } from '@silk/ui/utils';
-	import { flyAndScale } from '@silk/ui/internals/transition';
+	import { clickOutside, cn, positionFloatingPanel, trapFocus } from '@silk/ui/utils';
+	import { createPresence } from '@silk/ui/internals/presence.svelte.ts';
 	import { getContext } from 'svelte';
-	import type { ReferenceElement } from '@floating-ui/dom';
 	import type { PopoverContentProps, PopoverState } from '.';
 
 	const {
@@ -72,6 +71,7 @@
 		refElement,
 		role = 'dialog',
 		tabindex = -1,
+		focusTrap = true,
 		id,
 		'aria-modal': ariaModalProp,
 		...rest
@@ -80,7 +80,11 @@
 	const key = getContext('key') as string;
 	const uiState = states[key].data as PopoverState;
 
+	// Keep the content mounted through its CSS exit animation.
+	const presence = createPresence(() => uiState.open);
+
 	let popover = $state<HTMLElement | undefined>();
+	let panelEl = $state<HTMLElement | undefined>();
 	let clickOutsideCleanup: (() => void) | undefined;
 
 	function handleKeydown(event: KeyboardEvent) {
@@ -130,6 +134,11 @@
 		if (uiState?.buttonRef) ro.observe(uiState.buttonRef);
 		if (popover) ro.observe(popover);
 
+		// These fire on document focus changes -- including the focusout that the
+		// browser dispatches synchronously while the content is being removed from
+		// the DOM. Defer the state write to a microtask so we never mutate
+		// reactive state in the middle of the Svelte flush that unmounts us
+		// (which throws state_unsafe_mutation). The DOM is read synchronously.
 		const handleFocusIn = (e: FocusEvent) => {
 			const target = e.target as HTMLElement;
 			if (!target) return;
@@ -137,11 +146,16 @@
 			const openPopovers = Array.from(document.body.children).filter(
 				(el) => el.id.startsWith('popover-') && !el.id.includes('controls')
 			);
-			uiState.focusedInside = openPopovers.some((el) => el.contains(target));
+			const inside = openPopovers.some((el) => el.contains(target));
+			queueMicrotask(() => {
+				uiState.focusedInside = inside;
+			});
 		};
 
 		const handleFocusOut = () => {
-			uiState.focusedInside = false;
+			queueMicrotask(() => {
+				uiState.focusedInside = false;
+			});
 		};
 
 		document.addEventListener('focusin', handleFocusIn);
@@ -190,6 +204,27 @@
 			cancelClose();
 		}
 	});
+
+	// Position the panel the moment it opens, before the browser paints. This
+	// sets left/top *and* --popover-trigger-width synchronously, so the panel
+	// never flashes at its (0,0) origin — the cause of the tooltip-swap jitter —
+	// nor at auto width before snapping to the trigger (the combobox jump).
+	// Without this we'd rely on the ResizeObserver firing a frame later.
+	$effect(() => {
+		if (uiState.open && presence.mounted && popover) {
+			updatePosition();
+		}
+	});
+
+	// Trap Tab focus inside the panel while open. Hoverable surfaces (tooltip,
+	// hover-card) are excluded -- they aren't keyboard-modal and stealing focus
+	// would fight their pointer-driven open/close.
+	$effect(() => {
+		if (uiState.open && panelEl && !uiState.hoverable && focusTrap) {
+			const cleanup = trapFocus(panelEl);
+			return cleanup;
+		}
+	});
 </script>
 
 <div
@@ -209,10 +244,14 @@
 		}
 	}}
 >
-	{#if uiState?.open}
+	{#if presence.mounted}
 		<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
 		<div
 			{...rest}
+			data-silk-anim="panel"
+			data-state={presence.state}
+			onanimationend={presence.end}
+			bind:this={panelEl}
 			id={id ?? `popover-${String(key)}-content`}
 			{role}
 			aria-modal={ariaModalProp ??
@@ -223,7 +262,6 @@
 					? `popover-${String(key)}-title`
 					: undefined}
 			{tabindex}
-			transition:flyAndScale={{ durationVar: '--motion-duration-panel' }}
 			data-ui="popover-content"
 			class={cn(
 				classProp,

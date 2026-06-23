@@ -14,8 +14,16 @@
 	const tabsState = $state({
 		id: `tabs-${Math.random().toString(36).slice(2)}`,
 		value: value ?? '',
-		orientation: 'horizontal' as 'horizontal' | 'vertical',
-		variant: 'default' as TabsVariant
+		// Seed from the props so the very first (SSR) render is already correct,
+		// rather than starting on the defaults and waiting for the effects below
+		// to sync after hydration.
+		orientation,
+		variant
+	} as {
+		id: string;
+		value: string;
+		orientation: 'horizontal' | 'vertical';
+		variant: TabsVariant;
 	});
 
 	setContext('tabs', tabsState);

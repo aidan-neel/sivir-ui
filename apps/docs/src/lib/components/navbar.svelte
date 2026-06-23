@@ -23,9 +23,10 @@
 	import Rocket from '@lucide/svelte/icons/rocket';
 	import Globe from '@lucide/svelte/icons/globe';
 	import History from '@lucide/svelte/icons/history';
-	import LayoutTemplate from '@lucide/svelte/icons/layout-template';
 	import Palette from '@lucide/svelte/icons/palette';
 	import * as Sheet from '@silk/ui/components/sheet';
+	import GitHubBlack from '$lib/assets/GitHub_Invertocat_Black.svg';
+	import GitHubWhite from '$lib/assets/GitHub_Invertocat_White.svg';
 
 	const { starCount = null }: { starCount?: number | null } = $props();
 
@@ -46,9 +47,7 @@
 	const navItems = [
 		{ href: '/', label: 'Home' },
 		{ href: '/docs/introduction', label: 'Docs' },
-		{ href: '/docs/components', label: 'Components' },
-		{ href: '/themes', label: 'Themes' },
-		{ href: '/themes/studio', label: 'Studio' }
+		{ href: '/docs/components', label: 'Components' }
 	];
 
 	const docsPages = [
@@ -93,20 +92,6 @@
 			href: resolve('/docs/changelog'),
 			icon: History,
 			keywords: 'docs release notes updates versions'
-		},
-		{
-			title: 'Themes',
-			description: 'Browse the theme presets gallery',
-			href: resolve('/themes'),
-			icon: LayoutTemplate,
-			keywords: 'themes presets gallery showcase'
-		},
-		{
-			title: 'Theme Studio',
-			description: 'Build, preview, and export a custom theme',
-			href: resolve('/themes/studio'),
-			icon: LayoutTemplate,
-			keywords: 'themes studio editor preview export customize'
 		}
 	];
 
@@ -161,25 +146,13 @@
 			isStudio
 				? 'max-w-none px-4'
 				: isHome
-					? 'max-w-none px-[clamp(1.5rem,4vw,4rem)]'
-					: 'max-w-[1440px] px-4 md:px-8'
+					? 'nav-home-in max-w-[1200px] px-4 md:px-6'
+					: 'px-4 md:px-10'
 		}`}
 	>
 		<Command.Root>
 			<div class="flex min-w-0 flex-row items-center gap-4 md:gap-5">
-				<a
-					href={resolve('/')}
-					onclick={closeMobileMenu}
-					class="flex min-w-0 flex-row items-center gap-2 rounded-lg px-1 py-2 text-sm [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)] tracking-tight text-foreground transition-colors duration-150 hover:text-foreground"
-				>
-					<Logo />
-					<span class="truncate">Silk UI</span>
-					<span
-						class="ml-1 rounded-md bg-secondary px-1.5 py-0.5 font-mono text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
-					>
-						v0.4.2
-					</span>
-				</a>
+				<Logo />
 				<div class="hidden items-center gap-1 md:flex">
 					{#each navItems as item (item.href)}
 						<Navbutton href={item.href}>{item.label}</Navbutton>
@@ -188,7 +161,9 @@
 			</div>
 
 			<div class="flex flex-row items-center gap-1.5 md:gap-2">
-				<div class="hidden md:block">
+				<!--
+
+<div class="hidden md:block">
 					<Command.Trigger
 						class="h-8 w-60 justify-between rounded-md px-2 text-[0.78rem] text-foreground-muted"
 						variant="outline"
@@ -204,6 +179,7 @@
 				>
 					<Search size={16} />
 				</Command.Trigger>
+-->
 
 				<Button
 					class="size-9 rounded-lg"
@@ -235,20 +211,19 @@
 				</Button>
 
 				<Button
-					class="hidden h-8 gap-1.5 rounded-lg px-2 sm:inline-flex"
-					variant="primary"
+					class="hidden h-9 gap-1.5 rounded-lg flex items-center! justify-center! px-3"
+					variant="ghost"
 					onclick={() =>
 						window.open('https://github.com/aidan-neel/ui', '_blank', 'noopener,noreferrer')}
 					aria-label="Star Silk UI on GitHub"
 				>
-					<svg viewBox="0 0 24 24" aria-hidden="true" class="size-3 fill-current">
-						<path
-							d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
-						/>
-					</svg>
+					<img
+						src={mode.current === 'dark' ? GitHubWhite : GitHubBlack}
+						class="size-4 flex items-center justify-center"
+					/>
 					<span
-						class="text-[0.72rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]"
-						>Star · {formatStarCount(starCount)}</span
+						class="text-[14px] mt-[1px] font-mono text-foreground-muted [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]"
+						>{formatStarCount(starCount)}</span
 					>
 				</Button>
 			</div>
@@ -301,60 +276,75 @@
 			</Command.Content>
 		</Command.Root>
 	</div>
+</nav>
 
-	<Sheet.Root bind:open={mobileMenuOpen}>
-		<Sheet.Content
-			side="left"
-			class="w-[min(100vw,24rem)] max-w-[24rem] gap-0 overflow-hidden p-0 md:hidden"
-		>
-			<div class="flex h-full flex-col">
-				<Sheet.Header class="border-b border-border/70 px-4 pb-4 pt-4">
-					<Sheet.Title>Browse Silk UI</Sheet.Title>
-					<Sheet.Description>
-						Jump between pages, docs, and components from the same mobile menu.
-					</Sheet.Description>
-				</Sheet.Header>
+<Sheet.Root bind:open={mobileMenuOpen}>
+	<Sheet.Content
+		side="left"
+		class="w-[min(100vw,24rem)] max-w-[24rem] gap-0 overflow-hidden p-0 md:hidden"
+	>
+		<div class="flex h-full flex-col">
+			<Sheet.Header class="border-b border-border/70 px-4 pb-4 pt-4">
+				<Sheet.Title>Browse Silk UI</Sheet.Title>
+				<Sheet.Description>
+					Jump between pages, docs, and components from the same mobile menu.
+				</Sheet.Description>
+			</Sheet.Header>
 
-				<div class="min-h-0 flex-1 overflow-y-auto">
-					<div class="border-b border-border/60 px-4 py-4">
-						<div class="grid gap-1.5">
-							{#each navItems as item (item.href)}
-								<Navbutton href={item.href} mobile onclick={closeMobileMenu}>
-									{item.label}
-								</Navbutton>
-							{/each}
-						</div>
+			<div class="min-h-0 flex-1 overflow-y-auto">
+				<div class="border-b border-border/60 px-4 py-4">
+					<div class="grid gap-1.5">
+						{#each navItems as item (item.href)}
+							<Navbutton href={item.href} mobile onclick={closeMobileMenu}>
+								{item.label}
+							</Navbutton>
+						{/each}
 					</div>
+				</div>
 
-					<div class="px-3 py-4">
-						<SideNavbar class="w-full pt-0" onNavigate={closeMobileMenu} />
-					</div>
+				<div class="px-3 py-4">
+					<SideNavbar class="w-full pt-0" onNavigate={closeMobileMenu} />
+				</div>
 
-					<div class="border-t border-border/60 px-4 py-4">
-						<div class="flex items-center gap-2">
-							<Button
-								class="h-10 flex-1 justify-center rounded-lg"
-								variant="outline"
-								onclick={() => {
-									window.open('https://github.com/aidan-neel/ui', '_blank', 'noopener,noreferrer');
-									closeMobileMenu();
-								}}
-							>
-								GitHub
-							</Button>
-							<Button
-								class="h-10 flex-1 justify-center rounded-lg"
-								variant="secondary"
-								onclick={() => {
-									toggleMode();
-								}}
-							>
-								{mode.current === 'dark' ? 'Dark mode' : 'Light mode'}
-							</Button>
-						</div>
+				<div class="border-t border-border/60 px-4 py-4">
+					<div class="flex items-center gap-2">
+						<Button
+							class="h-10 flex-1 justify-center rounded-lg"
+							variant="outline"
+							onclick={() => {
+								window.open('https://github.com/aidan-neel/ui', '_blank', 'noopener,noreferrer');
+								closeMobileMenu();
+							}}
+						>
+							GitHub
+						</Button>
+						<Button
+							class="h-10 flex-1 justify-center rounded-lg"
+							variant="secondary"
+							onclick={() => {
+								toggleMode();
+							}}
+						>
+							{mode.current === 'dark' ? 'Dark mode' : 'Light mode'}
+						</Button>
 					</div>
 				</div>
 			</div>
-		</Sheet.Content>
-	</Sheet.Root>
-</nav>
+		</div>
+	</Sheet.Content>
+</Sheet.Root>
+
+<style>
+	@media (prefers-reduced-motion: no-preference) {
+		:global(.nav-home-in) {
+			animation: nav-home-in 0.6s var(--ease-out) 1.25s both;
+		}
+	}
+
+	@keyframes nav-home-in {
+		from {
+			opacity: 0;
+			transform: translateY(-10px);
+		}
+	}
+</style>

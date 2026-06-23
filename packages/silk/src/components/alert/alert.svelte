@@ -25,7 +25,7 @@
 	);
 </script>
 
-<div role="alert" {...rest} class={cn(classProp, alert({ variant }))}>
+<div role="alert" {...rest} class={cn(classProp, alert())}>
 	<Icon class={alertIcon({ variant })} size={16} strokeWidth={2.25} aria-hidden="true" />
 	<div class="flex min-w-0 flex-1 flex-col gap-0.5">
 		{@render children?.()}

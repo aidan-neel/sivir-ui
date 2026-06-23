@@ -250,7 +250,7 @@
 			Start at the top. Drop down a layer only when the one above isn't enough.
 		</p>
 
-		<Tabs.Root bind:value={activeTab} variant="outlined">
+		<Tabs.Root bind:value={activeTab} variant="segmented">
 			<Tabs.List>
 				<Tabs.Trigger value="semantic">1 · Semantic tokens</Tabs.Trigger>
 				<Tabs.Trigger value="component">2 · Component tokens</Tabs.Trigger>

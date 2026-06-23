@@ -34,9 +34,12 @@
 	{disabled}
 	class={cn(
 		className,
-		'relative z-10 rounded-[var(--radius-lg)] hover:cursor-[var(--ui-cursor-interactive)] px-[var(--tabs-trigger-padding-x)] py-[var(--tabs-trigger-padding-y)] text-sm [font-weight:var(--font-weight-button,500)] [letter-spacing:var(--tracking-button,0em)] leading-tight transition-[color,transform,box-shadow] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-out)] active:scale-[var(--motion-press-scale)] focus-visible:outline-none focus-visible:ring-0 focus-visible:shadow-[var(--focus-ring)] disabled:cursor-not-allowed disabled:opacity-50',
+		'relative z-10 select-none rounded-[var(--radius-lg)] hover:cursor-[var(--ui-cursor-interactive)] px-[var(--tabs-trigger-padding-x)] py-[var(--tabs-trigger-padding-y)] text-sm [font-weight:var(--font-weight-button,500)] [letter-spacing:var(--tracking-button,0em)] leading-tight transition-[color,transform,box-shadow] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-out)] active:scale-[var(--motion-press-scale)] focus-visible:outline-none focus-visible:ring-0 focus-visible:shadow-[var(--focus-ring)] disabled:cursor-not-allowed disabled:opacity-50',
 		active ? 'text-foreground' : 'text-foreground-muted hover:text-foreground',
-		ghostActive && '[font-weight:600]'
+		ghostActive && '[font-weight:600]',
+		// Segmented pills sit a touch taller than their text padding; flex-center
+		// keeps the label vertically centered inside the taller pill.
+		tabsState.variant === 'segmented' && 'inline-flex items-center justify-center min-h-[32px]'
 	)}
 	onclick={() => {
 		if (!disabled) tabsState.value = value;

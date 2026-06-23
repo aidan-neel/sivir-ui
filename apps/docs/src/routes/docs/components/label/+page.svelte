@@ -1,17 +1,21 @@
 <script lang="ts">
 	import { Button } from '@silk/ui/components/button';
-	import { Label } from '@silk/ui/components/label';
-	import { Input } from '@silk/ui/components/input';
-	import { ComponentPreview, Steps } from '$lib/components/docs';
-	import { highlight } from '$lib/highlight';
+	import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+	import { CodeBlock } from '@silk/ui/components/code-block';
 	import { components, sanitizeComponent } from '$lib/components';
+
+	import Hero from './examples/hero.svelte';
+	import HeroSrc from './examples/hero.svelte?raw';
+	import WithRequired from './examples/with-required.svelte';
+	import WithRequiredSrc from './examples/with-required.svelte?raw';
+	import Disabled from './examples/disabled.svelte';
+	import DisabledSrc from './examples/disabled.svelte?raw';
 
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
 	import ChevronLeft from '@lucide/svelte/icons/chevron-left';
 	import ChevronRight from '@lucide/svelte/icons/chevron-right';
 	import Copy from '@lucide/svelte/icons/copy';
 	import Check from '@lucide/svelte/icons/check';
-	import Hash from '@lucide/svelte/icons/hash';
 	import External from '@lucide/svelte/icons/external-link';
 
 	const TITLE = 'Label';
@@ -48,10 +52,6 @@
 	}
 
 	const installCommand = 'bunx @aidan-neel/ui add label';
-	const heroCode = `<div class="flex flex-col gap-1.5">
-	<Label for="email">Email address</Label>
-	<Input id="email" type="email" placeholder="you@silk-ui.dev" />
-</div>`;
 </script>
 
 <svelte:head>
@@ -83,11 +83,8 @@
 
 	<!-- ─── Hero Example ──────────────────────────────────────────── -->
 	<section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-		<ComponentPreview code={heroCode}>
-			<div class="flex flex-col gap-1.5">
-				<Label for="demo-email">Email address</Label>
-				<Input id="demo-email" type="email" placeholder="you@silk-ui.dev" />
-			</div>
+		<ComponentPreview code={HeroSrc}>
+			<Hero />
 		</ComponentPreview>
 	</section>
 
@@ -98,40 +95,7 @@
 		>
 			Installation
 		</h2>
-		<p class="text-sm text-foreground-muted">Install the Label component with the CLI:</p>
-		<Steps
-			steps={[
-				{
-					title: 'Run the CLI',
-					description: 'Copy the command below and run it in your terminal.'
-				}
-			]}
-		>
-			<div
-				class="flex items-stretch overflow-hidden rounded-[var(--radius-md)] border border-border bg-card"
-			>
-				<div class="flex flex-1 items-center gap-3 px-3 py-2.5">
-					<span
-						class="grid size-6 place-items-center rounded-md bg-secondary/70 text-foreground-muted"
-					>
-						<Hash size={12} />
-					</span>
-					<code class="flex-1 font-mono text-[0.82rem] text-foreground">{installCommand}</code>
-				</div>
-				<button
-					type="button"
-					onclick={() => copy(installCommand, 'install')}
-					class="border-l border-border bg-card px-3 text-[0.78rem] text-foreground-muted transition-colors hover:bg-secondary/50 hover:text-foreground"
-					aria-label="Copy install command"
-				>
-					{#if copiedSnippet === 'install'}
-						<Check size={14} class="text-[var(--color-success)]" />
-					{:else}
-						<Copy size={14} />
-					{/if}
-				</button>
-			</div>
-		</Steps>
+		<InstallCommand command={installCommand} />
 	</section>
 
 	<!-- ─── Usage ─────────────────────────────────────────────────── -->
@@ -142,13 +106,11 @@
 			Usage
 		</h2>
 		<p class="text-sm text-foreground-muted">Import Label and pair it with an input:</p>
-		<pre
-			class="m-0 overflow-x-auto bg-secondary/40 rounded-[var(--radius-md)] border border-border px-4 py-3 font-mono text-[0.85rem] leading-relaxed text-foreground"><code
-				>{@html highlight(
-					`import { Label } from '@silk/ui/components/label';\nimport { Input } from '@silk/ui/components/input';\n\n<Label for="email">Email</Label>\n<Input id="email" type="email" />`,
-					'svelte'
-				)}</code
-			></pre>
+		<CodeBlock
+			code={`import { Label } from '@silk/ui/components/label';\nimport { Input } from '@silk/ui/components/input';\n\n<Label for="email">Email</Label>\n<Input id="email" type="email" />`}
+			lang="svelte"
+			copy="overlay"
+		/>
 	</section>
 
 	<!-- ─── Examples ──────────────────────────────────────────────── -->
@@ -171,11 +133,8 @@
 			>
 				With email input
 			</h3>
-			<ComponentPreview code={heroCode}>
-				<div class="flex flex-col gap-1.5">
-					<Label for="demo-email">Email address</Label>
-					<Input id="demo-email" type="email" placeholder="you@silk-ui.dev" />
-				</div>
+			<ComponentPreview code={HeroSrc}>
+				<Hero />
 			</ComponentPreview>
 		</div>
 
@@ -186,16 +145,8 @@
 			>
 				With required indicator
 			</h3>
-			<ComponentPreview
-				code={`<div class="flex flex-col gap-1.5">
-	<Label for="name">Full name <span class="text-destructive">*</span></Label>
-	<Input id="name" type="text" />
-</div>`}
-			>
-				<div class="flex flex-col gap-1.5">
-					<Label for="demo-name">Full name <span class="text-destructive">*</span></Label>
-					<Input id="demo-name" type="text" />
-				</div>
+			<ComponentPreview code={WithRequiredSrc}>
+				<WithRequired />
 			</ComponentPreview>
 		</div>
 
@@ -206,16 +157,8 @@
 			>
 				Disabled field
 			</h3>
-			<ComponentPreview
-				code={`<div class="flex flex-col gap-1.5">
-	<Label for="disabled">Username</Label>
-	<Input id="disabled" type="text" disabled />
-</div>`}
-			>
-				<div class="flex flex-col gap-1.5">
-					<Label for="demo-disabled">Username</Label>
-					<Input id="demo-disabled" type="text" disabled />
-				</div>
+			<ComponentPreview code={DisabledSrc}>
+				<Disabled />
 			</ComponentPreview>
 		</div>
 	</section>

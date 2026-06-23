@@ -6,10 +6,13 @@
 	import '../app.css';
 	import type { Snippet } from 'svelte';
 	import { dev } from '$app/environment';
+	import { page } from '$app/stores';
 
 	import type { LayoutData } from './$types';
 
 	const { children, data }: { children: Snippet; data: LayoutData } = $props();
+
+	const isHome = $derived($page.url.pathname === '/');
 
 	// NOTE: the global docs no longer re-apply a persisted Studio theme on load.
 	// That override (stored as `silk-live-theme-css`) was masking the baked
@@ -27,4 +30,16 @@
 	<Navbar starCount={data?.starCount ?? null} />
 </main>
 
-{@render children?.()}
+<main class="min-h-screen w-screen bg-background pt-16">
+	{#if isHome}
+		<div class="relative mx-auto flex min-h-[calc(100vh-4rem)] w-full max-w-[1200px] flex-col">
+			{@render children?.()}
+		</div>
+	{:else}
+		<div
+			class="mx-auto flex min-h-[calc(100vh-3.5rem)] w-full flex-col gap-5 px-4 md:px-8 lg:flex-row lg:gap-16"
+		>
+			{@render children?.()}
+		</div>
+	{/if}
+</main>

@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Inter:wght@400;500;600;700&family=Instrument+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Sora:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400..700&family=Fraunces:opsz,wght@9..144,400..700&family=Newsreader:opsz,wght@6..72,400..700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&family=IBM+Plex+Mono:wght@400;500;600;700&family=JetBrains+Mono:wght@100..800&display=swap');
 
 @source "./**/*.{svelte,svx,ts,html}";
 @source "../../../packages/silk/src/**/*.{svelte,ts}";
@@ -20,6 +20,34 @@ body {
 	padding: 0;
 	height: 100%;
 	width: 100%;
+}
+
+/* Reserve scrollbar space so opening an overlay (which locks body scroll)
+   never shifts centered content sideways. */
+html {
+	scrollbar-gutter: stable;
+}
+
+/* Hide scrollbar on the element itself */
+.hide-scrollbar {
+	-ms-overflow-style: none !important;
+	scrollbar-width: none !important;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+	display: none !important;
+}
+
+/* Hide scrollbar on the element and all descendants */
+.hide-scrollbar-all,
+.hide-scrollbar-all * {
+	-ms-overflow-style: none !important;
+	scrollbar-width: none !important;
+}
+
+.hide-scrollbar-all::-webkit-scrollbar,
+.hide-scrollbar-all *::-webkit-scrollbar {
+	display: none !important;
 }
 
 @layer base {
@@ -124,43 +152,62 @@ pre {
 }
 
 /* ─── Syntax highlighting tokens ────────────────────────────────
-   Monochrome — every token is a different opacity / weight of the
-   theme's foreground color. Always matches the code background,
-   regardless of which theme is loaded.
+   Light mode: Monochrome (black/gray palette only)
+   Dark mode: White base with gray, blue, yellow accents
    ──────────────────────────────────────────────────────────────── */
 .tok-comment {
-	color: color-mix(in srgb, var(--color-foreground) 42%, transparent);
+	color: #b0b0b0;
 	font-style: italic;
 }
 .tok-string {
-	color: color-mix(in srgb, var(--color-foreground) 72%, transparent);
+	color: #565656;
 }
 .tok-keyword {
-	color: var(--color-foreground);
-	font-weight: var(--font-weight-header, 600);
-	letter-spacing: var(--tracking-header, -0.02em);
+	color: #565656;
 }
 .tok-number {
-	color: color-mix(in srgb, var(--color-foreground) 80%, transparent);
+	color: #868686;
 }
 .tok-variable {
-	color: color-mix(in srgb, var(--color-foreground) 78%, transparent);
+	color: #565656;
 }
 .tok-type {
-	color: color-mix(in srgb, var(--color-foreground) 88%, transparent);
-	font-weight: var(--font-weight-label, 500);
-	font-size: var(--font-size-label, 14px);
-	letter-spacing: var(--tracking-label, 0em);
+	color: #868686;
 }
 .tok-tag {
-	color: color-mix(in srgb, var(--color-foreground) 92%, transparent);
-	font-weight: var(--font-weight-label, 500);
-	font-size: var(--font-size-label, 14px);
-	letter-spacing: var(--tracking-label, 0em);
+	color: #868686;
 }
 .tok-attr {
-	color: color-mix(in srgb, var(--color-foreground) 65%, transparent);
+	color: #868686;
 }
 .tok-fn {
-	color: color-mix(in srgb, var(--color-foreground) 85%, transparent);
+	color: #565656;
+}
+
+.dark .tok-comment {
+	color: #a0a0a0;
+}
+.dark .tok-string {
+	color: #ffc966;
+}
+.dark .tok-keyword {
+	color: #7ec4ff;
+}
+.dark .tok-number {
+	color: #ffc966;
+}
+.dark .tok-variable {
+	color: #f0f0f0;
+}
+.dark .tok-type {
+	color: #7ec4ff;
+}
+.dark .tok-tag {
+	color: #a0a0a0;
+}
+.dark .tok-attr {
+	color: #7ec4ff;
+}
+.dark .tok-fn {
+	color: #7ec4ff;
 }

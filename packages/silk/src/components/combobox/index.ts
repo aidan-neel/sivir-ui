@@ -11,7 +11,7 @@ import type { DefaultProps } from '@silk/ui/utils';
 export type ComboboxItem = {
 	value: string;
 	label: string;
-	callback: () => void;
+	callback?: () => void;
 	ref: HTMLButtonElement | HTMLAnchorElement | undefined;
 };
 
@@ -23,6 +23,16 @@ export type ComboboxState = {
 	selected?: ComboboxItem;
 } & PopoverState;
 
+export type ComboboxRootProps = {
+	placeholder?: string;
+} & DefaultProps;
+
+export type ComboboxTriggerProps = {
+	class?: string;
+	threshold?: number;
+} & DefaultProps;
+
+/** @deprecated Search functionality is now integrated into the Trigger component. */
 export type ComboboxSearchProps = {
 	threshold?: number;
 	placeholder?: string;

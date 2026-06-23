@@ -1,27 +1,31 @@
 <script lang="ts">
-	import * as Popover from '@silk/ui/components/popover';
-	import { cn } from '@silk/ui/utils';
-	import type { Snippet } from 'svelte';
+	import { getContext, onMount, type Snippet } from 'svelte';
 
-	let {
-		children,
-		class: className
-	}: {
-		children?: Snippet;
-		class?: string;
-	} = $props();
+	let { children }: { children?: Snippet } = $props();
+
+	const tip = getContext('silk-tooltip') as { text: string };
+
+	// The shared bubble renders the label itself (with a slot-text roll), so this
+	// just hosts the authored content off-screen and reports its text up to the
+	// context — a MutationObserver keeps dynamic labels (Copy → Copied) current.
+	let el = $state<HTMLElement>();
+
+	onMount(() => {
+		if (!el) return;
+		const sync = () => {
+			tip.text = (el?.textContent ?? '').replace(/\s+/g, ' ').trim();
+		};
+		sync();
+		const mo = new MutationObserver(sync);
+		mo.observe(el, { childList: true, characterData: true, subtree: true });
+		return () => mo.disconnect();
+	});
 </script>
 
-<Popover.Content
-	role="none"
-	allowClickOutside={false}
-	aria-label="Tooltip"
-	class={cn(
-		className,
-		'bg-[var(--color-tooltip)] text-[var(--color-tooltip-foreground)] max-w-[var(--tooltip-max-width)] rounded-[var(--radius-lg)] border border-border px-[var(--tooltip-padding-x)] py-[var(--tooltip-padding-y)] [font-size:var(--font-size-label,14px)] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] shadow-[var(--tooltip-shadow,var(--shadow-sm))]'
-	)}
+<span
+	bind:this={el}
+	aria-hidden="true"
+	style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;"
 >
-	<div role="tooltip">
-		{@render children?.()}
-	</div>
-</Popover.Content>
+	{@render children?.()}
+</span>

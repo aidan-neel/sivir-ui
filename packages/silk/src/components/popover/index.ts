@@ -18,13 +18,15 @@ export type PopoverContentProps = {
 	refElement?: VirtualElement;
 	role?: 'dialog' | 'alertdialog' | 'menu' | 'listbox' | 'none';
 	tabindex?: number;
+	/** Trap Tab focus inside the panel while open. Defaults to `true`. */
+	focusTrap?: boolean;
 } & DefaultProps &
 	Partial<HTMLAttributes<HTMLElement>>;
 
 export type PopoverProps = {
 	open?: boolean;
 	stateName?: string;
-	placement?: 'top' | 'left' | 'bottom' | 'right';
+	placement?: Placement;
 	state_key?: string;
 	state?: UIState<PopoverState>;
 	hoverable?: boolean;
@@ -58,7 +60,20 @@ export type PopoverTriggerProps = {
 	Partial<Record<`data-${string}`, string | boolean | null>>;
 export type PopoverTitleProps = DefaultProps;
 
-export type Placement = 'top' | 'left' | 'right' | 'bottom';
+// Mirrors floating-ui's placements: a side, optionally aligned to a corner.
+export type Placement =
+	| 'top'
+	| 'top-start'
+	| 'top-end'
+	| 'bottom'
+	| 'bottom-start'
+	| 'bottom-end'
+	| 'left'
+	| 'left-start'
+	| 'left-end'
+	| 'right'
+	| 'right-start'
+	| 'right-end';
 
 export type PopoverState = {
 	open: boolean;

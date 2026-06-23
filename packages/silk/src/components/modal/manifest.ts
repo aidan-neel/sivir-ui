@@ -3,7 +3,7 @@ import type { Manifest } from '@silk/ui/_manifest/types';
 /**
  * Modal -- centered dialog overlay. Composes `_internal/overlay` for the
  * shared focus-trap / click-outside / Escape / body-scroll-lock concerns;
- * owns its own portal, flyAndScale animation, and centered positioning.
+ * owns its own portal, CSS enter/exit animation, and centered positioning.
  *
  * Wrapped by `alert-dialog`.
  *

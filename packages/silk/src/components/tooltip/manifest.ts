@@ -29,12 +29,15 @@ export const manifest: Manifest = {
 		'components/tooltip/tooltip.svelte',
 		'components/tooltip/tooltip-content.svelte',
 		'components/tooltip/tooltip-trigger.svelte',
+		'components/tooltip/shared-tooltip.ts',
 		'components/tooltip/index.ts',
 		'components/tooltip/manifest.ts'
 	],
-	components: ['popover'],
-	shared: ['utils.cn', 'internals/state'],
+	components: [],
+	shared: ['utils.cn'],
 	peerDependencies: {
+		'@floating-ui/dom': '^1.0.0',
+		'slot-text': '^0.3.0',
 		clsx: '^2.0.0',
 		'tailwind-merge': '^3.0.0',
 		svelte: '^5.0.0'

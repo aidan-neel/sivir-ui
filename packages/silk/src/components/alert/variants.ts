@@ -1,26 +1,12 @@
 import { tv } from 'tailwind-variants';
 
 /**
- * Soft status callout: a gentle status-tinted surface + subtle status border +
- * a matching colored icon. No left accent strip — status reads from the tint and
- * icon, which stays calm and on-brand in light and dark.
+ * Neutral callout styled like an outline button: a calm card surface with the
+ * outline button's hairline edge + subtle inset lift (no status tint on the
+ * surface). Status reads purely from the colored icon.
  */
 export const alert = tv({
-	base: 'flex flex-row gap-3 rounded-[var(--radius-lg)] border px-4 py-3 text-[var(--color-foreground)]',
-	variants: {
-		variant: {
-			info: 'border-[color-mix(in_srgb,var(--color-info)_22%,transparent)] bg-[color-mix(in_srgb,var(--color-info)_7%,var(--color-card))]',
-			error:
-				'border-[color-mix(in_srgb,var(--color-error)_22%,transparent)] bg-[color-mix(in_srgb,var(--color-error)_7%,var(--color-card))]',
-			warning:
-				'border-[color-mix(in_srgb,var(--color-warning)_22%,transparent)] bg-[color-mix(in_srgb,var(--color-warning)_7%,var(--color-card))]',
-			success:
-				'border-[color-mix(in_srgb,var(--color-success)_22%,transparent)] bg-[color-mix(in_srgb,var(--color-success)_7%,var(--color-card))]'
-		}
-	},
-	defaultVariants: {
-		variant: 'info'
-	}
+	base: 'flex flex-row gap-3 rounded-[var(--radius-lg)] bg-[var(--button-outlined-bg)] px-4 py-3 text-[var(--button-outlined-foreground)] shadow-[var(--button-outline-shadow)]'
 });
 
 export const alertIcon = tv({

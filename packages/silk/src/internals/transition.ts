@@ -1,25 +1,6 @@
 import { cubicOut, quintOut } from 'svelte/easing';
 import type { TransitionConfig } from 'svelte/transition';
 
-type FlyAndScaleParams = {
-	y?: number;
-	x?: number;
-	start?: number;
-	duration?: number;
-	durationVar?: string;
-	blur?: number;
-	xVar?: string;
-	yVar?: string;
-	blurVar?: string;
-	startVar?: string;
-	perspective?: number;
-	rotateX?: number;
-	opacityStart?: number;
-	perspectiveVar?: string;
-	rotateXVar?: string;
-	opacityStartVar?: string;
-};
-
 type FlyNoOpacityParams = {
 	y?: number;
 	x?: number;
@@ -95,93 +76,6 @@ export const flyNoOpacity = (
 				transform: `${transform} translate3d(${x}px, ${y}px, 0)`
 			});
 		}
-	};
-};
-
-export const flyAndScale = (
-	node: Element,
-	params: FlyAndScaleParams = { y: 8, x: 0, start: 0.985, duration: 240 }
-): TransitionConfig => {
-	const style = getComputedStyle(node);
-	const transform = style.transform === 'none' ? '' : style.transform;
-	const duration =
-		params.duration ?? getCssDuration(node, params.durationVar ?? '--motion-duration-panel', 240);
-	const offsetX = params.x ?? getCssNumber(node, params.xVar ?? '--motion-panel-x', 0);
-	const offsetY = params.y ?? getCssNumber(node, params.yVar ?? '--motion-panel-y', 5);
-	const blur = params.blur ?? getCssNumber(node, params.blurVar ?? '--motion-panel-blur', 0);
-	const start =
-		params.start ?? getCssNumber(node, params.startVar ?? '--motion-panel-scale-start', 0.95);
-
-	// Optional 3D + opacity tweaks -- all default to "off" so themes that don't
-	// opt in keep the original flat behavior.
-	const perspective =
-		params.perspective ??
-		getCssNumber(node, params.perspectiveVar ?? '--motion-panel-perspective', 0);
-	const rotateX =
-		params.rotateX ?? getCssNumber(node, params.rotateXVar ?? '--motion-panel-rotate-x', 0);
-	const opacityStart =
-		params.opacityStart ??
-		getCssNumber(node, params.opacityStartVar ?? '--motion-panel-opacity-start', 0);
-
-	const scaleConversion = (valueA: number, scaleA: [number, number], scaleB: [number, number]) => {
-		const [minA, maxA] = scaleA;
-		const [minB, maxB] = scaleB;
-
-		const percentage = (valueA - minA) / (maxA - minA);
-		const valueB = percentage * (maxB - minB) + minB;
-
-		return valueB;
-	};
-
-	const styleToString = (style: Record<string, number | string | undefined>): string => {
-		return Object.keys(style).reduce((str, key) => {
-			if (style[key] === undefined) return str;
-			return str + `${key}:${style[key]};`;
-		}, '');
-	};
-
-	return {
-		duration,
-		delay: 0,
-		css: (t) => {
-			const y = scaleConversion(t, [0, 1], [offsetY, 0]);
-			const x = scaleConversion(t, [0, 1], [offsetX, 0]);
-			const scale = scaleConversion(t, [0, 1], [start, 1]);
-			const filter = blur > 0 ? `blur(${scaleConversion(t, [0, 1], [blur, 0])}px)` : undefined;
-			const opacity = scaleConversion(t, [0, 1], [opacityStart, 1]);
-			const perspectivePart = perspective > 0 ? `perspective(${perspective}px) ` : '';
-			const rotatePart =
-				perspective > 0 && rotateX !== 0
-					? `rotateX(${scaleConversion(t, [0, 1], [rotateX, 0])}deg) `
-					: '';
-
-			return styleToString({
-				transform: `${transform} ${perspectivePart}${rotatePart}translate3d(${x}px, ${y}px, 0) scale(${scale})`,
-				filter,
-				opacity
-			});
-		},
-		easing: quintOut
-	};
-};
-
-type ThemedFadeParams = {
-	durationVar?: string;
-	fallback?: number;
-};
-
-/** Opacity-only fade that reads its duration from a CSS motion variable. */
-export const themedFade = (node: Element, params: ThemedFadeParams = {}): TransitionConfig => {
-	const duration = getCssDuration(
-		node,
-		params.durationVar ?? '--motion-duration-overlay',
-		params.fallback ?? 150
-	);
-	return {
-		duration,
-		delay: 0,
-		easing: cubicOut,
-		css: (t) => `opacity: ${t};`
 	};
 };
 

@@ -4,7 +4,6 @@
 	import { cn } from '@silk/ui/utils';
 	import { getContext, setContext, type Snippet } from 'svelte';
 	import Check from '@lucide/svelte/icons/check';
-	import { flyAndScale } from '@silk/ui/internals/transition';
 	import type { PopoverState } from '@silk/ui/components/popover';
 
 	const key = getContext('key') as string;

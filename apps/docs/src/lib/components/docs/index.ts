@@ -5,5 +5,15 @@ import ExportItem from './export-item.svelte';
 import APIReference from './api-reference.svelte';
 import BreadcrumbNav from './breadcrumb-nav.svelte';
 import Steps from './steps.svelte';
+import InstallCommand from './install-command.svelte';
 
-export { ComponentPreview, CodeBlock, CodeSnippet, ExportItem, APIReference, BreadcrumbNav, Steps };
+export {
+	ComponentPreview,
+	CodeBlock,
+	CodeSnippet,
+	ExportItem,
+	APIReference,
+	BreadcrumbNav,
+	Steps,
+	InstallCommand
+};

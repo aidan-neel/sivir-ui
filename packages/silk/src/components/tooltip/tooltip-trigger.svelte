@@ -1,60 +1,64 @@
 <script lang="ts">
-	import { getContext, onMount, onDestroy, type Snippet } from 'svelte';
-	import { states, type UIState } from '@silk/ui/internals/state.svelte.ts';
+	import { getContext, onDestroy, type Snippet } from 'svelte';
 	import { cn } from '@silk/ui/utils';
-	import type { PopoverState } from '@silk/ui/components/popover';
+	import {
+		showTooltip,
+		hideTooltip,
+		updateTooltipText,
+		flashTooltip,
+		isActiveTooltip
+	} from './shared-tooltip';
 
-	const key = getContext('key') as string;
-	const uiState = states[key] as UIState<PopoverState>;
+	type Placement = 'top' | 'left' | 'bottom' | 'right';
 
-	let element = $state<HTMLElement>();
+	let {
+		children,
+		class: className,
+		showOnClick = false
+	}: {
+		children?: Snippet;
+		class?: string;
+		/** Also reveal the tooltip on click (e.g. Copy buttons fired by touch/keyboard). */
+		showOnClick?: boolean;
+	} = $props();
 
-	const { children, class: className }: { children?: Snippet; class?: string } = $props();
+	const tip = getContext('silk-tooltip') as {
+		text: string;
+		placement: Placement;
+		delay: number;
+		closeDelay: number;
+	};
 
-	function clearTimers() {
-		if (uiState.data.hoverTimeout) {
-			clearTimeout(uiState.data.hoverTimeout);
-			uiState.data.hoverTimeout = undefined;
-		}
-		if (uiState.data.closeTimeout) {
-			clearTimeout(uiState.data.closeTimeout);
-			uiState.data.closeTimeout = undefined;
-		}
-	}
+	let el = $state<HTMLElement>();
 
 	function open() {
-		clearTimers();
-		const delay = uiState.data.delay ?? 0;
-		uiState.data.hoverTimeout = setTimeout(() => {
-			uiState.data.open = true;
-			uiState.data.hovering = true;
-		}, delay);
+		if (el) showTooltip(el, tip.text, tip.placement, tip.delay);
 	}
-
 	function close() {
-		clearTimers();
-		const closeDelay = uiState.data.closeDelay ?? 150;
-		uiState.data.closeTimeout = setTimeout(() => {
-			uiState.data.open = false;
-			uiState.data.hovering = false;
-		}, closeDelay);
+		hideTooltip(el ?? null, tip.closeDelay);
+	}
+	function clickOpen() {
+		if (showOnClick && el) flashTooltip(el, tip.text, tip.placement);
 	}
 
-	onMount(() => {
-		uiState.data.buttonRef = element ?? null;
+	// Keep the bubble's label in sync while this trigger owns it, so a label that
+	// changes mid-hover (Copy → Copied) morphs in place instead of going stale.
+	$effect(() => {
+		const text = tip.text;
+		if (el && isActiveTooltip(el)) updateTooltipText(el, text);
 	});
 
-	onDestroy(clearTimers);
+	onDestroy(() => hideTooltip(el ?? null, 0));
 </script>
 
 <span
-	bind:this={element}
+	bind:this={el}
 	role="presentation"
-	aria-describedby={uiState.data.open ? `popover-${String(key)}-content` : undefined}
 	onmouseenter={open}
 	onmouseleave={close}
 	onfocusin={open}
 	onfocusout={close}
+	onclick={clickOpen}
 	class={cn(className, 'inline-flex')}
 >
 	{@render children?.()}

@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { Button } from '@silk/ui/components/button';
-	import * as Select from '@silk/ui/components/select';
-	import { ComponentPreview, Steps } from '$lib/components/docs';
-	import { highlight } from '$lib/highlight';
+	import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+	import { CodeBlock } from '@silk/ui/components/code-block';
 	import { components, sanitizeComponent } from '$lib/components';
 
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
@@ -10,8 +9,10 @@
 	import ChevronRight from '@lucide/svelte/icons/chevron-right';
 	import Copy from '@lucide/svelte/icons/copy';
 	import Check from '@lucide/svelte/icons/check';
-	import Hash from '@lucide/svelte/icons/hash';
 	import External from '@lucide/svelte/icons/external-link';
+
+	import Hero from './examples/hero.svelte';
+	import HeroSrc from './examples/hero.svelte?raw';
 
 	const TITLE = 'Select';
 	const SOURCE = 'https://github.com/aidan-neel/silk/tree/main/registry/silk/default/select';
@@ -19,8 +20,6 @@
 	const curIndex = components.indexOf(TITLE.toLowerCase());
 	const prevComponent = components[curIndex - 1];
 	const nextComponent = components[curIndex + 1];
-
-	let pgRole = $state('designer');
 
 	const apiRows = [
 		{
@@ -67,14 +66,6 @@
 		}
 	];
 
-	const heroCode = `<Select.Root value={role}>
-  <Select.Trigger>Select a role</Select.Trigger>
-  <Select.Content>
-    <Select.Item value="designer" onclick={() => (role = 'designer')}>Designer</Select.Item>
-    <Select.Item value="engineer" onclick={() => (role = 'engineer')}>Engineer</Select.Item>
-  </Select.Content>
-</Select.Root>`;
-
 	const installCommand = 'bunx @aidan-neel/ui add select';
 
 	let copiedSnippet = $state<string | null>(null);
@@ -114,17 +105,8 @@
 
 	<!-- ─── Hero Example ──────────────────────────────────────────── -->
 	<section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-		<ComponentPreview code={heroCode}>
-			<Select.Root value={pgRole}>
-				<Select.Trigger class="h-9 w-60" variant="outline">
-					{pgRole.charAt(0).toUpperCase() + pgRole.slice(1)}
-				</Select.Trigger>
-				<Select.Content>
-					{#each [{ v: 'engineer', l: 'Engineer' }, { v: 'designer', l: 'Designer' }, { v: 'product', l: 'Product manager' }, { v: 'founder', l: 'Founder' }] as r (r.v)}
-						<Select.Item value={r.v} onclick={() => (pgRole = r.v)}>{r.l}</Select.Item>
-					{/each}
-				</Select.Content>
-			</Select.Root>
+		<ComponentPreview code={HeroSrc}>
+			<Hero />
 		</ComponentPreview>
 	</section>
 
@@ -135,40 +117,7 @@
 		>
 			Installation
 		</h2>
-		<p class="text-sm text-foreground-muted">Install the Select component with the CLI:</p>
-		<Steps
-			steps={[
-				{
-					title: 'Run the CLI',
-					description: 'Copy the command below and run it in your terminal.'
-				}
-			]}
-		>
-			<div
-				class="flex items-stretch overflow-hidden rounded-[var(--radius-md)] border border-border bg-card"
-			>
-				<div class="flex flex-1 items-center gap-3 px-3 py-2.5">
-					<span
-						class="grid size-6 place-items-center rounded-md bg-secondary/70 text-foreground-muted"
-					>
-						<Hash size={12} />
-					</span>
-					<code class="flex-1 font-mono text-[0.82rem] text-foreground">{installCommand}</code>
-				</div>
-				<button
-					type="button"
-					onclick={() => copy(installCommand, 'install')}
-					class="border-l border-border bg-card px-3 text-[0.78rem] text-foreground-muted transition-colors hover:bg-secondary/50 hover:text-foreground"
-					aria-label="Copy install command"
-				>
-					{#if copiedSnippet === 'install'}
-						<Check size={14} class="text-[var(--color-success)]" />
-					{:else}
-						<Copy size={14} />
-					{/if}
-				</button>
-			</div>
-		</Steps>
+		<InstallCommand command={installCommand} />
 	</section>
 
 	<!-- ─── Usage ─────────────────────────────────────────────────── -->
@@ -179,13 +128,11 @@
 			Usage
 		</h2>
 		<p class="text-sm text-foreground-muted">Import Select and use it in your component:</p>
-		<pre
-			class="m-0 overflow-x-auto bg-secondary/40 rounded-[var(--radius-md)] border border-border px-4 py-3 font-mono text-[0.85rem] leading-relaxed text-foreground"><code
-				>{@html highlight(
-					`import * as Select from '@silk/ui/components/select';\n\n<Select.Root value={role}>\n  <Select.Trigger>Designer</Select.Trigger>\n  <Select.Content>\n    <Select.Item value="designer">Designer</Select.Item>\n  </Select.Content>\n</Select.Root>`,
-					'svelte'
-				)}</code
-			></pre>
+		<CodeBlock
+			code={`import * as Select from '@silk/ui/components/select';\n\n<Select.Root value={role}>\n  <Select.Trigger>Designer</Select.Trigger>\n  <Select.Content>\n    <Select.Item value="designer">Designer</Select.Item>\n  </Select.Content>\n</Select.Root>`}
+			lang="svelte"
+			copy="overlay"
+		/>
 	</section>
 
 	<!-- ─── Examples ──────────────────────────────────────────────── -->
@@ -205,17 +152,8 @@
 			>
 				Basic
 			</h3>
-			<ComponentPreview code={heroCode}>
-				<Select.Root value={pgRole}>
-					<Select.Trigger class="h-9 w-60" variant="outline">
-						{pgRole.charAt(0).toUpperCase() + pgRole.slice(1)}
-					</Select.Trigger>
-					<Select.Content>
-						{#each [{ v: 'engineer', l: 'Engineer' }, { v: 'designer', l: 'Designer' }, { v: 'product', l: 'Product manager' }, { v: 'founder', l: 'Founder' }] as r (r.v)}
-							<Select.Item value={r.v} onclick={() => (pgRole = r.v)}>{r.l}</Select.Item>
-						{/each}
-					</Select.Content>
-				</Select.Root>
+			<ComponentPreview code={HeroSrc}>
+				<Hero />
 			</ComponentPreview>
 		</div>
 	</section>

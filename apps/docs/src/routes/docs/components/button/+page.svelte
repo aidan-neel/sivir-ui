@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { Button, type ButtonVariant } from '@silk/ui/components/button';
-	import { ComponentPreview, Steps } from '$lib/components/docs';
-	import { highlight } from '$lib/highlight';
+	import { Button } from '@silk/ui/components/button';
+	import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+	import { CodeBlock } from '@silk/ui/components/code-block';
 	import * as Tooltip from '@silk/ui/components/tooltip';
 
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
@@ -10,15 +10,35 @@
 	import Copy from '@lucide/svelte/icons/copy';
 	import Check from '@lucide/svelte/icons/check';
 	import Layers from '@lucide/svelte/icons/layers-3';
-	import Plus from '@lucide/svelte/icons/plus';
-	import Trash from '@lucide/svelte/icons/trash-2';
-	import Send from '@lucide/svelte/icons/send';
-	import Download from '@lucide/svelte/icons/download';
-	import Loader from '@lucide/svelte/icons/loader-circle';
-	import Heart from '@lucide/svelte/icons/heart';
 	import External from '@lucide/svelte/icons/external-link';
-	import Hash from '@lucide/svelte/icons/hash';
 	import { components, sanitizeComponent } from '$lib/components';
+
+	import Hero from './examples/hero.svelte';
+	import HeroSrc from './examples/hero.svelte?raw';
+	import VariantPrimary from './examples/variant-primary.svelte';
+	import VariantPrimarySrc from './examples/variant-primary.svelte?raw';
+	import VariantSecondary from './examples/variant-secondary.svelte';
+	import VariantSecondarySrc from './examples/variant-secondary.svelte?raw';
+	import VariantOutline from './examples/variant-outline.svelte';
+	import VariantOutlineSrc from './examples/variant-outline.svelte?raw';
+	import VariantGhost from './examples/variant-ghost.svelte';
+	import VariantGhostSrc from './examples/variant-ghost.svelte?raw';
+	import VariantDestructive from './examples/variant-destructive.svelte';
+	import VariantDestructiveSrc from './examples/variant-destructive.svelte?raw';
+	import Sizes from './examples/sizes.svelte';
+	import SizesSrc from './examples/sizes.svelte?raw';
+	import Disabled from './examples/disabled.svelte';
+	import DisabledSrc from './examples/disabled.svelte?raw';
+	import LeadingIcon from './examples/leading-icon.svelte';
+	import LeadingIconSrc from './examples/leading-icon.svelte?raw';
+	import TrailingIcon from './examples/trailing-icon.svelte';
+	import TrailingIconSrc from './examples/trailing-icon.svelte?raw';
+	import Loading from './examples/loading.svelte';
+	import LoadingSrc from './examples/loading.svelte?raw';
+	import AsLink from './examples/as-link.svelte';
+	import AsLinkSrc from './examples/as-link.svelte?raw';
+	import IconGroup from './examples/icon-group.svelte';
+	import IconGroupSrc from './examples/icon-group.svelte?raw';
 
 	const TITLE = 'Button';
 	const SOURCE = 'https://github.com/aidan-neel/silk/tree/main/registry/silk/default/button';
@@ -40,74 +60,6 @@
 	}
 
 	const installCommand = 'bunx @aidan-neel/ui add button';
-	const heroCode = '<Button>Get started</Button>';
-
-	// ── Variant metadata ────────────────────────────────────────────
-	const variantList: { value: ButtonVariant; label: string; tone: string; use: string }[] = [
-		{
-			value: 'primary',
-			label: 'Primary',
-			tone: 'The hero action',
-			use: 'One per surface. Hits the eye first.'
-		},
-		{
-			value: 'secondary',
-			label: 'Secondary',
-			tone: 'Quiet partner',
-			use: 'Pairs with Primary when you need two equally valid choices.'
-		},
-		{
-			value: 'outline',
-			label: 'Outline',
-			tone: 'Neutral container',
-			use: 'Toolbar actions, in-line controls, anything that should defer to content.'
-		},
-		{
-			value: 'ghost',
-			label: 'Ghost',
-			tone: 'Invisible until hovered',
-			use: 'Dense menus, icon buttons, anywhere chrome should disappear.'
-		},
-		{
-			value: 'destructive',
-			label: 'Destructive',
-			tone: 'Irreversible',
-			use: '"Delete account", "Erase data" -- the actions you want users to pause on.'
-		}
-	];
-
-	type Size = 'sm' | 'md' | 'lg' | 'icon';
-
-	const sizeList: { value: Size; label: string; height: string; padX: string; usage: string }[] = [
-		{
-			value: 'sm',
-			label: 'sm',
-			height: '32 px',
-			padX: '10 px',
-			usage: 'Toolbars, dense tables, inline filters.'
-		},
-		{
-			value: 'md',
-			label: 'md',
-			height: '36 px',
-			padX: '12 px',
-			usage: 'Forms, dialogs, page CTAs.'
-		},
-		{
-			value: 'lg',
-			label: 'lg',
-			height: '40 px',
-			padX: '16 px',
-			usage: 'Marketing pages and high-emphasis flows.'
-		},
-		{
-			value: 'icon',
-			label: 'icon',
-			height: '36 px',
-			padX: '0 px',
-			usage: 'Square, content-less affordances.'
-		}
-	];
 
 	const apiRows = [
 		{
@@ -184,8 +136,8 @@
 
 	<!-- ─── Hero Example ──────────────────────────────────────────── -->
 	<section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-		<ComponentPreview code={heroCode}>
-			<Button>Get started</Button>
+		<ComponentPreview code={HeroSrc}>
+			<Hero />
 		</ComponentPreview>
 	</section>
 
@@ -196,40 +148,7 @@
 		>
 			Installation
 		</h2>
-		<p class="text-sm text-foreground-muted">Install the Button component with the CLI:</p>
-		<Steps
-			steps={[
-				{
-					title: 'Run the CLI',
-					description: 'Copy the command below and run it in your terminal.'
-				}
-			]}
-		>
-			<div
-				class="flex items-stretch overflow-hidden rounded-[var(--radius-md)] border border-border bg-card"
-			>
-				<div class="flex flex-1 items-center gap-3 px-3 py-2.5">
-					<span
-						class="grid size-6 place-items-center rounded-md bg-secondary/70 text-foreground-muted"
-					>
-						<Hash size={12} />
-					</span>
-					<code class="flex-1 font-mono text-[0.82rem] text-foreground">{installCommand}</code>
-				</div>
-				<button
-					type="button"
-					onclick={() => copy(installCommand, 'install')}
-					class="border-l border-border bg-card px-3 text-[0.78rem] text-foreground-muted transition-colors hover:bg-secondary/50 hover:text-foreground"
-					aria-label="Copy install command"
-				>
-					{#if copiedSnippet === 'install'}
-						<Check size={14} class="text-[var(--color-success)]" />
-					{:else}
-						<Copy size={14} />
-					{/if}
-				</button>
-			</div>
-		</Steps>
+		<InstallCommand command={installCommand} />
 	</section>
 
 	<!-- ─── Usage ─────────────────────────────────────────────────── -->
@@ -240,13 +159,11 @@
 			Usage
 		</h2>
 		<p class="text-sm text-foreground-muted">Import the Button and use it in your component:</p>
-		<pre
-			class="m-0 overflow-x-auto bg-secondary/40 rounded-[var(--radius-md)] border border-border px-4 py-3 font-mono text-[0.85rem] leading-relaxed text-foreground"><code
-				>{@html highlight(
-					`import { Button } from '@silk/ui/components/button';\n\n<Button>Click me</Button>`,
-					'svelte'
-				)}</code
-			></pre>
+		<CodeBlock
+			code={`import { Button } from '@silk/ui/components/button';\n\n<Button>Click me</Button>`}
+			lang="svelte"
+			copy="overlay"
+		/>
 	</section>
 
 	<!-- ─── Examples ──────────────────────────────────────────────── -->
@@ -263,19 +180,60 @@
 		</div>
 
 		<!-- Variants — each its own example piece -->
-		{#each variantList as v (v.value)}
-			{@const code = `<Button${v.value !== 'primary' ? ` variant="${v.value}"` : ''}>${v.label}</Button>`}
-			<div id={`variant-${v.value}`} class="scroll-mt-20 flex flex-col gap-3">
-				<h3
-					class="text-[1rem] font-[var(--font-weight-header,600)] tracking-tight text-foreground docs-subsection-heading"
-				>
-					{v.label}
-				</h3>
-				<ComponentPreview {code}>
-					<Button variant={v.value}>{v.label}</Button>
-				</ComponentPreview>
-			</div>
-		{/each}
+		<div id="variant-primary" class="scroll-mt-20 flex flex-col gap-3">
+			<h3
+				class="text-[1rem] font-[var(--font-weight-header,600)] tracking-tight text-foreground docs-subsection-heading"
+			>
+				Primary
+			</h3>
+			<ComponentPreview code={VariantPrimarySrc}>
+				<VariantPrimary />
+			</ComponentPreview>
+		</div>
+
+		<div id="variant-secondary" class="scroll-mt-20 flex flex-col gap-3">
+			<h3
+				class="text-[1rem] font-[var(--font-weight-header,600)] tracking-tight text-foreground docs-subsection-heading"
+			>
+				Secondary
+			</h3>
+			<ComponentPreview code={VariantSecondarySrc}>
+				<VariantSecondary />
+			</ComponentPreview>
+		</div>
+
+		<div id="variant-outline" class="scroll-mt-20 flex flex-col gap-3">
+			<h3
+				class="text-[1rem] font-[var(--font-weight-header,600)] tracking-tight text-foreground docs-subsection-heading"
+			>
+				Outline
+			</h3>
+			<ComponentPreview code={VariantOutlineSrc}>
+				<VariantOutline />
+			</ComponentPreview>
+		</div>
+
+		<div id="variant-ghost" class="scroll-mt-20 flex flex-col gap-3">
+			<h3
+				class="text-[1rem] font-[var(--font-weight-header,600)] tracking-tight text-foreground docs-subsection-heading"
+			>
+				Ghost
+			</h3>
+			<ComponentPreview code={VariantGhostSrc}>
+				<VariantGhost />
+			</ComponentPreview>
+		</div>
+
+		<div id="variant-destructive" class="scroll-mt-20 flex flex-col gap-3">
+			<h3
+				class="text-[1rem] font-[var(--font-weight-header,600)] tracking-tight text-foreground docs-subsection-heading"
+			>
+				Destructive
+			</h3>
+			<ComponentPreview code={VariantDestructiveSrc}>
+				<VariantDestructive />
+			</ComponentPreview>
+		</div>
 
 		<!-- Sizes (consolidated) -->
 		<div id="sizes" class="scroll-mt-20 flex flex-col gap-3">
@@ -284,20 +242,8 @@
 			>
 				Sizes
 			</h3>
-			<ComponentPreview
-				code={`<Button size="sm">Small</Button>\n<Button>Medium</Button>\n<Button size="lg">Large</Button>\n<Button size="icon"><Heart size={14} /></Button>`}
-			>
-				<div class="flex flex-wrap items-center justify-center gap-4">
-					{#each sizeList as s (s.value)}
-						<Button size={s.value} variant="primary">
-							{#if s.value === 'icon'}
-								<Heart size={14} />
-							{:else}
-								{s.label}
-							{/if}
-						</Button>
-					{/each}
-				</div>
+			<ComponentPreview code={SizesSrc}>
+				<Sizes />
 			</ComponentPreview>
 		</div>
 
@@ -308,8 +254,8 @@
 			>
 				Disabled
 			</h3>
-			<ComponentPreview code="<Button disabled>Disabled</Button>">
-				<Button disabled>Disabled</Button>
+			<ComponentPreview code={DisabledSrc}>
+				<Disabled />
 			</ComponentPreview>
 		</div>
 
@@ -321,11 +267,8 @@
 			>
 				Leading icon
 			</h3>
-			<ComponentPreview code={`<Button>\n  <Plus size={14} />\n  New project\n</Button>`}>
-				<Button>
-					<Plus size={14} />
-					New project
-				</Button>
+			<ComponentPreview code={LeadingIconSrc}>
+				<LeadingIcon />
 			</ComponentPreview>
 		</div>
 
@@ -336,13 +279,8 @@
 			>
 				Trailing icon
 			</h3>
-			<ComponentPreview
-				code={`<Button variant="secondary">\n  Continue\n  <ArrowRight size={14} />\n</Button>`}
-			>
-				<Button variant="secondary">
-					Continue
-					<ArrowRight size={14} />
-				</Button>
+			<ComponentPreview code={TrailingIconSrc}>
+				<TrailingIcon />
 			</ComponentPreview>
 		</div>
 
@@ -353,13 +291,8 @@
 			>
 				Loading
 			</h3>
-			<ComponentPreview
-				code={`<Button disabled>\n  <Loader size={14} class="animate-spin" />\n  Saving…\n</Button>`}
-			>
-				<Button disabled>
-					<Loader size={14} class="animate-spin" />
-					Saving…
-				</Button>
+			<ComponentPreview code={LoadingSrc}>
+				<Loading />
 			</ComponentPreview>
 		</div>
 
@@ -370,13 +303,8 @@
 			>
 				As link
 			</h3>
-			<ComponentPreview
-				code={`<Button href="/docs" variant="outline">\n  <External size={13} />\n  Open docs\n</Button>`}
-			>
-				<Button href="https://silk.dev" variant="outline">
-					<External size={13} />
-					Open docs
-				</Button>
+			<ComponentPreview code={AsLinkSrc}>
+				<AsLink />
 			</ComponentPreview>
 		</div>
 
@@ -387,14 +315,8 @@
 			>
 				Icon group
 			</h3>
-			<ComponentPreview
-				code={`<div class="flex items-center gap-2">\n  <Button variant="ghost"><Download size={14} /></Button>\n  <Button variant="ghost"><Send size={14} /></Button>\n  <Button variant="ghost"><Trash size={14} /></Button>\n</div>`}
-			>
-				<div class="flex items-center gap-2">
-					<Button variant="ghost"><Download size={14} /></Button>
-					<Button variant="ghost"><Send size={14} /></Button>
-					<Button variant="ghost"><Trash size={14} /></Button>
-				</div>
+			<ComponentPreview code={IconGroupSrc}>
+				<IconGroup />
 			</ComponentPreview>
 		</div>
 	</section>

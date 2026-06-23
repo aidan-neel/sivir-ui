@@ -1,8 +1,8 @@
 <script lang="ts">
 	import * as Avatar from '@silk/ui/components/avatar';
 	import { Button } from '@silk/ui/components/button';
-	import { ComponentPreview, Steps } from '$lib/components/docs';
-	import { highlight } from '$lib/highlight';
+	import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+	import { CodeBlock } from '@silk/ui/components/code-block';
 	import { components, sanitizeComponent } from '$lib/components';
 
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
@@ -12,7 +12,14 @@
 	import Check from '@lucide/svelte/icons/check';
 	import Layers from '@lucide/svelte/icons/layers-3';
 	import External from '@lucide/svelte/icons/external-link';
-	import Hash from '@lucide/svelte/icons/hash';
+	import Hero from './examples/hero.svelte';
+	import HeroSrc from './examples/hero.svelte?raw';
+	import Sizes from './examples/sizes.svelte';
+	import SizesSrc from './examples/sizes.svelte?raw';
+	import Shapes from './examples/shapes.svelte';
+	import ShapesSrc from './examples/shapes.svelte?raw';
+	import WithImage from './examples/with-image.svelte';
+	import WithImageSrc from './examples/with-image.svelte?raw';
 
 	const TITLE = 'Avatar';
 	const SLUG = 'avatar';
@@ -72,10 +79,6 @@
 	}
 
 	const installCommand = `bunx @aidan-neel/ui add ${SLUG}`;
-	const heroCode = `<Avatar.Root>
-  <Avatar.Image src="/avatar.jpg" alt="User" />
-  <Avatar.Fallback>AN</Avatar.Fallback>
-</Avatar.Root>`;
 </script>
 
 <svelte:head>
@@ -103,13 +106,8 @@
 
 	<!-- ─── Hero Example ──────────────────────────────────────────── -->
 	<section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-		<ComponentPreview code={heroCode}>
-			<div class="flex items-center justify-center">
-				<Avatar.Root>
-					<Avatar.Image src="https://github.com/shadcn.png" alt="User" />
-					<Avatar.Fallback>AN</Avatar.Fallback>
-				</Avatar.Root>
-			</div>
+		<ComponentPreview code={HeroSrc}>
+			<Hero />
 		</ComponentPreview>
 	</section>
 
@@ -120,40 +118,7 @@
 		>
 			Installation
 		</h2>
-		<p class="text-sm text-foreground-muted">Install the Avatar component with the CLI:</p>
-		<Steps
-			steps={[
-				{
-					title: 'Run the CLI',
-					description: 'Copy the command below and run it in your terminal.'
-				}
-			]}
-		>
-			<div
-				class="flex items-stretch overflow-hidden rounded-[var(--radius-md)] border border-border bg-card"
-			>
-				<div class="flex flex-1 items-center gap-3 px-3 py-2.5">
-					<span
-						class="grid size-6 place-items-center rounded-md bg-secondary/70 text-foreground-muted"
-					>
-						<Hash size={12} />
-					</span>
-					<code class="flex-1 font-mono text-[0.82rem] text-foreground">{installCommand}</code>
-				</div>
-				<button
-					type="button"
-					onclick={() => copy(installCommand, 'install')}
-					class="border-l border-border bg-card px-3 text-[0.78rem] text-foreground-muted transition-colors hover:bg-secondary/50 hover:text-foreground"
-					aria-label="Copy install command"
-				>
-					{#if copiedSnippet === 'install'}
-						<Check size={14} class="text-[var(--color-success)]" />
-					{:else}
-						<Copy size={14} />
-					{/if}
-				</button>
-			</div>
-		</Steps>
+		<InstallCommand command={installCommand} />
 	</section>
 
 	<!-- ─── Usage ─────────────────────────────────────────────────── -->
@@ -164,13 +129,11 @@
 			Usage
 		</h2>
 		<p class="text-sm text-foreground-muted">Import and use the Avatar component:</p>
-		<pre
-			class="m-0 overflow-x-auto bg-secondary/40 rounded-[var(--radius-md)] border border-border px-4 py-3 font-mono text-[0.85rem] leading-relaxed text-foreground"><code
-				>{@html highlight(
-					`import * as Avatar from '@silk/ui/components/avatar';\n\n<Avatar.Root>\n  <Avatar.Image src="/avatar.jpg" alt="User" />\n  <Avatar.Fallback>AB</Avatar.Fallback>\n</Avatar.Root>`,
-					'svelte'
-				)}</code
-			></pre>
+		<CodeBlock
+			code={`import * as Avatar from '@silk/ui/components/avatar';\n\n<Avatar.Root>\n  <Avatar.Image src="/avatar.jpg" alt="User" />\n  <Avatar.Fallback>AB</Avatar.Fallback>\n</Avatar.Root>`}
+			lang="svelte"
+			copy="overlay"
+		/>
 	</section>
 
 	<!-- ─── Examples ──────────────────────────────────────────────── -->
@@ -190,18 +153,8 @@
 			>
 				Sizes
 			</h3>
-			<ComponentPreview
-				code={`<Avatar.Root size="sm"><Avatar.Fallback>SM</Avatar.Fallback></Avatar.Root>
-<Avatar.Root size="md"><Avatar.Fallback>MD</Avatar.Fallback></Avatar.Root>
-<Avatar.Root size="lg"><Avatar.Fallback>LG</Avatar.Fallback></Avatar.Root>
-<Avatar.Root size="xl"><Avatar.Fallback>XL</Avatar.Fallback></Avatar.Root>`}
-			>
-				<div class="flex items-center justify-center gap-4">
-					<Avatar.Root size="sm"><Avatar.Fallback>SM</Avatar.Fallback></Avatar.Root>
-					<Avatar.Root size="md"><Avatar.Fallback>MD</Avatar.Fallback></Avatar.Root>
-					<Avatar.Root size="lg"><Avatar.Fallback>LG</Avatar.Fallback></Avatar.Root>
-					<Avatar.Root size="xl"><Avatar.Fallback>XL</Avatar.Fallback></Avatar.Root>
-				</div>
+			<ComponentPreview code={SizesSrc}>
+				<Sizes />
 			</ComponentPreview>
 		</div>
 
@@ -212,14 +165,8 @@
 			>
 				Shapes
 			</h3>
-			<ComponentPreview
-				code={`<Avatar.Root shape="circle"><Avatar.Fallback>CR</Avatar.Fallback></Avatar.Root>
-<Avatar.Root shape="square"><Avatar.Fallback>SQ</Avatar.Fallback></Avatar.Root>`}
-			>
-				<div class="flex items-center justify-center gap-4">
-					<Avatar.Root shape="circle"><Avatar.Fallback>CR</Avatar.Fallback></Avatar.Root>
-					<Avatar.Root shape="square"><Avatar.Fallback>SQ</Avatar.Fallback></Avatar.Root>
-				</div>
+			<ComponentPreview code={ShapesSrc}>
+				<Shapes />
 			</ComponentPreview>
 		</div>
 
@@ -230,18 +177,8 @@
 			>
 				With image
 			</h3>
-			<ComponentPreview
-				code={`<Avatar.Root>
-  <Avatar.Image src="/avatar.jpg" alt="User" />
-  <Avatar.Fallback>AB</Avatar.Fallback>
-</Avatar.Root>`}
-			>
-				<div class="flex items-center justify-center">
-					<Avatar.Root>
-						<Avatar.Image src="https://github.com/shadcn.png" alt="User" />
-						<Avatar.Fallback>AB</Avatar.Fallback>
-					</Avatar.Root>
-				</div>
+			<ComponentPreview code={WithImageSrc}>
+				<WithImage />
 			</ComponentPreview>
 		</div>
 	</section>

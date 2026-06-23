@@ -4,6 +4,7 @@
 	import type { AlertDialogState } from '.';
 	import { Button, type ButtonProps } from '@silk/ui/components/button';
 	import { cn, type DefaultProps } from '@silk/ui/utils';
+	import { useIsDark } from '@silk/ui/internals/is-dark.svelte.ts';
 
 	type Props = {
 		onclick?: () => void;
@@ -16,6 +17,10 @@
 	const uiState = states[key].data as AlertDialogState;
 	let element = $state<HTMLButtonElement | HTMLAnchorElement | undefined>(undefined);
 
+	// Cancel reads as outline in light, ghost in dark.
+	const isDark = useIsDark();
+	const cancelVariant = $derived(isDark.current ? 'ghost' : 'outline');
+
 	onMount(() => {
 		element?.focus();
 	});
@@ -27,7 +32,7 @@
 		uiState.open = false;
 		onclick?.();
 	}}
-	variant="ghost"
+	variant={cancelVariant}
 	{...rest}
 	class={cn(className, `flex sm:w-fit w-full flex-row gap-2 justify-center items-center`)}
 >

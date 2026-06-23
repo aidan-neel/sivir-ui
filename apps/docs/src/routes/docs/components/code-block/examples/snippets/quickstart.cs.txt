@@ -1,0 +1,18 @@
+// Initialize a Pinecone client with your API key
+using Pinecone;
+
+var pc = new PineconeClient("YOUR_API_KEY");
+
+// Create an index for dense vectors with integrated embedding
+var indexName = "quickstart-cs";
+var index = await pc.CreateIndexForModelAsync(new CreateIndexForModelRequest
+{
+    Name = indexName,
+    Cloud = CreateIndexForModelRequestCloud.Aws,
+    Region = "us-east-1",
+    Embed = new CreateIndexForModelRequestEmbed
+    {
+        Model = "llama-text-embed-v2",
+        FieldMap = new Dictionary<string, object?> { { "text", "chunk_text" } },
+    },
+});

@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { Button } from '@silk/ui/components/button';
-	import { Textarea } from '@silk/ui/components/textarea';
-	import { ComponentPreview, Steps } from '$lib/components/docs';
-	import { highlight } from '$lib/highlight';
+	import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+	import { CodeBlock } from '@silk/ui/components/code-block';
 	import { components, sanitizeComponent } from '$lib/components';
 
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
@@ -10,8 +9,16 @@
 	import ChevronRight from '@lucide/svelte/icons/chevron-right';
 	import Copy from '@lucide/svelte/icons/copy';
 	import Check from '@lucide/svelte/icons/check';
-	import Hash from '@lucide/svelte/icons/hash';
 	import External from '@lucide/svelte/icons/external-link';
+
+	import Hero from './examples/hero.svelte';
+	import HeroSrc from './examples/hero.svelte?raw';
+	import Basic from './examples/basic.svelte';
+	import BasicSrc from './examples/basic.svelte?raw';
+	import Labeled from './examples/labeled.svelte';
+	import LabeledSrc from './examples/labeled.svelte?raw';
+	import Disabled from './examples/disabled.svelte';
+	import DisabledSrc from './examples/disabled.svelte?raw';
 
 	const TITLE = 'Textarea';
 	const SOURCE = 'https://github.com/aidan-neel/silk/tree/main/registry/silk/default/textarea';
@@ -19,10 +26,6 @@
 	const curIndex = components.indexOf(TITLE.toLowerCase());
 	const prevComponent = components[curIndex - 1];
 	const nextComponent = components[curIndex + 1];
-
-	let value = $state(
-		"Silk's textarea uses the same field tokens as Input — labels, descriptions, and focus rings stay consistent."
-	);
 
 	const apiRows = [
 		{ prop: 'value', type: 'string', default: '--', description: 'Bindable text content.' },
@@ -61,7 +64,6 @@
 	}
 
 	const installCommand = 'bunx @aidan-neel/ui add textarea';
-	const heroCode = '<Textarea bind:value label="Message" />';
 </script>
 
 <svelte:head>
@@ -90,10 +92,8 @@
 
 	<!-- ─── Hero Example ──────────────────────────────────────────── -->
 	<section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-		<ComponentPreview code={heroCode}>
-			<div class="w-full max-w-sm">
-				<Textarea bind:value label="Message" />
-			</div>
+		<ComponentPreview code={HeroSrc}>
+			<Hero />
 		</ComponentPreview>
 	</section>
 
@@ -104,40 +104,7 @@
 		>
 			Installation
 		</h2>
-		<p class="text-sm text-foreground-muted">Install the Textarea component with the CLI:</p>
-		<Steps
-			steps={[
-				{
-					title: 'Run the CLI',
-					description: 'Copy the command below and run it in your terminal.'
-				}
-			]}
-		>
-			<div
-				class="flex items-stretch overflow-hidden rounded-[var(--radius-md)] border border-border bg-card"
-			>
-				<div class="flex flex-1 items-center gap-3 px-3 py-2.5">
-					<span
-						class="grid size-6 place-items-center rounded-md bg-secondary/70 text-foreground-muted"
-					>
-						<Hash size={12} />
-					</span>
-					<code class="flex-1 font-mono text-[0.82rem] text-foreground">{installCommand}</code>
-				</div>
-				<button
-					type="button"
-					onclick={() => copy(installCommand, 'install')}
-					class="border-l border-border bg-card px-3 text-[0.78rem] text-foreground-muted transition-colors hover:bg-secondary/50 hover:text-foreground"
-					aria-label="Copy install command"
-				>
-					{#if copiedSnippet === 'install'}
-						<Check size={14} class="text-[var(--color-success)]" />
-					{:else}
-						<Copy size={14} />
-					{/if}
-				</button>
-			</div>
-		</Steps>
+		<InstallCommand command={installCommand} />
 	</section>
 
 	<!-- ─── Usage ─────────────────────────────────────────────────── -->
@@ -148,13 +115,11 @@
 			Usage
 		</h2>
 		<p class="text-sm text-foreground-muted">Import Textarea and bind its value:</p>
-		<pre
-			class="m-0 overflow-x-auto bg-secondary/40 rounded-[var(--radius-md)] border border-border px-4 py-3 font-mono text-[0.85rem] leading-relaxed text-foreground"><code
-				>{@html highlight(
-					`import { Textarea } from '@silk/ui/components/textarea';\n\n<Textarea bind:value label="Message" rows={4} />`,
-					'svelte'
-				)}</code
-			></pre>
+		<CodeBlock
+			code={`import { Textarea } from '@silk/ui/components/textarea';\n\n<Textarea bind:value label="Message" rows={4} />`}
+			lang="svelte"
+			copy="overlay"
+		/>
 	</section>
 
 	<!-- ─── Examples ──────────────────────────────────────────────── -->
@@ -175,10 +140,8 @@
 			>
 				Basic
 			</h3>
-			<ComponentPreview code="<Textarea placeholder=&quot;Enter your message...&quot; />">
-				<div class="w-full max-w-sm">
-					<Textarea placeholder="Enter your message..." />
-				</div>
+			<ComponentPreview code={BasicSrc}>
+				<Basic />
 			</ComponentPreview>
 		</div>
 
@@ -189,12 +152,8 @@
 			>
 				With label and description
 			</h3>
-			<ComponentPreview
-				code="<Textarea label=&quot;Feedback&quot; description=&quot;Tell us what you think.&quot; />"
-			>
-				<div class="w-full max-w-sm">
-					<Textarea label="Feedback" description="Tell us what you think." />
-				</div>
+			<ComponentPreview code={LabeledSrc}>
+				<Labeled />
 			</ComponentPreview>
 		</div>
 
@@ -205,12 +164,8 @@
 			>
 				Disabled
 			</h3>
-			<ComponentPreview
-				code="<Textarea disabled value=&quot;Cannot edit this text&quot; label=&quot;Disabled&quot; />"
-			>
-				<div class="w-full max-w-sm">
-					<Textarea disabled value="Cannot edit this text" label="Disabled" />
-				</div>
+			<ComponentPreview code={DisabledSrc}>
+				<Disabled />
 			</ComponentPreview>
 		</div>
 	</section>

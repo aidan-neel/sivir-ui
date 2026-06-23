@@ -83,65 +83,73 @@
 	.silk-sheet-backdrop {
 		position: absolute;
 		inset: 0;
-		background: var(--color-overlay);
-		backdrop-filter: blur(var(--motion-overlay-blur));
-		-webkit-backdrop-filter: blur(var(--motion-overlay-blur));
+		background: color-mix(in oklab, var(--silk-neutral-50) 30%, transparent);
+		backdrop-filter: blur(6px);
+		-webkit-backdrop-filter: blur(6px);
+		backface-visibility: hidden;
+		transform: translateZ(0);
 		animation: silk-sheet-backdrop-in var(--motion-duration-overlay, 150ms) ease-out both;
 	}
 
 	.silk-sheet-panel {
-		animation-duration: var(--motion-duration-sheet, 320ms);
-		animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 		animation-fill-mode: both;
 		will-change: transform;
 	}
 	.silk-sheet-panel[data-side='right'] {
-		animation-name: silk-sheet-slide-in-right;
+		animation: silk-sheet-slide-in-right 180ms cubic-bezier(0.16, 1, 0.3, 1) both;
 	}
 	.silk-sheet-panel[data-side='left'] {
-		animation-name: silk-sheet-slide-in-left;
+		animation: silk-sheet-slide-in-left 180ms cubic-bezier(0.16, 1, 0.3, 1) both;
 	}
 
 	.silk-sheet-root[data-state='closed'] .silk-sheet-backdrop {
 		animation: silk-sheet-backdrop-out var(--motion-duration-overlay, 150ms) ease-in both;
 	}
 	.silk-sheet-root[data-state='closed'] .silk-sheet-panel[data-side='right'] {
-		animation-name: silk-sheet-slide-out-right;
+		animation: silk-sheet-slide-out-right 300ms cubic-bezier(0.4, 0, 1, 1) both;
 	}
 	.silk-sheet-root[data-state='closed'] .silk-sheet-panel[data-side='left'] {
-		animation-name: silk-sheet-slide-out-left;
+		animation: silk-sheet-slide-out-left 300ms cubic-bezier(0.4, 0, 1, 1) both;
 	}
 
 	@keyframes silk-sheet-slide-in-right {
 		from {
-			transform: translate3d(calc(100% + 1rem), 0, 0);
+			transform: translate3d(calc(100% + 1rem), 0, 0) scale(0.985);
+			opacity: 0;
 		}
 		to {
-			transform: translate3d(0, 0, 0);
+			transform: translate3d(0, 0, 0) scale(1);
+			opacity: 1;
 		}
 	}
 	@keyframes silk-sheet-slide-out-right {
 		from {
-			transform: translate3d(0, 0, 0);
+			transform: translate3d(0, 0, 0) scale(1);
+			opacity: 1;
 		}
 		to {
-			transform: translate3d(calc(100% + 1rem), 0, 0);
+			transform: translate3d(calc(100% + 1rem), 0, 0) scale(0.99);
+			opacity: 0;
 		}
 	}
 	@keyframes silk-sheet-slide-in-left {
 		from {
-			transform: translate3d(calc(-100% - 1rem), 0, 0);
+			transform: translate3d(calc(-100% - 1rem), 0, 0) scale(0.985);
+			opacity: 0;
 		}
 		to {
-			transform: translate3d(0, 0, 0);
+			transform: translate3d(0, 0, 0) scale(1);
+			opacity: 1;
 		}
 	}
 	@keyframes silk-sheet-slide-out-left {
 		from {
-			transform: translate3d(0, 0, 0);
+			transform: translate3d(0, 0, 0) scale(1);
+			opacity: 1;
 		}
 		to {
-			transform: translate3d(calc(-100% - 1rem), 0, 0);
+			transform: translate3d(calc(-100% - 1rem), 0, 0) scale(0.99);
+			opacity: 0;
 		}
 	}
 	@keyframes silk-sheet-backdrop-in {

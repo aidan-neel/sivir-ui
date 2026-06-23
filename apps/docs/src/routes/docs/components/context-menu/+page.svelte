@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Button } from '@silk/ui/components/button';
-	import { ComponentPreview, Steps } from '$lib/components/docs';
-	import { highlight } from '$lib/highlight';
+	import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+	import { CodeBlock } from '@silk/ui/components/code-block';
 	import * as ContextMenu from '@silk/ui/components/context-menu';
 	import { components, sanitizeComponent } from '$lib/components';
 
@@ -10,19 +10,16 @@
 	import ChevronRight from '@lucide/svelte/icons/chevron-right';
 	import Copy from '@lucide/svelte/icons/copy';
 	import Check from '@lucide/svelte/icons/check';
-	import Hash from '@lucide/svelte/icons/hash';
 	import External from '@lucide/svelte/icons/external-link';
-	import MousePointer from '@lucide/svelte/icons/mouse-pointer-2';
-	import Image from '@lucide/svelte/icons/image';
-	import Pencil from '@lucide/svelte/icons/pencil';
-	import Copy2 from '@lucide/svelte/icons/files';
-	import Share from '@lucide/svelte/icons/share-2';
-	import Trash from '@lucide/svelte/icons/trash-2';
-	import Star from '@lucide/svelte/icons/star';
-	import Tag from '@lucide/svelte/icons/tag';
-	import Download from '@lucide/svelte/icons/download';
-	import FolderOpen from '@lucide/svelte/icons/folder-open';
-	import FileText from '@lucide/svelte/icons/file-text';
+
+	import Hero from './examples/hero.svelte';
+	import HeroSrc from './examples/hero.svelte?raw';
+	import FileRow from './examples/file-row.svelte';
+	import FileRowSrc from './examples/file-row.svelte?raw';
+	import Image from './examples/image.svelte';
+	import ImageSrc from './examples/image.svelte?raw';
+	import TaskCard from './examples/task-card.svelte';
+	import TaskCardSrc from './examples/task-card.svelte?raw';
 
 	const _TITLE = 'Context Menu';
 	const SLUG = 'context-menu';
@@ -96,17 +93,6 @@
 	}
 
 	const installCommand = 'bunx @aidan-neel/ui add context-menu';
-	const heroCode = `<ContextMenu.Root>
-  <ContextMenu.Trigger>
-    <div>Right-click me</div>
-  </ContextMenu.Trigger>
-  <ContextMenu.Content>
-    <ContextMenu.Item callback={open}>Open</ContextMenu.Item>
-    <ContextMenu.Item callback={rename}>Rename</ContextMenu.Item>
-    <ContextMenu.Separator />
-    <ContextMenu.Item callback={trash}>Move to trash</ContextMenu.Item>
-  </ContextMenu.Content>
-</ContextMenu.Root>`;
 </script>
 
 <svelte:head>
@@ -138,24 +124,8 @@
 
 	<!-- ─── Hero Example ──────────────────────────────────────────── -->
 	<section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-		<ComponentPreview code={heroCode}>
-			<ContextMenu.Root>
-				<ContextMenu.Trigger>
-					<div
-						class="flex h-32 w-72 cursor-default flex-col items-center justify-center gap-2 rounded-[var(--radius-md)] border-2 border-dashed border-border bg-card text-foreground-muted"
-					>
-						<MousePointer size={18} />
-						<span class="text-[0.82rem]">Right-click anywhere here</span>
-					</div>
-				</ContextMenu.Trigger>
-				<ContextMenu.Content>
-					<ContextMenu.Item callback={() => {}}>Open</ContextMenu.Item>
-					<ContextMenu.Item callback={() => {}}>Rename</ContextMenu.Item>
-					<ContextMenu.Item callback={() => {}}>Duplicate</ContextMenu.Item>
-					<ContextMenu.Separator />
-					<ContextMenu.Item callback={() => {}}>Move to trash</ContextMenu.Item>
-				</ContextMenu.Content>
-			</ContextMenu.Root>
+		<ComponentPreview code={HeroSrc}>
+			<Hero />
 		</ComponentPreview>
 	</section>
 
@@ -166,40 +136,7 @@
 		>
 			Installation
 		</h2>
-		<p class="text-sm text-foreground-muted">Install the Context Menu component with the CLI:</p>
-		<Steps
-			steps={[
-				{
-					title: 'Run the CLI',
-					description: 'Copy the command below and run it in your terminal.'
-				}
-			]}
-		>
-			<div
-				class="flex items-stretch overflow-hidden rounded-[var(--radius-md)] border border-border bg-card"
-			>
-				<div class="flex flex-1 items-center gap-3 px-3 py-2.5">
-					<span
-						class="grid size-6 place-items-center rounded-md bg-secondary/70 text-foreground-muted"
-					>
-						<Hash size={12} />
-					</span>
-					<code class="flex-1 font-mono text-[0.82rem] text-foreground">{installCommand}</code>
-				</div>
-				<button
-					type="button"
-					onclick={() => copy(installCommand, 'install')}
-					class="border-l border-border bg-card px-3 text-[0.78rem] text-foreground-muted transition-colors hover:bg-secondary/50 hover:text-foreground"
-					aria-label="Copy install command"
-				>
-					{#if copiedSnippet === 'install'}
-						<Check size={14} class="text-[var(--color-success)]" />
-					{:else}
-						<Copy size={14} />
-					{/if}
-				</button>
-			</div>
-		</Steps>
+		<InstallCommand command={installCommand} />
 	</section>
 
 	<!-- ─── Usage ─────────────────────────────────────────────────── -->
@@ -212,13 +149,11 @@
 		<p class="text-sm text-foreground-muted">
 			Import and compose with Root, Trigger, Content, and Item:
 		</p>
-		<pre
-			class="m-0 overflow-x-auto bg-secondary/40 rounded-[var(--radius-md)] border border-border px-4 py-3 font-mono text-[0.85rem] leading-relaxed text-foreground"><code
-				>{@html highlight(
-					`import * as ContextMenu from '@silk/ui/components/context-menu';\n\n<ContextMenu.Root>\n  <ContextMenu.Trigger>\n    <div>Right-click me</div>\n  </ContextMenu.Trigger>\n  <ContextMenu.Content>\n    <ContextMenu.Item callback={handleAction}>Action</ContextMenu.Item>\n  </ContextMenu.Content>\n</ContextMenu.Root>`,
-					'svelte'
-				)}</code
-			></pre>
+		<CodeBlock
+			code={`import * as ContextMenu from '@silk/ui/components/context-menu';\n\n<ContextMenu.Root>\n  <ContextMenu.Trigger>\n    <div>Right-click me</div>\n  </ContextMenu.Trigger>\n  <ContextMenu.Content>\n    <ContextMenu.Item callback={handleAction}>Action</ContextMenu.Item>\n  </ContextMenu.Content>\n</ContextMenu.Root>`}
+			lang="svelte"
+			copy="overlay"
+		/>
 	</section>
 
 	<!-- ─── Examples ──────────────────────────────────────────────── -->
@@ -241,80 +176,8 @@
 			>
 				File row
 			</h3>
-			<ComponentPreview
-				code={`<ContextMenu.Root>
-  <ContextMenu.Trigger>
-    <div class="flex items-center gap-3 rounded px-3 py-3 border border-dashed">
-      <FileText size={14} />
-      <div>
-        <span>brand-guidelines.fig</span>
-        <span class="text-sm text-muted">Edited 2h ago · 4.2 MB</span>
-      </div>
-    </div>
-  </ContextMenu.Trigger>
-  <ContextMenu.Content>
-    <ContextMenu.Item callback={open}>
-      <span class="flex items-center gap-2"><FolderOpen size={13} /> Open</span>
-    </ContextMenu.Item>
-    <ContextMenu.Item callback={rename}>
-      <span class="flex items-center gap-2"><Pencil size={13} /> Rename</span>
-    </ContextMenu.Item>
-    <ContextMenu.Item callback={duplicate}>
-      <span class="flex items-center gap-2"><Copy2 size={13} /> Duplicate</span>
-    </ContextMenu.Item>
-    <ContextMenu.Separator />
-    <ContextMenu.Item callback={star}>
-      <span class="flex items-center gap-2"><Star size={13} /> Star</span>
-    </ContextMenu.Item>
-    <ContextMenu.Item callback={label}>
-      <span class="flex items-center gap-2"><Tag size={13} /> Add label</span>
-    </ContextMenu.Item>
-    <ContextMenu.Separator />
-    <ContextMenu.Item callback={trash}>
-      <span class="flex items-center gap-2 text-destructive"><Trash size={13} /> Move to trash</span>
-    </ContextMenu.Item>
-  </ContextMenu.Content>
-</ContextMenu.Root>`}
-			>
-				<ContextMenu.Root>
-					<ContextMenu.Trigger>
-						<div
-							class="flex items-center gap-3 rounded-[var(--radius-md)] border border-dashed border-border bg-secondary/30 px-3 py-3 cursor-default"
-						>
-							<FileText size={14} class="text-foreground-muted" />
-							<div class="flex flex-col">
-								<span class="text-[0.84rem] font-[var(--font-weight-label,500)]"
-									>brand-guidelines.fig</span
-								>
-								<span class="text-[0.7rem] text-foreground-muted">Edited 2h ago · 4.2 MB</span>
-							</div>
-						</div>
-					</ContextMenu.Trigger>
-					<ContextMenu.Content>
-						<ContextMenu.Item callback={() => {}}>
-							<span class="flex items-center gap-2"><FolderOpen size={13} /> Open</span>
-						</ContextMenu.Item>
-						<ContextMenu.Item callback={() => {}}>
-							<span class="flex items-center gap-2"><Pencil size={13} /> Rename</span>
-						</ContextMenu.Item>
-						<ContextMenu.Item callback={() => {}}>
-							<span class="flex items-center gap-2"><Copy2 size={13} /> Duplicate</span>
-						</ContextMenu.Item>
-						<ContextMenu.Separator />
-						<ContextMenu.Item callback={() => {}}>
-							<span class="flex items-center gap-2"><Star size={13} /> Star</span>
-						</ContextMenu.Item>
-						<ContextMenu.Item callback={() => {}}>
-							<span class="flex items-center gap-2"><Tag size={13} /> Add label</span>
-						</ContextMenu.Item>
-						<ContextMenu.Separator />
-						<ContextMenu.Item callback={() => {}}>
-							<span class="flex items-center gap-2 text-[var(--color-destructive)]"
-								><Trash size={13} /> Move to trash</span
-							>
-						</ContextMenu.Item>
-					</ContextMenu.Content>
-				</ContextMenu.Root>
+			<ComponentPreview code={FileRowSrc}>
+				<FileRow />
 			</ComponentPreview>
 		</div>
 
@@ -325,48 +188,8 @@
 			>
 				Image
 			</h3>
-			<ComponentPreview
-				code={`<ContextMenu.Root>
-  <ContextMenu.Trigger>
-    <div class="grid h-24 place-items-center rounded border">
-      <Image size={20} />
-    </div>
-  </ContextMenu.Trigger>
-  <ContextMenu.Content>
-    <ContextMenu.Item callback={save}>
-      <span class="flex items-center gap-2"><Download size={13} /> Save image</span>
-    </ContextMenu.Item>
-    <ContextMenu.Item callback={copy}>
-      <span class="flex items-center gap-2"><Copy2 size={13} /> Copy image</span>
-    </ContextMenu.Item>
-    <ContextMenu.Item callback={copyAddr}>Copy image address</ContextMenu.Item>
-    <ContextMenu.Separator />
-    <ContextMenu.Item callback={openNew}>Open in new tab</ContextMenu.Item>
-    <ContextMenu.Item callback={inspect}>Inspect</ContextMenu.Item>
-  </ContextMenu.Content>
-</ContextMenu.Root>`}
-			>
-				<ContextMenu.Root>
-					<ContextMenu.Trigger>
-						<div
-							class="grid h-24 place-items-center rounded-[var(--radius-md)] border border-border bg-[linear-gradient(135deg,color-mix(in_srgb,var(--color-primary)_30%,transparent),color-mix(in_srgb,var(--color-info)_30%,transparent))] cursor-default"
-						>
-							<Image size={20} class="text-foreground" />
-						</div>
-					</ContextMenu.Trigger>
-					<ContextMenu.Content>
-						<ContextMenu.Item callback={() => {}}>
-							<span class="flex items-center gap-2"><Download size={13} /> Save image</span>
-						</ContextMenu.Item>
-						<ContextMenu.Item callback={() => {}}>
-							<span class="flex items-center gap-2"><Copy2 size={13} /> Copy image</span>
-						</ContextMenu.Item>
-						<ContextMenu.Item callback={() => {}}>Copy image address</ContextMenu.Item>
-						<ContextMenu.Separator />
-						<ContextMenu.Item callback={() => {}}>Open in new tab</ContextMenu.Item>
-						<ContextMenu.Item callback={() => {}}>Inspect</ContextMenu.Item>
-					</ContextMenu.Content>
-				</ContextMenu.Root>
+			<ComponentPreview code={ImageSrc}>
+				<Image />
 			</ComponentPreview>
 		</div>
 
@@ -377,73 +200,8 @@
 			>
 				Task card
 			</h3>
-			<ComponentPreview
-				code={`<ContextMenu.Root>
-  <ContextMenu.Trigger>
-    <div class="flex flex-col gap-2 rounded border p-3">
-      <div class="flex items-center justify-between">
-        <span class="text-xs uppercase text-muted">SLK-482</span>
-        <span class="text-xs text-warning">In review</span>
-      </div>
-      <p>Refactor toolbar to share Button primitives</p>
-    </div>
-  </ContextMenu.Trigger>
-  <ContextMenu.Content>
-    <ContextMenu.Item callback={edit}>
-      <span class="flex items-center gap-2"><Pencil size={13} /> Edit task</span>
-    </ContextMenu.Item>
-    <ContextMenu.Item callback={watch}>
-      <span class="flex items-center gap-2"><Star size={13} /> Watch</span>
-    </ContextMenu.Item>
-    <ContextMenu.Item callback={share}>
-      <span class="flex items-center gap-2"><Share size={13} /> Share link</span>
-    </ContextMenu.Item>
-    <ContextMenu.Separator />
-    <ContextMenu.Item callback={backlog}>Move to backlog</ContextMenu.Item>
-    <ContextMenu.Item callback={close}>Close as complete</ContextMenu.Item>
-  </ContextMenu.Content>
-</ContextMenu.Root>`}
-			>
-				<ContextMenu.Root>
-					<ContextMenu.Trigger>
-						<div
-							class="flex flex-col gap-2 rounded-[var(--radius-md)] border border-border bg-background/40 p-3 cursor-default"
-						>
-							<div class="flex items-center justify-between gap-2">
-								<span
-									class="text-[0.7rem] font-[var(--font-weight-label,500)] uppercase text-foreground-muted"
-									>SLK-482</span
-								>
-								<span
-									class="inline-flex items-center gap-1 text-[0.66rem] text-[var(--color-warning)]"
-								>
-									<span class="size-1.5 rounded-full bg-[var(--color-warning)]"></span>
-									In review
-								</span>
-							</div>
-							<p class="m-0 text-[0.84rem] font-[var(--font-weight-label,500)] leading-snug">
-								Refactor toolbar to share Button primitives
-							</p>
-						</div>
-					</ContextMenu.Trigger>
-					<ContextMenu.Content>
-						<ContextMenu.Item callback={() => {}}
-							><span class="flex items-center gap-2"><Pencil size={13} /> Edit task</span
-							></ContextMenu.Item
-						>
-						<ContextMenu.Item callback={() => {}}
-							><span class="flex items-center gap-2"><Star size={13} /> Watch</span
-							></ContextMenu.Item
-						>
-						<ContextMenu.Item callback={() => {}}
-							><span class="flex items-center gap-2"><Share size={13} /> Share link</span
-							></ContextMenu.Item
-						>
-						<ContextMenu.Separator />
-						<ContextMenu.Item callback={() => {}}>Move to backlog</ContextMenu.Item>
-						<ContextMenu.Item callback={() => {}}>Close as complete</ContextMenu.Item>
-					</ContextMenu.Content>
-				</ContextMenu.Root>
+			<ComponentPreview code={TaskCardSrc}>
+				<TaskCard />
 			</ComponentPreview>
 		</div>
 	</section>

@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { Button } from '@silk/ui/components/button';
-	import { ComponentPreview, Steps } from '$lib/components/docs';
-	import { highlight } from '$lib/highlight';
-	import Shortcut from '@silk/ui/components/shortcut';
+	import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+	import { CodeBlock } from '@silk/ui/components/code-block';
 	import { components, sanitizeComponent } from '$lib/components';
 
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
@@ -10,8 +9,16 @@
 	import ChevronRight from '@lucide/svelte/icons/chevron-right';
 	import Copy from '@lucide/svelte/icons/copy';
 	import Check from '@lucide/svelte/icons/check';
-	import Hash from '@lucide/svelte/icons/hash';
 	import External from '@lucide/svelte/icons/external-link';
+
+	import Hero from './examples/hero.svelte';
+	import HeroSrc from './examples/hero.svelte?raw';
+	import Basic from './examples/basic.svelte';
+	import BasicSrc from './examples/basic.svelte?raw';
+	import Modifiers from './examples/modifiers.svelte';
+	import ModifiersSrc from './examples/modifiers.svelte?raw';
+	import Context from './examples/context.svelte';
+	import ContextSrc from './examples/context.svelte?raw';
 
 	const TITLE = 'Shortcut';
 	const SOURCE = 'https://github.com/aidan-neel/silk/tree/main/registry/silk/default/shortcut';
@@ -47,7 +54,6 @@
 	}
 
 	const installCommand = 'bunx @aidan-neel/ui add shortcut';
-	const heroCode = '<Shortcut shortcut="K" />';
 </script>
 
 <svelte:head>
@@ -76,11 +82,8 @@
 
 	<!-- ─── Hero Example ──────────────────────────────────────────── -->
 	<section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-		<ComponentPreview code={heroCode}>
-			<div class="flex items-center gap-4">
-				<span class="text-sm">Search</span>
-				<Shortcut shortcut="K" />
-			</div>
+		<ComponentPreview code={HeroSrc}>
+			<Hero />
 		</ComponentPreview>
 	</section>
 
@@ -91,40 +94,7 @@
 		>
 			Installation
 		</h2>
-		<p class="text-sm text-foreground-muted">Install the Shortcut component with the CLI:</p>
-		<Steps
-			steps={[
-				{
-					title: 'Run the CLI',
-					description: 'Copy the command below and run it in your terminal.'
-				}
-			]}
-		>
-			<div
-				class="flex items-stretch overflow-hidden rounded-[var(--radius-md)] border border-border bg-card"
-			>
-				<div class="flex flex-1 items-center gap-3 px-3 py-2.5">
-					<span
-						class="grid size-6 place-items-center rounded-md bg-secondary/70 text-foreground-muted"
-					>
-						<Hash size={12} />
-					</span>
-					<code class="flex-1 font-mono text-[0.82rem] text-foreground">{installCommand}</code>
-				</div>
-				<button
-					type="button"
-					onclick={() => copy(installCommand, 'install')}
-					class="border-l border-border bg-card px-3 text-[0.78rem] text-foreground-muted transition-colors hover:bg-secondary/50 hover:text-foreground"
-					aria-label="Copy install command"
-				>
-					{#if copiedSnippet === 'install'}
-						<Check size={14} class="text-[var(--color-success)]" />
-					{:else}
-						<Copy size={14} />
-					{/if}
-				</button>
-			</div>
-		</Steps>
+		<InstallCommand command={installCommand} />
 	</section>
 
 	<!-- ─── Usage ─────────────────────────────────────────────────── -->
@@ -137,13 +107,11 @@
 		<p class="text-sm text-foreground-muted">
 			Import Shortcut and pass a keyboard shortcut string:
 		</p>
-		<pre
-			class="m-0 overflow-x-auto bg-secondary/40 rounded-[var(--radius-md)] border border-border px-4 py-3 font-mono text-[0.85rem] leading-relaxed text-foreground"><code
-				>{@html highlight(
-					`import Shortcut from '@silk/ui/components/shortcut';\n\n<Shortcut shortcut="cmd+K" />\n<Shortcut shortcut="shift+/" />`,
-					'svelte'
-				)}</code
-			></pre>
+		<CodeBlock
+			code={`import Shortcut from '@silk/ui/components/shortcut';\n\n<Shortcut shortcut="cmd+K" />\n<Shortcut shortcut="shift+/" />`}
+			lang="svelte"
+			copy="overlay"
+		/>
 	</section>
 
 	<!-- ─── Examples ──────────────────────────────────────────────── -->
@@ -166,8 +134,8 @@
 			>
 				Basic
 			</h3>
-			<ComponentPreview code="<Shortcut shortcut=&quot;K&quot; />">
-				<Shortcut shortcut="K" />
+			<ComponentPreview code={BasicSrc}>
+				<Basic />
 			</ComponentPreview>
 		</div>
 
@@ -178,13 +146,8 @@
 			>
 				With modifiers
 			</h3>
-			<ComponentPreview
-				code="<div class=&quot;flex gap-2&quot;><Shortcut shortcut=&quot;cmd+K&quot; /><Shortcut shortcut=&quot;shift+/&quot; /></div>"
-			>
-				<div class="flex gap-2">
-					<Shortcut shortcut="cmd+K" />
-					<Shortcut shortcut="shift+/" />
-				</div>
+			<ComponentPreview code={ModifiersSrc}>
+				<Modifiers />
 			</ComponentPreview>
 		</div>
 
@@ -195,15 +158,8 @@
 			>
 				In context
 			</h3>
-			<ComponentPreview
-				code="<div class=&quot;flex items-center justify-between w-full max-w-xs px-3 py-2 rounded border border-border&quot;><span class=&quot;text-sm&quot;>Open command menu</span><Shortcut shortcut=&quot;cmd+K&quot; /></div>"
-			>
-				<div
-					class="flex items-center justify-between w-full max-w-xs px-3 py-2 rounded border border-border"
-				>
-					<span class="text-sm">Open command menu</span>
-					<Shortcut shortcut="cmd+K" />
-				</div>
+			<ComponentPreview code={ContextSrc}>
+				<Context />
 			</ComponentPreview>
 		</div>
 	</section>

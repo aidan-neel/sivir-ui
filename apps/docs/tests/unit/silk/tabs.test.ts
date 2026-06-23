@@ -100,11 +100,17 @@ describe('Tabs -- variants', () => {
 		expect(list.getAttribute('data-variant')).toBe('default');
 	});
 
-	it('outlined renders a bordered container', () => {
-		render(TabsFixture, { props: { value: 'one', variant: 'outlined' } });
+	it('segmented renders a muted track container', () => {
+		render(TabsFixture, { props: { value: 'one', variant: 'segmented' } });
 		const list = document.querySelector('[data-ui="tabs-list"]')!;
-		expect(list.getAttribute('data-variant')).toBe('outlined');
-		expect(list.className).toContain('border-border');
+		expect(list.getAttribute('data-variant')).toBe('segmented');
+		expect(list.className).toContain('bg-secondary');
+	});
+
+	it('segmented triggers render taller (min-height token) from first paint', () => {
+		render(TabsFixture, { props: { value: 'one', variant: 'segmented' } });
+		const trigger = document.querySelector('[role="tab"]')!;
+		expect(trigger.className).toContain('min-h-[32px]');
 	});
 
 	it('ghost has no bordered container', () => {
@@ -123,21 +129,24 @@ describe('Tabs -- variants', () => {
 		});
 	});
 
-	it('outlined renders a filled pill as the active indicator', async () => {
-		render(TabsFixture, { props: { value: 'one', variant: 'outlined' } });
+	it('segmented renders an elevated pill as the active indicator', async () => {
+		render(TabsFixture, { props: { value: 'one', variant: 'segmented' } });
 		await waitFor(() => {
 			const list = document.querySelector('[data-ui="tabs-list"]')!;
 			const indicator = list.querySelector('div[aria-hidden="true"]');
-			expect(indicator?.className).toContain('bg-secondary');
+			expect(indicator?.className).toContain('bg-card');
 		});
 	});
 
-	it('ghost has no pill/underline indicator -- active is shown on the trigger', () => {
+	it('ghost rests its fill on the selected tab', async () => {
 		render(TabsFixture, { props: { value: 'one', variant: 'ghost' } });
-		// no separate active-indicator element is rendered for ghost
-		const list = document.querySelector('[data-ui="tabs-list"]')!;
-		expect(list.querySelector('div[aria-hidden="true"]')).toBeNull();
-		// the active tab is conveyed on the trigger itself
+		// the selected tab carries the ghost fill (a sliding highlight element)
+		await waitFor(() => {
+			const list = document.querySelector('[data-ui="tabs-list"]')!;
+			const fill = list.querySelector('div[aria-hidden="true"]');
+			expect(fill?.className).toContain('bg-secondary/70');
+		});
+		// and the active tab is still conveyed on the trigger itself
 		const activeTrigger = screen.getByTestId('trig-one').closest('button')!;
 		expect(activeTrigger.getAttribute('aria-selected')).toBe('true');
 		expect(activeTrigger.className).toContain('text-foreground');

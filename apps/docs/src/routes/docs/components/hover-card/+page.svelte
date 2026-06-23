@@ -1,9 +1,7 @@
 <script lang="ts">
 	import { Button } from '@silk/ui/components/button';
-	import * as HoverCard from '@silk/ui/components/hover-card';
-	import * as Avatar from '@silk/ui/components/avatar';
-	import { ComponentPreview, Steps } from '$lib/components/docs';
-	import { highlight } from '$lib/highlight';
+	import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+	import { CodeBlock } from '@silk/ui/components/code-block';
 	import { components, sanitizeComponent } from '$lib/components';
 
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
@@ -11,8 +9,14 @@
 	import ChevronRight from '@lucide/svelte/icons/chevron-right';
 	import Copy from '@lucide/svelte/icons/copy';
 	import Check from '@lucide/svelte/icons/check';
-	import Hash from '@lucide/svelte/icons/hash';
 	import External from '@lucide/svelte/icons/external-link';
+
+	import UserPreview from './examples/user-preview.svelte';
+	import UserPreviewSrc from './examples/user-preview.svelte?raw';
+	import LinkPreview from './examples/link-preview.svelte';
+	import LinkPreviewSrc from './examples/link-preview.svelte?raw';
+	import Definition from './examples/definition.svelte';
+	import DefinitionSrc from './examples/definition.svelte?raw';
 
 	const _TITLE = 'Hover Card';
 	const SLUG = 'hover-card';
@@ -65,18 +69,6 @@
 	}
 
 	const installCommand = `bunx @aidan-neel/ui add ${SLUG}`;
-	const heroCode = `<HoverCard.Root>
-	  <HoverCard.Trigger>@aidan-neel</HoverCard.Trigger>
-	  <HoverCard.Content>
-	    <div class="flex items-start gap-3">
-	      <Avatar.Root size="md"><Avatar.Fallback>AN</Avatar.Fallback></Avatar.Root>
-	      <div class="flex flex-col gap-1">
-	        <HoverCard.Title>Aidan Neel</HoverCard.Title>
-	        <HoverCard.Description>Building Silk. Loves type-driven design and animation polish.</HoverCard.Description>
-	      </div>
-	    </div>
-	  </HoverCard.Content>
-	</HoverCard.Root>`;
 </script>
 
 <svelte:head>
@@ -108,25 +100,8 @@
 
 	<!-- ─── Hero Example ──────────────────────────────────────────── -->
 	<section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-		<ComponentPreview code={heroCode}>
-			<p class="text-[0.92rem] text-foreground-muted">
-				Built by
-				<HoverCard.Root>
-					<HoverCard.Trigger href="https://github.com/aidan-neel">@aidan-neel</HoverCard.Trigger>
-					<HoverCard.Content>
-						<div class="flex items-start gap-3">
-							<Avatar.Root size="md"><Avatar.Fallback>AN</Avatar.Fallback></Avatar.Root>
-							<div class="flex flex-col gap-1">
-								<HoverCard.Title>Aidan Neel</HoverCard.Title>
-								<HoverCard.Description
-									>Building Silk. Loves type-driven design and animation polish.</HoverCard.Description
-								>
-							</div>
-						</div>
-					</HoverCard.Content>
-				</HoverCard.Root>
-				— hover the username for a preview.
-			</p>
+		<ComponentPreview code={UserPreviewSrc}>
+			<UserPreview />
 		</ComponentPreview>
 	</section>
 
@@ -137,40 +112,7 @@
 		>
 			Installation
 		</h2>
-		<p class="text-sm text-foreground-muted">Install the Hover Card component with the CLI:</p>
-		<Steps
-			steps={[
-				{
-					title: 'Run the CLI',
-					description: 'Copy the command below and run it in your terminal.'
-				}
-			]}
-		>
-			<div
-				class="flex items-stretch overflow-hidden rounded-[var(--radius-md)] border border-border bg-card"
-			>
-				<div class="flex flex-1 items-center gap-3 px-3 py-2.5">
-					<span
-						class="grid size-6 place-items-center rounded-md bg-secondary/70 text-foreground-muted"
-					>
-						<Hash size={12} />
-					</span>
-					<code class="flex-1 font-mono text-[0.82rem] text-foreground">{installCommand}</code>
-				</div>
-				<button
-					type="button"
-					onclick={() => copy(installCommand, 'install')}
-					class="border-l border-border bg-card px-3 text-[0.78rem] text-foreground-muted transition-colors hover:bg-secondary/50 hover:text-foreground"
-					aria-label="Copy install command"
-				>
-					{#if copiedSnippet === 'install'}
-						<Check size={14} class="text-[var(--color-success)]" />
-					{:else}
-						<Copy size={14} />
-					{/if}
-				</button>
-			</div>
-		</Steps>
+		<InstallCommand command={installCommand} />
 	</section>
 
 	<!-- ─── Usage ─────────────────────────────────────────────────── -->
@@ -183,13 +125,11 @@
 		<p class="text-sm text-foreground-muted">
 			Import Hover Card and compose it with sub-components:
 		</p>
-		<pre
-			class="m-0 overflow-x-auto bg-secondary/40 rounded-[var(--radius-md)] border border-border px-4 py-3 font-mono text-[0.85rem] leading-relaxed text-foreground"><code
-				>{@html highlight(
-					`import * as HoverCard from '@silk/ui/components/hover-card';\nimport * as Avatar from '@silk/ui/components/avatar';\n\n<HoverCard.Root>\n  <HoverCard.Trigger>@username</HoverCard.Trigger>\n  <HoverCard.Content>\n    <HoverCard.Title>Full name</HoverCard.Title>\n    <HoverCard.Description>Bio or description</HoverCard.Description>\n  </HoverCard.Content>\n</HoverCard.Root>`,
-					'svelte'
-				)}</code
-			></pre>
+		<CodeBlock
+			code={`import * as HoverCard from '@silk/ui/components/hover-card';\nimport * as Avatar from '@silk/ui/components/avatar';\n\n<HoverCard.Root>\n  <HoverCard.Trigger>@username</HoverCard.Trigger>\n  <HoverCard.Content>\n    <HoverCard.Title>Full name</HoverCard.Title>\n    <HoverCard.Description>Bio or description</HoverCard.Description>\n  </HoverCard.Content>\n</HoverCard.Root>`}
+			lang="svelte"
+			copy="overlay"
+		/>
 	</section>
 
 	<!-- ─── Examples ──────────────────────────────────────────────── -->
@@ -212,25 +152,8 @@
 			>
 				User mention preview
 			</h3>
-			<ComponentPreview code={heroCode}>
-				<p class="text-[0.92rem] text-foreground-muted">
-					Built by
-					<HoverCard.Root>
-						<HoverCard.Trigger href="https://github.com/aidan-neel">@aidan-neel</HoverCard.Trigger>
-						<HoverCard.Content>
-							<div class="flex items-start gap-3">
-								<Avatar.Root size="md"><Avatar.Fallback>AN</Avatar.Fallback></Avatar.Root>
-								<div class="flex flex-col gap-1">
-									<HoverCard.Title>Aidan Neel</HoverCard.Title>
-									<HoverCard.Description
-										>Building Silk. Loves type-driven design and animation polish.</HoverCard.Description
-									>
-								</div>
-							</div>
-						</HoverCard.Content>
-					</HoverCard.Root>
-					— hover the username for a preview.
-				</p>
+			<ComponentPreview code={UserPreviewSrc}>
+				<UserPreview />
 			</ComponentPreview>
 		</div>
 
@@ -241,24 +164,8 @@
 			>
 				Link preview
 			</h3>
-			<ComponentPreview
-				code={`<HoverCard.Root>
-	  <HoverCard.Trigger href="https://silk.dev">Silk UI</HoverCard.Trigger>
-	  <HoverCard.Content>
-	    <HoverCard.Title>Silk UI</HoverCard.Title>
-	    <HoverCard.Description>An unstyled, accessible Svelte component library.</HoverCard.Description>
-	  </HoverCard.Content>
-	</HoverCard.Root>`}
-			>
-				<HoverCard.Root>
-					<HoverCard.Trigger href="https://silk.dev">Silk UI</HoverCard.Trigger>
-					<HoverCard.Content>
-						<HoverCard.Title>Silk UI</HoverCard.Title>
-						<HoverCard.Description
-							>An unstyled, accessible Svelte component library.</HoverCard.Description
-						>
-					</HoverCard.Content>
-				</HoverCard.Root>
+			<ComponentPreview code={LinkPreviewSrc}>
+				<LinkPreview />
 			</ComponentPreview>
 		</div>
 
@@ -269,22 +176,8 @@
 			>
 				Definition or term
 			</h3>
-			<ComponentPreview
-				code={`<HoverCard.Root>
-	  <HoverCard.Trigger>polymorphic</HoverCard.Trigger>
-	  <HoverCard.Content>
-	    <HoverCard.Description>Able to render as different HTML elements while maintaining the same component API.</HoverCard.Description>
-	  </HoverCard.Content>
-	</HoverCard.Root>`}
-			>
-				<HoverCard.Root>
-					<HoverCard.Trigger>polymorphic</HoverCard.Trigger>
-					<HoverCard.Content>
-						<HoverCard.Description
-							>Able to render as different HTML elements while maintaining the same component API.</HoverCard.Description
-						>
-					</HoverCard.Content>
-				</HoverCard.Root>
+			<ComponentPreview code={DefinitionSrc}>
+				<Definition />
 			</ComponentPreview>
 		</div>
 	</section>

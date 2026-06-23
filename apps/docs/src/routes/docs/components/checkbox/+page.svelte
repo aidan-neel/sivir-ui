@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { Checkbox } from '@silk/ui/components/checkbox';
 	import { Button } from '@silk/ui/components/button';
-	import { ComponentPreview, Steps } from '$lib/components/docs';
-	import { highlight } from '$lib/highlight';
+	import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+	import { CodeBlock } from '@silk/ui/components/code-block';
 	import { components, sanitizeComponent } from '$lib/components';
 
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
@@ -12,7 +12,16 @@
 	import Check from '@lucide/svelte/icons/check';
 	import Layers from '@lucide/svelte/icons/layers-3';
 	import External from '@lucide/svelte/icons/external-link';
-	import Hash from '@lucide/svelte/icons/hash';
+	import Hero from './examples/hero.svelte';
+	import HeroSrc from './examples/hero.svelte?raw';
+	import LabelOnly from './examples/label-only.svelte';
+	import LabelOnlySrc from './examples/label-only.svelte?raw';
+	import WithDescription from './examples/with-description.svelte';
+	import WithDescriptionSrc from './examples/with-description.svelte?raw';
+	import Disabled from './examples/disabled.svelte';
+	import DisabledSrc from './examples/disabled.svelte?raw';
+	import Checked from './examples/checked.svelte';
+	import CheckedSrc from './examples/checked.svelte?raw';
 
 	const TITLE = 'Checkbox';
 	const SLUG = 'checkbox';
@@ -55,10 +64,7 @@
 		}
 	];
 
-	let checked = $state(true);
 	let copiedSnippet = $state<string | null>(null);
-
-	const checkedCode = '<Checkbox label="Checked by default" checked />';
 
 	function copy(text: string, key: string) {
 		if (typeof navigator === 'undefined' || !navigator.clipboard) return;
@@ -70,7 +76,6 @@
 	}
 
 	const installCommand = `bunx @aidan-neel/ui add ${SLUG}`;
-	const heroCode = `<Checkbox label="Accept terms" />`;
 </script>
 
 <svelte:head>
@@ -99,10 +104,8 @@
 
 	<!-- ─── Hero Example ──────────────────────────────────────────── -->
 	<section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-		<ComponentPreview code={heroCode}>
-			<div class="flex items-center justify-center">
-				<Checkbox bind:checked label="Accept terms" />
-			</div>
+		<ComponentPreview code={HeroSrc}>
+			<Hero />
 		</ComponentPreview>
 	</section>
 
@@ -113,40 +116,7 @@
 		>
 			Installation
 		</h2>
-		<p class="text-sm text-foreground-muted">Install the Checkbox component with the CLI:</p>
-		<Steps
-			steps={[
-				{
-					title: 'Run the CLI',
-					description: 'Copy the command below and run it in your terminal.'
-				}
-			]}
-		>
-			<div
-				class="flex items-stretch overflow-hidden rounded-[var(--radius-md)] border border-border bg-card"
-			>
-				<div class="flex flex-1 items-center gap-3 px-3 py-2.5">
-					<span
-						class="grid size-6 place-items-center rounded-md bg-secondary/70 text-foreground-muted"
-					>
-						<Hash size={12} />
-					</span>
-					<code class="flex-1 font-mono text-[0.82rem] text-foreground">{installCommand}</code>
-				</div>
-				<button
-					type="button"
-					onclick={() => copy(installCommand, 'install')}
-					class="border-l border-border bg-card px-3 text-[0.78rem] text-foreground-muted transition-colors hover:bg-secondary/50 hover:text-foreground"
-					aria-label="Copy install command"
-				>
-					{#if copiedSnippet === 'install'}
-						<Check size={14} class="text-[var(--color-success)]" />
-					{:else}
-						<Copy size={14} />
-					{/if}
-				</button>
-			</div>
-		</Steps>
+		<InstallCommand command={installCommand} />
 	</section>
 
 	<!-- ─── Usage ─────────────────────────────────────────────────── -->
@@ -157,13 +127,11 @@
 			Usage
 		</h2>
 		<p class="text-sm text-foreground-muted">Import and use the Checkbox component:</p>
-		<pre
-			class="m-0 overflow-x-auto bg-secondary/40 rounded-[var(--radius-md)] border border-border px-4 py-3 font-mono text-[0.85rem] leading-relaxed text-foreground"><code
-				>{@html highlight(
-					`import { Checkbox } from '@silk/ui/components/checkbox';\n\nlet checked = $state();\n\n<Checkbox bind:checked label="Accept" />`,
-					'svelte'
-				)}</code
-			></pre>
+		<CodeBlock
+			code={`import { Checkbox } from '@silk/ui/components/checkbox';\n\nlet checked = $state();\n\n<Checkbox bind:checked label="Accept" />`}
+			lang="svelte"
+			copy="overlay"
+		/>
 	</section>
 
 	<!-- ─── Examples ──────────────────────────────────────────────── -->
@@ -183,10 +151,8 @@
 			>
 				Label only
 			</h3>
-			<ComponentPreview code={`<Checkbox label="Receive updates" checked={false} />`}>
-				<div class="flex items-center justify-center">
-					<Checkbox label="Receive updates" checked={false} />
-				</div>
+			<ComponentPreview code={LabelOnlySrc}>
+				<LabelOnly />
 			</ComponentPreview>
 		</div>
 
@@ -197,16 +163,8 @@
 			>
 				With description
 			</h3>
-			<ComponentPreview
-				code={`<Checkbox\n  label="Receive product updates"\n  description="Roughly one email per month"\n  checked={false}\n/>`}
-			>
-				<div class="flex items-center justify-center">
-					<Checkbox
-						label="Receive product updates"
-						description="Roughly one email per month"
-						checked={false}
-					/>
-				</div>
+			<ComponentPreview code={WithDescriptionSrc}>
+				<WithDescription />
 			</ComponentPreview>
 		</div>
 
@@ -217,10 +175,8 @@
 			>
 				Disabled
 			</h3>
-			<ComponentPreview code={`<Checkbox label="Disabled option" disabled checked={false} />`}>
-				<div class="flex items-center justify-center">
-					<Checkbox label="Disabled option" disabled checked={false} />
-				</div>
+			<ComponentPreview code={DisabledSrc}>
+				<Disabled />
 			</ComponentPreview>
 		</div>
 
@@ -231,10 +187,8 @@
 			>
 				Checked
 			</h3>
-			<ComponentPreview code={checkedCode}>
-				<div class="flex items-center justify-center">
-					<Checkbox label="Checked by default" checked />
-				</div>
+			<ComponentPreview code={CheckedSrc}>
+				<Checked />
 			</ComponentPreview>
 		</div>
 	</section>

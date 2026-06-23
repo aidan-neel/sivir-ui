@@ -288,12 +288,9 @@
 					>
 						Heading
 					</p>
-					<Combobox.Root>
-						<Combobox.Trigger variant="outline" class="w-full"
-							>{headerFontSelection}</Combobox.Trigger
-						>
+					<Combobox.Root placeholder="Search fonts...">
+						<Combobox.Trigger variant="outline" class="w-full" />
 						<Combobox.Content class="w-full min-w-[var(--button-width,auto)]">
-							<Combobox.Search placeholder="Search fonts..." />
 							<Combobox.Results>
 								{#each groupedFontOptions as group}
 									{#if group.items.length > 0}
@@ -303,9 +300,7 @@
 												value={opt.label}
 												label={opt.label}
 												callback={() => updateHeaderFont(opt.label)}
-											>
-												{opt.label}
-											</Combobox.Item>
+											/>
 										{/each}
 									{/if}
 								{/each}
@@ -319,11 +314,9 @@
 					>
 						Body
 					</p>
-					<Combobox.Root>
-						<Combobox.Trigger variant="outline" class="w-full">{bodyFontSelection}</Combobox.Trigger
-						>
+					<Combobox.Root placeholder="Search fonts...">
+						<Combobox.Trigger variant="outline" class="w-full" />
 						<Combobox.Content class="w-full min-w-[var(--button-width,auto)]">
-							<Combobox.Search placeholder="Search fonts..." />
 							<Combobox.Results>
 								{#each groupedFontOptions as group}
 									{#if group.items.length > 0}
@@ -333,9 +326,7 @@
 												value={opt.label}
 												label={opt.label}
 												callback={() => updateBodyFont(opt.label)}
-											>
-												{opt.label}
-											</Combobox.Item>
+											/>
 										{/each}
 									{/if}
 								{/each}

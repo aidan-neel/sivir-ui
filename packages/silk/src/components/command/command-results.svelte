@@ -15,7 +15,9 @@
 	const { children, class: className, allowClickOutside = true, ...rest }: Props = $props();
 </script>
 
-<div class="max-h-full overflow-y-auto p-[var(--menu-padding)]">
+<div
+	class="max-h-full overflow-y-auto p-[var(--menu-padding)] pb-[calc(var(--menu-padding)+0.375rem)]"
+>
 	{#if uiState.searchContent === '' || uiState.results.size > 0}
 		{@render children?.()}
 	{:else}

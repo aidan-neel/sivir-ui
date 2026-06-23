@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { Button } from '@silk/ui/components/button';
-	import { ComponentPreview, Steps } from '$lib/components/docs';
-	import { highlight } from '$lib/highlight';
-	import * as Popover from '@silk/ui/components/popover';
+	import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+	import { CodeBlock } from '@silk/ui/components/code-block';
 	import { components, sanitizeComponent } from '$lib/components';
 
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
@@ -10,9 +9,14 @@
 	import ChevronRight from '@lucide/svelte/icons/chevron-right';
 	import Copy from '@lucide/svelte/icons/copy';
 	import Check from '@lucide/svelte/icons/check';
-	import Hash from '@lucide/svelte/icons/hash';
 	import External from '@lucide/svelte/icons/external-link';
-	import Bell from '@lucide/svelte/icons/bell';
+
+	import Hero from './examples/hero.svelte';
+	import HeroSrc from './examples/hero.svelte?raw';
+	import Basic from './examples/basic.svelte';
+	import BasicSrc from './examples/basic.svelte?raw';
+	import Placements from './examples/placements.svelte';
+	import PlacementsSrc from './examples/placements.svelte?raw';
 
 	const _TITLE = 'Popover';
 	const SLUG = 'popover';
@@ -35,7 +39,6 @@
 	}
 
 	const installCommand = 'bunx @aidan-neel/ui add popover';
-	const heroCode = `<Popover.Root placement="bottom">\n  <Popover.Trigger variant="outline">\n    <Bell size={14} />\n    Notifications\n  </Popover.Trigger>\n  <Popover.Content class="w-72">\n    <div class="flex flex-col gap-2 p-3">\n      <p class="m-0 text-[0.86rem] font-[600]">Notifications</p>\n      <p class="m-0 text-[0.78rem] text-foreground-muted">You have 3 unread messages and 1 new follower.</p>\n      <Button size="sm" class="mt-2 self-start">Open inbox</Button>\n    </div>\n  </Popover.Content>\n</Popover.Root>`;
 
 	const apiRows = [
 		{
@@ -95,22 +98,8 @@
 
 	<!-- ─── Hero Example ──────────────────────────────────────────── -->
 	<section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-		<ComponentPreview code={heroCode}>
-			<Popover.Root placement="bottom">
-				<Popover.Trigger variant="outline">
-					<Bell size={14} />
-					Notifications
-				</Popover.Trigger>
-				<Popover.Content class="w-72">
-					<div class="flex flex-col gap-2 p-3">
-						<p class="m-0 text-[0.86rem] font-[600]">Notifications</p>
-						<p class="m-0 text-[0.78rem] text-foreground-muted">
-							You have 3 unread messages and 1 new follower.
-						</p>
-						<Button size="sm" class="mt-2 self-start">Open inbox</Button>
-					</div>
-				</Popover.Content>
-			</Popover.Root>
+		<ComponentPreview code={HeroSrc}>
+			<Hero />
 		</ComponentPreview>
 	</section>
 
@@ -121,40 +110,7 @@
 		>
 			Installation
 		</h2>
-		<p class="text-sm text-foreground-muted">Install the Popover component with the CLI:</p>
-		<Steps
-			steps={[
-				{
-					title: 'Run the CLI',
-					description: 'Copy the command below and run it in your terminal.'
-				}
-			]}
-		>
-			<div
-				class="flex items-stretch overflow-hidden rounded-[var(--radius-md)] border border-border bg-card"
-			>
-				<div class="flex flex-1 items-center gap-3 px-3 py-2.5">
-					<span
-						class="grid size-6 place-items-center rounded-md bg-secondary/70 text-foreground-muted"
-					>
-						<Hash size={12} />
-					</span>
-					<code class="flex-1 font-mono text-[0.82rem] text-foreground">{installCommand}</code>
-				</div>
-				<button
-					type="button"
-					onclick={() => copy(installCommand, 'install')}
-					class="border-l border-border bg-card px-3 text-[0.78rem] text-foreground-muted transition-colors hover:bg-secondary/50 hover:text-foreground"
-					aria-label="Copy install command"
-				>
-					{#if copiedSnippet === 'install'}
-						<Check size={14} class="text-[var(--color-success)]" />
-					{:else}
-						<Copy size={14} />
-					{/if}
-				</button>
-			</div>
-		</Steps>
+		<InstallCommand command={installCommand} />
 	</section>
 
 	<!-- ─── Usage ─────────────────────────────────────────────────── -->
@@ -165,13 +121,11 @@
 			Usage
 		</h2>
 		<p class="text-sm text-foreground-muted">Import Popover and compose it with sub-components:</p>
-		<pre
-			class="m-0 overflow-x-auto bg-secondary/40 rounded-[var(--radius-md)] border border-border px-4 py-3 font-mono text-[0.85rem] leading-relaxed text-foreground"><code
-				>{@html highlight(
-					`import * as Popover from '@silk/ui/components/popover';\n\n<Popover.Root>\n  <Popover.Trigger>Open</Popover.Trigger>\n  <Popover.Content class="w-64">\n    Content here\n  </Popover.Content>\n</Popover.Root>`,
-					'svelte'
-				)}</code
-			></pre>
+		<CodeBlock
+			code={`import * as Popover from '@silk/ui/components/popover';\n\n<Popover.Root>\n  <Popover.Trigger>Open</Popover.Trigger>\n  <Popover.Content class="w-64">\n    Content here\n  </Popover.Content>\n</Popover.Root>`}
+			lang="svelte"
+			copy="overlay"
+		/>
 	</section>
 
 	<!-- ─── Examples ──────────────────────────────────────────────── -->
@@ -194,17 +148,8 @@
 			>
 				Basic popover
 			</h3>
-			<ComponentPreview
-				code={`<Popover.Root>\n  <Popover.Trigger>Open menu</Popover.Trigger>\n  <Popover.Content class="w-64">\n    <div class="p-3">\n      <p class="m-0 text-sm text-foreground-muted">Popover content goes here.</p>\n    </div>\n  </Popover.Content>\n</Popover.Root>`}
-			>
-				<Popover.Root>
-					<Popover.Trigger>Open menu</Popover.Trigger>
-					<Popover.Content class="w-64">
-						<div class="p-3">
-							<p class="m-0 text-sm text-foreground-muted">Popover content goes here.</p>
-						</div>
-					</Popover.Content>
-				</Popover.Root>
+			<ComponentPreview code={BasicSrc}>
+				<Basic />
 			</ComponentPreview>
 		</div>
 
@@ -215,21 +160,8 @@
 			>
 				Placement variants
 			</h3>
-			<ComponentPreview
-				code={`<div class="flex flex-wrap gap-4 justify-center">\n  {#each ['top', 'right', 'bottom', 'left'] as placement}\n    <Popover.Root {placement}>\n      <Popover.Trigger size="sm">{placement}</Popover.Trigger>\n      <Popover.Content class="w-48">\n        <div class="p-3">\n          <p class="m-0 text-sm">Anchored to {placement}</p>\n        </div>\n      </Popover.Content>\n    </Popover.Root>\n  {/each}\n</div>`}
-			>
-				<div class="flex flex-wrap gap-4 justify-center">
-					{#each ['top', 'right', 'bottom', 'left'] as placement (placement)}
-						<Popover.Root placement={placement as 'top' | 'right' | 'bottom' | 'left'}>
-							<Popover.Trigger size="sm" variant="outline">{placement}</Popover.Trigger>
-							<Popover.Content class="w-48">
-								<div class="p-3">
-									<p class="m-0 text-sm text-foreground-muted">Anchored to {placement}</p>
-								</div>
-							</Popover.Content>
-						</Popover.Root>
-					{/each}
-				</div>
+			<ComponentPreview code={PlacementsSrc}>
+				<Placements />
 			</ComponentPreview>
 		</div>
 	</section>

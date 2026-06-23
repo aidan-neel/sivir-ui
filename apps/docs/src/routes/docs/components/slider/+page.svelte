@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { Button } from '@silk/ui/components/button';
 	import { Slider } from '@silk/ui/components/slider';
-	import { ComponentPreview, Steps } from '$lib/components/docs';
-	import { highlight } from '$lib/highlight';
+	import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+	import { CodeBlock } from '@silk/ui/components/code-block';
 	import { components, sanitizeComponent } from '$lib/components';
 
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
@@ -10,8 +10,16 @@
 	import ChevronRight from '@lucide/svelte/icons/chevron-right';
 	import Copy from '@lucide/svelte/icons/copy';
 	import Check from '@lucide/svelte/icons/check';
-	import Hash from '@lucide/svelte/icons/hash';
 	import External from '@lucide/svelte/icons/external-link';
+
+	import Hero from './examples/hero.svelte';
+	import HeroSrc from './examples/hero.svelte?raw';
+	import Basic from './examples/basic.svelte';
+	import BasicSrc from './examples/basic.svelte?raw';
+	import Stepped from './examples/stepped.svelte';
+	import SteppedSrc from './examples/stepped.svelte?raw';
+	import Disabled from './examples/disabled.svelte';
+	import DisabledSrc from './examples/disabled.svelte?raw';
 
 	const TITLE = 'Slider';
 	const SLUG = 'slider';
@@ -46,8 +54,6 @@
 		}
 	];
 
-	let volume = $state(64);
-
 	let copiedSnippet = $state<string | null>(null);
 
 	function copy(text: string, key: string) {
@@ -60,7 +66,6 @@
 	}
 
 	const installCommand = `bunx @aidan-neel/ui add ${SLUG}`;
-	const heroCode = `<Slider bind:value={volume} label="Volume" />`;
 </script>
 
 <svelte:head>
@@ -89,14 +94,8 @@
 
 	<!-- ─── Hero Example ──────────────────────────────────────────── -->
 	<section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-		<ComponentPreview code={heroCode}>
-			<div class="flex w-full max-w-sm flex-col gap-2">
-				<div class="flex items-center justify-between text-[0.78rem]">
-					<span class="text-foreground-muted">Volume</span>
-					<span class="font-mono text-foreground">{volume}</span>
-				</div>
-				<Slider bind:value={volume} label="Volume" />
-			</div>
+		<ComponentPreview code={HeroSrc}>
+			<Hero />
 		</ComponentPreview>
 	</section>
 
@@ -107,40 +106,7 @@
 		>
 			Installation
 		</h2>
-		<p class="text-sm text-foreground-muted">Install the Slider component with the CLI:</p>
-		<Steps
-			steps={[
-				{
-					title: 'Run the CLI',
-					description: 'Copy the command below and run it in your terminal.'
-				}
-			]}
-		>
-			<div
-				class="flex items-stretch overflow-hidden rounded-[var(--radius-md)] border border-border bg-card"
-			>
-				<div class="flex flex-1 items-center gap-3 px-3 py-2.5">
-					<span
-						class="grid size-6 place-items-center rounded-md bg-secondary/70 text-foreground-muted"
-					>
-						<Hash size={12} />
-					</span>
-					<code class="flex-1 font-mono text-[0.82rem] text-foreground">{installCommand}</code>
-				</div>
-				<button
-					type="button"
-					onclick={() => copy(installCommand, 'install')}
-					class="border-l border-border bg-card px-3 text-[0.78rem] text-foreground-muted transition-colors hover:bg-secondary/50 hover:text-foreground"
-					aria-label="Copy install command"
-				>
-					{#if copiedSnippet === 'install'}
-						<Check size={14} class="text-[var(--color-success)]" />
-					{:else}
-						<Copy size={14} />
-					{/if}
-				</button>
-			</div>
-		</Steps>
+		<InstallCommand command={installCommand} />
 	</section>
 
 	<!-- ─── Usage ─────────────────────────────────────────────────── -->
@@ -151,13 +117,11 @@
 			Usage
 		</h2>
 		<p class="text-sm text-foreground-muted">Import Slider and bind its value:</p>
-		<pre
-			class="m-0 overflow-x-auto bg-secondary/40 rounded-[var(--radius-md)] border border-border px-4 py-3 font-mono text-[0.85rem] leading-relaxed text-foreground"><code
-				>{@html highlight(
-					`import { Slider } from '@silk/ui/components/slider';\n\n<Slider bind:value={volume} label="Volume" />`,
-					'svelte'
-				)}</code
-			></pre>
+		<CodeBlock
+			code={`import { Slider } from '@silk/ui/components/slider';\n\n<Slider bind:value={volume} label="Volume" />`}
+			lang="svelte"
+			copy="overlay"
+		/>
 	</section>
 
 	<!-- ─── Examples ──────────────────────────────────────────────── -->
@@ -178,10 +142,8 @@
 			>
 				Basic
 			</h3>
-			<ComponentPreview code={`<Slider value={50} label="Slider" />`}>
-				<div class="w-full max-w-sm">
-					<Slider value={50} label="Slider" />
-				</div>
+			<ComponentPreview code={BasicSrc}>
+				<Basic />
 			</ComponentPreview>
 		</div>
 
@@ -192,10 +154,8 @@
 			>
 				With step
 			</h3>
-			<ComponentPreview code={`<Slider value={50} step={10} min={0} max={100} label="By tens" />`}>
-				<div class="w-full max-w-sm">
-					<Slider value={50} step={10} min={0} max={100} label="By tens" />
-				</div>
+			<ComponentPreview code={SteppedSrc}>
+				<Stepped />
 			</ComponentPreview>
 		</div>
 
@@ -206,10 +166,8 @@
 			>
 				Disabled
 			</h3>
-			<ComponentPreview code={`<Slider value={50} disabled label="Disabled" />`}>
-				<div class="w-full max-w-sm">
-					<Slider value={50} disabled label="Disabled" />
-				</div>
+			<ComponentPreview code={DisabledSrc}>
+				<Disabled />
 			</ComponentPreview>
 		</div>
 	</section>

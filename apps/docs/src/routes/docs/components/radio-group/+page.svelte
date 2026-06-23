@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { Button } from '@silk/ui/components/button';
-	import * as RadioGroup from '@silk/ui/components/radio-group';
-	import { ComponentPreview, Steps } from '$lib/components/docs';
-	import { highlight } from '$lib/highlight';
+	import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+	import { CodeBlock } from '@silk/ui/components/code-block';
 	import { components, sanitizeComponent } from '$lib/components';
 
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
@@ -10,8 +9,14 @@
 	import ChevronRight from '@lucide/svelte/icons/chevron-right';
 	import Copy from '@lucide/svelte/icons/copy';
 	import Check from '@lucide/svelte/icons/check';
-	import Hash from '@lucide/svelte/icons/hash';
 	import External from '@lucide/svelte/icons/external-link';
+
+	import Hero from './examples/hero.svelte';
+	import HeroSrc from './examples/hero.svelte?raw';
+	import Descriptions from './examples/descriptions.svelte';
+	import DescriptionsSrc from './examples/descriptions.svelte?raw';
+	import Disabled from './examples/disabled.svelte';
+	import DisabledSrc from './examples/disabled.svelte?raw';
 
 	const _TITLE = 'Radio Group';
 	const SLUG = 'radio-group';
@@ -66,8 +71,6 @@
 		}
 	];
 
-	let plan = $state<string | undefined>('pro');
-
 	let copiedSnippet = $state<string | null>(null);
 	function copy(text: string, key: string) {
 		if (typeof navigator === 'undefined' || !navigator.clipboard) return;
@@ -79,11 +82,6 @@
 	}
 
 	const installCommand = 'bunx @aidan-neel/ui add radio-group';
-	const heroCode = `<RadioGroup.Root bind:value name="plan">
-  <RadioGroup.Item value="free" label="Free" description="For solo hobby projects." />
-  <RadioGroup.Item value="pro" label="Pro" description="For small teams and side projects." />
-  <RadioGroup.Item value="team" label="Team" description="Audit log, SSO, and priority support." />
-</RadioGroup.Root>`;
 </script>
 
 <svelte:head>
@@ -111,16 +109,8 @@
 
 	<!-- ─── Hero Example ──────────────────────────────────────────── -->
 	<section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-		<ComponentPreview code={heroCode}>
-			<RadioGroup.Root bind:value={plan} name="plan">
-				<RadioGroup.Item value="free" label="Free" description="For solo hobby projects." />
-				<RadioGroup.Item value="pro" label="Pro" description="For small teams and side projects." />
-				<RadioGroup.Item
-					value="team"
-					label="Team"
-					description="Audit log, SSO, and priority support."
-				/>
-			</RadioGroup.Root>
+		<ComponentPreview code={HeroSrc}>
+			<Hero />
 		</ComponentPreview>
 	</section>
 
@@ -131,40 +121,7 @@
 		>
 			Installation
 		</h2>
-		<p class="text-sm text-foreground-muted">Install the Radio Group component with the CLI:</p>
-		<Steps
-			steps={[
-				{
-					title: 'Run the CLI',
-					description: 'Copy the command below and run it in your terminal.'
-				}
-			]}
-		>
-			<div
-				class="flex items-stretch overflow-hidden rounded-[var(--radius-md)] border border-border bg-card"
-			>
-				<div class="flex flex-1 items-center gap-3 px-3 py-2.5">
-					<span
-						class="grid size-6 place-items-center rounded-md bg-secondary/70 text-foreground-muted"
-					>
-						<Hash size={12} />
-					</span>
-					<code class="flex-1 font-mono text-[0.82rem] text-foreground">{installCommand}</code>
-				</div>
-				<button
-					type="button"
-					onclick={() => copy(installCommand, 'install')}
-					class="border-l border-border bg-card px-3 text-[0.78rem] text-foreground-muted transition-colors hover:bg-secondary/50 hover:text-foreground"
-					aria-label="Copy install command"
-				>
-					{#if copiedSnippet === 'install'}
-						<Check size={14} class="text-[var(--color-success)]" />
-					{:else}
-						<Copy size={14} />
-					{/if}
-				</button>
-			</div>
-		</Steps>
+		<InstallCommand command={installCommand} />
 	</section>
 
 	<!-- ─── Usage ─────────────────────────────────────────────────── -->
@@ -177,13 +134,11 @@
 		<p class="text-sm text-foreground-muted">
 			Import RadioGroup and compose it with Item sub-components:
 		</p>
-		<pre
-			class="m-0 overflow-x-auto bg-secondary/40 rounded-[var(--radius-md)] border border-border px-4 py-3 font-mono text-[0.85rem] leading-relaxed text-foreground"><code
-				>{@html highlight(
-					`import * as RadioGroup from '@silk/ui/components/radio-group';\n\n<RadioGroup.Root bind:value name="plan">\n  <RadioGroup.Item value="pro" label="Pro" />\n</RadioGroup.Root>`,
-					'svelte'
-				)}</code
-			></pre>
+		<CodeBlock
+			code={`import * as RadioGroup from '@silk/ui/components/radio-group';\n\n<RadioGroup.Root bind:value name="plan">\n  <RadioGroup.Item value="pro" label="Pro" />\n</RadioGroup.Root>`}
+			lang="svelte"
+			copy="overlay"
+		/>
 	</section>
 
 	<!-- ─── Examples ──────────────────────────────────────────────── -->
@@ -204,20 +159,8 @@
 			>
 				With descriptions
 			</h3>
-			<ComponentPreview code={heroCode}>
-				<RadioGroup.Root bind:value={plan} name="plan">
-					<RadioGroup.Item value="free" label="Free" description="For solo hobby projects." />
-					<RadioGroup.Item
-						value="pro"
-						label="Pro"
-						description="For small teams and side projects."
-					/>
-					<RadioGroup.Item
-						value="team"
-						label="Team"
-						description="Audit log, SSO, and priority support."
-					/>
-				</RadioGroup.Root>
+			<ComponentPreview code={DescriptionsSrc}>
+				<Descriptions />
 			</ComponentPreview>
 		</div>
 
@@ -228,13 +171,8 @@
 			>
 				Disabled
 			</h3>
-			<ComponentPreview
-				code={`<RadioGroup.Root disabled name="option">\n  <RadioGroup.Item value="a" label="Option A" />\n  <RadioGroup.Item value="b" label="Option B" />\n</RadioGroup.Root>`}
-			>
-				<RadioGroup.Root disabled name="option">
-					<RadioGroup.Item value="a" label="Option A" />
-					<RadioGroup.Item value="b" label="Option B" />
-				</RadioGroup.Root>
+			<ComponentPreview code={DisabledSrc}>
+				<Disabled />
 			</ComponentPreview>
 		</div>
 	</section>

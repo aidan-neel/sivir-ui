@@ -10,14 +10,19 @@
 	type Rect = { left: number; top: number; width: number; height: number };
 
 	const variant = $derived(tabsState.variant);
-	// `default` + `ghost` get the animated hover-highlight pill; `outlined` doesn't.
-	const showHover = $derived(variant !== 'outlined');
+	// `default` + `ghost` get the animated hover-highlight pill; the
+	// container-style `segmented` variant doesn't (its pill marks the active tab).
+	const showHover = $derived(variant !== 'segmented');
 
 	let listEl = $state<HTMLDivElement | undefined>(undefined);
 	let indicator = $state<Rect | null>(null);
 	let hover = $state<Rect | null>(null);
 	let hovering = $state(false);
 	let ready = $state(false);
+
+	// Ghost: a single fill that rests on the selected tab and slides to whatever
+	// tab the pointer is over, snapping back to the selection on mouse-leave.
+	const ghostRect = $derived(hovering && hover ? hover : indicator);
 
 	function rectOf(el: HTMLElement): Rect {
 		// offsetLeft/Top are relative to the offsetParent's padding box, which is
@@ -49,9 +54,12 @@
 		hovering = false;
 	}
 
-	// Slide geometry + (optionally) fade, driven by the theme's panel duration.
-	const SLIDE =
-		'left var(--motion-duration-panel) var(--ease-out),top var(--motion-duration-panel) var(--ease-out),width var(--motion-duration-panel) var(--ease-out),height var(--motion-duration-panel) var(--ease-out)';
+	// Fluid glide that stays *inside* the track: a strong decel curve (no
+	// overshoot, so the pill never shoots past the container on the end tabs),
+	// held a touch slower so the motion reads as liquid rather than snappy.
+	const SLIDE_DUR = '300ms';
+	const SLIDE_EASE = 'var(--ease-out)';
+	const SLIDE = `left ${SLIDE_DUR} ${SLIDE_EASE},top ${SLIDE_DUR} ${SLIDE_EASE},width ${SLIDE_DUR} ${SLIDE_EASE},height ${SLIDE_DUR} ${SLIDE_EASE}`;
 
 	$effect(() => {
 		// re-measure whenever the active value changes
@@ -134,8 +142,8 @@
 	class={cn(
 		className,
 		'relative inline-flex items-center',
-		variant === 'outlined' &&
-			'rounded-[var(--radius-lg)] border border-border bg-secondary/40 p-[var(--tabs-list-padding)] shadow-[var(--outline-shadow)]',
+		variant === 'segmented' &&
+			'rounded-[var(--radius-xl)] bg-secondary p-[var(--tabs-list-padding)]',
 		variant === 'ghost' && 'gap-1',
 		// bottom padding = the visible gap between the tabs and the underline
 		variant === 'default' && 'gap-1 pb-1'
@@ -147,16 +155,23 @@
 	onfocusout={handleMouseLeave}
 	{...rest}
 >
-	<!-- Hover highlight (default + ghost). In `ghost` this is the ONLY fill -- the
-	     active tab is shown through text color/weight, not a pill. -->
-	{#if showHover && hover}
+	<!-- Default: a faint hover highlight that fades in over the hovered tab,
+	     sitting behind the underline indicator. -->
+	{#if variant === 'default' && hover}
 		<div
 			aria-hidden="true"
-			class={cn(
-				'pointer-events-none absolute rounded-[var(--radius-md)]',
-				variant === 'ghost' ? 'bg-secondary/70' : 'bg-foreground/[0.06]'
-			)}
+			class="pointer-events-none absolute rounded-[var(--radius-md)] bg-foreground/[0.06]"
 			style={`left:${hover.left}px;top:${hover.top}px;width:${hover.width}px;height:${hover.height}px;opacity:${hovering ? 1 : 0};transition:${SLIDE},opacity var(--motion-duration-hover) ease-out;`}
+		></div>
+	{/if}
+
+	<!-- Ghost: the selected tab carries the ghost fill, which slides to follow
+	     the pointer across tabs and returns to the selection on leave. -->
+	{#if variant === 'ghost' && ghostRect}
+		<div
+			aria-hidden="true"
+			class="pointer-events-none absolute rounded-[var(--radius-md)] bg-secondary/70"
+			style={`left:${ghostRect.left}px;top:${ghostRect.top}px;width:${ghostRect.width}px;height:${ghostRect.height}px;transition:${ready ? SLIDE : 'none'};`}
 		></div>
 	{/if}
 
@@ -170,11 +185,11 @@
 				class="pointer-events-none absolute bottom-0 h-[var(--tabs-indicator-height)] rounded-full bg-foreground"
 				style={`left:${indicator.left}px;width:${indicator.width}px;transition:${ready ? 'left var(--motion-duration-panel) var(--ease-out),width var(--motion-duration-panel) var(--ease-out)' : 'none'};`}
 			></div>
-		{:else if variant === 'outlined'}
-			<!-- filled pill inside the bordered container -->
+		{:else if variant === 'segmented'}
+			<!-- elevated white pill on the muted track (iOS-style segmented control) -->
 			<div
 				aria-hidden="true"
-				class="pointer-events-none absolute rounded-[calc(var(--radius-lg)-4px)] bg-secondary shadow-[var(--outline-shadow)]"
+				class="pointer-events-none absolute rounded-[var(--radius-lg)] bg-card shadow-[var(--card-shadow)] ring-1 ring-border/50"
 				style={`left:${indicator.left}px;top:${indicator.top}px;width:${indicator.width}px;height:${indicator.height}px;transition:${ready ? SLIDE : 'none'};`}
 			></div>
 		{/if}

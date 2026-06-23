@@ -1,8 +1,8 @@
 <script lang="ts">
 	import * as Command from '@silk/ui/components/command';
 	import { Button } from '@silk/ui/components/button';
-	import { ComponentPreview, Steps } from '$lib/components/docs';
-	import { highlight } from '$lib/highlight';
+	import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+	import { CodeBlock } from '@silk/ui/components/code-block';
 	import { components, sanitizeComponent } from '$lib/components';
 
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
@@ -12,11 +12,10 @@
 	import Check from '@lucide/svelte/icons/check';
 	import Layers from '@lucide/svelte/icons/layers-3';
 	import External from '@lucide/svelte/icons/external-link';
-	import Hash from '@lucide/svelte/icons/hash';
-	import Search from '@lucide/svelte/icons/search';
-	import Plus from '@lucide/svelte/icons/plus';
-	import Settings from '@lucide/svelte/icons/settings';
-	import Users from '@lucide/svelte/icons/users';
+	import Hero from './examples/hero.svelte';
+	import HeroSrc from './examples/hero.svelte?raw';
+	import WithGroups from './examples/with-groups.svelte';
+	import WithGroupsSrc from './examples/with-groups.svelte?raw';
 
 	const TITLE = 'Command';
 	const SLUG = 'command';
@@ -90,18 +89,6 @@
 	}
 
 	const installCommand = `bunx @aidan-neel/ui add ${SLUG}`;
-	const heroCode = `<Command.Root>
-  <Command.Trigger>Open command palette</Command.Trigger>
-  <Command.Content>
-    <Command.Search placeholder="Search..." />
-    <Command.Results>
-      <Command.Group heading="Suggestions">
-        <Command.Item name="New project">New project</Command.Item>
-        <Command.Item name="Settings">Settings</Command.Item>
-      </Command.Group>
-    </Command.Results>
-  </Command.Content>
-</Command.Root>`;
 </script>
 
 <svelte:head>
@@ -130,36 +117,8 @@
 
 	<!-- ─── Hero Example ──────────────────────────────────────────── -->
 	<section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-		<ComponentPreview code={heroCode}>
-			<div class="flex items-center justify-center">
-				<Command.Root>
-					<Command.Trigger>
-						<Search size={14} />
-						Open command palette
-					</Command.Trigger>
-					<Command.Content>
-						<Command.Search placeholder="Search commands..." />
-						<Command.Results>
-							<Command.Group heading="Suggestions">
-								<Command.Item name="New project">
-									<Plus size={14} />
-									New project
-								</Command.Item>
-								<Command.Item name="Settings">
-									<Settings size={14} />
-									Settings
-								</Command.Item>
-							</Command.Group>
-							<Command.Group heading="Users">
-								<Command.Item name="Team">
-									<Users size={14} />
-									Team
-								</Command.Item>
-							</Command.Group>
-						</Command.Results>
-					</Command.Content>
-				</Command.Root>
-			</div>
+		<ComponentPreview code={HeroSrc}>
+			<Hero />
 		</ComponentPreview>
 	</section>
 
@@ -170,40 +129,7 @@
 		>
 			Installation
 		</h2>
-		<p class="text-sm text-foreground-muted">Install the Command component with the CLI:</p>
-		<Steps
-			steps={[
-				{
-					title: 'Run the CLI',
-					description: 'Copy the command below and run it in your terminal.'
-				}
-			]}
-		>
-			<div
-				class="flex items-stretch overflow-hidden rounded-[var(--radius-md)] border border-border bg-card"
-			>
-				<div class="flex flex-1 items-center gap-3 px-3 py-2.5">
-					<span
-						class="grid size-6 place-items-center rounded-md bg-secondary/70 text-foreground-muted"
-					>
-						<Hash size={12} />
-					</span>
-					<code class="flex-1 font-mono text-[0.82rem] text-foreground">{installCommand}</code>
-				</div>
-				<button
-					type="button"
-					onclick={() => copy(installCommand, 'install')}
-					class="border-l border-border bg-card px-3 text-[0.78rem] text-foreground-muted transition-colors hover:bg-secondary/50 hover:text-foreground"
-					aria-label="Copy install command"
-				>
-					{#if copiedSnippet === 'install'}
-						<Check size={14} class="text-[var(--color-success)]" />
-					{:else}
-						<Copy size={14} />
-					{/if}
-				</button>
-			</div>
-		</Steps>
+		<InstallCommand command={installCommand} />
 	</section>
 
 	<!-- ─── Usage ─────────────────────────────────────────────────── -->
@@ -214,13 +140,11 @@
 			Usage
 		</h2>
 		<p class="text-sm text-foreground-muted">Import and use the Command components:</p>
-		<pre
-			class="m-0 overflow-x-auto bg-secondary/40 rounded-[var(--radius-md)] border border-border px-4 py-3 font-mono text-[0.85rem] leading-relaxed text-foreground"><code
-				>{@html highlight(
-					`import * as Command from '@silk/ui/components/command';\n\n<Command.Root>\n  <Command.Trigger>Open palette</Command.Trigger>\n  <Command.Content>\n    <Command.Search placeholder="Search..." />\n    <Command.Results>\n      <Command.Item name="search">Item</Command.Item>\n    </Command.Results>\n  </Command.Content>\n</Command.Root>`,
-					'svelte'
-				)}</code
-			></pre>
+		<CodeBlock
+			code={`import * as Command from '@silk/ui/components/command';\n\n<Command.Root>\n  <Command.Trigger>Open palette</Command.Trigger>\n  <Command.Content>\n    <Command.Search placeholder="Search..." />\n    <Command.Results>\n      <Command.Item name="search">Item</Command.Item>\n    </Command.Results>\n  </Command.Content>\n</Command.Root>`}
+			lang="svelte"
+			copy="overlay"
+		/>
 	</section>
 
 	<!-- ─── Examples ──────────────────────────────────────────────── -->
@@ -240,36 +164,8 @@
 			>
 				With groups
 			</h3>
-			<ComponentPreview code={heroCode}>
-				<div class="flex items-center justify-center">
-					<Command.Root>
-						<Command.Trigger>
-							<Search size={14} />
-							Open palette
-						</Command.Trigger>
-						<Command.Content>
-							<Command.Search placeholder="Search..." />
-							<Command.Results>
-								<Command.Group heading="Actions">
-									<Command.Item name="New project">
-										<Plus size={14} />
-										New project
-									</Command.Item>
-									<Command.Item name="Settings">
-										<Settings size={14} />
-										Settings
-									</Command.Item>
-								</Command.Group>
-								<Command.Group heading="Users">
-									<Command.Item name="Team">
-										<Users size={14} />
-										Team
-									</Command.Item>
-								</Command.Group>
-							</Command.Results>
-						</Command.Content>
-					</Command.Root>
-				</div>
+			<ComponentPreview code={WithGroupsSrc}>
+				<WithGroups />
 			</ComponentPreview>
 		</div>
 	</section>

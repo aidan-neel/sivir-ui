@@ -1,7 +1,7 @@
 import { tv } from 'tailwind-variants';
 
 export const checkbox = tv({
-	base: 'group flex flex-row items-start gap-3 [transition-duration:var(--motion-duration-press)] ease-[var(--ease-out)]',
+	base: 'group flex select-none flex-row items-start gap-2 [transition-duration:var(--motion-duration-press)] ease-[var(--ease-out)]',
 	variants: {
 		variant: {
 			default: '',

@@ -16,7 +16,7 @@
 	{...rest}
 	class={cn(
 		classProp,
-		'[font-size:var(--font-size-body,16px)] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted'
+		'[font-size:var(--font-size-body,16px)] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-pretty text-foreground-muted'
 	)}
 >
 	{@render children?.()}

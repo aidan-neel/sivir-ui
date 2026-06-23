@@ -1,3 +1,4 @@
-<svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-6 w-6 text-foreground">
-	<circle cx="12" cy="12" r="7" fill="currentColor" />
-</svg>
+<a href="/" class="flex items-center gap-2 no-underline" aria-label="Silk UI Home">
+	<span class="inline-block size-2 rounded-full bg-foreground"></span>
+	<span class="hidden font-semibold tracking-tight text-foreground sm:inline">Silk</span>
+</a>

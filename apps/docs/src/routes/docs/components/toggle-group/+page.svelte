@@ -1,20 +1,21 @@
 <script lang="ts">
 	import { Button } from '@silk/ui/components/button';
 	import * as ToggleGroup from '@silk/ui/components/toggle-group';
-	import { ComponentPreview, Steps } from '$lib/components/docs';
-	import { highlight } from '$lib/highlight';
+	import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+	import { CodeBlock } from '@silk/ui/components/code-block';
 	import { components, sanitizeComponent } from '$lib/components';
 
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
 	import ChevronLeft from '@lucide/svelte/icons/chevron-left';
 	import ChevronRight from '@lucide/svelte/icons/chevron-right';
-	import Copy from '@lucide/svelte/icons/copy';
-	import Check from '@lucide/svelte/icons/check';
-	import Hash from '@lucide/svelte/icons/hash';
 	import External from '@lucide/svelte/icons/external-link';
-	import AlignLeft from '@lucide/svelte/icons/align-left';
-	import AlignCenter from '@lucide/svelte/icons/align-center';
-	import AlignRight from '@lucide/svelte/icons/align-right';
+
+	import Hero from './examples/hero.svelte';
+	import HeroSrc from './examples/hero.svelte?raw';
+	import Single from './examples/single.svelte';
+	import SingleSrc from './examples/single.svelte?raw';
+	import Multiple from './examples/multiple.svelte';
+	import MultipleSrc from './examples/multiple.svelte?raw';
 
 	const TITLE = 'Toggle Group';
 	const SLUG = 'toggle-group';
@@ -55,25 +56,7 @@
 		}
 	];
 
-	let alignment = $state('center');
-
-	let copiedSnippet = $state<string | null>(null);
-
-	function copy(text: string, key: string) {
-		if (typeof navigator === 'undefined' || !navigator.clipboard) return;
-		void navigator.clipboard.writeText(text);
-		copiedSnippet = key;
-		setTimeout(() => {
-			if (copiedSnippet === key) copiedSnippet = null;
-		}, 1600);
-	}
-
 	const installCommand = `bunx @aidan-neel/ui add ${SLUG}`;
-	const heroCode = `<ToggleGroup.Root type="single" value="center">
-  <ToggleGroup.Item value="left"><AlignLeft size={14} /></ToggleGroup.Item>
-  <ToggleGroup.Item value="center"><AlignCenter size={14} /></ToggleGroup.Item>
-  <ToggleGroup.Item value="right"><AlignRight size={14} /></ToggleGroup.Item>
-</ToggleGroup.Root>`;
 </script>
 
 <svelte:head>
@@ -102,18 +85,8 @@
 
 	<!-- ─── Hero Example ──────────────────────────────────────────── -->
 	<section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-		<ComponentPreview code={heroCode}>
-			<ToggleGroup.Root type="single" bind:value={alignment}>
-				<ToggleGroup.Item value="left" aria-label="Align left">
-					<AlignLeft size={14} />
-				</ToggleGroup.Item>
-				<ToggleGroup.Item value="center" aria-label="Align center">
-					<AlignCenter size={14} />
-				</ToggleGroup.Item>
-				<ToggleGroup.Item value="right" aria-label="Align right">
-					<AlignRight size={14} />
-				</ToggleGroup.Item>
-			</ToggleGroup.Root>
+		<ComponentPreview code={HeroSrc}>
+			<Hero />
 		</ComponentPreview>
 	</section>
 
@@ -124,40 +97,7 @@
 		>
 			Installation
 		</h2>
-		<p class="text-sm text-foreground-muted">Install the Toggle Group component with the CLI:</p>
-		<Steps
-			steps={[
-				{
-					title: 'Run the CLI',
-					description: 'Copy the command below and run it in your terminal.'
-				}
-			]}
-		>
-			<div
-				class="flex items-stretch overflow-hidden rounded-[var(--radius-md)] border border-border bg-card"
-			>
-				<div class="flex flex-1 items-center gap-3 px-3 py-2.5">
-					<span
-						class="grid size-6 place-items-center rounded-md bg-secondary/70 text-foreground-muted"
-					>
-						<Hash size={12} />
-					</span>
-					<code class="flex-1 font-mono text-[0.82rem] text-foreground">{installCommand}</code>
-				</div>
-				<button
-					type="button"
-					onclick={() => copy(installCommand, 'install')}
-					class="border-l border-border bg-card px-3 text-[0.78rem] text-foreground-muted transition-colors hover:bg-secondary/50 hover:text-foreground"
-					aria-label="Copy install command"
-				>
-					{#if copiedSnippet === 'install'}
-						<Check size={14} class="text-[var(--color-success)]" />
-					{:else}
-						<Copy size={14} />
-					{/if}
-				</button>
-			</div>
-		</Steps>
+		<InstallCommand command={installCommand} />
 	</section>
 
 	<!-- ─── Usage ─────────────────────────────────────────────────── -->
@@ -170,13 +110,11 @@
 		<p class="text-sm text-foreground-muted">
 			Import Toggle Group and compose it with Item components:
 		</p>
-		<pre
-			class="m-0 overflow-x-auto bg-secondary/40 rounded-[var(--radius-md)] border border-border px-4 py-3 font-mono text-[0.85rem] leading-relaxed text-foreground"><code
-				>{@html highlight(
-					`import * as ToggleGroup from '@silk/ui/components/toggle-group';\n\n<ToggleGroup.Root type="single" bind:value={alignment}>\n  <ToggleGroup.Item value="left">Left</ToggleGroup.Item>\n  <ToggleGroup.Item value="center">Center</ToggleGroup.Item>\n  <ToggleGroup.Item value="right">Right</ToggleGroup.Item>\n</ToggleGroup.Root>`,
-					'svelte'
-				)}</code
-			></pre>
+		<CodeBlock
+			code={`import * as ToggleGroup from '@silk/ui/components/toggle-group';\n\n<ToggleGroup.Root type="single" bind:value={alignment}>\n  <ToggleGroup.Item value="left">Left</ToggleGroup.Item>\n  <ToggleGroup.Item value="center">Center</ToggleGroup.Item>\n  <ToggleGroup.Item value="right">Right</ToggleGroup.Item>\n</ToggleGroup.Root>`}
+			lang="svelte"
+			copy="overlay"
+		/>
 	</section>
 
 	<!-- ─── Examples ──────────────────────────────────────────────── -->
@@ -197,20 +135,8 @@
 			>
 				Single select
 			</h3>
-			<ComponentPreview
-				code={`<ToggleGroup.Root type="single" value="center"><ToggleGroup.Item value="left"><AlignLeft size={14} /></ToggleGroup.Item><ToggleGroup.Item value="center"><AlignCenter size={14} /></ToggleGroup.Item><ToggleGroup.Item value="right"><AlignRight size={14} /></ToggleGroup.Item></ToggleGroup.Root>`}
-			>
-				<ToggleGroup.Root type="single" value="center">
-					<ToggleGroup.Item value="left" aria-label="Align left">
-						<AlignLeft size={14} />
-					</ToggleGroup.Item>
-					<ToggleGroup.Item value="center" aria-label="Align center">
-						<AlignCenter size={14} />
-					</ToggleGroup.Item>
-					<ToggleGroup.Item value="right" aria-label="Align right">
-						<AlignRight size={14} />
-					</ToggleGroup.Item>
-				</ToggleGroup.Root>
+			<ComponentPreview code={SingleSrc}>
+				<Single />
 			</ComponentPreview>
 		</div>
 
@@ -221,18 +147,8 @@
 			>
 				Multiple select
 			</h3>
-			<ComponentPreview
-				code={`<ToggleGroup.Root type="multiple" value={['left', 'center']}>
-  <ToggleGroup.Item value="left">Option A</ToggleGroup.Item>
-  <ToggleGroup.Item value="center">Option B</ToggleGroup.Item>
-  <ToggleGroup.Item value="right">Option C</ToggleGroup.Item>
-</ToggleGroup.Root>`}
-			>
-				<ToggleGroup.Root type="multiple" value={['left', 'center']}>
-					<ToggleGroup.Item value="left">Option A</ToggleGroup.Item>
-					<ToggleGroup.Item value="center">Option B</ToggleGroup.Item>
-					<ToggleGroup.Item value="right">Option C</ToggleGroup.Item>
-				</ToggleGroup.Root>
+			<ComponentPreview code={MultipleSrc}>
+				<Multiple />
 			</ComponentPreview>
 		</div>
 	</section>

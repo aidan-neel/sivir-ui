@@ -219,7 +219,7 @@
 	<Popover.Root state_key={key} placement="bottom">
 		<Popover.Trigger
 			{variant}
-			class="group h-8 w-full justify-start gap-2 px-1.5 text-sm [font-weight:var(--font-weight-button,500)] [letter-spacing:var(--tracking-button,0em)]"
+			class="group h-8 w-full justify-start gap-2 pl-1.5 pr-2.5 text-sm [font-weight:var(--font-weight-button,500)] [letter-spacing:var(--tracking-button,0em)]"
 		>
 			<span
 				class="size-5 shrink-0 rounded-md ring-1 ring-inset ring-black/10"
@@ -353,6 +353,11 @@
 		border-radius: 9999px;
 		outline: none;
 		cursor: pointer;
+	}
+	/* In dark mode --color-secondary sits close to the popover panel, leaving
+	   the track faint. Lean on the strong border token for clear contrast. */
+	:global(.dark) .silk-color-range {
+		background: var(--color-border-strong);
 	}
 	.silk-color-range::-webkit-slider-thumb {
 		appearance: none;

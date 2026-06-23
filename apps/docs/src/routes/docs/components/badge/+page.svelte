@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { Button } from '@silk/ui/components/button';
 	import { Badge } from '@silk/ui/components/badge';
-	import { ComponentPreview, Steps } from '$lib/components/docs';
-	import { highlight } from '$lib/highlight';
+	import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+	import { CodeBlock } from '@silk/ui/components/code-block';
 	import { components, sanitizeComponent } from '$lib/components';
 
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
@@ -10,8 +10,28 @@
 	import ChevronRight from '@lucide/svelte/icons/chevron-right';
 	import Copy from '@lucide/svelte/icons/copy';
 	import Check from '@lucide/svelte/icons/check';
-	import Hash from '@lucide/svelte/icons/hash';
 	import External from '@lucide/svelte/icons/external-link';
+
+	import Hero from './examples/hero.svelte';
+	import HeroSrc from './examples/hero.svelte?raw';
+	import VariantPrimary from './examples/variant-primary.svelte';
+	import VariantPrimarySrc from './examples/variant-primary.svelte?raw';
+	import VariantSecondary from './examples/variant-secondary.svelte';
+	import VariantSecondarySrc from './examples/variant-secondary.svelte?raw';
+	import VariantGhost from './examples/variant-ghost.svelte';
+	import VariantGhostSrc from './examples/variant-ghost.svelte?raw';
+	import VariantOutline from './examples/variant-outline.svelte';
+	import VariantOutlineSrc from './examples/variant-outline.svelte?raw';
+	import VariantDestructive from './examples/variant-destructive.svelte';
+	import VariantDestructiveSrc from './examples/variant-destructive.svelte?raw';
+	import VariantInfo from './examples/variant-info.svelte';
+	import VariantInfoSrc from './examples/variant-info.svelte?raw';
+	import VariantSuccess from './examples/variant-success.svelte';
+	import VariantSuccessSrc from './examples/variant-success.svelte?raw';
+	import VariantWarning from './examples/variant-warning.svelte';
+	import VariantWarningSrc from './examples/variant-warning.svelte?raw';
+	import VariantError from './examples/variant-error.svelte';
+	import VariantErrorSrc from './examples/variant-error.svelte?raw';
 
 	const TITLE = 'Badge';
 	const SOURCE = 'https://github.com/aidan-neel/silk/tree/main/registry/silk/default/badge';
@@ -19,33 +39,6 @@
 	const curIndex = components.indexOf(TITLE.toLowerCase());
 	const prevComponent = components[curIndex - 1];
 	const nextComponent = components[curIndex + 1];
-
-	type Variant =
-		| 'primary'
-		| 'secondary'
-		| 'ghost'
-		| 'outline'
-		| 'destructive'
-		| 'info'
-		| 'success'
-		| 'warning'
-		| 'error';
-
-	const variantList: { value: Variant; label: string; use: string }[] = [
-		{
-			value: 'primary',
-			label: 'Primary',
-			use: 'Highlight & hero placements -- pair with actions.'
-		},
-		{ value: 'secondary', label: 'Secondary', use: 'Neutral label or metadata (default).' },
-		{ value: 'ghost', label: 'Ghost', use: 'Invisible chrome -- counts, low-emphasis tags.' },
-		{ value: 'outline', label: 'Outline', use: 'Quiet container that defers to content.' },
-		{ value: 'destructive', label: 'Destructive', use: '"Failing", "Blocked", "Past due".' },
-		{ value: 'info', label: 'Info', use: 'Informational status tint.' },
-		{ value: 'success', label: 'Success', use: 'Success or positive status.' },
-		{ value: 'warning', label: 'Warning', use: 'Warning or attention-needed status.' },
-		{ value: 'error', label: 'Error', use: 'Error or critical status.' }
-	];
 
 	const apiRows = [
 		{
@@ -74,7 +67,6 @@
 		}
 	];
 
-	const heroCode = '<Badge>New</Badge>';
 	const installCommand = 'bunx @aidan-neel/ui add badge';
 
 	let copiedSnippet = $state<string | null>(null);
@@ -114,8 +106,8 @@
 
 	<!-- ─── Hero Example ──────────────────────────────────────────── -->
 	<section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-		<ComponentPreview code={heroCode}>
-			<Badge>New</Badge>
+		<ComponentPreview code={HeroSrc}>
+			<Hero />
 		</ComponentPreview>
 	</section>
 
@@ -126,40 +118,7 @@
 		>
 			Installation
 		</h2>
-		<p class="text-sm text-foreground-muted">Install the Badge component with the CLI:</p>
-		<Steps
-			steps={[
-				{
-					title: 'Run the CLI',
-					description: 'Copy the command below and run it in your terminal.'
-				}
-			]}
-		>
-			<div
-				class="flex items-stretch overflow-hidden rounded-[var(--radius-md)] border border-border bg-card"
-			>
-				<div class="flex flex-1 items-center gap-3 px-3 py-2.5">
-					<span
-						class="grid size-6 place-items-center rounded-md bg-secondary/70 text-foreground-muted"
-					>
-						<Hash size={12} />
-					</span>
-					<code class="flex-1 font-mono text-[0.82rem] text-foreground">{installCommand}</code>
-				</div>
-				<button
-					type="button"
-					onclick={() => copy(installCommand, 'install')}
-					class="border-l border-border bg-card px-3 text-[0.78rem] text-foreground-muted transition-colors hover:bg-secondary/50 hover:text-foreground"
-					aria-label="Copy install command"
-				>
-					{#if copiedSnippet === 'install'}
-						<Check size={14} class="text-[var(--color-success)]" />
-					{:else}
-						<Copy size={14} />
-					{/if}
-				</button>
-			</div>
-		</Steps>
+		<InstallCommand command={installCommand} />
 	</section>
 
 	<!-- ─── Usage ─────────────────────────────────────────────────── -->
@@ -170,13 +129,11 @@
 			Usage
 		</h2>
 		<p class="text-sm text-foreground-muted">Import the Badge and use it in your component:</p>
-		<pre
-			class="m-0 overflow-x-auto bg-secondary/40 rounded-[var(--radius-md)] border border-border px-4 py-3 font-mono text-[0.85rem] leading-relaxed text-foreground"><code
-				>{@html highlight(
-					`import { Badge } from '@silk/ui/components/badge';\n\n<Badge>New</Badge>\n<Badge variant="success">Active</Badge>\n<Badge variant="error">Failed</Badge>`,
-					'svelte'
-				)}</code
-			></pre>
+		<CodeBlock
+			code={`import { Badge } from '@silk/ui/components/badge';\n\n<Badge>New</Badge>\n<Badge variant="success">Active</Badge>\n<Badge variant="error">Failed</Badge>`}
+			lang="svelte"
+			copy="overlay"
+		/>
 	</section>
 
 	<!-- ─── Examples ──────────────────────────────────────────────── -->
@@ -192,19 +149,104 @@
 			</p>
 		</div>
 
-		{#each variantList as v (v.value)}
-			{@const code = `<Badge${v.value !== 'secondary' ? ` variant="${v.value}"` : ''}>${v.label}</Badge>`}
-			<div id={`variant-${v.value}`} class="scroll-mt-20 flex flex-col gap-3">
-				<h3
-					class="text-[1rem] font-[var(--font-weight-header,600)] tracking-tight text-foreground docs-subsection-heading"
-				>
-					{v.label}
-				</h3>
-				<ComponentPreview {code}>
-					<Badge variant={v.value}>{v.label}</Badge>
-				</ComponentPreview>
-			</div>
-		{/each}
+		<div id="variant-primary" class="scroll-mt-20 flex flex-col gap-3">
+			<h3
+				class="text-[1rem] font-[var(--font-weight-header,600)] tracking-tight text-foreground docs-subsection-heading"
+			>
+				Primary
+			</h3>
+			<ComponentPreview code={VariantPrimarySrc}>
+				<VariantPrimary />
+			</ComponentPreview>
+		</div>
+
+		<div id="variant-secondary" class="scroll-mt-20 flex flex-col gap-3">
+			<h3
+				class="text-[1rem] font-[var(--font-weight-header,600)] tracking-tight text-foreground docs-subsection-heading"
+			>
+				Secondary
+			</h3>
+			<ComponentPreview code={VariantSecondarySrc}>
+				<VariantSecondary />
+			</ComponentPreview>
+		</div>
+
+		<div id="variant-ghost" class="scroll-mt-20 flex flex-col gap-3">
+			<h3
+				class="text-[1rem] font-[var(--font-weight-header,600)] tracking-tight text-foreground docs-subsection-heading"
+			>
+				Ghost
+			</h3>
+			<ComponentPreview code={VariantGhostSrc}>
+				<VariantGhost />
+			</ComponentPreview>
+		</div>
+
+		<div id="variant-outline" class="scroll-mt-20 flex flex-col gap-3">
+			<h3
+				class="text-[1rem] font-[var(--font-weight-header,600)] tracking-tight text-foreground docs-subsection-heading"
+			>
+				Outline
+			</h3>
+			<ComponentPreview code={VariantOutlineSrc}>
+				<VariantOutline />
+			</ComponentPreview>
+		</div>
+
+		<div id="variant-destructive" class="scroll-mt-20 flex flex-col gap-3">
+			<h3
+				class="text-[1rem] font-[var(--font-weight-header,600)] tracking-tight text-foreground docs-subsection-heading"
+			>
+				Destructive
+			</h3>
+			<ComponentPreview code={VariantDestructiveSrc}>
+				<VariantDestructive />
+			</ComponentPreview>
+		</div>
+
+		<div id="variant-info" class="scroll-mt-20 flex flex-col gap-3">
+			<h3
+				class="text-[1rem] font-[var(--font-weight-header,600)] tracking-tight text-foreground docs-subsection-heading"
+			>
+				Info
+			</h3>
+			<ComponentPreview code={VariantInfoSrc}>
+				<VariantInfo />
+			</ComponentPreview>
+		</div>
+
+		<div id="variant-success" class="scroll-mt-20 flex flex-col gap-3">
+			<h3
+				class="text-[1rem] font-[var(--font-weight-header,600)] tracking-tight text-foreground docs-subsection-heading"
+			>
+				Success
+			</h3>
+			<ComponentPreview code={VariantSuccessSrc}>
+				<VariantSuccess />
+			</ComponentPreview>
+		</div>
+
+		<div id="variant-warning" class="scroll-mt-20 flex flex-col gap-3">
+			<h3
+				class="text-[1rem] font-[var(--font-weight-header,600)] tracking-tight text-foreground docs-subsection-heading"
+			>
+				Warning
+			</h3>
+			<ComponentPreview code={VariantWarningSrc}>
+				<VariantWarning />
+			</ComponentPreview>
+		</div>
+
+		<div id="variant-error" class="scroll-mt-20 flex flex-col gap-3">
+			<h3
+				class="text-[1rem] font-[var(--font-weight-header,600)] tracking-tight text-foreground docs-subsection-heading"
+			>
+				Error
+			</h3>
+			<ComponentPreview code={VariantErrorSrc}>
+				<VariantError />
+			</ComponentPreview>
+		</div>
 	</section>
 
 	<!-- ─── API Reference ─────────────────────────────────────────── -->

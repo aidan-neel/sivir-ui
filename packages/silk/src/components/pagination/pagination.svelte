@@ -38,7 +38,7 @@
 <nav
 	data-ui="pagination"
 	aria-label="Pagination"
-	class={cn('flex items-center gap-1', className)}
+	class={cn('flex select-none items-center gap-1', className)}
 	{...rest}
 >
 	<button
@@ -65,9 +65,9 @@
 				aria-current={p === page ? 'page' : undefined}
 				onclick={() => go(p)}
 				class={cn(
-					'inline-flex size-[var(--size-icon-md)] items-center justify-center rounded-[var(--radius-md)] text-[0.82rem] [font-weight:var(--font-weight-button,500)] [letter-spacing:var(--tracking-button,0em)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)]', // token-lint-disable-line no-literal-length
+					'inline-flex size-[var(--size-icon-md)] items-center justify-center rounded-[var(--radius-md)] text-[0.82rem] tabular-nums [font-weight:var(--font-weight-button,500)] [letter-spacing:var(--tracking-button,0em)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)]', // token-lint-disable-line no-literal-length
 					p === page
-						? 'bg-primary text-foreground-opposite'
+						? 'bg-[var(--button-outlined-bg)] text-[var(--button-outlined-foreground)] shadow-[var(--button-outline-shadow)] hover:bg-[var(--button-outlined-hover-bg)]'
 						: 'text-foreground-muted hover:bg-secondary hover:text-foreground'
 				)}
 			>

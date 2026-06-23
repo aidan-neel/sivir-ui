@@ -1,8 +1,8 @@
 <script lang="ts">
 	import * as Combobox from '@silk/ui/components/combobox';
 	import { Button } from '@silk/ui/components/button';
-	import { ComponentPreview, Steps } from '$lib/components/docs';
-	import { highlight } from '$lib/highlight';
+	import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+	import { CodeBlock } from '@silk/ui/components/code-block';
 	import { components, sanitizeComponent } from '$lib/components';
 
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
@@ -12,7 +12,10 @@
 	import Check from '@lucide/svelte/icons/check';
 	import Layers from '@lucide/svelte/icons/layers-3';
 	import External from '@lucide/svelte/icons/external-link';
-	import Hash from '@lucide/svelte/icons/hash';
+	import Hero from './examples/hero.svelte';
+	import HeroSrc from './examples/hero.svelte?raw';
+	import Basic from './examples/basic.svelte';
+	import BasicSrc from './examples/basic.svelte?raw';
 
 	const TITLE = 'Combobox';
 	const SLUG = 'combobox';
@@ -21,16 +24,6 @@
 	const curIndex = components.indexOf(SLUG);
 	const prevComponent = components[curIndex - 1];
 	const nextComponent = components[curIndex + 1];
-
-	let selected = $state('next');
-
-	const frameworks = [
-		{ value: 'next', label: 'Next.js' },
-		{ value: 'sveltekit', label: 'SvelteKit' },
-		{ value: 'nuxt', label: 'Nuxt' },
-		{ value: 'remix', label: 'Remix' },
-		{ value: 'astro', label: 'Astro' }
-	];
 
 	const apiRows = [
 		{
@@ -89,15 +82,6 @@
 	}
 
 	const installCommand = `bunx @aidan-neel/ui add ${SLUG}`;
-	const heroCode = `<Combobox.Root bind:selected>
-  <Combobox.Trigger>Choose framework</Combobox.Trigger>
-  <Combobox.Content>
-    <Combobox.Search placeholder="Search..." />
-    {#each items as item}
-      <Combobox.Item value={item.value}>{item.label}</Combobox.Item>
-    {/each}
-  </Combobox.Content>
-</Combobox.Root>`;
 </script>
 
 <svelte:head>
@@ -126,24 +110,8 @@
 
 	<!-- ─── Hero Example ──────────────────────────────────────────── -->
 	<section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-		<ComponentPreview code={heroCode}>
-			<div class="flex items-center justify-center">
-				<Combobox.Root>
-					<Combobox.Trigger>
-						{frameworks.find((f) => f.value === selected)?.label || 'Choose framework'}
-					</Combobox.Trigger>
-					<Combobox.Content>
-						<Combobox.Search placeholder="Search..." />
-						{#each frameworks as item (item.value)}
-							<Combobox.Item
-								value={item.value}
-								label={item.label}
-								callback={() => (selected = item.value)}
-							/>
-						{/each}
-					</Combobox.Content>
-				</Combobox.Root>
-			</div>
+		<ComponentPreview code={HeroSrc}>
+			<Hero />
 		</ComponentPreview>
 	</section>
 
@@ -154,40 +122,7 @@
 		>
 			Installation
 		</h2>
-		<p class="text-sm text-foreground-muted">Install the Combobox component with the CLI:</p>
-		<Steps
-			steps={[
-				{
-					title: 'Run the CLI',
-					description: 'Copy the command below and run it in your terminal.'
-				}
-			]}
-		>
-			<div
-				class="flex items-stretch overflow-hidden rounded-[var(--radius-md)] border border-border bg-card"
-			>
-				<div class="flex flex-1 items-center gap-3 px-3 py-2.5">
-					<span
-						class="grid size-6 place-items-center rounded-md bg-secondary/70 text-foreground-muted"
-					>
-						<Hash size={12} />
-					</span>
-					<code class="flex-1 font-mono text-[0.82rem] text-foreground">{installCommand}</code>
-				</div>
-				<button
-					type="button"
-					onclick={() => copy(installCommand, 'install')}
-					class="border-l border-border bg-card px-3 text-[0.78rem] text-foreground-muted transition-colors hover:bg-secondary/50 hover:text-foreground"
-					aria-label="Copy install command"
-				>
-					{#if copiedSnippet === 'install'}
-						<Check size={14} class="text-[var(--color-success)]" />
-					{:else}
-						<Copy size={14} />
-					{/if}
-				</button>
-			</div>
-		</Steps>
+		<InstallCommand command={installCommand} />
 	</section>
 
 	<!-- ─── Usage ─────────────────────────────────────────────────── -->
@@ -198,13 +133,11 @@
 			Usage
 		</h2>
 		<p class="text-sm text-foreground-muted">Import and use the Combobox components:</p>
-		<pre
-			class="m-0 overflow-x-auto bg-secondary/40 rounded-[var(--radius-md)] border border-border px-4 py-3 font-mono text-[0.85rem] leading-relaxed text-foreground"><code
-				>{@html highlight(
-					`import * as Combobox from '@silk/ui/components/combobox';\n\nlet selected = $state('next');\n\n<Combobox.Root>\n  <Combobox.Trigger>{selected}</Combobox.Trigger>\n  <Combobox.Content>\n    <Combobox.Search />\n    <Combobox.Item value="next" callback={() => (selected = 'next')}>Next.js</Combobox.Item>\n  </Combobox.Content>\n</Combobox.Root>`,
-					'svelte'
-				)}</code
-			></pre>
+		<CodeBlock
+			code={`import * as Combobox from '@silk/ui/components/combobox';\n\nlet selected = $state('next');\n\n<Combobox.Root>\n  <Combobox.Trigger>{selected}</Combobox.Trigger>\n  <Combobox.Content>\n    <Combobox.Search />\n    <Combobox.Item value="next" callback={() => (selected = 'next')}>Next.js</Combobox.Item>\n  </Combobox.Content>\n</Combobox.Root>`}
+			lang="svelte"
+			copy="overlay"
+		/>
 	</section>
 
 	<!-- ─── Examples ──────────────────────────────────────────────── -->
@@ -224,24 +157,8 @@
 			>
 				Basic usage
 			</h3>
-			<ComponentPreview code={heroCode}>
-				<div class="flex items-center justify-center">
-					<Combobox.Root>
-						<Combobox.Trigger>
-							{frameworks.find((f) => f.value === selected)?.label || 'Choose framework'}
-						</Combobox.Trigger>
-						<Combobox.Content>
-							<Combobox.Search placeholder="Search frameworks..." />
-							{#each frameworks as item (item.value)}
-								<Combobox.Item
-									value={item.value}
-									label={item.label}
-									callback={() => (selected = item.value)}
-								/>
-							{/each}
-						</Combobox.Content>
-					</Combobox.Root>
-				</div>
+			<ComponentPreview code={BasicSrc}>
+				<Basic />
 			</ComponentPreview>
 		</div>
 	</section>

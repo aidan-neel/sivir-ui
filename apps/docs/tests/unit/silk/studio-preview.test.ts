@@ -26,11 +26,6 @@ describe('StudioPreview — token-group coverage', () => {
 		).not.toBeNull();
 		// Surfaces group — card/surface padding, radius, elevation tokens.
 		expect(container.querySelector('[data-ui="card"]'), 'missing card (surfaces)').not.toBeNull();
-		// Nav/Data group — calendar + progress tokens.
-		expect(
-			container.querySelector('[data-ui="calendar"]'),
-			'missing calendar (nav/data)'
-		).not.toBeNull();
 		expect(
 			container.querySelector('[data-ui="progress"]'),
 			'missing progress (feedback)'

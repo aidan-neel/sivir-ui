@@ -34,10 +34,10 @@
 	} & HTMLInputAttributes = $props();
 </script>
 
-<label class="flex flex-col gap-1">
+<label class="flex w-full flex-col gap-1">
 	{#if label}
 		<span
-			class="text-[length:var(--text-sm)] [font-size:var(--font-size-body,16px)] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground [font-family:var(--font-sans),sans-serif]"
+			class="text-[length:var(--text-sm)] mb-0.5 select-none [font-size:var(--font-size-label,14px)] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] leading-none text-foreground [font-family:var(--font-sans),sans-serif]"
 			>{label}</span
 		>
 	{/if}

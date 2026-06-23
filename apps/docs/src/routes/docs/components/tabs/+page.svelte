@@ -1,9 +1,7 @@
 <script lang="ts">
 	import { Button } from '@silk/ui/components/button';
-	import * as Tabs from '@silk/ui/components/tabs';
-	import type { TabsVariant } from '@silk/ui/components/tabs';
-	import { ComponentPreview, Steps } from '$lib/components/docs';
-	import { highlight } from '$lib/highlight';
+	import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+	import { CodeBlock } from '@silk/ui/components/code-block';
 	import { components, sanitizeComponent } from '$lib/components';
 
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
@@ -11,8 +9,16 @@
 	import ChevronRight from '@lucide/svelte/icons/chevron-right';
 	import Copy from '@lucide/svelte/icons/copy';
 	import Check from '@lucide/svelte/icons/check';
-	import Hash from '@lucide/svelte/icons/hash';
 	import External from '@lucide/svelte/icons/external-link';
+
+	import Hero from './examples/hero.svelte';
+	import HeroSrc from './examples/hero.svelte?raw';
+	import VariantDefault from './examples/variant-default.svelte';
+	import VariantDefaultSrc from './examples/variant-default.svelte?raw';
+	import VariantGhost from './examples/variant-ghost.svelte';
+	import VariantGhostSrc from './examples/variant-ghost.svelte?raw';
+	import VariantSegmented from './examples/variant-segmented.svelte';
+	import VariantSegmentedSrc from './examples/variant-segmented.svelte?raw';
 
 	const TITLE = 'Tabs';
 	const SOURCE = 'https://github.com/aidan-neel/silk/tree/main/registry/silk/default/tabs';
@@ -20,29 +26,6 @@
 	const curIndex = components.indexOf(TITLE.toLowerCase());
 	const prevComponent = components[curIndex - 1];
 	const nextComponent = components[curIndex + 1];
-
-	let demoTab = $state('overview');
-
-	const variantList: { value: TabsVariant; label: string; note: string; use: string }[] = [
-		{
-			value: 'default',
-			label: 'Default',
-			note: 'Underline + hover highlight',
-			use: 'Page-level navigation and content switchers that sit flush on a surface.'
-		},
-		{
-			value: 'ghost',
-			label: 'Ghost',
-			note: 'Filled pill, no container',
-			use: 'Compact, low-chrome switchers inside cards and toolbars.'
-		},
-		{
-			value: 'outlined',
-			label: 'Outlined',
-			note: 'Bordered segmented control',
-			use: 'Self-contained segmented controls that need a clear boundary.'
-		}
-	];
 
 	const apiRows = [
 		{
@@ -62,10 +45,10 @@
 		{
 			component: 'Root',
 			prop: 'variant',
-			type: '"default" | "ghost" | "outlined"',
+			type: '"default" | "ghost" | "segmented"',
 			default: '"default"',
 			description:
-				'Visual style. default = underline + hover highlight, ghost = filled pill, outlined = bordered segmented container.'
+				'Visual style. default = underline + hover highlight, ghost = filled pill, segmented = elevated pill on a muted track.'
 		},
 		{
 			component: 'List',
@@ -89,15 +72,6 @@
 			description: 'The panel shown when this value matches Root.value.'
 		}
 	];
-
-	const heroCode = `<Tabs.Root bind:value={tab}>
-  <Tabs.List>
-    <Tabs.Trigger value="overview">Overview</Tabs.Trigger>
-    <Tabs.Trigger value="activity">Activity</Tabs.Trigger>
-  </Tabs.List>
-  <Tabs.Content value="overview">…</Tabs.Content>
-  <Tabs.Content value="activity">…</Tabs.Content>
-</Tabs.Root>`;
 
 	const installCommand = 'bunx @aidan-neel/ui add tabs';
 
@@ -141,29 +115,8 @@
 
 	<!-- ─── Hero Example ──────────────────────────────────────────── -->
 	<section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-		<ComponentPreview code={heroCode}>
-			<Tabs.Root bind:value={demoTab}>
-				<Tabs.List>
-					<Tabs.Trigger value="overview">Overview</Tabs.Trigger>
-					<Tabs.Trigger value="activity">Activity</Tabs.Trigger>
-					<Tabs.Trigger value="files">Files</Tabs.Trigger>
-				</Tabs.List>
-				<Tabs.Content
-					value="overview"
-					class="flex h-10 items-center justify-center text-[0.84rem] text-foreground-muted"
-					>Overview content</Tabs.Content
-				>
-				<Tabs.Content
-					value="activity"
-					class="flex h-10 items-center justify-center text-[0.84rem] text-foreground-muted"
-					>Activity content</Tabs.Content
-				>
-				<Tabs.Content
-					value="files"
-					class="flex h-10 items-center justify-center text-[0.84rem] text-foreground-muted"
-					>Files content</Tabs.Content
-				>
-			</Tabs.Root>
+		<ComponentPreview code={HeroSrc}>
+			<Hero />
 		</ComponentPreview>
 	</section>
 
@@ -174,40 +127,7 @@
 		>
 			Installation
 		</h2>
-		<p class="text-sm text-foreground-muted">Install the Tabs component with the CLI:</p>
-		<Steps
-			steps={[
-				{
-					title: 'Run the CLI',
-					description: 'Copy the command below and run it in your terminal.'
-				}
-			]}
-		>
-			<div
-				class="flex items-stretch overflow-hidden rounded-[var(--radius-md)] border border-border bg-card"
-			>
-				<div class="flex flex-1 items-center gap-3 px-3 py-2.5">
-					<span
-						class="grid size-6 place-items-center rounded-md bg-secondary/70 text-foreground-muted"
-					>
-						<Hash size={12} />
-					</span>
-					<code class="flex-1 font-mono text-[0.82rem] text-foreground">{installCommand}</code>
-				</div>
-				<button
-					type="button"
-					onclick={() => copy(installCommand, 'install')}
-					class="border-l border-border bg-card px-3 text-[0.78rem] text-foreground-muted transition-colors hover:bg-secondary/50 hover:text-foreground"
-					aria-label="Copy install command"
-				>
-					{#if copiedSnippet === 'install'}
-						<Check size={14} class="text-[var(--color-success)]" />
-					{:else}
-						<Copy size={14} />
-					{/if}
-				</button>
-			</div>
-		</Steps>
+		<InstallCommand command={installCommand} />
 	</section>
 
 	<!-- ─── Usage ─────────────────────────────────────────────────── -->
@@ -218,13 +138,11 @@
 			Usage
 		</h2>
 		<p class="text-sm text-foreground-muted">Import Tabs and use it in your component:</p>
-		<pre
-			class="m-0 overflow-x-auto bg-secondary/40 rounded-[var(--radius-md)] border border-border px-4 py-3 font-mono text-[0.85rem] leading-relaxed text-foreground"><code
-				>{@html highlight(
-					`import * as Tabs from '@silk/ui/components/tabs';\n\n<Tabs.Root bind:value={tab}>\n  <Tabs.List>\n    <Tabs.Trigger value="tab1">Tab 1</Tabs.Trigger>\n    <Tabs.Trigger value="tab2">Tab 2</Tabs.Trigger>\n  </Tabs.List>\n  <Tabs.Content value="tab1">Content 1</Tabs.Content>\n  <Tabs.Content value="tab2">Content 2</Tabs.Content>\n</Tabs.Root>`,
-					'svelte'
-				)}</code
-			></pre>
+		<CodeBlock
+			code={`import * as Tabs from '@silk/ui/components/tabs';\n\n<Tabs.Root bind:value={tab}>\n  <Tabs.List>\n    <Tabs.Trigger value="tab1">Tab 1</Tabs.Trigger>\n    <Tabs.Trigger value="tab2">Tab 2</Tabs.Trigger>\n  </Tabs.List>\n  <Tabs.Content value="tab1">Content 1</Tabs.Content>\n  <Tabs.Content value="tab2">Content 2</Tabs.Content>\n</Tabs.Root>`}
+			lang="svelte"
+			copy="overlay"
+		/>
 	</section>
 
 	<!-- ─── Examples ──────────────────────────────────────────────── -->
@@ -238,25 +156,38 @@
 			<p class="mt-2 text-sm text-foreground-muted">Explore Tabs in different variants.</p>
 		</div>
 
-		{#each variantList as v (v.value)}
-			{@const code = `<Tabs.Root bind:value={tab}${v.value !== 'default' ? ` variant="${v.value}"` : ''}>…</Tabs.Root>`}
-			<div id={`variant-${v.value}`} class="scroll-mt-20 flex flex-col gap-3">
-				<h3
-					class="text-[1rem] font-[var(--font-weight-header,600)] tracking-tight text-foreground docs-subsection-heading"
-				>
-					{v.label}
-				</h3>
-				<ComponentPreview {code}>
-					<Tabs.Root bind:value={demoTab} variant={v.value}>
-						<Tabs.List>
-							<Tabs.Trigger value="overview">Overview</Tabs.Trigger>
-							<Tabs.Trigger value="activity">Activity</Tabs.Trigger>
-							<Tabs.Trigger value="files">Files</Tabs.Trigger>
-						</Tabs.List>
-					</Tabs.Root>
-				</ComponentPreview>
-			</div>
-		{/each}
+		<div id="variant-default" class="scroll-mt-20 flex flex-col gap-3">
+			<h3
+				class="text-[1rem] font-[var(--font-weight-header,600)] tracking-tight text-foreground docs-subsection-heading"
+			>
+				Default
+			</h3>
+			<ComponentPreview code={VariantDefaultSrc}>
+				<VariantDefault />
+			</ComponentPreview>
+		</div>
+
+		<div id="variant-ghost" class="scroll-mt-20 flex flex-col gap-3">
+			<h3
+				class="text-[1rem] font-[var(--font-weight-header,600)] tracking-tight text-foreground docs-subsection-heading"
+			>
+				Ghost
+			</h3>
+			<ComponentPreview code={VariantGhostSrc}>
+				<VariantGhost />
+			</ComponentPreview>
+		</div>
+
+		<div id="variant-segmented" class="scroll-mt-20 flex flex-col gap-3">
+			<h3
+				class="text-[1rem] font-[var(--font-weight-header,600)] tracking-tight text-foreground docs-subsection-heading"
+			>
+				Segmented
+			</h3>
+			<ComponentPreview code={VariantSegmentedSrc}>
+				<VariantSegmented />
+			</ComponentPreview>
+		</div>
 	</section>
 
 	<!-- ─── API Reference ─────────────────────────────────────────── -->

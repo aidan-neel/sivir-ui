@@ -18,7 +18,10 @@
 			errored = true;
 			ctx.imageLoaded = false;
 		}}
-		class={cn('absolute inset-0 h-full w-full object-cover', className)}
+		class={cn(
+			'absolute inset-0 h-full w-full object-cover outline outline-1 -outline-offset-1 outline-black/10 dark:outline-white/10',
+			className
+		)}
 		{...rest}
 	/>
 {/if}

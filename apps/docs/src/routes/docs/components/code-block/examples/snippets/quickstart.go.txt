@@ -1,0 +1,18 @@
+// Initialize a Pinecone client with your API key
+import "github.com/pinecone-io/go-pinecone/v3/pinecone"
+
+pc, err := pinecone.NewClient(pinecone.NewClientParams{
+    ApiKey: "YOUR_API_KEY",
+})
+
+// Create an index for dense vectors with integrated embedding
+indexName := "quickstart-go"
+index, err := pc.CreateIndexForModel(ctx, &pinecone.CreateIndexForModelRequest{
+    Name:   indexName,
+    Cloud:  pinecone.Aws,
+    Region: "us-east-1",
+    Embed: pinecone.CreateIndexForModelEmbed{
+        Model:    "llama-text-embed-v2",
+        FieldMap: map[string]interface{}{"text": "chunk_text"},
+    },
+})

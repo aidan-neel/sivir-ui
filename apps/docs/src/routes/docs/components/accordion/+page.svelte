@@ -1,8 +1,8 @@
 <script lang="ts">
 	import * as Accordion from '@silk/ui/components/accordion';
 	import { Button } from '@silk/ui/components/button';
-	import { ComponentPreview, Steps } from '$lib/components/docs';
-	import { highlight } from '$lib/highlight';
+	import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+	import { CodeBlock } from '@silk/ui/components/code-block';
 	import { components, sanitizeComponent } from '$lib/components';
 
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
@@ -12,7 +12,12 @@
 	import Check from '@lucide/svelte/icons/check';
 	import Layers from '@lucide/svelte/icons/layers-3';
 	import External from '@lucide/svelte/icons/external-link';
-	import Hash from '@lucide/svelte/icons/hash';
+	import Hero from './examples/hero.svelte';
+	import HeroSrc from './examples/hero.svelte?raw';
+	import SingleMode from './examples/single-mode.svelte';
+	import SingleModeSrc from './examples/single-mode.svelte?raw';
+	import MultipleMode from './examples/multiple-mode.svelte';
+	import MultipleModeSrc from './examples/multiple-mode.svelte?raw';
 
 	const TITLE = 'Accordion';
 	const SLUG = 'accordion';
@@ -79,12 +84,6 @@
 	}
 
 	const installCommand = `bunx @aidan-neel/ui add ${SLUG}`;
-	const heroCode = `<Accordion.Root type="single">
-  <Accordion.Item value="a">
-    <Accordion.Trigger>Section A</Accordion.Trigger>
-    <Accordion.Content>Content A</Accordion.Content>
-  </Accordion.Item>
-</Accordion.Root>`;
 </script>
 
 <svelte:head>
@@ -113,30 +112,8 @@
 
 	<!-- ─── Hero Example ──────────────────────────────────────────── -->
 	<section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-		<ComponentPreview code={heroCode}>
-			<div class="w-full max-w-md">
-				<Accordion.Root type="single" value="item-1">
-					<Accordion.Item value="item-1">
-						<Accordion.Trigger>Is it accessible?</Accordion.Trigger>
-						<Accordion.Content
-							>Yes — the trigger is a real button with `aria-expanded` and `aria-controls`, and the
-							content has `role="region"`.</Accordion.Content
-						>
-					</Accordion.Item>
-					<Accordion.Item value="item-2">
-						<Accordion.Trigger>Does it animate?</Accordion.Trigger>
-						<Accordion.Content
-							>Yes — height is animated via CSS grid-template-rows. No JS measurement, no jank.</Accordion.Content
-						>
-					</Accordion.Item>
-					<Accordion.Item value="item-3">
-						<Accordion.Trigger>Does it theme?</Accordion.Trigger>
-						<Accordion.Content
-							>Yes — open the theme studio and watch the chevron, duration, and colors update live.</Accordion.Content
-						>
-					</Accordion.Item>
-				</Accordion.Root>
-			</div>
+		<ComponentPreview code={HeroSrc}>
+			<Hero />
 		</ComponentPreview>
 	</section>
 
@@ -147,40 +124,7 @@
 		>
 			Installation
 		</h2>
-		<p class="text-sm text-foreground-muted">Install the Accordion component with the CLI:</p>
-		<Steps
-			steps={[
-				{
-					title: 'Run the CLI',
-					description: 'Copy the command below and run it in your terminal.'
-				}
-			]}
-		>
-			<div
-				class="flex items-stretch overflow-hidden rounded-[var(--radius-md)] border border-border bg-card"
-			>
-				<div class="flex flex-1 items-center gap-3 px-3 py-2.5">
-					<span
-						class="grid size-6 place-items-center rounded-md bg-secondary/70 text-foreground-muted"
-					>
-						<Hash size={12} />
-					</span>
-					<code class="flex-1 font-mono text-[0.82rem] text-foreground">{installCommand}</code>
-				</div>
-				<button
-					type="button"
-					onclick={() => copy(installCommand, 'install')}
-					class="border-l border-border bg-card px-3 text-[0.78rem] text-foreground-muted transition-colors hover:bg-secondary/50 hover:text-foreground"
-					aria-label="Copy install command"
-				>
-					{#if copiedSnippet === 'install'}
-						<Check size={14} class="text-[var(--color-success)]" />
-					{:else}
-						<Copy size={14} />
-					{/if}
-				</button>
-			</div>
-		</Steps>
+		<InstallCommand command={installCommand} />
 	</section>
 
 	<!-- ─── Usage ─────────────────────────────────────────────────── -->
@@ -191,13 +135,11 @@
 			Usage
 		</h2>
 		<p class="text-sm text-foreground-muted">Import the Accordion components and use them:</p>
-		<pre
-			class="m-0 overflow-x-auto bg-secondary/40 rounded-[var(--radius-md)] border border-border px-4 py-3 font-mono text-[0.85rem] leading-relaxed text-foreground"><code
-				>{@html highlight(
-					`import * as Accordion from '@silk/ui/components/accordion';\n\n<Accordion.Root type="single">\n  <Accordion.Item value="a">\n    <Accordion.Trigger>Trigger</Accordion.Trigger>\n    <Accordion.Content>Content</Accordion.Content>\n  </Accordion.Item>\n</Accordion.Root>`,
-					'svelte'
-				)}</code
-			></pre>
+		<CodeBlock
+			code={`import * as Accordion from '@silk/ui/components/accordion';\n\n<Accordion.Root type="single">\n  <Accordion.Item value="a">\n    <Accordion.Trigger>Trigger</Accordion.Trigger>\n    <Accordion.Content>Content</Accordion.Content>\n  </Accordion.Item>\n</Accordion.Root>`}
+			lang="svelte"
+			copy="overlay"
+		/>
 	</section>
 
 	<!-- ─── Examples ──────────────────────────────────────────────── -->
@@ -217,30 +159,8 @@
 			>
 				Single mode
 			</h3>
-			<ComponentPreview
-				code={`<Accordion.Root type="single">
-  <Accordion.Item value="a">
-    <Accordion.Trigger>Item A</Accordion.Trigger>
-    <Accordion.Content>Content A</Accordion.Content>
-  </Accordion.Item>
-  <Accordion.Item value="b">
-    <Accordion.Trigger>Item B</Accordion.Trigger>
-    <Accordion.Content>Content B</Accordion.Content>
-  </Accordion.Item>
-</Accordion.Root>`}
-			>
-				<div class="w-full max-w-md">
-					<Accordion.Root type="single">
-						<Accordion.Item value="a">
-							<Accordion.Trigger>Item A</Accordion.Trigger>
-							<Accordion.Content>Content A — only one panel open at a time.</Accordion.Content>
-						</Accordion.Item>
-						<Accordion.Item value="b">
-							<Accordion.Trigger>Item B</Accordion.Trigger>
-							<Accordion.Content>Content B — opening this closes Item A.</Accordion.Content>
-						</Accordion.Item>
-					</Accordion.Root>
-				</div>
+			<ComponentPreview code={SingleModeSrc}>
+				<SingleMode />
 			</ComponentPreview>
 		</div>
 
@@ -251,30 +171,8 @@
 			>
 				Multiple mode
 			</h3>
-			<ComponentPreview
-				code={`<Accordion.Root type="multiple">
-  <Accordion.Item value="a">
-    <Accordion.Trigger>Item A</Accordion.Trigger>
-    <Accordion.Content>Content A</Accordion.Content>
-  </Accordion.Item>
-  <Accordion.Item value="b">
-    <Accordion.Trigger>Item B</Accordion.Trigger>
-    <Accordion.Content>Content B</Accordion.Content>
-  </Accordion.Item>
-</Accordion.Root>`}
-			>
-				<div class="w-full max-w-md">
-					<Accordion.Root type="multiple">
-						<Accordion.Item value="a">
-							<Accordion.Trigger>Item A</Accordion.Trigger>
-							<Accordion.Content>Content A — any panels can be open together.</Accordion.Content>
-						</Accordion.Item>
-						<Accordion.Item value="b">
-							<Accordion.Trigger>Item B</Accordion.Trigger>
-							<Accordion.Content>Content B — opening this keeps Item A open too.</Accordion.Content>
-						</Accordion.Item>
-					</Accordion.Root>
-				</div>
+			<ComponentPreview code={MultipleModeSrc}>
+				<MultipleMode />
 			</ComponentPreview>
 		</div>
 	</section>

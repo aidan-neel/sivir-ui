@@ -30,3 +30,6 @@ audit/
 node_modules/
 
 temp/
+
+# Local agent skill cache (not part of the project)
+.agents/

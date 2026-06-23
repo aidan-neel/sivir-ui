@@ -167,7 +167,7 @@ export const defaultSpacing: ThemeSpacing = {
 	buttonHeightSm: 29,
 	buttonHeightLg: 40,
 	fieldHeight: 35,
-	menuItemHeight: 32,
+	menuItemHeight: 34,
 	switchTrackWidth: 39,
 	switchThumbSize: 14,
 	iconButtonSize: 32,

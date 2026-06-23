@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { Button } from '@silk/ui/components/button';
-	import { Toggle } from '@silk/ui/components/toggle';
-	import { ComponentPreview, Steps } from '$lib/components/docs';
-	import { highlight } from '$lib/highlight';
+	import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+	import { CodeBlock } from '@silk/ui/components/code-block';
 	import { components, sanitizeComponent } from '$lib/components';
 
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
@@ -10,11 +9,18 @@
 	import ChevronRight from '@lucide/svelte/icons/chevron-right';
 	import Copy from '@lucide/svelte/icons/copy';
 	import Check from '@lucide/svelte/icons/check';
-	import Hash from '@lucide/svelte/icons/hash';
 	import External from '@lucide/svelte/icons/external-link';
-	import Bold from '@lucide/svelte/icons/bold';
-	import Italic from '@lucide/svelte/icons/italic';
-	import Underline from '@lucide/svelte/icons/underline';
+
+	import Hero from './examples/hero.svelte';
+	import HeroSrc from './examples/hero.svelte?raw';
+	import Icon from './examples/icon.svelte';
+	import IconSrc from './examples/icon.svelte?raw';
+	import Text from './examples/text.svelte';
+	import TextSrc from './examples/text.svelte?raw';
+	import Sizes from './examples/sizes.svelte';
+	import SizesSrc from './examples/sizes.svelte?raw';
+	import Disabled from './examples/disabled.svelte';
+	import DisabledSrc from './examples/disabled.svelte?raw';
 
 	const TITLE = 'Toggle';
 	const SLUG = 'toggle';
@@ -52,10 +58,6 @@
 		}
 	];
 
-	let bold = $state(true);
-	let italic = $state(false);
-	let underline = $state(false);
-
 	let copiedSnippet = $state<string | null>(null);
 
 	function copy(text: string, key: string) {
@@ -68,7 +70,6 @@
 	}
 
 	const installCommand = `bunx @aidan-neel/ui add ${SLUG}`;
-	const heroCode = `<Toggle bind:pressed={bold} aria-label="Bold">\n  <Bold size={14} />\n</Toggle>`;
 </script>
 
 <svelte:head>
@@ -97,18 +98,8 @@
 
 	<!-- ─── Hero Example ──────────────────────────────────────────── -->
 	<section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-		<ComponentPreview code={heroCode}>
-			<div class="flex gap-2">
-				<Toggle bind:pressed={bold} aria-label="Bold">
-					<Bold size={14} />
-				</Toggle>
-				<Toggle bind:pressed={italic} aria-label="Italic">
-					<Italic size={14} />
-				</Toggle>
-				<Toggle bind:pressed={underline} aria-label="Underline">
-					<Underline size={14} />
-				</Toggle>
-			</div>
+		<ComponentPreview code={HeroSrc}>
+			<Hero />
 		</ComponentPreview>
 	</section>
 
@@ -119,40 +110,7 @@
 		>
 			Installation
 		</h2>
-		<p class="text-sm text-foreground-muted">Install the Toggle component with the CLI:</p>
-		<Steps
-			steps={[
-				{
-					title: 'Run the CLI',
-					description: 'Copy the command below and run it in your terminal.'
-				}
-			]}
-		>
-			<div
-				class="flex items-stretch overflow-hidden rounded-[var(--radius-md)] border border-border bg-card"
-			>
-				<div class="flex flex-1 items-center gap-3 px-3 py-2.5">
-					<span
-						class="grid size-6 place-items-center rounded-md bg-secondary/70 text-foreground-muted"
-					>
-						<Hash size={12} />
-					</span>
-					<code class="flex-1 font-mono text-[0.82rem] text-foreground">{installCommand}</code>
-				</div>
-				<button
-					type="button"
-					onclick={() => copy(installCommand, 'install')}
-					class="border-l border-border bg-card px-3 text-[0.78rem] text-foreground-muted transition-colors hover:bg-secondary/50 hover:text-foreground"
-					aria-label="Copy install command"
-				>
-					{#if copiedSnippet === 'install'}
-						<Check size={14} class="text-[var(--color-success)]" />
-					{:else}
-						<Copy size={14} />
-					{/if}
-				</button>
-			</div>
-		</Steps>
+		<InstallCommand command={installCommand} />
 	</section>
 
 	<!-- ─── Usage ─────────────────────────────────────────────────── -->
@@ -163,13 +121,11 @@
 			Usage
 		</h2>
 		<p class="text-sm text-foreground-muted">Import Toggle and bind its pressed state:</p>
-		<pre
-			class="m-0 overflow-x-auto bg-secondary/40 rounded-[var(--radius-md)] border border-border px-4 py-3 font-mono text-[0.85rem] leading-relaxed text-foreground"><code
-				>{@html highlight(
-					`import { Toggle } from '@silk/ui/components/toggle';\n\n<Toggle bind:pressed={bold}>\n  <Bold size={14} />\n</Toggle>`,
-					'svelte'
-				)}</code
-			></pre>
+		<CodeBlock
+			code={`import { Toggle } from '@silk/ui/components/toggle';\n\n<Toggle bind:pressed={bold}>\n  <Bold size={14} />\n</Toggle>`}
+			lang="svelte"
+			copy="overlay"
+		/>
 	</section>
 
 	<!-- ─── Examples ──────────────────────────────────────────────── -->
@@ -190,10 +146,8 @@
 			>
 				Icon toggle
 			</h3>
-			<ComponentPreview code={`<Toggle aria-label="Bold"><Bold size={14} /></Toggle>`}>
-				<Toggle aria-label="Bold">
-					<Bold size={14} />
-				</Toggle>
+			<ComponentPreview code={IconSrc}>
+				<Icon />
 			</ComponentPreview>
 		</div>
 
@@ -204,8 +158,8 @@
 			>
 				Text toggle
 			</h3>
-			<ComponentPreview code="<Toggle>Option</Toggle>">
-				<Toggle>Option</Toggle>
+			<ComponentPreview code={TextSrc}>
+				<Text />
 			</ComponentPreview>
 		</div>
 
@@ -216,20 +170,8 @@
 			>
 				Sizes
 			</h3>
-			<ComponentPreview
-				code={`<div class="flex gap-2"><Toggle size="sm"><Bold size={12} /></Toggle><Toggle><Bold size={14} /></Toggle><Toggle size="lg"><Bold size={16} /></Toggle></div>`}
-			>
-				<div class="flex gap-2">
-					<Toggle size="sm">
-						<Bold size={12} />
-					</Toggle>
-					<Toggle>
-						<Bold size={14} />
-					</Toggle>
-					<Toggle size="lg">
-						<Bold size={16} />
-					</Toggle>
-				</div>
+			<ComponentPreview code={SizesSrc}>
+				<Sizes />
 			</ComponentPreview>
 		</div>
 
@@ -240,10 +182,8 @@
 			>
 				Disabled
 			</h3>
-			<ComponentPreview code="<Toggle disabled><Bold size={14} /></Toggle>">
-				<Toggle disabled>
-					<Bold size={14} />
-				</Toggle>
+			<ComponentPreview code={DisabledSrc}>
+				<Disabled />
 			</ComponentPreview>
 		</div>
 	</section>

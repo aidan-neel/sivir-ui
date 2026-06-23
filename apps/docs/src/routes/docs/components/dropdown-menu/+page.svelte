@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { Button } from '@silk/ui/components/button';
-	import { ComponentPreview, Steps } from '$lib/components/docs';
-	import { highlight } from '$lib/highlight';
-	import * as DropdownMenu from '@silk/ui/components/dropdown-menu';
+	import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+	import { CodeBlock } from '@silk/ui/components/code-block';
 	import { components, sanitizeComponent } from '$lib/components';
 
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
@@ -10,22 +9,20 @@
 	import ChevronRight from '@lucide/svelte/icons/chevron-right';
 	import Copy from '@lucide/svelte/icons/copy';
 	import Check from '@lucide/svelte/icons/check';
-	import Hash from '@lucide/svelte/icons/hash';
 	import External from '@lucide/svelte/icons/external-link';
-	import ChevronDown from '@lucide/svelte/icons/chevron-down';
-	import User from '@lucide/svelte/icons/user';
-	import Settings from '@lucide/svelte/icons/settings';
-	import LogOut from '@lucide/svelte/icons/log-out';
-	import CreditCard from '@lucide/svelte/icons/credit-card';
-	import MoreHorizontal from '@lucide/svelte/icons/ellipsis';
-	import Pencil from '@lucide/svelte/icons/pencil';
-	import Copy2 from '@lucide/svelte/icons/files';
-	import Trash from '@lucide/svelte/icons/trash-2';
-	import Send from '@lucide/svelte/icons/send';
-	import Archive from '@lucide/svelte/icons/archive';
-	import EyeOff from '@lucide/svelte/icons/eye-off';
-	import Star from '@lucide/svelte/icons/star';
-	import LifeBuoy from '@lucide/svelte/icons/life-buoy';
+
+	import Hero from './examples/hero.svelte';
+	import HeroSrc from './examples/hero.svelte?raw';
+	import BasicMenu from './examples/basic-menu.svelte';
+	import BasicMenuSrc from './examples/basic-menu.svelte?raw';
+	import RowActions from './examples/row-actions.svelte';
+	import RowActionsSrc from './examples/row-actions.svelte?raw';
+	import ShareMenu from './examples/share-menu.svelte';
+	import ShareMenuSrc from './examples/share-menu.svelte?raw';
+	import SortMenu from './examples/sort-menu.svelte';
+	import SortMenuSrc from './examples/sort-menu.svelte?raw';
+	import Inverted from './examples/inverted.svelte';
+	import InvertedSrc from './examples/inverted.svelte?raw';
 
 	const _TITLE = 'Dropdown Menu';
 	const SLUG = 'dropdown-menu';
@@ -36,6 +33,13 @@
 	const nextComponent = components[curIndex + 1];
 
 	const apiRows = [
+		{
+			component: 'Root',
+			prop: 'inverted',
+			type: 'boolean',
+			default: 'false',
+			description: 'Dark theme panel with light text (when true).'
+		},
 		{
 			component: 'Root',
 			prop: 'children',
@@ -98,35 +102,6 @@
 	}
 
 	const installCommand = 'bunx @aidan-neel/ui add dropdown-menu';
-
-	// Handler stubs for all callbacks used in examples
-	const _handleAction = () => {};
-	const _handleRename = () => {};
-	const _handleDuplicate = () => {};
-	const _handleArchive = () => {};
-	const _handleDelete = () => {};
-	const _handleInvite = () => {};
-	const _handleCopyLink = () => {};
-	const _handlePrivate = () => {};
-	const _handleSort = () => {};
-
-	const heroCode = `<DropdownMenu.Root>
-  <DropdownMenu.Trigger>
-    <Avatar fallback="AN" />
-    Aidan Neel
-    <ChevronDown size={12} />
-  </DropdownMenu.Trigger>
-  <DropdownMenu.Content>
-    <DropdownMenu.Label>aidan@silk-ui.dev</DropdownMenu.Label>
-    <DropdownMenu.Item callback={openProfile}>
-      <User size={13} /> Profile
-    </DropdownMenu.Item>
-    <DropdownMenu.Separator />
-    <DropdownMenu.Item callback={signOut}>
-      <LogOut size={13} /> Sign out
-    </DropdownMenu.Item>
-  </DropdownMenu.Content>
-</DropdownMenu.Root>`;
 </script>
 
 <svelte:head>
@@ -158,61 +133,8 @@
 
 	<!-- ─── Hero Example ──────────────────────────────────────────── -->
 	<section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-		<ComponentPreview code={heroCode}>
-			<DropdownMenu.Root>
-				<DropdownMenu.Trigger variant="outline" class="h-9 gap-2 text-[0.82rem]">
-					<span
-						class="inline-flex size-6 items-center justify-center rounded-full bg-primary/15 text-[0.66rem] font-[var(--font-weight-label,600)] text-primary"
-					>
-						AN
-					</span>
-					<span>Aidan Neel</span>
-					<ChevronDown size={12} class="text-foreground-muted" />
-				</DropdownMenu.Trigger>
-				<DropdownMenu.Content class="min-w-[16rem]">
-					<DropdownMenu.Label>
-						<span class="text-[0.7rem] text-foreground-muted">aidan@silk-ui.dev</span>
-					</DropdownMenu.Label>
-					<DropdownMenu.Item>
-						<span class="flex items-center gap-2"><User size={13} /> Profile</span>
-						<kbd
-							class="rounded border border-border bg-secondary/60 px-1.5 py-0.5 font-mono text-[0.62rem] text-foreground-muted"
-						>
-							⇧⌘P
-						</kbd>
-					</DropdownMenu.Item>
-					<DropdownMenu.Item>
-						<span class="flex items-center gap-2"><CreditCard size={13} /> Billing</span>
-						<kbd
-							class="rounded border border-border bg-secondary/60 px-1.5 py-0.5 font-mono text-[0.62rem] text-foreground-muted"
-						>
-							⌘B
-						</kbd>
-					</DropdownMenu.Item>
-					<DropdownMenu.Item>
-						<span class="flex items-center gap-2"><Settings size={13} /> Settings</span>
-						<kbd
-							class="rounded border border-border bg-secondary/60 px-1.5 py-0.5 font-mono text-[0.62rem] text-foreground-muted"
-						>
-							⌘,
-						</kbd>
-					</DropdownMenu.Item>
-					<DropdownMenu.Separator />
-					<DropdownMenu.Item>
-						<span class="flex items-center gap-2"><LifeBuoy size={13} /> Help & feedback</span>
-					</DropdownMenu.Item>
-					<DropdownMenu.Item>
-						<span class="flex items-center gap-2 text-[var(--color-destructive)]">
-							<LogOut size={13} /> Sign out
-						</span>
-						<kbd
-							class="rounded border border-border bg-secondary/60 px-1.5 py-0.5 font-mono text-[0.62rem] text-foreground-muted"
-						>
-							⇧⌘Q
-						</kbd>
-					</DropdownMenu.Item>
-				</DropdownMenu.Content>
-			</DropdownMenu.Root>
+		<ComponentPreview code={HeroSrc}>
+			<Hero />
 		</ComponentPreview>
 	</section>
 
@@ -223,40 +145,7 @@
 		>
 			Installation
 		</h2>
-		<p class="text-sm text-foreground-muted">Install the Dropdown Menu component with the CLI:</p>
-		<Steps
-			steps={[
-				{
-					title: 'Run the CLI',
-					description: 'Copy the command below and run it in your terminal.'
-				}
-			]}
-		>
-			<div
-				class="flex items-stretch overflow-hidden rounded-[var(--radius-md)] border border-border bg-card"
-			>
-				<div class="flex flex-1 items-center gap-3 px-3 py-2.5">
-					<span
-						class="grid size-6 place-items-center rounded-md bg-secondary/70 text-foreground-muted"
-					>
-						<Hash size={12} />
-					</span>
-					<code class="flex-1 font-mono text-[0.82rem] text-foreground">{installCommand}</code>
-				</div>
-				<button
-					type="button"
-					onclick={() => copy(installCommand, 'install')}
-					class="border-l border-border bg-card px-3 text-[0.78rem] text-foreground-muted transition-colors hover:bg-secondary/50 hover:text-foreground"
-					aria-label="Copy install command"
-				>
-					{#if copiedSnippet === 'install'}
-						<Check size={14} class="text-[var(--color-success)]" />
-					{:else}
-						<Copy size={14} />
-					{/if}
-				</button>
-			</div>
-		</Steps>
+		<InstallCommand command={installCommand} />
 	</section>
 
 	<!-- ─── Usage ─────────────────────────────────────────────────── -->
@@ -269,13 +158,11 @@
 		<p class="text-sm text-foreground-muted">
 			Import Dropdown Menu and compose it with sub-components:
 		</p>
-		<pre
-			class="m-0 overflow-x-auto bg-secondary/40 rounded-[var(--radius-md)] border border-border px-4 py-3 font-mono text-[0.85rem] leading-relaxed text-foreground"><code
-				>{@html highlight(
-					`import * as DropdownMenu from '@silk/ui/components/dropdown-menu';\n\n<DropdownMenu.Root>\n  <DropdownMenu.Trigger>Menu</DropdownMenu.Trigger>\n  <DropdownMenu.Content>\n    <DropdownMenu.Item callback={handleClick}>\n      Action\n    </DropdownMenu.Item>\n  </DropdownMenu.Content>\n</DropdownMenu.Root>`,
-					'svelte'
-				)}</code
-			></pre>
+		<CodeBlock
+			code={`import * as DropdownMenu from '@silk/ui/components/dropdown-menu';\n\n<DropdownMenu.Root>\n  <DropdownMenu.Trigger>Menu</DropdownMenu.Trigger>\n  <DropdownMenu.Content>\n    <DropdownMenu.Item callback={handleClick}>\n      Action\n    </DropdownMenu.Item>\n  </DropdownMenu.Content>\n</DropdownMenu.Root>`}
+			lang="svelte"
+			copy="overlay"
+		/>
 	</section>
 
 	<!-- ─── Examples ──────────────────────────────────────────────── -->
@@ -298,26 +185,8 @@
 			>
 				Basic menu
 			</h3>
-			<ComponentPreview
-				code={`<DropdownMenu.Root>
-  <DropdownMenu.Trigger>Open menu</DropdownMenu.Trigger>
-  <DropdownMenu.Content>
-    <DropdownMenu.Item callback={handleAction}>
-      Action 1
-    </DropdownMenu.Item>
-    <DropdownMenu.Item callback={handleAction}>
-      Action 2
-    </DropdownMenu.Item>
-  </DropdownMenu.Content>
-</DropdownMenu.Root>`}
-			>
-				<DropdownMenu.Root>
-					<DropdownMenu.Trigger>Open menu</DropdownMenu.Trigger>
-					<DropdownMenu.Content>
-						<DropdownMenu.Item>Action 1</DropdownMenu.Item>
-						<DropdownMenu.Item>Action 2</DropdownMenu.Item>
-					</DropdownMenu.Content>
-				</DropdownMenu.Root>
+			<ComponentPreview code={BasicMenuSrc}>
+				<BasicMenu />
 			</ComponentPreview>
 		</div>
 
@@ -328,60 +197,8 @@
 			>
 				Row actions
 			</h3>
-			<ComponentPreview
-				code={`<DropdownMenu.Root>
-  <DropdownMenu.Trigger variant="ghost" size="icon">
-    <MoreHorizontal size={14} />
-  </DropdownMenu.Trigger>
-  <DropdownMenu.Content>
-    <DropdownMenu.Item callback={handleRename}>
-      <Pencil size={13} /> Rename
-    </DropdownMenu.Item>
-    <DropdownMenu.Item callback={handleDuplicate}>
-      <Copy2 size={13} /> Duplicate
-    </DropdownMenu.Item>
-    <DropdownMenu.Item callback={handleArchive}>
-      <Archive size={13} /> Archive
-    </DropdownMenu.Item>
-    <DropdownMenu.Separator />
-    <DropdownMenu.Item callback={handleDelete}>
-      <Trash size={13} /> Delete
-    </DropdownMenu.Item>
-  </DropdownMenu.Content>
-</DropdownMenu.Root>`}
-			>
-				<DropdownMenu.Root>
-					<DropdownMenu.Trigger variant="ghost" size="icon" aria-label="Row actions">
-						<MoreHorizontal size={14} />
-					</DropdownMenu.Trigger>
-					<DropdownMenu.Content class="min-w-[12rem]">
-						<DropdownMenu.Item>
-							<span class="flex items-center gap-2"><Pencil size={13} /> Rename</span>
-						</DropdownMenu.Item>
-						<DropdownMenu.Item>
-							<span class="flex items-center gap-2"><Copy2 size={13} /> Duplicate</span>
-							<kbd
-								class="rounded border border-border bg-secondary/60 px-1.5 py-0.5 font-mono text-[0.62rem] text-foreground-muted"
-							>
-								⌘D
-							</kbd>
-						</DropdownMenu.Item>
-						<DropdownMenu.Item>
-							<span class="flex items-center gap-2"><Archive size={13} /> Archive</span>
-						</DropdownMenu.Item>
-						<DropdownMenu.Separator />
-						<DropdownMenu.Item>
-							<span class="flex items-center gap-2 text-[var(--color-destructive)]">
-								<Trash size={13} /> Delete
-							</span>
-							<kbd
-								class="rounded border border-border bg-secondary/60 px-1.5 py-0.5 font-mono text-[0.62rem] text-foreground-muted"
-							>
-								⌫
-							</kbd>
-						</DropdownMenu.Item>
-					</DropdownMenu.Content>
-				</DropdownMenu.Root>
+			<ComponentPreview code={RowActionsSrc}>
+				<RowActions />
 			</ComponentPreview>
 		</div>
 
@@ -392,54 +209,8 @@
 			>
 				Share menu
 			</h3>
-			<ComponentPreview
-				code={`<DropdownMenu.Root>
-  <DropdownMenu.Trigger variant="outline">
-    <Send size={13} />
-    Share
-  </DropdownMenu.Trigger>
-  <DropdownMenu.Content>
-    <DropdownMenu.Label>Workspace</DropdownMenu.Label>
-    <DropdownMenu.Item callback={handleInvite}>
-      <User size={13} /> Invite collaborator
-    </DropdownMenu.Item>
-    <DropdownMenu.Item callback={handleCopyLink}>
-      <Copy2 size={13} /> Copy link
-    </DropdownMenu.Item>
-    <DropdownMenu.Separator />
-    <DropdownMenu.Label>Public</DropdownMenu.Label>
-    <DropdownMenu.Item callback={handlePrivate}>
-      <EyeOff size={13} /> Make private
-    </DropdownMenu.Item>
-  </DropdownMenu.Content>
-</DropdownMenu.Root>`}
-			>
-				<DropdownMenu.Root>
-					<DropdownMenu.Trigger variant="outline" class="h-9 gap-1.5 text-[0.82rem]">
-						<Send size={13} />
-						Share
-						<ChevronDown size={11} class="text-foreground-muted" />
-					</DropdownMenu.Trigger>
-					<DropdownMenu.Content class="min-w-[14rem]">
-						<DropdownMenu.Label>Workspace</DropdownMenu.Label>
-						<DropdownMenu.Item>
-							<span class="flex items-center gap-2"><User size={13} /> Invite collaborator</span>
-						</DropdownMenu.Item>
-						<DropdownMenu.Item>
-							<span class="flex items-center gap-2"><Copy2 size={13} /> Copy link</span>
-							<kbd
-								class="rounded border border-border bg-secondary/60 px-1.5 py-0.5 font-mono text-[0.62rem] text-foreground-muted"
-							>
-								⇧⌘C
-							</kbd>
-						</DropdownMenu.Item>
-						<DropdownMenu.Separator />
-						<DropdownMenu.Label>Public</DropdownMenu.Label>
-						<DropdownMenu.Item>
-							<span class="flex items-center gap-2"><EyeOff size={13} /> Make private</span>
-						</DropdownMenu.Item>
-					</DropdownMenu.Content>
-				</DropdownMenu.Root>
+			<ComponentPreview code={ShareMenuSrc}>
+				<ShareMenu />
 			</ComponentPreview>
 		</div>
 
@@ -450,48 +221,23 @@
 			>
 				Sort menu
 			</h3>
-			<ComponentPreview
-				code={`<DropdownMenu.Root>
-  <DropdownMenu.Trigger variant="ghost">
-    <Star size={13} />
-    Most starred
-  </DropdownMenu.Trigger>
-  <DropdownMenu.Content>
-    <DropdownMenu.Item>
-      <span>Most starred</span>
-      <Check size={12} />
-    </DropdownMenu.Item>
-    <DropdownMenu.Item callback={handleSort}>
-      <span>Recently updated</span>
-    </DropdownMenu.Item>
-    <DropdownMenu.Item callback={handleSort}>
-      <span>Alphabetical</span>
-    </DropdownMenu.Item>
-  </DropdownMenu.Content>
-</DropdownMenu.Root>`}
+			<ComponentPreview code={SortMenuSrc}>
+				<SortMenu />
+			</ComponentPreview>
+		</div>
+
+		<!-- Inverted menu -->
+		<div id="inverted-menu" class="scroll-mt-20 flex flex-col gap-3">
+			<h3
+				class="text-[1rem] font-[var(--font-weight-header,600)] tracking-tight text-foreground docs-subsection-heading"
 			>
-				<DropdownMenu.Root>
-					<DropdownMenu.Trigger variant="ghost" class="h-9 gap-1.5 text-[0.82rem]">
-						<Star size={13} />
-						Most starred
-						<ChevronDown size={11} class="text-foreground-muted" />
-					</DropdownMenu.Trigger>
-					<DropdownMenu.Content class="min-w-[12rem]">
-						<DropdownMenu.Item>
-							<span>Most starred</span>
-							<Check size={12} class="text-primary" />
-						</DropdownMenu.Item>
-						<DropdownMenu.Item>
-							<span>Recently updated</span>
-						</DropdownMenu.Item>
-						<DropdownMenu.Item>
-							<span>Alphabetical</span>
-						</DropdownMenu.Item>
-						<DropdownMenu.Item>
-							<span>Oldest first</span>
-						</DropdownMenu.Item>
-					</DropdownMenu.Content>
-				</DropdownMenu.Root>
+				Inverted menu
+			</h3>
+			<p class="text-sm text-foreground-muted">
+				A dark-themed dropdown with inverted colors. Use `inverted` prop on Root.
+			</p>
+			<ComponentPreview code={InvertedSrc}>
+				<Inverted />
 			</ComponentPreview>
 		</div>
 	</section>

@@ -103,7 +103,7 @@ describe('Modal -- close paths actually unmount (P3-F6 disambiguation)', () => {
 		await new Promise((r) => setTimeout(r, 20));
 		await expect.element(page.getByText('Modal Title')).toBeInTheDocument();
 
-		const overlay = document.querySelector('.bg-\\[var\\(--color-overlay\\)\\]') as HTMLElement;
+		const overlay = document.querySelector('[data-silk-anim="overlay"]') as HTMLElement;
 		expect(overlay).toBeInTheDocument();
 		overlay.click();
 		await flush();
@@ -116,7 +116,7 @@ describe('Modal -- close paths actually unmount (P3-F6 disambiguation)', () => {
 		await new Promise((r) => setTimeout(r, 20));
 		await expect.element(page.getByText('Modal Title')).toBeInTheDocument();
 
-		const overlay = document.querySelector('.bg-\\[var\\(--color-overlay\\)\\]') as HTMLElement;
+		const overlay = document.querySelector('[data-silk-anim="overlay"]') as HTMLElement;
 		expect(overlay).toBeInTheDocument();
 		overlay.click();
 		await flush();

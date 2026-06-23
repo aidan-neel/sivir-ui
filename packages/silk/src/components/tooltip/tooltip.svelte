@@ -1,12 +1,11 @@
 <script lang="ts">
-	import * as Popover from '@silk/ui/components/popover';
-	import type { Snippet } from 'svelte';
+	import { setContext, type Snippet } from 'svelte';
 
 	type Placement = 'top' | 'left' | 'bottom' | 'right';
 
 	let {
 		children,
-		delay = 600,
+		delay = 125,
 		closeDelay = 100,
 		placement = 'top'
 	}: {
@@ -15,8 +14,25 @@
 		closeDelay?: number;
 		placement?: Placement;
 	} = $props();
+
+	// Shared config + the live label, read by Trigger and written by Content.
+	// (Reactive so a changing label morphs the active bubble in place.)
+	// svelte-ignore state_referenced_locally
+	const tip = $state<{ text: string; placement: Placement; delay: number; closeDelay: number }>({
+		text: '',
+		// seeded from props; the effect below keeps them in sync afterwards
+		placement,
+		delay,
+		closeDelay
+	});
+
+	$effect(() => {
+		tip.placement = placement;
+		tip.delay = delay;
+		tip.closeDelay = closeDelay;
+	});
+
+	setContext('silk-tooltip', tip);
 </script>
 
-<Popover.Root hoverable {delay} {closeDelay} {placement}>
-	{@render children?.()}
-</Popover.Root>
+{@render children?.()}

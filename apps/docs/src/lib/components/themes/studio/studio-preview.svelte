@@ -36,7 +36,6 @@
 	import { Progress } from '@silk/ui/components/progress';
 	import { Separator } from '@silk/ui/components/separator';
 	import { Pagination } from '@silk/ui/components/pagination';
-	import { Calendar } from '@silk/ui/components/calendar';
 	import { Label } from '@silk/ui/components/label';
 	import { Textarea } from '@silk/ui/components/textarea';
 	import { Marquee } from '@silk/ui/components/marquee';
@@ -82,7 +81,6 @@
 	let glPlan = $state('pro');
 	let glAccordion = $state('a1');
 	let glPage = $state(2);
-	let glCalendar = $state<Date | undefined>(new Date(2026, 4, 15));
 	let glTextarea = $state('Silk themes cascade from a single source of truth.');
 	let newProjectOpen = $state(false);
 	let newProjectName = $state('');
@@ -824,7 +822,7 @@
 
 					<!-- Navigation & data -->
 					<section class="flex flex-col gap-4 px-6 py-7 md:px-8">
-						{@render sectionHead('Navigation & data', 'Avatars, pagination, calendar')}
+						{@render sectionHead('Navigation & data', 'Avatars, pagination, tabs')}
 						<div class="flex items-center gap-2">
 							<Avatar.Root size="sm"><Avatar.Fallback>AN</Avatar.Fallback></Avatar.Root>
 							<Avatar.Root size="md"><Avatar.Fallback>MC</Avatar.Fallback></Avatar.Root>
@@ -839,10 +837,7 @@
 								<Tabs.Trigger value="files">Files</Tabs.Trigger>
 							</Tabs.List>
 						</Tabs.Root>
-						<div class="grid grid-cols-2 gap-3 max-md:grid-cols-1">
-							<Pagination bind:page={glPage} total={20} />
-							<Calendar bind:value={glCalendar} />
-						</div>
+						<Pagination bind:page={glPage} total={20} />
 						<Separator />
 						<ScrollArea
 							class="h-20 w-full rounded-[var(--radius-md)] border border-border bg-background p-3"

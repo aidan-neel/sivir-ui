@@ -22,7 +22,9 @@
 	}
 </script>
 
-<aside class={`${classProp} silk-docs-sidebar flex flex-col gap-5 overflow-y-auto pb-8 pr-2`}>
+<aside
+	class={`${classProp} silk-docs-sidebar hide-scrollbar-all flex flex-col gap-5 overflow-y-auto pb-8 pr-2`}
+>
 	<section class="flex flex-col gap-1.5">
 		<h3
 			class="px-2 text-[12px] text-foreground-muted [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]"

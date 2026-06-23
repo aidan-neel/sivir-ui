@@ -14,7 +14,6 @@ import Switch from '@silk/ui/components/switch/switch.svelte';
 import Slider from '@silk/ui/components/slider/slider.svelte';
 import Toggle from '@silk/ui/components/toggle/toggle.svelte';
 import Progress from '@silk/ui/components/progress/progress.svelte';
-import Calendar from '@silk/ui/components/calendar/calendar.svelte';
 import Pagination from '@silk/ui/components/pagination/pagination.svelte';
 import Separator from '@silk/ui/components/separator/separator.svelte';
 import Skeleton from '@silk/ui/components/skeleton/skeleton.svelte';
@@ -88,7 +87,6 @@ describe('SSR -- leaf components (Tier 1)', () => {
 	ssrShouldNotThrow('slider', Slider, { value: 0 });
 	ssrShouldNotThrow('toggle', Toggle, { pressed: false });
 	ssrShouldNotThrow('progress', Progress, { value: 50, max: 100 });
-	ssrShouldNotThrow('calendar', Calendar, { value: new Date(2026, 4, 15) });
 	ssrShouldNotThrow('pagination', Pagination, { page: 1, total: 5 });
 	ssrShouldNotThrow('separator', Separator, { orientation: 'horizontal' });
 	ssrShouldNotThrow('skeleton', Skeleton, {});

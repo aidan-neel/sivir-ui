@@ -86,11 +86,17 @@
 			{/if}
 
 			{#if toast.actions?.length}
-				<div class="mt-2.5 flex flex-row items-center gap-2">
-					{#each toast.actions as action}
+				<div class="mt-1.5 flex flex-row flex-wrap items-center gap-4">
+					{#each toast.actions as action, i (i)}
 						<Button
-							variant={action.variant ?? 'secondary'}
-							class="py-0 h-7 min-h-7 shrink-0 rounded-lg px-2 text-[11.5px]"
+							variant={action.variant ?? 'ghost'}
+							size="sm"
+							class={cn(
+								'!h-auto min-h-0 rounded-[var(--radius-sm)] !bg-transparent px-0 py-0 [font-size:var(--font-size-label)] [font-weight:var(--font-weight-button,600)] underline-offset-2 hover:!bg-transparent hover:underline',
+								i === 0
+									? 'text-[var(--color-primary)] hover:text-[var(--color-primary)]'
+									: 'text-foreground-muted hover:text-foreground'
+							)}
 							onclick={() => {
 								action.callback();
 								if (toast.id !== undefined) dismissToast(toast.id);
