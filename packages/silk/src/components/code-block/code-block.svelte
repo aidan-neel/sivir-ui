@@ -119,15 +119,15 @@
 		/* Horizontal travel of the directional tab-swap slide. */
 		--code-block-slide: 1.25rem;
 
-		/* Light palette (GitHub-light flavoured). */
-		--code-block-token-comment: #6e7781;
-		--code-block-token-keyword: #cf222e;
-		--code-block-token-string: #0a3069;
-		--code-block-token-number: #0550ae;
-		--code-block-token-function: #8250df;
-		--code-block-token-property: #0550ae;
-		--code-block-token-builtin: #953800;
-		--code-block-token-meta: #6e7781;
+		/* Light palette — muted grayscale (matches the docs syntax theme). */
+		--code-block-token-comment: #b0b0b0;
+		--code-block-token-keyword: #565656;
+		--code-block-token-string: #565656;
+		--code-block-token-number: #868686;
+		--code-block-token-function: #565656;
+		--code-block-token-property: #868686;
+		--code-block-token-builtin: #868686;
+		--code-block-token-meta: #868686;
 	}
 
 	/* Dark palette (muted VS Code dark), applied under a `.dark` ancestor. */
@@ -135,13 +135,13 @@
 		/* Softer, lower-contrast border in dark — it shouldn't draw the eye. */
 		--code-block-border: color-mix(in oklab, var(--color-border) 40%, transparent);
 
-		--code-block-token-comment: #7f9d6c;
-		--code-block-token-keyword: #c58fd1;
-		--code-block-token-string: #cbac84;
-		--code-block-token-number: #6cb6c9;
-		--code-block-token-function: #61afef;
-		--code-block-token-property: #9cd0f5;
-		--code-block-token-builtin: #4ec9b0;
-		--code-block-token-meta: #8a8f98;
+		--code-block-token-comment: #a0a0a0;
+		--code-block-token-keyword: #7ec4ff;
+		--code-block-token-string: #ffc966;
+		--code-block-token-number: #ffc966;
+		--code-block-token-function: #7ec4ff;
+		--code-block-token-property: #7ec4ff;
+		--code-block-token-builtin: #7ec4ff;
+		--code-block-token-meta: #a0a0a0;
 	}
 </style>

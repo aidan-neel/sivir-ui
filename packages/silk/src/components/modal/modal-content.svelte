@@ -61,7 +61,7 @@
 			data-state={presence.state}
 			class={cn(
 				overlayClass,
-				'absolute inset-0 bg-[var(--silk-neutral-50)]/30 backdrop-blur-[6px] [backface-visibility:hidden] [transform:translateZ(0)]'
+				'absolute inset-0 bg-[var(--silk-neutral-50)]/40 backdrop-blur-[2px] [backface-visibility:hidden] [transform:translateZ(0)]'
 			)}
 		></div>
 		<div
@@ -72,7 +72,7 @@
 			class={cn(
 				contentClass,
 				className,
-				'[--motion-panel-origin:center] [--motion-panel-y:0px] [--motion-panel-scale-start:0.92] bg-[var(--color-modal)] text-[var(--color-panel-foreground)] border border-border rounded-[var(--radius-lg)] shadow-[var(--panel-shadow)] flex flex-col gap-[var(--modal-section-gap)] p-[var(--modal-padding)] fixed top-[45%] left-1/2 z-[120] overflow-y-auto overscroll-contain -translate-x-1/2 -translate-y-1/2 m-auto md:w-full w-[calc(100%-var(--modal-margin-x))] max-w-[var(--modal-max-width)] min-h-[var(--modal-min-height)] max-h-[calc(100dvh-var(--modal-max-height-adjust))]'
+				'[--motion-panel-origin:center] [--motion-panel-y:0px] [--motion-panel-scale-start:0.92] bg-[var(--color-panel)] text-[var(--color-foreground)] border border-border rounded-[var(--radius-lg)] shadow-[var(--panel-shadow)] flex flex-col gap-[var(--modal-section-gap)] p-[var(--modal-padding)] fixed top-[45%] left-1/2 z-[120] overflow-y-auto overscroll-contain -translate-x-1/2 -translate-y-1/2 m-auto md:w-full w-[calc(100%-var(--modal-margin-x))] max-w-[var(--modal-max-width)] min-h-[var(--modal-min-height)] max-h-[calc(100dvh-var(--modal-max-height-adjust))]'
 			)}
 			style:--modal-max-width={maxWidth}
 			{role}

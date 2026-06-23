@@ -7,11 +7,9 @@
 	import { components, sanitizeComponent } from '$lib/components';
 	import Button from '@silk/ui/components/button';
 	import SideNavbar from '$lib/components/docs/side-navbar.svelte';
-	import Shortcut from '@silk/ui/components/shortcut';
 	import Logo from './logo.svelte';
 	import Navbutton from './navbutton.svelte';
 	import Menu from '@lucide/svelte/icons/menu';
-	import Search from '@lucide/svelte/icons/search';
 	import X from '@lucide/svelte/icons/x';
 	import Moon from '@lucide/svelte/icons/moon';
 	import Sun from '@lucide/svelte/icons/sun';
@@ -146,8 +144,8 @@
 			isStudio
 				? 'max-w-none px-4'
 				: isHome
-					? 'nav-home-in max-w-[1200px] px-4 md:px-6'
-					: 'px-4 md:px-10'
+					? 'nav-home-in max-w-[1400px] px-4 md:px-6'
+					: 'px-4 md:px-6'
 		}`}
 	>
 		<Command.Root>

@@ -52,7 +52,7 @@
 			onanimationend={onAnimationEnd}
 			class={cn(
 				className,
-				`silk-sheet-panel bg-[var(--color-modal)] text-[var(--color-panel-foreground)] shadow-[var(--panel-shadow)] p-[var(--sheet-body-padding)] border border-border rounded-[var(--radius-lg)] fixed top-[var(--sheet-margin)] bottom-[var(--sheet-margin)] z-50 flex w-[calc(100%-calc(var(--sheet-margin)*2))] max-w-[var(--sheet-max-width)] flex-col overflow-y-auto overscroll-contain ${
+				`silk-sheet-panel bg-[var(--color-panel)] text-[var(--color-foreground)] shadow-[var(--panel-shadow)] p-[var(--sheet-body-padding)] border border-border rounded-[var(--radius-lg)] fixed top-[var(--sheet-margin)] bottom-[var(--sheet-margin)] z-50 flex w-[calc(100%-calc(var(--sheet-margin)*2))] max-w-[var(--sheet-max-width)] flex-col overflow-y-auto overscroll-contain ${
 					side === 'left' ? 'left-[var(--sheet-margin)]' : 'right-[var(--sheet-margin)]'
 				}`
 			)}

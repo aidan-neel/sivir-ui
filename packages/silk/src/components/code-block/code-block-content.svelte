@@ -104,6 +104,7 @@
 		background: var(--code-block-bg);
 		color: var(--code-block-fg);
 		font-family: var(--font-mono);
+		font-weight: 500;
 		box-shadow:
 			var(--card-shadow),
 			0 0 0 1px color-mix(in oklab, var(--code-block-border) 50%, transparent);

@@ -40,7 +40,7 @@
 		</ContextMenu.Item>
 		<ContextMenu.Separator />
 		<ContextMenu.Item callback={() => {}}>
-			<span class="flex items-center gap-2 text-[var(--color-destructive)]"
+			<span class="flex items-center gap-2 text-[var(--color-error)]"
 				><Trash size={13} /> Move to trash</span
 			>
 		</ContextMenu.Item>

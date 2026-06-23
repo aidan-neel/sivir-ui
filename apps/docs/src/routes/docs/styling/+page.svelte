@@ -2,13 +2,10 @@
 	import { Button } from '@silk/ui/components/button';
 	import { Badge } from '@silk/ui/components/badge';
 	import * as Alert from '@silk/ui/components/alert';
-	import { highlight } from '$lib/highlight';
+	import { CodeBlock } from '@silk/ui/components/code-block';
 
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
 	import Paintbrush from '@lucide/svelte/icons/paintbrush-vertical';
-	import Copy from '@lucide/svelte/icons/copy';
-	import Check from '@lucide/svelte/icons/check';
-	import Terminal from '@lucide/svelte/icons/terminal';
 	import Wand from '@lucide/svelte/icons/wand-sparkles';
 	import FileCode from '@lucide/svelte/icons/file-code-2';
 	import Tag from '@lucide/svelte/icons/tag';
@@ -86,16 +83,6 @@ src/lib/silk/components/button/
 └── index.ts`
 		}
 	];
-
-	let copied = $state<string | null>(null);
-	function copy(key: string, text: string) {
-		if (typeof navigator === 'undefined' || !navigator.clipboard) return;
-		void navigator.clipboard.writeText(text);
-		copied = key;
-		setTimeout(() => {
-			if (copied === key) copied = null;
-		}, 1600);
-	}
 </script>
 
 <svelte:head>
@@ -170,35 +157,7 @@ src/lib/silk/components/button/
 				</div>
 				<div class="flex flex-1 flex-col gap-3">
 					<p class="m-0 text-[0.86rem] leading-relaxed text-foreground-muted">{layer.body}</p>
-					<div
-						class="overflow-hidden rounded-[var(--radius-md)] border border-border bg-secondary/40"
-					>
-						<div
-							class="flex items-center justify-between gap-2 border-b border-border/70 px-3 py-1.5"
-						>
-							<span
-								class="inline-flex items-center gap-1.5 text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted"
-							>
-								<Terminal size={11} />
-								{layer.lang}
-							</span>
-							<button
-								type="button"
-								onclick={() => copy(layer.id, layer.code)}
-								class="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2 py-0.5 text-[0.7rem] text-foreground-muted transition-colors hover:bg-secondary/60 hover:text-foreground"
-							>
-								{#if copied === layer.id}
-									<Check size={11} class="text-[var(--color-success)]" /> Copied
-								{:else}
-									<Copy size={11} /> Copy
-								{/if}
-							</button>
-						</div>
-						<pre
-							class="m-0 max-h-[22rem] overflow-auto px-4 py-3 font-mono text-[0.8rem] leading-relaxed text-foreground"><code
-								>{@html highlight(layer.code, layer.lang)}</code
-							></pre>
-					</div>
+					<CodeBlock code={layer.code} lang={layer.lang} copy="overlay" />
 				</div>
 			</div>
 		{/each}

@@ -38,7 +38,7 @@
 					variant="ghost"
 					href={`/docs/${item.slug}`}
 					onclick={onNavigate}
-					class={`h-8 w-full justify-start gap-2 rounded-lg px-3 text-left text-sm transition-[background-color,color] ${
+					class={`h-8 w-fit justify-start gap-2 rounded-lg px-3 text-left text-sm transition-[background-color,color] ${
 						active
 							? 'bg-secondary/85 [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]'
 							: ' hover:bg-secondary/55 hover:text-foreground'
@@ -67,7 +67,7 @@
 					variant="ghost"
 					href={`/docs/components/${component}`}
 					onclick={onNavigate}
-					class={`h-8.5 w-full justify-start rounded-lg px-3 text-left text-sm transition-[background-color,color] ${
+					class={`h-8.5 w-fit justify-start rounded-lg px-3 text-left text-sm transition-[background-color,color] ${
 						active
 							? 'bg-secondary/85 [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]'
 							: 'hover:bg-secondary/55 hover:text-foreground'

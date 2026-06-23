@@ -10,27 +10,34 @@ describe('ui.css Tier 1 primitives', () => {
 			expect(css).toContain(`--silk-neutral-${step}:`);
 		}
 	});
-	it('defines the blue ramp and the 4px space unit', () => {
+	it('defines the blue ramp and the density-driven space unit', () => {
 		expect(css).toContain('--silk-blue-500:');
-		expect(css).toContain('--silk-space-unit: 4px');
+		expect(css).toContain('--silk-space-unit: 3.6px');
 	});
 	it('overrides the neutral ramp under .dark', () => {
 		const darkBlock = css.slice(css.indexOf('.dark'));
-		expect(darkBlock).toContain('--silk-neutral-0: #0d0d0d');
+		expect(darkBlock).toContain('--silk-neutral-0: hsl(0 0% 5%)');
 	});
 });
 
 describe('ui.css Tier 2 semantic', () => {
 	it('maps semantic color tokens to neutral/blue primitives', () => {
-		expect(css).toContain('--color-background: var(--silk-neutral-25)');
+		expect(css).toContain('--color-background: var(--silk-neutral-10)');
 		expect(css).toContain('--color-card: var(--silk-neutral-0)');
-		expect(css).toContain('--color-primary: var(--silk-blue-500)');
-		expect(css).toContain('--color-ring: var(--silk-blue-ring)');
+		expect(css).toContain('--color-primary: #1f9be6');
+		expect(css).toContain(
+			'--color-ring: color-mix(in srgb, var(--color-primary) 30%, transparent)'
+		);
 	});
-	it('aliases retired names to their replacements', () => {
-		expect(css).toContain('--color-destructive: var(--color-error)');
-		expect(css).toContain('--color-modal: var(--color-panel)');
-		expect(css).toContain('--color-info: var(--color-primary)');
+	it('keeps canonical semantics and drops the retired aliases (consumers migrated)', () => {
+		// Real semantic tokens stay.
+		expect(css).toContain('--color-error:');
+		expect(css).toContain('--color-panel:');
+		expect(css).toContain('--color-info:');
+		// Pure pass-through aliases were removed; consumers now read the canonical names.
+		expect(css).not.toContain('--color-destructive:');
+		expect(css).not.toContain('--color-modal:');
+		expect(css).not.toContain('--color-panel-foreground:');
 	});
 });
 

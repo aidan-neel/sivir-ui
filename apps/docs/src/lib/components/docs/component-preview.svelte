@@ -1,19 +1,17 @@
 <script lang="ts">
 	import { onMount, type Snippet } from 'svelte';
-	import CodeBlock from '$lib/components/docs/code-block.svelte';
+	import * as CodeBlock from '@silk/ui/components/code-block';
+	import { Panel } from '@silk/ui/components/panel';
 	import { cn } from '@silk/ui/utils';
 	import * as Tabs from '@silk/ui/components/tabs';
-	import { CopyButton } from '@silk/ui/components/copy-button';
 
 	let {
 		children,
-		selectedTab = 1,
 		code,
 		class: classProp,
 		...rest
 	}: {
 		children?: Snippet;
-		selectedTab?: number;
 		code: string;
 		class?: string;
 	} = $props();
@@ -43,29 +41,43 @@
 		</Tabs.List>
 	</Tabs.Root>
 
-	<!-- Content -->
-	<div
+	<!-- Frame: a Panel (concentric border). Its fill sits a hair darker than the
+	     card-coloured inner surface, so the demo/code reads as a distinct inset. -->
+	<Panel
 		{...rest}
 		class={cn(
 			classProp,
-			`border border-border rounded-[var(--radius-lg)] bg-card w-full flex flex-col max-h-[40rem] ${
-				value === 'preview'
-					? 'min-h-[20rem] items-center justify-center overflow-hidden p-10'
-					: 'items-stretch justify-start overflow-auto relative'
-			}`
+			'w-full flex flex-col max-h-[40rem] p-2',
+			'bg-[color-mix(in_srgb,var(--color-card)_97%,var(--color-foreground))]',
+			value === 'preview' ? 'overflow-hidden' : 'overflow-auto relative'
 		)}
 	>
 		<div
 			bind:this={previewBody}
 			tabindex="-1"
-			class={cn(classProp, 'w-full relative flex items-center justify-center focus:outline-none')}
+			class={cn(
+				'w-full rounded-[var(--radius-md)] bg-card focus:outline-none',
+				value === 'preview'
+					? 'min-h-[20rem] flex items-center justify-center overflow-hidden p-10'
+					: 'relative'
+			)}
 		>
 			{#if value === 'preview'}
 				{@render children?.()}
 			{:else}
-				<CopyButton text={code} class="z-50 absolute top-3 right-3" />
-				<CodeBlock class="border-none bg-transparent shadow-none" {code} />
+				<CodeBlock.Root value="code" class="w-full border-none bg-transparent shadow-none">
+					<CodeBlock.Content value="code" {code} lang="svelte" copyPlacement="overlay" />
+				</CodeBlock.Root>
 			{/if}
 		</div>
-	</div>
+	</Panel>
 </div>
+
+<style>
+	/* Inside the preview the Panel frame already supplies the border, so drop the
+	   CodeBlock's own interior ring + drop shadow — it would double up otherwise. */
+	:global([data-component-preview] [data-ui='code-block-content']) {
+		box-shadow: none;
+		background: transparent;
+	}
+</style>

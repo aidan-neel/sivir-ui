@@ -22,6 +22,7 @@ export const components = [
 	'marquee',
 	'modal',
 	'pagination',
+	'panel',
 	'popover',
 	'progress',
 	'radio-group',

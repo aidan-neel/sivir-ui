@@ -2,17 +2,11 @@
 @source "./**/*.{svelte,ts}";
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* ============================================================
-   TIER 1 — PRIMITIVES (the only hand-picked values)
-   Brandless scales. Components must NEVER reference these.
-   ============================================================ */
 @theme {
-	/* Fonts */
 	--font-sans: 'Inter', sans-serif;
 	--font-mono: 'JetBrains Mono', monospace;
 	--font-header: var(--font-sans);
 
-	/* Neutral ramp — LIGHT (cool-neutral default) */
 	--silk-neutral-0: hsl(0 0% 100%);
 	--silk-neutral-10: hsl(60 11.1% 99.2%);
 	--silk-neutral-25: hsl(60 11.1% 98.2%);
@@ -28,19 +22,16 @@
 	--silk-neutral-800: hsl(60 5% 19%);
 	--silk-neutral-900: hsl(60 5.7% 10.4%);
 
-	/* Accent (blue) ramp — used sparingly */
 	--silk-blue-50: hsl(218.8 100% 96.7%);
 	--silk-blue-100: hsl(218 100% 93%);
 	--silk-blue-500: hsl(212.2 100% 64.5%);
 	--silk-blue-600: hsl(219.1 85.8% 58.6%);
 	--silk-blue-ring: rgb(74 140 255 / 0.4);
 
-	/* Status hues */
 	--silk-success: hsl(148.7 42.2% 42.7%);
 	--silk-warning: hsl(36.1 64.8% 47.8%);
 	--silk-error: hsl(0 57.7% 56.5%);
 
-	/* Spacing scale (multiples of the density-driven unit) */
 	--silk-space-unit: 3.6px;
 	--silk-space-1: calc(var(--silk-space-unit) * 1);
 	--silk-space-2: calc(var(--silk-space-unit) * 2);
@@ -51,14 +42,11 @@
 	--silk-space-8: calc(var(--silk-space-unit) * 8);
 	--silk-space-10: calc(var(--silk-space-unit) * 10);
 
-	/* Radius scale (default) — softened a step for a gentler feel */
 	--radius-sm: 6px;
 	--radius-md: 8px;
 	--radius-lg: 10px;
 	--radius-xl: 14px;
 
-	/* Type scale — smaller headers; the title/description pattern pairs a
-	   semibold header with a same-size MEDIUM, muted description. */
 	--text-xs: 12px;
 	--text-sm: 14px;
 	--text-base: 14px;
@@ -72,20 +60,18 @@
 	--font-weight-label: 500;
 	--font-weight-button: 500;
 	--font-weight-badge: 500;
-	/* Weight for description text paired with a header (same size, medium). */
 	--font-weight-description: 450;
+
 	--tracking-header: -0.015em;
 	--tracking-body: 0em;
 	--tracking-label: 0em;
 	--tracking-button: 0em;
 	--tracking-badge: 0em;
 
-	/* Elevation scale (borders-first) */
 	--elevation-0: none;
-	--elevation-1: 0 1px 2px rgb(0 0 0 / 0.04);
+	--elevation-1: 0 4px 2px rgb(0 0 0 / 0.04);
 	--elevation-float: 0 8px 24px -8px rgb(0 0 0 / 0.12), 0 2px 6px rgb(0 0 0 / 0.06);
 
-	/* Motion scale (default feel) */
 	--motion-duration-hover: 160ms;
 	--motion-duration-menu: 40ms;
 	--motion-duration-panel: 180ms;
@@ -98,40 +84,33 @@
 	--motion-panel-y: 4px;
 	--motion-panel-blur: 0px;
 	--motion-panel-scale-start: 0.96;
-	/* Panel enter/exit feel: fast in, slower + smoother out, scale anchored
-	   to a corner (origin) rather than the center. */
+
 	--motion-duration-panel-in: 210ms;
 	--motion-duration-panel-out: 160ms;
 	--motion-panel-origin: top left;
 	--motion-sheet-offset: 132px;
 	--motion-overlay-blur: 0px;
-	/* Custom easing curves (stronger than CSS built-ins). */
+
 	--ease-out: cubic-bezier(0.23, 1, 0.32, 1);
 	--ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
 	--ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
 	--motion-panel-easing: var(--ease-out);
-	/* Gentle decel for exits — feels smoother than the snappy enter easing. */
 	--motion-panel-ease-out: cubic-bezier(0.4, 0, 0.2, 1);
 	--motion-easing-hover: var(--ease-out);
-	/* Press feedback (buttons & pressable controls). */
+
 	--motion-press-scale: 1;
 	--motion-duration-press: 110ms;
 
 	--border-size: 1px;
 	--ui-cursor-interactive: pointer;
-	/* Panel items (menu items, select options) default to the same cursor as
-	   buttons/triggers, but can be overridden independently. */
 	--ui-panel-interactive: default;
 
-	/* ============================================================
-	   TIER 2 — SEMANTIC (public names; the component contract)
-	   ============================================================ */
 	--color-background: var(--silk-neutral-10);
 	--color-card: var(--silk-neutral-0);
 	--color-panel: var(--silk-neutral-0);
 	--color-muted: var(--silk-neutral-50);
 	--color-secondary: var(--silk-neutral-100);
-	/* Softer hairline; dark mode re-strengthens it (it has no shadow to lean on). */
+
 	--color-border: var(--silk-neutral-150);
 	--color-border-strong: var(--silk-neutral-300);
 	--color-input: var(--silk-neutral-300);
@@ -145,33 +124,20 @@
 	--color-accent-tint: var(--silk-blue-50);
 	--color-ring: color-mix(in srgb, var(--color-primary) 30%, transparent);
 	--focus-ring: 0 0 0 3px var(--color-ring);
+	--color-overlay: var(--silk-neutral-0);
+
 	--color-success: var(--silk-success);
 	--color-warning: var(--silk-warning);
 	--color-error: var(--silk-error);
-	--color-overlay: var(--silk-neutral-0);
-
-	/* Retired-name aliases (so existing components keep resolving) */
-	--color-destructive: var(--color-error);
-	--color-modal: var(--color-panel);
 	--color-info: var(--silk-blue-500);
-	--color-alternate: var(--silk-neutral-800);
-	--color-accent: var(--color-muted);
-	--color-floating-panel: var(--color-panel);
-	--color-floating-panel-foreground: var(--color-foreground);
-	--color-panel-foreground: var(--color-foreground);
-	--color-overlay-bg: var(--color-background);
+
 	--color-tooltip: var(--silk-neutral-900);
 	--color-tooltip-foreground: var(--silk-neutral-0);
+
 	--color-field: var(--color-card);
 	--color-field-hover: var(--color-muted);
-	--color-field-focus: var(--color-card);
 	--color-field-foreground: var(--color-foreground);
-	--color-field-placeholder: var(--color-foreground-muted);
 
-	/* ============================================================
-	   TIER 3 — COMPONENT TOKENS (DERIVED from Tier 2 by recipe)
-	   ============================================================ */
-	/* Control sizing (from spacing scale) */
 	--size-control-sm: var(--silk-space-8); /* 32px */
 	--size-control-md: calc(var(--silk-space-8) + var(--silk-space-2)); /* 36px */
 	--size-control-lg: var(--silk-space-10); /* 40px */
@@ -180,7 +146,6 @@
 	--space-panel: var(--silk-space-3);
 	--space-menu-item-x: var(--silk-space-2);
 
-	/* Button */
 	--button-height: var(--size-control-md);
 	--button-padding-x: var(--silk-space-3);
 	--button-gap: var(--silk-space-2);
@@ -196,29 +161,21 @@
 	--button-ghost-border: transparent;
 	--button-ghost-foreground: var(--color-foreground);
 	--button-ghost-hover-bg: color-mix(in srgb, var(--color-foreground) 8%, transparent);
-	/* Vertical nudge on press (active). Tasteful tactile feedback. */
+
 	--button-press-y: 1px;
 	--button-outlined-bg: var(--color-card);
 	--button-outlined-foreground: var(--color-foreground);
 	--button-outlined-hover-bg: var(--color-muted);
-	--button-outlined-flat-shadow: inset 0 0 0 1px var(--color-border);
-	/* Subtle INNER (inset) shadow: hairline edge + soft inset depth, no outer drop. */
 	--button-outline-shadow:
 		inset 0 0 0 1px var(--color-border), inset 0 -2px 3px -2px rgb(15 15 16 / 0.08),
 		inset 0 1px 0 0 rgb(255 255 255 / 0.4);
-	--button-outlined-fancy-shadow: var(--button-outline-shadow);
-	/* Soft destructive: a very light red tint with red text. */
 	--button-destructive-bg: color-mix(in srgb, var(--color-error) 12%, transparent);
 	--button-destructive-foreground: var(--color-error);
 	--button-destructive-border: transparent;
 	--button-destructive-hover-bg: color-mix(in srgb, var(--color-error) 20%, transparent);
-	/* haptic retired -> flat */
-	--haptic-press-y: 0px;
 
-	/* Badge */
 	--badge-padding-x: var(--silk-space-2);
 	--badge-padding-y: 2px;
-	/* Intents */
 	--badge-primary-bg: var(--color-primary);
 	--badge-primary-fg: var(--color-on-primary);
 	--badge-secondary-bg: var(--color-secondary);
@@ -231,7 +188,6 @@
 	--badge-outline-border: var(--color-border);
 	--badge-destructive-bg: var(--color-error);
 	--badge-destructive-fg: hsl(0 0% 100%);
-	/* Statuses (soft tinted chips) */
 	--badge-info-bg: color-mix(in srgb, var(--color-info) 16%, transparent);
 	--badge-info-fg: var(--color-info);
 	--badge-success-bg: color-mix(in srgb, var(--color-success) 16%, transparent);
@@ -241,7 +197,6 @@
 	--badge-error-bg: color-mix(in srgb, var(--color-error) 16%, transparent);
 	--badge-error-fg: var(--color-error);
 
-	/* Field / input */
 	--field-height: var(--size-control-md);
 	--field-padding-x: var(--silk-space-3);
 	--field-padding-y: 0rem;
@@ -283,7 +238,6 @@
 	--hover-card-width: 16rem;
 	--popover-viewport-margin: 1rem;
 
-	/* Controls: switch / checkbox / separator / skeleton */
 	--separator-color: var(--color-border);
 	--separator-thickness: 1px;
 	--switch-track-bg: color-mix(in srgb, var(--color-foreground) 18%, var(--color-background));
@@ -301,7 +255,6 @@
 	--skeleton-base: var(--color-secondary);
 	--skeleton-highlight: var(--color-muted);
 
-	/* Component padding carried for existing components (Plan 2 tokenizes the rest) */
 	--tabs-trigger-padding-x: var(--silk-space-3);
 	--tabs-trigger-padding-y: var(--silk-space-2);
 	--tabs-list-padding: 3px;
@@ -310,15 +263,17 @@
 	--toast-padding-x: var(--silk-space-4);
 	--toast-padding-y: var(--silk-space-4);
 	--toast-progress-height: 2px;
+	--toast-icon-size: var(--silk-space-6);
+	--toast-close-size: var(--silk-space-5);
 	--calendar-padding: var(--silk-space-3);
 	--calendar-grid-gap: var(--silk-space-1);
 	--color-picker-padding: var(--silk-space-2);
 	--color-picker-width: 244px;
 	--color-picker-area-height: 148px;
+
 	--modal-padding: var(--silk-space-6);
 	--modal-title-description-gap: var(--silk-space-1);
 	--modal-section-gap: var(--silk-space-4);
-	/* Modal width scale — pick via the Modal.Content `size` prop. */
 	--modal-width-sm: 22rem;
 	--modal-width-md: 28rem;
 	--modal-width-lg: 36rem;
@@ -327,10 +282,12 @@
 	--modal-min-height: 5rem;
 	--modal-margin-x: 1.5rem;
 	--modal-max-height-adjust: 2rem;
+
 	--sheet-body-padding: var(--silk-space-4);
 	--sheet-header-padding-bottom: var(--silk-space-6);
 	--sheet-max-width: 25rem;
 	--sheet-margin: 0.5rem;
+
 	--textarea-min-height: 7rem;
 	--textarea-padding-y: var(--silk-space-2);
 	--breadcrumb-gap: var(--silk-space-2);
@@ -342,13 +299,10 @@
 	--slider-thumb-border: 2px;
 	--slider-track-height: var(--silk-space-1);
 	--slider-transition-duration: 120ms;
-	--toast-icon-size: var(--silk-space-6);
-	--toast-close-size: var(--silk-space-5);
 	--outline-shadow: none;
 }
 
 .dark {
-	/* TIER 1 — dark neutral ramp + accent */
 	--silk-neutral-0: hsl(0 0% 5%);
 	--silk-neutral-25: hsl(0 0% 8%);
 	--silk-neutral-50: hsl(0 0% 10%);
@@ -373,12 +327,6 @@
 	--silk-warning: hsl(37.3 72.6% 55.7%);
 	--silk-error: hsl(0 66.7% 63.5%);
 
-	/* ── TIER 2 — dark semantic remap ──────────────────────────────
-	   A single coherent elevation ladder (each layer ~2.5% lighter):
-	     background 4%  →  muted 7%  →  card 9%  →  panel 11.5%
-	     →  secondary 14.5%  →  border 16.5%
-	   Every surface is visibly distinct from its neighbours so chips,
-	   tracks, popovers and hover fills all read against each other. */
 	--color-background: hsl(0 0% 4%);
 	--color-muted: hsl(0 0% 7%);
 	--color-card: hsl(0 0% 9%);
@@ -393,16 +341,11 @@
 	--color-tooltip-foreground: var(--silk-neutral-0);
 	--color-field: var(--color-secondary);
 
-	/* Dark cards keep a whisper of lift instead of a hard border. */
 	--elevation-1: 0 1px 2px rgb(0 0 0 / 0.4);
 	--card-shadow: var(--elevation-1);
 	--panel-shadow: var(--elevation-float);
 	--switch-track-bg: color-mix(in srgb, var(--color-foreground) 24%, var(--color-background));
 
-	/* ── Interactive tokens retuned for dark ───────────────────────
-	   The base recipes mix toward `white`, which chalks out badly on a
-	   dark surface. Here every hover/fill is an explicit step on the
-	   ladder above (or a translucent foreground film for ghost rows). */
 	--button-secondary-bg: var(--color-secondary);
 	--button-secondary-hover-bg: hsl(0 0% 18.5%);
 	--button-primary-hover-bg: var(--color-primary-hover);
@@ -410,8 +353,6 @@
 	--button-ghost-hover-bg: color-mix(in srgb, var(--color-foreground) 10%, transparent);
 	--menu-item-hover-bg: color-mix(in srgb, var(--color-foreground) 8%, transparent);
 	--color-field-hover: hsl(0 0% 17.5%);
-
-	/* Original outlined-button lift (from main), dialed WAY down for dark. */
 	--button-outline-shadow:
 		inset 0 0 0 1px var(--color-border), inset 0 -2px 3px -2px rgb(0 0 0 / 0.32),
 		inset 0 1px 0 0 rgb(255 255 255 / 0.05);
@@ -422,12 +363,31 @@
 		border-color: var(--color-border);
 	}
 
+	/* Route every border-width utility through --border-size so a single token
+	   drives hairline thickness. Numeric widths (border-2, border-t-2, …) are
+	   separate classes and stay untouched. */
 	.border {
 		border-width: var(--border-size) !important;
 	}
+	.border-x {
+		border-inline-width: var(--border-size) !important;
+	}
+	.border-y {
+		border-block-width: var(--border-size) !important;
+	}
+	.border-t {
+		border-top-width: var(--border-size) !important;
+	}
+	.border-r {
+		border-right-width: var(--border-size) !important;
+	}
+	.border-b {
+		border-bottom-width: var(--border-size) !important;
+	}
+	.border-l {
+		border-left-width: var(--border-size) !important;
+	}
 
-	/* Buttons hover a touch slower than other controls (~+100ms) for a softer,
-	   more deliberate fade. */
 	[data-ui='button'] {
 		transition-duration: calc(var(--motion-duration-hover) + 100ms) !important;
 	}
@@ -447,10 +407,6 @@
 		transition-timing-function: var(--motion-panel-easing);
 	}
 
-	/* Menu items: every item-style row in popover-based menus collapses to
-	   --menu-item-height, regardless of content. Targets roles set on items
-	   by DropdownMenu, ContextMenu, Select, Combobox, Command, and their
-	   sub-triggers. */
 	[role='menuitem'],
 	[role='menuitemcheckbox'],
 	[role='menuitemradio'],
@@ -466,19 +422,6 @@
 	}
 }
 
-/* ============================================================
-   Panel / overlay enter + exit — CSS replacement for the old
-   flyAndScale Svelte transition. Driven by data-state=open|closed
-   so enter (fast, snappy) and exit (slower, smoother) can differ.
-   The scale is anchored to --motion-panel-origin (a corner), so
-   surfaces feel like they grow from an edge, not the center.
-
-   These keyframes animate only `transform` (translateY + scale).
-   Centered panels keep their Tailwind `-translate-x-1/2
-   -translate-y-1/2` classes, which use the standalone CSS
-   `translate` property and so compose with this `transform`
-   without the two fighting over centering.
-   ============================================================ */
 @keyframes silk-panel-in {
 	from {
 		opacity: 0;
@@ -536,17 +479,11 @@
 	0% {
 		background-position: 200% 0;
 	}
-
 	100% {
 		background-position: -200% 0;
 	}
 }
 
-/* Reduced motion (P3-F14).
-   When the user opts out of motion, zero every silk motion duration so
-   transitions complete in one frame. Consumers who want to keep some
-   motion under reduced-motion can override these variables in their
-   own stylesheet. */
 @media (prefers-reduced-motion: reduce) {
 	:root {
 		--motion-duration-hover: 0ms;
@@ -562,20 +499,11 @@
 	}
 }
 
-/* Buttons (and role="button") follow the --ui-cursor-interactive token on
-   hover. The themeStudio's "Pointer cursor" toggle flips this variable
-   between `pointer` and `default`, so every button on the page tracks it
-   without needing to opt in. !important keeps it ahead of utility classes
-   like `hover:cursor-pointer`. */
 button:not(:disabled):hover,
 [role='button']:not([aria-disabled='true']):hover {
 	cursor: var(--ui-cursor-interactive, pointer) !important;
 }
 
-/* Panel items (dropdown-menu items, select options) follow their own
-   --ui-panel-interactive token so menus can opt into a pointer cursor
-   independently of buttons/triggers. The extra attribute selector keeps these
-   ahead of the button rule above on specificity. */
 button[role='menuitem']:not(:disabled):hover,
 button[role='option']:not(:disabled):hover,
 [role='menuitem']:not([aria-disabled='true']):hover,

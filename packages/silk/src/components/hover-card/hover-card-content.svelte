@@ -26,7 +26,7 @@
 	{...rest}
 	class={cn(
 		className,
-		'w-[var(--hover-card-width)] rounded-[var(--radius-lg)] border border-border bg-[var(--color-panel)] p-[var(--panel-padding)] text-[var(--font-size-body)] text-[var(--color-panel-foreground)] shadow-[var(--panel-shadow)]'
+		'w-[var(--hover-card-width)] rounded-[var(--radius-lg)] border border-border bg-[var(--color-panel)] p-[var(--panel-padding)] text-[var(--font-size-body)] text-[var(--color-foreground)] shadow-[var(--panel-shadow)]'
 	)}
 >
 	{@render children?.()}

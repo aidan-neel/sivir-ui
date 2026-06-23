@@ -18,7 +18,7 @@
 	data-ui="dropdown-submenu-content"
 	class={cn(
 		props.class,
-		'bg-[var(--color-panel)] text-[var(--color-panel-foreground)] border border-border rounded-[var(--radius-lg)] shadow-[var(--panel-shadow)] p-[var(--menu-padding)] flex flex-col gap-0'
+		'bg-[var(--color-panel)] text-[var(--color-foreground)] border border-border rounded-[var(--radius-lg)] shadow-[var(--panel-shadow)] p-[var(--menu-padding)] flex flex-col gap-0'
 	)}
 >
 	{@render props.children?.()}

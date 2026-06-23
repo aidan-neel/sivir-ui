@@ -24,7 +24,7 @@
 	data-ui="combobox-content"
 	class={cn(
 		className,
-		'min-w-[var(--popover-trigger-width)] w-[var(--popover-trigger-width)] bg-[var(--color-panel)] text-[var(--color-panel-foreground)] border border-border rounded-[var(--radius-lg)] shadow-[var(--panel-shadow)] p-[var(--menu-padding)] overflow-y-auto'
+		'min-w-[var(--popover-trigger-width)] w-[var(--popover-trigger-width)] bg-[var(--color-panel)] text-[var(--color-foreground)] border border-border rounded-[var(--radius-lg)] shadow-[var(--panel-shadow)] p-[var(--menu-padding)] overflow-y-auto'
 	)}
 >
 	{@render children?.()}

@@ -5,7 +5,6 @@
 	import Archive from '@lucide/svelte/icons/archive';
 	import Trash from '@lucide/svelte/icons/trash-2';
 	import MoreHorizontal from '@lucide/svelte/icons/ellipsis';
-	import Check from '@lucide/svelte/icons/check';
 </script>
 
 <DropdownMenu.Root>
@@ -29,7 +28,7 @@
 		</DropdownMenu.Item>
 		<DropdownMenu.Separator />
 		<DropdownMenu.Item>
-			<span class="flex items-center gap-2 text-[var(--color-destructive)]">
+			<span class="flex items-center gap-2 text-[var(--color-error)]">
 				<Trash size={13} /> Delete
 			</span>
 			<kbd

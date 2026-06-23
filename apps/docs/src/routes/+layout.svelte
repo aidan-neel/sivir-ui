@@ -32,12 +32,12 @@
 
 <main class="min-h-screen w-screen bg-background pt-16">
 	{#if isHome}
-		<div class="relative mx-auto flex min-h-[calc(100vh-4rem)] w-full max-w-[1200px] flex-col">
+		<div class="relative mx-auto flex min-h-[calc(100vh-4rem)] w-full max-w-[1400px] flex-col">
 			{@render children?.()}
 		</div>
 	{:else}
 		<div
-			class="mx-auto flex min-h-[calc(100vh-3.5rem)] w-full flex-col gap-5 px-4 md:px-8 lg:flex-row lg:gap-16"
+			class="mx-auto flex min-h-[calc(100vh-3.5rem)] w-full flex-col gap-5 px-4 lg:flex-row lg:gap-16"
 		>
 			{@render children?.()}
 		</div>

@@ -1,6 +1,13 @@
 <script lang="ts">
-	import { CodeBlock } from '@silk/ui/components/code-block';
+	import * as CodeBlock from '@silk/ui/components/code-block';
 </script>
 
-<!-- copy="inline": a single-line body with the copy centered on the far right. -->
-<CodeBlock class="max-w-md" code="bunx @aidan-neel/ui add code-block" lang="bash" copy="inline" />
+<!-- copyPlacement="inline": a single-line body with the copy centered on the far right. -->
+<CodeBlock.Root class="max-w-md" value="sh">
+	<CodeBlock.Content
+		value="sh"
+		code="bunx @aidan-neel/ui add code-block"
+		lang="bash"
+		copyPlacement="inline"
+	/>
+</CodeBlock.Root>

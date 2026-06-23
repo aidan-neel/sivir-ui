@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { CodeBlock } from '@silk/ui/components/code-block';
+	import * as CodeBlock from '@silk/ui/components/code-block';
 	import { Button } from '@silk/ui/components/button';
 	import * as Tooltip from '@silk/ui/components/tooltip';
 	import Info from '@lucide/svelte/icons/info';
@@ -13,33 +13,37 @@
 	import csharp from './snippets/quickstart.cs.txt?raw';
 </script>
 
-<CodeBlock
-	class="max-w-2xl"
-	value="javascript"
-	tabs={[
-		{ label: 'Python', lang: 'python', code: python },
-		{ label: 'JavaScript', lang: 'javascript', code: javascript },
-		{ label: 'Java', lang: 'java', code: java },
-		{ label: 'Go', lang: 'go', code: go },
-		{ label: 'C#', lang: 'csharp', code: csharp }
-	]}
->
-	{#snippet actions()}
-		<Tooltip.Root>
-			<Tooltip.Trigger>
-				<Button variant="ghost" size="icon" aria-label="About this snippet">
-					<Info size={15} />
-				</Button>
-			</Tooltip.Trigger>
-			<Tooltip.Content>About this snippet</Tooltip.Content>
-		</Tooltip.Root>
-		<Tooltip.Root>
-			<Tooltip.Trigger>
-				<Button variant="ghost" size="icon" aria-label="Explain with AI">
-					<Sparkles size={15} />
-				</Button>
-			</Tooltip.Trigger>
-			<Tooltip.Content>Explain with AI</Tooltip.Content>
-		</Tooltip.Root>
-	{/snippet}
-</CodeBlock>
+<CodeBlock.Root class="max-w-2xl" value="javascript">
+	<CodeBlock.Header>
+		<CodeBlock.List>
+			<CodeBlock.Trigger value="python">Python</CodeBlock.Trigger>
+			<CodeBlock.Trigger value="javascript">JavaScript</CodeBlock.Trigger>
+			<CodeBlock.Trigger value="java">Java</CodeBlock.Trigger>
+			<CodeBlock.Trigger value="go">Go</CodeBlock.Trigger>
+			<CodeBlock.Trigger value="csharp">C#</CodeBlock.Trigger>
+		</CodeBlock.List>
+		<CodeBlock.Actions>
+			<Tooltip.Root>
+				<Tooltip.Trigger>
+					<Button variant="ghost" size="icon" aria-label="About this snippet">
+						<Info size={15} />
+					</Button>
+				</Tooltip.Trigger>
+				<Tooltip.Content>About this snippet</Tooltip.Content>
+			</Tooltip.Root>
+			<Tooltip.Root>
+				<Tooltip.Trigger>
+					<Button variant="ghost" size="icon" aria-label="Explain with AI">
+						<Sparkles size={15} />
+					</Button>
+				</Tooltip.Trigger>
+				<Tooltip.Content>Explain with AI</Tooltip.Content>
+			</Tooltip.Root>
+		</CodeBlock.Actions>
+	</CodeBlock.Header>
+	<CodeBlock.Content value="python" code={python} lang="python" />
+	<CodeBlock.Content value="javascript" code={javascript} lang="javascript" />
+	<CodeBlock.Content value="java" code={java} lang="java" />
+	<CodeBlock.Content value="go" code={go} lang="go" />
+	<CodeBlock.Content value="csharp" code={csharp} lang="csharp" />
+</CodeBlock.Root>

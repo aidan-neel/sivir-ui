@@ -46,7 +46,7 @@
 			<span class="flex items-center gap-2"><LifeBuoy size={13} /> Help & feedback</span>
 		</DropdownMenu.Item>
 		<DropdownMenu.Item>
-			<span class="flex items-center gap-2 text-[var(--color-destructive)]">
+			<span class="flex items-center gap-2 text-[var(--color-error)]">
 				<LogOut size={13} /> Sign out
 			</span>
 			<kbd

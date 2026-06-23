@@ -53,7 +53,7 @@
 	<div
 		data-silk-anim="overlay"
 		data-state={presence.state}
-		class="fixed inset-0 z-40 bg-[var(--silk-neutral-50)]/30 backdrop-blur-[6px] [backface-visibility:hidden] [transform:translateZ(0)]"
+		class="fixed inset-0 z-40 bg-[var(--silk-neutral-50)]/40 backdrop-blur-[2px] [backface-visibility:hidden] [transform:translateZ(0)]"
 	></div>
 	<div
 		bind:this={element}
@@ -68,7 +68,7 @@
 		tabindex="-1"
 		class={cn(
 			className,
-			'bg-[var(--color-panel)] text-[var(--color-panel-foreground)] border border-border rounded-[var(--radius-lg)] shadow-[var(--panel-shadow)] fixed top-[47%] left-1/2 z-50 m-auto flex max-h-[min(var(--command-dialog-max-height),calc(100dvh-2rem))] min-h-[5rem] w-[calc(100%-2*var(--command-dialog-width-margin))] max-w-[var(--command-dialog-max-width)] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden duration-200 transition-[opacity,transform]' // token-lint-disable-line no-literal-length
+			'bg-[var(--color-panel)] text-[var(--color-foreground)] border border-border rounded-[var(--radius-lg)] shadow-[var(--panel-shadow)] fixed top-[47%] left-1/2 z-50 m-auto flex max-h-[min(var(--command-dialog-max-height),calc(100dvh-2rem))] min-h-[5rem] w-[calc(100%-2*var(--command-dialog-width-margin))] max-w-[var(--command-dialog-max-width)] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden duration-200 transition-[opacity,transform]' // token-lint-disable-line no-literal-length
 		)}
 		use:clickOutside={() => {
 			if (allowClickOutside) {

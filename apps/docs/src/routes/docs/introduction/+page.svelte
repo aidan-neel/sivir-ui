@@ -2,17 +2,14 @@
 	import { Button } from '@silk/ui/components/button';
 	import { Badge } from '@silk/ui/components/badge';
 	import * as Alert from '@silk/ui/components/alert';
-	import { highlight } from '$lib/highlight';
+	import { CodeBlock } from '@silk/ui/components/code-block';
 
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
 	import Sparkles from '@lucide/svelte/icons/sparkles';
-	import Copy from '@lucide/svelte/icons/copy';
-	import Check from '@lucide/svelte/icons/check';
 	import Layers from '@lucide/svelte/icons/layers-3';
 	import Palette from '@lucide/svelte/icons/palette';
 	import Box from '@lucide/svelte/icons/box';
 	import Type from '@lucide/svelte/icons/type';
-	import Hash from '@lucide/svelte/icons/hash';
 	import Wand from '@lucide/svelte/icons/wand-sparkles';
 	import Keyboard from '@lucide/svelte/icons/keyboard';
 	import Accessibility from '@lucide/svelte/icons/accessibility';
@@ -20,14 +17,6 @@
 	import GitFork from '@lucide/svelte/icons/git-fork';
 
 	const installCommand = 'bunx @aidan-neel/ui init';
-	let copied = $state(false);
-
-	function copy(text: string) {
-		if (typeof navigator === 'undefined' || !navigator.clipboard) return;
-		void navigator.clipboard.writeText(text);
-		copied = true;
-		setTimeout(() => (copied = false), 1600);
-	}
 </script>
 
 <svelte:head>
@@ -66,30 +55,7 @@
 			</p>
 		</div>
 
-		<div
-			class="flex items-stretch overflow-hidden rounded-[var(--radius-md)] border border-border bg-card"
-		>
-			<div class="flex flex-1 items-center gap-3 px-3 py-2.5">
-				<span
-					class="grid size-6 place-items-center rounded-md bg-secondary/70 text-foreground-muted"
-				>
-					<Hash size={12} />
-				</span>
-				<code class="flex-1 font-mono text-[0.82rem] text-foreground"
-					>{@html highlight(installCommand, 'shell')}</code
-				>
-			</div>
-			<button
-				type="button"
-				onclick={() => copy(installCommand)}
-				class="border-l border-border bg-card px-3 text-foreground-muted transition-colors hover:bg-secondary/50 hover:text-foreground"
-				aria-label="Copy install command"
-			>
-				{#if copied}<Check size={14} class="text-[var(--color-success)]" />{:else}<Copy
-						size={14}
-					/>{/if}
-			</button>
-		</div>
+		<CodeBlock code={installCommand} lang="bash" copy="inline" />
 	</header>
 
 	<!-- ─── Pillars ─────────────────────────────────────────────────── -->

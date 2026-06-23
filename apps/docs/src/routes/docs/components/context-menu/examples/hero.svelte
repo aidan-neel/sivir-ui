@@ -121,7 +121,7 @@
 
 			<ContextMenu.Item callback={() => {}}>
 				<div class="flex items-center justify-between w-full gap-4">
-					<div class="flex items-center gap-2 text-destructive">
+					<div class="flex items-center gap-2 text-error">
 						<Trash size={16} />
 						<span>Delete</span>
 					</div>

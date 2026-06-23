@@ -3,13 +3,10 @@
 	import { Badge } from '@silk/ui/components/badge';
 	import * as Alert from '@silk/ui/components/alert';
 	import * as Tabs from '@silk/ui/components/tabs';
-	import { highlight } from '$lib/highlight';
+	import { CodeBlock } from '@silk/ui/components/code-block';
 
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
 	import Palette from '@lucide/svelte/icons/palette';
-	import Copy from '@lucide/svelte/icons/copy';
-	import Check from '@lucide/svelte/icons/check';
-	import Terminal from '@lucide/svelte/icons/terminal';
 	import Type from '@lucide/svelte/icons/type';
 	import Square from '@lucide/svelte/icons/square';
 	import Waypoints from '@lucide/svelte/icons/waypoints';
@@ -129,15 +126,6 @@
 	};
 
 	let activeTab = $state('semantic');
-	let copied = $state<string | null>(null);
-	function copy(key: string, text: string) {
-		if (typeof navigator === 'undefined' || !navigator.clipboard) return;
-		void navigator.clipboard.writeText(text);
-		copied = key;
-		setTimeout(() => {
-			if (copied === key) copied = null;
-		}, 1600);
-	}
 </script>
 
 <svelte:head>
@@ -262,35 +250,7 @@
 					Think in interfaces, not components. Get background, foreground, primary, and border right
 					and most of the library already feels cohesive.
 				</p>
-				<div
-					class="overflow-hidden rounded-[var(--radius-md)] border border-border bg-secondary/40"
-				>
-					<div
-						class="flex items-center justify-between gap-2 border-b border-border/70 px-3 py-1.5"
-					>
-						<span
-							class="inline-flex items-center gap-1.5 text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted"
-						>
-							<Terminal size={11} />
-							app.css
-						</span>
-						<button
-							type="button"
-							onclick={() => copy('semantic', codeBlocks.semantic.code)}
-							class="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2 py-0.5 text-[0.7rem] text-foreground-muted transition-colors hover:bg-secondary/60 hover:text-foreground"
-						>
-							{#if copied === 'semantic'}
-								<Check size={11} class="text-[var(--color-success)]" /> Copied
-							{:else}
-								<Copy size={11} /> Copy
-							{/if}
-						</button>
-					</div>
-					<pre
-						class="m-0 max-h-[24rem] overflow-auto px-4 py-3 font-mono text-[0.78rem] leading-relaxed text-foreground"><code
-							>{@html highlight(codeBlocks.semantic.code, codeBlocks.semantic.lang)}</code
-						></pre>
-				</div>
+				<CodeBlock code={codeBlocks.semantic.code} lang={codeBlocks.semantic.lang} copy="overlay" />
 			</Tabs.Content>
 
 			<Tabs.Content value="component">
@@ -298,35 +258,11 @@
 					When a category needs to break from defaults (pill buttons, taller fields, denser
 					dropdowns), tune the component tokens. No forks needed.
 				</p>
-				<div
-					class="overflow-hidden rounded-[var(--radius-md)] border border-border bg-secondary/40"
-				>
-					<div
-						class="flex items-center justify-between gap-2 border-b border-border/70 px-3 py-1.5"
-					>
-						<span
-							class="inline-flex items-center gap-1.5 text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted"
-						>
-							<Terminal size={11} />
-							app.css
-						</span>
-						<button
-							type="button"
-							onclick={() => copy('component', codeBlocks.component.code)}
-							class="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2 py-0.5 text-[0.7rem] text-foreground-muted transition-colors hover:bg-secondary/60 hover:text-foreground"
-						>
-							{#if copied === 'component'}
-								<Check size={11} class="text-[var(--color-success)]" /> Copied
-							{:else}
-								<Copy size={11} /> Copy
-							{/if}
-						</button>
-					</div>
-					<pre
-						class="m-0 max-h-[24rem] overflow-auto px-4 py-3 font-mono text-[0.78rem] leading-relaxed text-foreground"><code
-							>{@html highlight(codeBlocks.component.code, codeBlocks.component.lang)}</code
-						></pre>
-				</div>
+				<CodeBlock
+					code={codeBlocks.component.code}
+					lang={codeBlocks.component.lang}
+					copy="overlay"
+				/>
 			</Tabs.Content>
 
 			<Tabs.Content value="overrides">
@@ -336,35 +272,11 @@
 					>
 					and <code class="font-mono text-foreground">data-variant</code> hooks. Cleaner than forking.
 				</p>
-				<div
-					class="overflow-hidden rounded-[var(--radius-md)] border border-border bg-secondary/40"
-				>
-					<div
-						class="flex items-center justify-between gap-2 border-b border-border/70 px-3 py-1.5"
-					>
-						<span
-							class="inline-flex items-center gap-1.5 text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted"
-						>
-							<Terminal size={11} />
-							app.css
-						</span>
-						<button
-							type="button"
-							onclick={() => copy('overrides', codeBlocks.overrides.code)}
-							class="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2 py-0.5 text-[0.7rem] text-foreground-muted transition-colors hover:bg-secondary/60 hover:text-foreground"
-						>
-							{#if copied === 'overrides'}
-								<Check size={11} class="text-[var(--color-success)]" /> Copied
-							{:else}
-								<Copy size={11} /> Copy
-							{/if}
-						</button>
-					</div>
-					<pre
-						class="m-0 max-h-[24rem] overflow-auto px-4 py-3 font-mono text-[0.78rem] leading-relaxed text-foreground"><code
-							>{@html highlight(codeBlocks.overrides.code, codeBlocks.overrides.lang)}</code
-						></pre>
-				</div>
+				<CodeBlock
+					code={codeBlocks.overrides.code}
+					lang={codeBlocks.overrides.lang}
+					copy="overlay"
+				/>
 			</Tabs.Content>
 		</Tabs.Root>
 	</section>
@@ -450,55 +362,9 @@
 		</p>
 
 		<div class="grid grid-cols-1 gap-3 md:grid-cols-2">
-			<div class="overflow-hidden rounded-[var(--radius-md)] border border-border bg-secondary/40">
-				<div class="flex items-center justify-between gap-2 border-b border-border/70 px-3 py-1.5">
-					<span
-						class="inline-flex items-center gap-1.5 text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted"
-					>
-						<Terminal size={11} />
-						shell
-					</span>
-					<button
-						type="button"
-						onclick={() => copy('preset', presetCmd)}
-						class="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2 py-0.5 text-[0.7rem] text-foreground-muted transition-colors hover:bg-secondary/60 hover:text-foreground"
-					>
-						{#if copied === 'preset'}
-							<Check size={11} class="text-[var(--color-success)]" /> Copied
-						{:else}
-							<Copy size={11} /> Copy
-						{/if}
-					</button>
-				</div>
-				<pre class="m-0 px-4 py-3 font-mono text-[0.82rem] leading-relaxed text-foreground"><code
-						>{@html highlight(presetCmd, 'shell')}</code
-					></pre>
-			</div>
+			<CodeBlock code={presetCmd} lang="shell" copy="overlay" />
 
-			<div class="overflow-hidden rounded-[var(--radius-md)] border border-border bg-secondary/40">
-				<div class="flex items-center justify-between gap-2 border-b border-border/70 px-3 py-1.5">
-					<span
-						class="inline-flex items-center gap-1.5 text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted"
-					>
-						<Terminal size={11} />
-						app.css
-					</span>
-					<button
-						type="button"
-						onclick={() => copy('import', importCss)}
-						class="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2 py-0.5 text-[0.7rem] text-foreground-muted transition-colors hover:bg-secondary/60 hover:text-foreground"
-					>
-						{#if copied === 'import'}
-							<Check size={11} class="text-[var(--color-success)]" /> Copied
-						{:else}
-							<Copy size={11} /> Copy
-						{/if}
-					</button>
-				</div>
-				<pre class="m-0 px-4 py-3 font-mono text-[0.78rem] leading-relaxed text-foreground"><code
-						>{@html highlight(importCss, 'css')}</code
-					></pre>
-			</div>
+			<CodeBlock code={importCss} lang="css" copy="overlay" />
 		</div>
 
 		<Alert.Root variant="info">

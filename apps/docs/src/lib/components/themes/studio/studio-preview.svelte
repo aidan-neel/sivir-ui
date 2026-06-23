@@ -155,7 +155,7 @@
 		design: 'var(--color-info)',
 		engineering: 'var(--color-success)',
 		product: 'var(--color-warning)',
-		billing: 'var(--color-destructive)',
+		billing: 'var(--color-error)',
 		system: 'var(--color-foreground-muted)'
 	};
 
@@ -878,7 +878,7 @@
 								<div class="mt-0.5 flex items-center gap-1.5">
 									<span
 										class="inline-flex items-center gap-0.5 rounded-full px-1.5 py-0.5 text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]"
-										style={`background:color-mix(in srgb, ${stat.up ? 'var(--color-success)' : 'var(--color-destructive)'} 12%, transparent); color:${stat.up ? 'var(--color-success)' : 'var(--color-destructive)'};`}
+										style={`background:color-mix(in srgb, ${stat.up ? 'var(--color-success)' : 'var(--color-error)'} 12%, transparent); color:${stat.up ? 'var(--color-success)' : 'var(--color-error)'};`}
 									>
 										{#if stat.up}<TrendingUp size={11} />{:else}<TrendingDown size={11} />{/if}
 										{stat.delta}
@@ -1216,9 +1216,7 @@
 								</Button>
 								<Button variant="outline" size="sm">Forward</Button>
 								<Button variant="ghost" size="sm">Mark unread</Button>
-								<Button variant="ghost" size="sm" class="text-[var(--color-destructive)]"
-									>Delete</Button
-								>
+								<Button variant="ghost" size="sm" class="text-[var(--color-error)]">Delete</Button>
 							</div>
 						</div>
 					</div>
