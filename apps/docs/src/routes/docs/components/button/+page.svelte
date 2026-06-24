@@ -25,6 +25,8 @@
 	import VariantGhostSrc from './examples/variant-ghost.svelte?raw';
 	import VariantDestructive from './examples/variant-destructive.svelte';
 	import VariantDestructiveSrc from './examples/variant-destructive.svelte?raw';
+	import VariantPanel from './examples/variant-panel.svelte';
+	import VariantPanelSrc from './examples/variant-panel.svelte?raw';
 	import Sizes from './examples/sizes.svelte';
 	import SizesSrc from './examples/sizes.svelte?raw';
 	import Disabled from './examples/disabled.svelte';
@@ -232,6 +234,17 @@
 			</h3>
 			<ComponentPreview code={VariantDestructiveSrc}>
 				<VariantDestructive />
+			</ComponentPreview>
+		</div>
+
+		<div id="variant-panel" class="scroll-mt-20 flex flex-col gap-3">
+			<h3
+				class="text-[1rem] font-[var(--font-weight-header,600)] tracking-tight text-foreground docs-subsection-heading"
+			>
+				Panel
+			</h3>
+			<ComponentPreview code={VariantPanelSrc}>
+				<VariantPanel />
 			</ComponentPreview>
 		</div>
 

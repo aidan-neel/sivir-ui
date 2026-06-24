@@ -3,7 +3,7 @@ import Button from './button.svelte';
 import type { Snippet } from 'svelte';
 import type { Intent } from '../../internals/variants';
 
-export type ButtonVariant = Intent;
+export type ButtonVariant = Intent | 'panel';
 
 export type ButtonProps = {
 	href?: string;

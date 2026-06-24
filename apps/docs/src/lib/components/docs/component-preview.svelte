@@ -56,7 +56,6 @@
 		<!-- Code is a CodeBlock — it carries its own Panel frame, so it stands alone. -->
 		<CodeBlock.Root
 			{...rest}
-			value="code"
 			{code}
 			lang="svelte"
 			copy="overlay"
