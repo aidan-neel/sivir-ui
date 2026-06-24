@@ -7,7 +7,7 @@
 </script>
 
 <SideNavbar
-	class="hidden sticky top-16 h-[calc(100vh-4rem)] w-64 flex-shrink-0 border-r border-border pt-8 lg:flex"
+	class="hidden sticky top-16 h-[calc(100vh-4rem)] w-64 flex-shrink-0 border-r border-border bg-[color-mix(in_srgb,var(--color-foreground)_4%,transparent)] pl-4 pt-8 lg:flex"
 />
 <div class="flex w-full min-w-0 flex-1 justify-center lg:px-10">
 	<div

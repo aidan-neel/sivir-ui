@@ -51,6 +51,8 @@
 		</div>
 	</section>
 
+	<div class="mx-2 border-t border-border/50"></div>
+
 	<section class="flex flex-col gap-1.5">
 		<div class="flex items-center justify-between px-2">
 			<h3
