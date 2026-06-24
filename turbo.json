@@ -8,14 +8,20 @@
 		},
 		"build": {
 			"dependsOn": ["^build", "check"],
-			"outputs": ["build/**", ".svelte-kit/**", "dist/**", "prisma/generated/**"]
+			"outputs": [
+				"build/**",
+				".svelte-kit/**",
+				"dist/**",
+				"prisma/generated/**",
+				".vercel/output/**"
+			]
 		},
 		"check": {
 			"dependsOn": ["^check"]
 		},
 		"generate": {
 			"inputs": ["prisma/schema.prisma", "prisma.config.ts"],
-			"outputs": ["prisma/generated/**"]
+			"outputs": ["prisma/generated/**", ".vercel/output/**"]
 		},
 		"lint": {},
 		"test": {
