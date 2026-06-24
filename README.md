@@ -2,9 +2,7 @@
 
 # Silk UI (WIP)
 
-**Svelte components that feel designed, not generated.**
-
-41 styled components, a live theme studio, and a token system.
+**SvelteKit component library inspired by shadcn/ui**
 
 <p>
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-1d4ed8?style=flat-square" /></a>
@@ -16,13 +14,11 @@
   <a href="https://github.com/aidan-neel/ui/stargazers"><img alt="Stars" src="https://img.shields.io/github/stars/aidan-neel/ui?style=flat-square&color=facc15" /></a>
 </p>
 
-[**Documentation**](https://silk-ui.dev/docs/introduction) · [**Theme Studio**](https://silk-ui.dev/themes/studio) · [**Components**](https://silk-ui.dev/docs/components/accordion) · [**Issues**](ISSUES.md)
+[**Documentation**](https://silk-ui.com/docs/introduction) · [**Components**](https://silk-ui.com/docs/components/accordion) · [**Issues**](ISSUES.md)
 
 </div>
 
 ## Components
-
-41 shipping. Every one is themed end-to-end and respects `prefers-reduced-motion`.
 
 | Layout      | Forms        | Overlay       | Feedback | Navigation | Data        |
 | ----------- | ------------ | ------------- | -------- | ---------- | ----------- |
@@ -39,44 +35,6 @@
 |             | Textarea     |               |          |            |             |
 |             | Toggle       |               |          |            |             |
 |             | Toggle Group |               |          |            |             |
-
-## Repository layout
-
-```
-silk/
-├── apps/
-│   ├── docs/        # SvelteKit docs site + theme studio
-│   └── registry/    # Elysia + Prisma API serving themes from Supabase
-├── packages/
-│   └── silk/        # Canonical component source (consumed by apps/docs via the @silk/ui alias)
-├── docker-compose.yml
-├── turbo.json
-└── package.json     # Bun workspaces + Turborepo
-```
-
-## Development
-
-```bash
-bun install         # install everything
-bun run dev         # turbo runs docs + registry in parallel
-bun run check       # type-check all workspaces
-bun run build       # production build (adapter-node for docs)
-```
-
-Editing a component in `packages/silk/src/components/…` is live in the docs site via the
-`@silk/ui` alias (`apps/docs/svelte.config.js`) — Vite picks the change up immediately.
-
-## Production deploy (self-hosted)
-
-The repo ships with a `docker-compose.yml` that builds both apps and runs them on the same
-host. Provide `apps/registry/.env` with Supabase `DATABASE_URL` + `DIRECT_URL`
-(see `apps/registry/README.md`), then:
-
-```bash
-docker compose up --build -d
-```
-
-The docs site listens on `:3000` and the registry on `:4100`.
 
 ## License
 
