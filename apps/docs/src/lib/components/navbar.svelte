@@ -41,6 +41,7 @@
 	let mobileMenuOpen = $state(false);
 	const isStudio = $derived($page.url.pathname.startsWith('/themes/studio'));
 	const isHome = $derived($page.url.pathname === '/');
+	const isDocs = $derived($page.url.pathname.startsWith('/docs'));
 
 	const navItems = [
 		{ href: '/', label: 'Home' },
@@ -134,9 +135,11 @@
 	class={`fixed inset-x-0 top-0 z-20 transition-[background-color,backdrop-filter] duration-200 ${
 		isStudio
 			? 'border-b border-border bg-background'
-			: scrolled
-				? 'bg-background/58 backdrop-blur-[14px]'
-				: 'bg-transparent'
+			: isDocs
+				? 'bg-background/72 backdrop-blur-[14px]'
+				: scrolled
+					? 'bg-background/58 backdrop-blur-[14px]'
+					: 'bg-transparent'
 	}`}
 >
 	<div
@@ -145,7 +148,9 @@
 				? 'max-w-none px-4'
 				: isHome
 					? 'nav-home-in max-w-[1400px] px-4 md:px-6'
-					: 'px-4 md:px-6'
+					: isDocs
+						? 'max-w-[1400px] px-4 md:px-6'
+						: 'px-4 md:px-6'
 		}`}
 	>
 		<Command.Root>

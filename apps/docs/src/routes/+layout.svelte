@@ -37,7 +37,7 @@
 		</div>
 	{:else}
 		<div
-			class="mx-auto flex min-h-[calc(100vh-3.5rem)] w-full flex-col gap-5 px-4 lg:flex-row lg:gap-16"
+			class="mx-auto flex min-h-[calc(100vh-4rem)] w-full max-w-[1400px] flex-col gap-5 px-4 md:px-6 lg:flex-row lg:gap-0"
 		>
 			{@render children?.()}
 		</div>
