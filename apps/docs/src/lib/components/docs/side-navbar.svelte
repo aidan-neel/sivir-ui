@@ -23,7 +23,7 @@
 </script>
 
 <aside
-	class={`${classProp} silk-docs-sidebar hide-scrollbar-all flex flex-col gap-5 overflow-y-auto pb-8 pr-2`}
+	class={`${classProp} silk-docs-sidebar hide-scrollbar-all flex flex-col gap-5 overflow-y-auto pb-8 pr-4`}
 >
 	<section class="flex flex-col gap-1.5">
 		<h3
