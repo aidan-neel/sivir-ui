@@ -15,6 +15,8 @@
 	import Sun from '@lucide/svelte/icons/sun';
 	import { toggleMode, mode } from 'mode-watcher';
 	import * as Command from '@silk/ui/components/command';
+	import Shortcut from '@silk/ui/components/shortcut';
+	import Search from '@lucide/svelte/icons/search';
 	import BookOpen from '@lucide/svelte/icons/book-open';
 	import Component from '@lucide/svelte/icons/component';
 	import Download from '@lucide/svelte/icons/download';
@@ -164,15 +166,16 @@
 			</div>
 
 			<div class="flex flex-row items-center gap-1.5 md:gap-2">
-				<!--
-
-<div class="hidden md:block">
+				<div class="hidden md:block">
 					<Command.Trigger
 						class="h-8 w-60 justify-between rounded-md px-2 text-[0.78rem] text-foreground-muted"
 						variant="outline"
 					>
 						Search docs...
 						<Shortcut shortcut="/">/</Shortcut>
+						<!-- ⌘K / Ctrl+K open the palette too; rendered for the listener, hidden visually. -->
+						<Shortcut shortcut="cmd+k" class="sr-only" />
+						<Shortcut shortcut="ctrl+k" class="sr-only" />
 					</Command.Trigger>
 				</div>
 				<Command.Trigger
@@ -182,7 +185,6 @@
 				>
 					<Search size={16} />
 				</Command.Trigger>
--->
 
 				<Button
 					class="size-9 rounded-lg"
