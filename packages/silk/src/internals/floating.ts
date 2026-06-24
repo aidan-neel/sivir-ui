@@ -222,12 +222,7 @@ function getOppositeAxisPlacements(placement: Placement, direction: 'start' | 'e
 
 /** Swaps to the opposite (or a fallback) placement when the current one overflows. */
 export function flip(options: FlipOptions = {}): Middleware {
-	const {
-		padding = 0,
-		crossAxis: checkCrossAxis = true,
-		fallbackPlacements,
-		fallbackAxisSideDirection = 'none'
-	} = options;
+	const { padding = 0, fallbackPlacements, fallbackAxisSideDirection = 'none' } = options;
 
 	return {
 		name: 'flip',
@@ -247,22 +242,13 @@ export function flip(options: FlipOptions = {}): Middleware {
 
 			const overflow = detectOverflow(state, padding);
 			const side = getSide(placement);
+			const mainOverflow = overflow[side];
+			const overflows = [...(data.overflows ?? []), { placement, overflow: mainOverflow }];
 
-			// Track overflow on the main side (and, optionally, the alignment axis).
-			const checks: number[] = [overflow[side]];
-			if (checkCrossAxis) {
-				const alignment = getAlignment(placement);
-				if (alignment) {
-					const alignAxis: Axis = getSideAxis(placement) === 'y' ? 'x' : 'y';
-					const a: Side = alignAxis === 'x' ? 'left' : 'top';
-					const b: Side = alignAxis === 'x' ? 'right' : 'bottom';
-					checks.push(overflow[a], overflow[b]);
-				}
-			}
-
-			const overflows = [...(data.overflows ?? []), { placement, overflow: overflow[side] }];
-
-			if (!checks.every((o) => o <= 0)) {
+			// Only the main (side) axis decides a flip. Cross-axis (alignment)
+			// overflow is left to shift(), so a panel anchored near a viewport
+			// edge slides into view instead of flipping to a perpendicular side.
+			if (mainOverflow > 0) {
 				const nextIndex = (data.index ?? 0) + 1;
 				const nextPlacement = placements[nextIndex];
 				if (nextPlacement) {
@@ -271,7 +257,7 @@ export function flip(options: FlipOptions = {}): Middleware {
 						reset: { placement: nextPlacement }
 					};
 				}
-				// Nothing fit on its main side: fall back to whichever overflowed least.
+				// Exhausted: keep whichever placement overflowed its side the least.
 				const best = [...overflows].sort((p, q) => p.overflow - q.overflow)[0]?.placement;
 				if (best && best !== placement) {
 					return { data: { placements }, reset: { placement: best } };

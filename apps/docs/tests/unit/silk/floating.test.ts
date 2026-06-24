@@ -133,6 +133,20 @@ describe('computePosition — middleware', () => {
 		expect(placement).toBe('bottom');
 	});
 
+	it('flip() does NOT flip when only the cross axis overflows (shift handles it)', async () => {
+		// A bottom-start panel anchored near the right edge hangs off the right
+		// (cross axis), but there is room below -- it must stay on bottom, not
+		// jump to a perpendicular/opposite side. Regression test for the dropdown
+		// that collapsed to a thin strip at the wrong spot.
+		const ref = virtualRef(980, 100, 20, 20); // viewport width is 1024
+		const floating = makeFloating(200, 100);
+		const { placement } = await computePosition(ref, floating, {
+			placement: 'bottom-start',
+			middleware: [flip({ padding: 8, crossAxis: true, fallbackAxisSideDirection: 'start' })]
+		});
+		expect(placement).toBe('bottom-start');
+	});
+
 	it('shift() slides the panel back inside the viewport', async () => {
 		// bottom-start would push a wide panel past the right edge; shift pulls it in.
 		const ref = virtualRef(1000, 100, 20, 20);
