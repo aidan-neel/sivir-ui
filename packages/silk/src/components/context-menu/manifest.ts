@@ -5,7 +5,7 @@ export const manifest: Manifest = {
 	version: '1.0.0',
 	visibility: 'public',
 	description:
-		'Right-click contextual menu with sub-menus and checkbox items. Positioned via @floating-ui virtual element.',
+		'Right-click contextual menu with sub-menus and checkbox items. Positioned via a virtual reference element.',
 	role: 'menu',
 	files: [
 		'components/context-menu/context-menu.svelte',
@@ -23,7 +23,6 @@ export const manifest: Manifest = {
 	components: ['popover', 'button'],
 	shared: ['utils.cn', 'internals/state'],
 	peerDependencies: {
-		'@floating-ui/dom': '^1.0.0',
 		clsx: '^2.0.0',
 		'tailwind-merge': '^3.0.0',
 		svelte: '^5.0.0'

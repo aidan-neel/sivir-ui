@@ -61,7 +61,7 @@
 	import { clickOutside, cn, positionFloatingPanel, trapFocus } from '@silk/ui/utils';
 	import { createPresence } from '@silk/ui/internals/presence.svelte.ts';
 	import { getContext } from 'svelte';
-	import type { ReferenceElement } from '@floating-ui/dom';
+	import type { ReferenceElement } from '@silk/ui/internals/floating';
 	import { PANEL_FRAME, PANEL_SURFACE } from '../../panel';
 	import '../../panel/panel.css';
 	import type { PopoverContentProps, PopoverState } from '.';

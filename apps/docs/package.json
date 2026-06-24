@@ -56,7 +56,6 @@
 		"vitest-browser-svelte": "^2.1.1"
 	},
 	"dependencies": {
-		"@floating-ui/dom": "^1.7.6",
 		"@lucide/svelte": "^1.7.0",
 		"@silk/ui": "workspace:*",
 		"clsx": "^2.1.1",

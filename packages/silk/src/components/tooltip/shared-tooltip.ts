@@ -6,7 +6,7 @@
 // Centering trick: the bubble is anchored by its *center* (left = trigger
 // centre + translateX(-50%)), so its width can change freely without ever
 // drifting off the trigger.
-import { computePosition, offset, flip, shift, type Placement } from '@floating-ui/dom';
+import { computePosition, offset, flip, shift, type Placement } from '@silk/ui/internals/floating';
 import { slotText, type SlotTextController } from 'slot-text';
 import 'slot-text/style.css';
 

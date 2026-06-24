@@ -1,7 +1,6 @@
 <script lang="ts">
 	import type { HTMLButtonAttributes } from 'svelte/elements';
 	import { Button, type ButtonProps } from '@silk/ui/components/button';
-	import { computePosition, flip } from '@floating-ui/dom';
 	import { getContext, onMount, type Snippet } from 'svelte';
 	import { states } from '@silk/ui/internals/state.svelte.ts';
 	import type { ComboboxState } from '.';

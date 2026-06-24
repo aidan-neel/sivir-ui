@@ -10,7 +10,7 @@ import Trigger from './context-menu-trigger.svelte';
 
 import type { DefaultProps } from '@silk/ui/utils';
 import type { PopoverState } from '../popover';
-import type { VirtualElement } from '@floating-ui/dom';
+import type { VirtualElement } from '@silk/ui/internals/floating';
 import type { ButtonProps } from '../button';
 
 export type ContextMenuProps = {} & DefaultProps;

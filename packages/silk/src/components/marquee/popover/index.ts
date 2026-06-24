@@ -7,7 +7,7 @@ import type { DefaultProps } from '@silk/ui/utils';
 import type { Snippet } from 'svelte';
 import type { UIState } from '@silk/ui/internals/state.svelte.ts';
 import type { ButtonVariant } from '@silk/ui/components/button';
-import type { VirtualElement } from '@floating-ui/dom';
+import type { VirtualElement } from '@silk/ui/internals/floating';
 import type { HTMLAttributes, HTMLButtonAttributes } from 'svelte/elements';
 
 export type PopoverContentProps = {

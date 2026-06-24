@@ -7,7 +7,7 @@ import {
 	size,
 	type Placement,
 	type ReferenceElement
-} from '@floating-ui/dom';
+} from './internals/floating';
 import type { Snippet } from 'svelte';
 import { twMerge } from 'tailwind-merge';
 

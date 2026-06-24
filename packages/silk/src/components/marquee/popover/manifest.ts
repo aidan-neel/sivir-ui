@@ -26,7 +26,7 @@ export const manifest: Manifest = {
 	version: '2.0.0',
 	visibility: 'public',
 	description:
-		'Floating content positioned by @floating-ui. Click or hover triggers, Title/Content subparts, click-outside + Escape dismiss, optional portal.',
+		'Floating content positioned by the built-in floating engine. Click or hover triggers, Title/Content subparts, click-outside + Escape dismiss, optional portal.',
 	role: 'dialog',
 	files: [
 		'components/popover/popover.svelte',
@@ -45,7 +45,6 @@ export const manifest: Manifest = {
 		'internals/transition'
 	],
 	peerDependencies: {
-		'@floating-ui/dom': '^1.0.0',
 		clsx: '^2.0.0',
 		'tailwind-merge': '^3.0.0',
 		svelte: '^5.0.0'

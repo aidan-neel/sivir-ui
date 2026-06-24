@@ -36,7 +36,6 @@ export const manifest: Manifest = {
 	components: [],
 	shared: ['utils.cn'],
 	peerDependencies: {
-		'@floating-ui/dom': '^1.0.0',
 		'slot-text': '^0.3.0',
 		clsx: '^2.0.0',
 		'tailwind-merge': '^3.0.0',

@@ -2,7 +2,7 @@
 	import { states, type UIState } from '@silk/ui/internals/state.svelte.ts';
 	import { getContext } from 'svelte';
 	import { type ContextMenuState, type ContextMenuTriggerProps } from '.';
-	import type { VirtualElement } from '@floating-ui/dom';
+	import type { VirtualElement } from '@silk/ui/internals/floating';
 
 	const key = getContext<string>('key');
 	const uiState = states[key].data as ContextMenuState;
