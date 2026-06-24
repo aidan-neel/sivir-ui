@@ -81,7 +81,7 @@
 				{#if showLineNumbers}
 					<pre
 						aria-hidden="true"
-						class="m-0 shrink-0 select-none border-r border-[var(--code-block-border)] px-3 py-[var(--code-block-padding-y)] text-right text-[13px] leading-[var(--code-block-line-height)] text-[var(--code-block-gutter)]">{#each Array.from({ length: lineCount }, (_, i) => i) as i (i)}{i +
+						class="m-0 shrink-0 select-none border-r border-[var(--panel-border)] px-3 py-[var(--code-block-padding-y)] text-right text-[13px] leading-[var(--code-block-line-height)] text-[var(--code-block-gutter)]">{#each Array.from({ length: lineCount }, (_, i) => i) as i (i)}{i +
 								1}{'\n'}{/each}</pre>
 				{/if}
 				<pre
@@ -101,13 +101,13 @@
 	   active one shows. */
 	.cb-panel {
 		border-radius: var(--radius-md);
-		background: var(--code-block-bg);
-		color: var(--code-block-fg);
+		background: var(--panel-bg);
+		color: var(--panel-fg);
 		font-family: var(--font-mono);
 		font-weight: 500;
 		box-shadow:
 			var(--card-shadow),
-			0 0 0 1px color-mix(in oklab, var(--code-block-border) 50%, transparent);
+			0 0 0 1px color-mix(in oklab, var(--panel-border) 50%, transparent);
 		overflow: hidden;
 	}
 	.cb-panel--idle {

@@ -24,10 +24,8 @@
 	aria-modal="false"
 	allowClickOutside={false}
 	{...rest}
-	class={cn(
-		className,
-		'w-[var(--hover-card-width)] rounded-[var(--radius-lg)] border border-border bg-[var(--color-panel)] p-[var(--panel-padding)] text-[var(--font-size-body)] text-[var(--color-foreground)] shadow-[var(--panel-shadow)]'
-	)}
+	class={cn(className, 'w-[var(--hover-card-width)] text-[var(--font-size-body)]')}
+	surfaceClass="p-[var(--panel-padding)]"
 >
 	{@render children?.()}
 </Popover.Content>

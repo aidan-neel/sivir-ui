@@ -61,11 +61,14 @@
 	import { clickOutside, cn, positionFloatingPanel, trapFocus } from '@silk/ui/utils';
 	import { createPresence } from '@silk/ui/internals/presence.svelte.ts';
 	import { getContext } from 'svelte';
+	import { PANEL_FRAME, PANEL_SURFACE } from '../panel';
+	import '../panel/panel.css';
 	import type { PopoverContentProps, PopoverState } from '.';
 
 	const {
 		children,
 		class: classProp,
+		surfaceClass,
 		allowClickOutside = true,
 		portal = true,
 		refElement,
@@ -265,10 +268,23 @@
 			data-ui="popover-content"
 			class={cn(
 				classProp,
-				`bg-[var(--color-panel)] text-[var(--color-foreground)] border border-border rounded-[var(--radius-lg)] shadow-[var(--panel-shadow)] p-[var(--panel-padding)] text-sm m-auto max-w-[min(var(--popover-available-width,calc(100vw-2*var(--popover-viewport-margin))),calc(100vw-2*var(--popover-viewport-margin)))] max-h-[min(var(--popover-available-height,calc(100vh-2*var(--popover-viewport-margin))),calc(100vh-2*var(--popover-viewport-margin)))] overflow-auto`
+				'm-auto flex flex-col overflow-hidden text-sm text-[var(--color-foreground)]',
+				'bg-[color-mix(in_oklab,var(--color-foreground)_3%,var(--color-panel))] shadow-[var(--panel-shadow)]',
+				'max-w-[min(var(--popover-available-width,calc(100vw-2*var(--popover-viewport-margin))),calc(100vw-2*var(--popover-viewport-margin)))] max-h-[min(var(--popover-available-height,calc(100vh-2*var(--popover-viewport-margin))),calc(100vh-2*var(--popover-viewport-margin)))]',
+				PANEL_FRAME,
+				'panel-root'
 			)}
 		>
-			{@render children?.()}
+			<!-- The inset surface: children live here, on the panel fill. -->
+			<div
+				class={cn(
+					surfaceClass,
+					'min-h-0 flex-1 overflow-auto bg-[var(--color-panel)] p-[var(--panel-padding)]',
+					PANEL_SURFACE
+				)}
+			>
+				{@render children?.()}
+			</div>
 		</div>
 	{/if}
 </div>

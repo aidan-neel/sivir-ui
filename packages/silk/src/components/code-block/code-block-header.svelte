@@ -8,7 +8,7 @@
 <!-- The tab List flows from the left; Actions carries `ml-auto` to pin right. -->
 <div
 	data-ui="code-block-header"
-	class={cn(className, 'flex items-center gap-4 bg-[var(--code-block-header-bg)] px-2')}
+	class={cn(className, 'flex items-center gap-4 bg-[var(--panel-header-bg)] px-2')}
 	{...rest}
 >
 	{@render children?.()}

@@ -22,10 +22,8 @@
 	tabindex={-1}
 	focusTrap={false}
 	data-ui="combobox-content"
-	class={cn(
-		className,
-		'min-w-[var(--popover-trigger-width)] w-[var(--popover-trigger-width)] bg-[var(--color-panel)] text-[var(--color-foreground)] border border-border rounded-[var(--radius-lg)] shadow-[var(--panel-shadow)] p-[var(--menu-padding)] overflow-y-auto'
-	)}
+	class={cn(className, 'min-w-[var(--popover-trigger-width)] w-[var(--popover-trigger-width)]')}
+	surfaceClass="p-[var(--menu-padding)]"
 >
 	{@render children?.()}
 </Popover.Content>

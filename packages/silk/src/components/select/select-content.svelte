@@ -34,10 +34,8 @@
 	role="listbox"
 	tabindex={-1}
 	data-ui="select-content"
-	class={cn(
-		props.class,
-		'min-w-[var(--popover-trigger-width)] w-max bg-[var(--color-panel)] text-[var(--color-foreground)] border border-border rounded-[var(--radius-lg)] shadow-[var(--panel-shadow)] p-[var(--menu-padding)] flex flex-col gap-0'
-	)}
+	class={cn(props.class, 'min-w-[var(--popover-trigger-width)] w-max')}
+	surfaceClass="flex flex-col gap-0 p-[var(--menu-padding)]"
 >
 	{@render props.children?.()}
 </Popover.Content>

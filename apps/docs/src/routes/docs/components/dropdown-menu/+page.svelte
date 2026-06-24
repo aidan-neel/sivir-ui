@@ -15,6 +15,8 @@
 	import HeroSrc from './examples/hero.svelte?raw';
 	import BasicMenu from './examples/basic-menu.svelte';
 	import BasicMenuSrc from './examples/basic-menu.svelte?raw';
+	import UserMenu from './examples/user-menu.svelte';
+	import UserMenuSrc from './examples/user-menu.svelte?raw';
 	import RowActions from './examples/row-actions.svelte';
 	import RowActionsSrc from './examples/row-actions.svelte?raw';
 	import ShareMenu from './examples/share-menu.svelte';
@@ -187,6 +189,18 @@
 			</h3>
 			<ComponentPreview code={BasicMenuSrc}>
 				<BasicMenu />
+			</ComponentPreview>
+		</div>
+
+		<!-- Grouped (user) menu -->
+		<div id="user-menu" class="scroll-mt-20 flex flex-col gap-3">
+			<h3
+				class="text-[1rem] font-[var(--font-weight-header,600)] tracking-tight text-foreground docs-subsection-heading"
+			>
+				Grouped items
+			</h3>
+			<ComponentPreview code={UserMenuSrc}>
+				<UserMenu />
 			</ComponentPreview>
 		</div>
 

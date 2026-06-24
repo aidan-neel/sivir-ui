@@ -1,0 +1,15 @@
+/* Generic surface tokens owned by Panel. Imported by Panel and any component
+   that builds on the Panel surface (e.g. CodeBlock). Plain (unscoped) CSS so
+   the custom properties cascade to every descendant of `.panel-root`. Override
+   any `--panel-*` var from a theme to restyle the surface. */
+.panel-root {
+	--panel-bg: var(--color-card);
+	--panel-header-bg: color-mix(in oklab, var(--color-foreground) 3%, var(--color-card));
+	--panel-fg: var(--color-foreground);
+	--panel-border: var(--color-border);
+}
+
+/* Softer, lower-contrast border in dark — it shouldn't draw the eye. */
+.dark .panel-root {
+	--panel-border: color-mix(in oklab, var(--color-border) 40%, transparent);
+}

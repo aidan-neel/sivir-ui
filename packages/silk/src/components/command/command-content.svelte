@@ -4,6 +4,8 @@
 	import type { CommandState } from '.';
 	import { createPresence } from '@silk/ui/internals/presence.svelte.ts';
 	import { clickOutside, cn, trapFocus } from '@silk/ui/utils';
+	import { PANEL_FRAME, PANEL_SURFACE } from '../panel';
+	import '../panel/panel.css';
 
 	const key = getContext('key') as string;
 	const uiState = states[key].data as CommandState;
@@ -68,7 +70,9 @@
 		tabindex="-1"
 		class={cn(
 			className,
-			'bg-[var(--color-panel)] text-[var(--color-foreground)] border border-border rounded-[var(--radius-lg)] shadow-[var(--panel-shadow)] fixed top-[47%] left-1/2 z-50 m-auto flex max-h-[min(var(--command-dialog-max-height),calc(100dvh-2rem))] min-h-[5rem] w-[calc(100%-2*var(--command-dialog-width-margin))] max-w-[var(--command-dialog-max-width)] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden duration-200 transition-[opacity,transform]' // token-lint-disable-line no-literal-length
+			'text-[var(--color-foreground)] shadow-[var(--panel-shadow)] fixed top-[47%] left-1/2 z-50 m-auto flex max-h-[min(var(--command-dialog-max-height),calc(100dvh-2rem))] min-h-[5rem] w-[calc(100%-2*var(--command-dialog-width-margin))] max-w-[var(--command-dialog-max-width)] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden duration-200 transition-[opacity,transform]', // token-lint-disable-line no-literal-length
+			PANEL_FRAME,
+			'panel-root'
 		)}
 		use:clickOutside={() => {
 			if (allowClickOutside) {
@@ -77,6 +81,14 @@
 		}}
 		{...rest}
 	>
-		{@render children?.()}
+		<!-- Inset surface: the command input + list live here, on the panel fill. -->
+		<div
+			class={cn(
+				'flex min-h-0 flex-1 flex-col overflow-hidden bg-[var(--color-panel)]',
+				PANEL_SURFACE
+			)}
+		>
+			{@render children?.()}
+		</div>
 	</div>
 {/if}

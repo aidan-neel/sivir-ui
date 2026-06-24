@@ -13,6 +13,9 @@ import type { HTMLAttributes, HTMLButtonAttributes } from 'svelte/elements';
 export type PopoverContentProps = {
 	children: Snippet;
 	class?: string;
+	/** Classes for the inset surface (where children live) — padding, layout,
+	 * background overrides. The `class` prop styles the outer Panel frame. */
+	surfaceClass?: string;
 	allowClickOutside?: boolean;
 	portal?: boolean;
 	refElement?: VirtualElement;

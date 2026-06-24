@@ -2,6 +2,8 @@
 	import { cn } from '@silk/ui/utils';
 	import { setContext } from 'svelte';
 	import * as Tabs from '@silk/ui/components/tabs';
+	import { PANEL_FRAME, PANEL_SURFACE } from '../panel';
+	import '../panel/panel.css';
 	import type { CodeBlockProps, CodeBlockRegistry, CodeBlockTab } from '.';
 	import Header from './code-block-header.svelte';
 	import List from './code-block-list.svelte';
@@ -54,7 +56,8 @@
 	data-ui="code-block"
 	class={cn(
 		className,
-		'cb-root flex w-full flex-col p-0.5 bg-[var(--code-block-header-bg)] overflow-hidden rounded-[var(--radius-lg)] border border-[var(--code-block-border)] text-[var(--code-block-fg)] shadow-[var(--card-shadow)]'
+		PANEL_FRAME,
+		'cb-root panel-root flex w-full flex-col overflow-hidden text-[var(--panel-fg)]'
 	)}
 	{...rest}
 >
@@ -77,9 +80,7 @@
 			{#if hasTabRow || code != null}
 				<!-- The static card: holds the background/ring while only the text
 				     panels slide inside it (and clips the slide). -->
-				<div
-					class="cb-bodies relative w-full overflow-hidden rounded-md bg-[var(--code-block-bg)] shadow-[var(--card-shadow)] ring-1 ring-[color-mix(in_oklab,var(--code-block-border)_50%,transparent)]"
-				>
+				<div class={cn(PANEL_SURFACE, 'cb-bodies relative w-full overflow-hidden')}>
 					{#if hasTabRow}
 						{#each resolvedTabs as t (t.value)}
 							<Content
@@ -102,15 +103,12 @@
 </div>
 
 <style>
-	/* Surfaces reference Silk's semantic tokens, so the block follows the page's
-	   light/dark theme automatically. Only the syntax (token) colors need a
-	   per-mode palette — light defaults here, dark overrides below. Override any
-	   `--code-block-*` var from a theme to restyle. */
+	/* The surface (bg/border/fg) comes from Panel's `--panel-*` tokens (see
+	   ../panel/panel.css). Only the code-specific tokens live here: the gutter,
+	   code padding/leading, the tab-swap slide, and the syntax palette — light
+	   defaults below, dark overrides further down. Override any `--code-block-*`
+	   var from a theme to restyle the code. */
 	.cb-root {
-		--code-block-bg: var(--color-card);
-		--code-block-header-bg: color-mix(in oklab, var(--color-foreground) 3%, var(--color-card));
-		--code-block-fg: var(--color-foreground);
-		--code-block-border: var(--color-border);
 		--code-block-gutter: var(--color-foreground-muted);
 
 		--code-block-padding-x: 1.1rem;
@@ -132,9 +130,6 @@
 
 	/* Dark palette (muted VS Code dark), applied under a `.dark` ancestor. */
 	:global(.dark) .cb-root {
-		/* Softer, lower-contrast border in dark — it shouldn't draw the eye. */
-		--code-block-border: color-mix(in oklab, var(--color-border) 40%, transparent);
-
 		--code-block-token-comment: #a0a0a0;
 		--code-block-token-keyword: #7ec4ff;
 		--code-block-token-string: #ffc966;

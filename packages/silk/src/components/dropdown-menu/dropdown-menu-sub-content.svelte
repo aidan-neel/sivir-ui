@@ -1,6 +1,5 @@
 <script lang="ts">
 	import * as Popover from '@silk/ui/components/popover';
-	import { cn } from '@silk/ui/utils';
 	import { getContext, type Snippet } from 'svelte';
 
 	const key = getContext('key');
@@ -16,10 +15,8 @@
 <Popover.Content
 	portal={false}
 	data-ui="dropdown-submenu-content"
-	class={cn(
-		props.class,
-		'bg-[var(--color-panel)] text-[var(--color-foreground)] border border-border rounded-[var(--radius-lg)] shadow-[var(--panel-shadow)] p-[var(--menu-padding)] flex flex-col gap-0'
-	)}
+	class={props.class}
+	surfaceClass="flex flex-col gap-0 p-[var(--menu-padding)]"
 >
 	{@render props.children?.()}
 </Popover.Content>

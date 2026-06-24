@@ -230,7 +230,7 @@
 			</span>
 		</Popover.Trigger>
 
-		<Popover.Content class="w-[var(--color-picker-width)] !p-0 overflow-hidden">
+		<Popover.Content class="w-[var(--color-picker-width)]" surfaceClass="overflow-hidden !p-0">
 			<!-- SB picker (large) -->
 			<div
 				bind:this={sbEl}

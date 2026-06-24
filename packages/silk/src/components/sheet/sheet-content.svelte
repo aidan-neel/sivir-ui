@@ -4,6 +4,8 @@
 	import { getContext } from 'svelte';
 	import { states, UIState } from '@silk/ui/internals/state.svelte.ts';
 	import { useOverlay } from '@silk/ui/components/_internal/overlay';
+	import { PANEL_FRAME, PANEL_SURFACE } from '../panel';
+	import '../panel/panel.css';
 
 	let {
 		class: className,
@@ -52,9 +54,11 @@
 			onanimationend={onAnimationEnd}
 			class={cn(
 				className,
-				`silk-sheet-panel bg-[var(--color-panel)] text-[var(--color-foreground)] shadow-[var(--panel-shadow)] p-[var(--sheet-body-padding)] border border-border rounded-[var(--radius-lg)] fixed top-[var(--sheet-margin)] bottom-[var(--sheet-margin)] z-50 flex w-[calc(100%-calc(var(--sheet-margin)*2))] max-w-[var(--sheet-max-width)] flex-col overflow-y-auto overscroll-contain ${
+				`silk-sheet-panel text-[var(--color-foreground)] shadow-[var(--panel-shadow)] fixed top-[var(--sheet-margin)] bottom-[var(--sheet-margin)] z-50 flex w-[calc(100%-calc(var(--sheet-margin)*2))] max-w-[var(--sheet-max-width)] flex-col overflow-hidden ${
 					side === 'left' ? 'left-[var(--sheet-margin)]' : 'right-[var(--sheet-margin)]'
-				}`
+				}`,
+				PANEL_FRAME,
+				'panel-root'
 			)}
 			role="dialog"
 			aria-modal="true"
@@ -64,7 +68,15 @@
 			tabindex="-1"
 			{...rest}
 		>
-			{@render children?.()}
+			<!-- Inset surface: the sheet body lives here, on the panel fill. -->
+			<div
+				class={cn(
+					'flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain bg-[var(--color-panel)] p-[var(--sheet-body-padding)]',
+					PANEL_SURFACE
+				)}
+			>
+				{@render children?.()}
+			</div>
 		</div>
 	</div>
 {/if}

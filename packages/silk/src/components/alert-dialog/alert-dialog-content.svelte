@@ -1,6 +1,6 @@
 <script lang="ts">
 	import * as Modal from '@silk/ui/components/modal';
-	import { cn, type DefaultProps } from '@silk/ui/utils';
+	import type { DefaultProps } from '@silk/ui/utils';
 
 	type Props = {
 		allowClickOutside?: boolean;
@@ -27,10 +27,7 @@
 	role="alertdialog"
 	panelIdPrefix="alert-dialog"
 	data-ui="alert-dialog-content"
-	class={cn(
-		className,
-		`bg-[var(--color-panel)] text-[var(--color-foreground)] border border-border rounded-[var(--radius-xl)]`
-	)}
+	class={className}
 	{...rest}
 >
 	{@render children?.()}

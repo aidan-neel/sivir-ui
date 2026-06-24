@@ -41,43 +41,26 @@
 		</Tabs.List>
 	</Tabs.Root>
 
-	<!-- Frame: a Panel (concentric border). Its fill sits a hair darker than the
-	     card-coloured inner surface, so the demo/code reads as a distinct inset. -->
-	<Panel
-		{...rest}
-		class={cn(
-			classProp,
-			'w-full flex flex-col max-h-[40rem] p-2',
-			'bg-[color-mix(in_srgb,var(--color-card)_97%,var(--color-foreground))]',
-			value === 'preview' ? 'overflow-hidden' : 'overflow-auto relative'
-		)}
-	>
-		<div
-			bind:this={previewBody}
-			tabindex="-1"
-			class={cn(
-				'w-full rounded-[var(--radius-md)] bg-card focus:outline-none',
-				value === 'preview'
-					? 'min-h-[20rem] flex items-center justify-center overflow-hidden p-10'
-					: 'relative'
-			)}
-		>
-			{#if value === 'preview'}
+	{#if value === 'preview'}
+		<!-- Preview is a Panel: the demo sits on its inset surface. -->
+		<Panel {...rest} class={cn(classProp, 'w-full max-h-[40rem] overflow-hidden')}>
+			<div
+				bind:this={previewBody}
+				tabindex="-1"
+				class="flex min-h-[20rem] w-full items-center justify-center overflow-hidden p-10 focus:outline-none"
+			>
 				{@render children?.()}
-			{:else}
-				<CodeBlock.Root value="code" class="w-full border-none bg-transparent shadow-none">
-					<CodeBlock.Content value="code" {code} lang="svelte" copyPlacement="overlay" />
-				</CodeBlock.Root>
-			{/if}
-		</div>
-	</Panel>
+			</div>
+		</Panel>
+	{:else}
+		<!-- Code is a CodeBlock — it carries its own Panel frame, so it stands alone. -->
+		<CodeBlock.Root
+			{...rest}
+			value="code"
+			{code}
+			lang="svelte"
+			copy="overlay"
+			class={cn(classProp, 'w-full max-h-[40rem] overflow-auto')}
+		/>
+	{/if}
 </div>
-
-<style>
-	/* Inside the preview the Panel frame already supplies the border, so drop the
-	   CodeBlock's own interior ring + drop shadow — it would double up otherwise. */
-	:global([data-component-preview] [data-ui='code-block-content']) {
-		box-shadow: none;
-		background: transparent;
-	}
-</style>

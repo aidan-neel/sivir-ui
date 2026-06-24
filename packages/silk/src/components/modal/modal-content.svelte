@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { cn } from '@silk/ui/utils';
+	import { PANEL_FRAME, PANEL_SURFACE } from '../panel';
+	import '../panel/panel.css';
 	import type { ModalContentProps, ModalState } from '.';
 	import { getContext } from 'svelte';
 	import { states, UIState } from '@silk/ui/internals/state.svelte.ts';
@@ -72,7 +74,9 @@
 			class={cn(
 				contentClass,
 				className,
-				'[--motion-panel-origin:center] [--motion-panel-y:0px] [--motion-panel-scale-start:0.92] bg-[var(--color-panel)] text-[var(--color-foreground)] border border-border rounded-[var(--radius-lg)] shadow-[var(--panel-shadow)] flex flex-col gap-[var(--modal-section-gap)] p-[var(--modal-padding)] fixed top-[45%] left-1/2 z-[120] overflow-y-auto overscroll-contain -translate-x-1/2 -translate-y-1/2 m-auto md:w-full w-[calc(100%-var(--modal-margin-x))] max-w-[var(--modal-max-width)] min-h-[var(--modal-min-height)] max-h-[calc(100dvh-var(--modal-max-height-adjust))]'
+				'[--motion-panel-origin:center] [--motion-panel-y:0px] [--motion-panel-scale-start:0.92] text-[var(--color-foreground)] shadow-[var(--panel-shadow)]',
+				PANEL_FRAME,
+				'panel-root fixed top-[45%] left-1/2 z-[120] overflow-y-auto overscroll-contain -translate-x-1/2 -translate-y-1/2 m-auto md:w-full w-[calc(100%-var(--modal-margin-x))] max-w-[var(--modal-max-width)] min-h-[var(--modal-min-height)] max-h-[calc(100dvh-var(--modal-max-height-adjust))]'
 			)}
 			style:--modal-max-width={maxWidth}
 			{role}
@@ -83,18 +87,28 @@
 			tabindex="-1"
 			{...rest}
 		>
-			{#if showClose}
-				<button
-					onclick={() => {
-						uiState.data.open = false;
-					}}
-					aria-label="Close"
-					class="absolute top-3 right-3 inline-flex size-7 items-center justify-center rounded-[var(--radius-md)] text-foreground-muted hover:bg-secondary hover:text-foreground transition-colors focus-visible:outline-none focus-visible:shadow-[var(--focus-ring)]"
-				>
-					<X size={16} />
-				</button>
-			{/if}
-			{@render children?.()}
+			<!-- Experiment: Modal.Content as a Panel. The box is Panel's outer frame;
+			     this is its inset surface, themed with the modal's own tokens. -->
+			<div
+				class={cn(
+					'bg-[var(--color-panel)]',
+					PANEL_SURFACE,
+					'relative flex h-full flex-col gap-[var(--modal-section-gap)] p-[var(--modal-padding)]'
+				)}
+			>
+				{#if showClose}
+					<button
+						onclick={() => {
+							uiState.data.open = false;
+						}}
+						aria-label="Close"
+						class="absolute top-3 right-3 inline-flex size-7 items-center justify-center rounded-[var(--radius-md)] text-foreground-muted hover:bg-secondary hover:text-foreground transition-colors focus-visible:outline-none focus-visible:shadow-[var(--focus-ring)]"
+					>
+						<X size={16} />
+					</button>
+				{/if}
+				{@render children?.()}
+			</div>
 		</div>
 	</div>
 {/if}
