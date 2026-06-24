@@ -59,6 +59,26 @@ Run the registry image (`./Dockerfile`) with these set:
 | `DIRECT_URL`   | yes      | Supabase direct/session (port 5432).     |
 | `PORT`         | no       | Defaults to 4100 via docker-compose.     |
 
+## Tests
+
+Route behavior is covered by `tests/themes.test.ts`, run with Bun's built-in
+test runner:
+
+```bash
+bun --filter='registry' run test   # from the repo root
+bun test                           # from apps/registry
+```
+
+The tests **do not need a database or `prisma generate`**. They replace
+`@lib/prisma` with an in-memory fake via `mock.module(...)` before the routes
+load, then drive the Elysia app with `app.handle(new Request(...))`. This keeps
+them hermetic and avoids the Prisma engine download (which fails behind
+restrictive proxies). They cover the happy paths plus validation and error
+cases for `GET /themes`, `GET /themes/:slug`, and `POST /themes`.
+
+`turbo run test` picks the registry suite up automatically alongside the other
+workspaces.
+
 ## Managing themes
 
 There's no built-in admin UI. The registry only exposes public read endpoints

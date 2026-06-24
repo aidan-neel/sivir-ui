@@ -61,5 +61,8 @@ jobs:
       - name: Test (unit + ssr)
         run: bun --filter='docs' run test:ci
 
+      - name: Test (registry)
+        run: bun --filter='registry' run test
+
       - name: Build
         run: bun run build
