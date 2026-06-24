@@ -15,7 +15,7 @@
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"format": "prettier --write .",
-		"lint": "prettier --check . && eslint .",
+		"lint": "prettier --check . && eslint . --max-warnings=0",
 		"test": "vitest run",
 		"test:ci": "vitest run --project unit --project ssr",
 		"test:browser": "vitest run --project browser",

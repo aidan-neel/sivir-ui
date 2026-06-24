@@ -222,6 +222,7 @@
 				>
 					<img
 						src={mode.current === 'dark' ? GitHubWhite : GitHubBlack}
+						alt="GitHub"
 						class="size-4 flex items-center justify-center"
 					/>
 					<span

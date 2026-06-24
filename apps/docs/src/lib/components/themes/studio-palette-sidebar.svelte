@@ -74,7 +74,7 @@
 				Accent
 			</p>
 			<div class="grid grid-cols-3 gap-2">
-				{#each accentOptions as option}
+				{#each accentOptions as option (option.value)}
 					{@const isActive = activeAccentValue === option.value}
 					<button
 						type="button"
