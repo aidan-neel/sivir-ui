@@ -165,65 +165,67 @@
 		{:else}
 			<ul class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
 				{#each filteredThemes as theme (theme.slug)}
-					<li
-						class="group flex cursor-pointer flex-col overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card transition-colors hover:border-border/80"
-						onclick={() => openDetail(theme)}
-						onkeydown={(e) => {
-							if (e.key === 'Enter' || e.key === ' ') {
-								e.preventDefault();
-								openDetail(theme);
-							}
-						}}
-						role="button"
-						tabindex="0"
-					>
-						<!-- Header -->
-						<div class="flex flex-col gap-2 border-b border-border/60 px-4 py-3">
-							<h3
-								class="m-0 text-[1rem] font-[500] text-foreground"
-								style="font-family: var(--font-header);"
-							>
-								{theme.name}
-							</h3>
-							<p class="m-0 text-[0.82rem] leading-relaxed text-foreground-muted line-clamp-2">
-								{theme.description}
-							</p>
-						</div>
-
-						<!-- Info -->
-						<div class="flex-1 px-4 py-3 text-[0.78rem] text-foreground-muted space-y-1">
-							<div><span class="text-foreground">Brand:</span> {theme.brand}</div>
-							<div><span class="text-foreground">Neutral:</span> {theme.neutral}</div>
-							<div><span class="text-foreground">Radius:</span> {theme.radius}</div>
-							<div><span class="text-foreground">Density:</span> {theme.density}</div>
-							<div><span class="text-foreground">Motion:</span> {theme.motion}</div>
-							<div><span class="text-foreground">Fonts:</span> {theme.fontSans}</div>
-						</div>
-
-						<!-- Actions -->
+					<li class="overflow-hidden rounded-[var(--radius-lg)]">
 						<div
-							class="mt-auto flex items-center justify-between gap-2 border-t border-border/60 px-3 py-2.5"
-							onclick={(e) => e.stopPropagation()}
-							onkeydown={(e) => e.stopPropagation()}
-							role="presentation"
+							class="group flex h-full cursor-pointer flex-col overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card transition-colors hover:border-border/80"
+							onclick={() => openDetail(theme)}
+							onkeydown={(e) => {
+								if (e.key === 'Enter' || e.key === ' ') {
+									e.preventDefault();
+									openDetail(theme);
+								}
+							}}
+							role="button"
+							tabindex="0"
 						>
-							<Button
-								variant="ghost"
-								size="sm"
-								class="h-8 text-[0.78rem]"
-								onclick={() => applyTheme(theme)}
+							<!-- Header -->
+							<div class="flex flex-col gap-2 border-b border-border/60 px-4 py-3">
+								<h3
+									class="m-0 text-[1rem] font-[500] text-foreground"
+									style="font-family: var(--font-header);"
+								>
+									{theme.name}
+								</h3>
+								<p class="m-0 text-[0.82rem] leading-relaxed text-foreground-muted line-clamp-2">
+									{theme.description}
+								</p>
+							</div>
+
+							<!-- Info -->
+							<div class="flex-1 px-4 py-3 text-[0.78rem] text-foreground-muted space-y-1">
+								<div><span class="text-foreground">Brand:</span> {theme.brand}</div>
+								<div><span class="text-foreground">Neutral:</span> {theme.neutral}</div>
+								<div><span class="text-foreground">Radius:</span> {theme.radius}</div>
+								<div><span class="text-foreground">Density:</span> {theme.density}</div>
+								<div><span class="text-foreground">Motion:</span> {theme.motion}</div>
+								<div><span class="text-foreground">Fonts:</span> {theme.fontSans}</div>
+							</div>
+
+							<!-- Actions -->
+							<div
+								class="mt-auto flex items-center justify-between gap-2 border-t border-border/60 px-3 py-2.5"
+								onclick={(e) => e.stopPropagation()}
+								onkeydown={(e) => e.stopPropagation()}
+								role="presentation"
 							>
-								Apply
-							</Button>
-							<Button
-								variant="outline"
-								size="sm"
-								class="h-8 gap-1.5 text-[0.78rem]"
-								onclick={() => openInStudio(theme)}
-							>
-								<Wand size={12} />
-								Studio
-							</Button>
+								<Button
+									variant="ghost"
+									size="sm"
+									class="h-8 text-[0.78rem]"
+									onclick={() => applyTheme(theme)}
+								>
+									Apply
+								</Button>
+								<Button
+									variant="outline"
+									size="sm"
+									class="h-8 gap-1.5 text-[0.78rem]"
+									onclick={() => openInStudio(theme)}
+								>
+									<Wand size={12} />
+									Studio
+								</Button>
+							</div>
 						</div>
 					</li>
 				{/each}
@@ -242,11 +244,13 @@
 			}}
 			role="dialog"
 			aria-modal="true"
+			tabindex="-1"
 		>
 			<div
 				class="w-full max-w-2xl max-h-[90vh] overflow-auto rounded-[var(--radius-lg)] border border-border bg-background p-6"
 				onclick={(e) => e.stopPropagation()}
 				onkeydown={(e) => e.stopPropagation()}
+				role="presentation"
 			>
 				<div class="flex items-center justify-between gap-3 mb-4">
 					<h2

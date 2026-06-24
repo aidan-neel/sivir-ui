@@ -57,7 +57,7 @@
 		<!-- Scrollable chat list -->
 		<ScrollArea class="flex-1">
 			<div class="flex flex-col">
-				{#each groupedChats as group}
+				{#each groupedChats as group (group.date)}
 					<!-- Date header -->
 					<div
 						class="px-4 py-2 pt-3 text-[0.7rem] font-semibold uppercase text-foreground-muted tracking-wider"
@@ -66,7 +66,7 @@
 					</div>
 
 					<!-- Chat items -->
-					{#each group.items as chat}
+					{#each group.items as chat (chat.id)}
 						<button
 							type="button"
 							onclick={() => (activeChatId = chat.id)}

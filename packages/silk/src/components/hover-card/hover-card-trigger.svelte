@@ -71,6 +71,7 @@
 		onmouseleave={close}
 		onfocus={open}
 		onblur={close}
+		role="button"
 		tabindex="0"
 		class={cn('inline-flex', className)}
 		{...rest}

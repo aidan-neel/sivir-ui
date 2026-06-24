@@ -1713,7 +1713,7 @@
 			<Tabs.Root bind:value={inspectorTab} class="flex h-full flex-col">
 				<div class="flex justify-center border-b border-border p-2.5">
 					<Tabs.List class="flex w-full">
-						{#each tabs as t}
+						{#each tabs as t (t.id)}
 							<Tabs.Trigger value={t.id} class="flex-1 min-w-0 text-[0.76rem] px-2">
 								{t.label}
 							</Tabs.Trigger>
@@ -1979,7 +1979,7 @@
 									{headerFontSelection}
 								</Select.Trigger>
 								<Select.Content class="max-h-72 overflow-y-auto">
-									{#each fontOptions as font}
+									{#each fontOptions as font (font.label)}
 										<Select.Item value={font.label} onclick={() => updateHeaderFont(font.label)}>
 											<span style={`font-family:${font.value};`} class="text-left">
 												{font.label}
@@ -2001,7 +2001,7 @@
 									{bodyFontSelection}
 								</Select.Trigger>
 								<Select.Content class="max-h-72 overflow-y-auto">
-									{#each fontOptions as font}
+									{#each fontOptions as font (font.label)}
 										<Select.Item value={font.label} onclick={() => updateBodyFont(font.label)}>
 											<span style={`font-family:${font.value};`} class="text-left">
 												{font.label}
@@ -2024,7 +2024,7 @@
 								<span class="text-[0.66rem] text-foreground-muted/70">Per-element</span>
 							</div>
 							<div class="flex flex-col gap-2.5">
-								{#each weightFields as field}
+								{#each weightFields as field (field.key)}
 									{@const typo = editorTheme.typography ?? defaultTypography}
 									{@const currentWeight = typo[field.key] ?? defaultTypography[field.key]}
 									{@const currentTracking =
@@ -2045,7 +2045,7 @@
 													>
 												</Select.Trigger>
 												<Select.Content class="max-h-72 overflow-y-auto">
-													{#each sizeOptions as opt}
+													{#each sizeOptions as opt (opt.value)}
 														<Select.Item
 															class=""
 															value={String(opt.value)}
@@ -2073,7 +2073,7 @@
 													>
 												</Select.Trigger>
 												<Select.Content class="max-h-72 overflow-y-auto">
-													{#each weightOptions as opt}
+													{#each weightOptions as opt (opt.value)}
 														<Select.Item
 															class=""
 															value={String(opt.value)}
@@ -2101,7 +2101,7 @@
 													>
 												</Select.Trigger>
 												<Select.Content class="max-h-72 overflow-y-auto">
-													{#each trackingOptions as opt}
+													{#each trackingOptions as opt (opt.value)}
 														<Select.Item
 															class=""
 															value={String(opt.value)}
@@ -2209,7 +2209,7 @@
 								</span>
 							</div>
 							<div class="grid grid-cols-4 gap-1.5">
-								{#each radiusOptions as opt}
+								{#each radiusOptions as opt (opt.value)}
 									<button
 										type="button"
 										onclick={() => updateRadius(opt.value)}
@@ -2250,7 +2250,7 @@
 								Motion preset
 							</p>
 							<div class="grid grid-cols-3 gap-1.5">
-								{#each transitionPresets as preset}
+								{#each transitionPresets as preset (preset.slug)}
 									{@const active = editorTheme.durationPreset === preset.slug}
 									{@const speedDots =
 										preset.slug === 'none' || preset.slug === 'instant'
@@ -2267,7 +2267,7 @@
 										class={`flex flex-col items-center gap-1.5 rounded-lg border p-2 text-[0.72rem] transition-colors ${active ? 'border-primary bg-primary/10 text-foreground' : 'border-border bg-background/40 text-foreground-muted hover:border-border-strong'}`}
 									>
 										<span class="flex items-center gap-0.5" aria-hidden="true">
-											{#each Array(4) as _, i}
+											{#each Array(4) as _, i (i)}
 												<span
 													class={`size-1 rounded-full ${i < speedDots ? (active ? 'bg-primary' : 'bg-foreground-muted') : 'bg-border'}`}
 												></span>
@@ -2363,7 +2363,7 @@
 									{currentEasing.label}
 								</Select.Trigger>
 								<Select.Content class="max-h-72 overflow-y-auto">
-									{#each easingOptions as opt}
+									{#each easingOptions as opt (opt.value)}
 										<Select.Item
 											value={opt.value}
 											label={opt.label}
@@ -2403,7 +2403,7 @@
 									{currentHoverEasing.label}
 								</Select.Trigger>
 								<Select.Content class="max-h-72 overflow-y-auto">
-									{#each easingOptions as opt}
+									{#each easingOptions as opt (opt.value)}
 										<Select.Item
 											value={opt.value}
 											label={opt.label}
@@ -2586,7 +2586,7 @@
 								Catalog
 							</p>
 							<div class="flex flex-col gap-1">
-								{#each themesCatalog as preset}
+								{#each themesCatalog as preset (preset.slug)}
 									<button
 										type="button"
 										onclick={() => attemptLoadPreset(preset)}
@@ -2662,9 +2662,9 @@
 				</div>
 
 				<div class="min-h-0 flex-1 overflow-y-auto px-5 py-4">
-					{#each ['light', 'dark'] as mode}
+					{#each ['light', 'dark'] as mode (mode)}
 						<Tabs.Content value={mode} class="flex flex-col gap-5">
-							{#each paletteGroups as group}
+							{#each paletteGroups as group (group.title)}
 								<section class="flex flex-col gap-2">
 									<p
 										class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
@@ -2672,7 +2672,7 @@
 										{group.title}
 									</p>
 									<div class="grid grid-cols-2 gap-x-3 gap-y-2 max-sm:grid-cols-1">
-										{#each group.fields as field}
+										{#each group.fields as field (field.key)}
 											<div class="flex items-center justify-between gap-2">
 												<span class="text-[0.74rem] text-foreground">{field.label}</span>
 												<ColorPicker
@@ -2815,7 +2815,7 @@
 						Durations
 					</p>
 					<div class="grid grid-cols-2 gap-x-4 gap-y-4 max-sm:grid-cols-1">
-						{#each motionDurationFields as field}
+						{#each motionDurationFields as field (field.key)}
 							{@const value = durationToMs(editorTheme.motion[field.key])}
 							<label class="flex flex-col gap-1.5">
 								<div class="flex items-baseline justify-between gap-2">
@@ -2855,7 +2855,7 @@
 						Per-surface transform & blur — shapes how panels enter the screen.
 					</span>
 					<div class="grid grid-cols-2 gap-x-4 gap-y-4 max-sm:grid-cols-1">
-						{#each motionNumberFields as field}
+						{#each motionNumberFields as field (field.key)}
 							{@const numericValue = (editorTheme.motion[field.key] ?? 0) as number}
 							{@const display = field.format ? field.format(numericValue) : String(numericValue)}
 							<label class="flex flex-col gap-1.5">

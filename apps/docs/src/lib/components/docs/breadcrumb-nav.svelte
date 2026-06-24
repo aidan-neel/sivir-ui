@@ -14,6 +14,7 @@
 	{#each items as item, index (item.label)}
 		<Breadcrumb.Item>
 			{#if item.href && index < items.length - 1}
+				<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -- href is supplied by the caller as an already-resolved pathname -->
 				<a href={item.href} class="transition-colors hover:text-foreground">
 					{item.label}
 				</a>
