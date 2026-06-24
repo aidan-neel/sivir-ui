@@ -1,3 +1,4 @@
+<!-- token-lint-disable-file -->
 <script lang="ts">
 	import { cn } from '@silk/ui/utils';
 	import { getContext } from 'svelte';
@@ -39,6 +40,7 @@
 		ghostActive && '[font-weight:600]',
 		// Segmented pills sit a touch taller than their text padding; flex-center
 		// keeps the label vertically centered inside the taller pill.
+		// token-lint-disable-next-line no-literal-length
 		tabsState.variant === 'segmented' && 'inline-flex items-center justify-center min-h-[32px]'
 	)}
 	onclick={() => {

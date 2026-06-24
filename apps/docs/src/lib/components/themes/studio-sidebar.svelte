@@ -28,8 +28,6 @@
 		editorName: string;
 		editorTheme: ThemeDraft;
 		colorMode: 'light' | 'dark';
-		headerFontSelection: string;
-		bodyFontSelection: string;
 		radiusOptions: RadiusOption[];
 		transitionPresets: ThemeTransitionPreset[];
 		fontOptions: FontOption[];
@@ -76,8 +74,6 @@
 		editorName,
 		editorTheme,
 		colorMode,
-		headerFontSelection,
-		bodyFontSelection,
 		radiusOptions,
 		transitionPresets,
 		fontOptions,

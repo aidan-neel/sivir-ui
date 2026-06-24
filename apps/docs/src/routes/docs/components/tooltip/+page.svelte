@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { Button } from '@silk/ui/components/button';
-	import * as Tooltip from '@silk/ui/components/tooltip';
 	import { ComponentPreview, InstallCommand } from '$lib/components/docs';
 	import { CodeBlock } from '@silk/ui/components/code-block';
 	import { components, sanitizeComponent } from '$lib/components';
@@ -9,7 +8,6 @@
 	import ChevronLeft from '@lucide/svelte/icons/chevron-left';
 	import ChevronRight from '@lucide/svelte/icons/chevron-right';
 	import External from '@lucide/svelte/icons/external-link';
-	import Info from '@lucide/svelte/icons/info';
 
 	import Hero from './examples/hero.svelte';
 	import HeroSrc from './examples/hero.svelte?raw';

@@ -1,5 +1,4 @@
 <script lang="ts">
-	import * as Combobox from '@silk/ui/components/combobox';
 	import { Button } from '@silk/ui/components/button';
 	import { ComponentPreview, InstallCommand } from '$lib/components/docs';
 	import { CodeBlock } from '@silk/ui/components/code-block';

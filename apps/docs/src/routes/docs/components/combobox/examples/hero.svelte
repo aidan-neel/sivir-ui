@@ -1,8 +1,6 @@
 <script lang="ts">
 	import * as Combobox from '@silk/ui/components/combobox';
 
-	let selected = $state('');
-
 	const frameworks = [
 		{ value: 'nextjs', label: 'Next.js' },
 		{ value: 'sveltekit', label: 'SvelteKit' },
@@ -18,11 +16,7 @@
 			<Combobox.Trigger class="w-full" />
 			<Combobox.Content>
 				{#each frameworks as item (item.value)}
-					<Combobox.Item
-						value={item.value}
-						label={item.label}
-						callback={() => (selected = item.value)}
-					/>
+					<Combobox.Item value={item.value} label={item.label} callback={() => {}} />
 				{/each}
 			</Combobox.Content>
 		</Combobox.Root>

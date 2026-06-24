@@ -1,8 +1,6 @@
 <script lang="ts">
 	import * as Combobox from '@silk/ui/components/combobox';
 
-	let selected = $state('');
-
 	const languages = [
 		{ value: 'en', label: 'English' },
 		{ value: 'es', label: 'Spanish' },
@@ -19,11 +17,7 @@
 			<Combobox.Trigger class="w-full" />
 			<Combobox.Content>
 				{#each languages as item (item.value)}
-					<Combobox.Item
-						value={item.value}
-						label={item.label}
-						callback={() => (selected = item.value)}
-					/>
+					<Combobox.Item value={item.value} label={item.label} callback={() => {}} />
 				{/each}
 			</Combobox.Content>
 		</Combobox.Root>

@@ -2,7 +2,6 @@
 	import { Button } from '@silk/ui/components/button';
 	import { ComponentPreview, InstallCommand } from '$lib/components/docs';
 	import { CodeBlock } from '@silk/ui/components/code-block';
-	import * as ContextMenu from '@silk/ui/components/context-menu';
 	import { components, sanitizeComponent } from '$lib/components';
 
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';

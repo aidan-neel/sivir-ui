@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { Button } from '@silk/ui/components/button';
-	import { Slider } from '@silk/ui/components/slider';
 	import { ComponentPreview, InstallCommand } from '$lib/components/docs';
 	import { CodeBlock } from '@silk/ui/components/code-block';
 	import { components, sanitizeComponent } from '$lib/components';

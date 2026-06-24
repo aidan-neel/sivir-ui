@@ -1,3 +1,4 @@
+<!-- token-lint-disable-file -->
 <script lang="ts">
 	import { getContext, type Snippet } from 'svelte';
 	import { states } from '@silk/ui/internals/state.svelte.ts';

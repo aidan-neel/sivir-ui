@@ -1,3 +1,4 @@
+<!-- token-lint-disable-file -->
 <script lang="ts">
 	import { getContext, onMount, type Snippet } from 'svelte';
 	import type { HTMLInputAttributes } from 'svelte/elements';

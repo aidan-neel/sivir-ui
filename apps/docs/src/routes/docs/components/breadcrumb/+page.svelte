@@ -1,5 +1,4 @@
 <script lang="ts">
-	import * as Breadcrumb from '@silk/ui/components/breadcrumb';
 	import { Button } from '@silk/ui/components/button';
 	import { ComponentPreview, InstallCommand } from '$lib/components/docs';
 	import { CodeBlock } from '@silk/ui/components/code-block';
@@ -19,7 +18,6 @@
 	import Check from '@lucide/svelte/icons/check';
 	import Layers from '@lucide/svelte/icons/layers-3';
 	import External from '@lucide/svelte/icons/external-link';
-	import Home from '@lucide/svelte/icons/home';
 
 	const TITLE = 'Breadcrumb';
 	const SLUG = 'breadcrumb';

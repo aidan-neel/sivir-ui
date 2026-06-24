@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { Button } from '@silk/ui/components/button';
-	import { Badge } from '@silk/ui/components/badge';
 	import { ComponentPreview, InstallCommand } from '$lib/components/docs';
 	import { CodeBlock } from '@silk/ui/components/code-block';
 	import { components, sanitizeComponent } from '$lib/components';

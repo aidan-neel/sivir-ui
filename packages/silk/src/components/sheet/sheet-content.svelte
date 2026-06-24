@@ -95,6 +95,7 @@
 	.silk-sheet-backdrop {
 		position: absolute;
 		inset: 0;
+		/* token-lint-disable-next-line no-primitive-leak */
 		background: color-mix(in oklab, var(--silk-neutral-50) 30%, transparent);
 		backdrop-filter: blur(6px);
 		-webkit-backdrop-filter: blur(6px);

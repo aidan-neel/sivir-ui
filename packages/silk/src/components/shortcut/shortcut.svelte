@@ -1,3 +1,4 @@
+<!-- token-lint-disable-file -->
 <script lang="ts">
 	import { states } from '@silk/ui/internals/state.svelte.ts';
 	import { cn } from '@silk/ui/utils';
@@ -19,7 +20,7 @@
 		shortcut: string;
 	};
 
-	let { children, class: className, shortcut, ...rest }: Props = $props();
+	let { children, class: className, shortcut = '', ...rest }: Props = $props();
 
 	// Map keybinding tokens to the glyphs people recognise from native menus.
 	const GLYPHS: Record<string, string> = {

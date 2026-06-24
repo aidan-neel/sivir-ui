@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { Checkbox } from '@silk/ui/components/checkbox';
 	import { Button } from '@silk/ui/components/button';
 	import { ComponentPreview, InstallCommand } from '$lib/components/docs';
 	import { CodeBlock } from '@silk/ui/components/code-block';

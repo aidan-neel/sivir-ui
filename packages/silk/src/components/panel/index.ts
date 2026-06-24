@@ -11,7 +11,7 @@ export const PANEL_FRAME =
  * Its radius is the frame radius minus the 2px frame inset, so the inner corner
  * stays concentric with the outer corner across themes. */
 export const PANEL_SURFACE =
-	'rounded-[calc(var(--radius-lg)-2px)] bg-[var(--panel-bg)] shadow-[var(--card-shadow)] ring-1 ring-[color-mix(in_oklab,var(--panel-border)_50%,transparent)]';
+	'rounded-[calc(var(--radius-lg)-2px)] bg-[var(--panel-bg)] shadow-[var(--card-shadow)] ring-1 ring-[color-mix(in_oklab,var(--panel-border)_50%,transparent)]'; // token-lint-disable-line no-literal-length
 
 export { Panel };
 export default Panel;

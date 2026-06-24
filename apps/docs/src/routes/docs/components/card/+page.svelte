@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { Button } from '@silk/ui/components/button';
-	import * as Card from '@silk/ui/components/card';
 	import { ComponentPreview, InstallCommand } from '$lib/components/docs';
 	import { CodeBlock } from '@silk/ui/components/code-block';
 	import { components, sanitizeComponent } from '$lib/components';
