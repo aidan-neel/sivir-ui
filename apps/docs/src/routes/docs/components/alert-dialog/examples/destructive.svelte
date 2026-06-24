@@ -1,0 +1,21 @@
+<script lang="ts">
+	import * as AlertDialog from '@silk/ui/components/alert-dialog';
+</script>
+
+<div class="grid place-items-center">
+	<AlertDialog.Root>
+		<AlertDialog.Trigger variant="destructive">Delete project</AlertDialog.Trigger>
+		<AlertDialog.Content class="max-w-[26rem]">
+			<AlertDialog.Header>
+				<AlertDialog.Title>Delete this project?</AlertDialog.Title>
+				<AlertDialog.Description>
+					All branches, issues, and deploy history will be permanently removed.
+				</AlertDialog.Description>
+			</AlertDialog.Header>
+			<AlertDialog.Footer>
+				<AlertDialog.Exit>Cancel</AlertDialog.Exit>
+				<AlertDialog.Confirm>Delete project</AlertDialog.Confirm>
+			</AlertDialog.Footer>
+		</AlertDialog.Content>
+	</AlertDialog.Root>
+</div>

@@ -1,8 +1,8 @@
 import { describe, expect, it, beforeEach } from 'vitest';
-import { getCssDuration } from '@silk/ui/internals/transition';
+import { getCssDuration, getCssNumber } from '@silk/ui/internals/transition';
 
 /*
- * getCssDuration reads CSS custom properties via
+ * getCssDuration and getCssNumber read CSS custom properties via
  * getComputedStyle. The tests below set inline styles on a real
  * element (jsdom) and assert the parsing branches.
  *
@@ -61,5 +61,53 @@ describe('getCssDuration', () => {
 	it('handles decimal seconds', () => {
 		node.style.setProperty('--d', '0.25s');
 		expect(getCssDuration(node, '--d', 0)).toBe(250);
+	});
+});
+
+describe('getCssNumber', () => {
+	let node: HTMLDivElement;
+
+	beforeEach(() => {
+		node = document.createElement('div');
+		document.body.appendChild(node);
+	});
+
+	it('returns fallback when variable is unset', () => {
+		expect(getCssNumber(node, '--missing', 42)).toBe(42);
+	});
+
+	it('parses integer values', () => {
+		node.style.setProperty('--n', '15');
+		expect(getCssNumber(node, '--n', 0)).toBe(15);
+	});
+
+	it('parses float values', () => {
+		node.style.setProperty('--n', '0.99');
+		expect(getCssNumber(node, '--n', 0)).toBe(0.99);
+	});
+
+	it('parses values with px (drops the unit)', () => {
+		node.style.setProperty('--n', '132px');
+		expect(getCssNumber(node, '--n', 0)).toBe(132);
+	});
+
+	it('respects 0 instead of treating it as falsy', () => {
+		node.style.setProperty('--n', '0');
+		expect(getCssNumber(node, '--n', 999)).toBe(0);
+	});
+
+	it('returns fallback for non-numeric values', () => {
+		node.style.setProperty('--n', 'not-a-number');
+		expect(getCssNumber(node, '--n', 99)).toBe(99);
+	});
+
+	it('handles negative values', () => {
+		node.style.setProperty('--n', '-12');
+		expect(getCssNumber(node, '--n', 0)).toBe(-12);
+	});
+
+	it('handles values with leading/trailing whitespace from getPropertyValue', () => {
+		node.style.setProperty('--n', '   88   ');
+		expect(getCssNumber(node, '--n', 0)).toBe(88);
 	});
 });

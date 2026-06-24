@@ -58,20 +58,23 @@
 <script lang="ts">
 	import { onDestroy, onMount } from 'svelte';
 	import { states } from '@silk/ui/internals/state.svelte.ts';
-	import { clickOutside, cn, positionFloatingPanel } from '@silk/ui/utils';
-	import { usePresence } from '@silk/ui/internals/presence.svelte.ts';
+	import { clickOutside, cn, positionFloatingPanel, trapFocus } from '@silk/ui/utils';
+	import { createPresence } from '@silk/ui/internals/presence.svelte.ts';
 	import { getContext } from 'svelte';
-	import type { ReferenceElement } from '@floating-ui/dom';
+	import { PANEL_FRAME, PANEL_SURFACE } from '../panel';
+	import '../panel/panel.css';
 	import type { PopoverContentProps, PopoverState } from '.';
 
 	const {
 		children,
 		class: classProp,
+		surfaceClass,
 		allowClickOutside = true,
 		portal = true,
 		refElement,
 		role = 'dialog',
 		tabindex = -1,
+		focusTrap = true,
 		id,
 		'aria-modal': ariaModalProp,
 		...rest
@@ -80,15 +83,12 @@
 	const key = getContext('key') as string;
 	const uiState = states[key].data as PopoverState;
 
-	let popover = $state<HTMLElement | undefined>();
-	let content = $state<HTMLElement | undefined>();
-	let clickOutsideCleanup: (() => void) | undefined;
-
 	// Keep the content mounted through its CSS exit animation.
-	const presence = usePresence(
-		() => uiState?.open ?? false,
-		() => content
-	);
+	const presence = createPresence(() => uiState.open);
+
+	let popover = $state<HTMLElement | undefined>();
+	let panelEl = $state<HTMLElement | undefined>();
+	let clickOutsideCleanup: (() => void) | undefined;
 
 	function handleKeydown(event: KeyboardEvent) {
 		if (event.key === 'Escape') {
@@ -137,6 +137,11 @@
 		if (uiState?.buttonRef) ro.observe(uiState.buttonRef);
 		if (popover) ro.observe(popover);
 
+		// These fire on document focus changes -- including the focusout that the
+		// browser dispatches synchronously while the content is being removed from
+		// the DOM. Defer the state write to a microtask so we never mutate
+		// reactive state in the middle of the Svelte flush that unmounts us
+		// (which throws state_unsafe_mutation). The DOM is read synchronously.
 		const handleFocusIn = (e: FocusEvent) => {
 			const target = e.target as HTMLElement;
 			if (!target) return;
@@ -144,11 +149,16 @@
 			const openPopovers = Array.from(document.body.children).filter(
 				(el) => el.id.startsWith('popover-') && !el.id.includes('controls')
 			);
-			uiState.focusedInside = openPopovers.some((el) => el.contains(target));
+			const inside = openPopovers.some((el) => el.contains(target));
+			queueMicrotask(() => {
+				uiState.focusedInside = inside;
+			});
 		};
 
 		const handleFocusOut = () => {
-			uiState.focusedInside = false;
+			queueMicrotask(() => {
+				uiState.focusedInside = false;
+			});
 		};
 
 		document.addEventListener('focusin', handleFocusIn);
@@ -197,13 +207,34 @@
 			cancelClose();
 		}
 	});
+
+	// Position the panel the moment it opens, before the browser paints. This
+	// sets left/top *and* --popover-trigger-width synchronously, so the panel
+	// never flashes at its (0,0) origin — the cause of the tooltip-swap jitter —
+	// nor at auto width before snapping to the trigger (the combobox jump).
+	// Without this we'd rely on the ResizeObserver firing a frame later.
+	$effect(() => {
+		if (uiState.open && presence.mounted && popover) {
+			updatePosition();
+		}
+	});
+
+	// Trap Tab focus inside the panel while open. Hoverable surfaces (tooltip,
+	// hover-card) are excluded -- they aren't keyboard-modal and stealing focus
+	// would fight their pointer-driven open/close.
+	$effect(() => {
+		if (uiState.open && panelEl && !uiState.hoverable && focusTrap) {
+			const cleanup = trapFocus(panelEl);
+			return cleanup;
+		}
+	});
 </script>
 
 <div
 	role="presentation"
 	data-floating-content
 	class={cn(
-		'absolute left-0 top-0 z-[130] flex max-w-[calc(100vw-1rem)] max-h-[calc(100vh-1rem)] items-center justify-center'
+		'absolute left-0 top-0 z-[130] flex max-w-[calc(100vw-2*var(--popover-viewport-margin))] max-h-[calc(100vh-2*var(--popover-viewport-margin))] items-center justify-center'
 	)}
 	bind:this={popover as HTMLElement}
 	onmouseenter={cancelClose}
@@ -216,11 +247,14 @@
 		}
 	}}
 >
-	{#if presence.present}
+	{#if presence.mounted}
 		<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
 		<div
 			{...rest}
-			bind:this={content}
+			data-silk-anim="panel"
+			data-state={presence.state}
+			onanimationend={presence.end}
+			bind:this={panelEl}
 			id={id ?? `popover-${String(key)}-content`}
 			{role}
 			aria-modal={ariaModalProp ??
@@ -231,15 +265,26 @@
 					? `popover-${String(key)}-title`
 					: undefined}
 			{tabindex}
-			data-state={presence.status}
-			data-hoverable={uiState?.hoverable ? 'true' : undefined}
 			data-ui="popover-content"
 			class={cn(
 				classProp,
-				`bg-[var(--color-panel)] text-[var(--color-panel-foreground)] border border-border rounded-[var(--radius-lg)] shadow-[var(--panel-shadow)] p-[var(--panel-padding)] text-sm m-auto max-w-[min(var(--popover-available-width,calc(100vw-1rem)),calc(100vw-1rem))] max-h-[min(var(--popover-available-height,calc(100vh-1rem)),calc(100vh-1rem))] overflow-auto`
+				'm-auto flex flex-col overflow-hidden text-sm text-[var(--color-foreground)]',
+				'bg-[color-mix(in_oklab,var(--color-foreground)_3%,var(--color-panel))] shadow-[var(--panel-shadow)]',
+				'max-w-[min(var(--popover-available-width,calc(100vw-2*var(--popover-viewport-margin))),calc(100vw-2*var(--popover-viewport-margin)))] max-h-[min(var(--popover-available-height,calc(100vh-2*var(--popover-viewport-margin))),calc(100vh-2*var(--popover-viewport-margin)))]',
+				PANEL_FRAME,
+				'panel-root'
 			)}
 		>
-			{@render children?.()}
+			<!-- The inset surface: children live here, on the panel fill. -->
+			<div
+				class={cn(
+					surfaceClass,
+					'min-h-0 flex-1 overflow-auto bg-[var(--color-panel)] p-[var(--panel-padding)]',
+					PANEL_SURFACE
+				)}
+			>
+				{@render children?.()}
+			</div>
 		</div>
 	{/if}
 </div>

@@ -102,7 +102,6 @@ export const spacingGroups: SpacingFieldGroup[] = [
 		fields: [
 			{ key: 'toastPaddingX', label: 'Toast (X)', min: 4, max: 32 },
 			{ key: 'toastPaddingY', label: 'Toast (Y)', min: 4, max: 32 },
-			{ key: 'calendarPadding', label: 'Calendar', min: 0, max: 24 },
 			{ key: 'colorPickerPadding', label: 'Color picker', min: 0, max: 24 }
 		]
 	}

@@ -1,0 +1,105 @@
+<script module lang="ts">
+	export const metadata = {
+	  "title": "Checkbox",
+	  "description": "Displays a selectable option for user input.",
+	  "component": true,
+	  "source": "https://github.com/aidan-neel/silk/tree/main/registry/silk/default/checkbox"
+};
+</script>
+
+<script>
+    import { ComponentPreview, CodeBlock, CodeSnippet, ExportItem, APIReference } from '$lib/components/docs';
+    import { Checkbox } from '@silk/ui/components/checkbox';
+</script>
+
+<ComponentPreview code={`<script lang="ts">
+    import { Checkbox } from "@silk/ui/components/checkbox";
+</script>\n
+<Checkbox label="Agree to terms and service" />`}>
+    <div class="flex flex-col gap-6 items-start">
+        <Checkbox label="Agree to terms and service" />
+    </div>
+</ComponentPreview>
+<div class="flex flex-col gap-5 pt-8 pb-8">
+	<h1 class="h1">Installation</h1>
+	<CodeBlock lang="shell" code={`bunx @aidan-neel/ui add checkbox`} />
+</div>
+
+<h1 class="py-2 h1">
+    Import
+</h1>
+
+<p class="py-2">
+    Checkbox only exports 1 component
+</p>
+
+<ExportItem title="Checkbox">The main component for displaying a checkbox.</ExportItem>
+
+<h1 class="py-6 h1 pt-10">
+    Variants
+</h1>
+
+<h1 class="py-2 pb-4 h2">
+    Primary
+</h1>
+
+<ComponentPreview code={`<Checkbox
+    variant="primary"
+    label="Agree to terms and service"
+    description="By clicking this checkbox, you agree to the terms and conditions."
+/>`}>
+    <div class="flex flex-col gap-6 items-start">
+        <Checkbox
+            variant="primary"
+            label="Agree to terms and service"
+            description="By clicking this checkbox, you agree to the terms and conditions."
+        />
+    </div>
+</ComponentPreview>
+
+<h1 class="py-6 h1 pt-10">
+    API Reference
+</h1>
+
+<div class="flex flex-col gap-10">
+	<APIReference
+		title="Checkbox"
+		component="Root"
+		description="A custom checkbox component with animated check icon and optional label."
+		items={[
+			{
+				property: "checked",
+				type: "boolean",
+				description: "The current checked state of the checkbox. Bindable.",
+				defaults: "false"
+			},
+            {
+				property: "disabled",
+				type: "boolean",
+				description: "Whether or not the checkbox is disabled",
+				defaults: "false"
+			},
+			{
+				property: "label",
+				type: "string",
+				description: "Text label displayed next to the checkbox."
+			},
+            {
+				property: "description",
+				type: "string",
+				description: "Description of the checkbox's label."
+			},
+			{
+				property: "class",
+				type: "string",
+				description: "Additional CSS classes to apply to the checkbox wrapper."
+			},
+			{
+				property: "...rest",
+				type: "HTMLLabelAttributes",
+				description: "Additional attributes passed to the label container.",
+				defaults: "{}"
+			}
+		]}
+	/>
+</div>

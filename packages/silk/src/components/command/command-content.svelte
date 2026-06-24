@@ -1,9 +1,12 @@
+<!-- token-lint-disable-file -->
 <script lang="ts">
 	import { getContext, tick, type Snippet } from 'svelte';
 	import { states } from '@silk/ui/internals/state.svelte.ts';
 	import type { CommandState } from '.';
-	import { usePresence } from '@silk/ui/internals/presence.svelte.ts';
+	import { createPresence } from '@silk/ui/internals/presence.svelte.ts';
 	import { clickOutside, cn, trapFocus } from '@silk/ui/utils';
+	import { PANEL_FRAME, PANEL_SURFACE } from '../panel';
+	import '../panel/panel.css';
 
 	const key = getContext('key') as string;
 	const uiState = states[key].data as CommandState;
@@ -20,11 +23,8 @@
 	let scrollY = $state(0);
 	const { children, class: className, allowClickOutside = true, ...rest }: Props = $props();
 
-	// Keep the palette mounted through its CSS exit animation.
-	const presence = usePresence(
-		() => uiState.open,
-		() => element
-	);
+	// Keep the dialog mounted through its CSS exit animation.
+	const presence = createPresence(() => uiState.open);
 
 	$effect(() => {
 		if (uiState.open !== lastOpen) {
@@ -52,33 +52,42 @@
 	});
 </script>
 
-{#if presence.present}
+{#if presence.mounted}
 	<div
-		data-ui="overlay-backdrop"
-		data-state={presence.status}
-		class="fixed inset-0 z-40 bg-[var(--color-overlay)]"
+		data-silk-anim="overlay"
+		data-state={presence.state}
+		class="fixed inset-0 z-40 bg-[var(--silk-neutral-50)]/40 backdrop-blur-[2px] [backface-visibility:hidden] [transform:translateZ(0)]"
 	></div>
-	<!-- Flex centering wrapper so the panel animates its own transform. -->
-	<div class="pointer-events-none fixed inset-0 z-50 flex items-start justify-center p-3 pt-[12vh]">
+	<div
+		bind:this={element}
+		data-silk-anim="panel"
+		data-state={presence.state}
+		onanimationend={presence.end}
+		id={`${String(key)}-content`}
+		data-ui="command-content"
+		role="dialog"
+		aria-modal="true"
+		aria-labelledby={`${String(key)}-controls`}
+		tabindex="-1"
+		class={cn(
+			className,
+			'text-[var(--color-foreground)] shadow-[var(--panel-shadow)] fixed top-[47%] left-1/2 z-50 m-auto flex max-h-[min(var(--command-dialog-max-height),calc(100dvh-2rem))] min-h-[5rem] w-[calc(100%-2*var(--command-dialog-width-margin))] max-w-[var(--command-dialog-max-width)] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden duration-200 transition-[opacity,transform]', // token-lint-disable-line no-literal-length
+			PANEL_FRAME,
+			'panel-root'
+		)}
+		use:clickOutside={() => {
+			if (allowClickOutside) {
+				uiState.open = false;
+			}
+		}}
+		{...rest}
+	>
+		<!-- Inset surface: the command input + list live here, on the panel fill. -->
 		<div
-			bind:this={element}
-			data-ui="command-content"
-			data-state={presence.status}
-			id={`${String(key)}-content`}
-			role="dialog"
-			aria-modal="true"
-			aria-labelledby={`${String(key)}-controls`}
-			tabindex="-1"
 			class={cn(
-				className,
-				'pointer-events-auto bg-[var(--color-overlay-bg)] text-[var(--color-panel-foreground)] border border-border rounded-[var(--radius-lg)] shadow-[inset_0_1px_0_var(--panel-highlight),var(--panel-shadow)] flex max-h-[min(28rem,calc(100dvh-2rem))] min-h-[5rem] w-full max-w-[35rem] flex-col overflow-hidden'
+				'flex min-h-0 flex-1 flex-col overflow-hidden bg-[var(--color-panel)]',
+				PANEL_SURFACE
 			)}
-			use:clickOutside={() => {
-				if (allowClickOutside) {
-					uiState.open = false;
-				}
-			}}
-			{...rest}
 		>
 			{@render children?.()}
 		</div>

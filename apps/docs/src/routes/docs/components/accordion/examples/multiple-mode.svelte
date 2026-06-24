@@ -1,0 +1,16 @@
+<script lang="ts">
+	import * as Accordion from '@silk/ui/components/accordion';
+</script>
+
+<div class="w-full max-w-md">
+	<Accordion.Root type="multiple">
+		<Accordion.Item value="a">
+			<Accordion.Trigger>Item A</Accordion.Trigger>
+			<Accordion.Content>Content A — any panels can be open together.</Accordion.Content>
+		</Accordion.Item>
+		<Accordion.Item value="b">
+			<Accordion.Trigger>Item B</Accordion.Trigger>
+			<Accordion.Content>Content B — opening this keeps Item A open too.</Accordion.Content>
+		</Accordion.Item>
+	</Accordion.Root>
+</div>

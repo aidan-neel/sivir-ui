@@ -171,117 +171,121 @@
 	/>
 </svelte:head>
 
-<!-- ─── Hero ─────────────────────────────────────────────────────── -->
-<header class="flex flex-col gap-5 border-b border-border/60 pb-10">
-	<div class="flex flex-wrap items-center gap-2">
-		<Badge variant="outlined" icon={History} iconSize={11} class="gap-1.5 text-[0.66rem]">
-			Changelog
-		</Badge>
-		<Badge variant="ghost" class="text-[0.66rem]">{releases.length} releases</Badge>
-		<Badge variant="ghost" class="text-[0.66rem]">{releases[0].version}</Badge>
-	</div>
+<div class="flex flex-col gap-10" data-docs-page>
+	<!-- ─── Hero ─────────────────────────────────────────────────────── -->
+	<header class="flex flex-col gap-5 border-b border-border/60 pb-10">
+		<div class="flex flex-wrap items-center gap-2">
+			<Badge variant="outline" icon={History} iconSize={11} class="gap-1.5 text-[0.66rem]">
+				Changelog
+			</Badge>
+			<Badge variant="ghost" class="text-[0.66rem]">{releases.length} releases</Badge>
+			<Badge variant="ghost" class="text-[0.66rem]">{releases[0].version}</Badge>
+		</div>
 
-	<div class="flex flex-col gap-3">
-		<h1
-			class="m-0 max-w-[26ch] text-[2.6rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] leading-[1.02] tracking-[-0.04em] md:text-[3rem]"
-			style="font-family: var(--font-header);"
-		>
-			What's new in Silk.
-		</h1>
-		<p class="m-0 max-w-[44rem] text-[1.05rem] leading-relaxed text-foreground-muted">
-			Releases, polish passes, and the occasional bug fix — in the order they shipped.
-		</p>
-	</div>
-</header>
+		<div class="flex flex-col gap-3">
+			<h1
+				class="m-0 max-w-[26ch] text-[1.875rem] font-[var(--font-weight-header,600)] tracking-[-0.02em] leading-tight"
+				style="font-family: var(--font-header);"
+			>
+				What's new in Silk.
+			</h1>
+			<p
+				class="m-0 max-w-2xl text-[1rem] text-foreground-muted leading-relaxed font-[var(--font-weight-description,450)]"
+			>
+				Releases, polish passes, and the occasional bug fix — in the order they shipped.
+			</p>
+		</div>
+	</header>
 
-<!-- ─── Release timeline ───────────────────────────────────────── -->
-<section class="pt-10 flex flex-col gap-10">
-	{#each releases as release, idx}
-		<article class="relative flex flex-col gap-5">
-			<!-- Release header -->
-			<div class="flex flex-col gap-2">
-				<div class="flex flex-wrap items-center gap-2">
-					<span
-						class="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2 py-0.5 font-mono text-[0.74rem] [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)] text-foreground"
-					>
-						<GitCommit size={11} class="text-foreground-muted" />
-						{release.version}
-					</span>
-					<span class="text-[0.74rem] text-foreground-muted">{formatDate(release.date)}</span>
-					{#if idx === 0}
-						<Badge
-							variant="outlined"
-							class="border-[color-mix(in_srgb,var(--color-primary)_50%,var(--color-border))] text-[0.62rem] uppercase tracking-wide"
+	<!-- ─── Release timeline ───────────────────────────────────────── -->
+	<section class="pt-10 flex flex-col gap-10">
+		{#each releases as release, idx (release.version)}
+			<article class="relative flex flex-col gap-5">
+				<!-- Release header -->
+				<div class="flex flex-col gap-2">
+					<div class="flex flex-wrap items-center gap-2">
+						<span
+							class="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2 py-0.5 font-mono text-[0.74rem] [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)] text-foreground"
 						>
-							Latest
-						</Badge>
-					{/if}
-				</div>
-				<h2
-					class="m-0 text-[1.5rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] leading-tight tracking-[-0.025em]"
-					style="font-family: var(--font-header);"
-				>
-					{release.title}
-				</h2>
-				<p class="m-0 max-w-[46rem] text-[0.92rem] leading-relaxed text-foreground-muted">
-					{release.summary}
-				</p>
-			</div>
-
-			<!-- Entries -->
-			<div class="grid grid-cols-1 gap-3 md:grid-cols-2">
-				{#each release.entries as entry}
-					<div
-						class="flex flex-col gap-3 rounded-[var(--radius-lg)] border border-border bg-card p-5"
-					>
-						<div class="flex items-center justify-between gap-2">
-							<span
-								class="grid size-9 place-items-center rounded-md bg-secondary/60 text-foreground"
+							<GitCommit size={11} class="text-foreground-muted" />
+							{release.version}
+						</span>
+						<span class="text-[0.74rem] text-foreground-muted">{formatDate(release.date)}</span>
+						{#if idx === 0}
+							<Badge
+								variant="outline"
+								class="border-[color-mix(in_srgb,var(--color-primary)_50%,var(--color-border))] text-[0.62rem] uppercase tracking-wide"
 							>
-								<entry.icon size={15} />
-							</span>
-							<span
-								class={`inline-flex items-center rounded-md border px-2 py-0.5 text-[0.62rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide ${tagStyles[entry.tag].cls}`}
-							>
-								{tagStyles[entry.tag].label}
-							</span>
-						</div>
-						<p
-							class="m-0 text-[0.96rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
-							style="font-family: var(--font-header);"
-						>
-							{entry.title}
-						</p>
-						<p class="m-0 text-[0.84rem] leading-relaxed text-foreground-muted">
-							{entry.body}
-						</p>
+								Latest
+							</Badge>
+						{/if}
 					</div>
-				{/each}
-			</div>
-		</article>
-	{/each}
-</section>
+					<h2
+						class="m-0 text-[1.5rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] leading-tight tracking-[-0.025em]"
+						style="font-family: var(--font-header);"
+					>
+						{release.title}
+					</h2>
+					<p class="m-0 max-w-[46rem] text-[0.92rem] leading-relaxed text-foreground-muted">
+						{release.summary}
+					</p>
+				</div>
 
-<!-- ─── Footer CTA ─────────────────────────────────────────────── -->
-<section
-	class="mt-12 flex flex-col items-start justify-between gap-4 rounded-[var(--radius-lg)] border border-border bg-card p-6 sm:flex-row sm:items-center"
->
-	<div class="flex flex-col gap-1">
-		<p
-			class="m-0 text-[1rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
-			style="font-family: var(--font-header);"
-		>
-			Want to follow along?
-		</p>
-		<p class="m-0 text-[0.86rem] text-foreground-muted">
-			Star the repo to see new releases as they ship, or jump straight to the latest components.
-		</p>
-	</div>
-	<div class="flex flex-wrap items-center gap-2">
-		<Button href="https://github.com/aidan-neel/ui" variant="outlined">GitHub</Button>
-		<Button href="/docs/components">
-			Components
-			<ArrowRight size={14} />
-		</Button>
-	</div>
-</section>
+				<!-- Entries -->
+				<div class="grid grid-cols-1 gap-3 md:grid-cols-2">
+					{#each release.entries as entry (entry.title)}
+						<div
+							class="flex flex-col gap-3 rounded-[var(--radius-lg)] border border-border bg-card p-5"
+						>
+							<div class="flex items-center justify-between gap-2">
+								<span
+									class="grid size-9 place-items-center rounded-md bg-secondary/60 text-foreground"
+								>
+									<entry.icon size={15} />
+								</span>
+								<span
+									class={`inline-flex items-center rounded-md border px-2 py-0.5 text-[0.62rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide ${tagStyles[entry.tag].cls}`}
+								>
+									{tagStyles[entry.tag].label}
+								</span>
+							</div>
+							<p
+								class="m-0 text-[0.96rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
+								style="font-family: var(--font-header);"
+							>
+								{entry.title}
+							</p>
+							<p class="m-0 text-[0.84rem] leading-relaxed text-foreground-muted">
+								{entry.body}
+							</p>
+						</div>
+					{/each}
+				</div>
+			</article>
+		{/each}
+	</section>
+
+	<!-- ─── Footer CTA ─────────────────────────────────────────────── -->
+	<section
+		class="mt-12 flex flex-col items-start justify-between gap-4 rounded-[var(--radius-lg)] border border-border bg-card p-6 sm:flex-row sm:items-center"
+	>
+		<div class="flex flex-col gap-1">
+			<p
+				class="m-0 text-[1rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
+				style="font-family: var(--font-header);"
+			>
+				Want to follow along?
+			</p>
+			<p class="m-0 text-[0.86rem] text-foreground-muted">
+				Star the repo to see new releases as they ship, or jump straight to the latest components.
+			</p>
+		</div>
+		<div class="flex flex-wrap items-center gap-2">
+			<Button href="https://github.com/aidan-neel/ui" variant="outline">GitHub</Button>
+			<Button href="/docs/components">
+				Components
+				<ArrowRight size={14} />
+			</Button>
+		</div>
+	</section>
+</div>

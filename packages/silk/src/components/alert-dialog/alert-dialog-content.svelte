@@ -1,41 +1,33 @@
 <script lang="ts">
 	import * as Modal from '@silk/ui/components/modal';
-	import { setContext } from 'svelte';
-	import { cn, type DefaultProps } from '@silk/ui/utils';
-	import { ALERT_DIALOG_VARIANT_KEY, type AlertDialogVariant } from '.';
+	import type { DefaultProps } from '@silk/ui/utils';
 
 	type Props = {
 		allowClickOutside?: boolean;
-		variant?: AlertDialogVariant;
+		/** Max-width preset (maps to the --modal-width-* tokens). Defaults to `md`. */
+		size?: 'sm' | 'md' | 'lg' | 'xl';
+		/** Show the top-right close (X) button. Defaults to `true`. */
+		showClose?: boolean;
 	} & DefaultProps;
 
 	let {
 		class: className,
 		allowClickOutside = false,
-		variant = 'default',
+		size = 'md',
+		showClose = true,
 		children,
 		...rest
 	}: Props = $props();
-
-	// Broadcast the variant (as a getter so it stays reactive) to descendant
-	// parts -- Title, Description, Footer, Confirm, Exit -- so they can opt into
-	// the matching treatment.
-	setContext(ALERT_DIALOG_VARIANT_KEY, () => variant);
-
-	const panelClass = $derived(
-		variant === 'spotlight'
-			? 'text-center text-[var(--color-panel-foreground)] border border-border rounded-[1.5rem] gap-5 p-7 max-w-[26rem]'
-			: 'text-[var(--color-panel-foreground)] border border-border rounded-[var(--radius-xl)]'
-	);
 </script>
 
 <Modal.Content
 	{allowClickOutside}
+	{size}
+	{showClose}
 	role="alertdialog"
 	panelIdPrefix="alert-dialog"
 	data-ui="alert-dialog-content"
-	data-variant={variant}
-	class={cn(className, panelClass)}
+	class={className}
 	{...rest}
 >
 	{@render children?.()}

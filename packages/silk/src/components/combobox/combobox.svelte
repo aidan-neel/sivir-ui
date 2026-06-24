@@ -4,13 +4,19 @@
 	import type { ComboboxState } from '.';
 	import * as Popover from '@silk/ui/components/popover';
 
-	const { children, state_key, ...rest }: Popover.PopoverProps = $props();
+	interface Props extends Popover.PopoverProps {
+		placeholder?: string;
+	}
+
+	const { children, state_key, placeholder = 'Select…', ...rest }: Props = $props();
 
 	const generatedKey = Math.random().toString(36).substring(2);
 	// svelte-ignore state_referenced_locally
 	const key = $derived(state_key ?? generatedKey);
 	// svelte-ignore state_referenced_locally
 	setContext('key', key);
+	// svelte-ignore state_referenced_locally
+	setContext('placeholder', placeholder);
 
 	// svelte-ignore state_referenced_locally
 	const uiState = useState<ComboboxState>(
@@ -27,6 +33,7 @@
 		if (event.key === 'Escape') {
 			if (uiState.data) {
 				uiState.data.open = false;
+				uiState.data.searchContent = '';
 			}
 		}
 	}

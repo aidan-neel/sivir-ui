@@ -1,20 +1,13 @@
 import { env } from '$env/dynamic/private';
-import type { ThemeDraft } from '@silk/ui/themes/presets';
+import type { Theme } from '@silk/ui/themes/theme';
 
-export type RegistryTheme = ThemeDraft & {
+export type RegistryTheme = Theme & {
 	id: string;
 	createdAt: string;
 	updatedAt: string;
 };
 
 const DEFAULT_REGISTRY_URL = 'http://localhost:4100';
-
-// Bound registry reads so an unreachable registry (e.g. not running in local
-// dev) fails fast and lets callers fall back, instead of hanging the request --
-// a dead local port doesn't always refuse promptly (notably under WSL2). The
-// registry is local, so a healthy instance answers in well under this; the
-// timeout is only ever paid when it's down, so keep it short.
-const REGISTRY_READ_TIMEOUT_MS = 1200;
 
 export class RegistryRequestError extends Error {
 	constructor(
@@ -35,9 +28,7 @@ async function parseErrorMessage(response: Response) {
 }
 
 export async function listRegistryThemes(fetchImpl: typeof fetch) {
-	const response = await fetchImpl(`${getRegistryBaseUrl()}/themes`, {
-		signal: AbortSignal.timeout(REGISTRY_READ_TIMEOUT_MS)
-	});
+	const response = await fetchImpl(`${getRegistryBaseUrl()}/themes`);
 	if (!response.ok) {
 		throw new RegistryRequestError(response.status, await parseErrorMessage(response));
 	}
@@ -47,9 +38,7 @@ export async function listRegistryThemes(fetchImpl: typeof fetch) {
 }
 
 export async function getRegistryThemeBySlug(fetchImpl: typeof fetch, slug: string) {
-	const response = await fetchImpl(`${getRegistryBaseUrl()}/themes/${encodeURIComponent(slug)}`, {
-		signal: AbortSignal.timeout(REGISTRY_READ_TIMEOUT_MS)
-	});
+	const response = await fetchImpl(`${getRegistryBaseUrl()}/themes/${encodeURIComponent(slug)}`);
 	if (!response.ok) {
 		throw new RegistryRequestError(response.status, await parseErrorMessage(response));
 	}
@@ -57,7 +46,7 @@ export async function getRegistryThemeBySlug(fetchImpl: typeof fetch, slug: stri
 	return (await response.json()) as RegistryTheme;
 }
 
-export async function publishRegistryTheme(fetchImpl: typeof fetch, theme: ThemeDraft) {
+export async function publishRegistryTheme(fetchImpl: typeof fetch, theme: Theme) {
 	const response = await fetchImpl(`${getRegistryBaseUrl()}/themes`, {
 		method: 'POST',
 		headers: {

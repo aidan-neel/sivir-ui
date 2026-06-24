@@ -2,412 +2,360 @@
 @source "./**/*.{svelte,ts}";
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* Chosen Theme */
 @theme {
-	/* Fonts */
-	--font-sans: 'Geist', sans-serif;
-	--font-mono: 'Geist Mono', monospace;
+	--font-sans: 'Inter', sans-serif;
+	--font-mono: 'JetBrains Mono', monospace;
 	--font-header: var(--font-sans);
 
-	/* Core colors */
-	--color-background: #fafafa;
-	/* Background for floating overlays (Modal/Dialog/Sheet/Command). Themes
-	   override this to either --color-background or --color-card based on the
-	   `overlaysOnSurface` flag. */
-	--color-overlay-bg: var(--color-background);
-	--color-border: #e5e5e5;
-	--color-border-strong: #d0d0d0;
-	--color-input: #d0d0d0;
-	--color-primary: #5e6ad2;
-	--color-info: #5e6ad2;
-	--color-foreground-opposite: #ffffff;
-	--color-foreground: #0f0f10;
-	--color-muted: #f5f5f5;
-	--color-panel: #ffffff;
-	--color-modal: #ffffff;
-	--color-foreground-muted: #8a8a8a;
-	--color-foreground-btn: #ffffff;
-	--color-secondary: #f2f2f2;
-	--color-card: #ffffff;
-	--color-accent: #ffffff;
-	--color-alternate: #1a1a1b;
-	--color-success: #4caf7d;
-	--color-warning: #f5a623;
-	--color-error: #eb5757;
-	--color-destructive: #e03f3f;
-	--color-overlay: rgb(15 15 16 / 0.18);
-	--color-ring: rgb(94 106 210 / 0.22);
+	--silk-neutral-0: hsl(0 0% 100%);
+	--silk-neutral-10: hsl(60 11.1% 99.2%);
+	--silk-neutral-25: hsl(60 11.1% 98.2%);
+	--silk-neutral-50: hsl(60 11.1% 96.5%);
+	--silk-neutral-100: hsl(60 6.2% 93.7%);
+	--silk-neutral-150: hsl(60 4.2% 90.6%);
+	--silk-neutral-200: hsl(60 5% 88%);
+	--silk-neutral-300: hsl(60 4.4% 82.4%);
+	--silk-neutral-400: hsl(60 3.8% 69.4%);
+	--silk-neutral-500: hsl(60 3% 54.7%);
+	--silk-neutral-600: hsl(60 3.3% 42.2%);
+	--silk-neutral-700: hsl(60 4% 31%);
+	--silk-neutral-800: hsl(60 5% 19%);
+	--silk-neutral-900: hsl(60 5.7% 10.4%);
 
-	/* Semantic aliases */
-	--color-panel-foreground: var(--color-foreground);
-	--color-floating-panel: var(--color-panel);
-	--color-floating-panel-foreground: var(--color-foreground);
-	--color-tooltip: color-mix(in srgb, var(--color-foreground) 90%, black);
-	--color-tooltip-foreground: var(--color-foreground-opposite);
-	--color-field: var(--color-background);
-	--color-field-hover: color-mix(in srgb, var(--color-background) 88%, var(--color-secondary));
-	--color-field-focus: var(--color-background);
-	--color-field-foreground: var(--color-foreground);
-	--color-field-placeholder: color-mix(in srgb, var(--color-foreground) 42%, transparent);
+	--silk-blue-50: hsl(218.8 100% 96.7%);
+	--silk-blue-100: hsl(218 100% 93%);
+	--silk-blue-500: hsl(212.2 100% 64.5%);
+	--silk-blue-600: hsl(219.1 85.8% 58.6%);
+	--silk-blue-ring: rgb(74 140 255 / 0.4);
 
-	/* Border radius */
-	--radius-sm: 0.2rem;
-	--radius-md: 0.3rem;
-	--radius-lg: 0.4rem;
-	--radius-xl: 0.6rem;
-	--motion-duration-hover: 240ms;
-	--motion-duration-menu: 150ms;
-	--motion-duration-panel: 240ms;
-	--motion-duration-sheet: 320ms;
-	--motion-duration-overlay: 150ms;
-	--motion-duration-tooltip: 140ms;
-	--motion-duration-toast-in: 440ms;
-	--motion-duration-toast-out: 340ms;
-	--motion-panel-easing: cubic-bezier(0.22, 1, 0.36, 1);
-	--motion-easing-hover: cubic-bezier(0.25, 0.1, 0.25, 1);
+	--silk-success: hsl(148.7 42.2% 42.7%);
+	--silk-warning: hsl(36.1 64.8% 47.8%);
+	--silk-error: hsl(0 57.7% 56.5%);
 
-	/* Animation (shape) -- keyframe names per surface, set by the active theme's
-	   animation. Defaults to the "Default" (flyAndScale) animation. `none`
-	   disables motion for a surface. Decoupled from the duration/easing tokens
-	   above (the "feel"). */
-	--silk-anim-panel-in: silk-panel-default-in;
-	--silk-anim-panel-out: silk-panel-default-out;
-	--silk-anim-overlay-in: silk-fade-in;
-	--silk-anim-overlay-out: silk-fade-out;
-	--silk-anim-sheet-in: silk-sheet-in;
-	--silk-anim-sheet-out: silk-sheet-out;
-	--silk-sheet-from: translateX(100%);
+	--silk-space-unit: 3.6px;
+	--silk-space-1: calc(var(--silk-space-unit) * 1);
+	--silk-space-2: calc(var(--silk-space-unit) * 2);
+	--silk-space-3: calc(var(--silk-space-unit) * 3);
+	--silk-space-4: calc(var(--silk-space-unit) * 4);
+	--silk-space-5: calc(var(--silk-space-unit) * 5);
+	--silk-space-6: calc(var(--silk-space-unit) * 6);
+	--silk-space-8: calc(var(--silk-space-unit) * 8);
+	--silk-space-10: calc(var(--silk-space-unit) * 10);
 
-	--border-size: 1px;
+	--radius-sm: 6px;
+	--radius-md: 8px;
+	--radius-lg: 10px;
+	--radius-xl: 14px;
 
-	/* Spacing + sizing */
-	--space-control-x: 0.75rem;
-	--space-panel: 0.75rem;
-	--space-menu-item-x: 0.45rem;
-	--size-control-sm: 1.8rem;
-	--size-control-md: 2.2rem;
-	--size-control-lg: 2.4rem;
-	--size-icon-md: 2rem;
-	--size-switch-track: 2.45rem;
-	--size-switch-thumb: 0.875rem;
-	--switch-track-padding: 0.125rem;
-	--card-highlight: rgb(255 255 255 / 0.5);
-	--panel-highlight: rgb(255 255 255 / 0.58);
-
-	/* Shadows */
-	--shadow-xs: 0 1px 2px rgb(16 24 40 / 0.06);
-	--shadow-sm: 0 4px 10px rgb(16 24 40 / 0.08), 0 1px 2px rgb(16 24 40 / 0.05);
-	--shadow-md: 0 12px 24px -4px rgb(16 24 40 / 0.12), 0 4px 8px -2px rgb(16 24 40 / 0.06);
-	--shadow-lg: 0 24px 48px -12px rgb(16 24 40 / 0.18), 0 10px 16px -6px rgb(16 24 40 / 0.08);
-
-	/* Typography */
 	--text-xs: 12px;
 	--text-sm: 14px;
-	--text-base: 16px;
-	--tracking-header: -0.02em;
+	--text-base: 14px;
+	--font-size-header: 16px;
+	--font-size-body: 14px;
+	--font-size-label: 13px;
+	--font-size-button: 14px;
+	--font-size-badge: 12px;
+	--font-weight-header: 600;
+	--font-weight-body: 400;
+	--font-weight-label: 500;
+	--font-weight-button: 500;
+	--font-weight-badge: 500;
+	--font-weight-description: 450;
+
+	--tracking-header: -0.015em;
 	--tracking-body: 0em;
 	--tracking-label: 0em;
 	--tracking-button: 0em;
 	--tracking-badge: 0em;
-	--font-size-header: 18px;
-	--font-size-body: 16px;
-	--font-size-label: 14px;
-	--font-size-button: 14px;
-	--font-size-badge: 12px;
-	--haptic-press-y: 0px;
-	--menu-padding: 4px;
-	--menu-search-padding: 12px;
-	--menu-label-padding-x: 8px;
-	--menu-label-padding-y: 4px;
-	--toggle-padding-sm: 8px;
-	--toggle-padding-md: 10px;
-	--toggle-padding-lg: 14px;
-	--tabs-trigger-padding-x: 14px;
-	--tabs-trigger-padding-y: 6px;
-	--tabs-list-padding: 3px;
-	--toast-padding-x: 16px;
-	--toast-padding-y: 16px;
-	--calendar-padding: 12px;
-	--color-picker-padding: 10px;
-	--sheet-header-padding-bottom: 24px;
-	--modal-padding: 16px;
-	--modal-title-description-gap: 6px;
-	--modal-section-gap: 16px;
-	--sheet-body-padding: 16px;
-	--textarea-min-height: 7rem;
-	--textarea-padding-y: 0.7rem;
-	--breadcrumb-gap: 0.5rem;
-	--calendar-grid-gap: 0.25rem;
-	--toast-icon-size: 1.65rem;
-	--toast-close-size: 1.2rem;
-	--shortcut-font-size: 11px;
-	--color-picker-width: 244px;
-	--slider-thumb-size: 16px;
-	--slider-thumb-border: 2px;
-	--slider-track-height: 0.375rem;
-	--slider-transition-duration: 120ms;
 
-	/* Component-level tokens */
-	--button-height: calc(var(--size-control-md));
-	--button-padding-x: calc(var(--space-control-x) + 0.15rem);
-	--button-gap: 0.375rem;
+	--elevation-0: none;
+	--elevation-1: 0 4px 2px rgb(0 0 0 / 0.04);
+	--elevation-float: 0 8px 24px -8px rgb(0 0 0 / 0.12), 0 2px 6px rgb(0 0 0 / 0.06);
+
+	--motion-duration-hover: 120ms;
+	--motion-duration-menu: 40ms;
+	--motion-duration-panel: 180ms;
+	--motion-duration-sheet: 220ms;
+	--motion-duration-overlay: 120ms;
+	--motion-duration-tooltip: 120ms;
+	--motion-duration-toast-in: 320ms;
+	--motion-duration-toast-out: 240ms;
+	--motion-panel-x: 0px;
+	--motion-panel-y: 4px;
+	--motion-panel-blur: 2px;
+	--motion-panel-scale-start: 0.97;
+
+	--motion-duration-panel-in: 140ms;
+	--motion-duration-panel-out: 180ms;
+	--motion-panel-origin: top left;
+	--motion-sheet-offset: 132px;
+	--motion-overlay-blur: 0px;
+
+	--ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+	--ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+	--ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+	--motion-panel-easing: var(--ease-out);
+	--motion-panel-ease-out: cubic-bezier(0.4, 0, 0.2, 1);
+	--motion-easing-hover: var(--ease-out);
+
+	--motion-press-scale: 1;
+	--motion-duration-press: 110ms;
+
+	--border-size: 1px;
 	--ui-cursor-interactive: pointer;
+	--ui-panel-interactive: default;
 
+	--color-background: var(--silk-neutral-10);
+	--color-card: var(--silk-neutral-0);
+	--color-panel: var(--silk-neutral-0);
+	--color-muted: var(--silk-neutral-50);
+	--color-secondary: var(--silk-neutral-100);
+
+	--color-border: var(--silk-neutral-150);
+	--color-border-strong: var(--silk-neutral-300);
+	--color-input: var(--silk-neutral-300);
+	--color-foreground: var(--silk-neutral-900);
+	--color-foreground-muted: var(--silk-neutral-500);
+	--color-foreground-opposite: var(--silk-neutral-0);
+	--color-foreground-btn: hsl(0 0% 100%);
+	--color-primary: #1f9be6;
+	--color-primary-hover: #1789cf;
+	--color-on-primary: hsl(0 0% 100%);
+	--color-accent-tint: var(--silk-blue-50);
+	--color-ring: color-mix(in srgb, var(--color-primary) 30%, transparent);
+	--focus-ring: 0 0 0 3px var(--color-ring);
+	--color-overlay: var(--silk-neutral-0);
+
+	--color-success: var(--silk-success);
+	--color-warning: var(--silk-warning);
+	--color-error: var(--silk-error);
+	--color-info: var(--silk-blue-500);
+
+	--color-tooltip: var(--silk-neutral-900);
+	--color-tooltip-foreground: var(--silk-neutral-0);
+
+	--color-field: var(--color-card);
+	--color-field-hover: var(--color-muted);
+	--color-field-foreground: var(--color-foreground);
+
+	--size-control-sm: var(--silk-space-8); /* 32px */
+	--size-control-md: calc(var(--silk-space-8) + var(--silk-space-2)); /* 36px */
+	--size-control-lg: var(--silk-space-10); /* 40px */
+	--size-icon-md: var(--silk-space-8);
+	--space-control-x: var(--silk-space-3);
+	--space-panel: var(--silk-space-3);
+	--space-menu-item-x: var(--silk-space-2);
+
+	--button-height: var(--size-control-md);
+	--button-padding-x: var(--silk-space-3);
+	--button-gap: var(--silk-space-2);
 	--button-primary-bg: var(--color-primary);
-	/* Transparent by default; the Studio's `primaryButtonOutline` flag (via
-	   themeToCss) sets a visible color to draw the primary button's outline. */
+	--button-primary-foreground: var(--color-on-primary);
+	--button-primary-hover-bg: color-mix(in srgb, var(--color-primary) 88%, white);
 	--button-primary-border: transparent;
-	--button-primary-foreground: var(--color-foreground-btn);
-	/* Auto-adaptive: darken light primaries, lighten dark ones (e.g. near-black)
-	   so the hover is always visible. sign() flips the shift at L≈0.4. */
-	--button-primary-hover-bg: oklch(from var(--color-primary) calc(l + 0.1 * sign(0.4 - l)) c h);
-	--button-primary-shadow:
-		0 1px 2px 0 rgb(10 13 18 / 0.05), inset 0 -2px 0 0 rgb(0 0 0 / 0.05),
-		inset 0 0 0 1px rgb(0 0 0 / 0.25);
-
-	--button-success-bg: var(--color-success);
-	--button-success-border: color-mix(in srgb, var(--color-success) 80%, #2f7a4e);
-	--button-success-foreground: #f0fff5;
-	--button-success-hover-bg: color-mix(in srgb, var(--color-success) 88%, #2f7a4e);
-	--button-success-shadow:
-		0 1px 2px 0 color-mix(in srgb, var(--color-success) 28%, rgb(10 13 18 / 0.08)),
-		inset 0 -2px 0 0 rgb(0 0 0 / 0.06),
-		inset 0 0 0 1px color-mix(in srgb, var(--color-success) 55%, #0d3a23);
-
-	--button-warning-bg: var(--color-warning);
-	--button-warning-border: color-mix(in srgb, var(--color-warning) 82%, #a06800);
-	--button-warning-foreground: #fff8ef;
-	--button-warning-hover-bg: color-mix(in srgb, var(--color-warning) 88%, #a06800);
-	--button-warning-shadow:
-		0 1px 2px 0 color-mix(in srgb, var(--color-warning) 30%, rgb(10 13 18 / 0.08)),
-		inset 0 -2px 0 0 rgb(0 0 0 / 0.06),
-		inset 0 0 0 1px color-mix(in srgb, var(--color-warning) 55%, #4a2900);
-
-	--button-error-bg: var(--color-error);
-	--button-error-border: color-mix(in srgb, var(--color-error) 80%, #8b2222);
-	--button-error-foreground: #fff5f5;
-	--button-error-hover-bg: color-mix(in srgb, var(--color-error) 88%, #8b2222);
-	--button-error-shadow:
-		0 1px 2px 0 color-mix(in srgb, var(--color-error) 28%, rgb(10 13 18 / 0.08)),
-		inset 0 -2px 0 0 rgb(0 0 0 / 0.06),
-		inset 0 0 0 1px color-mix(in srgb, var(--color-error) 55%, #4a0e0e);
-
-	--button-secondary-bg: var(--color-secondary);
-	--button-secondary-border: var(--color-border);
+	--button-secondary-bg: var(--color-muted);
 	--button-secondary-foreground: var(--color-foreground);
-	--button-secondary-hover-bg: color-mix(in srgb, var(--color-secondary) 72%, var(--color-border));
-
-	--button-flat-bg: color-mix(in srgb, var(--color-primary) 12%, transparent);
-	--button-flat-border: transparent;
-	--button-flat-foreground: var(--color-primary);
-	--button-flat-hover-bg: color-mix(in srgb, var(--color-primary) 18%, transparent);
-
-	--button-outlined-bg: var(--color-background);
-	--button-outlined-foreground: var(--color-foreground);
-	--button-outlined-hover-bg: color-mix(
-		in srgb,
-		var(--button-outlined-bg) 96%,
-		var(--color-foreground)
-	);
-	--button-outlined-shadow:
-		0 12px 30px -8px rgb(15 15 16 / 0.18), 0 6px 14px -6px rgb(15 15 16 / 0.12),
-		0 1px 2px rgb(15 15 16 / 0.06);
-	--button-outlined-fancy-shadow: var(--field-outlined-shadow);
-	--button-outlined-flat-shadow: inset 0 0 0 1px var(--color-border);
-
+	--button-secondary-border: var(--color-border);
+	--button-secondary-hover-bg: color-mix(in srgb, var(--color-muted) 70%, white);
 	--button-ghost-bg: transparent;
 	--button-ghost-border: transparent;
 	--button-ghost-foreground: var(--color-foreground);
-	--button-ghost-hover-bg: color-mix(in srgb, var(--color-foreground) 6%, transparent);
+	--button-ghost-hover-bg: color-mix(in srgb, var(--color-foreground) 8%, transparent);
 
-	--button-alternate-bg: var(--color-alternate);
-	--button-alternate-border: var(--color-alternate);
-	--button-alternate-foreground: var(--color-foreground-opposite);
-	--button-alternate-hover-bg: color-mix(in srgb, var(--color-alternate) 90%, #ffffff);
+	--button-press-y: 1px;
+	--button-outlined-bg: var(--color-card);
+	--button-outlined-foreground: var(--color-foreground);
+	--button-outlined-hover-bg: var(--color-muted);
+	--button-outline-shadow:
+		inset 0 0 0 1px var(--color-border), inset 0 -2px 3px -2px rgb(15 15 16 / 0.08),
+		inset 0 1px 0 0 rgb(255 255 255 / 0.4);
+	--button-destructive-bg: color-mix(in srgb, var(--color-error) 12%, transparent);
+	--button-destructive-foreground: var(--color-error);
+	--button-destructive-border: transparent;
+	--button-destructive-hover-bg: color-mix(in srgb, var(--color-error) 20%, transparent);
 
-	--button-destructive-bg: var(--color-destructive);
-	--button-destructive-border: color-mix(in srgb, var(--color-destructive) 80%, #8b0000);
-	--button-destructive-foreground: var(--color-foreground-btn);
-	--button-destructive-hover-bg: color-mix(in srgb, var(--color-destructive) 88%, #8b0000);
-	--button-destructive-shadow:
-		0 1px 2px 0 color-mix(in srgb, var(--color-destructive) 30%, rgb(10 13 18 / 0.08)),
-		inset 0 -2px 0 0 rgb(0 0 0 / 0.06),
-		inset 0 0 0 1px color-mix(in srgb, var(--color-destructive) 55%, #4a0000);
-
-	--badge-padding-x: 0.55rem;
-	--badge-padding-y: 0.25rem;
+	--badge-padding-x: var(--silk-space-2);
+	--badge-padding-y: 2px;
+	--badge-primary-bg: var(--color-primary);
+	--badge-primary-fg: var(--color-on-primary);
+	--badge-secondary-bg: var(--color-secondary);
+	--badge-secondary-fg: var(--color-foreground);
+	--badge-ghost-bg: transparent;
+	--badge-ghost-fg: var(--color-foreground);
+	--badge-ghost-border: transparent;
+	--badge-outline-bg: transparent;
+	--badge-outline-fg: var(--color-foreground);
+	--badge-outline-border: var(--color-border);
+	--badge-destructive-bg: var(--color-error);
+	--badge-destructive-fg: hsl(0 0% 100%);
+	--badge-info-bg: color-mix(in srgb, var(--color-info) 16%, transparent);
+	--badge-info-fg: var(--color-info);
+	--badge-success-bg: color-mix(in srgb, var(--color-success) 16%, transparent);
+	--badge-success-fg: var(--color-success);
+	--badge-warning-bg: color-mix(in srgb, var(--color-warning) 16%, transparent);
+	--badge-warning-fg: var(--color-warning);
+	--badge-error-bg: color-mix(in srgb, var(--color-error) 16%, transparent);
+	--badge-error-fg: var(--color-error);
 
 	--field-height: var(--size-control-md);
-	--field-padding-x: var(--space-control-x);
+	--field-padding-x: var(--silk-space-3);
 	--field-padding-y: 0rem;
-	--field-focus-border: color-mix(in srgb, var(--color-primary) 28%, var(--color-border-strong));
+	--field-bg: var(--color-card);
+	--field-border: var(--color-input);
+	--field-focus-border: var(--color-primary);
+	--field-placeholder: var(--color-foreground-muted);
 	--field-disabled-opacity: 0.55;
-	--field-outlined-shadow:
-		0 1px 2px 0 rgb(10 13 18 / 0.05), inset 0 -2px 0 0 rgb(0 0 0 / 0.05),
-		inset 0 0 0 1px var(--color-border);
+	--field-outlined-shadow: inset 0 0 0 1px var(--color-border);
 
-	--panel-padding: var(--space-panel);
-	--panel-shadow:
-		0 16px 36px -10px rgb(15 15 16 / 0.18), 0 6px 14px -6px rgb(15 15 16 / 0.1),
-		0 1px 3px rgb(15 15 16 / 0.05);
-	--outline-shadow: none;
-
-	--card-padding: 1.5rem;
+	/* Panel / card / menu / tooltip */
+	--panel-padding: var(--silk-space-3);
+	--panel-shadow: var(--elevation-float);
+	--card-padding: var(--silk-space-6);
 	--card-bg: var(--color-card);
-	--card-shadow: var(--shadow-xs);
-
-	--tooltip-padding-y: 0.22rem;
-	--tooltip-padding-x: 0.46rem;
-	--tooltip-shadow: 0 10px 22px rgb(16 24 40 / 0.18);
-
-	--menu-item-height: 2rem;
+	--card-shadow: var(--elevation-1);
+	--tooltip-padding-y: var(--silk-space-1);
+	--tooltip-padding-x: var(--silk-space-2);
+	--tooltip-shadow: var(--elevation-float);
+	--menu-item-height: var(--silk-space-8);
 	--menu-item-padding-x: var(--space-menu-item-x);
 	--menu-item-foreground: var(--color-foreground);
-	--floating-menu-item-foreground: var(--menu-item-foreground);
+	--floating-menu-item-foreground: var(--color-foreground);
 	--menu-item-hover-bg: color-mix(in srgb, var(--color-foreground) 6%, transparent);
 	--floating-menu-item-hover-bg: var(--menu-item-hover-bg);
-	--menu-item-active-bg: color-mix(in srgb, var(--color-primary) 10%, transparent);
+	--menu-item-active-bg: var(--color-accent-tint);
 	--floating-menu-item-active-bg: var(--menu-item-active-bg);
 	--menu-label-foreground: var(--color-foreground-muted);
+	--menu-padding: var(--silk-space-1);
+	--menu-search-padding: var(--silk-space-3);
+	--menu-label-padding-x: var(--silk-space-2);
+	--menu-label-padding-y: var(--silk-space-1);
+	--menu-separator-margin-x: var(--silk-space-4);
+	--menu-submenu-min-width: 11rem;
+	--command-dialog-max-width: 35rem;
+	--command-dialog-max-height: 28rem;
+	--command-dialog-width-margin: 1.5rem;
+	--tooltip-max-width: 18rem;
+	--hover-card-width: 16rem;
+	--popover-viewport-margin: 1rem;
 
-	--separator-color: color-mix(in srgb, var(--color-input) 58%, transparent);
-
+	--separator-color: var(--color-border);
+	--separator-thickness: 1px;
 	--switch-track-bg: color-mix(in srgb, var(--color-foreground) 18%, var(--color-background));
 	--switch-track-active-bg: var(--color-primary);
-	--switch-thumb-bg: #ffffff;
-
-	--checkbox-size: 1rem;
+	--switch-thumb-bg: hsl(0 0% 100%);
+	--size-switch-track: var(--silk-space-10);
+	--size-switch-thumb: 14px;
+	--switch-track-padding: 2px;
+	--checkbox-size: var(--silk-space-4);
 	--checkbox-bg: var(--color-field);
 	--checkbox-checked-bg: var(--color-primary);
-	--checkbox-checked-foreground: var(--color-foreground-btn);
-
+	--checkbox-checked-foreground: var(--color-on-primary);
 	--toast-bg: var(--color-panel);
-	--toast-shadow: 0 10px 24px rgb(16 24 40 / 0.08);
-	--skeleton-base: color-mix(in srgb, var(--color-secondary) 92%, var(--color-border));
-	--skeleton-highlight: color-mix(in srgb, white 78%, var(--color-secondary));
+	--toast-shadow: var(--elevation-float);
+	--skeleton-base: var(--color-secondary);
+	--skeleton-highlight: var(--color-muted);
+
+	--tabs-trigger-padding-x: var(--silk-space-3);
+	--tabs-trigger-padding-y: var(--silk-space-2);
+	--tabs-list-padding: 3px;
+	--tabs-indicator-height: 2px;
+	--progress-height: var(--silk-space-2);
+	--toast-padding-x: var(--silk-space-4);
+	--toast-padding-y: var(--silk-space-4);
+	--toast-progress-height: 2px;
+	--toast-icon-size: var(--silk-space-6);
+	--toast-close-size: var(--silk-space-5);
+	--calendar-padding: var(--silk-space-3);
+	--calendar-grid-gap: var(--silk-space-1);
+	--color-picker-padding: var(--silk-space-2);
+	--color-picker-width: 244px;
+	--color-picker-area-height: 148px;
+
+	--modal-padding: var(--silk-space-6);
+	--modal-title-description-gap: var(--silk-space-1);
+	--modal-section-gap: var(--silk-space-4);
+	--modal-width-sm: 22rem;
+	--modal-width-md: 28rem;
+	--modal-width-lg: 36rem;
+	--modal-width-xl: 48rem;
+	--modal-max-width: var(--modal-width-md);
+	--modal-min-height: 5rem;
+	--modal-margin-x: 1.5rem;
+	--modal-max-height-adjust: 2rem;
+
+	--sheet-body-padding: var(--silk-space-4);
+	--sheet-header-padding-bottom: var(--silk-space-6);
+	--sheet-max-width: 25rem;
+	--sheet-margin: 0.5rem;
+
+	--textarea-min-height: 7rem;
+	--textarea-padding-y: var(--silk-space-2);
+	--breadcrumb-gap: var(--silk-space-2);
+	--toggle-padding-sm: var(--silk-space-2);
+	--toggle-padding-md: var(--silk-space-3);
+	--toggle-padding-lg: var(--silk-space-4);
+	--shortcut-font-size: 11px;
+	--slider-thumb-size: 16px;
+	--slider-thumb-border: 2px;
+	--slider-track-height: var(--silk-space-1);
+	--slider-transition-duration: 120ms;
+	--outline-shadow: none;
 }
 
 .dark {
-	/* Fonts */
-	--font-sans: 'Geist', sans-serif;
-	--font-mono: 'Geist Mono', monospace;
+	--silk-neutral-0: hsl(0 0% 5%);
+	--silk-neutral-25: hsl(0 0% 8%);
+	--silk-neutral-50: hsl(0 0% 10%);
+	--silk-neutral-100: hsl(0 0% 13%);
+	--silk-neutral-150: hsl(0 0% 15.7%);
+	--silk-neutral-200: hsl(0 0% 19%);
+	--silk-neutral-300: hsl(0 0% 22.7%);
+	--silk-neutral-400: hsl(0 0% 29%);
+	--silk-neutral-500: hsl(0 0% 42%);
+	--silk-neutral-600: hsl(0 0% 54%);
+	--silk-neutral-700: hsl(0 0% 66%);
+	--silk-neutral-800: hsl(0 0% 81.6%);
+	--silk-neutral-900: hsl(0 0% 93%);
 
-	/* Core colors */
-	--color-background: #141516;
-	--color-border: #252526;
-	--color-border-strong: #303031;
-	--color-input: #303031;
-	--color-primary: #5e6ad2;
-	--color-info: #7b8cf7;
-	--color-foreground-opposite: #ffffff;
-	--color-foreground: #e8e8e8;
-	--color-muted: #1c1c1d;
-	--color-panel: #1f2023;
-	--color-modal: #24262a;
-	--color-foreground-muted: #717171;
-	--color-foreground-btn: #ffffff;
-	--color-secondary: #1e1e1f;
-	--color-card: #1c1c1d;
-	--color-accent: #222224;
-	--color-alternate: #e8e8e8;
-	--color-success: #4caf7d;
-	--color-warning: #f5a623;
-	--color-error: #eb5757;
-	--color-destructive: #c53030;
-	--color-overlay: rgb(0 0 0 / 0.68);
-	--color-ring: rgb(94 106 210 / 0.28);
+	--silk-blue-50: hsl(217.1 52.5% 15.7%);
+	--silk-blue-100: hsl(216.6 51.3% 22.5%);
+	--silk-blue-500: hsl(216.6 100% 67.8%);
+	--silk-blue-600: hsl(218.1 100% 64.5%);
+	--silk-blue-ring: rgb(91 155 255 / 0.45);
 
-	/* Semantic aliases */
-	--color-panel-foreground: var(--color-foreground);
-	--color-floating-panel: var(--color-panel);
-	--color-floating-panel-foreground: var(--color-foreground);
-	--color-tooltip: color-mix(in srgb, white 92%, var(--color-background));
-	--color-tooltip-foreground: #0f1720;
+	--silk-success: hsl(149.7 39.4% 49.2%);
+	--silk-warning: hsl(37.3 72.6% 55.7%);
+	--silk-error: hsl(0 66.7% 63.5%);
+
+	--color-background: hsl(0 0% 4%);
+	--color-muted: hsl(0 0% 7%);
+	--color-card: hsl(0 0% 9%);
+	--color-panel: hsl(0 0% 11.5%);
+	--color-secondary: hsl(0 0% 14.5%);
+	--color-border: hsl(0 0% 16.5%);
+	--color-border-strong: hsl(0 0% 26%);
+	--color-input: hsl(0 0% 24%);
+	--color-foreground-opposite: var(--silk-neutral-0);
+	--color-overlay: rgb(0 0 0 / 0.55);
+	--color-tooltip: var(--silk-neutral-900);
+	--color-tooltip-foreground: var(--silk-neutral-0);
 	--color-field: var(--color-secondary);
-	--color-field-hover: color-mix(in srgb, var(--color-accent) 65%, var(--color-secondary));
-	--color-field-focus: color-mix(in srgb, var(--color-accent) 85%, var(--color-panel));
-	--color-field-foreground: var(--color-foreground);
-	--color-field-placeholder: color-mix(in srgb, var(--color-foreground) 34%, transparent);
 
-	/* Shadows */
-	--shadow-xs: 0 1px 2px rgb(0 0 0 / 0.22);
-	--shadow-sm: 0 4px 12px rgb(0 0 0 / 0.24);
-	--shadow-md: 0 12px 28px rgb(0 0 0 / 0.28);
-	--shadow-lg: 0 18px 36px rgb(0 0 0 / 0.32);
-
-	/* Variant tweaks */
-	--panel-shadow:
-		0 28px 56px -16px rgb(0 0 0 / 0.55), 0 12px 24px -8px rgb(0 0 0 / 0.32),
-		0 2px 6px rgb(0 0 0 / 0.25);
-	--card-highlight: rgb(255 255 255 / 0.04);
-	--panel-highlight: rgb(255 255 255 / 0.05);
-	--floating-panel-highlight: var(--panel-highlight);
-	--button-primary-border: transparent;
-	--button-primary-hover-bg: oklch(from var(--color-primary) calc(l + 0.1 * sign(0.4 - l)) c h);
-	--button-primary-shadow:
-		0 1px 2px 0 rgb(0 0 0 / 0.18), inset 0 -2px 0 0 rgb(0 0 0 / 0.12),
-		inset 0 0 0 1px rgb(255 255 255 / 0.12);
-	--button-secondary-bg: var(--color-secondary);
-	--button-secondary-border: var(--color-border);
-	--button-secondary-hover-bg: color-mix(in srgb, var(--color-secondary) 72%, var(--color-border));
-	--button-success-border: color-mix(in srgb, var(--color-success) 80%, #78d092);
-	--button-success-foreground: #f0fff5;
-	--button-success-hover-bg: color-mix(in srgb, var(--color-success) 88%, #78d092);
-	--button-success-shadow:
-		0 1px 2px 0 color-mix(in srgb, var(--color-success) 32%, rgb(0 0 0 / 0.22)),
-		inset 0 -2px 0 0 rgb(0 0 0 / 0.14),
-		inset 0 0 0 1px color-mix(in srgb, var(--color-success) 55%, #ffffff);
-	--button-warning-border: color-mix(in srgb, var(--color-warning) 80%, #ffc46b);
-	--button-warning-foreground: #fff8ef;
-	--button-warning-hover-bg: color-mix(in srgb, var(--color-warning) 88%, #ffc46b);
-	--button-warning-shadow:
-		0 1px 2px 0 color-mix(in srgb, var(--color-warning) 32%, rgb(0 0 0 / 0.22)),
-		inset 0 -2px 0 0 rgb(0 0 0 / 0.14),
-		inset 0 0 0 1px color-mix(in srgb, var(--color-warning) 55%, #ffffff);
-	--button-error-border: color-mix(in srgb, var(--color-error) 80%, #ffaaa8);
-	--button-error-foreground: #fff4f4;
-	--button-error-hover-bg: color-mix(in srgb, var(--color-error) 88%, #ffaaa8);
-	--button-error-shadow:
-		0 1px 2px 0 color-mix(in srgb, var(--color-error) 32%, rgb(0 0 0 / 0.22)),
-		inset 0 -2px 0 0 rgb(0 0 0 / 0.14),
-		inset 0 0 0 1px color-mix(in srgb, var(--color-error) 55%, #ffffff);
-	--button-flat-foreground: color-mix(in srgb, var(--color-primary) 90%, white);
-	--button-outlined-hover-bg: color-mix(
-		in srgb,
-		var(--button-outlined-bg) 92%,
-		var(--color-foreground)
-	);
-	--button-outlined-shadow:
-		0 24px 48px -16px rgb(0 0 0 / 0.5), 0 12px 24px -8px rgb(0 0 0 / 0.35),
-		0 2px 6px rgb(0 0 0 / 0.25);
-	--button-outlined-fancy-shadow: var(--field-outlined-shadow);
-	--button-outlined-flat-shadow: inset 0 0 0 1px var(--color-border);
-	--button-ghost-hover-bg: color-mix(in srgb, var(--color-foreground) 8%, transparent);
-	--button-alternate-bg: var(--color-foreground);
-	--button-alternate-border: var(--color-foreground);
-	--button-alternate-foreground: var(--color-background);
-	--button-alternate-hover-bg: color-mix(in srgb, var(--color-foreground) 88%, transparent);
-	--button-destructive-border: color-mix(in srgb, var(--color-destructive) 80%, #ff6b6b);
-	--button-destructive-foreground: #ffffff;
-	--button-destructive-hover-bg: color-mix(in srgb, var(--color-destructive) 88%, #ff6b6b);
-	--button-destructive-shadow:
-		0 1px 2px 0 color-mix(in srgb, var(--color-destructive) 34%, rgb(0 0 0 / 0.22)),
-		inset 0 -2px 0 0 rgb(0 0 0 / 0.14),
-		inset 0 0 0 1px color-mix(in srgb, var(--color-destructive) 55%, #ffffff);
-	--floating-menu-item-foreground: var(--color-foreground);
-	--menu-item-hover-bg: color-mix(in srgb, var(--color-foreground) 7%, transparent);
-	--floating-menu-item-hover-bg: var(--menu-item-hover-bg);
-	--floating-menu-item-active-bg: color-mix(in srgb, var(--color-primary) 12%, transparent);
-	--switch-thumb-bg: var(--color-foreground-opposite);
+	--elevation-1: 0 1px 2px rgb(0 0 0 / 0.4);
+	--card-shadow: var(--elevation-1);
+	--panel-shadow: var(--elevation-float);
 	--switch-track-bg: color-mix(in srgb, var(--color-foreground) 24%, var(--color-background));
-	--field-outlined-shadow:
-		0 1px 2px 0 rgb(0 0 0 / 0.16), inset 0 -1px 0 0 rgb(0 0 0 / 0.16),
-		inset 0 0 0 1px var(--color-border);
-	--outline-shadow: none;
-	--toast-shadow: 0 12px 32px rgb(0 0 0 / 0.32);
-	--tooltip-shadow: 0 12px 28px rgb(0 0 0 / 0.28);
-	--skeleton-base: color-mix(in srgb, var(--color-secondary) 86%, var(--color-border-strong));
-	--skeleton-highlight: color-mix(in srgb, var(--color-accent) 68%, var(--color-foreground) 14%);
+
+	--button-secondary-bg: var(--color-secondary);
+	--button-secondary-hover-bg: hsl(0 0% 18.5%);
+	--button-primary-hover-bg: var(--color-primary-hover);
+	--button-outlined-hover-bg: hsl(0 0% 12.5%);
+	--button-ghost-hover-bg: color-mix(in srgb, var(--color-foreground) 10%, transparent);
+	--menu-item-hover-bg: color-mix(in srgb, var(--color-foreground) 8%, transparent);
+	--color-field-hover: hsl(0 0% 17.5%);
+	--button-outline-shadow:
+		inset 0 0 0 1px var(--color-border), inset 0 -2px 3px -2px rgb(0 0 0 / 0.32),
+		inset 0 1px 0 0 rgb(255 255 255 / 0.05);
 }
 
 @layer base {
@@ -415,11 +363,35 @@
 		border-color: var(--color-border);
 	}
 
+	/* Route every border-width utility through --border-size so a single token
+	   drives hairline thickness. Numeric widths (border-2, border-t-2, …) are
+	   separate classes and stay untouched. */
 	.border {
 		border-width: var(--border-size) !important;
 	}
+	.border-x {
+		border-inline-width: var(--border-size) !important;
+	}
+	.border-y {
+		border-block-width: var(--border-size) !important;
+	}
+	.border-t {
+		border-top-width: var(--border-size) !important;
+	}
+	.border-r {
+		border-right-width: var(--border-size) !important;
+	}
+	.border-b {
+		border-bottom-width: var(--border-size) !important;
+	}
+	.border-l {
+		border-left-width: var(--border-size) !important;
+	}
 
-	[data-ui='button'],
+	[data-ui='button'] {
+		transition-duration: calc(var(--motion-duration-hover) + 100ms) !important;
+	}
+
 	[data-ui='input'],
 	[data-ui='textarea'],
 	[data-ui='switch'],
@@ -435,10 +407,6 @@
 		transition-timing-function: var(--motion-panel-easing);
 	}
 
-	/* Menu items: every item-style row in popover-based menus collapses to
-	   --menu-item-height, regardless of content. Targets roles set on items
-	   by DropdownMenu, ContextMenu, Select, Combobox, Command, and their
-	   sub-triggers. */
 	[role='menuitem'],
 	[role='menuitemcheckbox'],
 	[role='menuitemradio'],
@@ -454,220 +422,75 @@
 	}
 }
 
+@keyframes silk-panel-in {
+	from {
+		opacity: 0;
+		transform: translateY(var(--motion-panel-y)) scale(var(--motion-panel-scale-start));
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0) scale(1);
+	}
+}
+@keyframes silk-panel-out {
+	from {
+		opacity: 1;
+		transform: translateY(0) scale(1);
+	}
+	to {
+		opacity: 0;
+		transform: translateY(var(--motion-panel-y)) scale(var(--motion-panel-scale-start));
+	}
+}
+@keyframes silk-overlay-in {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+@keyframes silk-overlay-out {
+	from {
+		opacity: 1;
+	}
+	to {
+		opacity: 0;
+	}
+}
+
+[data-silk-anim='panel'] {
+	transform-origin: var(--motion-panel-origin, top left);
+}
+[data-silk-anim='panel'][data-state='open'] {
+	animation: silk-panel-in var(--motion-duration-panel-in) var(--motion-panel-easing) both;
+}
+[data-silk-anim='panel'][data-state='closed'] {
+	animation: silk-panel-out var(--motion-duration-panel-out) var(--motion-panel-ease-out) both;
+}
+[data-silk-anim='overlay'][data-state='open'] {
+	animation: silk-overlay-in var(--motion-duration-overlay) var(--ease-out) both;
+}
+[data-silk-anim='overlay'][data-state='closed'] {
+	animation: silk-overlay-out var(--motion-duration-overlay) var(--ease-out) both;
+}
+
 @keyframes skeleton-loading {
 	0% {
 		background-position: 200% 0;
 	}
-
 	100% {
 		background-position: -200% 0;
 	}
 }
 
-/* ----------------------------------------------------------------------------
-   Motion: decoupled Animation (shape) + Feel (timing).
-
-   The `silk-*` keyframes below are the seven animations. Which pair runs on each
-   surface is chosen by the `--silk-anim-*` variables (the theme's animation);
-   the duration/easing come from `--motion-duration-*` / `--motion-*-easing` (the
-   theme's feel). Surfaces render with `data-ui` + `data-state` (open|closed) via
-   the presence rune; the rules here map state -> keyframe.
-   ------------------------------------------------------------------------- */
-@keyframes silk-panel-default-in {
-	from {
-		opacity: 0;
-		transform: translateY(6px) scale(0.96);
-	}
-	to {
-		opacity: 1;
-		transform: none;
-	}
-}
-@keyframes silk-panel-default-out {
-	from {
-		opacity: 1;
-		transform: none;
-	}
-	to {
-		opacity: 0;
-		transform: translateY(6px) scale(0.97);
-	}
-}
-@keyframes silk-panel-scale-in {
-	from {
-		opacity: 0;
-		transform: scale(0.94);
-	}
-	to {
-		opacity: 1;
-		transform: none;
-	}
-}
-@keyframes silk-panel-scale-out {
-	from {
-		opacity: 1;
-		transform: none;
-	}
-	to {
-		opacity: 0;
-		transform: scale(0.96);
-	}
-}
-@keyframes silk-panel-fly-in {
-	from {
-		opacity: 0;
-		transform: translateY(8px);
-	}
-	to {
-		opacity: 1;
-		transform: none;
-	}
-}
-@keyframes silk-panel-fly-out {
-	from {
-		opacity: 1;
-		transform: none;
-	}
-	to {
-		opacity: 0;
-		transform: translateY(8px);
-	}
-}
-@keyframes silk-panel-rise-in {
-	from {
-		opacity: 0;
-		transform: translateY(7px) scale(0.985);
-	}
-	to {
-		opacity: 1;
-		transform: none;
-	}
-}
-@keyframes silk-panel-rise-out {
-	from {
-		opacity: 1;
-		transform: none;
-	}
-	to {
-		opacity: 0;
-		transform: translateY(7px) scale(0.97);
-	}
-}
-@keyframes silk-panel-slide-in {
-	from {
-		opacity: 0;
-		transform: translateY(16px);
-	}
-	to {
-		opacity: 1;
-		transform: none;
-	}
-}
-@keyframes silk-panel-slide-out {
-	from {
-		opacity: 1;
-		transform: none;
-	}
-	to {
-		opacity: 0;
-		transform: translateY(12px);
-	}
-}
-@keyframes silk-fade-in {
-	from {
-		opacity: 0;
-	}
-	to {
-		opacity: 1;
-	}
-}
-@keyframes silk-fade-out {
-	from {
-		opacity: 1;
-	}
-	to {
-		opacity: 0;
-	}
-}
-@keyframes silk-sheet-in {
-	from {
-		opacity: 0;
-		transform: var(--silk-sheet-from);
-	}
-	to {
-		opacity: 1;
-		transform: none;
-	}
-}
-@keyframes silk-sheet-out {
-	from {
-		opacity: 1;
-		transform: none;
-	}
-	to {
-		opacity: 0;
-		transform: var(--silk-sheet-from);
-	}
-}
-@keyframes silk-cascade-item-in {
-	from {
-		opacity: 0;
-		transform: translateY(4px);
-	}
-	to {
-		opacity: 1;
-		transform: none;
-	}
-}
-
-/* Panel surfaces (popover/menu/select/modal/alert-dialog/command). Tooltips and
-   hover-cards reuse the popover panel keyframes with the tooltip duration. */
-[data-ui='popover-content'][data-state='open'],
-[data-ui='dialog-content'][data-state='open'],
-[data-ui='alert-dialog-content'][data-state='open'],
-[data-ui='command-content'][data-state='open'] {
-	animation: var(--silk-anim-panel-in) var(--motion-duration-panel) var(--motion-panel-easing) both;
-}
-[data-ui='popover-content'][data-state='closed'],
-[data-ui='dialog-content'][data-state='closed'],
-[data-ui='alert-dialog-content'][data-state='closed'],
-[data-ui='command-content'][data-state='closed'] {
-	animation: var(--silk-anim-panel-out) var(--motion-duration-panel) var(--motion-panel-easing) both;
-}
-[data-ui='popover-content'][data-hoverable='true'][data-state] {
-	animation-duration: var(--motion-duration-tooltip);
-}
-
-[data-ui='overlay-backdrop'][data-state='open'] {
-	animation: var(--silk-anim-overlay-in) var(--motion-duration-overlay) linear both;
-}
-[data-ui='overlay-backdrop'][data-state='closed'] {
-	animation: var(--silk-anim-overlay-out) var(--motion-duration-overlay) linear both;
-}
-
-[data-ui='sheet-content'][data-state='open'] {
-	animation: var(--silk-anim-sheet-in) var(--motion-duration-sheet) var(--motion-panel-easing) both;
-}
-[data-ui='sheet-content'][data-state='closed'] {
-	animation: var(--silk-anim-sheet-out) var(--motion-duration-sheet) var(--motion-panel-easing) both;
-}
-[data-ui='sheet-content'][data-side='right'] {
-	--silk-sheet-from: translate3d(calc(100% + 1rem), 0, 0);
-}
-[data-ui='sheet-content'][data-side='left'] {
-	--silk-sheet-from: translate3d(calc(-100% - 1rem), 0, 0);
-}
-
-/* Reduced motion (P3-F14).
-   When the user opts out of motion, zero every silk motion duration so
-   transitions complete in one frame. Consumers who want to keep some
-   motion under reduced-motion can override these variables in their
-   own stylesheet. */
 @media (prefers-reduced-motion: reduce) {
 	:root {
 		--motion-duration-hover: 0ms;
 		--motion-duration-menu: 0ms;
 		--motion-duration-panel: 0ms;
+		--motion-duration-panel-in: 0ms;
+		--motion-duration-panel-out: 0ms;
 		--motion-duration-sheet: 0ms;
 		--motion-duration-overlay: 0ms;
 		--motion-duration-tooltip: 0ms;
@@ -676,12 +499,14 @@
 	}
 }
 
-/* Buttons (and role="button") follow the --ui-cursor-interactive token on
-   hover. The themeStudio's "Pointer cursor" toggle flips this variable
-   between `pointer` and `default`, so every button on the page tracks it
-   without needing to opt in. !important keeps it ahead of utility classes
-   like `hover:cursor-pointer`. */
 button:not(:disabled):hover,
 [role='button']:not([aria-disabled='true']):hover {
 	cursor: var(--ui-cursor-interactive, pointer) !important;
+}
+
+button[role='menuitem']:not(:disabled):hover,
+button[role='option']:not(:disabled):hover,
+[role='menuitem']:not([aria-disabled='true']):hover,
+[role='option']:not([aria-disabled='true']):hover {
+	cursor: var(--ui-panel-interactive, default) !important;
 }

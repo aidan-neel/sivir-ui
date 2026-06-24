@@ -1,0 +1,18 @@
+// Initialize a Pinecone client with your API key
+import io.pinecone.clients.Pinecone;
+import org.openapitools.db_control.client.model.*;
+
+Pinecone pc = new Pinecone.Builder("YOUR_API_KEY").build();
+
+// Create an index for dense vectors with integrated embedding
+String indexName = "quickstart-java";
+pc.createIndexForModel(
+    indexName,
+    CreateIndexForModelRequest.CloudEnum.AWS,
+    "us-east-1",
+    new CreateIndexForModelRequestEmbed()
+        .model("llama-text-embed-v2")
+        .fieldMap(Map.of("text", "chunk_text")),
+    DeletionProtection.DISABLED,
+    null
+);

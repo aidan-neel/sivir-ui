@@ -4,6 +4,7 @@
 	"scripts": {
 		"test": "echo \"registry: no tests\"",
 		"dev": "bun run --watch src/index.ts",
+		"generate": "DATABASE_URL=postgresql://placeholder DIRECT_URL=postgresql://placeholder prisma generate",
 		"build": "DATABASE_URL=postgresql://placeholder DIRECT_URL=postgresql://placeholder prisma generate",
 		"check": "DATABASE_URL=postgresql://placeholder DIRECT_URL=postgresql://placeholder prisma generate && tsc --noEmit",
 		"lint": "prettier --check ."

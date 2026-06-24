@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { render, screen } from '@testing-library/svelte';
+import { render, screen, waitFor } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
 import TabsFixture from '../../fixtures/TabsFixture.svelte';
 
@@ -90,5 +90,65 @@ describe('Tabs -- ARIA roles', () => {
 		render(TabsFixture, { props: { value: 'one' } });
 		const list = document.querySelector('[role="tablist"]');
 		expect(list).toBeInTheDocument();
+	});
+});
+
+describe('Tabs -- variants', () => {
+	it('defaults to the underline variant', () => {
+		render(TabsFixture, { props: { value: 'one' } });
+		const list = document.querySelector('[data-ui="tabs-list"]')!;
+		expect(list.getAttribute('data-variant')).toBe('default');
+	});
+
+	it('segmented renders a muted track container', () => {
+		render(TabsFixture, { props: { value: 'one', variant: 'segmented' } });
+		const list = document.querySelector('[data-ui="tabs-list"]')!;
+		expect(list.getAttribute('data-variant')).toBe('segmented');
+		expect(list.className).toContain('bg-secondary');
+	});
+
+	it('segmented triggers render taller (min-height token) from first paint', () => {
+		render(TabsFixture, { props: { value: 'one', variant: 'segmented' } });
+		const trigger = document.querySelector('[role="tab"]')!;
+		expect(trigger.className).toContain('min-h-[32px]');
+	});
+
+	it('ghost has no bordered container', () => {
+		render(TabsFixture, { props: { value: 'one', variant: 'ghost' } });
+		const list = document.querySelector('[data-ui="tabs-list"]')!;
+		expect(list.getAttribute('data-variant')).toBe('ghost');
+		expect(list.className).not.toContain('border-border');
+	});
+
+	it('default renders the tokenized underline as the active indicator', async () => {
+		render(TabsFixture, { props: { value: 'one', variant: 'default' } });
+		await waitFor(() => {
+			const list = document.querySelector('[data-ui="tabs-list"]')!;
+			const indicator = list.querySelector('div[aria-hidden="true"]');
+			expect(indicator?.className).toContain('h-[var(--tabs-indicator-height)]');
+		});
+	});
+
+	it('segmented renders an elevated pill as the active indicator', async () => {
+		render(TabsFixture, { props: { value: 'one', variant: 'segmented' } });
+		await waitFor(() => {
+			const list = document.querySelector('[data-ui="tabs-list"]')!;
+			const indicator = list.querySelector('div[aria-hidden="true"]');
+			expect(indicator?.className).toContain('bg-card');
+		});
+	});
+
+	it('ghost rests its fill on the selected tab', async () => {
+		render(TabsFixture, { props: { value: 'one', variant: 'ghost' } });
+		// the selected tab carries the ghost fill (a sliding highlight element)
+		await waitFor(() => {
+			const list = document.querySelector('[data-ui="tabs-list"]')!;
+			const fill = list.querySelector('div[aria-hidden="true"]');
+			expect(fill?.className).toContain('bg-secondary/70');
+		});
+		// and the active tab is still conveyed on the trigger itself
+		const activeTrigger = screen.getByTestId('trig-one').closest('button')!;
+		expect(activeTrigger.getAttribute('aria-selected')).toBe('true');
+		expect(activeTrigger.className).toContain('text-foreground');
 	});
 });

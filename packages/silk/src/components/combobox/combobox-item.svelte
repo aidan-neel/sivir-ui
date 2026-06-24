@@ -43,7 +43,7 @@
 	});
 </script>
 
-{#if uiState.searchContent === ''}
+{#if uiState.searchContent === '' || Array.from(uiState.results).some((r) => r.value === item.value)}
 	<Button
 		bind:element={el}
 		id={`combobox-${key}-option-${value}`}
@@ -53,33 +53,9 @@
 		onclick={close}
 		class={cn(
 			className,
-			'[--button-height:var(--menu-item-height)] h-[var(--menu-item-height)] px-[var(--menu-item-padding-x)] py-0 rounded-[var(--radius-lg)] text-[var(--menu-item-foreground)] border border-transparent transition-[background-color,border-color,color,box-shadow] duration-150 hover:bg-[var(--menu-item-hover-bg)] data-[active=true]:bg-[var(--menu-item-hover-bg)] data-[selected=true]:bg-[var(--menu-item-active-bg)] w-full text-[14px] duration-50 [font-weight:var(--font-weight-button,500)] [letter-spacing:var(--tracking-button,0em)] hover:cursor-default items-center justify-between text-left'
+			'[--button-height:var(--menu-item-height)] h-[var(--menu-item-height)] px-[var(--menu-item-padding-x)] py-0 rounded-[var(--radius-lg)] text-[var(--menu-item-foreground)] border border-transparent transition-[background-color,border-color,color,box-shadow] [transition-duration:var(--motion-duration-menu)] ease-[var(--ease-out)] hover:bg-[var(--menu-item-hover-bg)] data-[active=true]:bg-[var(--menu-item-hover-bg)] data-[selected=true]:bg-[var(--menu-item-active-bg)] w-full text-[length:var(--font-size-button)] [font-weight:var(--font-weight-button,500)] [letter-spacing:var(--tracking-button,0em)] hover:cursor-default items-center justify-between text-left'
 		)}
 		variant={'ghost'}
-	>
-		{label}
-		{#if uiState.selected?.value === item.value}
-			<div aria-hidden="true">
-				<Check />
-			</div>
-		{/if}
-	</Button>
-{:else}
-	<Button
-		bind:element={el}
-		id={`combobox-${key}-option-${value}`}
-		role="option"
-		aria-selected={uiState.selected?.value === item.value}
-		{...rest}
-		onclick={close}
-		class={cn(
-			className,
-			'[--button-height:var(--menu-item-height)] h-[var(--menu-item-height)] px-[var(--menu-item-padding-x)] py-0 rounded-[var(--radius-lg)] text-[var(--menu-item-foreground)] border border-transparent transition-[background-color,border-color,color,box-shadow] duration-150 hover:bg-[var(--menu-item-hover-bg)] data-[active=true]:bg-[var(--menu-item-hover-bg)] data-[selected=true]:bg-[var(--menu-item-active-bg)] w-full text-[14px] duration-50 [font-weight:var(--font-weight-button,500)] [letter-spacing:var(--tracking-button,0em)] hover:cursor-default items-center justify-between text-left',
-			uiState.searchContent !== '' &&
-				!Array.from(uiState.results).some((r) => r.value === item.value) &&
-				'hidden'
-		)}
-		variant="ghost"
 	>
 		{label}
 		{#if uiState.selected?.value === item.value}

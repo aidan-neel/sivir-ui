@@ -4,7 +4,8 @@
 	import { getContext } from 'svelte';
 	import { states, UIState } from '@silk/ui/internals/state.svelte.ts';
 	import { useOverlay } from '@silk/ui/components/_internal/overlay';
-	import { usePresence } from '@silk/ui/internals/presence.svelte.ts';
+	import { PANEL_FRAME, PANEL_SURFACE } from '../panel';
+	import '../panel/panel.css';
 
 	let {
 		class: className,
@@ -18,11 +19,13 @@
 	const uiState = states[key] as UIState<SheetState>;
 	let element = $state<HTMLElement>();
 
-	// Keep the sheet mounted through its CSS exit animation.
-	const presence = usePresence(
-		() => uiState.data.open,
-		() => element
-	);
+	// `visible` stays true through the closing animation so we can run the
+	// outro before unmounting. It only flips to false after `animationend`.
+	let visible = $state(false);
+
+	$effect(() => {
+		if (uiState.data.open) visible = true;
+	});
 
 	// Shared overlay behavior -- focus trap, click-outside, Escape, body lock.
 	useOverlay({
@@ -33,26 +36,29 @@
 		},
 		allowClickOutside: () => allowClickOutside
 	});
+
+	function onAnimationEnd(event: AnimationEvent) {
+		// Only react to the panel's own slide animation, not bubbled child anims.
+		if (event.target !== element) return;
+		if (!uiState.data.open) visible = false;
+	}
 </script>
 
-{#if presence.present}
-	<div class="pointer-events-none fixed inset-0 z-40 [&>*]:pointer-events-auto">
-		<div
-			data-ui="overlay-backdrop"
-			data-state={presence.status}
-			aria-hidden="true"
-			class="absolute inset-0 bg-[var(--color-overlay)]"
-		></div>
+{#if visible}
+	<div class="silk-sheet-root" data-state={uiState.data.open ? 'open' : 'closed'}>
+		<div class="silk-sheet-backdrop" aria-hidden="true"></div>
 		<div
 			bind:this={element}
 			data-ui="sheet-content"
 			data-side={side}
-			data-state={presence.status}
+			onanimationend={onAnimationEnd}
 			class={cn(
 				className,
-				`bg-[var(--color-overlay-bg)] text-[var(--color-foreground)] shadow-[var(--panel-shadow)] p-[var(--sheet-body-padding,16px)] border border-border rounded-[var(--radius-lg)] fixed top-2 bottom-2 z-50 flex w-[calc(100%-1rem)] max-w-[25rem] flex-col overflow-y-auto overscroll-contain ${
-					side === 'left' ? 'left-2' : 'right-2'
-				}`
+				`silk-sheet-panel text-[var(--color-foreground)] shadow-[var(--panel-shadow)] fixed top-[var(--sheet-margin)] bottom-[var(--sheet-margin)] z-50 flex w-[calc(100%-calc(var(--sheet-margin)*2))] max-w-[var(--sheet-max-width)] flex-col overflow-hidden ${
+					side === 'left' ? 'left-[var(--sheet-margin)]' : 'right-[var(--sheet-margin)]'
+				}`,
+				PANEL_FRAME,
+				'panel-root'
 			)}
 			role="dialog"
 			aria-modal="true"
@@ -62,7 +68,124 @@
 			tabindex="-1"
 			{...rest}
 		>
-			{@render children?.()}
+			<!-- Inset surface: the sheet body lives here, on the panel fill. -->
+			<div
+				class={cn(
+					'flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain bg-[var(--color-panel)] p-[var(--sheet-body-padding)]',
+					PANEL_SURFACE
+				)}
+			>
+				{@render children?.()}
+			</div>
 		</div>
 	</div>
 {/if}
+
+<style>
+	.silk-sheet-root {
+		position: fixed;
+		inset: 0;
+		z-index: 40;
+		pointer-events: none;
+	}
+	.silk-sheet-root > * {
+		pointer-events: auto;
+	}
+
+	.silk-sheet-backdrop {
+		position: absolute;
+		inset: 0;
+		/* token-lint-disable-next-line no-primitive-leak */
+		background: color-mix(in oklab, var(--silk-neutral-50) 30%, transparent);
+		backdrop-filter: blur(6px);
+		-webkit-backdrop-filter: blur(6px);
+		backface-visibility: hidden;
+		transform: translateZ(0);
+		animation: silk-sheet-backdrop-in var(--motion-duration-overlay, 150ms) ease-out both;
+	}
+
+	.silk-sheet-panel {
+		animation-fill-mode: both;
+		will-change: transform;
+	}
+	.silk-sheet-panel[data-side='right'] {
+		animation: silk-sheet-slide-in-right 180ms cubic-bezier(0.16, 1, 0.3, 1) both;
+	}
+	.silk-sheet-panel[data-side='left'] {
+		animation: silk-sheet-slide-in-left 180ms cubic-bezier(0.16, 1, 0.3, 1) both;
+	}
+
+	.silk-sheet-root[data-state='closed'] .silk-sheet-backdrop {
+		animation: silk-sheet-backdrop-out var(--motion-duration-overlay, 150ms) ease-in both;
+	}
+	.silk-sheet-root[data-state='closed'] .silk-sheet-panel[data-side='right'] {
+		animation: silk-sheet-slide-out-right 300ms cubic-bezier(0.4, 0, 1, 1) both;
+	}
+	.silk-sheet-root[data-state='closed'] .silk-sheet-panel[data-side='left'] {
+		animation: silk-sheet-slide-out-left 300ms cubic-bezier(0.4, 0, 1, 1) both;
+	}
+
+	@keyframes silk-sheet-slide-in-right {
+		from {
+			transform: translate3d(calc(100% + 1rem), 0, 0) scale(0.985);
+			opacity: 0;
+		}
+		to {
+			transform: translate3d(0, 0, 0) scale(1);
+			opacity: 1;
+		}
+	}
+	@keyframes silk-sheet-slide-out-right {
+		from {
+			transform: translate3d(0, 0, 0) scale(1);
+			opacity: 1;
+		}
+		to {
+			transform: translate3d(calc(100% + 1rem), 0, 0) scale(0.99);
+			opacity: 0;
+		}
+	}
+	@keyframes silk-sheet-slide-in-left {
+		from {
+			transform: translate3d(calc(-100% - 1rem), 0, 0) scale(0.985);
+			opacity: 0;
+		}
+		to {
+			transform: translate3d(0, 0, 0) scale(1);
+			opacity: 1;
+		}
+	}
+	@keyframes silk-sheet-slide-out-left {
+		from {
+			transform: translate3d(0, 0, 0) scale(1);
+			opacity: 1;
+		}
+		to {
+			transform: translate3d(calc(-100% - 1rem), 0, 0) scale(0.99);
+			opacity: 0;
+		}
+	}
+	@keyframes silk-sheet-backdrop-in {
+		from {
+			opacity: 0;
+		}
+		to {
+			opacity: 1;
+		}
+	}
+	@keyframes silk-sheet-backdrop-out {
+		from {
+			opacity: 1;
+		}
+		to {
+			opacity: 0;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.silk-sheet-panel,
+		.silk-sheet-backdrop {
+			animation-duration: 1ms !important;
+		}
+	}
+</style>

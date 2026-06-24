@@ -49,6 +49,11 @@ export default ts.config(
 			// incrementally rather than blocking merges.
 			'svelte/prefer-writable-derived': 'warn',
 			'svelte/no-navigation-without-resolve': 'warn',
+			// Docs render multi-line code samples via `code={`…\n…`}` template
+			// literals; the escapes (newlines/quotes) make a plain attribute
+			// impractical, so allow escaped-string mustaches. Bare `{'string'}`
+			// is still flagged.
+			'svelte/no-useless-mustaches': ['error', { ignoreStringEscape: true }],
 			// Allow underscore-prefixed bindings/args to be intentionally unused
 			// (e.g. `{#each items as _, i}` where only the index is needed).
 			'@typescript-eslint/no-unused-vars': [

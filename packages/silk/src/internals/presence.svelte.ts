@@ -1,125 +1,65 @@
 /**
- * Presence -- delayed unmount for CSS exit animations.
+ * Keeps an element mounted across its CSS exit animation.
  *
- * Floating surfaces (popover, modal, sheet, command, toast, ...) render their
- * panel only while open. With CSS-only animations there is no Svelte
- * `transition:` to hold the node in the DOM while it animates out, so this rune
- * keeps `present` true until the exit keyframe finishes (or immediately when the
- * active animation is `none` / motion is reduced).
+ * Mirrors a reactive `open` flag into `mounted` (whether to render at all) and
+ * `state` ('open' | 'closed', which maps onto `data-state` for the CSS rules in
+ * ui.css). When `open` flips false we keep the element mounted, switch state to
+ * 'closed' so the out-animation runs, and unmount once that animation ends.
+ *
+ * This is the CSS-animation counterpart to a Svelte `transition:` directive:
+ * `transition:` removed the element after its JS-driven out animation; this lets
+ * a data-state-driven CSS keyframe own the exit instead.
  *
  * Usage:
- * ```svelte
- * const presence = usePresence(() => uiState.open, () => panelEl);
- * {#if presence.present}
- *   <div bind:this={panelEl} data-state={presence.status}>…</div>
- * {/if}
- * ```
- * The `data-state` attribute drives which keyframe runs; `ui.css` wires
- * `animation` per surface for `[data-state="open"|"closed"]`.
+ *   const presence = createPresence(() => uiState.open);
+ *   {#if presence.mounted}
+ *     <div data-silk-anim="panel" data-state={presence.state}
+ *          onanimationend={presence.end}>…</div>
+ *   {/if}
  */
-type Getter<T> = () => T;
+export function createPresence(getOpen: () => boolean) {
+	let mounted = $state(getOpen());
+	let state = $state<'open' | 'closed'>(getOpen() ? 'open' : 'closed');
+	let fallback: ReturnType<typeof setTimeout> | undefined;
 
-/** Largest value (in ms) across a comma-separated CSS time list. */
-function maxTimeMs(value: string): number {
-	const parts = value.split(',').map((part) => {
-		const token = part.trim();
-		if (token.endsWith('ms')) return Number.parseFloat(token) || 0;
-		if (token.endsWith('s')) return (Number.parseFloat(token) || 0) * 1000;
-		return Number.parseFloat(token) || 0;
-	});
-	return parts.length ? Math.max(0, ...parts) : 0;
-}
-
-export type Presence = {
-	/** Whether the node should be in the DOM (true through the exit animation). */
-	readonly present: boolean;
-	/** `open` while shown, `closed` while animating out -- bind to `data-state`. */
-	readonly status: 'open' | 'closed';
-};
-
-export function usePresence(
-	open: Getter<boolean>,
-	node: Getter<HTMLElement | undefined | null>
-): Presence {
-	let present = $state(open());
-	let status = $state<'open' | 'closed'>(open() ? 'open' : 'closed');
-
-	let frame = 0;
-	let timer: ReturnType<typeof setTimeout> | undefined;
-	let detach: (() => void) | undefined;
-
-	function clearPending() {
-		if (frame) cancelAnimationFrame(frame);
-		frame = 0;
-		if (timer) clearTimeout(timer);
-		timer = undefined;
-		detach?.();
-		detach = undefined;
+	function clearFallback() {
+		if (fallback) {
+			clearTimeout(fallback);
+			fallback = undefined;
+		}
 	}
 
 	$effect(() => {
-		const isOpen = open();
-
-		if (isOpen) {
-			clearPending();
-			present = true;
-			status = 'open';
-			return;
+		if (getOpen()) {
+			clearFallback();
+			mounted = true;
+			state = 'open';
+		} else if (mounted) {
+			state = 'closed';
+			clearFallback();
+			// Safety net: unmount even if `animationend` never fires (element
+			// never painted, animation cancelled, motion disabled, etc.).
+			fallback = setTimeout(() => {
+				mounted = false;
+				fallback = undefined;
+			}, 600);
 		}
-
-		// Already hidden -- nothing to animate out.
-		if (!present) {
-			status = 'closed';
-			return;
-		}
-
-		status = 'closed';
-		clearPending();
-
-		// Wait one frame so `data-state="closed"` applies and the exit keyframe is
-		// the element's active animation before we measure it.
-		frame = requestAnimationFrame(() => {
-			frame = 0;
-			const el = node();
-			if (!el || typeof window === 'undefined') {
-				present = false;
-				return;
-			}
-
-			const cs = getComputedStyle(el);
-			const total = maxTimeMs(cs.animationDuration) + maxTimeMs(cs.animationDelay);
-			if (cs.animationName === 'none' || total <= 0) {
-				present = false;
-				return;
-			}
-
-			const finish = () => {
-				clearPending();
-				present = false;
-			};
-			// Ignore animationend bubbling up from descendants (cascade children).
-			const onEnd = (event: AnimationEvent) => {
-				if (event.target === el) finish();
-			};
-			el.addEventListener('animationend', onEnd);
-			el.addEventListener('animationcancel', onEnd);
-			// Safety net if the animation never reports (e.g. element detached).
-			timer = setTimeout(finish, total + 80);
-			detach = () => {
-				el.removeEventListener('animationend', onEnd);
-				el.removeEventListener('animationcancel', onEnd);
-			};
-		});
-
-		return () => clearPending();
+		return clearFallback;
 	});
 
 	return {
-		get present() {
-			return present;
+		get mounted() {
+			return mounted;
 		},
-		get status() {
-			return status;
+		get state() {
+			return state;
+		},
+		/** Bind to the animating element's `onanimationend`. */
+		end(event: AnimationEvent) {
+			if (state === 'closed' && event.target === event.currentTarget) {
+				mounted = false;
+				clearFallback();
+			}
 		}
 	};
 }

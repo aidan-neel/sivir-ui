@@ -17,7 +17,10 @@
 	aria-controls={`collapsible-${key}`}
 	disabled={uiState.data.disabled}
 	onclick={() => (uiState.data.open = !uiState.data.open)}
-	class={cn('inline-flex items-center gap-2', className)}
+	class={cn(
+		'inline-flex items-center gap-2 transition-[transform] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-out)] active:scale-[var(--motion-press-scale)] focus-visible:outline-none focus-visible:shadow-[var(--focus-ring)]',
+		className
+	)}
 	{...rest}
 >
 	{@render children?.()}

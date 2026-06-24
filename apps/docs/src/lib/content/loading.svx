@@ -1,0 +1,36 @@
+<script module lang="ts">
+	export const metadata = {
+	  "title": "Loading",
+	  "description": "Brief description of the component.",
+	  "component": true,
+	  "source": "https://github.com/aidan-neel/silk/tree/main/registry/silk/default/componentname"
+};
+</script>
+
+<script>
+    import { ComponentPreview, ExportItem, APIReference, CodeBlock } from '$lib/components/docs';
+    import * as Combobox from '@silk/ui/components/combobox';
+</script>
+
+<ComponentPreview code={`<ComponentName.Root>
+    <ComponentName.SubComponent1>Content here</ComponentName.SubComponent1>
+    <ComponentName.SubComponent2>Content here</ComponentName.SubComponent2>
+</ComponentName.Root>`}>
+
+</ComponentPreview>
+<div class="flex flex-col gap-5 pt-8 pb-8">
+	<h1 class="h1">Installation</h1>
+	<CodeBlock lang="shell" code={`bunx @aidan-neel/ui add componentname`} />
+</div>
+
+<h1 class="py-2 h1">Import</h1>
+<p class="py-2">ComponentName exports its subcomponents.</p>
+
+<ExportItem title="Root">Main container for the component.</ExportItem>
+<ExportItem title="SubComponent1">Description of SubComponent1.</ExportItem>
+<ExportItem title="SubComponent2">Description of SubComponent2.</ExportItem>
+
+<h1 class="py-6 h1">API Reference</h1>
+
+<div class="flex flex-col gap-10">
+</div>

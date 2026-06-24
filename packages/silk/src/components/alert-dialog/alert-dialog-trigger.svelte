@@ -10,7 +10,7 @@
 		class?: string;
 		children?: import('svelte').Snippet;
 		variant?: ButtonVariant;
-		size?: 'default' | 'icon';
+		size?: 'sm' | 'md' | 'lg' | 'icon';
 		onclick?: () => void;
 	} & Partial<HTMLButtonAttributes>;
 

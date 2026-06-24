@@ -7,8 +7,8 @@
 	import Palette from '@lucide/svelte/icons/palette';
 	import History from '@lucide/svelte/icons/history';
 
-	let pageName = $state($page.url.pathname);
 	let { class: classProp = '', onNavigate }: { class?: string; onNavigate?: () => void } = $props();
+	const pageName = $derived($page.url.pathname);
 
 	const gettingStartedItems = [
 		{ slug: 'introduction', label: 'Introduction', icon: BookOpen },
@@ -17,16 +17,14 @@
 		{ slug: 'changelog', label: 'Changelog', icon: History }
 	];
 
-	$effect(() => {
-		pageName = $page.url.pathname;
-	});
-
 	function isActive(path: string) {
 		return pageName === path;
 	}
 </script>
 
-<aside class={`${classProp} silk-docs-sidebar flex flex-col gap-5 overflow-y-auto pb-8 pr-2`}>
+<aside
+	class={`${classProp} silk-docs-sidebar hide-scrollbar-all flex flex-col gap-5 overflow-y-auto pb-8 pr-4`}
+>
 	<section class="flex flex-col gap-1.5">
 		<h3
 			class="px-2 text-[12px] text-foreground-muted [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]"
@@ -34,13 +32,13 @@
 			Getting Started
 		</h3>
 		<div class="flex flex-col gap-0.5">
-			{#each gettingStartedItems as item}
+			{#each gettingStartedItems as item (item.slug)}
 				{@const active = isActive(`/docs/${item.slug}`)}
 				<Button
 					variant="ghost"
 					href={`/docs/${item.slug}`}
 					onclick={onNavigate}
-					class={`h-8 w-full justify-start gap-2 rounded-lg px-3 text-left text-sm transition-[background-color,color] ${
+					class={`h-8 w-fit justify-start gap-2 rounded-lg px-3 text-left text-sm transition-[background-color,color] ${
 						active
 							? 'bg-secondary/85 [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]'
 							: ' hover:bg-secondary/55 hover:text-foreground'
@@ -63,13 +61,13 @@
 			<span class="text-[11px] text-foreground-muted/70">{components.length}</span>
 		</div>
 		<div class="flex flex-col gap-0.5">
-			{#each components as component}
+			{#each components as component (component)}
 				{@const active = pageName === `/docs/components/${component}`}
 				<Button
 					variant="ghost"
 					href={`/docs/components/${component}`}
 					onclick={onNavigate}
-					class={`h-8.5 w-full justify-start rounded-lg px-3 text-left text-sm transition-[background-color,color] ${
+					class={`h-8.5 w-fit justify-start rounded-lg px-3 text-left text-sm transition-[background-color,color] ${
 						active
 							? 'bg-secondary/85 [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]'
 							: 'hover:bg-secondary/55 hover:text-foreground'

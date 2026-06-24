@@ -1,0 +1,124 @@
+<script module lang="ts">
+	export const metadata = {
+	  "title": "Switch",
+	  "description": "Toggle a setting on or off with a smooth, accessible control.",
+	  "component": true,
+	  "source": "https://github.com/aidan-neel/silk/tree/main/registry/silk/default/switch"
+};
+</script>
+
+<script>
+	import { ComponentPreview, ExportItem, APIReference, CodeBlock } from '$lib/components/docs';
+	import { Switch } from '@silk/ui/components/switch';
+
+	let notifications = $state(true);
+	let marketing = $state(false);
+</script>
+
+<ComponentPreview
+	code={`<script lang="ts">
+	import { Switch } from '@silk/ui/components/switch';
+
+	let notifications = true;
+</script>
+
+<Switch
+	bind:switched={notifications}
+	label="Push notifications"
+	description="Receive alerts for mentions, replies, and account updates."
+/>
+
+<Switch
+	label="Marketing emails"
+	description="Get occasional product updates and release notes."
+	bind:switched={marketing}
+/>
+
+<Switch
+	switched={true}
+	label="Read-only setting"
+	description="Disabled switches keep their current value."
+	disabled
+/>`}
+>
+	<div class="flex w-full max-w-xl flex-col gap-6">
+		<Switch
+			bind:switched={notifications}
+			label="Push notifications"
+			description="Receive alerts for mentions, replies, and account updates."
+		/>
+		<Switch
+			bind:switched={marketing}
+			label="Marketing emails"
+			description="Get occasional product updates and release notes."
+		/>
+		<Switch
+			switched={true}
+			label="Read-only setting"
+			description="Disabled switches keep their current value."
+			disabled
+		/>
+	</div>
+</ComponentPreview>
+<div class="flex flex-col gap-5 pt-8 pb-8">
+	<h1 class="h1">Installation</h1>
+	<CodeBlock lang="shell" code={`bunx @aidan-neel/ui add switch`} />
+</div>
+
+<h1 class="py-2 h1">Import</h1>
+
+<p class="py-2">
+	Switch exports a single component for binary toggles with optional supporting copy.
+</p>
+
+<ExportItem title="Switch">A button-based switch control for on/off settings.</ExportItem>
+
+<h1 class="py-6 h1">API Reference</h1>
+
+<div class="flex flex-col gap-10">
+	<APIReference
+		title="Switch"
+		component="Root"
+		description="A smooth, accessible toggle control built on a native button."
+		items={[
+			{
+				property: 'switched',
+				type: 'boolean',
+				description: 'The current checked state of the switch. Bindable.',
+				defaults: 'false'
+			},
+			{
+				property: 'label',
+				type: 'string',
+				description: 'Optional text label announced alongside the switch.'
+			},
+			{
+				property: 'description',
+				type: 'string',
+				description: 'Optional supporting copy rendered below the label.'
+			},
+			{
+				property: 'disabled',
+				type: 'boolean',
+				description: 'Prevents interaction while preserving the current state.',
+				defaults: 'false'
+			},
+			{
+				property: 'element',
+				type: 'HTMLButtonElement | undefined',
+				description: 'A bindable reference to the underlying button element.'
+			},
+			{
+				property: 'class',
+				type: 'string',
+				description: 'Additional classes applied to the switch track.'
+			},
+			{
+				property: '...rest',
+				type: 'HTMLButtonAttributes',
+				description: 'Additional button attributes passed to the control.',
+				defaults: '{}'
+			}
+		]}
+	/>
+</div>

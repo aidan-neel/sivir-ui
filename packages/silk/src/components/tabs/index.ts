@@ -4,15 +4,19 @@ import Trigger from './tabs-trigger.svelte';
 import Content from './tabs-content.svelte';
 import type { DefaultProps } from '@silk/ui/utils';
 
+export type TabsVariant = 'default' | 'ghost' | 'segmented';
+
 export type TabsState = {
 	id: string;
 	value: string;
 	orientation: 'horizontal' | 'vertical';
+	variant: TabsVariant;
 };
 
 export type TabsProps = {
 	value?: string;
 	orientation?: 'horizontal' | 'vertical';
+	variant?: TabsVariant;
 } & DefaultProps;
 
 export type TabsListProps = {} & DefaultProps;

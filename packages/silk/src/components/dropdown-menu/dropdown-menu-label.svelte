@@ -18,7 +18,7 @@
 	data-ui="menu-label"
 	class={cn(
 		className,
-		'[font-size:calc(var(--font-size-label,14px)*0.857)] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-[var(--menu-label-foreground)] select-none px-[var(--menu-label-padding-x)] py-[var(--menu-label-padding-y)]'
+		'text-[length:var(--text-xs)] [font-size:var(--font-size-label,14px)] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-[var(--menu-label-foreground)] select-none px-[var(--menu-label-padding-x)] py-[var(--menu-label-padding-y)]'
 	)}
 >
 	{@render children?.()}

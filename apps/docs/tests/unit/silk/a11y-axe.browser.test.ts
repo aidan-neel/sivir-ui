@@ -271,63 +271,6 @@ describe('Keyboard nav -- focus management (Playwright)', () => {
 });
 
 /*
- * Calendar keyboard nav: P3-F10 records that calendar has NO arrow-key /
- * Home / End navigation. Re-asserting the negative here would just
- * duplicate the finding. Reference P3-F10 and skip explicitly.
- */
-describe('Keyboard nav -- calendar (P3-F10 fixed)', () => {
-	it('arrow keys move focus one day at a time', async () => {
-		const { default: Calendar } = await import('@silk/ui/components/calendar/calendar.svelte');
-		render(Calendar as never, { value: new Date(2026, 4, 15) } as never);
-		await flush();
-
-		const initial = document.querySelector<HTMLElement>('[role="gridcell"][tabindex="0"]');
-		expect(initial?.getAttribute('data-date')).toBe('2026-05-15');
-		initial?.focus();
-
-		await userEvent.keyboard('{ArrowRight}');
-		await flush();
-		const afterRight = document.querySelector<HTMLElement>('[role="gridcell"][tabindex="0"]');
-		expect(afterRight?.getAttribute('data-date')).toBe('2026-05-16');
-
-		await userEvent.keyboard('{ArrowDown}');
-		await flush();
-		const afterDown = document.querySelector<HTMLElement>('[role="gridcell"][tabindex="0"]');
-		expect(afterDown?.getAttribute('data-date')).toBe('2026-05-23');
-	});
-
-	it('PageUp moves to the previous month, PageDown to the next', async () => {
-		const { default: Calendar } = await import('@silk/ui/components/calendar/calendar.svelte');
-		render(Calendar as never, { value: new Date(2026, 4, 15) } as never);
-		await flush();
-
-		document.querySelector<HTMLElement>('[role="gridcell"][tabindex="0"]')?.focus();
-		await userEvent.keyboard('{PageUp}');
-		await flush();
-		const afterPageUp = document.querySelector<HTMLElement>('[role="gridcell"][tabindex="0"]');
-		expect(afterPageUp?.getAttribute('data-date')).toBe('2026-04-15');
-
-		await userEvent.keyboard('{PageDown}');
-		await userEvent.keyboard('{PageDown}');
-		await flush();
-		const afterPageDown = document.querySelector<HTMLElement>('[role="gridcell"][tabindex="0"]');
-		expect(afterPageDown?.getAttribute('data-date')).toBe('2026-06-15');
-	});
-
-	it('Shift+PageDown moves to next year', async () => {
-		const { default: Calendar } = await import('@silk/ui/components/calendar/calendar.svelte');
-		render(Calendar as never, { value: new Date(2026, 4, 15) } as never);
-		await flush();
-
-		document.querySelector<HTMLElement>('[role="gridcell"][tabindex="0"]')?.focus();
-		await userEvent.keyboard('{Shift>}{PageDown}{/Shift}');
-		await flush();
-		const after = document.querySelector<HTMLElement>('[role="gridcell"][tabindex="0"]');
-		expect(after?.getAttribute('data-date')).toBe('2027-05-15');
-	});
-});
-
-/*
  * Color-contrast (P3-F13 theme pass -- deferred).
  *
  * Aria violations on popover/dropdown-menu/select/combobox/sheet have

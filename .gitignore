@@ -9,11 +9,6 @@ node_modules
 .wrangler
 /.svelte-kit
 /build
-packages/cli/dist
-packages/cli/registry
-packages/cli/.sandbox
-packages/silk/dist
-packages/silk/.svelte-kit
 
 # OS
 .DS_Store
@@ -32,3 +27,9 @@ ignored/
 inspiration/
 .claude/
 audit/
+node_modules/
+
+temp/
+
+# Local agent skill cache (not part of the project)
+.agents/

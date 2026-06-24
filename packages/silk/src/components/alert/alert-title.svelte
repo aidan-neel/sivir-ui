@@ -16,7 +16,7 @@
 	{...rest}
 	class={cn(
 		classProp,
-		`m-0 [font-family:var(--font-header)] [font-size:calc(var(--font-size-header,18px)*0.845)] [font-weight:var(--font-weight-header,600)] [letter-spacing:var(--tracking-header,-0.01em)] leading-tight text-foreground`
+		`m-0 [font-family:var(--font-header)] text-[0.95rem] [font-weight:var(--font-weight-header,600)] [letter-spacing:var(--tracking-header,-0.01em)] text-balance leading-tight text-foreground` // token-lint-disable-line no-literal-length
 	)}
 >
 	{@render children?.()}

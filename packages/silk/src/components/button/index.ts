@@ -1,23 +1,14 @@
 import type { HTMLAnchorAttributes, HTMLButtonAttributes } from 'svelte/elements';
 import Button from './button.svelte';
 import type { Snippet } from 'svelte';
+import type { Intent } from '../../internals/variants';
 
-export type ButtonVariant =
-	| 'primary'
-	| 'success'
-	| 'warning'
-	| 'error'
-	| 'flat'
-	| 'outlined'
-	| 'secondary'
-	| 'ghost'
-	| 'alternate'
-	| 'destructive';
+export type ButtonVariant = Intent | 'panel';
 
 export type ButtonProps = {
 	href?: string;
 	variant?: ButtonVariant;
-	size?: 'sm' | 'default' | 'lg' | 'icon';
+	size?: 'sm' | 'md' | 'lg' | 'icon';
 	children?: Snippet;
 	/**
 	 * Bindable reference to the rendered DOM element. Type is the union of

@@ -40,6 +40,9 @@ export type ModalContentProps = {
 	contentClass?: string;
 	overlayClass?: string;
 	panelIdPrefix?: string;
+	showClose?: boolean;
+	/** Max-width preset (maps to the --modal-width-* tokens). Defaults to `md`. */
+	size?: 'sm' | 'md' | 'lg' | 'xl';
 } & DefaultProps;
 
 export type ModalProps = {

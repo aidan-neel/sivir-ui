@@ -1,0 +1,156 @@
+<script module lang="ts">
+	export const metadata = {
+	  "title": "Select",
+	  "description": "Displays a list of options for a user to pick from triggered by a button.",
+	  "component": true,
+	  "source": "https://github.com/aidan-neel/silk/tree/main/registry/silk/default/select"
+};
+</script>
+
+<script>
+    import { ComponentPreview, CodeBlock, CodeSnippet, ExportItem, APIReference } from '$lib/components/docs';
+    import { Button } from '@silk/ui/components/button';
+    import { Input } from '@silk/ui/components/input';
+    import * as Popover from '@silk/ui/components/popover';
+    import * as Select from '@silk/ui/components/select';
+
+    let t = $state('');
+</script>
+
+<ComponentPreview code={`<script lang="ts">
+    import * as Select from "@silk/ui/components/select"
+
+    let selected = $state<string>('');
+</script>\n
+<Select.Root bind:value={selected}>
+    <Select.Trigger class="w-[180px]" variant="outlined">Select a fruit</Select.Trigger>
+    <Select.Content class="w-[180px]">
+        <Select.Label>Fruits</Select.Label>
+        <Select.Item value="apple">Apple</Select.Item>
+        <Select.Item value="banana">Banana</Select.Item>
+        <Select.Item value="orange">Orange</Select.Item>
+        <Select.Item value="grape">Grape</Select.Item>
+        <Select.Item value="pear">Pear</Select.Item>
+    </Select.Content>
+</Select.Root>
+</Select.Root>`}>
+    <Select.Root bind:value={t}>
+        <Select.Trigger class="w-[180px]" variant="outlined">Select a fruit</Select.Trigger>
+        <Select.Content class="w-[180px]">
+            <Select.Label>Fruits</Select.Label>
+            <Select.Item value="apple">Apple</Select.Item>
+            <Select.Item value="banana">Banana</Select.Item>
+            <Select.Item value="orange">Orange</Select.Item>
+            <Select.Item value="grape">Grape</Select.Item>
+            <Select.Item value="pear">Pear</Select.Item>
+        </Select.Content>
+    </Select.Root>
+</ComponentPreview>
+<div class="flex flex-col gap-5 pt-8 pb-8">
+	<h1 class="h1">Installation</h1>
+	<CodeBlock lang="shell" code={`bunx @aidan-neel/ui add select`} />
+</div>
+
+<h1 class="py-2 h1">
+    Import
+</h1>
+
+<p class="py-2">
+    Select exports 5 components
+</p>
+
+<ExportItem title="Root">The top-level component that manages the select</ExportItem>
+<ExportItem title="Trigger">The element that opens the list when activated</ExportItem>
+<ExportItem title="Content">The container that holds all selectable options</ExportItem>
+<ExportItem title="Item">An option that can be chosen</ExportItem>
+<ExportItem title="Label">A non-selectable text divider for grouping options</ExportItem>
+
+<h1 class="py-6 h1 pt-10">
+    API Reference
+</h1>
+
+<div class="flex flex-col gap-10">
+	<APIReference
+		title="Select"
+		component="Root"
+		description="The root container that manages the state and behavior of the select component."
+		items={[
+			{
+				property: "value",
+				type: "string",
+				description: "The current selected value. Bindable.",
+				defaults: "\"\""
+			},
+			{
+				property: "children",
+				type: "Snippet",
+				description: "The elements that make up the select system."
+			},
+			{
+				property: "class",
+				type: "string",
+				description: "Additional CSS classes to apply to the root container."
+			},
+			{
+				property: "...rest",
+				type: "HTMLDivAttributes",
+				description: "Additional attributes passed to the root container.",
+				defaults: "{}"
+			}
+		]}
+	/>
+
+	<APIReference
+		title="Select"
+		component="Trigger"
+		description="The button that toggles the select list open or closed."
+		items={[
+			{
+				property: "children",
+				type: "Snippet",
+				description: "The placeholder or trigger content to display when no value is selected."
+			},
+			{
+				property: "class",
+				type: "string",
+				description: "Additional CSS classes to apply to the trigger button."
+			},
+			{
+				property: "...rest",
+				type: "HTMLButtonAttributes | HTMLAnchorAttributes",
+				description: "Additional HTML button attributes passed to the trigger.",
+				defaults: "{}"
+			}
+		]}
+	/>
+
+	<APIReference
+		title="Select"
+		component="Item"
+		description="An individual option that can be selected."
+		items={[
+			{
+				property: "value",
+				type: "string",
+				description: "The option’s unique value."
+			},
+			{
+				property: "children",
+				type: "Snippet",
+				description: "The display content for the option."
+			},
+			{
+				property: "class",
+				type: "string",
+				description: "Additional CSS classes to apply to the item."
+			},
+			{
+				property: "...rest",
+				type: "ButtonProps",
+				description: "Additional attributes passed to the item button.",
+				defaults: "{}"
+			}
+		]}
+	/>
+
+</div>

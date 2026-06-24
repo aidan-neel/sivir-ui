@@ -1,45 +1,95 @@
 <script lang="ts">
-	import type { HTMLButtonAttributes } from 'svelte/elements';
-	import { Button, type ButtonProps } from '@silk/ui/components/button';
-	import { computePosition, flip } from '@floating-ui/dom';
-	import { getContext, onMount } from 'svelte';
+	import type { Snippet } from 'svelte';
+	import { getContext, tick } from 'svelte';
 	import { states } from '@silk/ui/internals/state.svelte.ts';
-	import type { ComboboxState } from '.';
+	import type { ComboboxState, ComboboxItem } from '.';
 	import * as Popover from '@silk/ui/components/popover';
 	import { cn } from '@silk/ui/utils';
-	import CaretSort from '@lucide/svelte/icons/chevrons-up-down';
+	import ChevronDown from '@lucide/svelte/icons/chevron-down';
+	import Fuse from 'fuse.js';
 
 	const key = getContext('key') as string;
+	const placeholder = getContext('placeholder') as string;
 	const uiState = states[key].data as ComboboxState;
 
-	const {
-		children,
-		class: classProp,
-		icon = true,
-		...rest
-	}: Popover.PopoverTriggerProps = $props();
+	interface Props extends Omit<Popover.PopoverTriggerProps, 'children'> {
+		class?: string;
+		threshold?: number;
+	}
+
+	const { class: className, threshold = 0.5, variant = 'outline', ...rest }: Props = $props();
+
+	let inputElement: HTMLInputElement | undefined = $state();
+
+	function handleInput() {
+		const itemsArray = Array.from(uiState.items);
+		const namesArray = itemsArray.map((item) => item.value);
+		const fuse = new Fuse(namesArray, { threshold });
+		const results = fuse.search(uiState.searchContent);
+		const resultSet = new Set<ComboboxItem>(
+			results.map((r) => itemsArray.find((item) => item.value === r.item)!)
+		);
+		uiState.results = resultSet;
+	}
+
+	function handleInputKeydown(e: KeyboardEvent) {
+		if (e.key === 'Enter') {
+			e.preventDefault();
+			const firstResult = [...uiState.results][0];
+			if (firstResult) {
+				uiState.selected = firstResult;
+				uiState.open = false;
+				uiState.searchContent = '';
+				firstResult.callback?.();
+			}
+		}
+	}
+
+	$effect(() => {
+		if (!uiState.open) return;
+		void tick().then(() => {
+			inputElement?.focus({ preventScroll: true });
+			inputElement?.select();
+		});
+	});
 </script>
 
 <Popover.Trigger
 	{...rest}
+	{variant}
 	role="combobox"
 	aria-haspopup="listbox"
 	aria-controls={`combobox-${String(key)}-listbox`}
 	aria-expanded={uiState.open}
-	aria-label={uiState.selected?.label
-		? `Selected ${uiState.selected.label}`
-		: ((rest as { 'aria-label'?: string })['aria-label'] ?? 'Open combobox')}
+	aria-label={uiState.selected?.label ? `Selected ${uiState.selected.label}` : 'Open combobox'}
 	class={cn(
-		classProp,
-		`flex flex-row justify-between items-center px-[var(--field-padding-x)] [font-weight:var(--font-weight-button,500)] [letter-spacing:var(--tracking-button,0em)]`
+		className,
+		'flex flex-row justify-between items-center px-[var(--field-padding-x)] [font-weight:var(--font-weight-button,500)] [letter-spacing:var(--tracking-button,0em)] transition-[background-color,border-color,color,box-shadow,transform] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-out)] active:scale-[var(--motion-press-scale)] focus-within:shadow-[var(--focus-ring)]',
+		uiState.selected?.label ? 'text-foreground' : 'text-foreground-muted'
 	)}
 >
-	{#if uiState.selected?.label}
-		{uiState.selected?.label}
-	{:else}
-		{@render children?.()}
-	{/if}
-	{#if icon}
-		<CaretSort class="text-foreground-muted size-3" />
-	{/if}
+	<div class="flex-1 min-w-0 text-left">
+		{#if uiState.open}
+			<input
+				bind:this={inputElement}
+				bind:value={uiState.searchContent}
+				{placeholder}
+				oninput={handleInput}
+				onkeydown={handleInputKeydown}
+				class="w-full h-full bg-transparent text-foreground [font-size:var(--font-size-button)] [font-weight:var(--font-weight-button,500)] [letter-spacing:var(--tracking-button,0em)] placeholder:text-foreground-muted placeholder:[font-weight:var(--font-weight-button,500)] focus:outline-none"
+				aria-label="Search options"
+			/>
+		{:else if uiState.selected?.label}
+			<span class="block truncate text-foreground [font-weight:var(--font-weight-button,500)]">
+				{uiState.selected.label}
+			</span>
+		{:else}
+			<span
+				class="block truncate text-foreground-muted [font-weight:var(--font-weight-button,500)]"
+			>
+				{placeholder}
+			</span>
+		{/if}
+	</div>
+	<ChevronDown size={18} class="flex-shrink-0 ml-2 text-foreground-muted" aria-hidden="true" />
 </Popover.Trigger>

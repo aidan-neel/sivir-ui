@@ -1,41 +1,55 @@
 import { describe, expect, it } from 'vitest';
 import { render, screen } from '@testing-library/svelte';
-import userEvent from '@testing-library/user-event';
 import StudioPreview from '$lib/components/themes/studio/studio-preview.svelte';
 
-// Phase 3 acceptance: the Playground preview's Gallery screen must render a
-// representative component from EVERY token group, so that every token has a
-// live home in the preview. Groups are marked with `data-group` on each
-// section; representative Silk components expose `data-ui`.
-const GROUPS = ['controls', 'surfaces', 'menus', 'modals', 'nav'] as const;
-
-async function openGallery() {
-	const user = userEvent.setup();
-	const { container } = render(StudioPreview);
-	await user.click(screen.getByRole('tab', { name: 'Gallery' }));
-	return container;
+// Acceptance: the Components preview screen must render a representative
+// component from EVERY token group, so that every token has a live home in the
+// preview. The screen is selected via the `preview` prop (driven by the studio
+// toolbar's "Select preview" tabs); representative Silk components expose
+// `data-ui`, and menu/overlay triggers are asserted by their accessible label.
+function renderComponents() {
+	return render(StudioPreview, { props: { preview: 'components' } }).container;
 }
 
-describe('StudioPreview — token-group coverage (Phase 3)', () => {
-	it('renders a section for every token group on the Gallery screen', async () => {
-		const container = await openGallery();
-		for (const group of GROUPS) {
-			expect(
-				container.querySelector(`[data-group="${group}"]`),
-				`missing preview section for token group "${group}"`
-			).not.toBeNull();
-		}
+describe('StudioPreview — token-group coverage', () => {
+	it('renders a representative component for every token group on the Components screen', () => {
+		const container = renderComponents();
+		// Controls group — control geometry/state tokens.
+		expect(
+			container.querySelector('[data-ui="slider"]'),
+			'missing slider (controls)'
+		).not.toBeNull();
+		// Text-input group — field tokens.
+		expect(
+			container.querySelector('[data-ui="textarea"]'),
+			'missing textarea (inputs)'
+		).not.toBeNull();
+		// Surfaces group — card/surface padding, radius, elevation tokens.
+		expect(container.querySelector('[data-ui="card"]'), 'missing card (surfaces)').not.toBeNull();
+		expect(
+			container.querySelector('[data-ui="progress"]'),
+			'missing progress (feedback)'
+		).not.toBeNull();
 	});
 
-	it('renders representative Silk components inside their group sections', async () => {
-		const container = await openGallery();
-		// Controls group exposes control geometry/state tokens.
-		expect(container.querySelector('[data-group="controls"] [data-ui="slider"]')).not.toBeNull();
-		expect(container.querySelector('[data-group="controls"] [data-ui="textarea"]')).not.toBeNull();
-		// Surfaces group exposes card/surface padding, radius, elevation tokens.
-		expect(container.querySelector('[data-group="surfaces"] [data-ui="card"]')).not.toBeNull();
-		// Nav/Data group exposes calendar + progress tokens.
-		expect(container.querySelector('[data-group="nav"] [data-ui="calendar"]')).not.toBeNull();
-		expect(container.querySelector('[data-group="nav"] [data-ui="progress"]')).not.toBeNull();
+	it('renders menu and modal/overlay representatives on the Components screen', () => {
+		renderComponents();
+		// Menus group — button-anchored floating surfaces.
+		expect(screen.getByText('Dropdown')).toBeTruthy();
+		expect(screen.getByText('Popover')).toBeTruthy();
+		// Modals & transient group.
+		expect(screen.getByText('Alert dialog')).toBeTruthy();
+	});
+
+	it('renders the requested screen for each preview tab', () => {
+		expect(
+			render(StudioPreview, { props: { preview: 'login' } }).getByText('Welcome back')
+		).toBeTruthy();
+		expect(
+			render(StudioPreview, { props: { preview: 'dashboard' } }).getByText('Revenue this year')
+		).toBeTruthy();
+		expect(
+			render(StudioPreview, { props: { preview: 'settings' } }).getByText('Workspace lifecycle')
+		).toBeTruthy();
 	});
 });

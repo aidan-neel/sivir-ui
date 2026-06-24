@@ -48,8 +48,7 @@ silk/
 │   ├── docs/        # SvelteKit docs site + theme studio
 │   └── registry/    # Elysia + Prisma API serving themes from Supabase
 ├── packages/
-│   ├── cli/         # @silk/cli — installs components into consumer projects (silk init/add/list)
-│   └── silk/        # @silk/ui — canonical component source, also published as a library
+│   └── silk/        # Canonical component source (consumed by apps/docs via the @silk/ui alias)
 ├── docker-compose.yml
 ├── turbo.json
 └── package.json     # Bun workspaces + Turborepo

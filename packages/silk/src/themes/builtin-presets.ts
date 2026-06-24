@@ -1,4 +1,5 @@
 import type { ThemeDraft } from '@silk/ui/themes/presets';
+import { DEFAULT_THEME, type Theme } from './theme';
 
 type ThemePresetModule = {
 	defaultTheme?: ThemeDraft;
@@ -20,6 +21,11 @@ const loadedPresets = Object.entries(presetModules)
 		return left.name.localeCompare(right.name);
 	});
 
+// Old engine exports (for restored studio)
 export const builtInThemePresets = loadedPresets;
 export const defaultTheme =
 	builtInThemePresets.find((theme) => theme.slug === 'default') ?? builtInThemePresets[0];
+
+// v2 exports (for new docs gallery)
+export const themesV2: Theme[] = [DEFAULT_THEME];
+export const defaultThemeV2: Theme = DEFAULT_THEME;

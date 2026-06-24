@@ -16,8 +16,10 @@
 	role={decorative ? 'none' : 'separator'}
 	aria-orientation={decorative ? undefined : orientation}
 	class={cn(
-		'shrink-0 bg-border',
-		orientation === 'horizontal' ? 'h-px w-full' : 'h-full w-px',
+		'shrink-0 bg-[var(--separator-color)]',
+		orientation === 'horizontal'
+			? 'h-[var(--separator-thickness)] w-full'
+			: 'h-full w-[var(--separator-thickness)]',
 		className
 	)}
 	{...rest}

@@ -20,7 +20,10 @@
 	aria-valuemin={0}
 	aria-valuemax={max}
 	aria-valuenow={indeterminate ? undefined : clamped}
-	class={cn('relative h-2 w-full overflow-hidden rounded-full bg-secondary', className)}
+	class={cn(
+		'relative h-[var(--progress-height)] w-full overflow-hidden rounded-full bg-secondary',
+		className
+	)}
 	{...rest}
 >
 	{#if indeterminate}

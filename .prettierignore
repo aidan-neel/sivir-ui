@@ -4,6 +4,5 @@ node_modules
 **/build
 **/dist
 **/generated
-packages/cli/registry
 bun.lock
 *.svx

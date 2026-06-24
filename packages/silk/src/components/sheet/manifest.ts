@@ -32,7 +32,7 @@ export const manifest: Manifest = {
 		'components/sheet/manifest.ts'
 	],
 	components: ['button', '_internal/overlay'],
-	shared: ['utils.cn', 'internals/state', 'internals/presence'],
+	shared: ['utils.cn', 'internals/state'],
 	peerDependencies: {
 		'@lucide/svelte': '^1.0.0',
 		clsx: '^2.0.0',

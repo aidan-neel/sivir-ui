@@ -16,7 +16,8 @@ export type StylePreset = {
 	 * Reference components this style has been tuned and verified against.
 	 * Coherence is achieved by overriding *shared* tokens (radius, elevation,
 	 * padding) that all of these components consume, so a "Sharp" button matches
-	 * a "Sharp" card automatically.
+	 * a "Sharp" card automatically. See `docs/theme-studio/style-rollout.md` for
+	 * the plan to extend each style to the remaining components.
 	 */
 	components: string[];
 	/** CSS custom-property overrides, applied after the theme in `:root, .dark`. */

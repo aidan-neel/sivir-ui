@@ -1,21 +1,31 @@
 <script lang="ts">
-	import { highlight } from '$lib/highlight';
-	import * as Breadcrumb from '@silk/ui/components/breadcrumb';
-	import DocHeader from '$lib/components/docs/doc-header.svelte';
-	import DocSection from '$lib/components/docs/doc-section.svelte';
-	import PropTable from '$lib/components/docs/prop-table.svelte';
-	import DocFooter from '$lib/components/docs/doc-footer.svelte';
-	import DocPager from '$lib/components/docs/doc-pager.svelte';
+	import { Button } from '@silk/ui/components/button';
+	import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+	import { CodeBlock } from '@silk/ui/components/code-block';
+	import { components, sanitizeComponent } from '$lib/components';
 
-	import Hash from '@lucide/svelte/icons/hash';
-	import Slash from '@lucide/svelte/icons/slash';
-	import Home from '@lucide/svelte/icons/home';
+	import Hero from './examples/hero.svelte';
+	import HeroSrc from './examples/hero.svelte?raw';
+	import Separators from './examples/separators.svelte';
+	import SeparatorsSrc from './examples/separators.svelte?raw';
+	import WithIcon from './examples/with-icon.svelte';
+	import WithIconSrc from './examples/with-icon.svelte?raw';
+
+	import ArrowRight from '@lucide/svelte/icons/arrow-right';
+	import ChevronLeft from '@lucide/svelte/icons/chevron-left';
 	import ChevronRight from '@lucide/svelte/icons/chevron-right';
+	import Copy from '@lucide/svelte/icons/copy';
+	import Check from '@lucide/svelte/icons/check';
+	import Layers from '@lucide/svelte/icons/layers-3';
+	import External from '@lucide/svelte/icons/external-link';
 
 	const TITLE = 'Breadcrumb';
 	const SLUG = 'breadcrumb';
 	const SOURCE = `https://github.com/aidan-neel/silk/tree/main/registry/silk/default/${SLUG}`;
-	const installCommand = `bunx @aidan-neel/ui add ${SLUG}`;
+
+	const curIndex = components.indexOf(SLUG);
+	const prevComponent = components[curIndex - 1];
+	const nextComponent = components[curIndex + 1];
 
 	const apiRows = [
 		{
@@ -23,7 +33,7 @@
 			prop: 'children',
 			type: 'Snippet',
 			default: '--',
-			description: 'Container -- flexes Items + Separators inline.'
+			description: 'Container — flexes Items + Separators inline.'
 		},
 		{
 			component: 'Item',
@@ -32,7 +42,13 @@
 			default: '--',
 			description: 'Renders as a link. Omit to render the current page (no link, dimmer text).'
 		},
-		{ component: 'Item', prop: 'children', type: 'Snippet', default: '--', description: 'Label.' },
+		{
+			component: 'Item',
+			prop: 'children',
+			type: 'Snippet',
+			default: '--',
+			description: 'Label.'
+		},
 		{
 			component: 'Separator',
 			prop: 'children',
@@ -41,151 +57,237 @@
 			description: 'Custom separator (swap for an icon like ChevronRight or Slash).'
 		}
 	];
+
+	let copiedSnippet = $state<string | null>(null);
+
+	function copy(text: string, key: string) {
+		if (typeof navigator === 'undefined' || !navigator.clipboard) return;
+		void navigator.clipboard.writeText(text);
+		copiedSnippet = key;
+		setTimeout(() => {
+			if (copiedSnippet === key) copiedSnippet = null;
+		}, 1600);
+	}
+
+	const installCommand = `bunx @aidan-neel/ui add ${SLUG}`;
 </script>
 
 <svelte:head>
-	<title>Silk · Breadcrumb</title>
+	<title>Silk · {TITLE}</title>
 	<meta name="description" content="A trail of links showing the user's position in a hierarchy." />
 </svelte:head>
 
-<DocHeader
-	title={TITLE}
-	description="Shows where the user is in a nested hierarchy and lets them jump back up. Keep them short — if you need more than five items, your hierarchy is probably the problem."
-	source={SOURCE}
-	install={installCommand}
-	pills={[{ label: 'v0.4.2', variant: 'outlined' }, { label: '3 sub-components' }]}
-/>
+<div data-docs-page class="flex flex-col gap-10">
+	<!-- ─── Header ────────────────────────────────────────────────── -->
+	<header class="flex flex-col gap-4">
+		<div>
+			<h1
+				class="m-0 text-[1.875rem] font-[var(--font-weight-header,600)] tracking-[-0.02em] text-foreground leading-tight"
+				style="font-family: var(--font-header);"
+			>
+				{TITLE}
+			</h1>
+			<p
+				class="mt-2 text-[1rem] text-foreground-muted leading-relaxed max-w-2xl font-[var(--font-weight-description,450)]"
+			>
+				Shows where the user is in a nested hierarchy and lets them jump back up. Keep them short —
+				if you need more than five items, your hierarchy is probably the problem.
+			</p>
+		</div>
+	</header>
 
-<!-- Playground / preview -->
-<section class="pt-10">
-	<div class="relative">
-		<div
-			class="absolute inset-x-10 -top-4 -z-10 h-32 rounded-full bg-[radial-gradient(60%_60%_at_50%_50%,color-mix(in_srgb,var(--color-primary)_18%,transparent),transparent_70%)] blur-2xl"
-		></div>
-		<div
-			class="overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card shadow-[var(--shadow-sm)]"
+	<!-- ─── Hero Example ──────────────────────────────────────────── -->
+	<section id="hero" class="scroll-mt-20 flex flex-col gap-4">
+		<ComponentPreview code={HeroSrc}>
+			<Hero />
+		</ComponentPreview>
+	</section>
+
+	<!-- ─── Installation ──────────────────────────────────────────── -->
+	<section id="installation" class="scroll-mt-20 flex flex-col gap-4">
+		<h2
+			class="text-[1.25rem] font-[var(--font-weight-header,600)] tracking-tight text-foreground docs-section-heading"
 		>
-			<div
-				class="grid min-h-[10rem] place-items-center border-b border-border/70 bg-[linear-gradient(135deg,color-mix(in_srgb,var(--color-secondary)_60%,transparent),transparent_70%)] p-8"
-			>
-				<Breadcrumb.Root>
-					<Breadcrumb.Item href="/docs/introduction">Docs</Breadcrumb.Item>
-					<Breadcrumb.Separator><ChevronRight size={14} /></Breadcrumb.Separator>
-					<Breadcrumb.Item href="/docs/components">Components</Breadcrumb.Item>
-					<Breadcrumb.Separator><ChevronRight size={14} /></Breadcrumb.Separator>
-					<Breadcrumb.Item>Breadcrumb</Breadcrumb.Item>
-				</Breadcrumb.Root>
-			</div>
-			<pre
-				class="m-0 overflow-x-auto bg-secondary/40 px-6 py-4 font-mono text-[0.78rem] leading-relaxed text-foreground"><code
-					>{@html highlight(
-						`<Breadcrumb.Root>
-  <Breadcrumb.Item href="/docs/introduction">Docs</Breadcrumb.Item>
-  <Breadcrumb.Separator><ChevronRight size={14} /></Breadcrumb.Separator>
-  <Breadcrumb.Item href="/docs/components">Components</Breadcrumb.Item>
-  <Breadcrumb.Separator><ChevronRight size={14} /></Breadcrumb.Separator>
-  <Breadcrumb.Item>Breadcrumb</Breadcrumb.Item>
-</Breadcrumb.Root>`,
-						'svelte'
-					)}</code
-				></pre>
-		</div>
-	</div>
-</section>
+			Installation
+		</h2>
+		<InstallCommand command={installCommand} />
+	</section>
 
-<div class="flex flex-col gap-16 pt-16">
-	<DocSection
-		icon={Slash}
-		title="Separators"
-		description="Three common choices. Pick one and use it everywhere — mixing separators in the same app looks accidental."
+	<!-- ─── Usage ─────────────────────────────────────────────────── -->
+	<section id="usage" class="scroll-mt-20 flex flex-col gap-4">
+		<h2
+			class="text-[1.25rem] font-[var(--font-weight-header,600)] tracking-tight text-foreground docs-section-heading"
+		>
+			Usage
+		</h2>
+		<p class="text-sm text-foreground-muted">Import and use the Breadcrumb components:</p>
+		<CodeBlock
+			code={`import * as Breadcrumb from '@silk/ui/components/breadcrumb';\n\n<Breadcrumb.Root>\n  <Breadcrumb.Item href="/">Home</Breadcrumb.Item>\n  <Breadcrumb.Separator>/</Breadcrumb.Separator>\n  <Breadcrumb.Item>Current</Breadcrumb.Item>\n</Breadcrumb.Root>`}
+			lang="svelte"
+			copy="overlay"
+		/>
+	</section>
+
+	<!-- ─── Examples ──────────────────────────────────────────────── -->
+	<section id="examples" class="scroll-mt-20 flex flex-col gap-10">
+		<div>
+			<h2
+				class="text-[1.25rem] font-[var(--font-weight-header,600)] tracking-tight text-foreground docs-section-heading"
+			>
+				Examples
+			</h2>
+		</div>
+
+		<!-- Separator styles -->
+		<div id="separators" class="scroll-mt-20 flex flex-col gap-3">
+			<h3
+				class="text-[1rem] font-[var(--font-weight-header,600)] tracking-tight text-foreground docs-subsection-heading"
+			>
+				Separator styles
+			</h3>
+			<ComponentPreview code={SeparatorsSrc}>
+				<Separators />
+			</ComponentPreview>
+		</div>
+
+		<!-- With home icon -->
+		<div id="with-icon" class="scroll-mt-20 flex flex-col gap-3">
+			<h3
+				class="text-[1rem] font-[var(--font-weight-header,600)] tracking-tight text-foreground docs-subsection-heading"
+			>
+				With home icon
+			</h3>
+			<ComponentPreview code={WithIconSrc}>
+				<WithIcon />
+			</ComponentPreview>
+		</div>
+	</section>
+
+	<!-- ─── API Reference ─────────────────────────────────────────── -->
+	<section id="api" class="scroll-mt-20 flex flex-col gap-4">
+		<h2
+			class="text-[1.25rem] font-[var(--font-weight-header,600)] tracking-tight text-foreground docs-section-heading"
+		>
+			API Reference
+		</h2>
+		<p class="text-sm text-foreground-muted">
+			<code class="font-mono text-foreground">Breadcrumb</code> exports
+			<code class="font-mono text-foreground">Root</code>,
+			<code class="font-mono text-foreground">Item</code>, and
+			<code class="font-mono text-foreground">Separator</code>.
+		</p>
+
+		<div class="overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card">
+			<div
+				class="grid grid-cols-[1fr_1.8fr_0.5fr] gap-3 border-b border-border bg-secondary/40 px-4 py-2.5 text-[0.7rem] font-[var(--font-weight-label,500)] uppercase tracking-wide text-foreground-muted max-md:hidden"
+			>
+				<span>Prop</span>
+				<span>Type</span>
+				<span class="text-right">Default</span>
+			</div>
+			<ul class="flex flex-col divide-y divide-border/60">
+				{#each apiRows as row, i (i)}
+					<li class="grid grid-cols-[1fr_1.8fr_0.5fr] gap-3 px-4 py-3 max-md:grid-cols-1">
+						<div class="flex items-center gap-2">
+							<button
+								type="button"
+								onclick={() => copy(row.prop, `prop-${row.prop}`)}
+								class="group inline-flex items-center gap-1.5 rounded-md px-1 py-0.5 transition-colors hover:bg-secondary/60"
+							>
+								<code
+									class="font-mono text-[0.82rem] font-[var(--font-weight-label,600)] text-foreground"
+								>
+									{row.prop}
+								</code>
+								{#if copiedSnippet === `prop-${row.prop}`}
+									<Check size={11} class="text-[var(--color-success)]" />
+								{:else}
+									<Copy
+										size={11}
+										class="text-foreground-muted opacity-0 transition-opacity group-hover:opacity-100"
+									/>
+								{/if}
+							</button>
+						</div>
+						<div class="flex flex-col gap-1">
+							<code
+								class="overflow-x-auto rounded-md bg-secondary/40 px-2 py-1 font-mono text-[0.74rem] text-foreground"
+							>
+								{row.type}
+							</code>
+							<p class="m-0 text-[0.78rem] leading-snug text-foreground-muted">
+								{row.description}
+							</p>
+						</div>
+						<div class="md:text-right">
+							<code
+								class="inline-block rounded-md bg-secondary/40 px-2 py-1 font-mono text-[0.72rem] text-foreground"
+							>
+								{row.default}
+							</code>
+						</div>
+					</li>
+				{/each}
+			</ul>
+		</div>
+	</section>
+
+	<!-- ─── Footer ────────────────────────────────────────────────── -->
+	<section
+		class="flex flex-col items-start justify-between gap-4 rounded-[var(--radius-lg)] border border-border bg-card p-6 sm:flex-row sm:items-center"
 	>
-		<div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
-			<div
-				class="flex flex-col items-start gap-3 rounded-[var(--radius-lg)] border border-border bg-card p-4"
+		<div class="flex flex-col gap-1">
+			<p
+				class="m-0 text-[1rem] font-[var(--font-weight-label,500)] tracking-tight"
+				style="font-family: var(--font-header);"
 			>
-				<span
-					class="text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted"
-					>Chevron</span
-				>
-				<Breadcrumb.Root>
-					<Breadcrumb.Item href="/">Home</Breadcrumb.Item>
-					<Breadcrumb.Separator><ChevronRight size={12} /></Breadcrumb.Separator>
-					<Breadcrumb.Item>Page</Breadcrumb.Item>
-				</Breadcrumb.Root>
-			</div>
-			<div
-				class="flex flex-col items-start gap-3 rounded-[var(--radius-lg)] border border-border bg-card p-4"
-			>
-				<span
-					class="text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted"
-					>Slash</span
-				>
-				<Breadcrumb.Root>
-					<Breadcrumb.Item href="/">Home</Breadcrumb.Item>
-					<Breadcrumb.Separator><Slash size={12} /></Breadcrumb.Separator>
-					<Breadcrumb.Item>Page</Breadcrumb.Item>
-				</Breadcrumb.Root>
-			</div>
-			<div
-				class="flex flex-col items-start gap-3 rounded-[var(--radius-lg)] border border-border bg-card p-4"
-			>
-				<span
-					class="text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted"
-					>Dot</span
-				>
-				<Breadcrumb.Root>
-					<Breadcrumb.Item href="/">Home</Breadcrumb.Item>
-					<Breadcrumb.Separator
-						><span class="text-[1rem] leading-none">·</span></Breadcrumb.Separator
-					>
-					<Breadcrumb.Item>Page</Breadcrumb.Item>
-				</Breadcrumb.Root>
-			</div>
+				Want to make it yours?
+			</p>
+			<p class="m-0 text-[0.86rem] text-foreground-muted">
+				Every Breadcrumb token lives in the studio — restyle it for your brand in seconds.
+			</p>
 		</div>
-	</DocSection>
-
-	<DocSection icon={Home} title="With a home icon">
-		<div class="grid gap-3 md:grid-cols-2">
-			<div
-				class="grid place-items-center rounded-[var(--radius-lg)] border border-border bg-card p-6"
-			>
-				<Breadcrumb.Root>
-					<Breadcrumb.Item href="/">
-						<Home size={13} />
-					</Breadcrumb.Item>
-					<Breadcrumb.Separator><ChevronRight size={12} /></Breadcrumb.Separator>
-					<Breadcrumb.Item href="/docs">Docs</Breadcrumb.Item>
-					<Breadcrumb.Separator><ChevronRight size={12} /></Breadcrumb.Separator>
-					<Breadcrumb.Item>Components</Breadcrumb.Item>
-				</Breadcrumb.Root>
-			</div>
-			<pre
-				class="m-0 overflow-x-auto rounded-[var(--radius-lg)] border border-border bg-secondary/40 px-4 py-4 font-mono text-[0.78rem] leading-relaxed"><code
-					>{@html highlight(
-						`<Breadcrumb.Root>
-  <Breadcrumb.Item href="/">
-    <Home size={13} />
-  </Breadcrumb.Item>
-  <Breadcrumb.Separator>
-    <ChevronRight size={12} />
-  </Breadcrumb.Separator>
-  <Breadcrumb.Item href="/docs">Docs</Breadcrumb.Item>
-  <Breadcrumb.Separator>
-    <ChevronRight size={12} />
-  </Breadcrumb.Separator>
-  <Breadcrumb.Item>Components</Breadcrumb.Item>
-</Breadcrumb.Root>`,
-						'svelte'
-					)}</code
-				></pre>
+		<div class="flex flex-wrap items-center gap-2">
+			<Button variant="ghost" href={SOURCE}>
+				<svg viewBox="0 0 24 24" aria-hidden="true" class="size-3.5 fill-current">
+					<path
+						d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.92.58.1.79-.25.79-.55v-1.94c-3.2.7-3.88-1.54-3.88-1.54-.52-1.32-1.28-1.67-1.28-1.67-1.05-.72.08-.7.08-.7 1.16.08 1.78 1.2 1.78 1.2 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.51-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 5.78 0c2.21-1.49 3.18-1.18 3.18-1.18.62 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.43-2.7 5.4-5.27 5.69.42.36.79 1.06.79 2.14v3.17c0 .31.21.66.8.55C20.21 21.38 23.5 17.07 23.5 12 23.5 5.65 18.35.5 12 .5z"
+					/>
+				</svg>
+				View source
+				<External size={11} class="text-foreground-muted" />
+			</Button>
+			<Button href="/themes/studio">
+				<Layers size={14} />
+				Open studio
+				<ArrowRight size={14} />
+			</Button>
 		</div>
-	</DocSection>
+	</section>
 
-	<DocSection icon={Hash} title="API">
-		<PropTable rows={apiRows} namespace="Breadcrumb" />
-	</DocSection>
-
-	<DocFooter />
+	<!-- ─── Prev / Next ───────────────────────────────────────────── -->
+	{#if curIndex !== -1}
+		<nav
+			class="mt-12 flex w-full items-center"
+			class:justify-between={prevComponent && nextComponent}
+			class:justify-end={!prevComponent && nextComponent}
+			class:justify-start={prevComponent && !nextComponent}
+		>
+			{#if prevComponent}
+				<Button href={`/docs/components/${prevComponent}`} variant="outline" class="flex-shrink-0">
+					<ChevronLeft size={16} />
+					{sanitizeComponent(prevComponent)}
+				</Button>
+			{/if}
+			{#if prevComponent && nextComponent}
+				<div class="mx-4 w-full rounded-lg border-t border-border"></div>
+			{/if}
+			{#if nextComponent}
+				<Button href={`/docs/components/${nextComponent}`} variant="outline" class="flex-shrink-0">
+					{sanitizeComponent(nextComponent)}
+					<ChevronRight size={16} />
+				</Button>
+			{/if}
+		</nav>
+	{/if}
 </div>
-
-<DocPager slug={SLUG} />

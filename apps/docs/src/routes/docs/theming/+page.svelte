@@ -3,13 +3,10 @@
 	import { Badge } from '@silk/ui/components/badge';
 	import * as Alert from '@silk/ui/components/alert';
 	import * as Tabs from '@silk/ui/components/tabs';
-	import { highlight } from '$lib/highlight';
+	import { CodeBlock } from '@silk/ui/components/code-block';
 
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
 	import Palette from '@lucide/svelte/icons/palette';
-	import Copy from '@lucide/svelte/icons/copy';
-	import Check from '@lucide/svelte/icons/check';
-	import Terminal from '@lucide/svelte/icons/terminal';
 	import Type from '@lucide/svelte/icons/type';
 	import Square from '@lucide/svelte/icons/square';
 	import Waypoints from '@lucide/svelte/icons/waypoints';
@@ -129,15 +126,6 @@
 	};
 
 	let activeTab = $state('semantic');
-	let copied = $state<string | null>(null);
-	function copy(key: string, text: string) {
-		if (typeof navigator === 'undefined' || !navigator.clipboard) return;
-		void navigator.clipboard.writeText(text);
-		copied = key;
-		setTimeout(() => {
-			if (copied === key) copied = null;
-		}, 1600);
-	}
 </script>
 
 <svelte:head>
@@ -148,371 +136,267 @@
 	/>
 </svelte:head>
 
-<header class="flex flex-col gap-5 border-b border-border/60 pb-10">
-	<div class="flex flex-wrap items-center gap-2">
-		<Badge variant="outlined" class="gap-1.5 text-[0.66rem]">
-			<Palette size={11} class="text-primary" />
-			Theming
-		</Badge>
-		<Badge variant="ghost" class="text-[0.66rem]">CSS tokens</Badge>
-		<Badge variant="ghost" class="text-[0.66rem]">Light + dark</Badge>
-	</div>
+<div class="flex flex-col gap-10" data-docs-page>
+	<header class="flex flex-col gap-5 border-b border-border/60 pb-10">
+		<div class="flex flex-wrap items-center gap-2">
+			<Badge variant="outline" class="gap-1.5 text-[0.66rem]">
+				<Palette size={11} class="text-primary" />
+				Theming
+			</Badge>
+			<Badge variant="ghost" class="text-[0.66rem]">CSS tokens</Badge>
+			<Badge variant="ghost" class="text-[0.66rem]">Light + dark</Badge>
+		</div>
 
-	<div class="flex flex-col gap-3">
-		<h1
-			class="m-0 max-w-[24ch] text-[2.6rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] leading-[1.02] tracking-[-0.04em] md:text-[3rem]"
-			style="font-family: var(--font-header);"
-		>
-			One stylesheet. The whole library shifts.
-		</h1>
-		<p class="m-0 max-w-[44rem] text-[1.05rem] leading-relaxed text-foreground-muted">
-			Silk reads every visual decision from CSS variables. Edit your token sheet, save, and every
-			button, dialog, and dropdown updates in the same frame.
+		<div class="flex flex-col gap-3">
+			<h1
+				class="m-0 max-w-[24ch] text-[1.875rem] font-[var(--font-weight-header,600)] tracking-[-0.02em] leading-tight"
+				style="font-family: var(--font-header);"
+			>
+				One stylesheet. The whole library shifts.
+			</h1>
+			<p
+				class="m-0 max-w-2xl text-[1rem] text-foreground-muted leading-relaxed font-[var(--font-weight-description,450)]"
+			>
+				Silk reads every visual decision from CSS variables. Edit your token sheet, save, and every
+				button, dialog, and dropdown updates in the same frame.
+			</p>
+		</div>
+
+		<div class="flex flex-wrap items-center gap-2">
+			<Button href="/themes/studio">
+				Open theme studio
+				<ArrowRight size={14} />
+			</Button>
+			<Button href="/themes" variant="outline">Browse presets</Button>
+		</div>
+	</header>
+
+	<!-- ─── Token surfaces ────────────────────────────────────────── -->
+	<section class="pt-12 flex flex-col gap-5">
+		<div class="flex items-center gap-2">
+			<span class="grid size-6 place-items-center rounded-md bg-primary/10 text-primary">
+				<Layers size={12} />
+			</span>
+			<h2
+				class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
+				style="font-family: var(--font-header);"
+			>
+				Four surfaces, one source
+			</h2>
+		</div>
+
+		<div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+			{#each layerCards as layer (layer.title)}
+				<div
+					class="flex flex-col gap-3 rounded-[var(--radius-lg)] border border-border bg-card p-5"
+				>
+					<div class="flex items-center justify-between">
+						<span class="grid size-9 place-items-center rounded-md bg-secondary/60 text-foreground">
+							<layer.icon size={15} />
+						</span>
+						<span
+							class="text-[0.6rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-[0.14em] text-foreground-muted"
+						>
+							Layer · {layer.tone}
+						</span>
+					</div>
+					<p
+						class="m-0 text-[1rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
+						style="font-family: var(--font-header);"
+					>
+						{layer.title}
+					</p>
+					<p class="m-0 text-[0.84rem] leading-relaxed text-foreground-muted">{layer.body}</p>
+					<div class="flex flex-wrap gap-1.5 pt-1">
+						{#each layer.tokens as token (token)}
+							<code
+								class="rounded-md border border-border/70 bg-secondary/40 px-1.5 py-0.5 font-mono text-[0.7rem] text-foreground-muted"
+							>
+								{token}
+							</code>
+						{/each}
+					</div>
+				</div>
+			{/each}
+		</div>
+	</section>
+
+	<!-- ─── Three layers — tabs ────────────────────────────────────── -->
+	<section class="pt-12 flex flex-col gap-5">
+		<div class="flex items-center gap-2">
+			<span class="grid size-6 place-items-center rounded-md bg-primary/10 text-primary">
+				<Wand size={12} />
+			</span>
+			<h2
+				class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
+				style="font-family: var(--font-header);"
+			>
+				Theme in three layers
+			</h2>
+		</div>
+		<p class="m-0 max-w-[44rem] text-[0.92rem] leading-relaxed text-foreground-muted">
+			Start at the top. Drop down a layer only when the one above isn't enough.
 		</p>
-	</div>
 
-	<div class="flex flex-wrap items-center gap-2">
-		<Button href="/themes/studio">
-			Open theme studio
-			<ArrowRight size={14} />
-		</Button>
-		<Button href="/themes" variant="outlined">Browse presets</Button>
-	</div>
-</header>
+		<Tabs.Root bind:value={activeTab} variant="segmented">
+			<Tabs.List>
+				<Tabs.Trigger value="semantic">1 · Semantic tokens</Tabs.Trigger>
+				<Tabs.Trigger value="component">2 · Component tokens</Tabs.Trigger>
+				<Tabs.Trigger value="overrides">3 · Per-component overrides</Tabs.Trigger>
+			</Tabs.List>
 
-<!-- ─── Token surfaces ────────────────────────────────────────── -->
-<section class="pt-12 flex flex-col gap-5">
-	<div class="flex items-center gap-2">
-		<span class="grid size-6 place-items-center rounded-md bg-primary/10 text-primary">
-			<Layers size={12} />
-		</span>
-		<h2
-			class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
-			style="font-family: var(--font-header);"
-		>
-			Four surfaces, one source
-		</h2>
-	</div>
+			<Tabs.Content value="semantic">
+				<p class="m-0 pb-3 text-[0.86rem] leading-relaxed text-foreground-muted">
+					Think in interfaces, not components. Get background, foreground, primary, and border right
+					and most of the library already feels cohesive.
+				</p>
+				<CodeBlock code={codeBlocks.semantic.code} lang={codeBlocks.semantic.lang} copy="overlay" />
+			</Tabs.Content>
 
-	<div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-		{#each layerCards as layer}
+			<Tabs.Content value="component">
+				<p class="m-0 pb-3 text-[0.86rem] leading-relaxed text-foreground-muted">
+					When a category needs to break from defaults (pill buttons, taller fields, denser
+					dropdowns), tune the component tokens. No forks needed.
+				</p>
+				<CodeBlock
+					code={codeBlocks.component.code}
+					lang={codeBlocks.component.lang}
+					copy="overlay"
+				/>
+			</Tabs.Content>
+
+			<Tabs.Content value="overrides">
+				<p class="m-0 pb-3 text-[0.86rem] leading-relaxed text-foreground-muted">
+					When a single primitive needs special care, use the <code
+						class="font-mono text-foreground">data-ui</code
+					>
+					and <code class="font-mono text-foreground">data-variant</code> hooks. Cleaner than forking.
+				</p>
+				<CodeBlock
+					code={codeBlocks.overrides.code}
+					lang={codeBlocks.overrides.lang}
+					copy="overlay"
+				/>
+			</Tabs.Content>
+		</Tabs.Root>
+	</section>
+
+	<!-- ─── Two ways to author ────────────────────────────────────── -->
+	<section class="pt-12 flex flex-col gap-5">
+		<div class="flex items-center gap-2">
+			<span class="grid size-6 place-items-center rounded-md bg-primary/10 text-primary">
+				<Wand size={12} />
+			</span>
+			<h2
+				class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
+				style="font-family: var(--font-header);"
+			>
+				Two ways to author a theme
+			</h2>
+		</div>
+
+		<div class="grid grid-cols-1 gap-3 md:grid-cols-2">
 			<div class="flex flex-col gap-3 rounded-[var(--radius-lg)] border border-border bg-card p-5">
 				<div class="flex items-center justify-between">
-					<span class="grid size-9 place-items-center rounded-md bg-secondary/60 text-foreground">
-						<layer.icon size={15} />
-					</span>
-					<span
-						class="text-[0.6rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-[0.14em] text-foreground-muted"
-					>
-						Layer · {layer.tone}
-					</span>
+					<Badge variant="ghost">Visual</Badge>
+					<Badge variant="outline" class="text-[0.62rem]">/themes/studio</Badge>
 				</div>
 				<p
 					class="m-0 text-[1rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
 					style="font-family: var(--font-header);"
 				>
-					{layer.title}
+					Theme Studio
 				</p>
-				<p class="m-0 text-[0.84rem] leading-relaxed text-foreground-muted">{layer.body}</p>
-				<div class="flex flex-wrap gap-1.5 pt-1">
-					{#each layer.tokens as token}
-						<code
-							class="rounded-md border border-border/70 bg-secondary/40 px-1.5 py-0.5 font-mono text-[0.7rem] text-foreground-muted"
-						>
-							{token}
-						</code>
-					{/each}
+				<p class="m-0 text-[0.84rem] leading-relaxed text-foreground-muted">
+					A live editor for color, type, radius, and motion. Drag, type, paste a hex — preview every
+					component side-by-side. Export when it's right.
+				</p>
+				<div class="pt-1">
+					<Button href="/themes/studio" variant="outline" class="w-full justify-center">
+						Open studio
+						<ArrowRight size={14} />
+					</Button>
 				</div>
 			</div>
-		{/each}
-	</div>
-</section>
 
-<!-- ─── Three layers — tabs ────────────────────────────────────── -->
-<section class="pt-12 flex flex-col gap-5">
-	<div class="flex items-center gap-2">
-		<span class="grid size-6 place-items-center rounded-md bg-primary/10 text-primary">
-			<Wand size={12} />
-		</span>
-		<h2
-			class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
-			style="font-family: var(--font-header);"
-		>
-			Theme in three layers
-		</h2>
-	</div>
-	<p class="m-0 max-w-[44rem] text-[0.92rem] leading-relaxed text-foreground-muted">
-		Start at the top. Drop down a layer only when the one above isn't enough.
-	</p>
-
-	<Tabs.Root bind:value={activeTab}>
-		<Tabs.List>
-			<Tabs.Trigger value="semantic">1 · Semantic tokens</Tabs.Trigger>
-			<Tabs.Trigger value="component">2 · Component tokens</Tabs.Trigger>
-			<Tabs.Trigger value="overrides">3 · Per-component overrides</Tabs.Trigger>
-		</Tabs.List>
-
-		<Tabs.Content value="semantic">
-			<p class="m-0 pb-3 text-[0.86rem] leading-relaxed text-foreground-muted">
-				Think in interfaces, not components. Get background, foreground, primary, and border right
-				and most of the library already feels cohesive.
-			</p>
-			<div class="overflow-hidden rounded-[var(--radius-md)] border border-border bg-secondary/40">
-				<div class="flex items-center justify-between gap-2 border-b border-border/70 px-3 py-1.5">
-					<span
-						class="inline-flex items-center gap-1.5 text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted"
-					>
-						<Terminal size={11} />
-						app.css
-					</span>
-					<button
-						type="button"
-						onclick={() => copy('semantic', codeBlocks.semantic.code)}
-						class="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2 py-0.5 text-[0.7rem] text-foreground-muted transition-colors hover:bg-secondary/60 hover:text-foreground"
-					>
-						{#if copied === 'semantic'}
-							<Check size={11} class="text-[var(--color-success)]" /> Copied
-						{:else}
-							<Copy size={11} /> Copy
-						{/if}
-					</button>
+			<div class="flex flex-col gap-3 rounded-[var(--radius-lg)] border border-border bg-card p-5">
+				<div class="flex items-center justify-between">
+					<Badge variant="ghost">Code</Badge>
+					<Badge variant="outline" class="text-[0.62rem]">@theme + .dark</Badge>
 				</div>
-				<pre
-					class="m-0 max-h-[24rem] overflow-auto px-4 py-3 font-mono text-[0.78rem] leading-relaxed text-foreground"><code
-						>{@html highlight(codeBlocks.semantic.code, codeBlocks.semantic.lang)}</code
-					></pre>
-			</div>
-		</Tabs.Content>
-
-		<Tabs.Content value="component">
-			<p class="m-0 pb-3 text-[0.86rem] leading-relaxed text-foreground-muted">
-				When a category needs to break from defaults (pill buttons, taller fields, denser
-				dropdowns), tune the component tokens. No forks needed.
-			</p>
-			<div class="overflow-hidden rounded-[var(--radius-md)] border border-border bg-secondary/40">
-				<div class="flex items-center justify-between gap-2 border-b border-border/70 px-3 py-1.5">
-					<span
-						class="inline-flex items-center gap-1.5 text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted"
-					>
-						<Terminal size={11} />
-						app.css
-					</span>
-					<button
-						type="button"
-						onclick={() => copy('component', codeBlocks.component.code)}
-						class="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2 py-0.5 text-[0.7rem] text-foreground-muted transition-colors hover:bg-secondary/60 hover:text-foreground"
-					>
-						{#if copied === 'component'}
-							<Check size={11} class="text-[var(--color-success)]" /> Copied
-						{:else}
-							<Copy size={11} /> Copy
-						{/if}
-					</button>
-				</div>
-				<pre
-					class="m-0 max-h-[24rem] overflow-auto px-4 py-3 font-mono text-[0.78rem] leading-relaxed text-foreground"><code
-						>{@html highlight(codeBlocks.component.code, codeBlocks.component.lang)}</code
-					></pre>
-			</div>
-		</Tabs.Content>
-
-		<Tabs.Content value="overrides">
-			<p class="m-0 pb-3 text-[0.86rem] leading-relaxed text-foreground-muted">
-				When a single primitive needs special care, use the <code class="font-mono text-foreground"
-					>data-ui</code
+				<p
+					class="m-0 text-[1rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
+					style="font-family: var(--font-header);"
 				>
-				and <code class="font-mono text-foreground">data-variant</code> hooks. Cleaner than forking.
-			</p>
-			<div class="overflow-hidden rounded-[var(--radius-md)] border border-border bg-secondary/40">
-				<div class="flex items-center justify-between gap-2 border-b border-border/70 px-3 py-1.5">
-					<span
-						class="inline-flex items-center gap-1.5 text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted"
+					Write a theme by hand
+				</p>
+				<p class="m-0 text-[0.84rem] leading-relaxed text-foreground-muted">
+					Drop tokens straight into <code class="font-mono text-foreground">app.css</code>. Light
+					goes in <code class="font-mono text-foreground">@theme</code>, dark goes in
+					<code class="font-mono text-foreground">.dark</code>. That's the whole API.
+				</p>
+				<div class="pt-1">
+					<Button href="#layers" variant="outline" class="w-full justify-center"
+						>See examples</Button
 					>
-						<Terminal size={11} />
-						app.css
-					</span>
-					<button
-						type="button"
-						onclick={() => copy('overrides', codeBlocks.overrides.code)}
-						class="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2 py-0.5 text-[0.7rem] text-foreground-muted transition-colors hover:bg-secondary/60 hover:text-foreground"
-					>
-						{#if copied === 'overrides'}
-							<Check size={11} class="text-[var(--color-success)]" /> Copied
-						{:else}
-							<Copy size={11} /> Copy
-						{/if}
-					</button>
 				</div>
-				<pre
-					class="m-0 max-h-[24rem] overflow-auto px-4 py-3 font-mono text-[0.78rem] leading-relaxed text-foreground"><code
-						>{@html highlight(codeBlocks.overrides.code, codeBlocks.overrides.lang)}</code
-					></pre>
 			</div>
-		</Tabs.Content>
-	</Tabs.Root>
-</section>
+		</div>
+	</section>
 
-<!-- ─── Two ways to author ────────────────────────────────────── -->
-<section class="pt-12 flex flex-col gap-5">
-	<div class="flex items-center gap-2">
-		<span class="grid size-6 place-items-center rounded-md bg-primary/10 text-primary">
-			<Wand size={12} />
-		</span>
-		<h2
-			class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
-			style="font-family: var(--font-header);"
-		>
-			Two ways to author a theme
-		</h2>
-	</div>
+	<!-- ─── Presets ───────────────────────────────────────────────── -->
+	<section class="pt-12 flex flex-col gap-5">
+		<div class="flex items-center gap-2">
+			<span class="grid size-6 place-items-center rounded-md bg-primary/10 text-primary">
+				<Palette size={12} />
+			</span>
+			<h2
+				class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
+				style="font-family: var(--font-header);"
+			>
+				Start from a preset
+			</h2>
+		</div>
+		<p class="m-0 max-w-[44rem] text-[0.86rem] leading-relaxed text-foreground-muted">
+			If a blank canvas is too much, install a preset and tweak from there.
+		</p>
 
-	<div class="grid grid-cols-1 gap-3 md:grid-cols-2">
-		<div class="flex flex-col gap-3 rounded-[var(--radius-lg)] border border-border bg-card p-5">
-			<div class="flex items-center justify-between">
-				<Badge variant="ghost">Visual</Badge>
-				<Badge variant="outlined" class="text-[0.62rem]">/themes/studio</Badge>
-			</div>
+		<div class="grid grid-cols-1 gap-3 md:grid-cols-2">
+			<CodeBlock code={presetCmd} lang="shell" copy="overlay" />
+
+			<CodeBlock code={importCss} lang="css" copy="overlay" />
+		</div>
+
+		<Alert.Root variant="info">
+			<Alert.Title>Presets aren't a fork</Alert.Title>
+			<Alert.Description>
+				They're just <code class="font-mono text-foreground">@theme</code> blocks. Override any token
+				beneath the import and yours wins.
+			</Alert.Description>
+		</Alert.Root>
+	</section>
+
+	<!-- ─── Footer CTA ─────────────────────────────────────────────── -->
+	<section
+		class="mt-12 flex flex-col items-start justify-between gap-4 rounded-[var(--radius-lg)] border border-border bg-card p-6 sm:flex-row sm:items-center"
+	>
+		<div class="flex flex-col gap-1">
 			<p
 				class="m-0 text-[1rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
 				style="font-family: var(--font-header);"
 			>
-				Theme Studio
+				Ready to make it yours?
 			</p>
-			<p class="m-0 text-[0.84rem] leading-relaxed text-foreground-muted">
-				A live editor for color, type, radius, and motion. Drag, type, paste a hex — preview every
-				component side-by-side. Export when it's right.
+			<p class="m-0 text-[0.86rem] text-foreground-muted">
+				Open the studio, dial in your tokens, copy the CSS into your project.
 			</p>
-			<div class="pt-1">
-				<Button href="/themes/studio" variant="outlined" class="w-full justify-center">
-					Open studio
-					<ArrowRight size={14} />
-				</Button>
-			</div>
 		</div>
-
-		<div class="flex flex-col gap-3 rounded-[var(--radius-lg)] border border-border bg-card p-5">
-			<div class="flex items-center justify-between">
-				<Badge variant="ghost">Code</Badge>
-				<Badge variant="outlined" class="text-[0.62rem]">@theme + .dark</Badge>
-			</div>
-			<p
-				class="m-0 text-[1rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
-				style="font-family: var(--font-header);"
-			>
-				Write a theme by hand
-			</p>
-			<p class="m-0 text-[0.84rem] leading-relaxed text-foreground-muted">
-				Drop tokens straight into <code class="font-mono text-foreground">app.css</code>. Light goes
-				in <code class="font-mono text-foreground">@theme</code>, dark goes in
-				<code class="font-mono text-foreground">.dark</code>. That's the whole API.
-			</p>
-			<div class="pt-1">
-				<Button href="#layers" variant="outlined" class="w-full justify-center">
-					See examples
-				</Button>
-			</div>
+		<div class="flex flex-wrap items-center gap-2">
+			<Button href="/docs/styling" variant="outline">Styling guide</Button>
+			<Button href="/themes/studio">
+				Theme studio
+				<ArrowRight size={14} />
+			</Button>
 		</div>
-	</div>
-</section>
-
-<!-- ─── Presets ───────────────────────────────────────────────── -->
-<section class="pt-12 flex flex-col gap-5">
-	<div class="flex items-center gap-2">
-		<span class="grid size-6 place-items-center rounded-md bg-primary/10 text-primary">
-			<Palette size={12} />
-		</span>
-		<h2
-			class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
-			style="font-family: var(--font-header);"
-		>
-			Start from a preset
-		</h2>
-	</div>
-	<p class="m-0 max-w-[44rem] text-[0.86rem] leading-relaxed text-foreground-muted">
-		If a blank canvas is too much, install a preset and tweak from there.
-	</p>
-
-	<div class="grid grid-cols-1 gap-3 md:grid-cols-2">
-		<div class="overflow-hidden rounded-[var(--radius-md)] border border-border bg-secondary/40">
-			<div class="flex items-center justify-between gap-2 border-b border-border/70 px-3 py-1.5">
-				<span
-					class="inline-flex items-center gap-1.5 text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted"
-				>
-					<Terminal size={11} />
-					shell
-				</span>
-				<button
-					type="button"
-					onclick={() => copy('preset', presetCmd)}
-					class="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2 py-0.5 text-[0.7rem] text-foreground-muted transition-colors hover:bg-secondary/60 hover:text-foreground"
-				>
-					{#if copied === 'preset'}
-						<Check size={11} class="text-[var(--color-success)]" /> Copied
-					{:else}
-						<Copy size={11} /> Copy
-					{/if}
-				</button>
-			</div>
-			<pre class="m-0 px-4 py-3 font-mono text-[0.82rem] leading-relaxed text-foreground"><code
-					>{@html highlight(presetCmd, 'shell')}</code
-				></pre>
-		</div>
-
-		<div class="overflow-hidden rounded-[var(--radius-md)] border border-border bg-secondary/40">
-			<div class="flex items-center justify-between gap-2 border-b border-border/70 px-3 py-1.5">
-				<span
-					class="inline-flex items-center gap-1.5 text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted"
-				>
-					<Terminal size={11} />
-					app.css
-				</span>
-				<button
-					type="button"
-					onclick={() => copy('import', importCss)}
-					class="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2 py-0.5 text-[0.7rem] text-foreground-muted transition-colors hover:bg-secondary/60 hover:text-foreground"
-				>
-					{#if copied === 'import'}
-						<Check size={11} class="text-[var(--color-success)]" /> Copied
-					{:else}
-						<Copy size={11} /> Copy
-					{/if}
-				</button>
-			</div>
-			<pre class="m-0 px-4 py-3 font-mono text-[0.78rem] leading-relaxed text-foreground"><code
-					>{@html highlight(importCss, 'css')}</code
-				></pre>
-		</div>
-	</div>
-
-	<Alert.Root variant="info">
-		<Alert.Title>Presets aren't a fork</Alert.Title>
-		<Alert.Description>
-			They're just <code class="font-mono text-foreground">@theme</code> blocks. Override any token beneath
-			the import and yours wins.
-		</Alert.Description>
-	</Alert.Root>
-</section>
-
-<!-- ─── Footer CTA ─────────────────────────────────────────────── -->
-<section
-	class="mt-12 flex flex-col items-start justify-between gap-4 rounded-[var(--radius-lg)] border border-border bg-card p-6 sm:flex-row sm:items-center"
->
-	<div class="flex flex-col gap-1">
-		<p
-			class="m-0 text-[1rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
-			style="font-family: var(--font-header);"
-		>
-			Ready to make it yours?
-		</p>
-		<p class="m-0 text-[0.86rem] text-foreground-muted">
-			Open the studio, dial in your tokens, copy the CSS into your project.
-		</p>
-	</div>
-	<div class="flex flex-wrap items-center gap-2">
-		<Button href="/docs/styling" variant="outlined">Styling guide</Button>
-		<Button href="/themes/studio">
-			Theme studio
-			<ArrowRight size={14} />
-		</Button>
-	</div>
-</section>
+	</section>
+</div>

@@ -1,9 +1,11 @@
 import { browser } from '$app/environment';
+import type { Theme } from './theme';
 import type { ThemeDraft, ThemeBasePalette } from '@silk/ui/themes/presets';
 
 const STORAGE_KEY = 'silk-live-theme-css';
 const STYLE_ID = 'silk-live-theme-style';
 const STUDIO_STATE_KEY = 'silk-theme-studio-state';
+const STUDIO_THEME_V2_KEY = 'silk-studio-theme-v2';
 
 export type ThemeStudioState = {
 	selectedPresetSlug: string;
@@ -59,6 +61,14 @@ export function getStoredLiveThemeCss() {
 	return localStorage.getItem(STORAGE_KEY);
 }
 
+/** Removes the live theme override from the document and storage. */
+export function clearLiveThemeCss() {
+	if (!browser) return;
+	localStorage.removeItem(STORAGE_KEY);
+	const tag = document.getElementById(STYLE_ID);
+	tag?.remove();
+}
+
 /** Persists the current theme studio draft for later restoration. */
 export function saveThemeStudioState(state: ThemeStudioState) {
 	if (!browser) return;
@@ -78,14 +88,6 @@ export function loadThemeStudioState() {
 		localStorage.removeItem(STUDIO_STATE_KEY);
 		return null;
 	}
-}
-
-/** Removes the live theme override from the document and storage. */
-export function clearLiveThemeCss() {
-	if (!browser) return;
-	localStorage.removeItem(STORAGE_KEY);
-	const tag = document.getElementById(STYLE_ID);
-	tag?.remove();
 }
 
 const SAVED_THEMES_KEY = 'silk-saved-themes';
@@ -156,4 +158,23 @@ export function deleteLocalTheme(id: string) {
 	if (!browser) return;
 	const next = getSavedThemes().filter((t) => t.id !== id);
 	localStorage.setItem(SAVED_THEMES_KEY, JSON.stringify(next));
+}
+
+/** Persists a v2 Theme to localStorage for the studio to restore on mount. */
+export function saveStudioThemeV2(theme: Theme) {
+	if (!browser) return;
+	localStorage.setItem(STUDIO_THEME_V2_KEY, JSON.stringify(theme));
+}
+
+/** Restores the last saved v2 Theme from localStorage, if one exists. */
+export function loadStudioThemeV2(): Theme | null {
+	if (!browser) return null;
+	const stored = localStorage.getItem(STUDIO_THEME_V2_KEY);
+	if (!stored) return null;
+	try {
+		return JSON.parse(stored) as Theme;
+	} catch {
+		localStorage.removeItem(STUDIO_THEME_V2_KEY);
+		return null;
+	}
 }

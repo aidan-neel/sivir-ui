@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { states } from '@silk/ui/internals/state.svelte.ts';
 	import { getContext, onMount } from 'svelte';
-	import { ALERT_DIALOG_VARIANT_KEY, type AlertDialogState, type AlertDialogVariant } from '.';
+	import type { AlertDialogState } from '.';
 	import { Button, type ButtonProps } from '@silk/ui/components/button';
 	import { cn, type DefaultProps } from '@silk/ui/utils';
+	import { useIsDark } from '@silk/ui/internals/is-dark.svelte.ts';
 
 	type Props = {
 		onclick?: () => void;
@@ -16,16 +17,9 @@
 	const uiState = states[key].data as AlertDialogState;
 	let element = $state<HTMLButtonElement | HTMLAnchorElement | undefined>(undefined);
 
-	const variant =
-		(getContext(ALERT_DIALOG_VARIANT_KEY) as (() => AlertDialogVariant) | undefined)?.() ??
-		'default';
-	// Spotlight pairs a neutral, full-width secondary Cancel with the primary
-	// Confirm; default keeps the quiet ghost treatment.
-	const buttonVariant = variant === 'spotlight' ? 'secondary' : 'ghost';
-	const exitClass =
-		variant === 'spotlight'
-			? 'flex h-11 w-full flex-row items-center justify-center gap-2 rounded-xl text-[0.95rem]'
-			: 'flex sm:w-fit w-full flex-row gap-2 justify-center items-center';
+	// Cancel reads as outline in light, ghost in dark.
+	const isDark = useIsDark();
+	const cancelVariant = $derived(isDark.current ? 'ghost' : 'outline');
 
 	onMount(() => {
 		element?.focus();
@@ -38,9 +32,9 @@
 		uiState.open = false;
 		onclick?.();
 	}}
-	variant={buttonVariant}
+	variant={cancelVariant}
 	{...rest}
-	class={cn(className, exitClass)}
+	class={cn(className, `flex sm:w-fit w-full flex-row gap-2 justify-center items-center`)}
 >
 	{@render children?.()}
 </Button>

@@ -1,0 +1,122 @@
+<script module lang="ts">
+	export const metadata = {
+	  "title": "Combobox",
+	  "description": "Lets users search and select from a list of options in a single field.",
+	  "component": true,
+	  "source": "https://github.com/aidan-neel/silk/tree/main/registry/silk/default/combobox"
+};
+</script>
+
+<script>
+	import { ComponentPreview, ExportItem, APIReference, CodeBlock } from '$lib/components/docs';
+	import * as Combobox from '@silk/ui/components/combobox';
+
+	const companies = [
+		{ value: "microsoft", label: "Microsoft" },
+		{ value: "apple", label: "Apple" },
+		{ value: "google", label: "Google" },
+		{ value: "facebook", label: "Facebook" },
+		{ value: "amazon", label: "Amazon" }
+	];
+</script>
+
+<ComponentPreview code={`<script>
+	import * as Combobox from '@silk/ui/components/combobox';
+
+	const companies = [
+		{ value: 'microsoft', label: 'Microsoft' },
+		{ value: 'apple', label: 'Apple' },
+		{ value: 'google', label: 'Google' }
+	];
+</script>
+
+<Combobox.Root>
+	<Combobox.Trigger variant="outlined" class="w-[220px]">Select company</Combobox.Trigger>
+	<Combobox.Content class="w-[220px]">
+		<Combobox.Search placeholder="Search companies..." />
+		<Combobox.Results>
+			{#each companies as company}
+				<Combobox.Item value={company.value} label={company.label} callback={() => {}}>
+					{company.label}
+				</Combobox.Item>
+			{/each}
+		</Combobox.Results>
+	</Combobox.Content>
+</Combobox.Root>`}>
+	<Combobox.Root>
+		<Combobox.Trigger variant="outlined" class="w-[220px]">Select company</Combobox.Trigger>
+		<Combobox.Content class="w-[220px]">
+			<Combobox.Search placeholder="Search companies..." />
+			<Combobox.Results>
+				{#each companies as company}
+					<Combobox.Item value={company.value} label={company.label} callback={() => {}}>
+						{company.label}
+					</Combobox.Item>
+				{/each}
+			</Combobox.Results>
+		</Combobox.Content>
+	</Combobox.Root>
+</ComponentPreview>
+<div class="flex flex-col gap-5 pt-8 pb-8">
+	<h1 class="h1">Installation</h1>
+	<CodeBlock lang="shell" code={`bunx @aidan-neel/ui add combobox`} />
+</div>
+
+<h1 class="py-2 h1">Import</h1>
+<p class="py-2">Combobox exports 6 components.</p>
+
+<ExportItem title="Root">Wraps the combobox state and interactions.</ExportItem>
+<ExportItem title="Trigger">Opens the list and displays the current selection.</ExportItem>
+<ExportItem title="Content">Popover surface for the search and results.</ExportItem>
+<ExportItem title="Search">Search input for filtering items.</ExportItem>
+<ExportItem title="Results">Container for combobox items.</ExportItem>
+<ExportItem title="Item">Selectable result row.</ExportItem>
+
+<h1 class="py-6 h1">API Reference</h1>
+
+<div class="flex flex-col gap-10">
+	<APIReference
+		title="Combobox"
+		component="Root"
+		description="Searchable selection wrapper built on the popover primitive."
+		items={[
+			{ property: "open", type: "boolean", description: "Optional bound open state." },
+			{ property: "placement", type: `"top" | "left" | "bottom" | "right"`, description: "Popover placement for the results panel.", defaults: `"bottom"` },
+			{ property: "children", type: "Snippet", description: "Trigger, content, search, and items." }
+		]}
+	/>
+
+	<APIReference
+		title="Combobox"
+		component="Trigger"
+		description="Button that opens the combobox and shows the selected label."
+		items={[
+			{ property: "children", type: "Snippet", description: "Fallback label shown before a selection is made." },
+			{ property: "icon", type: "boolean", description: "Shows or hides the chevron icon.", defaults: "true" },
+			{ property: "class", type: "string", description: "Additional trigger classes." }
+		]}
+	/>
+
+	<APIReference
+		title="Combobox"
+		component="Search"
+		description="Input used to filter registered combobox items."
+		items={[
+			{ property: "placeholder", type: "string", description: "Placeholder text inside the search input.", defaults: `"Search..."` },
+			{ property: "threshold", type: "number", description: "Fuse.js match threshold for filtering.", defaults: "0.5" },
+			{ property: "class", type: "string", description: "Additional classes for the search row." }
+		]}
+	/>
+
+	<APIReference
+		title="Combobox"
+		component="Item"
+		description="Selectable row inside the results list."
+		items={[
+			{ property: "value", type: "string", description: "Internal value used for searching and selection." },
+			{ property: "label", type: "string", description: "Label shown in the trigger after selection." },
+			{ property: "callback", type: "() => void", description: "Optional callback fired when the item is chosen." },
+			{ property: "class", type: "string", description: "Additional classes for the item row." }
+		]}
+	/>
+</div>

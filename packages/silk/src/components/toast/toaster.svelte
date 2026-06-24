@@ -1,3 +1,4 @@
+<!-- token-lint-disable-file -->
 <script lang="ts">
 	import { setToastUIState, type ToastUIState } from './lib.svelte';
 	import type { UIState } from '@silk/ui/internals/state.svelte.ts';

@@ -13,10 +13,8 @@
 	{...rest}
 	portal={false}
 	data-ui="context-submenu-content"
-	class={cn(
-		className,
-		'min-w-[11rem] bg-[var(--color-panel)] text-[var(--color-panel-foreground)] border border-border rounded-[var(--radius-lg)] shadow-[var(--panel-shadow)] p-[var(--menu-padding)] flex flex-col gap-0'
-	)}
+	class={cn(className, 'min-w-[var(--menu-submenu-min-width)]')}
+	surfaceClass="flex flex-col gap-0 p-[var(--menu-padding)]"
 >
 	{@render children?.()}
 </Popover.Content>
