@@ -2,8 +2,10 @@ name: Browser Tests
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
   pull_request:
-    types: [labeled, synchronize]
+    branches: [main]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -15,8 +17,6 @@ permissions:
 jobs:
   browser:
     name: Vitest browser project (Chromium)
-    # Opt-in only: manual dispatch, or a PR carrying the "run-browser-tests" label.
-    if: github.event_name == 'workflow_dispatch' || contains(github.event.pull_request.labels.*.name, 'run-browser-tests')
     runs-on: ubuntu-latest
     env:
       LEFTHOOK: 0
@@ -42,7 +42,14 @@ jobs:
         run: bun install --frozen-lockfile
 
       - name: Install Playwright Chromium
-        run: bunx playwright install --with-deps chromium
+        # @vitest/browser-playwright launches the Playwright version pinned in the
+        # lockfile; a bare `bunx playwright` resolves a different version whose
+        # browser build doesn't match (the headless-shell binary ends up missing),
+        # so derive the installed version and install exactly that one.
+        run: |
+          PW_VERSION=$(basename "$(ls -d node_modules/.bun/playwright@* | head -1)" | cut -d'@' -f2)
+          echo "Installing Playwright $PW_VERSION browsers"
+          bunx "playwright@${PW_VERSION}" install --with-deps chromium
 
       - name: Test (browser)
         run: bun --filter='docs' run test:browser

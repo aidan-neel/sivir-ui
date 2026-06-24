@@ -4,6 +4,7 @@ import { page } from 'vitest/browser';
 import { tick } from 'svelte';
 import TooltipFixture from '../../fixtures/TooltipFixture.svelte';
 import { states } from '@silk/ui/internals/state.svelte.ts';
+import { resetSharedTooltipForTests } from '@silk/ui/components/tooltip/shared-tooltip';
 
 /*
  * Tooltip is now a popover wrapper post-F-29 collapse.
@@ -23,22 +24,33 @@ async function flush() {
 	await new Promise((r) => setTimeout(r, 20));
 }
 
+// The visible tooltip is the shared, body-level bubble; Tooltip.Content only
+// reports the authored label off-screen (it's always in the DOM).
+function bubble() {
+	return document.querySelector('[data-silk-tooltip]') as HTMLElement | null;
+}
+function tooltipShown() {
+	const el = bubble();
+	return !!el && el.style.opacity === '1';
+}
+
 beforeEach(() => {
+	resetSharedTooltipForTests();
 	for (const key of Object.keys(states)) {
 		delete states[key];
 	}
 });
 
-describe('Tooltip -- closed initially, no content rendered', () => {
-	it('content is not in the DOM before hover', async () => {
+describe('Tooltip -- closed initially, no bubble shown', () => {
+	it('the shared bubble is not shown before hover', async () => {
 		render(TooltipFixture, { delay: 10, closeDelay: 10 });
 		await flush();
-		await expect.element(page.getByTestId('tooltip-body')).not.toBeInTheDocument();
+		expect(tooltipShown()).toBe(false);
 	});
 });
 
 describe('Tooltip -- hover opens after the configured delay', () => {
-	it('content appears after pointer enters the trigger', async () => {
+	it('the bubble becomes visible after the pointer enters the trigger', async () => {
 		render(TooltipFixture, { delay: 10, closeDelay: 10 });
 		await flush();
 
@@ -47,7 +59,7 @@ describe('Tooltip -- hover opens after the configured delay', () => {
 		await new Promise((r) => setTimeout(r, 80));
 		await flush();
 
-		await expect.element(page.getByTestId('tooltip-body')).toBeInTheDocument();
+		expect(tooltipShown()).toBe(true);
 	});
 
 	it('role="tooltip" is set on the rendered content', async () => {
@@ -59,7 +71,10 @@ describe('Tooltip -- hover opens after the configured delay', () => {
 
 		const tooltipEl = document.querySelector('[role="tooltip"]');
 		expect(tooltipEl).toBeInTheDocument();
-		expect(tooltipEl?.textContent).toMatch(/Tooltip content/);
+		// The bubble renders its label via a slot-text roll (which interleaves
+		// glyphs), so assert the authored label through the off-screen reporter.
+		const body = document.querySelector('[data-testid="tooltip-body"]');
+		expect(body?.textContent).toContain('Tooltip content');
 	});
 
 	it('uses default delay of 600ms when not overridden (does NOT open at <100ms)', async () => {
@@ -70,7 +85,7 @@ describe('Tooltip -- hover opens after the configured delay', () => {
 		await flush();
 
 		// At 80ms, the default 600ms delay has not elapsed.
-		await expect.element(page.getByTestId('tooltip-body')).not.toBeInTheDocument();
+		expect(tooltipShown()).toBe(false);
 	});
 });
 
@@ -82,7 +97,7 @@ describe('Tooltip -- leave closes after closeDelay', () => {
 		await page.getByTestId('tooltip-trigger').hover();
 		await new Promise((r) => setTimeout(r, 80));
 		await flush();
-		await expect.element(page.getByTestId('tooltip-body')).toBeInTheDocument();
+		expect(tooltipShown()).toBe(true);
 
 		// Move pointer away from trigger via synthetic leave events (vitest's
 		// BrowserPage has no positional hover; element-level dispatch covers it).
@@ -92,7 +107,7 @@ describe('Tooltip -- leave closes after closeDelay', () => {
 		await new Promise((r) => setTimeout(r, 80));
 		await flush();
 
-		await expect.element(page.getByTestId('tooltip-body')).not.toBeInTheDocument();
+		expect(tooltipShown()).toBe(false);
 	});
 });
 

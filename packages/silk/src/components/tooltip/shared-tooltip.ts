@@ -190,6 +190,27 @@ export function hideTooltip(ref: HTMLElement | null, closeDelay = 100) {
 	closeTimer = setTimeout(dismiss, closeDelay);
 }
 
+/**
+ * Test-only: tear down the shared bubble and clear its timers/state so browser
+ * suites don't leak an open tooltip (or a pending open timer) from one case
+ * into the next.
+ */
+export function resetSharedTooltipForTests() {
+	clearTimeout(openTimer);
+	clearTimeout(closeTimer);
+	openTimer = undefined;
+	closeTimer = undefined;
+	visible = false;
+	activeRef = null;
+	currentText = '';
+	lastCenter = 'translateX(-50%)';
+	bubble?.remove();
+	measurer?.remove();
+	bubble = null;
+	measurer = null;
+	controller = null;
+}
+
 export function isActiveTooltip(ref: HTMLElement) {
 	return visible && activeRef === ref;
 }

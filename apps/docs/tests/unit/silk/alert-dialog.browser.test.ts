@@ -97,7 +97,7 @@ describe('AlertDialog -- default allowClickOutside=false (distinctive from Modal
 		await new Promise((r) => setTimeout(r, 20));
 		await expect.element(page.getByText('Delete project?')).toBeInTheDocument();
 
-		const overlay = document.querySelector('.bg-\\[var\\(--color-overlay\\)\\]') as HTMLElement;
+		const overlay = document.querySelector('[data-silk-anim="overlay"]') as HTMLElement;
 		expect(overlay).toBeInTheDocument();
 		overlay.click();
 		await flush();
@@ -111,7 +111,7 @@ describe('AlertDialog -- default allowClickOutside=false (distinctive from Modal
 		await new Promise((r) => setTimeout(r, 20));
 		await expect.element(page.getByText('Delete project?')).toBeInTheDocument();
 
-		const overlay = document.querySelector('.bg-\\[var\\(--color-overlay\\)\\]') as HTMLElement;
+		const overlay = document.querySelector('[data-silk-anim="overlay"]') as HTMLElement;
 		overlay.click();
 		await flush();
 		await expect.element(page.getByText('Delete project?')).not.toBeInTheDocument();
