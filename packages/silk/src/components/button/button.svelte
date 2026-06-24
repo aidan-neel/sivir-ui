@@ -4,6 +4,8 @@
 	import type { HTMLAnchorAttributes, HTMLButtonAttributes } from 'svelte/elements';
 	import { cn } from '@silk/ui/utils';
 	import type { ButtonProps } from '.';
+	// `panel` variant reads Panel's `--panel-*` tokens (defined on `.panel-root`).
+	import '../panel/panel.css';
 	import { useState } from '@silk/ui/internals/state.svelte.ts';
 
 	let {

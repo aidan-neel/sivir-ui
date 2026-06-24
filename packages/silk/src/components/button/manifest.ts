@@ -24,20 +24,24 @@ import type { Manifest } from '@silk/ui/_manifest/types';
  *             are gone.
  *           - Coordinated with the F-29 collapse of tooltip and
  *             hover-card into popover wrappers.
+ *   3.2.0:
+ *           - Add the `panel` variant: a clickable Button wearing Panel's
+ *             concentric frame. Pulls Panel's `--panel-*` tokens, so button
+ *             now depends on `panel`.
  */
 export const manifest: Manifest = {
 	name: 'button',
-	version: '3.1.0',
+	version: '3.2.0',
 	visibility: 'public',
 	description:
-		'Click target with 5 intent variants and 4 sizes. Renders as <button> by default; renders as <a> when `href` is provided. Universal trigger primitive -- pulled by every interactive silk component.',
+		'Click target with 6 intent variants and 4 sizes. Renders as <button> by default; renders as <a> when `href` is provided. Universal trigger primitive -- pulled by every interactive silk component.',
 	files: [
 		'components/button/button.svelte',
 		'components/button/index.ts',
 		'components/button/variants.ts',
 		'components/button/manifest.ts'
 	],
-	components: [],
+	components: ['panel'],
 	shared: ['utils.cn', 'internals/state'],
 	peerDependencies: {
 		clsx: '^2.0.0',

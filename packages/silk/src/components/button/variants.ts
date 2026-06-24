@@ -17,7 +17,13 @@ export const button = tv({
 			outline:
 				'bg-[var(--button-outlined-bg)] text-[var(--button-outlined-foreground)] shadow-[var(--button-outline-shadow)] hover:bg-[var(--button-outlined-hover-bg)] data-[state=open]:bg-[var(--button-outlined-hover-bg)] focus-visible:shadow-[var(--focus-ring),var(--button-outline-shadow)]',
 			destructive:
-				'bg-[var(--button-destructive-bg)] text-[var(--button-destructive-foreground)] hover:bg-[var(--button-destructive-hover-bg)] data-[state=open]:bg-[var(--button-destructive-hover-bg)]'
+				'bg-[var(--button-destructive-bg)] text-[var(--button-destructive-foreground)] hover:bg-[var(--button-destructive-hover-bg)] data-[state=open]:bg-[var(--button-destructive-hover-bg)]',
+			// A clickable Panel: same interaction as `outline`, but wearing Panel's
+			// concentric frame -- the hairline `--panel-border` outside and the inset
+			// surface ring inside read as Panel's double edge. Tokens come from the
+			// `panel-root` class (../panel/panel.css), imported by button.svelte.
+			panel:
+				'panel-root border border-[var(--panel-border)] bg-[var(--panel-bg)] text-[var(--panel-fg)] shadow-[var(--card-shadow)] ring-1 ring-inset ring-[color-mix(in_oklab,var(--panel-border)_50%,transparent)] hover:bg-[var(--button-outlined-hover-bg)] data-[state=open]:bg-[var(--button-outlined-hover-bg)] focus-visible:shadow-[var(--focus-ring),var(--card-shadow)]' // token-lint-disable-line no-literal-length
 		},
 		size: {
 			sm: '[--button-height:var(--size-control-sm)] px-[calc(var(--button-padding-x)_-_0.125rem)]', // token-lint-disable-line no-literal-length
