@@ -54,8 +54,10 @@
 
 <section class="hero">
 	<h1 class="hero__title">
-		{#each titleWords as word, i (word + i)}<span class="word" style="--i: {i}">{word}</span
-			>{i < titleWords.length - 1 ? ' ' : ''}{/each}
+		{#each titleWords as word, i (word + i)}<span class="word" style="--i: {i}">{word}</span>{i <
+			titleWords.length - 1
+				? ' '
+				: ''}{/each}
 	</h1>
 
 	<p class="hero__subtitle reveal" style="--d: 0.62s">
