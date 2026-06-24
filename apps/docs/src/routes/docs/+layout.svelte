@@ -7,7 +7,7 @@
 </script>
 
 <SideNavbar
-	class="hidden sticky top-16 h-[calc(100vh-4rem)] w-64 flex-shrink-0 border-r border-border pt-8 lg:flex"
+	class="hidden sticky top-16 h-[calc(100vh-4rem)] w-64 flex-shrink-0 pt-8 lg:flex"
 />
 <div class="flex w-full min-w-0 flex-1 justify-center lg:px-10">
 	<div
@@ -18,5 +18,5 @@
 	</div>
 </div>
 <OnThisPage
-	class="hidden sticky top-16 h-[calc(100vh-4rem)] w-64 flex-shrink-0 border-l border-border pl-8 pt-8 xl:block"
+	class="hidden sticky top-16 h-[calc(100vh-4rem)] w-64 flex-shrink-0 pl-8 pt-8 xl:block"
 />

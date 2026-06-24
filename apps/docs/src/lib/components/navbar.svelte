@@ -136,7 +136,7 @@
 		isStudio
 			? 'border-b border-border bg-background'
 			: isDocs
-				? 'border-b border-border bg-background/72 backdrop-blur-[14px]'
+				? 'bg-background/72 backdrop-blur-[14px]'
 				: scrolled
 					? 'bg-background/58 backdrop-blur-[14px]'
 					: 'bg-transparent'
