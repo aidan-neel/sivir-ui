@@ -1,0 +1,33 @@
+<script lang="ts">
+	import { setContext } from 'svelte';
+	import { cn } from '@sivir/ui/utils';
+	import type { AccordionItemProps } from '.';
+
+	let {
+		class: className,
+		value,
+		disabled = false,
+		children,
+		...rest
+	}: AccordionItemProps = $props();
+	// Use getters so trigger/content see the current prop values reactively
+	// instead of the initial-mount snapshot.
+	setContext('accordion-item', {
+		get value() {
+			return value;
+		},
+		get disabled() {
+			return disabled;
+		}
+	});
+</script>
+
+<div
+	data-ui="accordion-item"
+	data-value={value}
+	data-disabled={disabled ? '' : undefined}
+	class={cn(className, 'group')}
+	{...rest}
+>
+	{@render children?.()}
+</div>
