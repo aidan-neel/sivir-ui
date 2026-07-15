@@ -4,7 +4,7 @@ WORKDIR /repo
 COPY package.json bun.lock ./
 COPY apps/docs/package.json ./apps/docs/
 COPY apps/registry/package.json ./apps/registry/
-COPY packages/silk/package.json ./packages/silk/
+COPY packages/sivir/package.json ./packages/sivir/
 
 RUN bun install --frozen-lockfile
 

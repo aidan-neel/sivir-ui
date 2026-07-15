@@ -1,4 +1,4 @@
-# Silk registry
+# Sivir registry
 
 Elysia + Bun service that backs the theme registry. Persists themes in
 Postgres via Prisma. Database lives on **Supabase** — there's no local pg
