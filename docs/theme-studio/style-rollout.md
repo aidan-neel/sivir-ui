@@ -10,7 +10,7 @@ The Style mechanism (Flat / Soft / Sharp) shipped in Phase 5 is **bounded to a r
 | Menus     | DropdownMenu        |
 | Transient | Tooltip             |
 
-Each style is a coherent **token bundle** (`packages/silk/src/themes/styles/<slug>.ts`) that overrides _shared_ tokens (radius scale, elevation/shadow, padding) which those components consume — so a "Sharp" button matches a "Sharp" card automatically, with no per-component code. Styles are separately-installable: each is its own module, auto-registered by the glob in `styles/index.ts`, ready for the future CLI to copy a subset.
+Each style is a coherent **token bundle** (`packages/sivir/src/themes/styles/<slug>.ts`) that overrides _shared_ tokens (radius scale, elevation/shadow, padding) which those components consume — so a "Sharp" button matches a "Sharp" card automatically, with no per-component code. Styles are separately-installable: each is its own module, auto-registered by the glob in `styles/index.ts`, ready for the future CLI to copy a subset.
 
 ## How a style is applied
 

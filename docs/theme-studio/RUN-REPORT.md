@@ -52,4 +52,4 @@ Full log in `decisions.md` (D0.1–D5.2). Notable autonomous calls:
 
 ## How to verify / resume
 
-From `apps/docs`: `bun run check` · `bun run lint` · `bun run test:ci` · (root) `bun run build`. Live: `bun run dev` then `/tmp/silk-*.mjs` Playwright scripts (chromium) against `/themes/studio` — **restart the dev server fresh before visual checks** (D2.2: accumulated HMR can transiently serve stale content). Scope was kept to the Theme Studio + token system only; no monorepo restructure or CLI build was started (hooks left in `style-rollout.md`).
+From `apps/docs`: `bun run check` · `bun run lint` · `bun run test:ci` · (root) `bun run build`. Live: `bun run dev` then `/tmp/sivir-*.mjs` Playwright scripts (chromium) against `/themes/studio` — **restart the dev server fresh before visual checks** (D2.2: accumulated HMR can transiently serve stale content). Scope was kept to the Theme Studio + token system only; no monorepo restructure or CLI build was started (hooks left in `style-rollout.md`).

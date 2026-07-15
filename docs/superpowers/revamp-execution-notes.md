@@ -2,11 +2,11 @@
 
 > **PROJECT COMPLETE (2026-06-20):** Plans 1–3 done + token-lint enforced (0 violations, guard test). All components (style+motion), all 43 docs pages, constrained 6-control Studio, old 91-field engine culled. Build green: check=0, build 4/4, unit suite green. Sole optional follow-up: migrate the independent `apps/registry` backend schema to the v2 `Theme` shape (DB-coupled — left for an explicit task).
 
-User is AFK. Standing order: apply the established design language + docs flow to **every component and every docs page**, loop until completely done, **ask no more questions**. Keep each step build-green (`bun run check` = 0, unit suite green). Commit per logical chunk. Screenshots go in `silk/temp/screenshots/` (gitignored).
+User is AFK. Standing order: apply the established design language + docs flow to **every component and every docs page**, loop until completely done, **ask no more questions**. Keep each step build-green (`bun run check` = 0, unit suite green). Commit per logical chunk. Screenshots go in `sivir/temp/screenshots/` (gitignored).
 
 ## Design language (components) — established on Button + Input
 
-- Tokens in `packages/silk/src/ui.css`: custom easing `--ease-out` (0.23,1,0.32,1), `--ease-in-out`, `--ease-drawer`; `--focus-ring` (0 0 0 3px var(--color-ring)); `--motion-press-scale: 0.99`; `--motion-duration-press: 140ms`; smaller header (`--font-size-header:16px`); softer radius (sm6/md8/lg10/xl14); softened light `--color-border` (neutral-150, dark re-strengthened to neutral-300); readable muted `--color-foreground-muted` (neutral-600); `--font-weight-description: 450`.
+- Tokens in `packages/sivir/src/ui.css`: custom easing `--ease-out` (0.23,1,0.32,1), `--ease-in-out`, `--ease-drawer`; `--focus-ring` (0 0 0 3px var(--color-ring)); `--motion-press-scale: 0.99`; `--motion-duration-press: 140ms`; smaller header (`--font-size-header:16px`); softer radius (sm6/md8/lg10/xl14); softened light `--color-border` (neutral-150, dark re-strengthened to neutral-300); readable muted `--color-foreground-muted` (neutral-600); `--font-weight-description: 450`.
 - **Press feedback**: pressable controls get `active:scale-[var(--motion-press-scale)]` + `transition transform/bg/color/box-shadow [transition-duration:var(--motion-duration-press)] ease-[var(--ease-out)]`.
 - **Focus**: `focus-visible:shadow-[var(--focus-ring)]`; where a base box-shadow exists (outline), COMPOSE: `focus-visible:shadow-[var(--focus-ring),<base-shadow>]`.
 - **Outline / fields = INNER (inset) shadow**, never an outer drop: `inset 0 0 0 1px var(--color-border), inset 0 -2px 1px -1px rgb(0 0 0/.06), inset 0 1px 0 0 rgb(255 255 255/.5)` (dark variant tuned). This is `--button-outline-shadow`; inputs use the same inset language.
@@ -40,7 +40,7 @@ Per-component page structure:
 7. API reference tables.
 8. `on-this-page` TOC (ids on sections).
 
-- **Differentiate from shadcn**: softer cards (less border, the inner-shadow language), the Silk type pattern, calmer spacing — make it feel like Silk, not a shadcn clone.
+- **Differentiate from shadcn**: softer cards (less border, the inner-shadow language), the Sivir type pattern, calmer spacing — make it feel like Sivir, not a shadcn clone.
 
 ## Rollout scope
 
@@ -68,7 +68,7 @@ Goal: replace the old ~91-field `ThemeDraft` engine + 153-knob Studio with the v
 - **Phase B — Registry/built-ins to v2:** `apps/registry/src/services/themes/model.ts` schema → the ~10-field `Theme`; `builtin-presets.ts` exports only v2 `Theme[]` (the single default). Discard old stored themes (user-approved).
 - **Phase C — Cull:** delete `themes/styles/`, `themes/transitions/`, `themes/presets/*.ts`, the old `ThemeDraft`/v1 surface in `presets.ts`, old types in `live.ts`; delete dead tests (`themes.presets`, `themes.density`, `themes.styles`, `themes.transitions`, `studio-spacing-fields`). Keep `theme.test.ts` + `studio-preview.test.ts`.
 
-Key facts: v2 engine (`theme.ts`) is ready (`Theme`, `DEFAULT_THEME`, `themeToCss`). `[name].css` already branches default→v2. `studio-preview.svelte` has NO old imports (keep). Registry mirrors `ThemeDraft` via its own Elysia schema (not a @silk import).
+Key facts: v2 engine (`theme.ts`) is ready (`Theme`, `DEFAULT_THEME`, `themeToCss`). `[name].css` already branches default→v2. `studio-preview.svelte` has NO old imports (keep). Registry mirrors `ThemeDraft` via its own Elysia schema (not a @sivir import).
 
 ## Status (historical)
 

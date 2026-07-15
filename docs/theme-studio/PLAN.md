@@ -1,19 +1,19 @@
-# Silk Theme Studio — Token System Overhaul (Executed Plan)
+# Sivir Theme Studio — Token System Overhaul (Executed Plan)
 
 > Companion docs: [`gap-report.md`](./gap-report.md) (empirical audit), [`decisions.md`](./decisions.md) (autonomous decisions), [`style-rollout.md`](./style-rollout.md) (Phase 5 backlog), [`RUN-REPORT.md`](./RUN-REPORT.md) (final summary).
 
 ## Context
 
-Silk is a Svelte 5 runes component library (38 public components) whose thesis is **extreme customizability** — the Theme Studio should re-skin every component. Today: the Studio exposes only a slice of the real token surface; tokens live in **two sources of truth** (`ui.css` static defaults + `themeToCss()` dynamic overrides); a handful of values are hardcoded; tokens are flat (no group scope); and the 4,079-line Studio page renders a static preview that doesn't prove every token works. This overhaul makes every customizable property flow from one source, group-scoped with per-component override, exposes every token live, decomposes the page, rebuilds the preview, and ships a bounded "Style" preset mechanism.
+Sivir is a Svelte 5 runes component library (38 public components) whose thesis is **extreme customizability** — the Theme Studio should re-skin every component. Today: the Studio exposes only a slice of the real token surface; tokens live in **two sources of truth** (`ui.css` static defaults + `themeToCss()` dynamic overrides); a handful of values are hardcoded; tokens are flat (no group scope); and the 4,079-line Studio page renders a static preview that doesn't prove every token works. This overhaul makes every customizable property flow from one source, group-scoped with per-component override, exposes every token live, decomposes the page, rebuilds the preview, and ships a bounded "Style" preset mechanism.
 
 Run is **autonomous** — open decisions are made defensibly and logged in `decisions.md`. Each phase lands typecheck + lint + full test suite green and build passing, then commits, before the next begins.
 
 ## Confirmed architecture (Phase 0 audit)
 
-- Components in `packages/silk/src/components/<name>/` (`*.svelte`, `index.ts`, `variants.ts` via `tailwind-variants`, `manifest.ts`); consume tokens through Tailwind arbitrary values (`px-[var(--button-padding-x)]`) and JS reads (`getCssNumber(node, '--motion-sheet-offset')`).
-- Static layer: `packages/silk/src/ui.css` (198 declared tokens). Dynamic layer: `themeToCss()` in `presets.ts` (129 emitted). Code consumes 182. **Gaps:** 28 dead, 77 consumed-but-uneditable, 16 emitted-but-unconsumed, plus the Category-C hardcodes — see `gap-report.md`.
-- Live apply: `themes/live.ts` injects `<style id="silk-live-theme-style">`. Studio state = `$state` runes in `+page.svelte`; `generatedCss = $derived(themeToCss(editorTheme))`; `$effect` re-applies.
-- Tests: Vitest 4 + @testing-library/svelte in `apps/docs/tests/unit/silk/` (projects: unit/ssr/browser). Baseline: **0 typecheck errors, 573 tests pass, 0 lint errors.**
+- Components in `packages/sivir/src/components/<name>/` (`*.svelte`, `index.ts`, `variants.ts` via `tailwind-variants`, `manifest.ts`); consume tokens through Tailwind arbitrary values (`px-[var(--button-padding-x)]`) and JS reads (`getCssNumber(node, '--motion-sheet-offset')`).
+- Static layer: `packages/sivir/src/ui.css` (198 declared tokens). Dynamic layer: `themeToCss()` in `presets.ts` (129 emitted). Code consumes 182. **Gaps:** 28 dead, 77 consumed-but-uneditable, 16 emitted-but-unconsumed, plus the Category-C hardcodes — see `gap-report.md`.
+- Live apply: `themes/live.ts` injects `<style id="sivir-live-theme-style">`. Studio state = `$state` runes in `+page.svelte`; `generatedCss = $derived(themeToCss(editorTheme))`; `$effect` re-applies.
+- Tests: Vitest 4 + @testing-library/svelte in `apps/docs/tests/unit/sivir/` (projects: unit/ssr/browser). Baseline: **0 typecheck errors, 573 tests pass, 0 lint errors.**
 - Commands (from `apps/docs`): `bun run check` | `bun run lint` | `bun run test:ci` | `bun run test:browser`; build from root `bun run build`; `bun run dev`. A **lefthook pre-commit** runs prettier/eslint — `bun run format` before committing.
 
 ## Phases
