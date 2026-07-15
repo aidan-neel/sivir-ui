@@ -6,18 +6,18 @@
 	import AlignRight from '@lucide/svelte/icons/align-right';
 
 	import { resolve } from '$app/paths';
-	import { Button } from '@silk/ui/components/button';
-	import { Input } from '@silk/ui/components/input';
-	import { Checkbox } from '@silk/ui/components/checkbox';
-	import { Switch } from '@silk/ui/components/switch';
-	import { Badge } from '@silk/ui/components/badge';
-	import { Slider } from '@silk/ui/components/slider';
-	import { Progress } from '@silk/ui/components/progress';
-	import * as Card from '@silk/ui/components/card';
-	import * as Tabs from '@silk/ui/components/tabs';
-	import * as Avatar from '@silk/ui/components/avatar';
-	import * as Alert from '@silk/ui/components/alert';
-	import * as ToggleGroup from '@silk/ui/components/toggle-group';
+	import { Button } from '@sivir/ui/components/button';
+	import { Input } from '@sivir/ui/components/input';
+	import { Checkbox } from '@sivir/ui/components/checkbox';
+	import { Switch } from '@sivir/ui/components/switch';
+	import { Badge } from '@sivir/ui/components/badge';
+	import { Slider } from '@sivir/ui/components/slider';
+	import { Progress } from '@sivir/ui/components/progress';
+	import * as Card from '@sivir/ui/components/card';
+	import * as Tabs from '@sivir/ui/components/tabs';
+	import * as Avatar from '@sivir/ui/components/avatar';
+	import * as Alert from '@sivir/ui/components/alert';
+	import * as ToggleGroup from '@sivir/ui/components/toggle-group';
 	import type { Snippet } from 'svelte';
 
 	const titleWords = ['Restyle', 'everything', 'from', 'a', 'few', 'tokens.'];
@@ -35,10 +35,10 @@
 </script>
 
 <svelte:head>
-	<title>Silk UI · Themed Svelte components</title>
+	<title>Sivir UI · Themed Svelte components</title>
 	<meta
 		name="description"
-		content="40 Svelte 5 components and a live theme studio. Restyle all of them from a handful of design tokens — no forks, no overrides."
+		content="41 Svelte 5 components and a live theme studio. Restyle all of them from a handful of design tokens — no forks, no overrides."
 	/>
 </svelte:head>
 
@@ -48,8 +48,8 @@
 <div class="grid-lines" aria-hidden="true">
 	<span class="gl gl--v gl--left"></span>
 	<span class="gl gl--v gl--right"></span>
-	<span class="gl gl--h gl--top" style="--d: 1.05s"></span>
-	<span class="gl gl--h gl--bottom" style="--d: 1.25s"></span>
+	<span class="gl gl--h gl--top" style="--d: 0.8s"></span>
+	<span class="gl gl--h gl--bottom" style="--d: 0.95s"></span>
 </div>
 
 <section class="hero">
@@ -60,17 +60,18 @@
 				: ''}{/each}
 	</h1>
 
-	<p class="hero__subtitle reveal" style="--d: 0.62s">
-		40 Svelte components and a live theme studio. Every one of them restyles from the same handful
+	<p class="hero__subtitle reveal" style="--d: 0.45s">
+		41 Svelte components and a live theme studio. Every one of them restyles from the same handful
 		of design tokens — no forks, no overrides.
 	</p>
 
-	<div class="hero__actions reveal" style="--d: 0.78s">
-		<Button href="/docs/introduction" size="lg">
+	<div class="hero__actions reveal" style="--d: 0.58s">
+		<Button href={resolve('/docs/introduction')} size="lg">
 			Get started
 			<ArrowRight size={16} />
 		</Button>
-		<Button href="/docs/components" variant="outline" size="lg">Browse components</Button>
+		<Button href={resolve('/docs/components')} variant="outline" size="lg">Browse components</Button
+		>
 	</div>
 </section>
 
@@ -80,7 +81,7 @@
 {#snippet galleryCard(c: CardDef, i: number)}
 	<a
 		class="gcard reveal"
-		style="--d: {0.05 + i * 0.04}s"
+		style="--d: {0.04 + i * 0.03}s"
 		href={resolve('/docs/components/[...slug]', { slug: c.slug })}
 	>
 		<div class="gcard__preview">
@@ -108,8 +109,8 @@
 {#snippet cardDemo()}
 	<Card.Root class="w-[15rem]">
 		<Card.Header>
-			<Card.Title>silk-ui</Card.Title>
-			<Card.Description>vercel.com/silk-ui</Card.Description>
+			<Card.Title>sivir-ui</Card.Title>
+			<Card.Description>vercel.com/sivir-ui</Card.Description>
 		</Card.Header>
 		<Card.Content>
 			<div class="flex items-center gap-2">
@@ -139,7 +140,7 @@
 	<div class="flex items-center gap-2">
 		<Badge>New</Badge>
 		<Badge variant="secondary">Stable</Badge>
-		<Badge variant="outline">v0.4</Badge>
+		<Badge variant="outline">v0.1</Badge>
 	</div>
 {/snippet}
 {#snippet tabsDemo()}
@@ -300,8 +301,8 @@
 	</div>
 
 	<div class="gallery__more">
-		<Button href="/docs/components" variant="outline">
-			Browse all 40 components
+		<Button href={resolve('/docs/components')} variant="outline">
+			Browse all 41 components
 			<ArrowRight size={15} />
 		</Button>
 	</div>
@@ -539,7 +540,7 @@
 
 	@media (prefers-reduced-motion: no-preference) {
 		.word {
-			animation: word-rise 0.6s var(--ease-out) calc(var(--i) * 0.07s) both;
+			animation: word-rise 0.6s var(--ease-out) calc(var(--i) * 0.05s) both;
 		}
 
 		.reveal {
@@ -547,12 +548,12 @@
 		}
 
 		.gl--v {
-			animation: draw-y 0.7s var(--ease-out) 0.95s both;
+			animation: draw-y 0.7s var(--ease-out) 0.72s both;
 		}
 
 		.gl--h,
 		.hero-rule {
-			animation: draw-x 0.6s var(--ease-out) var(--d, 1.15s) both;
+			animation: draw-x 0.6s var(--ease-out) var(--d, 0.88s) both;
 		}
 	}
 

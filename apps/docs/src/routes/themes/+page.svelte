@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
-	import { themesV2 } from '@silk/ui/themes/builtin-presets';
-	import { themeToCss } from '@silk/ui/themes/theme';
-	import { Button } from '@silk/ui/components/button';
-	import { Input } from '@silk/ui/components/input';
-	import { toast } from '@silk/ui/components/toast';
-	import { applyLiveThemeCss, saveStudioThemeV2 } from '@silk/ui/themes/live';
-	import type { Theme } from '@silk/ui/themes/theme';
+	import { builtInThemePresets } from '@sivir/ui/themes/builtin-presets';
+	import { themeToCss, type ThemeDraft } from '@sivir/ui/themes/presets';
+	import { Button } from '@sivir/ui/components/button';
+	import { Input } from '@sivir/ui/components/input';
+	import { toast } from '@sivir/ui/components/toast';
+	import { applyLiveThemeCss } from '@sivir/ui/themes/live';
+	import type { PageData } from './$types';
 
 	import Search from '@lucide/svelte/icons/search';
 	import Sparkles from '@lucide/svelte/icons/sparkles';
@@ -17,8 +17,18 @@
 	import FileCode from '@lucide/svelte/icons/file-code';
 	import Braces from '@lucide/svelte/icons/braces';
 
+	const { data = { themes: builtInThemePresets } as PageData }: { data?: PageData } = $props();
+	const getInitialThemes = () => {
+		const builtInSlugs = new Set(builtInThemePresets.map((theme) => theme.slug));
+		const registryThemes = Array.isArray(data?.themes) ? data.themes : [];
+		return [
+			...builtInThemePresets,
+			...registryThemes.filter((theme) => !builtInSlugs.has(theme.slug))
+		];
+	};
+
 	let searchQuery = $state('');
-	let themes = $state<Theme[]>(themesV2);
+	let themes = $state<ThemeDraft[]>(getInitialThemes());
 
 	const filteredThemes = $derived.by(() => {
 		const needle = searchQuery.trim().toLowerCase();
@@ -31,7 +41,7 @@
 		});
 	});
 
-	function applyTheme(theme: Theme) {
+	function applyTheme(theme: ThemeDraft) {
 		applyLiveThemeCss(themeToCss(theme));
 		toast({
 			title: `${theme.name} applied`,
@@ -43,10 +53,10 @@
 
 	// Theme detail modal
 	let detailOpen = $state(false);
-	let detailTheme = $state<Theme | null>(null);
+	let detailTheme = $state<ThemeDraft | null>(null);
 	let copiedKey = $state<'css' | 'json' | null>(null);
 
-	function openDetail(theme: Theme) {
+	function openDetail(theme: ThemeDraft) {
 		detailTheme = theme;
 		copiedKey = null;
 		detailOpen = true;
@@ -67,8 +77,7 @@
 		}, 1600);
 	}
 
-	function openInStudio(theme: Theme) {
-		saveStudioThemeV2(theme);
+	function openInStudio(theme: ThemeDraft) {
 		applyLiveThemeCss(themeToCss(theme));
 		void goto(resolve('/themes/studio'));
 	}
@@ -78,8 +87,8 @@
 </script>
 
 <svelte:head>
-	<title>Silk · Themes</title>
-	<meta name="description" content="Explore and customize Silk themes." />
+	<title>Sivir · Themes</title>
+	<meta name="description" content="Explore and customize Sivir themes." />
 </svelte:head>
 
 <div class="mt-16 min-h-[calc(100vh-4rem)] bg-background">
@@ -91,10 +100,10 @@
 					class="m-0 text-[2.9rem] font-[500] leading-[1.05] tracking-tight md:text-[3.6rem]"
 					style="font-family: var(--font-header);"
 				>
-					Silk themes.
+					Sivir themes.
 				</h1>
 				<p class="m-0 max-w-[42rem] text-[0.95rem] leading-relaxed text-foreground-muted">
-					Explore or customize a theme. All themes are built from 6 constrained controls.
+					Explore a complete theme preset, apply it live, or customize every token in Studio.
 				</p>
 			</div>
 
@@ -193,11 +202,10 @@
 
 							<!-- Info -->
 							<div class="flex-1 px-4 py-3 text-[0.78rem] text-foreground-muted space-y-1">
-								<div><span class="text-foreground">Brand:</span> {theme.brand}</div>
-								<div><span class="text-foreground">Neutral:</span> {theme.neutral}</div>
-								<div><span class="text-foreground">Radius:</span> {theme.radius}</div>
-								<div><span class="text-foreground">Density:</span> {theme.density}</div>
-								<div><span class="text-foreground">Motion:</span> {theme.motion}</div>
+								<div><span class="text-foreground">Brand:</span> {theme.light.primary}</div>
+								<div><span class="text-foreground">Background:</span> {theme.light.background}</div>
+								<div><span class="text-foreground">Radius:</span> {theme.radiusBase}</div>
+								<div><span class="text-foreground">Motion:</span> {theme.durationPreset}</div>
 								<div><span class="text-foreground">Fonts:</span> {theme.fontSans}</div>
 							</div>
 
@@ -278,26 +286,24 @@
 					<div>
 						<span class="text-foreground-muted">Brand</span>
 						<div class="flex items-center gap-2 mt-1">
-							<span class="size-4 rounded" style={`background: ${detailTheme.brand}`}></span>
-							<code class="text-foreground-muted font-mono text-[0.75rem]">{detailTheme.brand}</code
+							<span class="size-4 rounded" style={`background: ${detailTheme.light.primary}`}
+							></span>
+							<code class="text-foreground-muted font-mono text-[0.75rem]"
+								>{detailTheme.light.primary}</code
 							>
 						</div>
 					</div>
 					<div>
-						<span class="text-foreground-muted">Neutral</span>
-						<p class="m-0 mt-1 text-foreground">{detailTheme.neutral}</p>
+						<span class="text-foreground-muted">Background</span>
+						<p class="m-0 mt-1 text-foreground">{detailTheme.light.background}</p>
 					</div>
 					<div>
 						<span class="text-foreground-muted">Radius</span>
-						<p class="m-0 mt-1 text-foreground">{detailTheme.radius}</p>
-					</div>
-					<div>
-						<span class="text-foreground-muted">Density</span>
-						<p class="m-0 mt-1 text-foreground">{detailTheme.density}</p>
+						<p class="m-0 mt-1 text-foreground">{detailTheme.radiusBase}</p>
 					</div>
 					<div>
 						<span class="text-foreground-muted">Motion</span>
-						<p class="m-0 mt-1 text-foreground">{detailTheme.motion}</p>
+						<p class="m-0 mt-1 text-foreground">{detailTheme.durationPreset}</p>
 					</div>
 					<div>
 						<span class="text-foreground-muted">Fonts</span>

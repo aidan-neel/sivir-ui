@@ -1,4 +1,3 @@
-import { mdsvex } from 'mdsvex';
 import adapter from '@sveltejs/adapter-vercel';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 
@@ -6,17 +5,16 @@ import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 const config = {
 	// Consult https://svelte.dev/docs/kit/integrations
 	// for more information about preprocessors
-	preprocess: [vitePreprocess(), mdsvex()],
+	preprocess: vitePreprocess(),
 
 	kit: {
 		adapter: adapter(),
 		alias: {
-			'@silk/ui': '../../packages/silk/src',
-			'@silk/ui/*': '../../packages/silk/src/*'
+			'@sivir/ui/brand-mark': '../../packages/sivir/src/brand-mark.svelte',
+			'@sivir/ui': '../../packages/sivir/src',
+			'@sivir/ui/*': '../../packages/sivir/src/*'
 		}
-	},
-
-	extensions: ['.svelte', '.svx', '.md']
+	}
 };
 
 export default config;

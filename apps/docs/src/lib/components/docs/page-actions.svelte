@@ -3,8 +3,9 @@
 </script>
 
 <script lang="ts">
-	import * as Breadcrumb from '@silk/ui/components/breadcrumb';
-	import { Badge } from '@silk/ui/components/badge';
+	import { resolve } from '$app/paths';
+	import * as Breadcrumb from '@sivir/ui/components/breadcrumb';
+	import { Badge } from '@sivir/ui/components/badge';
 	import ChevronRight from '@lucide/svelte/icons/chevron-right';
 	import FileCode from '@lucide/svelte/icons/file-code';
 	import Accessibility from '@lucide/svelte/icons/accessibility';
@@ -12,31 +13,29 @@
 
 	let {
 		title,
-		slug,
 		source,
 		ariaUrl,
 		section
 	}: {
 		title: string;
-		slug: string | undefined;
 		source?: string;
 		ariaUrl?: string;
 		section: PageActionsSection;
 	} = $props();
 
 	const issueUrl = $derived(
-		`https://github.com/aidan-neel/ui/issues/new?title=${encodeURIComponent(`[${title}] `)}`
+		`https://github.com/aidan-neel/sivir-ui/issues/new?title=${encodeURIComponent(`[${title}] `)}`
 	);
 </script>
 
 {#if section === 'breadcrumbs'}
 	<div class="flex flex-col gap-1 pb-6">
 		<Breadcrumb.Root>
-			<Breadcrumb.Item href="/docs/introduction">Docs</Breadcrumb.Item>
+			<Breadcrumb.Item href={resolve('/docs/introduction')}>Docs</Breadcrumb.Item>
 			<ChevronRight size={14} class="text-foreground-muted" aria-hidden="true" />
-			<Breadcrumb.Item href="/docs/components">Components</Breadcrumb.Item>
+			<Breadcrumb.Item href={resolve('/docs/components')}>Components</Breadcrumb.Item>
 			<ChevronRight size={14} class="text-foreground-muted" aria-hidden="true" />
-			<Breadcrumb.Item href="/docs/components/{slug}">{title}</Breadcrumb.Item>
+			<Breadcrumb.Item>{title}</Breadcrumb.Item>
 		</Breadcrumb.Root>
 	</div>
 {:else}

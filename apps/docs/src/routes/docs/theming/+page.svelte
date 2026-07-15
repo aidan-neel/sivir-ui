@@ -1,9 +1,10 @@
 <script lang="ts">
-	import { Button } from '@silk/ui/components/button';
-	import { Badge } from '@silk/ui/components/badge';
-	import * as Alert from '@silk/ui/components/alert';
-	import * as Tabs from '@silk/ui/components/tabs';
-	import { CodeBlock } from '@silk/ui/components/code-block';
+	import { resolve } from '$app/paths';
+	import { Button } from '@sivir/ui/components/button';
+	import { Badge } from '@sivir/ui/components/badge';
+	import * as Alert from '@sivir/ui/components/alert';
+	import * as Tabs from '@sivir/ui/components/tabs';
+	import { CodeBlock } from '@sivir/ui/components/code-block';
 
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
 	import Palette from '@lucide/svelte/icons/palette';
@@ -115,9 +116,9 @@
 	--color-panel: color-mix(in srgb, var(--color-panel) 90%, white);
 }`;
 
-	const presetCmd = 'bunx @aidan-neel/ui theme install nordic';
-	const importCss = `/* app.css */
-@import './themes/nordic.css';`;
+	const presetCmd = 'bunx @sivir/ui add theme nordic';
+	const importCss = `/* app.css — import after ui.css so the preset wins */
+@import './lib/sivir/theme.css';`;
 
 	const codeBlocks = {
 		semantic: { code: semanticCss, lang: 'css' },
@@ -129,7 +130,7 @@
 </script>
 
 <svelte:head>
-	<title>Silk · Theming</title>
+	<title>Sivir · Theming</title>
 	<meta
 		name="description"
 		content="Build a theme system that controls color, shape, motion, and surface tone from one place."
@@ -157,17 +158,17 @@
 			<p
 				class="m-0 max-w-2xl text-[1rem] text-foreground-muted leading-relaxed font-[var(--font-weight-description,450)]"
 			>
-				Silk reads every visual decision from CSS variables. Edit your token sheet, save, and every
+				Sivir reads every visual decision from CSS variables. Edit your token sheet, save, and every
 				button, dialog, and dropdown updates in the same frame.
 			</p>
 		</div>
 
 		<div class="flex flex-wrap items-center gap-2">
-			<Button href="/themes/studio">
+			<Button href={resolve('/themes/studio')}>
 				Open theme studio
 				<ArrowRight size={14} />
 			</Button>
-			<Button href="/themes" variant="outline">Browse presets</Button>
+			<Button href={resolve('/themes')} variant="outline">Browse presets</Button>
 		</div>
 	</header>
 
@@ -312,7 +313,7 @@
 					component side-by-side. Export when it's right.
 				</p>
 				<div class="pt-1">
-					<Button href="/themes/studio" variant="outline" class="w-full justify-center">
+					<Button href={resolve('/themes/studio')} variant="outline" class="w-full justify-center">
 						Open studio
 						<ArrowRight size={14} />
 					</Button>
@@ -392,8 +393,8 @@
 			</p>
 		</div>
 		<div class="flex flex-wrap items-center gap-2">
-			<Button href="/docs/styling" variant="outline">Styling guide</Button>
-			<Button href="/themes/studio">
+			<Button href={resolve('/docs/styling')} variant="outline">Styling guide</Button>
+			<Button href={resolve('/themes/studio')}>
 				Theme studio
 				<ArrowRight size={14} />
 			</Button>

@@ -13,8 +13,8 @@ export const components = [
 	'color-picker',
 	'combobox',
 	'command',
-	'copy-button',
 	'context-menu',
+	'copy-button',
 	'dropdown-menu',
 	'hover-card',
 	'input',
@@ -40,7 +40,7 @@ export const components = [
 	'toggle',
 	'toggle-group',
 	'tooltip'
-].sort((a, b) => a.localeCompare(b));
+] as const;
 
 export const sanitizeComponent = (name: string) => {
 	return name

@@ -1,6 +1,7 @@
 <script lang="ts">
-	import { Button } from '@silk/ui/components/button';
-	import { Badge } from '@silk/ui/components/badge';
+	import { resolve } from '$app/paths';
+	import { Button } from '@sivir/ui/components/button';
+	import { Badge } from '@sivir/ui/components/badge';
 
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
 	import History from '@lucide/svelte/icons/history';
@@ -66,15 +67,15 @@
 		{
 			version: 'v0.4.0',
 			date: '2026-04-18',
-			title: 'Motion, perspective, and theme studio',
+			title: 'Motion and theme studio',
 			summary:
-				'Transitions gained 3D depth, the studio became the main authoring surface, and a handful of component bugs got chased down.',
+				'Transitions became themeable, the studio became the main authoring surface, and a handful of component bugs got chased down.',
 			entries: [
 				{
 					tag: 'feature',
 					icon: Wand,
-					title: 'Perspective transitions',
-					body: 'Panels can now enter with 3D depth via `panelPerspective`, `panelRotateX`, and `panelOpacityStart`. New "Depth" transition preset ships configured.'
+					title: 'Themeable transitions',
+					body: 'Panel movement, scale, and duration can now be tuned through transition presets.'
 				},
 				{
 					tag: 'polish',
@@ -127,7 +128,7 @@
 				{
 					tag: 'launch',
 					icon: Rocket,
-					title: 'Silk goes public',
+					title: 'Sivir goes public',
 					body: 'Twenty-plus components, the `init`/`add` CLI, the docs site, and the first set of theme presets -- all available to install today.'
 				}
 			]
@@ -164,7 +165,7 @@
 </script>
 
 <svelte:head>
-	<title>Silk · Changelog</title>
+	<title>Sivir · Changelog</title>
 	<meta
 		name="description"
 		content="Recent updates across components, theming, docs, and interaction polish."
@@ -187,7 +188,7 @@
 				class="m-0 max-w-[26ch] text-[1.875rem] font-[var(--font-weight-header,600)] tracking-[-0.02em] leading-tight"
 				style="font-family: var(--font-header);"
 			>
-				What's new in Silk.
+				What's new in Sivir.
 			</h1>
 			<p
 				class="m-0 max-w-2xl text-[1rem] text-foreground-muted leading-relaxed font-[var(--font-weight-description,450)]"
@@ -281,8 +282,8 @@
 			</p>
 		</div>
 		<div class="flex flex-wrap items-center gap-2">
-			<Button href="https://github.com/aidan-neel/ui" variant="outline">GitHub</Button>
-			<Button href="/docs/components">
+			<Button href="https://github.com/aidan-neel/sivir-ui" variant="outline">GitHub</Button>
+			<Button href={resolve('/docs/components')}>
 				Components
 				<ArrowRight size={14} />
 			</Button>

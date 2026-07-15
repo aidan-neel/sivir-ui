@@ -1,8 +1,9 @@
 <script lang="ts">
-	import { Button } from '@silk/ui/components/button';
-	import { Badge } from '@silk/ui/components/badge';
-	import * as Alert from '@silk/ui/components/alert';
-	import { CodeBlock } from '@silk/ui/components/code-block';
+	import { resolve } from '$app/paths';
+	import { Button } from '@sivir/ui/components/button';
+	import { Badge } from '@sivir/ui/components/badge';
+	import * as Alert from '@sivir/ui/components/alert';
+	import { CodeBlock } from '@sivir/ui/components/code-block';
 
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
 	import Paintbrush from '@lucide/svelte/icons/paintbrush-vertical';
@@ -17,7 +18,7 @@
 			step: '1',
 			icon: Tag,
 			label: 'Reach for the `class` prop first',
-			body: 'Every Silk primitive forwards `class`. Combine it with Tailwind utilities or your own classnames -- fastest path for one-off tweaks.',
+			body: 'Every Sivir primitive forwards `class`. Combine it with Tailwind utilities or your own classnames -- fastest path for one-off tweaks.',
 			lang: 'svelte',
 			code: `<Button
   class="w-full justify-between rounded-2xl"
@@ -75,10 +76,10 @@
 			step: '4',
 			icon: GitFork,
 			label: 'Own the file (last resort)',
-			body: 'The component lives in `src/lib/silk/components/<name>/` -- yours to edit. Reach for this only when behavior, not just style, needs to change.',
+			body: 'The component lives in `src/lib/sivir/components/<name>/` -- yours to edit. Reach for this only when behavior, not just style, needs to change.',
 			lang: 'shell',
-			code: `# already there after \`bunx @aidan-neel/ui add button\`
-src/lib/silk/components/button/
+			code: `# already there after \`bunx @sivir/ui add button\`
+src/lib/sivir/components/button/
 ├── button.svelte
 └── index.ts`
 		}
@@ -86,10 +87,10 @@ src/lib/silk/components/button/
 </script>
 
 <svelte:head>
-	<title>Silk · Styling</title>
+	<title>Sivir · Styling</title>
 	<meta
 		name="description"
-		content="Four ways to style Silk: class prop, component tokens, data attributes, and full ownership."
+		content="Four ways to style Sivir: class prop, component tokens, data attributes, and full ownership."
 	/>
 </svelte:head>
 
@@ -109,7 +110,7 @@ src/lib/silk/components/button/
 				class="m-0 max-w-[24ch] text-[1.875rem] font-[var(--font-weight-header,600)] tracking-[-0.02em] leading-tight"
 				style="font-family: var(--font-header);"
 			>
-				Style every Silk component your way.
+				Style every Sivir component your way.
 			</h1>
 			<p
 				class="m-0 max-w-2xl text-[1rem] text-foreground-muted leading-relaxed font-[var(--font-weight-description,450)]"
@@ -120,11 +121,11 @@ src/lib/silk/components/button/
 		</div>
 
 		<div class="flex flex-wrap items-center gap-2">
-			<Button href="/docs/theming">
+			<Button href={resolve('/docs/theming')}>
 				Token reference
 				<ArrowRight size={14} />
 			</Button>
-			<Button href="/docs/components" variant="outline">Browse components</Button>
+			<Button href={resolve('/docs/components')} variant="outline">Browse components</Button>
 		</div>
 	</header>
 
@@ -224,7 +225,7 @@ src/lib/silk/components/button/
 		<Alert.Root variant="info">
 			<Alert.Title>The `class` prop is composed, not overridden</Alert.Title>
 			<Alert.Description>
-				Silk uses <code class="font-mono text-foreground">cn()</code> to merge classes, so your
+				Sivir uses <code class="font-mono text-foreground">cn()</code> to merge classes, so your
 				classes win over defaults without needing
 				<code class="font-mono text-foreground">!important</code>. Override
 				<code class="font-mono text-foreground">rounded-2xl</code> on a Button and you get a
@@ -250,8 +251,8 @@ src/lib/silk/components/button/
 			</p>
 		</div>
 		<div class="flex flex-wrap items-center gap-2">
-			<Button href="/docs/components" variant="outline">Components</Button>
-			<Button href="/docs/theming">
+			<Button href={resolve('/docs/components')} variant="outline">Components</Button>
+			<Button href={resolve('/docs/theming')}>
 				Theming guide
 				<ArrowRight size={14} />
 			</Button>

@@ -2,18 +2,19 @@
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
 	import { mode, setMode } from 'mode-watcher';
-	import { Badge } from '@silk/ui/components/badge';
-	import { Button } from '@silk/ui/components/button';
-	import { Input } from '@silk/ui/components/input';
-	import { Switch } from '@silk/ui/components/switch';
-	import { Slider } from '@silk/ui/components/slider';
-	import { ColorPicker, type ColorOption } from '@silk/ui/components/color-picker';
-	import * as Select from '@silk/ui/components/select';
-	import * as Tabs from '@silk/ui/components/tabs';
-	import * as DropdownMenu from '@silk/ui/components/dropdown-menu';
-	import * as Alert from '@silk/ui/components/alert';
-	import * as Modal from '@silk/ui/components/modal';
-	import { toast } from '@silk/ui/components/toast';
+	import { Badge } from '@sivir/ui/components/badge';
+	import { Button } from '@sivir/ui/components/button';
+	import { Input } from '@sivir/ui/components/input';
+	import { Switch } from '@sivir/ui/components/switch';
+	import { Slider } from '@sivir/ui/components/slider';
+	import ColorPicker from '$lib/components/color-picker.svelte';
+	import type { ColorOption } from '@sivir/ui/components/color-picker';
+	import * as Select from '@sivir/ui/components/select';
+	import * as Tabs from '@sivir/ui/components/tabs';
+	import * as DropdownMenu from '@sivir/ui/components/dropdown-menu';
+	import * as Alert from '@sivir/ui/components/alert';
+	import * as Modal from '@sivir/ui/components/modal';
+	import { toast } from '@sivir/ui/components/toast';
 	import {
 		applyLiveThemeCss,
 		getStoredLiveThemeCss,
@@ -23,7 +24,7 @@
 		saveLocalTheme,
 		deleteLocalTheme,
 		type SavedTheme
-	} from '@silk/ui/themes/live';
+	} from '@sivir/ui/themes/live';
 	import {
 		type ThemePalette,
 		generatePaletteFromBase,
@@ -38,10 +39,10 @@
 		type ThemeTypography,
 		resolveSpacing,
 		type ThemeSpacing
-	} from '@silk/ui/themes/presets';
-	import { transitionPresets, type ThemeTransitionPresetSlug } from '@silk/ui/themes/transitions';
-	import { stylePresets, getStyle, styleToCss } from '@silk/ui/themes/styles';
-	import { builtInThemePresets } from '@silk/ui/themes/builtin-presets';
+	} from '@sivir/ui/themes/presets';
+	import { transitionPresets, type ThemeTransitionPresetSlug } from '@sivir/ui/themes/transitions';
+	import { stylePresets, getStyle, styleToCss } from '@sivir/ui/themes/styles';
+	import { builtInThemePresets } from '@sivir/ui/themes/builtin-presets';
 
 	import RotateCcw from '@lucide/svelte/icons/rotate-ccw';
 	import RotateCw from '@lucide/svelte/icons/rotate-cw';
@@ -60,11 +61,8 @@
 	import Trash from '@lucide/svelte/icons/trash-2';
 	import ArrowDown from '@lucide/svelte/icons/arrow-down';
 	import ArrowUp from '@lucide/svelte/icons/arrow-up';
-	import ArrowRight from '@lucide/svelte/icons/arrow-right';
 	import Maximize from '@lucide/svelte/icons/maximize-2';
 	import Minimize from '@lucide/svelte/icons/minimize-2';
-	import Layers2 from '@lucide/svelte/icons/layers-2';
-	import Wind from '@lucide/svelte/icons/wind';
 
 	import type { PageData } from './$types';
 	import StudioPreview from '$lib/components/themes/studio/studio-preview.svelte';
@@ -227,17 +225,10 @@
 	];
 
 	function cloneTheme(theme: ThemeDraft): ThemeDraft {
-		// Round-trip through JSON to deep-clone, then guarantee `typography` and
-		// `overlaysOnSurface` exist on the result. Without this, undefined fields
-		// get stripped by JSON and the $state proxy never registers them -- which
-		// silently breaks the studio's weights selects and the overlays toggle.
+		// Round-trip through JSON to deep-clone, then fill optional live contracts.
 		const cloned = JSON.parse(JSON.stringify(theme)) as ThemeDraft;
 		cloned.typography = resolveTypography(cloned.typography);
-		cloned.overlaysOnSurface = cloned.overlaysOnSurface === true;
-		cloned.fancyButtons = cloned.fancyButtons !== false;
-		cloned.fancyBadges = cloned.fancyBadges !== false;
 		cloned.fancyShadows = cloned.fancyShadows !== false;
-		cloned.hapticPress = cloned.hapticPress === true;
 		cloned.pointerCursor = cloned.pointerCursor !== false;
 		cloned.spacing = resolveSpacing(cloned.spacing);
 		return cloned;
@@ -437,67 +428,6 @@
 		selectedPresetSlug = 'custom';
 	}
 
-	// ─── Easing ───
-	const defaultEasing = 'cubic-bezier(0.22,1,0.36,1)';
-	const easingOptions = [
-		{
-			label: 'Soft',
-			value: 'cubic-bezier(0.22,1,0.36,1)',
-			description: 'Gentle ease-out -- Silk default.'
-		},
-		{
-			label: 'Standard',
-			value: 'cubic-bezier(0.4,0,0.2,1)',
-			description: 'Material standard easing -- even acceleration, sharp landing.'
-		},
-		{
-			label: 'Sharp',
-			value: 'cubic-bezier(0.4,0,0.6,1)',
-			description: 'Quick start, smooth tail.'
-		},
-		{
-			label: 'Spring',
-			value: 'cubic-bezier(0.34,1.56,0.64,1)',
-			description: 'Overshoots a touch, springs back.'
-		},
-		{ label: 'Linear', value: 'linear', description: 'Constant velocity. Use sparingly.' },
-		{
-			label: 'Ease in-out',
-			value: 'cubic-bezier(0.65,0,0.35,1)',
-			description: 'Symmetric acceleration / deceleration.'
-		}
-	] as const;
-
-	const currentEasing = $derived(
-		easingOptions.find((o) => o.value === (editorTheme.motion.panelEasing ?? defaultEasing)) ?? {
-			label: 'Custom',
-			value: 'custom',
-			description: 'Custom cubic-bezier set via All motion options.'
-		}
-	);
-
-	function updateEasing(value: string) {
-		editorTheme.motion = { ...editorTheme.motion, panelEasing: value };
-		selectedPresetSlug = 'custom';
-	}
-
-	// Control (hover/press) easing -- decoupled from panel easing so buttons and
-	// fields can feel different from floating surfaces.
-	const defaultHoverEasing = 'cubic-bezier(0.25,0.1,0.25,1)';
-	const currentHoverEasing = $derived(
-		easingOptions.find(
-			(o) => o.value === (editorTheme.motion.hoverEasing ?? defaultHoverEasing)
-		) ?? {
-			label: 'Custom',
-			value: 'custom',
-			description: 'Custom control easing.'
-		}
-	);
-	function updateHoverEasing(value: string) {
-		editorTheme.motion = { ...editorTheme.motion, hoverEasing: value };
-		selectedPresetSlug = 'custom';
-	}
-
 	const weightFields: {
 		key: keyof ThemeTypography;
 		trackingKey: keyof ThemeTypography;
@@ -567,10 +497,7 @@
 	}
 
 	function updateDurationPreset(next: ThemeTransitionPresetSlug) {
-		// Motion preset = durations only. Panel-shape fields (panelX, panelY,
-		// panelBlur, panelScaleStart, sheetOffset, overlayBlur, panelPerspective,
-		// panelRotateX, panelOpacityStart) stay put -- those are controlled by
-		// the Transition preset below.
+		// Duration presets preserve the separately selected panel offset and scale.
 		editorTheme.durationPreset = next;
 		const preset = resolveThemeMotion(next);
 		editorTheme.motion = {
@@ -580,7 +507,6 @@
 			panelDuration: preset.panelDuration,
 			sheetDuration: preset.sheetDuration,
 			overlayDuration: preset.overlayDuration,
-			tooltipDuration: preset.tooltipDuration,
 			toastInDuration: preset.toastInDuration,
 			toastOutDuration: preset.toastOutDuration
 		};
@@ -672,7 +598,7 @@
 			name: cleanedName,
 			slug,
 			description:
-				publishDescription.trim() || 'A custom theme published from the Silk UI Theme Studio.',
+				publishDescription.trim() || 'A custom theme published from the Sivir UI Theme Studio.',
 			publisher: publishPublisher.trim() || undefined
 		};
 		isPublishing = true;
@@ -713,8 +639,9 @@
 
 	const getInitialThemesCatalog = () => {
 		const themes = Array.isArray(data?.themes) ? data.themes : [];
+		const builtInSlugs = new Set(builtInThemePresets.map((theme) => theme.slug));
 		return themes.length
-			? [...builtInThemePresets, ...themes.filter((t) => t.slug !== 'default')]
+			? [...builtInThemePresets, ...themes.filter((theme) => !builtInSlugs.has(theme.slug))]
 			: builtInThemePresets;
 	};
 	const initialThemesCatalog = getInitialThemesCatalog();
@@ -749,42 +676,9 @@
 		selectedStyleSlug = slug;
 	}
 
-	// Source of truth: editorTheme.overlaysOnSurface. The Switch reads the
-	// derived `overlaysOnSurfaceOn` and writes via the onclick callback --
-	// no bidirectional bind / no racing effects.
-	const overlaysOnSurfaceOn = $derived(editorTheme.overlaysOnSurface === true);
-	function toggleOverlaysOnSurface() {
-		editorTheme.overlaysOnSurface = !overlaysOnSurfaceOn;
-		selectedPresetSlug = 'custom';
-	}
-
-	const fancyButtonsOn = $derived(editorTheme.fancyButtons !== false);
-	function toggleFancyButtons() {
-		editorTheme.fancyButtons = !fancyButtonsOn;
-		selectedPresetSlug = 'custom';
-	}
-
-	const primaryButtonOutlineOn = $derived(editorTheme.primaryButtonOutline === true);
-	function togglePrimaryButtonOutline() {
-		editorTheme.primaryButtonOutline = !primaryButtonOutlineOn;
-		selectedPresetSlug = 'custom';
-	}
-
-	const fancyBadgesOn = $derived(editorTheme.fancyBadges !== false);
-	function toggleFancyBadges() {
-		editorTheme.fancyBadges = !fancyBadgesOn;
-		selectedPresetSlug = 'custom';
-	}
-
 	const fancyShadowsOn = $derived(editorTheme.fancyShadows !== false);
 	function toggleFancyShadows() {
 		editorTheme.fancyShadows = !fancyShadowsOn;
-		selectedPresetSlug = 'custom';
-	}
-
-	const hapticPressOn = $derived(editorTheme.hapticPress === true);
-	function toggleHapticPress() {
-		editorTheme.hapticPress = !hapticPressOn;
 		selectedPresetSlug = 'custom';
 	}
 
@@ -916,7 +810,6 @@
 			fields: [
 				{ key: 'background', label: 'Background' },
 				{ key: 'panel', label: 'Panel' },
-				{ key: 'modal', label: 'Modal' },
 				{ key: 'card', label: 'Card' },
 				{ key: 'muted', label: 'Muted' }
 			]
@@ -925,9 +818,7 @@
 			title: 'Foreground',
 			fields: [
 				{ key: 'foreground', label: 'Foreground' },
-				{ key: 'foregroundOpposite', label: 'Foreground opposite' },
-				{ key: 'foregroundMuted', label: 'Foreground muted' },
-				{ key: 'foregroundButton', label: 'Foreground button' }
+				{ key: 'foregroundMuted', label: 'Foreground muted' }
 			]
 		},
 		{
@@ -935,8 +826,6 @@
 			fields: [
 				{ key: 'primary', label: 'Primary' },
 				{ key: 'secondary', label: 'Secondary' },
-				{ key: 'accent', label: 'Accent' },
-				{ key: 'alternate', label: 'Alternate' },
 				{ key: 'info', label: 'Info' }
 			]
 		},
@@ -945,8 +834,7 @@
 			fields: [
 				{ key: 'success', label: 'Success' },
 				{ key: 'warning', label: 'Warning' },
-				{ key: 'error', label: 'Error' },
-				{ key: 'destructive', label: 'Destructive' }
+				{ key: 'error', label: 'Error' }
 			]
 		},
 		{
@@ -980,7 +868,6 @@
 			| 'panelDuration'
 			| 'sheetDuration'
 			| 'overlayDuration'
-			| 'tooltipDuration'
 			| 'toastInDuration'
 			| 'toastOutDuration';
 		label: string;
@@ -988,16 +875,7 @@
 		max: number;
 	};
 	type MotionNumberField = {
-		key:
-			| 'panelX'
-			| 'panelY'
-			| 'panelBlur'
-			| 'panelScaleStart'
-			| 'sheetOffset'
-			| 'overlayBlur'
-			| 'panelPerspective'
-			| 'panelRotateX'
-			| 'panelOpacityStart';
+		key: 'panelY' | 'panelScaleStart';
 		label: string;
 		hint: string;
 		min: number;
@@ -1005,7 +883,6 @@
 		step: number;
 		unit?: string;
 		format?: (value: number) => string;
-		experimental?: boolean;
 	};
 	const motionDurationFields: MotionDurationField[] = [
 		{ key: 'hoverDuration', label: 'Hover', hint: 'Buttons, links, ghost state', max: 500 },
@@ -1013,35 +890,16 @@
 		{ key: 'panelDuration', label: 'Panel', hint: 'Popovers, dialogs', max: 700 },
 		{ key: 'sheetDuration', label: 'Sheet', hint: 'Side sheets, drawers', max: 800 },
 		{ key: 'overlayDuration', label: 'Overlay', hint: 'Modal backdrop fade', max: 500 },
-		{ key: 'tooltipDuration', label: 'Tooltip', hint: 'Hover hints', max: 400 },
 		{ key: 'toastInDuration', label: 'Toast in', hint: 'Notification entry', max: 900 },
 		{ key: 'toastOutDuration', label: 'Toast out', hint: 'Notification exit', max: 900 }
 	];
 	const motionNumberFields: MotionNumberField[] = [
-		{
-			key: 'panelX',
-			label: 'Panel X offset',
-			hint: 'Horizontal lift on entry',
-			min: -40,
-			max: 40,
-			step: 1,
-			unit: 'px'
-		},
 		{
 			key: 'panelY',
 			label: 'Panel Y offset',
 			hint: 'Vertical lift on entry',
 			min: -40,
 			max: 40,
-			step: 1,
-			unit: 'px'
-		},
-		{
-			key: 'panelBlur',
-			label: 'Panel blur',
-			hint: 'Backdrop blur',
-			min: 0,
-			max: 24,
 			step: 1,
 			unit: 'px'
 		},
@@ -1053,54 +911,6 @@
 			max: 1,
 			step: 0.005,
 			format: (v) => v.toFixed(3)
-		},
-		{
-			key: 'sheetOffset',
-			label: 'Sheet offset',
-			hint: 'Slide distance',
-			min: 0,
-			max: 240,
-			step: 4,
-			unit: 'px'
-		},
-		{
-			key: 'overlayBlur',
-			label: 'Overlay blur',
-			hint: 'Modal backdrop blur',
-			min: 0,
-			max: 24,
-			step: 1,
-			unit: 'px'
-		},
-		{
-			key: 'panelPerspective',
-			label: 'Perspective',
-			hint: '3D depth. 0 = flat. Try 600-1200 for subtle tilt.',
-			min: 0,
-			max: 2000,
-			step: 50,
-			unit: 'px',
-			experimental: true
-		},
-		{
-			key: 'panelRotateX',
-			label: 'Rotate X',
-			hint: 'Entry tilt in degrees. Needs perspective > 0.',
-			min: -20,
-			max: 20,
-			step: 1,
-			unit: '°',
-			experimental: true
-		},
-		{
-			key: 'panelOpacityStart',
-			label: 'Opacity start',
-			hint: '0 = fade from invisible, 1 = no fade.',
-			min: 0,
-			max: 1,
-			step: 0.05,
-			format: (v) => v.toFixed(2),
-			experimental: true
 		}
 	];
 
@@ -1133,91 +943,45 @@
 		description: string;
 		icon: typeof ArrowDown;
 		motion: {
-			panelX: number;
 			panelY: number;
 			panelScaleStart: number;
-			panelBlur: number;
-			panelPerspective?: number;
-			panelRotateX?: number;
 		};
 	};
 	const transitionShapes: TransitionShape[] = [
 		{
 			slug: 'subtle',
 			name: 'Subtle',
-			description: 'Gentle lift -- Silk default.',
+			description: 'Gentle lift -- Sivir default.',
 			icon: ArrowDown,
-			motion: {
-				panelX: 0,
-				panelY: 5,
-				panelScaleStart: 0.99,
-				panelBlur: 0,
-				panelPerspective: 0,
-				panelRotateX: 0
-			}
+			motion: { panelY: 5, panelScaleStart: 0.99 }
 		},
 		{
 			slug: 'lift',
 			name: 'Lift',
-			description: 'Bigger rise with a soft blur.',
+			description: 'Bigger rise with a tighter starting scale.',
 			icon: ArrowUp,
-			motion: {
-				panelX: 0,
-				panelY: 12,
-				panelScaleStart: 0.97,
-				panelBlur: 2,
-				panelPerspective: 0,
-				panelRotateX: 0
-			}
-		},
-		{
-			slug: 'depth',
-			name: 'Depth',
-			description: '3D tilt -- perspective + rotateX. Experimental.',
-			icon: Layers2,
-			motion: {
-				panelX: 0,
-				panelY: 6,
-				panelScaleStart: 0.985,
-				panelBlur: 0,
-				panelPerspective: 800,
-				panelRotateX: -10
-			}
-		},
-		{
-			slug: 'slide',
-			name: 'Slide',
-			description: 'Enters from the right.',
-			icon: ArrowRight,
-			motion: { panelX: 14, panelY: 0, panelScaleStart: 1, panelBlur: 0 }
+			motion: { panelY: 12, panelScaleStart: 0.97 }
 		},
 		{
 			slug: 'scale',
 			name: 'Scale',
 			description: 'Grows in from smaller.',
 			icon: Maximize,
-			motion: { panelX: 0, panelY: 0, panelScaleStart: 0.94, panelBlur: 0 }
+			motion: { panelY: 0, panelScaleStart: 0.94 }
 		},
 		{
 			slug: 'pop',
 			name: 'Pop',
 			description: 'Shrinks down from larger.',
 			icon: Minimize,
-			motion: { panelX: 0, panelY: 0, panelScaleStart: 1.06, panelBlur: 0 }
-		},
-		{
-			slug: 'glide',
-			name: 'Glide',
-			description: 'Lift with backdrop blur.',
-			icon: Wind,
-			motion: { panelX: 0, panelY: 8, panelScaleStart: 0.98, panelBlur: 4 }
+			motion: { panelY: 0, panelScaleStart: 1.06 }
 		},
 		{
 			slug: 'stack',
 			name: 'Stack',
 			description: 'Sits in place, fades only.',
-			icon: Layers2,
-			motion: { panelX: 0, panelY: 0, panelScaleStart: 1, panelBlur: 0 }
+			icon: ArrowDown,
+			motion: { panelY: 0, panelScaleStart: 1 }
 		}
 	];
 
@@ -1228,24 +992,16 @@
 	const activeTransitionShape = $derived(
 		transitionShapes.find(
 			(shape) =>
-				approxEqual(shape.motion.panelX, editorTheme.motion.panelX) &&
 				approxEqual(shape.motion.panelY, editorTheme.motion.panelY) &&
-				approxEqual(shape.motion.panelScaleStart, editorTheme.motion.panelScaleStart) &&
-				approxEqual(shape.motion.panelBlur, editorTheme.motion.panelBlur) &&
-				approxEqual(shape.motion.panelPerspective ?? 0, editorTheme.motion.panelPerspective ?? 0) &&
-				approxEqual(shape.motion.panelRotateX ?? 0, editorTheme.motion.panelRotateX ?? 0)
+				approxEqual(shape.motion.panelScaleStart, editorTheme.motion.panelScaleStart)
 		) ?? null
 	);
 
 	function applyTransitionShape(shape: TransitionShape) {
 		editorTheme.motion = {
 			...editorTheme.motion,
-			panelX: shape.motion.panelX,
 			panelY: shape.motion.panelY,
-			panelScaleStart: shape.motion.panelScaleStart,
-			panelBlur: shape.motion.panelBlur,
-			panelPerspective: shape.motion.panelPerspective ?? 0,
-			panelRotateX: shape.motion.panelRotateX ?? 0
+			panelScaleStart: shape.motion.panelScaleStart
 		};
 		selectedPresetSlug = 'custom';
 	}
@@ -1408,10 +1164,10 @@
 </script>
 
 <svelte:head>
-	<title>Silk · Theme Studio</title>
+	<title>Sivir · Theme Studio</title>
 	<meta
 		name="description"
-		content="Design, preview, and publish Silk UI themes with live tokens and instant export."
+		content="Design, preview, and publish Sivir UI themes with live tokens and instant export."
 	/>
 </svelte:head>
 
@@ -1633,8 +1389,8 @@
 								class="min-h-[5rem] resize-y rounded-[var(--radius-md)] border border-border bg-[var(--color-field)] px-3 py-2 text-[0.86rem] leading-relaxed text-foreground outline-none transition-[border-color,box-shadow] placeholder:text-foreground-muted focus:border-[var(--field-focus-border)] focus:shadow-[0_0_0_3px_var(--color-ring)]"
 							></textarea>
 							<span class="text-[0.7rem] text-foreground-muted">
-								Optional · if blank we publish with "A custom theme published from the Silk UI Theme
-								Studio."
+								Optional · if blank we publish with "A custom theme published from the Sivir UI
+								Theme Studio."
 							</span>
 						</div>
 						<Input
@@ -1827,82 +1583,6 @@
 							<div class="flex flex-col gap-0.5">
 								<span
 									class="text-[0.82rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground"
-									>Overlays on surface</span
-								>
-								<span class="text-[0.72rem] text-foreground-muted"
-									>Modals, dialogs &amp; sheets paint with Surface instead of Background.</span
-								>
-							</div>
-							<Switch
-								switched={overlaysOnSurfaceOn}
-								onclick={toggleOverlaysOnSurface}
-								aria-label="Toggle overlays-on-surface"
-							/>
-						</section>
-
-						<section
-							class="flex items-center justify-between gap-3 rounded-lg border border-border bg-background/40 px-3 py-2.5"
-						>
-							<div class="flex flex-col gap-0.5">
-								<span
-									class="text-[0.82rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground"
-									>Fancy buttons</span
-								>
-								<span class="text-[0.72rem] text-foreground-muted"
-									>Layered shadow &amp; inner highlight on all button variants. Off for flat.</span
-								>
-							</div>
-							<Switch
-								switched={fancyButtonsOn}
-								onclick={toggleFancyButtons}
-								aria-label="Toggle fancy buttons"
-							/>
-						</section>
-
-						<section
-							class="flex items-center justify-between gap-3 rounded-lg border border-border bg-background/40 px-3 py-2.5"
-						>
-							<div class="flex flex-col gap-0.5">
-								<span
-									class="text-[0.82rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground"
-									>Primary button outline</span
-								>
-								<span class="text-[0.72rem] text-foreground-muted"
-									>Draw a tinted outline around the primary button.</span
-								>
-							</div>
-							<Switch
-								switched={primaryButtonOutlineOn}
-								onclick={togglePrimaryButtonOutline}
-								aria-label="Toggle primary button outline"
-							/>
-						</section>
-
-						<section
-							class="flex items-center justify-between gap-3 rounded-lg border border-border bg-background/40 px-3 py-2.5"
-						>
-							<div class="flex flex-col gap-0.5">
-								<span
-									class="text-[0.82rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground"
-									>Fancy badges</span
-								>
-								<span class="text-[0.72rem] text-foreground-muted"
-									>Layered shadow &amp; inner highlight on badges. Off for flat.</span
-								>
-							</div>
-							<Switch
-								switched={fancyBadgesOn}
-								onclick={toggleFancyBadges}
-								aria-label="Toggle fancy badges"
-							/>
-						</section>
-
-						<section
-							class="flex items-center justify-between gap-3 rounded-lg border border-border bg-background/40 px-3 py-2.5"
-						>
-							<div class="flex flex-col gap-0.5">
-								<span
-									class="text-[0.82rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground"
 									>Fancy shadows</span
 								>
 								<span class="text-[0.72rem] text-foreground-muted"
@@ -1913,25 +1593,6 @@
 								switched={fancyShadowsOn}
 								onclick={toggleFancyShadows}
 								aria-label="Toggle fancy shadows"
-							/>
-						</section>
-
-						<section
-							class="flex items-center justify-between gap-3 rounded-lg border border-border bg-background/40 px-3 py-2.5"
-						>
-							<div class="flex flex-col gap-0.5">
-								<span
-									class="text-[0.82rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground"
-									>Haptic press</span
-								>
-								<span class="text-[0.72rem] text-foreground-muted"
-									>Buttons nudge -1px on press. Off for static.</span
-								>
-							</div>
-							<Switch
-								switched={hapticPressOn}
-								onclick={toggleHapticPress}
-								aria-label="Toggle haptic press"
 							/>
 						</section>
 
@@ -2035,7 +1696,7 @@
 									<div class="flex flex-col gap-1.5">
 										<span class="text-[0.74rem] text-foreground-muted">{field.label}</span>
 										<div class="flex items-center gap-1.5">
-											<Select.Root value={String(currentSize)} class="">
+											<Select.Root value={String(currentSize)}>
 												<Select.Trigger
 													class="h-8 w-[4.75rem] shrink-0 text-[0.78rem]"
 													variant="outline"
@@ -2051,9 +1712,9 @@
 															value={String(opt.value)}
 															onclick={() => updateSize(field.sizeKey, opt.value)}
 														>
-															<span class="silk-weight-row">
+															<span class="sivir-weight-row">
 																<span
-																	class="silk-weight-aa"
+																	class="sivir-weight-aa"
 																	style={`font-size:${opt.value}px;font-family:${fontFam};font-weight:${currentWeight};line-height:1;`}
 																	aria-hidden="true"
 																></span>
@@ -2063,7 +1724,7 @@
 													{/each}
 												</Select.Content>
 											</Select.Root>
-											<Select.Root value={String(currentWeight)} class="">
+											<Select.Root value={String(currentWeight)}>
 												<Select.Trigger
 													class="h-8 w-[6.5rem] shrink-0 text-[0.78rem]"
 													variant="outline"
@@ -2079,9 +1740,9 @@
 															value={String(opt.value)}
 															onclick={() => updateWeight(field.key, opt.value)}
 														>
-															<span class="silk-weight-row">
+															<span class="sivir-weight-row">
 																<span
-																	class="silk-weight-aa"
+																	class="sivir-weight-aa"
 																	style={`font-weight:${opt.value};font-family:${fontFam};`}
 																	aria-hidden="true"
 																></span>
@@ -2091,7 +1752,7 @@
 													{/each}
 												</Select.Content>
 											</Select.Root>
-											<Select.Root value={String(currentTracking)} class="">
+											<Select.Root value={String(currentTracking)}>
 												<Select.Trigger
 													class="h-8 w-[6.5rem] shrink-0 text-[0.78rem]"
 													variant="outline"
@@ -2107,9 +1768,9 @@
 															value={String(opt.value)}
 															onclick={() => updateTracking(field.trackingKey, opt.value)}
 														>
-															<span class="silk-weight-row">
+															<span class="sivir-weight-row">
 																<span
-																	class="silk-weight-aa"
+																	class="sivir-weight-aa"
 																	style={`letter-spacing:${opt.value}em;font-family:${fontFam};font-weight:${currentWeight};`}
 																	aria-hidden="true"
 																></span>
@@ -2234,7 +1895,7 @@
 									updateRadius(
 										`${Number.parseFloat((e.currentTarget as HTMLInputElement).value).toFixed(2)}rem`
 									)}
-								class="silk-range mt-1"
+								class="sivir-range mt-1"
 							/>
 							<span class="text-[0.66rem] text-foreground-muted">
 								Drag to fine-tune between presets.
@@ -2342,90 +2003,6 @@
 								<Sliders size={13} />
 								All motion options
 							</Button>
-						</section>
-
-						<div class="border-t border-border"></div>
-
-						<section class="flex flex-col gap-2">
-							<div class="flex items-baseline justify-between">
-								<p
-									class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
-								>
-									Panel easing
-								</p>
-								<span
-									class="text-[0.65rem] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted/70"
-									>{currentEasing.label}</span
-								>
-							</div>
-							<Select.Root value={editorTheme.motion.panelEasing ?? defaultEasing} class="">
-								<Select.Trigger class="h-9 w-full text-[0.82rem]" variant="outline">
-									{currentEasing.label}
-								</Select.Trigger>
-								<Select.Content class="max-h-72 overflow-y-auto">
-									{#each easingOptions as opt (opt.value)}
-										<Select.Item
-											value={opt.value}
-											label={opt.label}
-											class=""
-											onclick={() => updateEasing(opt.value)}
-										>
-											<span class="flex w-full items-center justify-between gap-3">
-												<span
-													class="[font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]"
-													>{opt.label}</span
-												>
-												<code class="font-mono text-[0.66rem] text-foreground-muted"
-													>{opt.value}</code
-												>
-											</span>
-										</Select.Item>
-									{/each}
-								</Select.Content>
-							</Select.Root>
-							<p class="m-0 text-[0.72rem] text-foreground-muted">{currentEasing.description}</p>
-						</section>
-
-						<section class="flex flex-col gap-2">
-							<div class="flex items-baseline justify-between">
-								<p
-									class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
-								>
-									Control easing
-								</p>
-								<span
-									class="text-[0.65rem] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted/70"
-									>{currentHoverEasing.label}</span
-								>
-							</div>
-							<Select.Root value={editorTheme.motion.hoverEasing ?? defaultHoverEasing} class="">
-								<Select.Trigger class="h-9 w-full text-[0.82rem]" variant="outline">
-									{currentHoverEasing.label}
-								</Select.Trigger>
-								<Select.Content class="max-h-72 overflow-y-auto">
-									{#each easingOptions as opt (opt.value)}
-										<Select.Item
-											value={opt.value}
-											label={opt.label}
-											class=""
-											onclick={() => updateHoverEasing(opt.value)}
-										>
-											<span class="flex w-full items-center justify-between gap-3">
-												<span
-													class="[font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]"
-													>{opt.label}</span
-												>
-												<code class="font-mono text-[0.66rem] text-foreground-muted"
-													>{opt.value}</code
-												>
-											</span>
-										</Select.Item>
-									{/each}
-								</Select.Content>
-							</Select.Root>
-							<p class="m-0 text-[0.72rem] text-foreground-muted">
-								Hover / press easing for buttons and fields. {currentHoverEasing.description}
-							</p>
 						</section>
 					</Tabs.Content>
 
@@ -2837,7 +2414,7 @@
 									{value}
 									oninput={(e) =>
 										updateMotionDuration(field.key, (e.currentTarget as HTMLInputElement).value)}
-									class="silk-range"
+									class="sivir-range"
 								/>
 								<span class="text-[0.66rem] text-foreground-muted">{field.hint}</span>
 							</label>
@@ -2852,7 +2429,7 @@
 						Transition
 					</p>
 					<span class="-mt-1 text-[0.7rem] text-foreground-muted">
-						Per-surface transform & blur — shapes how panels enter the screen.
+						Panel offset and scale at the start of the transition.
 					</span>
 					<div class="grid grid-cols-2 gap-x-4 gap-y-4 max-sm:grid-cols-1">
 						{#each motionNumberFields as field (field.key)}
@@ -2864,13 +2441,6 @@
 										class="flex items-center gap-1.5 text-[0.74rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground"
 									>
 										{field.label}
-										{#if field.experimental}
-											<span
-												class="rounded-full border border-border bg-secondary/40 px-1.5 py-0.5 text-[0.6rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted"
-											>
-												Experimental
-											</span>
-										{/if}
 									</span>
 									<span
 										class="rounded-md bg-secondary/60 px-1.5 py-0.5 font-mono text-[0.68rem] text-foreground"
@@ -2886,7 +2456,7 @@
 									value={numericValue}
 									oninput={(e) =>
 										updateMotionNumber(field.key, (e.currentTarget as HTMLInputElement).value)}
-									class="silk-range"
+									class="sivir-range"
 								/>
 								<span class="text-[0.66rem] text-foreground-muted">{field.hint}</span>
 							</label>
@@ -2914,13 +2484,13 @@
 	   doesn't enter textContent (which Select.Item uses for its label).
 	   Without this trick the trigger would shift from e.g. "Medium" to
 	   "Aa Medium" the first time the dropdown is opened. */
-	.silk-weight-row {
+	.sivir-weight-row {
 		display: inline-flex;
 		align-items: center;
 		gap: 0.5rem;
 		text-align: left;
 	}
-	.silk-weight-aa::before {
+	.sivir-weight-aa::before {
 		content: 'Aa';
 		display: inline-block;
 		min-width: 1.6rem;
@@ -2929,7 +2499,7 @@
 		line-height: 1;
 	}
 
-	.silk-range {
+	.sivir-range {
 		appearance: none;
 		width: 100%;
 		height: 4px;
@@ -2939,10 +2509,10 @@
 		cursor: pointer;
 		transition: background-color 150ms ease;
 	}
-	.silk-range:hover {
+	.sivir-range:hover {
 		background: color-mix(in srgb, var(--color-secondary) 60%, var(--color-border-strong));
 	}
-	.silk-range::-webkit-slider-thumb {
+	.sivir-range::-webkit-slider-thumb {
 		appearance: none;
 		width: 14px;
 		height: 14px;
@@ -2953,10 +2523,10 @@
 		box-shadow: 0 1px 3px rgb(0 0 0 / 0.18);
 		transition: transform 150ms ease;
 	}
-	.silk-range::-webkit-slider-thumb:hover {
+	.sivir-range::-webkit-slider-thumb:hover {
 		transform: scale(1.1);
 	}
-	.silk-range::-moz-range-thumb {
+	.sivir-range::-moz-range-thumb {
 		width: 14px;
 		height: 14px;
 		background: var(--color-primary);
@@ -2965,7 +2535,7 @@
 		cursor: pointer;
 		box-shadow: 0 1px 3px rgb(0 0 0 / 0.18);
 	}
-	.silk-range:focus-visible {
+	.sivir-range:focus-visible {
 		box-shadow: 0 0 0 3px var(--color-ring);
 	}
 </style>

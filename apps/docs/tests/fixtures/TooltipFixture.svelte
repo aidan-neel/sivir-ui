@@ -1,10 +1,14 @@
 <script lang="ts">
-	import * as Tooltip from '@silk/ui/components/tooltip';
+	import * as Tooltip from '@sivir/ui/components/tooltip';
 
 	let {
-		delay = 600,
-		closeDelay = 100,
+		delay,
+		closeDelay,
 		placement = 'top' as 'top' | 'bottom' | 'left' | 'right'
+	}: {
+		delay?: number;
+		closeDelay?: number;
+		placement?: 'top' | 'bottom' | 'left' | 'right';
 	} = $props();
 </script>
 

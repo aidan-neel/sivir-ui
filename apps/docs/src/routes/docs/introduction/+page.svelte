@@ -1,8 +1,9 @@
 <script lang="ts">
-	import { Button } from '@silk/ui/components/button';
-	import { Badge } from '@silk/ui/components/badge';
-	import * as Alert from '@silk/ui/components/alert';
-	import { CodeBlock } from '@silk/ui/components/code-block';
+	import { resolve } from '$app/paths';
+	import { Button } from '@sivir/ui/components/button';
+	import { Badge } from '@sivir/ui/components/badge';
+	import * as Alert from '@sivir/ui/components/alert';
+	import { CodeBlock } from '@sivir/ui/components/code-block';
 
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
 	import Sparkles from '@lucide/svelte/icons/sparkles';
@@ -16,11 +17,11 @@
 	import Gauge from '@lucide/svelte/icons/gauge';
 	import GitFork from '@lucide/svelte/icons/git-fork';
 
-	const installCommand = 'bunx @aidan-neel/ui init';
+	const installCommand = 'bunx @sivir/ui init';
 </script>
 
 <svelte:head>
-	<title>Silk · Introduction</title>
+	<title>Sivir · Introduction</title>
 	<meta
 		name="description"
 		content="A calmer, token-first Svelte 5 component library. Copy-paste, customizable, and built to feel right."
@@ -35,8 +36,8 @@
 				<Sparkles size={11} class="text-primary" />
 				Introduction
 			</Badge>
-			<Badge variant="ghost" class="text-[0.66rem]">v0.4.2</Badge>
-			<Badge variant="ghost" class="text-[0.66rem]">25 components</Badge>
+			<Badge variant="ghost" class="text-[0.66rem]">v0.1</Badge>
+			<Badge variant="ghost" class="text-[0.66rem]">41 components</Badge>
 		</div>
 
 		<div class="flex flex-col gap-3">
@@ -49,7 +50,7 @@
 			<p
 				class="m-0 max-w-2xl text-[1rem] text-foreground-muted leading-relaxed font-[var(--font-weight-description,450)]"
 			>
-				Silk is a small, opinionated set of Svelte 5 primitives built around real theming. You copy
+				Sivir is a small, opinionated set of Svelte 5 primitives built around real theming. You copy
 				what you need into your app, restyle from a single token sheet, and ship without fighting
 				anyone else's choices.
 			</p>
@@ -68,7 +69,7 @@
 				class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
 				style="font-family: var(--font-header);"
 			>
-				Why Silk
+				Why Sivir
 			</h2>
 		</div>
 
@@ -170,7 +171,7 @@
 		<Alert.Root variant="info">
 			<Alert.Title>Built on tokens, not magic</Alert.Title>
 			<Alert.Description>
-				Silk reads from CSS variables for color, radius, type, and motion. The Theme Studio at
+				Sivir reads from CSS variables for color, radius, type, and motion. The Theme Studio at
 				<code class="font-mono text-foreground">/themes/studio</code> is just a UI on top of them — change
 				a token there, change every page that imported a component.
 			</Alert.Description>
@@ -193,11 +194,11 @@
 			</p>
 		</div>
 		<div class="flex flex-wrap items-center gap-2">
-			<Button href="/docs/installation">
-				Install Silk
+			<Button href={resolve('/docs/installation')}>
+				Install Sivir
 				<ArrowRight size={14} />
 			</Button>
-			<Button href="/themes/studio" variant="outline">Open theme studio</Button>
+			<Button href={resolve('/themes/studio')} variant="outline">Open theme studio</Button>
 		</div>
 	</section>
 </div>

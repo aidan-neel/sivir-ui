@@ -1,5 +1,5 @@
 {
-	"$schema": "https://turborepo.com/schema.json",
+	"$schema": "https://v2-10-0.turborepo.dev/schema.json",
 	"ui": "stream",
 	"tasks": {
 		"dev": {
@@ -12,6 +12,7 @@
 				"build/**",
 				".svelte-kit/**",
 				"dist/**",
+				"registry/**",
 				"prisma/generated/**",
 				".vercel/output/**"
 			]
@@ -25,7 +26,7 @@
 		},
 		"lint": {},
 		"test": {
-			"dependsOn": ["^build"]
+			"dependsOn": ["^build", "build"]
 		}
 	}
 }
