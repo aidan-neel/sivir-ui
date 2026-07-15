@@ -22,7 +22,12 @@ export function installCommand(pm: PackageManager, packages: string[]) {
 export async function declaredDependencies(cwd: string): Promise<Set<string>> {
 	const file = path.join(cwd, 'package.json');
 	if (!existsSync(file)) return new Set();
-	const pkg = JSON.parse(await readFile(file, 'utf8'));
+	let pkg: Record<string, Record<string, unknown> | undefined>;
+	try {
+		pkg = JSON.parse(await readFile(file, 'utf8'));
+	} catch {
+		return new Set();
+	}
 	return new Set([
 		...Object.keys(pkg.dependencies ?? {}),
 		...Object.keys(pkg.devDependencies ?? {}),
@@ -44,7 +49,11 @@ export async function installFile(
 	alias: string,
 	overwrite: boolean
 ): Promise<CopyResult> {
-	const target = path.join(cwd, dir, file);
+	const base = path.resolve(cwd, dir);
+	const target = path.resolve(base, file);
+	if (!target.startsWith(`${base}${path.sep}`)) {
+		throw new Error(`unsafe registry file path: ${file}`);
+	}
 	const exists = existsSync(target);
 	if (exists && !overwrite) return 'skipped';
 	const source = await readFile(registryFilePath(file), 'utf8');

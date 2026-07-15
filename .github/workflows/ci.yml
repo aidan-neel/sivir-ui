@@ -67,5 +67,8 @@ jobs:
       - name: Test (registry)
         run: bun --filter='registry' run test
 
+      - name: Test (sivir package)
+        run: bun --filter='@sivir/ui' run test
+
       - name: Build
         run: bun run build

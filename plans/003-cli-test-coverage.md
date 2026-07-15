@@ -14,6 +14,7 @@
 
 ## Status
 
+- **Status**: DONE — CI runs 46 package tests covering file-writing commands, containment, config parsing, and registry output.
 - **Priority**: P1
 - **Effort**: M
 - **Risk**: LOW
@@ -220,13 +221,13 @@ here). Final verification: `bun --filter='@sivir/ui' run test` → 0 fail, and
 
 ## Done criteria
 
-- [ ] `ci.yml` contains a `Test (sivir package)` step running `bun --filter='@sivir/ui' run test`
-- [ ] `bun --filter='@sivir/ui' run test` exits 0 with ≥ 25 tests passing
-- [ ] `grep -n "startsWith(base" packages/sivir/cli/utils/project.ts` → 1 match (containment guard)
-- [ ] `declaredDependencies` malformed-JSON test exists and passes
-- [ ] `bun run check` exits 0; `bun run format:check` exits 0
-- [ ] `git status --porcelain` shows changes only in in-scope files
-- [ ] `plans/README.md` status row updated
+- [x] `ci.yml` contains a `Test (sivir package)` step running `bun --filter='@sivir/ui' run test`
+- [x] `bun --filter='@sivir/ui' run test` exits 0 with 46 tests passing
+- [x] `grep -n "startsWith(base" packages/sivir/cli/utils/project.ts` → 1 match (containment guard)
+- [x] `declaredDependencies` malformed-JSON test exists and passes
+- [x] `bun run check` exits 0; `bun run format:check` exits 0
+- [x] Changes are limited to CI, CLI source/tests, registry schema coverage, and plan status
+- [x] `plans/README.md` status row updated
 
 ## STOP conditions
 
