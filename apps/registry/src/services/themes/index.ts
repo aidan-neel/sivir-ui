@@ -3,7 +3,7 @@ import {
 	publishResponseSchema,
 	slugConflictSchema,
 	slugParamsSchema,
-	themeDraftSchema,
+	themeSchema,
 	themeListSchema,
 	themeNotFoundSchema,
 	themeRecordSchema
@@ -27,7 +27,7 @@ export const themesController = new Elysia({
 		}
 	})
 	.post('/', ({ body }) => publishTheme(body), {
-		body: themeDraftSchema,
+		body: themeSchema,
 		detail: { summary: 'Publish a new theme to the registry.' },
 		response: {
 			200: publishResponseSchema,

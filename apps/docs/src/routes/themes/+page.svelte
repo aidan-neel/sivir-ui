@@ -2,11 +2,11 @@
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import { builtInThemePresets } from '@sivir/ui/themes/builtin-presets';
-	import { themeToCss, type ThemeDraft } from '@sivir/ui/themes/presets';
+	import { themeToCss, type Theme } from '@sivir/ui/themes/theme';
 	import { Button } from '@sivir/ui/components/button';
 	import { Input } from '@sivir/ui/components/input';
 	import { toast } from '@sivir/ui/components/toast';
-	import { applyLiveThemeCss } from '@sivir/ui/themes/live';
+	import { applyLiveThemeCss, saveStudioTheme } from '@sivir/ui/themes/live';
 	import type { PageData } from './$types';
 
 	import Search from '@lucide/svelte/icons/search';
@@ -28,7 +28,7 @@
 	};
 
 	let searchQuery = $state('');
-	let themes = $state<ThemeDraft[]>(getInitialThemes());
+	let themes = $state<Theme[]>(getInitialThemes());
 
 	const filteredThemes = $derived.by(() => {
 		const needle = searchQuery.trim().toLowerCase();
@@ -41,7 +41,7 @@
 		});
 	});
 
-	function applyTheme(theme: ThemeDraft) {
+	function applyTheme(theme: Theme) {
 		applyLiveThemeCss(themeToCss(theme));
 		toast({
 			title: `${theme.name} applied`,
@@ -53,10 +53,10 @@
 
 	// Theme detail modal
 	let detailOpen = $state(false);
-	let detailTheme = $state<ThemeDraft | null>(null);
+	let detailTheme = $state<Theme | null>(null);
 	let copiedKey = $state<'css' | 'json' | null>(null);
 
-	function openDetail(theme: ThemeDraft) {
+	function openDetail(theme: Theme) {
 		detailTheme = theme;
 		copiedKey = null;
 		detailOpen = true;
@@ -77,8 +77,9 @@
 		}, 1600);
 	}
 
-	function openInStudio(theme: ThemeDraft) {
+	function openInStudio(theme: Theme) {
 		applyLiveThemeCss(themeToCss(theme));
+		saveStudioTheme(theme);
 		void goto(resolve('/themes/studio'));
 	}
 
@@ -202,10 +203,10 @@
 
 							<!-- Info -->
 							<div class="flex-1 px-4 py-3 text-[0.78rem] text-foreground-muted space-y-1">
-								<div><span class="text-foreground">Brand:</span> {theme.light.primary}</div>
-								<div><span class="text-foreground">Background:</span> {theme.light.background}</div>
-								<div><span class="text-foreground">Radius:</span> {theme.radiusBase}</div>
-								<div><span class="text-foreground">Motion:</span> {theme.durationPreset}</div>
+								<div><span class="text-foreground">Brand:</span> {theme.brand}</div>
+								<div><span class="text-foreground">Neutral:</span> {theme.neutral}</div>
+								<div><span class="text-foreground">Radius:</span> {theme.radius}</div>
+								<div><span class="text-foreground">Motion:</span> {theme.motion}</div>
 								<div><span class="text-foreground">Fonts:</span> {theme.fontSans}</div>
 							</div>
 
@@ -286,24 +287,22 @@
 					<div>
 						<span class="text-foreground-muted">Brand</span>
 						<div class="flex items-center gap-2 mt-1">
-							<span class="size-4 rounded" style={`background: ${detailTheme.light.primary}`}
-							></span>
-							<code class="text-foreground-muted font-mono text-[0.75rem]"
-								>{detailTheme.light.primary}</code
+							<span class="size-4 rounded" style={`background: ${detailTheme.brand}`}></span>
+							<code class="text-foreground-muted font-mono text-[0.75rem]">{detailTheme.brand}</code
 							>
 						</div>
 					</div>
 					<div>
-						<span class="text-foreground-muted">Background</span>
-						<p class="m-0 mt-1 text-foreground">{detailTheme.light.background}</p>
+						<span class="text-foreground-muted">Neutral</span>
+						<p class="m-0 mt-1 text-foreground">{detailTheme.neutral}</p>
 					</div>
 					<div>
 						<span class="text-foreground-muted">Radius</span>
-						<p class="m-0 mt-1 text-foreground">{detailTheme.radiusBase}</p>
+						<p class="m-0 mt-1 text-foreground">{detailTheme.radius}</p>
 					</div>
 					<div>
 						<span class="text-foreground-muted">Motion</span>
-						<p class="m-0 mt-1 text-foreground">{detailTheme.durationPreset}</p>
+						<p class="m-0 mt-1 text-foreground">{detailTheme.motion}</p>
 					</div>
 					<div>
 						<span class="text-foreground-muted">Fonts</span>

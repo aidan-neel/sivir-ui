@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, mock } from 'bun:test';
 import { Elysia } from 'elysia';
 
 import { defaultThemes } from '@src/services/themes/defaults';
-import type { ThemeDraft } from '@src/services/themes/model';
+import type { Theme } from '@src/services/themes/model';
 
 // The registry talks to Postgres through a Prisma client that is generated at
 // build time (`prisma generate`) and instantiates a real pg pool on import.
@@ -30,9 +30,11 @@ const { themesController } = await import('@src/services/themes');
 const app = new Elysia().use(themesController);
 
 /** Build a persisted DB row from a draft, as Prisma would return it. */
-function persisted(draft: ThemeDraft, id: string) {
+function persisted(theme: Theme, id: string) {
+	const { motion, ...rest } = theme;
 	return {
-		...draft,
+		...rest,
+		motionFeel: motion,
 		id,
 		createdAt: new Date('2026-01-02T00:00:00.000Z'),
 		updatedAt: new Date('2026-01-02T00:00:00.000Z')
@@ -53,7 +55,7 @@ function post(body: unknown) {
 	);
 }
 
-function validDraft(slug: string): ThemeDraft {
+function validTheme(slug: string): Theme {
 	// Reuse a built-in theme's shape so every required field is present, then
 	// give it a fresh, non-reserved slug.
 	return { ...defaultThemes[0], slug };
@@ -83,7 +85,7 @@ describe('GET /themes', () => {
 	});
 
 	it('merges published themes with the built-in defaults', async () => {
-		db.theme.findMany = async () => [persisted(validDraft('ocean'), 'db-1')];
+		db.theme.findMany = async () => [persisted(validTheme('ocean'), 'db-1')];
 		const res = await get('/themes');
 		const body = (await res.json()) as { slug: string }[];
 		const slugs = body.map((t) => t.slug);
@@ -117,7 +119,7 @@ describe('GET /themes/:slug', () => {
 
 	it('returns a published theme by slug', async () => {
 		db.theme.findUnique = async ({ where }) =>
-			where.slug === 'ocean' ? persisted(validDraft('ocean'), 'db-1') : null;
+			where.slug === 'ocean' ? persisted(validTheme('ocean'), 'db-1') : null;
 		const res = await get('/themes/ocean');
 		expect(res.status).toBe(200);
 		const body = (await res.json()) as { slug: string; id: string };
@@ -140,7 +142,7 @@ describe('POST /themes', () => {
 			created = args.data;
 			return args.data;
 		};
-		const res = await post(validDraft('ocean'));
+		const res = await post(validTheme('ocean'));
 		expect(res.status).toBe(200);
 		const body = await res.json();
 		expect(body).toEqual({ success: true, message: 'Successfully published theme!' });
@@ -148,7 +150,7 @@ describe('POST /themes', () => {
 	});
 
 	it('rejects a slug reserved for a built-in theme', async () => {
-		const res = await post(validDraft('default'));
+		const res = await post(validTheme('default'));
 		expect(res.status).toBe(409);
 		const body = await res.text();
 		expect(body).toBe('This slug is reserved for a built-in theme.');
@@ -156,14 +158,14 @@ describe('POST /themes', () => {
 
 	it('rejects a slug that already exists', async () => {
 		db.theme.findUnique = async () => ({ id: 'db-1' });
-		const res = await post(validDraft('ocean'));
+		const res = await post(validTheme('ocean'));
 		expect(res.status).toBe(409);
 		const body = await res.text();
 		expect(body).toBe('A theme with this slug already exists, try another one.');
 	});
 
 	it('rejects a malformed slug with a validation error', async () => {
-		const res = await post({ ...validDraft('ocean'), slug: 'Not A Slug' });
+		const res = await post({ ...validTheme('ocean'), slug: 'Not A Slug' });
 		expect(res.status).toBe(422);
 	});
 

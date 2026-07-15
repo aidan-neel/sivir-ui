@@ -8,6 +8,12 @@
 
 ## Status
 
+**DONE — 2026-07-15.** The baked stylesheet is the canonical default visual;
+package, CLI, registry, docs, and local persistence now share the version-2
+`Theme` contract and runtime parser. The configured hosted database tenant was
+unreachable/nonexistent, so the checked-in SQL migration defensively backfills
+any legacy rows before dropping the old columns.
+
 - **Priority**: P0
 - **Effort**: L
 - **Risk**: HIGH
@@ -96,12 +102,12 @@ bun run build
 
 ## Done criteria
 
-- [ ] One public theme type and one CSS generator remain
-- [ ] No emitted custom property references itself
-- [ ] Baked and generated defaults are machine-checked for parity
-- [ ] Registry and CLI validate the same versioned schema
-- [ ] Legacy code is removed or a time-bounded migration adapter is documented
-- [ ] Computed-style and fresh CLI theme tests pass
+- [x] One public theme type and one CSS generator remain
+- [x] No emitted custom property references itself
+- [x] Baked and generated defaults are machine-checked for parity
+- [x] Registry and CLI validate the same versioned schema
+- [x] Legacy code is removed or a time-bounded migration adapter is documented
+- [x] Computed-style and fresh CLI theme tests pass
 
 ## STOP conditions
 

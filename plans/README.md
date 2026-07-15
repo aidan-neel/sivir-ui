@@ -26,10 +26,10 @@ Remaining findings without plans are listed below.
 | 007  | Retire the legacy .svx docs pipeline                          | P3       | S–M    | —                       | [#111](https://github.com/aidan-neel/sivir-ui/issues/111) | DONE                                                                                |
 | 008  | Repair Shortcut activation and key parsing                    | P0       | S      | —                       | —                                                         | DONE                                                                                |
 | 009  | Make Command a real Modal-backed command palette              | P0       | M      | —                       | —                                                         | DONE                                                                                |
-| 010  | Canonicalize and correct the theme engine                     | P0       | L      | —                       | —                                                         | TODO                                                                                |
+| 010  | Canonicalize and correct the theme engine                     | P0       | L      | —                       | —                                                         | DONE                                                                                |
 | 011  | Minimize distributable CSS and make components Tailwind-first | P1       | L      | 009, 010                | —                                                         | TODO                                                                                |
 | 012  | Isolate component state and close overlay lifecycle leaks     | P1       | L      | 009                     | —                                                         | TODO                                                                                |
-| 013  | Close package release gates and isolated-install gaps         | P0/tag   | M      | 008–012; soft: 003, 005 | —                                                         | BLOCKED — awaits remaining P0 Plans 009–012; package/security gates are green       |
+| 013  | Close package release gates and isolated-install gaps         | P0/tag   | M      | 008–012; soft: 003, 005 | —                                                         | BLOCKED — awaits remaining Plans 011–012; package/security gates are green          |
 
 Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) |
 REJECTED (with one-line rationale).

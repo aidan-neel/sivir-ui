@@ -2,7 +2,7 @@ import * as clack from '@clack/prompts';
 import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import pc from 'picocolors';
-import { themeToCss, type ThemeDraft } from '../../../sivir/src/themes/presets';
+import { parseTheme, themeToCss } from '../../../sivir/src/themes/theme';
 import { CONFIG_FILE, loadConfig } from '../config';
 import { loadRegistryThemes } from '../registry';
 import { fail, ok } from '../utils/ui';
@@ -12,7 +12,7 @@ export type ThemeOptions = {
 };
 
 /** Resolves a slug to theme CSS -- built-in presets first, registry after. */
-async function resolveThemeCss(slug: string, registry: string) {
+export async function resolveThemeCss(slug: string, registry: string) {
 	const builtin = (await loadRegistryThemes()).find((theme) => theme.slug === slug);
 	if (builtin) return { css: builtin.css, source: 'built-in preset' };
 
@@ -29,8 +29,15 @@ async function resolveThemeCss(slug: string, registry: string) {
 	if (!response.ok) {
 		throw new Error(`theme registry responded ${response.status} for ${url}`);
 	}
-	const draft = (await response.json()) as ThemeDraft;
-	return { css: themeToCss(draft), source: 'registry' };
+	let theme;
+	try {
+		theme = parseTheme(await response.json());
+	} catch (error) {
+		throw new Error(
+			`theme registry returned an invalid v2 theme for "${slug}": ${error instanceof Error ? error.message : String(error)}`
+		);
+	}
+	return { css: themeToCss(theme), source: 'registry' };
 }
 
 export async function addTheme(slug: string, options: ThemeOptions) {

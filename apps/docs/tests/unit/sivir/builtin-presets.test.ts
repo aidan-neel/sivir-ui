@@ -1,9 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import { themesV2 } from '@sivir/ui/themes/builtin-presets';
+import { builtInThemePresets } from '@sivir/ui/themes/builtin-presets';
+import { parseTheme } from '@sivir/ui/themes/theme';
 
-describe('themesV2', () => {
-	it('ships exactly one default theme', () => {
-		expect(themesV2).toHaveLength(1);
-		expect(themesV2[0].slug).toBe('default');
+describe('builtInThemePresets', () => {
+	it('ships a valid, unique version-2 catalog led by the default theme', () => {
+		expect(builtInThemePresets[0].slug).toBe('default');
+		expect(builtInThemePresets.length).toBeGreaterThan(1);
+		expect(new Set(builtInThemePresets.map((theme) => theme.slug)).size).toBe(
+			builtInThemePresets.length
+		);
+		for (const theme of builtInThemePresets) expect(parseTheme(theme)).toEqual(theme);
 	});
 });

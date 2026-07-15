@@ -45,7 +45,7 @@
 		"./internals/transition": "./src/internals/transition.ts",
 		"./internals/*": "./src/internals/*",
 		"./themes/presets": "./src/themes/presets.ts",
-		"./themes/*": "./src/themes/*",
+		"./themes/*": "./src/themes/*.ts",
 		"./components/input/variants": "./src/components/input/variants.ts",
 		"./components/_internal/overlay": "./src/components/_internal/overlay/index.ts",
 		"./components/*": "./src/components/*/index.ts"

@@ -200,7 +200,7 @@ describe('registry snapshot', () => {
 		const themes = await loadRegistryThemes();
 		expect(themes.length).toBeGreaterThan(0);
 		for (const theme of themes) {
-			expect(theme.css).toContain('@theme {');
+			expect(theme.css).toContain(':root');
 			expect(theme.css).toContain('.dark {');
 		}
 	});

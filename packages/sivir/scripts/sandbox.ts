@@ -221,13 +221,13 @@ const CHECKS: Check[] = [
 		}
 	},
 	{
-		label: 'add resolves transitive deps (command → popover, button)',
+		label: 'add resolves transitive deps (command → modal, button)',
 		run: () => {
 			const f: string[] = [];
 			initApp();
 			const r = sivir(['add', 'command']);
 			if (r.status !== 0) f.push(`add command exited ${r.status}`);
-			for (const name of ['command', 'popover', 'button']) {
+			for (const name of ['command', 'modal', 'button']) {
 				if (!exists(`${SIVIR}/components/${name}`)) f.push(`missing component dir ${name}`);
 				if (!config().components?.[name]) f.push(`sivir.json missing ${name}`);
 			}
@@ -331,7 +331,7 @@ const CHECKS: Check[] = [
 			const r = sivir(['add', 'theme', 'default']);
 			if (r.status !== 0) f.push(`add theme exited ${r.status}`);
 			if (!exists(`${SIVIR}/theme.css`)) f.push('theme.css not written');
-			else if (!read(`${SIVIR}/theme.css`).includes('@theme')) f.push('theme.css missing @theme');
+			else if (!read(`${SIVIR}/theme.css`).includes(':root')) f.push('theme.css missing :root');
 			return f;
 		}
 	},

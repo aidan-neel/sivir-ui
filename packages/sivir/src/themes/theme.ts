@@ -1,50 +1,67 @@
-export type NeutralTemp = 'cool' | 'true' | 'warm';
-export type RadiusScale = 'sharp' | 'default' | 'rounded';
-export type Density = 'compact' | 'default' | 'comfortable';
-export type MotionFeel = 'none' | 'subtle' | 'default' | 'expressive';
+export const THEME_VERSION = 2 as const;
 
-/** The constrained theme contract — ~10 fields. Replaces the ~91-field ThemeDraft. */
+export const neutralTemperatures = ['cool', 'true', 'warm'] as const;
+export const radiusScales = ['sharp', 'default', 'rounded'] as const;
+export const densities = ['compact', 'default', 'comfortable'] as const;
+export const motionFeels = ['none', 'subtle', 'default', 'expressive'] as const;
+
+export type NeutralTemp = (typeof neutralTemperatures)[number];
+export type RadiusScale = (typeof radiusScales)[number];
+export type Density = (typeof densities)[number];
+export type MotionFeel = (typeof motionFeels)[number];
+
+/** The single, versioned public authoring contract for Sivir themes. */
 export type Theme = {
+	version: typeof THEME_VERSION;
 	slug: string;
 	name: string;
 	description: string;
 	publisher?: string;
-	/** Primary/accent color as hex; the full blue ramp is derived from it. */
+	/** Primary/accent color as a six-digit hex value. */
 	brand: string;
 	neutral: NeutralTemp;
 	radius: RadiusScale;
 	density: Density;
 	motion: MotionFeel;
+	/** CSS font-family values, including fallbacks when desired. */
 	fontSans: string;
 	fontMono: string;
 	fontHeader: string;
 };
 
+export type ThemeRecord = Theme & {
+	id: string;
+	createdAt: string;
+	updatedAt: string;
+};
+
+/** Matches the public axes baked into ui.css exactly. */
 export const DEFAULT_THEME: Theme = {
+	version: THEME_VERSION,
 	slug: 'default',
 	name: 'Default',
-	description: 'Sivir default — a calm, neutral, Notion-like system.',
+	description: 'Sivir default — a calm, warm-neutral interface system.',
 	publisher: 'Sivir UI',
-	brand: '#4a8cff',
-	neutral: 'cool',
+	brand: '#1f9be6',
+	neutral: 'warm',
 	radius: 'default',
 	density: 'default',
 	motion: 'default',
-	fontSans: 'Inter',
-	fontMono: 'Geist Mono',
-	fontHeader: 'Inter'
+	fontSans: "'Inter', sans-serif",
+	fontMono: "'JetBrains Mono', monospace",
+	fontHeader: 'var(--font-sans)'
 };
 
-const RADII: Record<RadiusScale, [string, string, string, string]> = {
-	sharp: ['2px', '3px', '4px', '6px'],
-	default: ['4px', '6px', '8px', '12px'],
-	rounded: ['6px', '10px', '14px', '20px']
+const RADII: Record<RadiusScale, readonly [string, string, string, string]> = {
+	sharp: ['2px', '4px', '6px', '8px'],
+	default: ['6px', '8px', '10px', '14px'],
+	rounded: ['10px', '14px', '18px', '24px']
 };
 
 const DENSITY_UNIT: Record<Density, string> = {
-	compact: '3.5px',
-	default: '4px',
-	comfortable: '4.5px'
+	compact: '3.2px',
+	default: '3.6px',
+	comfortable: '4px'
 };
 
 type MotionSet = {
@@ -56,6 +73,7 @@ type MotionSet = {
 	toastIn: string;
 	toastOut: string;
 };
+
 const MOTION: Record<MotionFeel, MotionSet> = {
 	none: {
 		hover: '0ms',
@@ -67,8 +85,8 @@ const MOTION: Record<MotionFeel, MotionSet> = {
 		toastOut: '0ms'
 	},
 	subtle: {
-		hover: '100ms',
-		menu: '80ms',
+		hover: '90ms',
+		menu: '30ms',
 		panel: '130ms',
 		sheet: '160ms',
 		overlay: '90ms',
@@ -76,8 +94,8 @@ const MOTION: Record<MotionFeel, MotionSet> = {
 		toastOut: '180ms'
 	},
 	default: {
-		hover: '140ms',
-		menu: '120ms',
+		hover: '120ms',
+		menu: '40ms',
 		panel: '180ms',
 		sheet: '220ms',
 		overlay: '120ms',
@@ -85,8 +103,8 @@ const MOTION: Record<MotionFeel, MotionSet> = {
 		toastOut: '240ms'
 	},
 	expressive: {
-		hover: '200ms',
-		menu: '160ms',
+		hover: '180ms',
+		menu: '120ms',
 		panel: '260ms',
 		sheet: '300ms',
 		overlay: '160ms',
@@ -95,66 +113,202 @@ const MOTION: Record<MotionFeel, MotionSet> = {
 	}
 };
 
-/** Neutral tint applied via color-mix over the baked cool ramp. 'cool' is the baked default (no override). */
-const NEUTRAL_TINT: Record<NeutralTemp, string | null> = {
-	cool: null,
-	true: '#808080', // pull toward pure gray
-	warm: '#8a5a2b' // pull toward warm
-};
-const NEUTRAL_STEPS = [0, 10, 50, 100, 150, 300, 500, 900];
+const NEUTRAL_STEPS = [0, 10, 50, 100, 150, 300, 500, 900] as const;
+type NeutralRamp = Record<(typeof NEUTRAL_STEPS)[number], string>;
 
-function brandRamp(hex: string): string[] {
+// Immutable source values keep generated declarations acyclic in every mode.
+const NEUTRALS: Record<NeutralTemp, { light: NeutralRamp; dark: NeutralRamp }> = {
+	warm: {
+		light: {
+			0: 'hsl(0 0% 100%)',
+			10: 'hsl(60 11.1% 99.2%)',
+			50: 'hsl(60 11.1% 96.5%)',
+			100: 'hsl(60 6.2% 93.7%)',
+			150: 'hsl(60 4.2% 90.6%)',
+			300: 'hsl(60 4.4% 82.4%)',
+			500: 'hsl(60 3% 42%)',
+			900: 'hsl(60 5.7% 10.4%)'
+		},
+		dark: {
+			0: 'hsl(0 0% 5%)',
+			10: 'hsl(60 11.1% 99.2%)',
+			50: 'hsl(0 0% 10%)',
+			100: 'hsl(0 0% 13%)',
+			150: 'hsl(0 0% 15.7%)',
+			300: 'hsl(0 0% 22.7%)',
+			500: 'hsl(0 0% 65%)',
+			900: 'hsl(0 0% 93%)'
+		}
+	},
+	true: {
+		light: {
+			0: 'hsl(0 0% 100%)',
+			10: 'hsl(0 0% 99%)',
+			50: 'hsl(0 0% 96%)',
+			100: 'hsl(0 0% 93%)',
+			150: 'hsl(0 0% 90%)',
+			300: 'hsl(0 0% 82%)',
+			500: 'hsl(0 0% 42%)',
+			900: 'hsl(0 0% 10%)'
+		},
+		dark: {
+			0: 'hsl(0 0% 5%)',
+			10: 'hsl(0 0% 7%)',
+			50: 'hsl(0 0% 10%)',
+			100: 'hsl(0 0% 13%)',
+			150: 'hsl(0 0% 16%)',
+			300: 'hsl(0 0% 23%)',
+			500: 'hsl(0 0% 65%)',
+			900: 'hsl(0 0% 93%)'
+		}
+	},
+	cool: {
+		light: {
+			0: 'hsl(220 20% 100%)',
+			10: 'hsl(220 20% 99%)',
+			50: 'hsl(220 16% 96%)',
+			100: 'hsl(220 14% 93%)',
+			150: 'hsl(220 12% 90%)',
+			300: 'hsl(220 10% 81%)',
+			500: 'hsl(220 8% 42%)',
+			900: 'hsl(220 12% 10%)'
+		},
+		dark: {
+			0: 'hsl(220 12% 5%)',
+			10: 'hsl(220 12% 7%)',
+			50: 'hsl(220 11% 10%)',
+			100: 'hsl(220 10% 13%)',
+			150: 'hsl(220 9% 16%)',
+			300: 'hsl(220 8% 23%)',
+			500: 'hsl(220 7% 65%)',
+			900: 'hsl(220 10% 93%)'
+		}
+	}
+};
+
+function block(selector: string, declarations: string[]): string {
+	return `${selector} {\n${declarations.map((declaration) => `\t${declaration}`).join('\n')}\n}\n`;
+}
+
+function neutralDeclarations(ramp: NeutralRamp) {
+	return NEUTRAL_STEPS.map((step) => `--sivir-neutral-${step}: ${ramp[step]};`);
+}
+
+function brandDeclarations(brand: string, mode: 'light' | 'dark') {
+	const isDefault = brand.toLowerCase() === DEFAULT_THEME.brand;
 	return [
-		`--color-primary: ${hex};`,
-		`--color-primary-hover: color-mix(in srgb, ${hex} 88%, black);`,
-		`--color-ring: oklch(from ${hex} l c h / 0.3);`,
-		`--sivir-blue-500: ${hex};`,
-		`--sivir-blue-50: oklch(from ${hex} calc(l + 0.36) calc(c * 0.35) h);`
+		`--color-primary: ${brand};`,
+		`--color-primary-hover: ${isDefault ? '#1789cf' : `color-mix(in srgb, ${brand} 88%, black)`};`,
+		`--color-ring: color-mix(in srgb, ${brand} 30%, transparent);`,
+		`--sivir-blue-500: ${
+			isDefault ? (mode === 'light' ? 'hsl(212.2 100% 64.5%)' : 'hsl(216.6 100% 67.8%)') : brand
+		};`,
+		`--sivir-blue-50: ${
+			isDefault
+				? mode === 'light'
+					? 'hsl(218.8 100% 96.7%)'
+					: 'hsl(217.1 52.5% 15.7%)'
+				: `color-mix(in srgb, ${brand} 12%, ${mode === 'light' ? 'white' : 'black'})`
+		};`
 	];
 }
 
-function neutralOverride(temp: NeutralTemp): string[] {
-	const tint = NEUTRAL_TINT[temp];
-	if (!tint) return [];
-	// Re-tint each step relative to itself; the baked value is read via the var.
-	return NEUTRAL_STEPS.map(
-		(n) => `--sivir-neutral-${n}: color-mix(in srgb, var(--sivir-neutral-${n}) 94%, ${tint});`
-	);
-}
-
-function block(selector: string, decls: string[]): string {
-	if (decls.length === 0) return '';
-	return `${selector} {\n${decls.map((d) => `\t${d}`).join('\n')}\n}\n`;
-}
-
-/**
- * Emits override CSS for a custom theme. The baked default lives in ui.css, so
- * an unmodified DEFAULT_THEME still emits a (harmless, identical) override block.
- */
-export function themeToCss(theme: Theme): string {
-	const [rsm, rmd, rlg, rxl] = RADII[theme.radius];
-	const m = MOTION[theme.motion];
+/** Generates complete, acyclic overrides for every public theme axis. */
+export function themeToCss(themeInput: Theme): string {
+	const theme = parseTheme(themeInput);
+	const [radiusSm, radiusMd, radiusLg, radiusXl] = RADII[theme.radius];
+	const motion = MOTION[theme.motion];
 	const shared = [
 		`--font-sans: ${theme.fontSans};`,
 		`--font-mono: ${theme.fontMono};`,
 		`--font-header: ${theme.fontHeader};`,
-		`--radius-sm: ${rsm};`,
-		`--radius-md: ${rmd};`,
-		`--radius-lg: ${rlg};`,
-		`--radius-xl: ${rxl};`,
+		`--radius-sm: ${radiusSm};`,
+		`--radius-md: ${radiusMd};`,
+		`--radius-lg: ${radiusLg};`,
+		`--radius-xl: ${radiusXl};`,
 		`--sivir-space-unit: ${DENSITY_UNIT[theme.density]};`,
-		`--motion-duration-hover: ${m.hover};`,
-		`--motion-duration-menu: ${m.menu};`,
-		`--motion-duration-panel: ${m.panel};`,
-		`--motion-duration-sheet: ${m.sheet};`,
-		`--motion-duration-overlay: ${m.overlay};`,
-		`--motion-duration-toast-in: ${m.toastIn};`,
-		`--motion-duration-toast-out: ${m.toastOut};`,
-		...brandRamp(theme.brand)
+		`--motion-duration-hover: ${motion.hover};`,
+		`--motion-duration-menu: ${motion.menu};`,
+		`--motion-duration-panel: ${motion.panel};`,
+		`--motion-duration-sheet: ${motion.sheet};`,
+		`--motion-duration-overlay: ${motion.overlay};`,
+		`--motion-duration-toast-in: ${motion.toastIn};`,
+		`--motion-duration-toast-out: ${motion.toastOut};`
 	];
+
 	return (
 		block(':root,\n.dark', shared) +
-		block(':root', neutralOverride(theme.neutral)) +
-		block('.dark', neutralOverride(theme.neutral))
+		block(':root', [
+			...brandDeclarations(theme.brand, 'light'),
+			...neutralDeclarations(NEUTRALS[theme.neutral].light)
+		]) +
+		block('.dark', [
+			...brandDeclarations(theme.brand, 'dark'),
+			...neutralDeclarations(NEUTRALS[theme.neutral].dark)
+		])
 	);
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+	return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function requiredString(value: unknown, field: string) {
+	if (typeof value !== 'string' || value.trim() === '') {
+		throw new TypeError(`Invalid theme: ${field} must be a non-empty string.`);
+	}
+	return value;
+}
+
+function enumValue<T extends string>(value: unknown, field: string, values: readonly T[]): T {
+	if (typeof value !== 'string' || !values.includes(value as T)) {
+		throw new TypeError(`Invalid theme: ${field} must be one of ${values.join(', ')}.`);
+	}
+	return value as T;
+}
+
+/** Validates untrusted registry/local-storage JSON and returns a normalized theme. */
+export function parseTheme(value: unknown): Theme {
+	if (!isRecord(value)) throw new TypeError('Invalid theme: expected an object.');
+	if (value.version !== THEME_VERSION) {
+		throw new TypeError(`Invalid theme: version must be ${THEME_VERSION}.`);
+	}
+
+	const slug = requiredString(value.slug, 'slug');
+	if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) {
+		throw new TypeError('Invalid theme: slug must contain lowercase letters, numbers, or hyphens.');
+	}
+
+	const brand = requiredString(value.brand, 'brand').toLowerCase();
+	if (!/^#[0-9a-f]{6}$/.test(brand)) {
+		throw new TypeError('Invalid theme: brand must be a six-digit hex color.');
+	}
+
+	const theme: Theme = {
+		version: THEME_VERSION,
+		slug,
+		name: requiredString(value.name, 'name'),
+		description: typeof value.description === 'string' ? value.description : '',
+		brand,
+		neutral: enumValue(value.neutral, 'neutral', neutralTemperatures),
+		radius: enumValue(value.radius, 'radius', radiusScales),
+		density: enumValue(value.density, 'density', densities),
+		motion: enumValue(value.motion, 'motion', motionFeels),
+		fontSans: requiredString(value.fontSans, 'fontSans'),
+		fontMono: requiredString(value.fontMono, 'fontMono'),
+		fontHeader: requiredString(value.fontHeader, 'fontHeader')
+	};
+	if (typeof value.publisher === 'string' && value.publisher.trim()) {
+		theme.publisher = value.publisher;
+	}
+	return theme;
+}
+
+export function isTheme(value: unknown): value is Theme {
+	try {
+		parseTheme(value);
+		return true;
+	} catch {
+		return false;
+	}
 }

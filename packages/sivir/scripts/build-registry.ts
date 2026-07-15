@@ -14,8 +14,8 @@ import { mkdir, readdir, rm, copyFile, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { themeToCss } from '../src/themes/presets';
-import type { ThemeDraft } from '../src/themes/presets';
+import { builtInThemePresets } from '../src/themes/builtin-presets';
+import { themeToCss } from '../src/themes/theme';
 import type { Manifest } from '../src/_manifest/types';
 import type { RegistryIndex, RegistryTheme } from '../cli/types';
 import pkg from '../package.json';
@@ -59,21 +59,12 @@ function sharedToFiles(entry: string): string[] {
 }
 
 async function buildThemes(): Promise<RegistryTheme[]> {
-	const presetsDir = path.join(sivirSrc, 'themes/presets');
-	const themes: RegistryTheme[] = [];
-	for (const file of (await readdir(presetsDir)).sort()) {
-		if (!file.endsWith('.ts')) continue;
-		const module = (await import(path.join(presetsDir, file))) as Record<string, ThemeDraft>;
-		const draft = module.preset ?? module.theme ?? module.defaultTheme;
-		if (!draft) continue;
-		themes.push({
-			slug: draft.slug,
-			name: draft.name,
-			description: draft.description,
-			css: themeToCss(draft)
-		});
-	}
-	return themes;
+	return builtInThemePresets.map((theme) => ({
+		slug: theme.slug,
+		name: theme.name,
+		description: theme.description,
+		css: themeToCss(theme)
+	}));
 }
 
 const manifests: Manifest[] = [];

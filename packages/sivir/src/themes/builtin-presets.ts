@@ -1,31 +1,52 @@
-import type { ThemeDraft } from '@sivir/ui/themes/presets';
-import { DEFAULT_THEME, type Theme } from './theme';
+import { DEFAULT_THEME, THEME_VERSION, type Theme } from './theme';
 
-type ThemePresetModule = {
-	defaultTheme?: ThemeDraft;
-	theme?: ThemeDraft;
-	preset?: ThemeDraft;
-};
+export const builtInThemePresets: readonly Theme[] = [
+	DEFAULT_THEME,
+	{
+		version: THEME_VERSION,
+		slug: 'graphite',
+		name: 'Graphite',
+		description: 'Cool grayscale surfaces with a restrained slate accent.',
+		publisher: 'Sivir UI',
+		brand: '#4d607f',
+		neutral: 'true',
+		radius: 'default',
+		density: 'default',
+		motion: 'default',
+		fontSans: 'Geist, sans-serif',
+		fontMono: "'Geist Mono', monospace",
+		fontHeader: 'Geist, sans-serif'
+	},
+	{
+		version: THEME_VERSION,
+		slug: 'grove',
+		name: 'Grove',
+		description: 'Botanical green accents with cool, compact surfaces.',
+		publisher: 'Sivir UI',
+		brand: '#2f7a54',
+		neutral: 'cool',
+		radius: 'default',
+		density: 'compact',
+		motion: 'subtle',
+		fontSans: "'Plus Jakarta Sans', sans-serif",
+		fontMono: "'IBM Plex Mono', monospace",
+		fontHeader: "'Plus Jakarta Sans', sans-serif"
+	},
+	{
+		version: THEME_VERSION,
+		slug: 'linen',
+		name: 'Linen',
+		description: 'Warm paper-like neutrals with a refined rust accent.',
+		publisher: 'Sivir UI',
+		brand: '#a44a2f',
+		neutral: 'warm',
+		radius: 'rounded',
+		density: 'comfortable',
+		motion: 'expressive',
+		fontSans: 'Manrope, sans-serif',
+		fontMono: "'IBM Plex Mono', monospace",
+		fontHeader: 'Lora, serif'
+	}
+];
 
-const presetModules = import.meta.glob('./presets/*.ts', { eager: true }) as Record<
-	string,
-	ThemePresetModule
->;
-
-const loadedPresets = Object.entries(presetModules)
-	.map(([, module]) => module.defaultTheme ?? module.theme ?? module.preset ?? null)
-	.filter((theme): theme is ThemeDraft => Boolean(theme))
-	.sort((left, right) => {
-		if (left.slug === 'default') return -1;
-		if (right.slug === 'default') return 1;
-		return left.name.localeCompare(right.name);
-	});
-
-// Old engine exports (for restored studio)
-export const builtInThemePresets = loadedPresets;
-export const defaultTheme =
-	builtInThemePresets.find((theme) => theme.slug === 'default') ?? builtInThemePresets[0];
-
-// v2 exports (for new docs gallery)
-export const themesV2: Theme[] = [DEFAULT_THEME];
-export const defaultThemeV2: Theme = DEFAULT_THEME;
+export const defaultTheme = DEFAULT_THEME;

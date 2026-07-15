@@ -16,41 +16,27 @@ datasource db {
 }
 
 model Theme {
-  id                    String                  @id @default(cuid())
-  slug                  String                  @unique
-  name                  String
-  description           String
-  publisher             String?
-  fontSans              String
-  fontMono              String
-  fontHeader            String
-  radiusBase            String
-  radiusSm              String
-  radiusMd              String
-  radiusLg              String
-  radiusXl              String
-  primaryButtonOutline  Boolean                 @default(false)
-  invertedPanels        Boolean                 @default(false)
-  fancyButtons          Boolean                 @default(true)
-  fancyBadges           Boolean                 @default(true)
-  fancyShadows          Boolean                 @default(true)
-  hapticPress           Boolean                 @default(false)
-  /// Padding token overrides (button/badge/field/card/panel/menu-item).
-  spacing               Json?
-  durationPreset        String                  @default("default")
-  motion                Json
-  light                 Json
-  dark                  Json
-  /// Per-element font weights (header, body, label, button, badge).
-  /// Optional — older themes without this field fall back to library defaults.
-  typography            Json?
-  createdAt             DateTime                @default(now())
-  updatedAt             DateTime                @updatedAt
+  id          String   @id @default(cuid())
+  version     Int      @default(2)
+  slug        String   @unique
+  name        String
+  description String
+  publisher   String?
+  brand       String
+  neutral     String
+  radius      String
+  density     String
+  motionFeel  String
+  fontSans    String
+  fontMono    String
+  fontHeader  String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 /// Tombstone for built-in default themes that an admin has chosen to hide.
 /// Listing the registry skips defaults whose slug appears here.
 model HiddenDefault {
-  slug      String   @id
-  hiddenAt  DateTime @default(now())
+  slug     String   @id
+  hiddenAt DateTime @default(now())
 }

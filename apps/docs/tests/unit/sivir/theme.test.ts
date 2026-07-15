@@ -1,50 +1,59 @@
 import { describe, expect, it } from 'vitest';
-import { DEFAULT_THEME, themeToCss } from '@sivir/ui/themes/theme';
+import { DEFAULT_THEME, THEME_VERSION, parseTheme, themeToCss } from '@sivir/ui/themes/theme';
 
 describe('DEFAULT_THEME', () => {
-	it('uses Inter, soft blue brand, default scales', () => {
-		expect(DEFAULT_THEME.fontSans).toBe('Inter');
-		expect(DEFAULT_THEME.brand).toBe('#4a8cff');
-		expect(DEFAULT_THEME.radius).toBe('default');
-		expect(DEFAULT_THEME.density).toBe('default');
-		expect(DEFAULT_THEME.motion).toBe('default');
+	it('matches the public visual axes baked into ui.css', () => {
+		expect(DEFAULT_THEME).toMatchObject({
+			version: THEME_VERSION,
+			brand: '#1f9be6',
+			neutral: 'warm',
+			radius: 'default',
+			density: 'default',
+			motion: 'default',
+			fontSans: "'Inter', sans-serif",
+			fontMono: "'JetBrains Mono', monospace"
+		});
 	});
 });
 
 describe('themeToCss', () => {
 	const css = themeToCss(DEFAULT_THEME);
-	it('emits a :root, .dark shared block with fonts, radii, brand ramp, motion', () => {
-		expect(css).toContain('--font-sans: Inter');
-		expect(css).toContain('--radius-lg: 8px');
-		expect(css).toContain('--sivir-blue-500: #4a8cff');
-		expect(css).toContain('--sivir-space-unit: 4px');
-		expect(css).toContain('--motion-duration-panel: 180ms');
+
+	it('emits fonts, radii, density, brand, motion, and mode-specific neutrals', () => {
+		expect(css).toContain("--font-sans: 'Inter', sans-serif");
+		expect(css).toContain('--radius-lg: 10px');
+		expect(css).toContain('--color-primary: #1f9be6');
+		expect(css).toContain('--sivir-space-unit: 3.6px');
+		expect(css).toContain('--motion-duration-menu: 40ms');
+		expect(css).toContain(':root {');
+		expect(css).toContain('.dark {');
 	});
-	it('derives the brand ramp via oklch from the brand hex', () => {
-		const c = themeToCss({ ...DEFAULT_THEME, brand: '#22cc88' });
-		expect(c).toContain('--color-primary: #22cc88');
-		expect(c).toContain('--color-ring: oklch(from #22cc88 l c h / 0.3)');
-		expect(c).toContain('--sivir-blue-500: #22cc88');
-		expect(c).toContain('--sivir-blue-50: oklch(from #22cc88');
-		expect(c).not.toContain('--sivir-blue-600:');
+
+	it('never emits a custom property that references itself', () => {
+		for (const line of css.split('\n')) {
+			const declaration = line.match(/^\s*(--[\w-]+):\s*(.+);$/);
+			if (!declaration) continue;
+			expect(declaration[2]).not.toContain(`var(${declaration[1]})`);
+		}
 	});
-	it('maps radius preset "sharp" to the sharp scale', () => {
-		expect(themeToCss({ ...DEFAULT_THEME, radius: 'sharp' })).toContain('--radius-lg: 4px');
+
+	it('derives custom brand tokens without changing the schema', () => {
+		const custom = themeToCss({ ...DEFAULT_THEME, brand: '#22cc88' });
+		expect(custom).toContain('--color-primary: #22cc88');
+		expect(custom).toContain('--color-ring: color-mix(in srgb, #22cc88 30%, transparent)');
+		expect(custom).toContain('--sivir-blue-500: #22cc88');
 	});
-	it('maps density "compact" to a smaller space unit', () => {
-		expect(themeToCss({ ...DEFAULT_THEME, density: 'compact' })).toContain(
-			'--sivir-space-unit: 3.5px'
-		);
+});
+
+describe('parseTheme', () => {
+	it('normalizes untrusted v2 JSON', () => {
+		expect(parseTheme({ ...DEFAULT_THEME, brand: '#AABBCC' }).brand).toBe('#aabbcc');
 	});
-	it('maps motion "none" to zeroed durations', () => {
-		expect(themeToCss({ ...DEFAULT_THEME, motion: 'none' })).toContain(
-			'--motion-duration-panel: 0ms'
-		);
-	});
-	it('emits a true-gray neutral override only for non-cool temperatures', () => {
-		expect(themeToCss(DEFAULT_THEME)).not.toContain('color-mix(in srgb, #e2e2df'); // cool => no override
-		const warm = themeToCss({ ...DEFAULT_THEME, neutral: 'warm' });
-		expect(warm).toContain('--sivir-neutral-300:');
-		expect(warm).not.toContain('--sivir-neutral-200:');
+
+	it('rejects legacy, unversioned, and malformed payloads', () => {
+		expect(() => parseTheme({ ...DEFAULT_THEME, version: 1 })).toThrow(/version/);
+		expect(() => parseTheme({ ...DEFAULT_THEME, version: undefined })).toThrow(/version/);
+		expect(() => parseTheme({ ...DEFAULT_THEME, brand: 'blue' })).toThrow(/brand/);
+		expect(() => parseTheme({ ...DEFAULT_THEME, neutral: 'purple' })).toThrow(/neutral/);
 	});
 });
