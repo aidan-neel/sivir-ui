@@ -16,6 +16,14 @@ function customHmr(): Plugin {
 
 export default defineConfig({
 	plugins: [sveltekit(), tailwindcss(), customHmr()],
+	ssr:
+		process.env.DOCS_ADAPTER === 'node'
+			? {
+					// Keep the adapter-node image self-contained. These are the only
+					// production dependencies left external by the default server build.
+					noExternal: ['@floating-ui/dom', 'clsx', 'tailwind-variants']
+				}
+			: undefined,
 	server: {
 		host: '0.0.0.0'
 	},

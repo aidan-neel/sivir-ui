@@ -5,7 +5,7 @@
 	import { ChevronDown } from '@lucide/svelte';
 	import type { ButtonVariant } from '@sivir/ui/components/button';
 	import { getSelectContext } from './context.svelte';
-	import { getPopoverContext } from '@sivir/ui/components/popover/context.svelte';
+	import { getPopoverContext } from '../popover/context.svelte';
 
 	const { state } = getSelectContext();
 	const { id: popoverId } = getPopoverContext();

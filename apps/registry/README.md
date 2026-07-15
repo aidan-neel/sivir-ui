@@ -53,11 +53,20 @@ Then `docker compose down -v` to delete the local volume.
 
 Run the registry image (`./Dockerfile`) with these set:
 
-| Variable       | Required | Notes                                    |
-| -------------- | -------- | ---------------------------------------- |
-| `DATABASE_URL` | yes      | Supabase transaction pooler (port 6543). |
-| `DIRECT_URL`   | yes      | Supabase direct/session (port 5432).     |
-| `PORT`         | no       | Defaults to 4100 via docker-compose.     |
+| Variable                | Required | Notes                                             |
+| ----------------------- | -------- | ------------------------------------------------- |
+| `DATABASE_URL`          | yes      | Supabase transaction pooler (port 6543).          |
+| `DIRECT_URL`            | yes      | Supabase direct/session (port 5432); migrations.  |
+| `DATABASE_CA_CERT_PATH` | no       | Enables strict TLS verification with a CA bundle. |
+| `PORT`                  | no       | Defaults to 4100 via docker-compose.              |
+
+Public theme payloads are capped at 128 KiB, validated with bounded text
+fields, and limited to five publish attempts per client in ten minutes. The
+rate limiter is process-local; use a shared store before scaling the registry
+to multiple instances.
+
+The container runs `prisma migrate deploy` before starting the API, so Prisma
+is intentionally retained as a production dependency.
 
 ## Tests
 

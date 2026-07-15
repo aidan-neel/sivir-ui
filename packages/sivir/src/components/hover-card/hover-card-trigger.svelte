@@ -2,7 +2,7 @@
 	import { onMount, onDestroy } from 'svelte';
 	import { cn } from '@sivir/ui/utils';
 	import type { HoverCardTriggerProps } from '.';
-	import { getPopoverContext } from '@sivir/ui/components/popover/context.svelte';
+	import { getPopoverContext } from '../popover/context.svelte';
 
 	let { class: className, children, href, ...rest }: HoverCardTriggerProps = $props();
 

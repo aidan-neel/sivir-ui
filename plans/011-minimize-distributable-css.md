@@ -79,8 +79,9 @@ utilities, then delete the `@layer base` universal border rule.
 
 Replace Tooltip's `slot-text` class stylesheet with a simple Tailwind/Svelte
 implementation or remove the cosmetic roll; remove the dependency/import and
-update Tooltip/CopyButton manifests and descriptions. Remove direct
-`tailwind-merge` dependencies/manifests where `cnfast` is the actual utility.
+update Tooltip/CopyButton manifests and descriptions. Keep `tailwind-merge`
+in install plans that use Tailwind Variants v3: it is an optional peer of that
+package and is required for its conflict-resolution behavior.
 
 ### Step 4: Make motion complete
 
@@ -122,9 +123,9 @@ bun run format:check
 ## Completion report
 
 - `ui.css`: 160 lines / 5,566 bytes (from 323 lines / 11,485 bytes)
-- Package contract: 24 tests passing; static CSS/dependency/keyframe guards added
+- Package contract: 48 tests passing; static CSS/dependency/keyframe guards added
 - Docs unit + SSR: 466 tests passing
-- Browser: 183 tests passing, including computed reduced-motion and axe contrast
+- Browser: 184 tests passing, including computed reduced-motion and axe contrast
 - Fresh CLI consumer sandbox: 15/15 checks passing
 - Production workspace build and formatting: green
 

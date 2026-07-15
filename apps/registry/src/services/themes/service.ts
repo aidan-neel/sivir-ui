@@ -93,23 +93,32 @@ export async function publishTheme(input: Theme) {
 		throw status(409, 'A theme with this slug already exists, try another one.' as const);
 	}
 
-	await prisma.theme.create({
-		data: {
-			version: theme.version,
-			slug: theme.slug,
-			name: theme.name,
-			description: theme.description,
-			publisher: theme.publisher ?? null,
-			brand: theme.brand,
-			neutral: theme.neutral,
-			radius: theme.radius,
-			density: theme.density,
-			motionFeel: theme.motion,
-			fontSans: theme.fontSans,
-			fontMono: theme.fontMono,
-			fontHeader: theme.fontHeader
-		} as never
-	});
+	try {
+		await prisma.theme.create({
+			data: {
+				version: theme.version,
+				slug: theme.slug,
+				name: theme.name,
+				description: theme.description,
+				publisher: theme.publisher ?? null,
+				brand: theme.brand,
+				neutral: theme.neutral,
+				radius: theme.radius,
+				density: theme.density,
+				motionFeel: theme.motion,
+				fontSans: theme.fontSans,
+				fontMono: theme.fontMono,
+				fontHeader: theme.fontHeader
+			} as never
+		});
+	} catch (error) {
+		// Prisma's generated error class can be duplicated across adapters/builds,
+		// so the stable public `code` is safer than an instanceof check.
+		if (typeof error === 'object' && error !== null && 'code' in error && error.code === 'P2002') {
+			throw status(409, 'A theme with this slug already exists, try another one.' as const);
+		}
+		throw error;
+	}
 
 	return {
 		success: true as const,

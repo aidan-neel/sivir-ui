@@ -1,3 +1,4 @@
+import { dev } from '$app/environment';
 import { env } from '$env/dynamic/private';
 import { parseTheme, type Theme, type ThemeRecord } from '@sivir/ui/themes/theme';
 
@@ -15,7 +16,10 @@ export class RegistryRequestError extends Error {
 }
 
 function getRegistryBaseUrl() {
-	return (env.THEME_REGISTRY_URL || DEFAULT_REGISTRY_URL).replace(/\/+$/, '');
+	const configured = env.THEME_REGISTRY_URL?.trim();
+	if (configured) return configured.replace(/\/+$/, '');
+	if (dev) return DEFAULT_REGISTRY_URL;
+	throw new RegistryRequestError(503, 'Theme registry is not configured.');
 }
 
 async function parseErrorMessage(response: Response) {

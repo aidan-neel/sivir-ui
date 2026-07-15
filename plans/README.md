@@ -19,7 +19,7 @@ Remaining findings without plans are listed below.
 | ---- | ------------------------------------------------------------- | -------- | ------ | ----------------------- | --------------------------------------------------------- | ----------------------------------------------------------------------------------- |
 | 003  | Put the CLI under test (CI wiring + command coverage)         | P1       | M      | —                       | [#107](https://github.com/aidan-neel/sivir-ui/issues/107) | DONE                                                                                |
 | 001  | Make `@sivir/ui` installable from npm (packaging + publish)   | P1       | M      | — (soft: 003)           | [#106](https://github.com/aidan-neel/sivir-ui/issues/106) | DONE                                                                                |
-| 002  | Harden the themes registry API                                | P1       | M      | —                       | withheld (security-sensitive; awaiting maintainer OK)     | TODO                                                                                |
+| 002  | Harden the themes registry API                                | P1       | M      | —                       | withheld (security-sensitive; awaiting maintainer OK)     | DONE                                                                                |
 | 004  | Reconcile rebrand external references (domain, repo, README)  | P2       | S      | —                       | [#108](https://github.com/aidan-neel/sivir-ui/issues/108) | BLOCKED — both candidate domains fail DNS; canonical host needs maintainer decision |
 | 005  | Dependency security updates and manifest hygiene              | P2       | S–M    | —                       | [#109](https://github.com/aidan-neel/sivir-ui/issues/109) | DONE                                                                                |
 | 006  | Stop rebuilding the Fuse index per keystroke                  | P2       | S      | —                       | [#110](https://github.com/aidan-neel/sivir-ui/issues/110) | DONE                                                                                |
@@ -29,7 +29,7 @@ Remaining findings without plans are listed below.
 | 010  | Canonicalize and correct the theme engine                     | P0       | L      | —                       | —                                                         | DONE                                                                                |
 | 011  | Minimize distributable CSS and make components Tailwind-first | P1       | L      | 009, 010                | —                                                         | DONE                                                                                |
 | 012  | Isolate component state and close overlay lifecycle leaks     | P1       | L      | 009                     | —                                                         | DONE                                                                                |
-| 013  | Close package release gates and isolated-install gaps         | P0/tag   | M      | 008–012; soft: 003, 005 | —                                                         | TODO — dependency plans are complete; final release gauntlet remains                |
+| 013  | Close package release gates and isolated-install gaps         | P0/tag   | M      | 008–012; soft: 003, 005 | —                                                         | DONE                                                                                |
 
 Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) |
 REJECTED (with one-line rationale).
@@ -51,8 +51,8 @@ REJECTED (with one-line rationale).
 - **012 after 009**: use the typed context pattern established by the
   Command/Modal composition across the remaining compound components.
 - **013 last**: it turns the repaired behavior and artifact into release gates.
-  Do not tag until 003, 005, 008, 009, 010, 011, 012, and 013 satisfy their done
-  criteria.
+  Its dependencies and done criteria are now complete; Plan 004's canonical
+  domain decision remains the only external pre-publish blocker.
 - Plans 001-007 assume the 2026-07-06 baseline. The 2026-07-14 follow-up
   baseline was package tests 15/15, docs unit/SSR 463 passing, and browser 134
   passing with 3 ColorPicker interactions skipped. A green baseline is not a
@@ -60,12 +60,6 @@ REJECTED (with one-line rationale).
 
 ## Findings without plans (real, deferred — ask to expand)
 
-- **Remaining component test gaps** (TEST-04/05): CodeBlock HTML escaping and
-  CopyButton clipboard behavior remain the highest-risk gaps not absorbed by
-  Plans 008, 009, and 013. M effort.
-- **Unchecked positioning rejection** (CORR-L-02): one missing `.catch` on
-  `computePosition` in `src/utils.ts`. DX hardening, S effort. Compound state
-  misuse and cryptic context failures are now Plan 012.
 - **Consumer bundle-cost verification** (PERF-01, downgraded): `sideEffects`
   is already set and the exports map supports granular imports, so the
   "500KB for a Button" claim is unverified — the honest next step is a
@@ -130,9 +124,8 @@ REJECTED (with one-line rationale).
 ## What was NOT audited
 
 - The deleted pre-rebrand tree at HEAD (audit targeted the working tree).
-- Deployment configuration (Vercel project settings, registry hosting, DNS) —
-  only what's visible in the repo.
+- Hosted deployment state (Vercel project settings, registry hosting, DNS) —
+  repository Docker, adapter, environment, and workflow contracts were audited.
 - `bun.lock` beyond `bun audit`; license compliance of dependencies.
-- Visual regression baselines (`__screenshots__`) and the browser-test suite's
-  flake rate (browser tests were not executed during this audit; unit/ssr and
-  registry suites were).
+- Visual regression baselines (`__screenshots__`) and long-run browser flake
+  rate; the complete 184-test browser suite passed once during release closure.

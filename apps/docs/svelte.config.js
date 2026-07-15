@@ -1,5 +1,8 @@
+import adapterNode from '@sveltejs/adapter-node';
 import adapter from '@sveltejs/adapter-vercel';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
+
+const deploymentAdapter = process.env.DOCS_ADAPTER === 'node' ? adapterNode() : adapter();
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -8,7 +11,7 @@ const config = {
 	preprocess: vitePreprocess(),
 
 	kit: {
-		adapter: adapter(),
+		adapter: deploymentAdapter,
 		alias: {
 			'@sivir/ui/brand-mark': '../../packages/sivir/src/brand-mark.svelte',
 			'@sivir/ui': '../../packages/sivir/src',

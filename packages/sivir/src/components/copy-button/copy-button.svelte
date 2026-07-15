@@ -3,6 +3,7 @@
 	import * as Tooltip from '@sivir/ui/components/tooltip';
 	import Copy from '@lucide/svelte/icons/copy';
 	import Check from '@lucide/svelte/icons/check';
+	import { onDestroy } from 'svelte';
 	import type { CopyButtonProps } from '.';
 
 	let {
@@ -32,6 +33,8 @@
 		clearTimeout(timer);
 		timer = setTimeout(() => (copied = false), duration);
 	}
+
+	onDestroy(() => clearTimeout(timer));
 </script>
 
 <Tooltip.Root placement="top" delay={125} closeDelay={80}>

@@ -58,7 +58,7 @@ describe('publishable package contract', () => {
 		}
 	});
 
-	test('does not ship redundant styling runtimes', async () => {
+	test('ships only the styling runtimes required by public components', async () => {
 		const tooltip = await readFile(
 			new URL('./src/components/tooltip/shared-tooltip.ts', import.meta.url),
 			'utf8'
@@ -66,7 +66,10 @@ describe('publishable package contract', () => {
 
 		expect(tooltip).not.toContain('slot-text/style.css');
 		expect(packageJson.dependencies).not.toHaveProperty('slot-text');
-		expect(packageJson.dependencies).not.toHaveProperty('tailwind-merge');
+		expect(packageJson.dependencies).toMatchObject({
+			'tailwind-merge': '^3.6.0',
+			'tailwind-variants': '^3.2.2'
+		});
 	});
 
 	test('keeps compound component state instance-scoped', async () => {
@@ -82,6 +85,25 @@ describe('publishable package contract', () => {
 		expect(files).not.toContain('internals/state.svelte.ts');
 		expect(source).not.toMatch(/\buseState\b|\bstates\s*\[/);
 		expect(source).not.toMatch(/(?:set|get)Context(?:<[^>]+>)?\(['"]key['"]\)/);
+	});
+
+	test('uses only exported package paths for source self-references', async () => {
+		const files = (await readdir(new URL('./src', import.meta.url), { recursive: true })).filter(
+			(file) => /\.(?:svelte|ts)$/.test(file)
+		);
+		const source = (
+			await Promise.all(
+				files.map((file) => readFile(new URL(`./src/${file}`, import.meta.url), 'utf8'))
+			)
+		).join('\n');
+		const selfReferences = [...source.matchAll(/['"](@sivir\/ui(?:\/[^'"]+)?)['"]/g)].map(
+			([, specifier]) => specifier
+		);
+		const exportedPath =
+			/^@sivir\/ui(?:\/(?:ui\.css|brand-mark|utils|_manifest\/types|internals\/[^/]+|themes\/[^/]+|components\/(?:input\/variants|_internal\/overlay|[^/]+)))?$/;
+
+		expect(selfReferences.length).toBeGreaterThan(0);
+		for (const specifier of selfReferences) expect(specifier).toMatch(exportedPath);
 	});
 
 	test('ships the repository license byte-for-byte', async () => {

@@ -13,6 +13,12 @@
 
 ## Status
 
+**BLOCKED — 2026-07-15.** All domain-independent repository fixes are done:
+GitHub references, issue links, devcontainer setup, and development/deployment
+documentation are reconciled. Neither `sivir-ui.com` nor `sivir-ui.dev`
+currently resolves, so selecting the canonical public host and configuring DNS
+requires the maintainer; the CLI default must not be guessed before publish.
+
 - **Priority**: P2
 - **Effort**: S
 - **Risk**: LOW (one MED item: the canonical-domain decision, gated by step 1)

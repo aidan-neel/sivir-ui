@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { type Snippet } from 'svelte';
 	import * as Popover from '@sivir/ui/components/popover';
-	import { getPopoverContext } from '@sivir/ui/components/popover/context.svelte';
+	import { getPopoverContext } from '../popover/context.svelte';
 	import { getDropdownMenuContext, setDropdownMenuContext } from './context.svelte';
 
 	const { state: parentState } = getPopoverContext();

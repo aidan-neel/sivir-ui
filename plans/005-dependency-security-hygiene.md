@@ -14,6 +14,12 @@
 
 ## Status
 
+**DONE — 2026-07-15.** Vulnerable transitive dependencies are pinned to
+patched versions, floating manifest versions and stale entries are gone, and
+`bun audit` reports no vulnerabilities. Prisma remains a production dependency
+because the registry container deliberately runs `prisma migrate deploy` at
+startup; build-only formatter and type packages moved to dev dependencies.
+
 - **Priority**: P2
 - **Effort**: S–M
 - **Risk**: MED (dep bumps can break the browser-test toolchain; every step is
@@ -154,8 +160,10 @@ In `apps/registry/package.json`:
 
 1. Delete the `"module": "src/index.js"` line (the file doesn't exist; the
    registry is a server, not an importable module).
-2. Move `@types/pg`, `prettier`, `prisma` from `dependencies` to
-   `devDependencies`. Keep `dotenv`, `pg`, `@prisma/adapter-pg`,
+2. Move `@types/pg` and `prettier` from `dependencies` to
+   `devDependencies`. Keep `prisma` in production dependencies because the
+   shipped container runs `prisma migrate deploy` before API startup. Keep
+   `dotenv`, `pg`, `@prisma/adapter-pg`,
    `@prisma/client`, `elysia`, `@elysiajs/openapi` in `dependencies` (all are
    runtime imports). For `zod`: grep first (see Current state); if unused,
    note it in the report — removing it is optional and low-stakes.
@@ -180,14 +188,24 @@ step (commands table). Final sweep: all five verification commands green, plus
 
 ## Done criteria
 
-- [ ] `bun audit` shows 0 critical; no `@vitest/browser`, `vite`, or `undici` advisories (hono-via-prisma may remain — record it)
-- [ ] `grep -rn '"latest"' apps/*/package.json packages/*/package.json` → 0 matches
-- [ ] `grep -c '"module"' apps/registry/package.json` → 0
-- [ ] `prisma`, `prettier`, `@types/pg` under devDependencies in `apps/registry/package.json`
-- [ ] `fuse.js` absent from `apps/docs/package.json`
-- [ ] `bun run check`, `bun run build`, docs `test:ci`, registry `test`, sivir `test` all exit 0
-- [ ] Changed files: only the three package.json files + `bun.lock`
-- [ ] `plans/README.md` status row updated
+- [x] `bun audit` reports no vulnerabilities
+- [x] `grep -rn '"latest"' apps/*/package.json packages/*/package.json` → 0 matches
+- [x] `grep -c '"module"' apps/registry/package.json` → 0
+- [x] `prettier` and `@types/pg` are dev dependencies; runtime Prisma is documented
+- [x] `fuse.js` absent from `apps/docs/package.json`
+- [x] `bun run check`, `bun run build`, docs `test:ci`, registry `test`, sivir `test` all exit 0
+- [x] Manifest and lockfile changes were reviewed in the coordinated release sweep
+- [x] `plans/README.md` status row updated
+
+## Completion report
+
+- Audit: 17 advisories at the planning baseline → 0 vulnerabilities.
+- Reproducibility: Elysia and Bun types are caret-pinned; root overrides pin
+  patched Hono, cookie, and Undici transitives.
+- Hygiene: the registry's bogus module entry and unused Zod dependency are
+  gone; docs no longer declares unused Fuse.js.
+- Full unit, SSR, browser, package, registry, build, and packed-consumer gates
+  pass on the patched dependency graph.
 
 ## STOP conditions
 

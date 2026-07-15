@@ -7,7 +7,7 @@
 
 	import type { ComboboxItem } from '.';
 	import { getComboboxContext } from './context.svelte';
-	import { getPopoverContext } from '@sivir/ui/components/popover/context.svelte';
+	import { getPopoverContext } from '../popover/context.svelte';
 
 	const { id, state: comboboxState } = getComboboxContext();
 	const { state: popoverState } = getPopoverContext();

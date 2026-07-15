@@ -5,7 +5,7 @@
 	import Check from '@lucide/svelte/icons/check';
 	import { MENU_ITEM } from '@sivir/ui/internals/menu';
 	import { getSelectContext } from './context.svelte';
-	import { getPopoverContext } from '@sivir/ui/components/popover/context.svelte';
+	import { getPopoverContext } from '../popover/context.svelte';
 
 	const { id, state: selectState } = getSelectContext();
 	const { state: popoverState } = getPopoverContext();

@@ -3,7 +3,7 @@ import type { Manifest } from '@sivir/ui/_manifest/types';
 export const manifest: Manifest = {
 	name: 'panel',
 	version: '1.0.0',
-	visibility: 'internal',
+	visibility: 'public',
 	description: 'Surface container framed by a concentric double-line border.',
 	files: [
 		'components/panel/panel.svelte',

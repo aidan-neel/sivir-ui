@@ -17,7 +17,15 @@
  */
 
 import { spawnSync } from 'node:child_process';
-import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import {
+	closeSync,
+	existsSync,
+	mkdirSync,
+	openSync,
+	readFileSync,
+	rmSync,
+	writeFileSync
+} from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import pc from 'picocolors';
@@ -42,6 +50,7 @@ const FRAMEWORK_PEERS: Record<string, string> = {
  * warning path can be exercised. */
 const COMPONENT_PEERS: Record<string, string> = {
 	cnfast: '^0.0.8',
+	'tailwind-merge': '^3.0.0',
 	'tailwind-variants': '^3.0.0',
 	'@floating-ui/dom': '^1.0.0',
 	'@lucide/svelte': '^1.0.0',
@@ -145,8 +154,24 @@ function buildCli(noBuild: boolean) {
 /** Runs `sivir` in the sandbox app and captures combined output (no TTY, so the
  * CLI never prompts -- it takes the non-interactive branch everywhere). */
 function sivir(args: string[]): { status: number; out: string } {
-	const result = spawnSync('node', [distEntry, ...args], { cwd: appDir, encoding: 'utf8' });
-	return { status: result.status ?? 1, out: `${result.stdout ?? ''}${result.stderr ?? ''}` };
+	const outputFile = path.join(sandboxRoot, '.command-output');
+	mkdirSync(sandboxRoot, { recursive: true });
+	const output = openSync(outputFile, 'w');
+	let result: ReturnType<typeof spawnSync>;
+	try {
+		// Bun 1.3 can drop output when a Bun process captures a nested Node
+		// process through pipes. A real file descriptor keeps this a Node-runtime
+		// CLI test while preserving output for assertions.
+		result = spawnSync('node', [distEntry, ...args], {
+			cwd: appDir,
+			stdio: ['ignore', output, output]
+		});
+	} finally {
+		closeSync(output);
+	}
+	const out = readFileSync(outputFile, 'utf8');
+	rmSync(outputFile, { force: true });
+	return { status: result.status ?? 1, out };
 }
 
 const exists = (rel: string) => existsSync(path.join(appDir, rel));

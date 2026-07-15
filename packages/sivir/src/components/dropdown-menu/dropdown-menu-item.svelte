@@ -3,7 +3,7 @@
 	import { cn } from '@sivir/ui/utils';
 	import { type Snippet } from 'svelte';
 	import { MENU_ITEM } from '@sivir/ui/internals/menu';
-	import { getPopoverContext } from '@sivir/ui/components/popover/context.svelte';
+	import { getPopoverContext } from '../popover/context.svelte';
 	import { getDropdownMenuContext } from './context.svelte';
 
 	const { state: popoverState } = getPopoverContext();

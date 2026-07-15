@@ -6,6 +6,11 @@
 
 ## Status
 
+**DONE — 2026-07-15.** CI and publish now run the complete source, browser,
+CLI, audit, build, and exact-tarball gauntlet. The verified tarball is installed
+into a fresh SvelteKit consumer and is the same artifact published by the
+release workflow.
+
 - **Priority**: P0 before tag
 - **Effort**: M
 - **Risk**: LOW
@@ -41,9 +46,9 @@ add a static test comparing external imports in every installable file with
 the dependencies resolved for that component's isolated install plan. Test at
 least Command and one icon-using component in separate fresh fixtures.
 
-Remove stale dependencies discovered by the same test (including Command's
-Popover edge after Plan 009 and direct `tailwind-merge` declarations after
-Plan 011).
+Remove stale dependencies discovered by the same test, including Command's
+Popover edge after Plan 009. Preserve `tailwind-merge` where Tailwind Variants
+v3 requires its optional peer for class-conflict resolution.
 
 ### Step 2: Establish a real package check
 
@@ -85,12 +90,23 @@ cd packages/sivir && npm pack --dry-run
 
 ## Done criteria
 
-- [ ] Every isolated component install declares all external runtime imports
-- [ ] CI and publish run package component checks and tests
-- [ ] No skipped core public-component browser interaction remains
-- [ ] Packed tarball passes fresh SvelteKit check/build smoke test
-- [ ] Plan 005 advisory criteria are satisfied
-- [ ] Plans 001 and 003 are reconciled rather than duplicated
+- [x] Every isolated component install declares all external runtime imports
+- [x] CI and publish run package component checks and tests
+- [x] No skipped core public-component browser interaction remains
+- [x] Packed tarball passes fresh SvelteKit check/build smoke test
+- [x] Plan 005 advisory criteria are satisfied
+- [x] Plans 001 and 003 are reconciled rather than duplicated
+
+## Completion report
+
+- Package contract: 48 tests passing, including mechanically complete isolated
+  install plans and a directly installable Panel component.
+- Browser: 184 interactions passing with no skipped release interaction.
+- CLI sandbox: 15/15 file-writing checks pass under the Node runtime.
+- Artifact: the allowlisted 513-file tarball passes fresh SvelteKit install,
+  typecheck, CSS import, representative render, and production build.
+- Publish: tag/version matching, audit, full tests, both deployment builds,
+  provenance, and exact verified-tarball publication are enforced.
 
 ## STOP conditions
 

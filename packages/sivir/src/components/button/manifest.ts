@@ -44,6 +44,7 @@ export const manifest: Manifest = {
 	shared: ['utils.cn', 'internals/variants'],
 	peerDependencies: {
 		cnfast: '^0.0.8',
+		'tailwind-merge': '^3.0.0',
 		'tailwind-variants': '^3.0.0',
 		svelte: '^5.0.0'
 	}

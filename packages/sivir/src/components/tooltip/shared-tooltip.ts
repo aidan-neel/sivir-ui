@@ -63,33 +63,38 @@ function reposition(ref: HTMLElement, placement: Placement, animated: boolean) {
 		strategy: 'fixed',
 		placement,
 		middleware: [offset(8), flip({ padding: 8 }), shift({ padding: 8 })]
-	}).then(({ x, y }) => {
-		if (!bubble || activeRef !== ref) return;
-		const horizontal = placement === 'top' || placement === 'bottom';
-		const center = horizontal ? 'translateX(-50%)' : 'translateY(-50%)';
-		lastCenter = center;
-		// Anchor by the bubble's centre so width/height changes never decentre it.
-		const left = horizontal ? x + bubble.offsetWidth / 2 : x;
-		const top = horizontal ? y : y + bubble.offsetHeight / 2;
-
-		if (animated) {
-			bubble.style.left = `${left}px`;
-			bubble.style.top = `${top}px`;
-		} else {
-			const prev = bubble.style.transition;
-			bubble.style.transition = 'none';
-			bubble.style.transform = `${center} ${HIDE}`;
-			bubble.style.left = `${left}px`;
-			bubble.style.top = `${top}px`;
-			void bubble.offsetHeight;
-			bubble.style.transition = prev;
-		}
-		requestAnimationFrame(() => {
+	})
+		.then(({ x, y }) => {
 			if (!bubble || activeRef !== ref) return;
-			bubble.style.opacity = '1';
-			bubble.style.transform = `${center} ${SHOW}`;
+			const horizontal = placement === 'top' || placement === 'bottom';
+			const center = horizontal ? 'translateX(-50%)' : 'translateY(-50%)';
+			lastCenter = center;
+			// Anchor by the bubble's centre so width/height changes never decentre it.
+			const left = horizontal ? x + bubble.offsetWidth / 2 : x;
+			const top = horizontal ? y : y + bubble.offsetHeight / 2;
+
+			if (animated) {
+				bubble.style.left = `${left}px`;
+				bubble.style.top = `${top}px`;
+			} else {
+				const prev = bubble.style.transition;
+				bubble.style.transition = 'none';
+				bubble.style.transform = `${center} ${HIDE}`;
+				bubble.style.left = `${left}px`;
+				bubble.style.top = `${top}px`;
+				void bubble.offsetHeight;
+				bubble.style.transition = prev;
+			}
+			requestAnimationFrame(() => {
+				if (!bubble || activeRef !== ref) return;
+				bubble.style.opacity = '1';
+				bubble.style.transform = `${center} ${SHOW}`;
+			});
+		})
+		.catch(() => {
+			// The active trigger can disappear while Floating UI is measuring it.
+			// A removed trigger needs no recovery and must not leak a rejection.
 		});
-	});
 }
 
 function present(ref: HTMLElement, text: string, placement: Placement) {

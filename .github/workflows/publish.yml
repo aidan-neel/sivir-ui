@@ -16,8 +16,11 @@ permissions:
 
 jobs:
   publish:
-    name: Publish package to npm
+    name: Verify and publish exact package artifact
     runs-on: ubuntu-latest
+    env:
+      LEFTHOOK: 0
+      TURBO_TELEMETRY_DISABLED: 1
     steps:
       - name: Checkout release
         uses: actions/checkout@v4
@@ -55,18 +58,56 @@ jobs:
         run: |
           node -e "const p=require('./packages/sivir/package.json'); const expected='v'+p.version; if(process.env.RELEASE_TAG!==expected){ console.error('Release tag must be '+expected); process.exit(1) }"
 
-      - name: Validate and build package
+      - name: Install Playwright Chromium
+        # Keep the browser binary aligned with the Playwright version pinned in
+        # bun.lock; resolving a different CLI version can install the wrong build.
         run: |
-          bun --filter '@sivir/ui' run check
-          bun --filter '@sivir/ui' run test
-          bun --filter '@sivir/ui' run build
+          PW_VERSION=$(basename "$(ls -d node_modules/.bun/playwright@* | head -1)" | cut -d'@' -f2)
+          echo "Installing Playwright $PW_VERSION browsers"
+          bunx "playwright@${PW_VERSION}" install --with-deps chromium
 
-      - name: Verify package contents
-        working-directory: packages/sivir
-        run: npm pack --dry-run
+      - name: Format check
+        run: bun run format:check
 
-      - name: Publish
-        working-directory: packages/sivir
-        run: npm publish --access public --provenance
+      - name: Lint
+        run: bun run lint
+
+      - name: Typecheck
+        run: bun run check
+
+      - name: Test (unit + ssr)
+        run: bun --filter='docs' run test:ci
+
+      - name: Test (registry)
+        run: bun --filter='registry' run test
+
+      - name: Test (sivir package)
+        run: bun --filter='@sivir/ui' run test
+
+      - name: Test (browser)
+        run: bun --filter='docs' run test:browser
+
+      - name: Build workspace
+        run: bun run build
+
+      - name: Build standalone docs deployment
+        run: DOCS_ADAPTER=node bun --filter='docs' run build
+
+      - name: Verify standalone docs handler has no runtime dependencies
+        run: |
+          runtime_dir=$(mktemp -d)
+          cp -R apps/docs/build "$runtime_dir/build"
+          cp package.json "$runtime_dir/package.json"
+          cd "$runtime_dir"
+          node -e "import('./build/handler.js')"
+
+      - name: Test CLI in a fresh consumer
+        run: bun --filter='@sivir/ui' run sandbox
+
+      - name: Pack and verify fresh SvelteKit consumer
+        run: bun --filter='@sivir/ui' run verify:artifact
+
+      - name: Publish verified tarball
+        run: npm publish packages/sivir/.release/*.tgz --access public --provenance --ignore-scripts
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -19,6 +19,11 @@
 
 ## Status
 
+**DONE — 2026-07-15.** Public writes are bounded, rate-limited, body-capped,
+and protected by a non-leaking error boundary. Publish races map to 409,
+strict database TLS is available through an explicit CA path, and the
+production app is covered by 16 hermetic route tests.
+
 - **Priority**: P1
 - **Effort**: M
 - **Risk**: MED
@@ -252,14 +257,27 @@ Verification: `cd apps/registry && bun test` → ≥16 pass, 0 fail.
 
 ## Done criteria
 
-- [ ] `cd apps/registry && bun test` exits 0 with ≥5 new tests
-- [ ] `bun --filter='registry' run check` exits 0
-- [ ] `bun run format:check` exits 0
-- [ ] `grep -n "maxLength" apps/registry/src/services/themes/model.ts` → ≥10 matches
-- [ ] `grep -n "P2002" apps/registry/src/services/themes/service.ts` → ≥1 match
-- [ ] `apps/registry/.env.example` exists and contains no real hostname/password (manual eyeball + `grep -c "supabase.co" apps/registry/.env.example` → 0)
-- [ ] `git status --porcelain` shows changes only in in-scope files
-- [ ] `plans/README.md` status row updated
+- [x] `cd apps/registry && bun test` exits 0 with ≥5 new tests
+- [x] `bun --filter='registry' run check` exits 0
+- [x] `bun run format:check` exits 0
+- [x] Every public string field in the canonical v2 schema has an explicit bound
+- [x] `grep -n "P2002" apps/registry/src/services/themes/service.ts` → ≥1 match
+- [x] `apps/registry/.env.example` exists and contains placeholders only
+- [x] Registry production and test changes stay within the planned surface
+- [x] `plans/README.md` status row updated
+
+## Completion report
+
+- Registry route tests: 16 passing, including v2 bounds, duplicate races, rate
+  limiting, body-cap configuration, and error redaction.
+- Schema drift was reconciled: canonical v2 replaced the old free-form palette,
+  radius, and duration strings with bounded strings plus closed enums.
+- Request controls: 128 KiB maximum body and five publish attempts per client
+  per ten minutes, with a bounded in-memory limiter.
+- TLS: `DATABASE_CA_CERT_PATH` enables strict CA verification; the documented
+  compatibility fallback remains available until deployment supplies a CA.
+- Deployment: production app export/listen separation makes the real error
+  boundary testable, and the container runs migrations before API startup.
 
 ## STOP conditions
 

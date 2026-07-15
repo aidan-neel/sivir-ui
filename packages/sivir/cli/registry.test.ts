@@ -128,6 +128,13 @@ describe('rewriteImports', () => {
 });
 
 describe('registry snapshot', () => {
+	test('keeps documented Panel directly installable', async () => {
+		const snapshot = await loadRegistryIndex();
+		const panel = snapshot.components.find((component) => component.name === 'panel');
+		expect(panel?.visibility).toBe('public');
+		expect(resolveInstallPlan(snapshot, ['panel']).components[0]?.name).toBe('panel');
+	});
+
 	test('index loads and every referenced file exists', async () => {
 		const snapshot = await loadRegistryIndex();
 		expect(snapshot.components.length).toBeGreaterThan(30);

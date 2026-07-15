@@ -1,5 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, mock } from 'bun:test';
-import { Elysia } from 'elysia';
+import { afterEach, beforeEach, describe, expect, it, mock, spyOn } from 'bun:test';
 
 import { defaultThemes } from '@src/services/themes/defaults';
 import type { Theme } from '@src/services/themes/model';
@@ -25,9 +24,9 @@ const db = {
 
 mock.module('@lib/prisma', () => ({ prisma: db }));
 
-// Import the controller only after the mock is registered.
-const { themesController } = await import('@src/services/themes');
-const app = new Elysia().use(themesController);
+// Import the production app only after the database mock is registered.
+const { app } = await import('@src/index');
+const { resetPublishRateLimitForTests } = await import('@src/services/themes');
 
 /** Build a persisted DB row from a draft, as Prisma would return it. */
 function persisted(theme: Theme, id: string) {
@@ -62,6 +61,7 @@ function validTheme(slug: string): Theme {
 }
 
 beforeEach(() => {
+	resetPublishRateLimitForTests();
 	db.theme.findMany = async () => [];
 	db.theme.findUnique = async () => null;
 	db.theme.create = async (args: CreateArgs) => args.data;
@@ -172,5 +172,49 @@ describe('POST /themes', () => {
 	it('rejects a body missing required fields', async () => {
 		const res = await post({ slug: 'ocean' });
 		expect(res.status).toBe(422);
+	});
+
+	it('rejects unbounded public text fields', async () => {
+		const res = await post({ ...validTheme('ocean'), name: 'x'.repeat(5_000) });
+		expect(res.status).toBe(422);
+	});
+
+	it('maps a concurrent unique-constraint race to conflict', async () => {
+		db.theme.create = async () => {
+			throw { code: 'P2002' };
+		};
+		const res = await post(validTheme('ocean'));
+		expect(res.status).toBe(409);
+		expect(await res.text()).toBe('A theme with this slug already exists, try another one.');
+	});
+
+	it('limits rapid anonymous publishes per client', async () => {
+		for (let attempt = 0; attempt < 5; attempt++) {
+			const res = await post(validTheme(`rate-${attempt}`));
+			expect(res.status).toBe(200);
+		}
+		const limited = await post(validTheme('rate-limited'));
+		expect(limited.status).toBe(429);
+		expect(await limited.text()).toBe('Too many publishes, try again later.');
+	});
+});
+
+describe('registry request guards', () => {
+	it('caps request bodies at 128 KiB', () => {
+		expect(app.config.serve?.maxRequestBodySize).toBe(128 * 1024);
+	});
+
+	it('does not leak unexpected service errors', async () => {
+		const errorLog = spyOn(console, 'error').mockImplementation(() => {});
+		db.theme.findMany = async () => {
+			throw new Error('boom: secret detail');
+		};
+
+		const res = await get('/themes');
+		const body = await res.text();
+		expect(res.status).toBe(500);
+		expect(body).toBe('Internal error.');
+		expect(body).not.toContain('boom');
+		expect(errorLog).toHaveBeenCalled();
 	});
 });

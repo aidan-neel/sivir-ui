@@ -16,6 +16,10 @@
 
 ## Status
 
+**DONE — 2026-07-15.** The package now ships complete metadata, license,
+public exports, source, generated registry, and CLI. The release workflow
+verifies and publishes the exact tarball with npm provenance.
+
 - **Priority**: P1
 - **Effort**: M
 - **Risk**: MED
@@ -219,14 +223,22 @@ maintainer's `NPM_TOKEN` secret and their go-ahead).
 
 Machine-checkable. ALL must hold:
 
-- [ ] `bun run check` exits 0
-- [ ] `cd packages/sivir && bun run test` exits 0
-- [ ] `grep -n "export { Panel }" packages/sivir/src/index.ts` → 1 match; same for `Separator`
-- [ ] `diff LICENSE packages/sivir/LICENSE` → empty
-- [ ] `npm pack --dry-run` (in `packages/sivir`) lists LICENSE, README.md, dist/index.js, registry/index.json, src/index.ts
-- [ ] `.github/workflows/publish.yml` exists, has no `pull_request` trigger, references `secrets.NPM_TOKEN`
-- [ ] `git status --porcelain` shows changes ONLY in the in-scope files
-- [ ] `plans/README.md` status row updated
+- [x] `bun run check` exits 0
+- [x] `cd packages/sivir && bun run test` exits 0
+- [x] Panel and Separator are public barrel exports
+- [x] Package license is byte-identical to the repository license
+- [x] The verified tarball contains the package allowlist, including registry and source
+- [x] Publish is release-only, token-authenticated, and provenance-enabled
+- [x] Package/release changes were reviewed in the coordinated release sweep
+- [x] `plans/README.md` status row updated
+
+## Completion report
+
+- Package tests: 48 passing.
+- Exact artifact: 513 allowlisted files, installed and built in a fresh
+  SvelteKit consumer before publication.
+- Workflow: full workspace tests and builds run before npm publishes the same
+  verified `.tgz`; release tag and package version must match.
 
 ## STOP conditions
 

@@ -188,10 +188,15 @@ export function positionFloatingPanel(
 				}
 			})
 		]
-	}).then(({ x, y }) => {
-		Object.assign(floating.style, {
-			left: `${x}px`,
-			top: `${y}px`
+	})
+		.then(({ x, y }) => {
+			Object.assign(floating.style, {
+				left: `${x}px`,
+				top: `${y}px`
+			});
+		})
+		.catch(() => {
+			// Floating UI may reject when either element is removed during an
+			// asynchronous layout pass. Teardown is an expected terminal state.
 		});
-	});
 }

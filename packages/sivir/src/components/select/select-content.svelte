@@ -3,7 +3,7 @@
 	import { cn } from '@sivir/ui/utils';
 	import { tick, type Snippet } from 'svelte';
 	import { getSelectContext } from './context.svelte';
-	import { getPopoverContext } from '@sivir/ui/components/popover/context.svelte';
+	import { getPopoverContext } from '../popover/context.svelte';
 
 	const { state } = getSelectContext();
 	const { state: popoverState } = getPopoverContext();
