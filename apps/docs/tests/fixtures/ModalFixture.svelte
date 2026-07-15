@@ -1,5 +1,5 @@
 <script lang="ts">
-	import * as Modal from '@silk/ui/components/modal';
+	import * as Modal from '@sivir/ui/components/modal';
 
 	let {
 		open = $bindable(false),

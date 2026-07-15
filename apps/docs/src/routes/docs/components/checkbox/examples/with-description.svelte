@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Checkbox } from '@silk/ui/components/checkbox';
+	import { Checkbox } from '@sivir/ui/components/checkbox';
 </script>
 
 <div class="flex items-center justify-center">

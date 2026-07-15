@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { ColorPicker, type ColorOption } from '@silk/ui/components/color-picker';
+	import * as ColorPicker from '@sivir/ui/components/color-picker';
+	import type { ColorOption } from '@sivir/ui/components/color-picker';
 
 	let valueWithOptions = $state('#0284c7');
 
@@ -13,10 +14,13 @@
 </script>
 
 <div class="flex items-center justify-center">
-	<ColorPicker
+	<ColorPicker.Root
 		value={valueWithOptions}
 		onValueChange={(v) => (valueWithOptions = v)}
 		options={presetSwatches}
 		label="Choose"
-	/>
+	>
+		<ColorPicker.Trigger />
+		<ColorPicker.Content />
+	</ColorPicker.Root>
 </div>

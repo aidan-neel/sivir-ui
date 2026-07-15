@@ -1,5 +1,5 @@
 <script lang="ts">
-	import * as ToggleGroup from '@silk/ui/components/toggle-group';
+	import * as ToggleGroup from '@sivir/ui/components/toggle-group';
 
 	let {
 		type = 'single',

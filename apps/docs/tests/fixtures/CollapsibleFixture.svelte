@@ -1,5 +1,5 @@
 <script lang="ts">
-	import * as Collapsible from '@silk/ui/components/collapsible';
+	import * as Collapsible from '@sivir/ui/components/collapsible';
 
 	let { open = $bindable(false), disabled = false } = $props();
 </script>

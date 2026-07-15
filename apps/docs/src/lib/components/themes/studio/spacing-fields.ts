@@ -1,4 +1,4 @@
-import type { ThemeSpacing } from '@silk/ui/themes/presets';
+import type { ThemeSpacing } from '@sivir/ui/themes/presets';
 
 /** A labelled, range-bounded control for a single spacing token. */
 export type SpacingField = {
@@ -76,7 +76,6 @@ export const spacingGroups: SpacingFieldGroup[] = [
 		fields: [
 			{ key: 'menuPadding', label: 'Menu surface', min: 0, max: 16 },
 			{ key: 'menuItemPaddingX', label: 'Menu item (X)', min: 2, max: 16 },
-			{ key: 'menuSearchPadding', label: 'Menu search', min: 0, max: 24 },
 			{ key: 'menuLabelPaddingX', label: 'Menu label (X)', min: 0, max: 16 },
 			{ key: 'menuLabelPaddingY', label: 'Menu label (Y)', min: 0, max: 12 }
 		]

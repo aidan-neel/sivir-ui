@@ -1,18 +1,20 @@
 <script lang="ts">
-	import * as DropdownMenu from '@silk/ui/components/dropdown-menu';
+	import * as DropdownMenu from '@sivir/ui/components/dropdown-menu';
 
 	let {
 		onItem1 = () => {},
 		onItem2 = () => {},
-		onItem3 = () => {}
+		onItem3 = () => {},
+		inverted = false
 	}: {
 		onItem1?: () => void;
 		onItem2?: () => void;
 		onItem3?: () => void;
+		inverted?: boolean;
 	} = $props();
 </script>
 
-<DropdownMenu.Root>
+<DropdownMenu.Root {inverted}>
 	<DropdownMenu.Trigger>
 		<span data-testid="dropdown-trigger">Open menu</span>
 	</DropdownMenu.Trigger>

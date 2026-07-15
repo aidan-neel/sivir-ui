@@ -4,19 +4,20 @@
 	import RotateCcw from '@lucide/svelte/icons/rotate-ccw';
 	import RotateCw from '@lucide/svelte/icons/rotate-cw';
 	import Shuffle from '@lucide/svelte/icons/shuffle';
-	import * as Combobox from '@silk/ui/components/combobox';
+	import * as Combobox from '@sivir/ui/components/combobox';
 	import Sliders from '@lucide/svelte/icons/sliders';
-	import * as Select from '@silk/ui/components/select';
-	import * as Modal from '@silk/ui/components/modal';
-	import * as Tabs from '@silk/ui/components/tabs';
-	import { Button } from '@silk/ui/components/button';
-	import { ColorPicker, type ColorOption } from '@silk/ui/components/color-picker';
-	import type { ThemeBasePalette, ThemeDraft, ThemePalette } from '@silk/ui/themes/presets';
+	import * as Select from '@sivir/ui/components/select';
+	import * as Modal from '@sivir/ui/components/modal';
+	import * as Tabs from '@sivir/ui/components/tabs';
+	import { Button } from '@sivir/ui/components/button';
+	import ColorPicker from '$lib/components/color-picker.svelte';
+	import type { ColorOption } from '@sivir/ui/components/color-picker';
+	import type { ThemeBasePalette, ThemeDraft, ThemePalette } from '@sivir/ui/themes/presets';
 	import type {
 		ThemeMotion,
 		ThemeTransitionPreset,
 		ThemeTransitionPresetSlug
-	} from '@silk/ui/themes/transitions';
+	} from '@sivir/ui/themes/transitions';
 	import { setMode } from 'mode-watcher';
 
 	type FontOption = { label: string; value: string; group: 'Sans Serif' | 'Serif' | 'Mono' };
@@ -166,14 +167,11 @@
 		{ key: 'card', label: 'Card' },
 		{ key: 'secondary', label: 'Secondary' },
 		{ key: 'muted', label: 'Muted' },
-		{ key: 'panel', label: 'Panel' },
-		{ key: 'modal', label: 'Modal' }
+		{ key: 'panel', label: 'Panel' }
 	];
 	const textTokens: { key: PaletteKey; label: string }[] = [
 		{ key: 'foreground', label: 'Text' },
-		{ key: 'foregroundMuted', label: 'Text Muted' },
-		{ key: 'foregroundOpposite', label: 'Text Opposite' },
-		{ key: 'foregroundButton', label: 'Text on Button' }
+		{ key: 'foregroundMuted', label: 'Text Muted' }
 	];
 	const borderTokens: { key: PaletteKey; label: string }[] = [
 		{ key: 'border', label: 'Border' },
@@ -181,15 +179,12 @@
 		{ key: 'input', label: 'Input Border' }
 	];
 	const interactiveTokens: { key: PaletteKey; label: string }[] = [
-		{ key: 'primary', label: 'Primary' },
-		{ key: 'accent', label: 'Accent Tint' },
-		{ key: 'alternate', label: 'Alternate' }
+		{ key: 'primary', label: 'Primary' }
 	];
 	const statusTokens: { key: PaletteKey; label: string }[] = [
 		{ key: 'success', label: 'Success' },
 		{ key: 'warning', label: 'Warning' },
-		{ key: 'error', label: 'Error' },
-		{ key: 'destructive', label: 'Destructive' }
+		{ key: 'error', label: 'Error' }
 	];
 
 	type ModalMode = 'light' | 'dark';
@@ -247,7 +242,7 @@
 			>
 				Radius
 			</p>
-			<Select.Root value={activeRadius} class="">
+			<Select.Root value={activeRadius}>
 				<Select.Trigger class="w-full" variant="outline">{activeRadius}</Select.Trigger>
 				<Select.Content class="">
 					{#each radiusOptions as option (option.value)}
@@ -335,7 +330,7 @@
 			>
 				Motion
 			</p>
-			<Select.Root value={activeDurationName} class="">
+			<Select.Root value={activeDurationName}>
 				<Select.Trigger class="w-full" variant="outline">{activeDurationName}</Select.Trigger>
 				<Select.Content class="">
 					{#each transitionPresets as preset (preset.slug)}
@@ -545,18 +540,6 @@
 			<label class="space-y-1">
 				<span
 					class="text-xs [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
-					>Tooltip</span
-				>
-				<input
-					class="h-8 w-full rounded-[var(--radius-lg)] border border-border bg-[var(--color-field)] px-2 text-sm text-foreground outline-none transition-[border-color,box-shadow] focus:border-[var(--field-focus-border)] focus:shadow-[0_0_0_3px_var(--color-ring)]"
-					value={editorTheme.motion.tooltipDuration}
-					oninput={(e) =>
-						updateMotion('tooltipDuration', (e.currentTarget as HTMLInputElement).value)}
-				/>
-			</label>
-			<label class="space-y-1">
-				<span
-					class="text-xs [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
 					>Toast In</span
 				>
 				<input
@@ -581,19 +564,6 @@
 			<label class="space-y-1">
 				<span
 					class="text-xs [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
-					>Panel X</span
-				>
-				<input
-					type="number"
-					class="h-8 w-full rounded-[var(--radius-lg)] border border-border bg-[var(--color-field)] px-2 text-sm text-foreground outline-none transition-[border-color,box-shadow] focus:border-[var(--field-focus-border)] focus:shadow-[0_0_0_3px_var(--color-ring)]"
-					value={editorTheme.motion.panelX}
-					oninput={(e) =>
-						updateMotion('panelX', Number((e.currentTarget as HTMLInputElement).value || 0))}
-				/>
-			</label>
-			<label class="space-y-1">
-				<span
-					class="text-xs [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
 					>Panel Y</span
 				>
 				<input
@@ -602,19 +572,6 @@
 					value={editorTheme.motion.panelY}
 					oninput={(e) =>
 						updateMotion('panelY', Number((e.currentTarget as HTMLInputElement).value || 0))}
-				/>
-			</label>
-			<label class="space-y-1">
-				<span
-					class="text-xs [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
-					>Panel Blur</span
-				>
-				<input
-					type="number"
-					class="h-8 w-full rounded-[var(--radius-lg)] border border-border bg-[var(--color-field)] px-2 text-sm text-foreground outline-none transition-[border-color,box-shadow] focus:border-[var(--field-focus-border)] focus:shadow-[0_0_0_3px_var(--color-ring)]"
-					value={editorTheme.motion.panelBlur}
-					oninput={(e) =>
-						updateMotion('panelBlur', Number((e.currentTarget as HTMLInputElement).value || 0))}
 				/>
 			</label>
 			<label class="space-y-1">
@@ -632,32 +589,6 @@
 							'panelScaleStart',
 							Number((e.currentTarget as HTMLInputElement).value || 0)
 						)}
-				/>
-			</label>
-			<label class="space-y-1">
-				<span
-					class="text-xs [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
-					>Sheet Offset</span
-				>
-				<input
-					type="number"
-					class="h-8 w-full rounded-[var(--radius-lg)] border border-border bg-[var(--color-field)] px-2 text-sm text-foreground outline-none transition-[border-color,box-shadow] focus:border-[var(--field-focus-border)] focus:shadow-[0_0_0_3px_var(--color-ring)]"
-					value={editorTheme.motion.sheetOffset}
-					oninput={(e) =>
-						updateMotion('sheetOffset', Number((e.currentTarget as HTMLInputElement).value || 0))}
-				/>
-			</label>
-			<label class="space-y-1">
-				<span
-					class="text-xs [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
-					>Overlay Blur</span
-				>
-				<input
-					type="number"
-					class="h-8 w-full rounded-[var(--radius-lg)] border border-border bg-[var(--color-field)] px-2 text-sm text-foreground outline-none transition-[border-color,box-shadow] focus:border-[var(--field-focus-border)] focus:shadow-[0_0_0_3px_var(--color-ring)]"
-					value={editorTheme.motion.overlayBlur}
-					oninput={(e) =>
-						updateMotion('overlayBlur', Number((e.currentTarget as HTMLInputElement).value || 0))}
 				/>
 			</label>
 		</div>

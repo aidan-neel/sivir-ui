@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Marquee } from '@silk/ui/components/marquee';
+	import { Marquee } from '@sivir/ui/components/marquee';
 
 	const logos = [
 		'Linear',

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import * as Sheet from '@silk/ui/components/sheet';
+	import * as Sheet from '@sivir/ui/components/sheet';
 	import Menu from '@lucide/svelte/icons/menu';
 </script>
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import * as CodeBlock from '@silk/ui/components/code-block';
+	import * as CodeBlock from '@sivir/ui/components/code-block';
 
 	const code = `const greet = (name: string) => {
   return \`Hello, \${name}!\`;

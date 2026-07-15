@@ -1,19 +1,19 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
-	import { Badge } from '@silk/ui/components/badge';
-	import { Button } from '@silk/ui/components/button';
-	import { Input } from '@silk/ui/components/input';
-	import { Switch } from '@silk/ui/components/switch';
-	import { Checkbox } from '@silk/ui/components/checkbox';
-	import { Skeleton } from '@silk/ui/components/skeleton';
-	import * as Select from '@silk/ui/components/select';
-	import * as Tabs from '@silk/ui/components/tabs';
-	import * as Alert from '@silk/ui/components/alert';
-	import * as Tooltip from '@silk/ui/components/tooltip';
-	import * as Breadcrumb from '@silk/ui/components/breadcrumb';
-	import * as Modal from '@silk/ui/components/modal';
-	import * as Command from '@silk/ui/components/command';
-	import { toast } from '@silk/ui/components/toast';
+	import { Badge } from '@sivir/ui/components/badge';
+	import { Button } from '@sivir/ui/components/button';
+	import { Input } from '@sivir/ui/components/input';
+	import { Switch } from '@sivir/ui/components/switch';
+	import { Checkbox } from '@sivir/ui/components/checkbox';
+	import { Skeleton } from '@sivir/ui/components/skeleton';
+	import * as Select from '@sivir/ui/components/select';
+	import * as Tabs from '@sivir/ui/components/tabs';
+	import * as Alert from '@sivir/ui/components/alert';
+	import * as Tooltip from '@sivir/ui/components/tooltip';
+	import * as Breadcrumb from '@sivir/ui/components/breadcrumb';
+	import * as Modal from '@sivir/ui/components/modal';
+	import * as Command from '@sivir/ui/components/command';
+	import { toast } from '@sivir/ui/components/toast';
 	import Send from '@lucide/svelte/icons/send';
 	import Layers from '@lucide/svelte/icons/layers-3';
 	import Bell from '@lucide/svelte/icons/bell';
@@ -31,25 +31,25 @@
 	import Info from '@lucide/svelte/icons/info';
 	import Slash from '@lucide/svelte/icons/slash';
 	// ── Gallery-screen components (one+ per token group) ──────────────────
-	import { Slider } from '@silk/ui/components/slider';
-	import { Toggle } from '@silk/ui/components/toggle';
-	import { Progress } from '@silk/ui/components/progress';
-	import { Separator } from '@silk/ui/components/separator';
-	import { Pagination } from '@silk/ui/components/pagination';
-	import { Label } from '@silk/ui/components/label';
-	import { Textarea } from '@silk/ui/components/textarea';
-	import { Marquee } from '@silk/ui/components/marquee';
-	import { ScrollArea } from '@silk/ui/components/scroll-area';
-	import * as Card from '@silk/ui/components/card';
-	import * as Accordion from '@silk/ui/components/accordion';
-	import * as Collapsible from '@silk/ui/components/collapsible';
-	import * as Avatar from '@silk/ui/components/avatar';
-	import * as HoverCard from '@silk/ui/components/hover-card';
-	import * as Popover from '@silk/ui/components/popover';
-	import * as DropdownMenu from '@silk/ui/components/dropdown-menu';
-	import * as ToggleGroup from '@silk/ui/components/toggle-group';
-	import * as RadioGroup from '@silk/ui/components/radio-group';
-	import * as AlertDialog from '@silk/ui/components/alert-dialog';
+	import { Slider } from '@sivir/ui/components/slider';
+	import { Toggle } from '@sivir/ui/components/toggle';
+	import { Progress } from '@sivir/ui/components/progress';
+	import { Separator } from '@sivir/ui/components/separator';
+	import { Pagination } from '@sivir/ui/components/pagination';
+	import { Label } from '@sivir/ui/components/label';
+	import { Textarea } from '@sivir/ui/components/textarea';
+	import { Marquee } from '@sivir/ui/components/marquee';
+	import { ScrollArea } from '@sivir/ui/components/scroll-area';
+	import * as Card from '@sivir/ui/components/card';
+	import * as Accordion from '@sivir/ui/components/accordion';
+	import * as Collapsible from '@sivir/ui/components/collapsible';
+	import * as Avatar from '@sivir/ui/components/avatar';
+	import * as HoverCard from '@sivir/ui/components/hover-card';
+	import * as Popover from '@sivir/ui/components/popover';
+	import * as DropdownMenu from '@sivir/ui/components/dropdown-menu';
+	import * as ToggleGroup from '@sivir/ui/components/toggle-group';
+	import * as RadioGroup from '@sivir/ui/components/radio-group';
+	import * as AlertDialog from '@sivir/ui/components/alert-dialog';
 
 	// Which reference screen to render — driven by the toolbar's "Select preview"
 	// tabs in the studio page. `onpreview` lets in-canvas affordances (the command
@@ -66,7 +66,7 @@
 	let loginPassword = $state('');
 	let loginRemember = $state(true);
 	let pgInputName = $state('Aidan');
-	let pgInputEmail = $state('aidan@silk-ui.dev');
+	let pgInputEmail = $state('aidan@sivir-ui.dev');
 	let pgNotifications = $state(true);
 	let pgEmailDigest = $state(false);
 	let pgTwoFactor = $state(true);
@@ -81,7 +81,7 @@
 	let glPlan = $state('pro');
 	let glAccordion = $state('a1');
 	let glPage = $state(2);
-	let glTextarea = $state('Silk themes cascade from a single source of truth.');
+	let glTextarea = $state('Sivir themes cascade from a single source of truth.');
 	let newProjectOpen = $state(false);
 	let newProjectName = $state('');
 	let newProjectTeam = $state('design');
@@ -287,7 +287,7 @@
 								Welcome back
 							</h2>
 							<p class="m-0 text-[0.9rem] text-foreground-muted">
-								Sign in to your Silk workspace to continue.
+								Sign in to your Sivir workspace to continue.
 							</p>
 						</div>
 
@@ -706,7 +706,7 @@
 												Tooltip
 											</Button>
 										</Tooltip.Trigger>
-										<Tooltip.Content>This is a Silk tooltip.</Tooltip.Content>
+										<Tooltip.Content>This is a Sivir tooltip.</Tooltip.Content>
 									</Tooltip.Root>
 									<HoverCard.Root>
 										<HoverCard.Trigger>
@@ -853,7 +853,7 @@
 							class="rounded-[var(--radius-md)] border border-border py-3"
 						>
 							<span class="px-4 text-[0.85rem] text-foreground-muted"
-								>Silk · extreme customizability ·</span
+								>Sivir · extreme customizability ·</span
 							>
 							<span class="px-4 text-[0.85rem] text-foreground-muted"
 								>every token, one source ·</span
@@ -947,7 +947,7 @@
 								</div>
 							{:else}
 								<div class="flex flex-col gap-2">
-									{#each ['silk-ui-roadmap.md', 'design-tokens.json', 'brand-guidelines.fig'] as file (file)}
+									{#each ['sivir-ui-roadmap.md', 'design-tokens.json', 'brand-guidelines.fig'] as file (file)}
 										<div class="flex items-center gap-2">
 											<FileText size={13} />
 											<span class="text-foreground">{file}</span>

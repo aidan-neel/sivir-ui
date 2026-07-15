@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { Button } from '@silk/ui/components/button';
-	import { toast } from '@silk/ui/components/toast';
+	import { Button } from '@sivir/ui/components/button';
+	import { toast } from '@sivir/ui/components/toast';
 </script>
 
 <div class="flex flex-wrap gap-2">

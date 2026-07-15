@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { onMount, type Snippet } from 'svelte';
-	import * as CodeBlock from '@silk/ui/components/code-block';
-	import { Panel } from '@silk/ui/components/panel';
-	import { cn } from '@silk/ui/utils';
-	import * as Tabs from '@silk/ui/components/tabs';
+	import * as CodeBlock from '@sivir/ui/components/code-block';
+	import { Panel } from '@sivir/ui/components/panel';
+	import { cn } from '@sivir/ui/utils';
+	import * as Tabs from '@sivir/ui/components/tabs';
 
 	let {
 		children,

@@ -1,6 +1,6 @@
 <script lang="ts">
-	import * as Command from '@silk/ui/components/command';
-	import Shortcut from '@silk/ui/components/shortcut';
+	import * as Command from '@sivir/ui/components/command';
+	import Shortcut from '@sivir/ui/components/shortcut';
 	import Search from '@lucide/svelte/icons/search';
 	import Inbox from '@lucide/svelte/icons/inbox';
 	import CircleDot from '@lucide/svelte/icons/circle-dot';

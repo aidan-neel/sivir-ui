@@ -1,5 +1,5 @@
 <script lang="ts">
-	import ColorPicker from '@silk/ui/components/color-picker/color-picker.svelte';
+	import ColorPicker from '$lib/components/color-picker.svelte';
 
 	let {
 		value = $bindable('#ff0000'),

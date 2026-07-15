@@ -1,6 +1,6 @@
 <script lang="ts">
-	import * as Modal from '@silk/ui/components/modal';
-	import { Input } from '@silk/ui/components/input';
+	import * as Modal from '@sivir/ui/components/modal';
+	import { Input } from '@sivir/ui/components/input';
 
 	let open = $state(false);
 	let domain = $state('');
@@ -11,7 +11,7 @@
 	<Modal.Content class="max-w-[26rem]">
 		<Modal.Header>
 			<Modal.Title>Add a domain</Modal.Title>
-			<Modal.Description>Add an existing domain to your silk-ui project.</Modal.Description>
+			<Modal.Description>Add an existing domain to your sivir-ui project.</Modal.Description>
 		</Modal.Header>
 		<Modal.Body class="gap-4">
 			<Input

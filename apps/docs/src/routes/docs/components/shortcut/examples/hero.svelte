@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Shortcut from '@silk/ui/components/shortcut';
+	import Shortcut from '@sivir/ui/components/shortcut';
 </script>
 
 <div class="flex items-center gap-4">

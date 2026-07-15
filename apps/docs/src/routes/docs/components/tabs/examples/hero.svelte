@@ -1,6 +1,9 @@
 <script lang="ts">
-	import * as Tabs from '@silk/ui/components/tabs';
-	import { CheckCircle2, TrendingUp, GitBranch, Clock } from '@lucide/svelte';
+	import * as Tabs from '@sivir/ui/components/tabs';
+	import CheckCircle2 from '@lucide/svelte/icons/check-circle-2';
+	import TrendingUp from '@lucide/svelte/icons/trending-up';
+	import GitBranch from '@lucide/svelte/icons/git-branch';
+	import Clock from '@lucide/svelte/icons/clock';
 
 	let activeTab = $state('overview');
 </script>
@@ -22,7 +25,7 @@
 						<div class="flex h-2 w-2 rounded-full bg-green-500"></div>
 						<span class="text-sm font-semibold text-foreground">Production</span>
 					</div>
-					<div class="mb-2 text-xs text-foreground-muted">silk-ui.vercel.app</div>
+					<div class="mb-2 text-xs text-foreground-muted">sivir-ui.vercel.app</div>
 					<div class="text-xs text-foreground-muted">Deployed 2h ago by aidan-neel</div>
 				</div>
 

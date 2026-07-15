@@ -1,5 +1,6 @@
 <script lang="ts">
-	import * as ContextMenu from '@silk/ui/components/context-menu';
+	import * as ContextMenu from '@sivir/ui/components/context-menu';
+	import Shortcut from '@sivir/ui/components/shortcut';
 	import Copy from '@lucide/svelte/icons/copy';
 	import Clipboard from '@lucide/svelte/icons/clipboard-paste';
 	import Clone from '@lucide/svelte/icons/copy';
@@ -61,7 +62,7 @@
 						<Copy size={16} />
 						<span>Copy</span>
 					</div>
-					<kbd class="text-foreground-muted text-xs">⌘C</kbd>
+					<Shortcut shortcut="cmd+C" />
 				</div>
 			</ContextMenu.Item>
 
@@ -71,7 +72,7 @@
 						<Clipboard size={16} />
 						<span>Paste here</span>
 					</div>
-					<kbd class="text-foreground-muted text-xs">⌘V</kbd>
+					<Shortcut shortcut="cmd+V" />
 				</div>
 			</ContextMenu.Item>
 
@@ -81,7 +82,7 @@
 						<Clone size={16} />
 						<span>Duplicate</span>
 					</div>
-					<kbd class="text-foreground-muted text-xs">⌘D</kbd>
+					<Shortcut shortcut="cmd+D" />
 				</div>
 			</ContextMenu.Item>
 
@@ -93,7 +94,7 @@
 						<ArrowUp size={16} />
 						<span>Bring to front</span>
 					</div>
-					<kbd class="text-foreground-muted text-xs">⌘]</kbd>
+					<Shortcut shortcut="cmd+]" />
 				</div>
 			</ContextMenu.Item>
 
@@ -103,7 +104,7 @@
 						<ArrowDown size={16} />
 						<span>Send to back</span>
 					</div>
-					<kbd class="text-foreground-muted text-xs">⌘[</kbd>
+					<Shortcut shortcut="cmd+[" />
 				</div>
 			</ContextMenu.Item>
 

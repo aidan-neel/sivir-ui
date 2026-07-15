@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Separator } from '@silk/ui/components/separator';
+	import { Separator } from '@sivir/ui/components/separator';
 </script>
 
 <div class="flex h-12 items-center gap-3 text-[0.78rem]">

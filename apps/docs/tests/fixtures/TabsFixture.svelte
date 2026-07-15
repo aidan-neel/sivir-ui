@@ -1,6 +1,6 @@
 <script lang="ts">
-	import * as Tabs from '@silk/ui/components/tabs';
-	import type { TabsVariant } from '@silk/ui/components/tabs';
+	import * as Tabs from '@sivir/ui/components/tabs';
+	import type { TabsVariant } from '@sivir/ui/components/tabs';
 
 	let {
 		value = $bindable('one'),

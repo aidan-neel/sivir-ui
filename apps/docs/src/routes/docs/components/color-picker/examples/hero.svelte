@@ -1,9 +1,12 @@
 <script lang="ts">
-	import { ColorPicker } from '@silk/ui/components/color-picker';
+	import * as ColorPicker from '@sivir/ui/components/color-picker';
 
 	let value = $state('#5e6ad2');
 </script>
 
 <div class="flex items-center justify-center">
-	<ColorPicker {value} onValueChange={(v) => (value = v)} />
+	<ColorPicker.Root {value} onValueChange={(v) => (value = v)}>
+		<ColorPicker.Trigger />
+		<ColorPicker.Content />
+	</ColorPicker.Root>
 </div>

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import * as ContextMenu from '@silk/ui/components/context-menu';
+	import * as ContextMenu from '@sivir/ui/components/context-menu';
 	import Pencil from '@lucide/svelte/icons/pencil';
 	import Star from '@lucide/svelte/icons/star';
 	import Share from '@lucide/svelte/icons/share-2';

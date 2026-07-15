@@ -1,5 +1,5 @@
-import { themeToCss } from '@silk/ui/themes/theme';
-import { defaultThemeV2 } from '@silk/ui/themes/builtin-presets';
+import { themeToCss } from '@sivir/ui/themes/theme';
+import { defaultThemeV2 } from '@sivir/ui/themes/builtin-presets';
 import { error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 

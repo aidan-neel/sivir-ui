@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { Button } from '@silk/ui/components/button';
-	import * as Tooltip from '@silk/ui/components/tooltip';
+	import { Button } from '@sivir/ui/components/button';
+	import * as Tooltip from '@sivir/ui/components/tooltip';
 	import Info from '@lucide/svelte/icons/info';
 </script>
 

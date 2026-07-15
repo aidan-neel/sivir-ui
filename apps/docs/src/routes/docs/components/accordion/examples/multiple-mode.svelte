@@ -1,5 +1,5 @@
 <script lang="ts">
-	import * as Accordion from '@silk/ui/components/accordion';
+	import * as Accordion from '@sivir/ui/components/accordion';
 </script>
 
 <div class="w-full max-w-md">

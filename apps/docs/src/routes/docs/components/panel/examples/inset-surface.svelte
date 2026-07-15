@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Panel } from '@silk/ui/components/panel';
+	import { Panel } from '@sivir/ui/components/panel';
 </script>
 
 <!-- The frame sits a hair darker than a card-coloured inner surface, so nested

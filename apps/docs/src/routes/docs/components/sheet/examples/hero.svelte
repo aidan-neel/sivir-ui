@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { Button } from '@silk/ui/components/button';
-	import { Input } from '@silk/ui/components/input';
-	import { Textarea } from '@silk/ui/components/textarea';
-	import * as Sheet from '@silk/ui/components/sheet';
+	import { Button } from '@sivir/ui/components/button';
+	import { Input } from '@sivir/ui/components/input';
+	import { Textarea } from '@sivir/ui/components/textarea';
+	import * as Sheet from '@sivir/ui/components/sheet';
 	import SquarePen from '@lucide/svelte/icons/square-pen';
 	import Circle from '@lucide/svelte/icons/circle';
 	import Signal from '@lucide/svelte/icons/signal';

@@ -1,5 +1,6 @@
 <script lang="ts">
-	import * as DropdownMenu from '@silk/ui/components/dropdown-menu';
+	import * as DropdownMenu from '@sivir/ui/components/dropdown-menu';
+	import Shortcut from '@sivir/ui/components/shortcut';
 	import User from '@lucide/svelte/icons/user';
 	import Settings from '@lucide/svelte/icons/settings';
 	import LogOut from '@lucide/svelte/icons/log-out';
@@ -15,31 +16,19 @@
 	</DropdownMenu.Trigger>
 	<DropdownMenu.Content class="min-w-[16rem]">
 		<DropdownMenu.Label>
-			<span class="text-[0.7rem] text-foreground-muted">aidan@silk-ui.dev</span>
+			<span class="text-[0.7rem] text-foreground-muted">aidan@sivir-ui.dev</span>
 		</DropdownMenu.Label>
 		<DropdownMenu.Item>
 			<span class="flex items-center gap-2"><User size={13} /> Profile</span>
-			<kbd
-				class="rounded border border-border bg-secondary/60 px-1.5 py-0.5 font-mono text-[0.62rem] text-foreground-muted"
-			>
-				⇧⌘P
-			</kbd>
+			<Shortcut shortcut="shift+cmd+P" />
 		</DropdownMenu.Item>
 		<DropdownMenu.Item>
 			<span class="flex items-center gap-2"><CreditCard size={13} /> Billing</span>
-			<kbd
-				class="rounded border border-border bg-secondary/60 px-1.5 py-0.5 font-mono text-[0.62rem] text-foreground-muted"
-			>
-				⌘B
-			</kbd>
+			<Shortcut shortcut="cmd+B" />
 		</DropdownMenu.Item>
 		<DropdownMenu.Item>
 			<span class="flex items-center gap-2"><Settings size={13} /> Settings</span>
-			<kbd
-				class="rounded border border-border bg-secondary/60 px-1.5 py-0.5 font-mono text-[0.62rem] text-foreground-muted"
-			>
-				⌘,
-			</kbd>
+			<Shortcut shortcut="cmd+," />
 		</DropdownMenu.Item>
 		<DropdownMenu.Separator />
 		<DropdownMenu.Item>
@@ -49,11 +38,7 @@
 			<span class="flex items-center gap-2 text-[var(--color-error)]">
 				<LogOut size={13} /> Sign out
 			</span>
-			<kbd
-				class="rounded border border-border bg-secondary/60 px-1.5 py-0.5 font-mono text-[0.62rem] text-foreground-muted"
-			>
-				⇧⌘Q
-			</kbd>
+			<Shortcut shortcut="shift+cmd+Q" />
 		</DropdownMenu.Item>
 	</DropdownMenu.Content>
 </DropdownMenu.Root>

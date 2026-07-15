@@ -1,7 +1,8 @@
 <script lang="ts">
-	import { Button } from '@silk/ui/components/button';
-	import { ColorPicker, type ColorOption } from '@silk/ui/components/color-picker';
-	import type { ThemeBasePalette, ThemeDraft } from '@silk/ui/themes/presets';
+	import { Button } from '@sivir/ui/components/button';
+	import ColorPicker from '$lib/components/color-picker.svelte';
+	import type { ColorOption } from '@sivir/ui/components/color-picker';
+	import type { ThemeBasePalette, ThemeDraft } from '@sivir/ui/themes/presets';
 
 	type AccentOption = { label: string; value: string; light: string; dark: string };
 	type BasePaletteKey = keyof ThemeBasePalette;
