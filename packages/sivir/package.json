@@ -3,6 +3,21 @@
 	"version": "0.1.0",
 	"description": "SvelteKit component library inspired by shadcn/ui. Svelte 5 + Tailwind v4.",
 	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/aidan-neel/sivir-ui.git",
+		"directory": "packages/sivir"
+	},
+	"homepage": "https://github.com/aidan-neel/sivir-ui#readme",
+	"bugs": "https://github.com/aidan-neel/sivir-ui/issues",
+	"keywords": [
+		"svelte",
+		"sveltekit",
+		"components",
+		"ui",
+		"tailwind",
+		"shadcn"
+	],
 	"type": "module",
 	"sideEffects": [
 		"**/*.css"
@@ -13,7 +28,7 @@
 		"registry"
 	],
 	"bin": {
-		"sivir": "./dist/index.js"
+		"sivir": "dist/index.js"
 	},
 	"svelte": "./src/index.ts",
 	"types": "./src/index.ts",
