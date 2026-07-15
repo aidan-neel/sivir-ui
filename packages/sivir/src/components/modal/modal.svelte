@@ -1,31 +1,47 @@
 <script lang="ts">
-	import { useState } from '@sivir/ui/internals/state.svelte.ts';
-	import { setContext } from 'svelte';
 	import type { ModalProps, ModalState } from '.';
+	import { setModalContext } from './context.svelte';
 
 	let { open = $bindable(false), children }: ModalProps = $props();
+	const id = $props.id();
 
-	const uiState = useState<ModalState>({
-		open,
-		triggerRef: null
+	const modalState = $state<ModalState>({ open });
+	const modalContext = $state({
+		id,
+		contentId: `modal-${id}`,
+		returnFocusEl: undefined as HTMLElement | undefined,
+		state: modalState
 	});
 	let syncedOpen = $state(open);
+	let wasOpen = $state(false);
+	setModalContext(modalContext);
+
+	$effect.pre(() => {
+		if (
+			modalState.open &&
+			!wasOpen &&
+			typeof document !== 'undefined' &&
+			document.activeElement instanceof HTMLElement &&
+			document.activeElement !== document.body
+		) {
+			modalContext.returnFocusEl = document.activeElement;
+		}
+		wasOpen = modalState.open;
+	});
 
 	$effect(() => {
 		if (open !== syncedOpen) {
 			syncedOpen = open;
-			uiState.data.open = open;
+			modalState.open = open;
 		}
 	});
 
 	$effect(() => {
-		if (uiState.data.open !== syncedOpen) {
-			syncedOpen = uiState.data.open;
-			open = uiState.data.open;
+		if (modalState.open !== syncedOpen) {
+			syncedOpen = modalState.open;
+			open = modalState.open;
 		}
 	});
-
-	setContext('key', uiState.key);
 </script>
 
 {@render children?.()}

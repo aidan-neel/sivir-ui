@@ -59,11 +59,15 @@ export function focusFirstDescendant(container: HTMLElement) {
 }
 
 /** Keeps keyboard focus inside a container and restores the previous focus on cleanup. */
-export function trapFocus(dialogEl: HTMLElement, options?: { initialFocus?: HTMLElement | null }) {
+export function trapFocus(
+	dialogEl: HTMLElement,
+	options?: { initialFocus?: HTMLElement | null; returnFocus?: HTMLElement | null }
+) {
 	if (!dialogEl) return;
 
 	const previouslyFocused =
-		document.activeElement instanceof HTMLElement ? document.activeElement : null;
+		options?.returnFocus ??
+		(document.activeElement instanceof HTMLElement ? document.activeElement : null);
 
 	const handleKeydown = (e: KeyboardEvent) => {
 		if (e.key !== 'Tab') return;

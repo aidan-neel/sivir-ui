@@ -1,12 +1,9 @@
 <script lang="ts">
 	import { cn } from '@sivir/ui/utils';
 	import type { Snippet } from 'svelte';
-	import type { CommandState } from '.';
-	import { states } from '@sivir/ui/internals/state.svelte.ts';
-	import { getContext } from 'svelte';
+	import { getCommandContext } from './context.svelte';
 
-	const key = getContext('key') as string;
-	const uiState = states[key].data as CommandState;
+	const command = getCommandContext();
 
 	type Props = {
 		children: Snippet;
@@ -17,8 +14,13 @@
 	let { children, class: className, heading, ...rest }: Props = $props();
 </script>
 
-<div {...rest} class="flex flex-col px-[var(--menu-padding)] pt-[var(--menu-padding)]">
-	{#if uiState.searchContent === ''}
+<div
+	{...rest}
+	role="group"
+	aria-label={heading}
+	class="flex flex-col px-[var(--menu-padding)] pt-[var(--menu-padding)]"
+>
+	{#if command.searchContent === ''}
 		<p
 			class={cn(
 				className,

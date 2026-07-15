@@ -14,11 +14,12 @@ export const manifest: Manifest = {
 		'components/command/command-item.svelte',
 		'components/command/command-group.svelte',
 		'components/command/command-separator.svelte',
+		'components/command/context.svelte.ts',
 		'components/command/index.ts',
 		'components/command/manifest.ts'
 	],
 	components: ['modal', 'button'],
-	shared: ['utils.cn', 'internals/state', 'internals/menu'],
+	shared: ['utils.cn', 'internals/menu'],
 	peerDependencies: {
 		'@lucide/svelte': '^1.0.0',
 		cnfast: '^0.0.8',

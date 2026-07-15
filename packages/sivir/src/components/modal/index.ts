@@ -14,7 +14,6 @@ import type { Snippet } from 'svelte';
 
 export type ModalState = {
 	open: boolean;
-	triggerRef?: HTMLElement | null;
 };
 
 export type ModalTriggerProps = ButtonProps;
@@ -40,7 +39,7 @@ export type ModalContentProps = {
 	Partial<Record<`aria-${string}`, string | boolean | null | undefined>>;
 
 export type ModalProps = {
-	open: boolean;
+	open?: boolean;
 	children?: Snippet;
 };
 

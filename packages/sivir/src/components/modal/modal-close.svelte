@@ -1,15 +1,14 @@
 <script lang="ts">
-	import { states } from '@sivir/ui/internals/state.svelte.ts';
-	import { getContext, onMount } from 'svelte';
-	import type { ModalCloseProps, ModalState } from '.';
+	import { onMount } from 'svelte';
+	import type { ModalCloseProps } from '.';
 	import { Button } from '@sivir/ui/components/button';
 	import { cn } from '@sivir/ui/utils';
 	import { useIsDark } from '@sivir/ui/internals/is-dark.svelte.ts';
+	import { getModalContext } from './context.svelte';
 
 	let { class: className, children, onclick, ...rest }: ModalCloseProps = $props();
 
-	const key = getContext<string>('key');
-	const uiState = states[key].data as ModalState;
+	const modal = getModalContext();
 	let element = $state<HTMLButtonElement | HTMLAnchorElement | undefined>(undefined);
 
 	// Cancel reads as outline in light, ghost in dark.
@@ -24,7 +23,7 @@
 <Button
 	bind:element
 	onclick={() => {
-		uiState.open = false;
+		modal.state.open = false;
 		onclick?.();
 	}}
 	variant={cancelVariant}

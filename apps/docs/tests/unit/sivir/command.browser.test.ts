@@ -66,6 +66,63 @@ describe('Command -- open and close', () => {
 		await userEvent.keyboard('{Escape}');
 		await flush();
 		await expect.element(page.getByTestId('cmd-profile')).not.toBeInTheDocument();
+		await expect.element(page.getByTestId('command-open-state')).toHaveTextContent('false');
+	});
+
+	it('supports controlled opening through bind:open', async () => {
+		render(CommandFixture, { open: false });
+		await flush();
+
+		await page.getByTestId('command-external-trigger').click();
+		await flush();
+		await expect.element(page.getByTestId('cmd-profile')).toBeInTheDocument();
+		await expect.element(page.getByTestId('command-open-state')).toHaveTextContent('true');
+	});
+
+	it('closes on outside click only when allowed', async () => {
+		render(CommandFixture, { open: true, allowClickOutside: false });
+		await flush();
+		await new Promise((r) => setTimeout(r, 20));
+
+		(document.querySelector('[data-ui="modal-overlay"]') as HTMLElement).click();
+		await flush();
+		await expect.element(page.getByTestId('cmd-profile')).toBeInTheDocument();
+
+		await userEvent.keyboard('{Escape}');
+		await flush();
+		await expect.element(page.getByTestId('cmd-profile')).not.toBeInTheDocument();
+	});
+
+	it('restores focus and body scroll after closing', async () => {
+		render(CommandFixture, {});
+		await flush();
+		const trigger = page.getByTestId('command-trigger').element().closest('button') as HTMLElement;
+
+		trigger.focus();
+		trigger.click();
+		await flush();
+		expect(document.body.style.overflow).toBe('hidden');
+
+		await userEvent.keyboard('{Escape}');
+		await flush();
+		expect(document.body.style.overflow).toBe('');
+		expect(document.activeElement).toBe(trigger);
+	});
+
+	it('restores body scroll when destroyed while open', async () => {
+		const before = document.createElement('button');
+		before.textContent = 'Before command';
+		document.body.appendChild(before);
+		before.focus();
+		const view = render(CommandFixture, { open: true });
+		await flush();
+		expect(document.body.style.overflow).toBe('hidden');
+
+		view.unmount();
+		await flush();
+		expect(document.body.style.overflow).toBe('');
+		expect(document.activeElement).toBe(before);
+		before.remove();
 	});
 });
 
@@ -80,6 +137,18 @@ describe('Command -- item activation', () => {
 		await flush();
 		expect(onSettings).toHaveBeenCalledTimes(1);
 	});
+
+	it('does not activate disabled items', async () => {
+		const onDisabled = vi.fn();
+		render(CommandFixture, { onDisabled });
+		await flush();
+		await openCommand();
+
+		await page.getByTestId('cmd-disabled').click({ force: true });
+		await flush();
+		expect(onDisabled).not.toHaveBeenCalled();
+		await expect.element(page.getByTestId('cmd-profile')).toBeInTheDocument();
+	});
 });
 
 describe('Command -- search input', () => {
@@ -91,5 +160,55 @@ describe('Command -- search input', () => {
 
 		const search = document.querySelector('input[placeholder="Search commands"]');
 		expect(document.activeElement).toBe(search);
+	});
+
+	it('exposes combobox, listbox, and option semantics', async () => {
+		render(CommandFixture, { open: true });
+		await flush();
+
+		const search = document.querySelector('[role="combobox"]');
+		const listbox = document.querySelector('[role="listbox"]');
+		const options = document.querySelectorAll('[role="option"]');
+		expect(search).toBeInTheDocument();
+		expect(listbox).toBeInTheDocument();
+		expect(options).toHaveLength(4);
+		expect(search?.getAttribute('aria-controls')).toBe(listbox?.id);
+		expect(search?.getAttribute('aria-activedescendant')).toBe(options[0]?.id);
+	});
+
+	it('navigates results and skips disabled items', async () => {
+		const onProfile = vi.fn();
+		const onLogout = vi.fn();
+		render(CommandFixture, { open: true, onProfile, onLogout });
+		await flush();
+		const search = document.querySelector('[role="combobox"]') as HTMLInputElement;
+
+		expect(document.getElementById(search.getAttribute('aria-activedescendant')!)).toContainElement(
+			page.getByTestId('cmd-profile').element()
+		);
+		await userEvent.keyboard('{ArrowDown}{ArrowDown}');
+		await flush();
+		expect(document.getElementById(search.getAttribute('aria-activedescendant')!)).toContainElement(
+			page.getByTestId('cmd-logout').element()
+		);
+
+		await userEvent.keyboard('{Home}{Enter}');
+		await flush();
+		expect(onProfile).toHaveBeenCalledTimes(1);
+		expect(onLogout).not.toHaveBeenCalled();
+	});
+
+	it('activates the matching filtered result with Enter', async () => {
+		const onLogout = vi.fn();
+		render(CommandFixture, { open: true, onLogout });
+		await flush();
+
+		await page.getByPlaceholder('Search commands').fill('logout');
+		await flush();
+		await expect.element(page.getByTestId('cmd-profile')).not.toBeVisible();
+		await expect.element(page.getByTestId('cmd-logout')).toBeVisible();
+		await userEvent.keyboard('{Enter}');
+		await flush();
+		expect(onLogout).toHaveBeenCalledTimes(1);
 	});
 });

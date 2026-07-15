@@ -26,6 +26,8 @@ export type OverlayOptions = {
 	onClose: () => void;
 	/** Reactive getter -- when false, click-outside does not call onClose. */
 	allowClickOutside?: () => boolean;
+	/** Element that receives focus again after the overlay closes. */
+	returnFocus?: () => HTMLElement | undefined;
 	/** Lock body scroll while open. Defaults to true. */
 	lockScroll?: boolean;
 };
@@ -40,7 +42,8 @@ export function useOverlay(opts: OverlayOptions) {
 		const lockScroll = opts.lockScroll !== false;
 
 		const cleanupTrap = trapFocus(panel, {
-			initialFocus: getFocusableElements(panel)[0] ?? null
+			initialFocus: getFocusableElements(panel)[0] ?? null,
+			returnFocus: opts.returnFocus?.()
 		});
 
 		if (lockScroll) {

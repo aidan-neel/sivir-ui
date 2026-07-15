@@ -2,16 +2,22 @@
 <script lang="ts">
 	import * as Modal from '@sivir/ui/components/modal';
 	import { cn } from '@sivir/ui/utils';
-	import { getContext, type Snippet } from 'svelte';
+	import type { Snippet } from 'svelte';
 
 	type Props = {
 		children?: Snippet;
 		class?: string;
 		allowClickOutside?: boolean;
+		label?: string;
 	};
 
-	const key = getContext('key') as string;
-	const { children, class: className, allowClickOutside = true, ...rest }: Props = $props();
+	const {
+		children,
+		class: className,
+		allowClickOutside = true,
+		label = 'Command palette',
+		...rest
+	}: Props = $props();
 </script>
 
 <Modal.Content
@@ -19,7 +25,8 @@
 	showClose={false}
 	panelIdPrefix="command"
 	data-ui="command-content"
-	aria-labelledby={`command-${key}-trigger`}
+	aria-label={label}
+	aria-labelledby={undefined}
 	aria-describedby={undefined}
 	class={cn(
 		className,

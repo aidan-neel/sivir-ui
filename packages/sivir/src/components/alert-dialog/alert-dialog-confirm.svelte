@@ -1,9 +1,7 @@
 <script lang="ts">
-	import { states } from '@sivir/ui/internals/state.svelte.ts';
-	import { getContext } from 'svelte';
-	import type { AlertDialogState } from '.';
 	import { Button, type ButtonProps } from '@sivir/ui/components/button';
 	import { cn, type DefaultProps } from '@sivir/ui/utils';
+	import { getModalContext } from '../modal/context.svelte';
 
 	type Props = {
 		onclick?: () => void;
@@ -11,13 +9,12 @@
 		ButtonProps;
 
 	let { class: className, children, onclick, ...rest }: Props = $props();
-	const key = getContext<string>('key');
-	const uiState = states[key].data as AlertDialogState;
+	const modal = getModalContext();
 </script>
 
 <Button
 	onclick={() => {
-		uiState.open = false;
+		modal.state.open = false;
 		onclick?.();
 	}}
 	{...rest}

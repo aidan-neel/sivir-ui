@@ -1,11 +1,9 @@
 <!-- token-lint-disable-file -->
 <script lang="ts">
-	import { getContext, type Snippet } from 'svelte';
-	import { states } from '@sivir/ui/internals/state.svelte.ts';
-	import type { CommandState } from '.';
+	import type { Snippet } from 'svelte';
+	import { getCommandContext } from './context.svelte';
 
-	const key = getContext('key') as string;
-	const uiState = states[key].data as CommandState;
+	const command = getCommandContext();
 
 	type Props = {
 		children?: Snippet;
@@ -15,9 +13,12 @@
 </script>
 
 <div
+	id={`${command.id}-listbox`}
+	role="listbox"
+	aria-label="Command results"
 	class="max-h-full overflow-y-auto p-[var(--menu-padding)] pb-[calc(var(--menu-padding)+0.375rem)]"
 >
-	{#if uiState.searchContent === '' || uiState.results.size > 0}
+	{#if command.searchContent === '' || command.results.length > 0}
 		{@render children?.()}
 	{:else}
 		<div class="flex w-full items-center justify-center p-[var(--panel-padding)]">

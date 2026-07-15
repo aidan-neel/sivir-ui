@@ -11,6 +11,7 @@ import AlertDialogFixture from '../../fixtures/AlertDialogFixture.svelte';
 import DropdownMenuFixture from '../../fixtures/DropdownMenuFixture.svelte';
 import AccordionFixture from '../../fixtures/AccordionFixture.svelte';
 import CollapsibleFixture from '../../fixtures/CollapsibleFixture.svelte';
+import CommandFixture from '../../fixtures/CommandFixture.svelte';
 
 /*
  * Reduced-motion tier -- strategy Sec.14.1 reduced-motion row,
@@ -137,6 +138,16 @@ describe('Reduced motion -- content visible within 50ms of open action under pre
 		const elapsed = performance.now() - start;
 
 		expect(document.body.textContent).toMatch(/Delete project\?/);
+		expect(elapsed).toBeLessThan(500);
+	});
+
+	it('command -- content present immediately on open', async () => {
+		const start = performance.now();
+		render(CommandFixture, { open: true });
+		await flush();
+		const elapsed = performance.now() - start;
+
+		expect(document.querySelector('[data-ui="command-content"]')).toBeInTheDocument();
 		expect(elapsed).toBeLessThan(500);
 	});
 

@@ -9,6 +9,10 @@
 
 ## Status
 
+**DONE — 2026-07-14.** Command now composes Modal through independent typed
+contexts, uses a listbox/option navigation model, and is covered across browser,
+axe, reduced-motion, cleanup, and SSR scenarios.
+
 - **Priority**: P0
 - **Effort**: M
 - **Risk**: MED
@@ -105,13 +109,13 @@ bun run format:check
 
 ## Done criteria
 
-- [ ] Command source contains no custom portal/backdrop/focus/body-lock code
-- [ ] Command renders `data-ui="modal-overlay"` and Modal's panel motion
-- [ ] Destroying an open Command restores focus and body overflow
-- [ ] `bind:open` is SSR-correct and synchronized both ways
-- [ ] Result roles and keyboard behavior form one valid ARIA model
-- [ ] Command manifest depends on Modal and declares `fuse.js`
-- [ ] All verification commands pass
+- [x] Command source contains no custom portal/backdrop/focus/body-lock code
+- [x] Command renders `data-ui="modal-overlay"` and Modal's panel motion
+- [x] Destroying an open Command restores focus and body overflow
+- [x] `bind:open` is SSR-correct and synchronized both ways
+- [x] Result roles and keyboard behavior form one valid ARIA model
+- [x] Command manifest depends on Modal and declares `fuse.js`
+- [x] All verification commands pass
 
 ## STOP conditions
 

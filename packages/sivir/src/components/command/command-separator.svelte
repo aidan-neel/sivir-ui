@@ -1,11 +1,9 @@
 <script lang="ts">
 	import { cn } from '@sivir/ui/utils';
-	import { getContext, type Snippet } from 'svelte';
-	import type { CommandState } from '.';
-	import { states } from '@sivir/ui/internals/state.svelte.ts';
+	import type { Snippet } from 'svelte';
+	import { getCommandContext } from './context.svelte';
 
-	const key = getContext('key') as string;
-	const uiState = states[key].data as CommandState;
+	const command = getCommandContext();
 
 	type Props = {
 		children?: Snippet;
@@ -15,7 +13,7 @@
 	let { children, class: className, ...rest }: Props = $props();
 </script>
 
-{#if uiState.searchContent === ''}
+{#if command.searchContent === ''}
 	<div
 		{...rest}
 		data-ui="menu-separator"

@@ -1,21 +1,27 @@
 <script lang="ts">
-	import { states } from '@sivir/ui/internals/state.svelte.ts';
-	import { getContext } from 'svelte';
-	import type { ModalState, ModalTriggerProps } from '.';
+	import type { ModalTriggerProps } from '.';
 	import { Button } from '@sivir/ui/components/button';
+	import { getModalContext } from './context.svelte';
 
-	let { class: className, children, onclick, ...rest }: ModalTriggerProps = $props();
+	let {
+		class: className,
+		children,
+		element = $bindable(),
+		onclick,
+		...rest
+	}: ModalTriggerProps = $props();
 
-	const key = getContext<string>('key');
-	const uiState = states[key].data as ModalState;
+	const modal = getModalContext();
 </script>
 
 <Button
+	bind:element
 	aria-haspopup="dialog"
-	aria-expanded={uiState.open}
-	aria-controls={`modal-${key}`}
+	aria-expanded={modal.state.open}
+	aria-controls={modal.contentId}
 	onclick={() => {
-		uiState.open = true;
+		modal.returnFocusEl = element;
+		modal.state.open = true;
 		onclick?.();
 	}}
 	class={className}

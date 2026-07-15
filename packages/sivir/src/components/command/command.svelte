@@ -1,39 +1,29 @@
 <script lang="ts">
-	import { onDestroy, setContext, untrack, type Snippet } from 'svelte';
-	import { useState, states } from '@sivir/ui/internals/state.svelte.ts';
+	import type { Snippet } from 'svelte';
+	import * as Modal from '@sivir/ui/components/modal';
 	import type { CommandState } from '.';
+	import { setCommandContext } from './context.svelte';
 
-	const {
-		open = false,
-		stateKey,
+	let {
+		open = $bindable(false),
 		children
 	}: {
 		open?: boolean;
-		stateKey?: string;
 		children?: Snippet;
 	} = $props();
+	const id = $props.id();
 
-	const generatedKey = Math.random().toString(36).substring(2);
-	const key = untrack(() => stateKey ?? generatedKey);
-	setContext('key', key);
-
-	const uiState = useState<CommandState>(
-		{
-			open: false,
-			items: new Set(),
-			results: new Set(),
-			searchContent: ''
-		} as CommandState,
-		key
-	);
-
-	$effect(() => {
-		uiState.data.open = open;
+	const command = $state<CommandState>({
+		id,
+		items: [],
+		results: [],
+		searchContent: '',
+		activeId: undefined,
+		itemsVersion: 0
 	});
-
-	onDestroy(() => {
-		delete states[key];
-	});
+	setCommandContext(command);
 </script>
 
-{@render children?.()}
+<Modal.Root bind:open>
+	{@render children?.()}
+</Modal.Root>

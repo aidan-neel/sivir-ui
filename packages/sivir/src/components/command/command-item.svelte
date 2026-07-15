@@ -1,24 +1,39 @@
 <script lang="ts">
-	import { Button, type ButtonProps } from '@sivir/ui/components/button';
-	import { states } from '@sivir/ui/internals/state.svelte.ts';
+	import { Button } from '@sivir/ui/components/button';
 	import { cn } from '@sivir/ui/utils';
-	import { getContext, onMount, type Snippet } from 'svelte';
-	import type { CommandItem, CommandState } from '.';
+	import { onMount, type Snippet } from 'svelte';
+	import type { CommandItem } from '.';
 	import { MENU_ITEM } from '@sivir/ui/internals/menu';
+	import { getModalContext } from '../modal/context.svelte';
+	import { getCommandContext, resetCommand } from './context.svelte';
 
-	const key = getContext('key') as string;
-	const uiState = states[key].data as CommandState;
+	const command = getCommandContext();
+	const modal = getModalContext();
+	const localId = $props.id();
+	const itemId = `${command.id}-option-${localId}`;
 
 	type Props = {
 		class?: string;
 		name: string;
 		children?: Snippet;
 		callback?: () => void;
-	} & ButtonProps;
+		disabled?: boolean;
+		href?: string;
+		onclick?: () => void;
+	};
 
-	let { children, name, class: className, callback, ...rest }: Props = $props();
+	let {
+		children,
+		name,
+		class: className,
+		callback,
+		disabled = false,
+		href,
+		onclick
+	}: Props = $props();
 	let el = $state<HTMLButtonElement | HTMLAnchorElement | undefined>();
 	const item = {
+		id: itemId,
 		get name() {
 			return name;
 		},
@@ -27,34 +42,55 @@
 		},
 		get ref() {
 			return el;
+		},
+		get disabled() {
+			return disabled;
 		}
 	} as CommandItem;
 
 	onMount(() => {
-		uiState.items.add(item);
-		uiState.results = new Set(uiState.items);
+		command.items.push(item);
+		command.results = [...command.items];
+		command.itemsVersion += 1;
+		command.activeId ??= command.items.find((candidate) => !candidate.disabled)?.id;
 
 		return () => {
-			uiState.items.delete(item);
-			uiState.results.delete(item);
+			command.items = command.items.filter((candidate) => candidate.id !== item.id);
+			command.results = command.results.filter((candidate) => candidate.id !== item.id);
+			command.itemsVersion += 1;
+			if (command.activeId === item.id) {
+				command.activeId = command.items.find((candidate) => !candidate.disabled)?.id;
+			}
 		};
 	});
+
+	function activate() {
+		if (disabled) return;
+		modal.state.open = false;
+		resetCommand(command);
+		callback?.();
+		onclick?.();
+	}
 </script>
 
 <Button
-	role="menuitem"
+	id={itemId}
+	role="option"
+	aria-selected={command.activeId === itemId}
+	tabindex={-1}
 	bind:element={el}
-	{...rest}
-	onclick={() => {
-		uiState.open = false;
-		uiState.searchContent = '';
-		callback?.();
+	{disabled}
+	{href}
+	onmouseenter={() => {
+		if (!disabled) command.activeId = itemId;
 	}}
+	onclick={activate}
 	class={cn(
 		className,
 		`${MENU_ITEM} justify-start gap-2`,
-		uiState.searchContent !== '' &&
-			!Array.from(uiState.results).some((result) => result.name === item.name) &&
+		command.activeId === itemId && 'bg-secondary text-foreground',
+		command.searchContent !== '' &&
+			!command.results.some((result) => result.id === item.id) &&
 			'hidden'
 	)}
 	variant="ghost"

@@ -26,6 +26,7 @@ import ComboboxFixture from '../../fixtures/ComboboxFixture.svelte';
 import TabsFixture from '../../fixtures/TabsFixture.svelte';
 import AccordionFixture from '../../fixtures/AccordionFixture.svelte';
 import RadioGroupFixture from '../../fixtures/RadioGroupFixture.svelte';
+import CommandFixture from '../../fixtures/CommandFixture.svelte';
 
 /*
  * A11y tier -- strategy Sec.14.1.
@@ -144,6 +145,13 @@ describe('A11y -- overlay components (axe, open state)', () => {
 		await flush();
 		const { violationsFiltered } = await runAxe();
 		expectNoViolations('alert-dialog (open)', violationsFiltered);
+	});
+
+	it('command open -- no violations', async () => {
+		render(CommandFixture, { open: true });
+		await flush();
+		const { violationsFiltered } = await runAxe();
+		expectNoViolations('command (open)', violationsFiltered);
 	});
 });
 

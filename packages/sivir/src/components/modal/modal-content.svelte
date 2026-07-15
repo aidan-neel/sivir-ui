@@ -1,11 +1,10 @@
 <script lang="ts">
 	import { cn } from '@sivir/ui/utils';
-	import type { ModalContentProps, ModalState } from '.';
-	import { getContext } from 'svelte';
-	import { states, type UIState } from '@sivir/ui/internals/state.svelte.ts';
+	import type { ModalContentProps } from '.';
 	import { dialogIn, dialogOut, overlayIn, overlayOut } from '@sivir/ui/internals/transition';
 	import { useOverlay } from '@sivir/ui/components/_internal/overlay';
 	import X from '@lucide/svelte/icons/x';
+	import { getModalContext } from './context.svelte';
 
 	let {
 		class: className,
@@ -26,10 +25,14 @@
 	// by class merging and survives the {...rest} spread.
 	const maxWidth = $derived(`var(--modal-width-${size})`);
 
-	const key = getContext<string>('key');
-	const uiState = states[key] as UIState<ModalState>;
+	const modal = getModalContext();
+	const contentId = $derived(`${panelIdPrefix}-${modal.id}`);
 	let element = $state<HTMLElement>();
 	let portalEl = $state<HTMLDivElement>();
+
+	$effect(() => {
+		modal.contentId = contentId;
+	});
 
 	// Portal the modal to <body> so its z-index escapes ancestor stacking
 	// contexts (e.g. flex items with z-index, transformed parents, etc.).
@@ -43,16 +46,17 @@
 
 	// Shared overlay behavior -- focus trap, click-outside, Escape, body lock.
 	useOverlay({
-		isOpen: () => uiState.data.open,
+		isOpen: () => modal.state.open,
 		panelEl: () => element,
 		onClose: () => {
-			uiState.data.open = false;
+			modal.state.open = false;
 		},
-		allowClickOutside: () => allowClickOutside
+		allowClickOutside: () => allowClickOutside,
+		returnFocus: () => modal.returnFocusEl
 	});
 </script>
 
-{#if uiState.data.open}
+{#if modal.state.open}
 	<div bind:this={portalEl} class="fixed inset-0 z-[115]">
 		<div
 			in:overlayIn
@@ -78,9 +82,9 @@
 			style:--modal-max-width={maxWidth}
 			{role}
 			aria-modal="true"
-			id={`${panelIdPrefix}-${uiState.key}`}
-			aria-labelledby={uiState.key + '-title'}
-			aria-describedby={uiState.key + '-desc'}
+			id={contentId}
+			aria-labelledby={modal.id + '-title'}
+			aria-describedby={modal.id + '-desc'}
 			tabindex="-1"
 			{...rest}
 		>
@@ -96,7 +100,7 @@
 				{#if showClose}
 					<button
 						onclick={() => {
-							uiState.data.open = false;
+							modal.state.open = false;
 						}}
 						aria-label="Close"
 						class="absolute top-3 right-3 inline-flex size-7 items-center justify-center rounded-[var(--radius-md)] text-foreground-muted hover:bg-secondary hover:text-foreground transition-colors focus-visible:outline-none focus-visible:shadow-[var(--focus-ring)]"

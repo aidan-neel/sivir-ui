@@ -31,11 +31,12 @@ export const manifest: Manifest = {
 		'components/modal/modal-body.svelte',
 		'components/modal/modal-close.svelte',
 		'components/modal/modal-confirm.svelte',
+		'components/modal/context.svelte.ts',
 		'components/modal/index.ts',
 		'components/modal/manifest.ts'
 	],
 	components: ['button', '_internal/overlay'],
-	shared: ['utils.cn', 'internals/state', 'internals/transition', 'internals/is-dark'],
+	shared: ['utils.cn', 'internals/transition', 'internals/is-dark'],
 	peerDependencies: {
 		'@lucide/svelte': '^1.0.0',
 		cnfast: '^0.0.8',

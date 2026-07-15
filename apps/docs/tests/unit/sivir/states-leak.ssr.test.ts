@@ -12,6 +12,7 @@ import type { ToastUIState } from '@sivir/ui/components/toast/lib.svelte.ts';
 
 import ModalFixture from '../../fixtures/ModalFixture.svelte';
 import SheetFixture from '../../fixtures/SheetFixture.svelte';
+import CommandFixture from '../../fixtures/CommandFixture.svelte';
 
 /*
  * Multi-request states-registry leak test -- SSR tier, failure modes (i)
@@ -76,7 +77,20 @@ describe('Failure mode (i) -- registry pollution across SSR renders (still NOT r
 		render(SheetFixture as Component<Record<string, unknown>>, { props: { open: false } });
 		render(SheetFixture as Component<Record<string, unknown>>, { props: { open: true } });
 		render(ModalFixture as Component<Record<string, unknown>>, { props: { open: true } });
+		render(CommandFixture as Component<Record<string, unknown>>, { props: { open: true } });
 		expect(Object.keys(states).length).toBe(0);
+	});
+
+	it('renders Command open state correctly during SSR', () => {
+		const closed = render(CommandFixture as Component<Record<string, unknown>>, {
+			props: { open: false }
+		});
+		const open = render(CommandFixture as Component<Record<string, unknown>>, {
+			props: { open: true }
+		});
+
+		expect(closed.body).not.toContain('data-ui="command-content"');
+		expect(open.body).toContain('data-ui="command-content"');
 	});
 });
 

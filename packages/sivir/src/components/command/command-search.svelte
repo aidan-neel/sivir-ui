@@ -1,15 +1,14 @@
 <!-- token-lint-disable-file -->
 <script lang="ts">
-	import { getContext, onMount } from 'svelte';
+	import { onMount } from 'svelte';
 	import type { HTMLInputAttributes } from 'svelte/elements';
-	import { states } from '@sivir/ui/internals/state.svelte.ts';
-	import type { CommandItem, CommandState } from '.';
+	import type { CommandItem } from '.';
 	import Search from '@lucide/svelte/icons/search';
 	import Fuse from 'fuse.js';
 	import { cn } from '@sivir/ui/utils';
+	import { getCommandContext, getCommandResults } from './context.svelte';
 
-	const key = getContext('key') as string;
-	const uiState = states[key].data as CommandState;
+	const command = getCommandContext();
 
 	let element = $state<HTMLInputElement | undefined>();
 
@@ -18,6 +17,12 @@
 	} & HTMLInputAttributes;
 
 	const { class: classProp, threshold = 0.5, ...rest }: Props = $props();
+	let fuse = new Fuse<CommandItem>([], { keys: ['name'] });
+
+	$effect(() => {
+		command.itemsVersion;
+		fuse = new Fuse(command.items, { keys: ['name'], threshold });
+	});
 
 	onMount(() => {
 		if (element) {
@@ -26,24 +31,54 @@
 	});
 
 	function handleInput() {
-		const itemsArray = Array.from(uiState.items);
-
-		if (uiState.searchContent.trim() === '') {
-			uiState.results = new Set(itemsArray);
+		if (command.searchContent.trim() === '') {
+			command.results = [...command.items];
+			command.activeId = getCommandResults(command)[0]?.id;
 			return;
 		}
 
-		const namesArray = itemsArray.map((item) => item.name);
-		const fuse = new Fuse(namesArray, { threshold });
-		const results = fuse.search(uiState.searchContent);
+		command.results = fuse.search(command.searchContent).map((result) => result.item);
+		command.activeId = getCommandResults(command)[0]?.id;
+	}
 
-		const resultSet = new Set<CommandItem>(
-			results
-				.map((r) => itemsArray.find((item) => item.name === r.item))
-				.filter(Boolean) as CommandItem[]
-		);
+	function setActive(index: number) {
+		const results = getCommandResults(command);
+		if (results.length === 0) return;
 
-		uiState.results = resultSet;
+		const item = results[(index + results.length) % results.length];
+		command.activeId = item.id;
+		item.ref?.scrollIntoView?.({ block: 'nearest' });
+	}
+
+	function handleKeydown(event: KeyboardEvent) {
+		const results = getCommandResults(command);
+		const activeIndex = results.findIndex((item) => item.id === command.activeId);
+
+		switch (event.key) {
+			case 'ArrowDown':
+				event.preventDefault();
+				setActive(activeIndex + 1);
+				break;
+			case 'ArrowUp':
+				event.preventDefault();
+				setActive(activeIndex <= 0 ? results.length - 1 : activeIndex - 1);
+				break;
+			case 'Home':
+				event.preventDefault();
+				setActive(0);
+				break;
+			case 'End':
+				event.preventDefault();
+				setActive(results.length - 1);
+				break;
+			case 'Enter': {
+				const active = results.find((item) => item.id === command.activeId) ?? results[0];
+				if (!active) return;
+				event.preventDefault();
+				active.ref?.click();
+				break;
+			}
+		}
 	}
 </script>
 
@@ -51,27 +86,20 @@
 	<Search size={16} class="shrink-0 text-foreground-muted" />
 	<input
 		bind:this={element}
-		bind:value={uiState.searchContent}
+		bind:value={command.searchContent}
 		oninput={handleInput}
-		onkeydown={(e) => {
-			if (e.key === 'Enter') {
-				const firstResult =
-					uiState.searchContent.trim() === ''
-						? Array.from(uiState.items)[0]
-						: Array.from(uiState.results)[0];
-				if (firstResult) {
-					uiState.open = false;
-					uiState.searchContent = '';
-					firstResult.callback?.();
-				}
-			}
-		}}
+		onkeydown={handleKeydown}
 		class={cn(
 			classProp,
 			'w-full bg-transparent text-[0.9rem] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground placeholder:text-foreground-muted focus-visible:outline-none'
 		)}
 		placeholder="Type a command or search..."
 		aria-label="Search commands"
+		role="combobox"
+		aria-autocomplete="list"
+		aria-expanded="true"
+		aria-controls={`${command.id}-listbox`}
+		aria-activedescendant={command.activeId}
 		{...rest}
 	/>
 </div>

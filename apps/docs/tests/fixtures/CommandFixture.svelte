@@ -2,21 +2,31 @@
 	import * as Command from '@sivir/ui/components/command';
 
 	let {
+		open = $bindable(false),
+		allowClickOutside = true,
 		onProfile = () => {},
 		onSettings = () => {},
+		onDisabled = () => {},
 		onLogout = () => {}
 	}: {
+		open?: boolean;
+		allowClickOutside?: boolean;
 		onProfile?: () => void;
 		onSettings?: () => void;
+		onDisabled?: () => void;
 		onLogout?: () => void;
 	} = $props();
 </script>
 
-<Command.Root>
+<button data-testid="command-external-trigger" onclick={() => (open = true)}>Open externally</button
+>
+<output data-testid="command-open-state">{String(open)}</output>
+
+<Command.Root bind:open>
 	<Command.Trigger>
 		<span data-testid="command-trigger">Open command</span>
 	</Command.Trigger>
-	<Command.Content>
+	<Command.Content {allowClickOutside}>
 		<Command.Search placeholder="Search commands" />
 		<Command.Results>
 			<Command.Group heading="Account">
@@ -25,6 +35,9 @@
 				</Command.Item>
 				<Command.Item name="settings" callback={onSettings}>
 					<span data-testid="cmd-settings">Settings</span>
+				</Command.Item>
+				<Command.Item name="disabled" callback={onDisabled} disabled>
+					<span data-testid="cmd-disabled">Disabled</span>
 				</Command.Item>
 			</Command.Group>
 			<Command.Separator />
