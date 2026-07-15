@@ -62,10 +62,10 @@
 	inert={!isActive}
 	class={cn(
 		className,
-		'overflow-hidden rounded-[var(--radius-md)] bg-[var(--panel-bg,var(--color-card))] font-mono font-medium text-[var(--panel-fg,var(--color-foreground))] shadow-[var(--card-shadow),0_0_0_1px_color-mix(in_oklab,var(--panel-border,var(--color-border))_50%,transparent)]',
+		'overflow-hidden rounded-[var(--radius-md)] bg-card font-mono font-medium text-foreground shadow-[var(--elevation-1)] ring-1 ring-[color-mix(in_oklab,var(--color-border)_50%,transparent)]',
 		!isActive && !registry?.contained && 'hidden',
 		registry?.contained &&
-			'overflow-visible rounded-none bg-transparent shadow-none transition-[transform,opacity] [transition-duration:220ms,190ms] ease-[var(--ease-out)] will-change-[transform,opacity]',
+			'overflow-visible rounded-none bg-transparent shadow-none transition-[transform,opacity] [transition-duration:var(--motion-duration-panel)] ease-[var(--ease-out)] motion-reduce:transition-none will-change-[transform,opacity]',
 		registry?.contained && isActive && 'relative z-[1]',
 		registry?.contained && !isActive && 'pointer-events-none absolute inset-0 block'
 	)}
@@ -88,7 +88,7 @@
 				{#if showLineNumbers}
 					<pre
 						aria-hidden="true"
-						class="m-0 shrink-0 select-none border-r border-[var(--panel-border,var(--color-border))] px-3 py-[var(--code-block-padding-y)] text-right text-[13px] leading-[var(--code-block-line-height)] text-[var(--code-block-gutter)]">{#each Array.from({ length: lineCount }, (_, i) => i) as i (i)}{i +
+						class="m-0 shrink-0 select-none border-r border-border px-3 py-[var(--code-block-padding-y)] text-right text-[13px] leading-[var(--code-block-line-height)] text-[var(--code-block-gutter)]">{#each Array.from({ length: lineCount }, (_, i) => i) as i (i)}{i +
 								1}{newline}{/each}</pre>
 				{/if}
 				<pre

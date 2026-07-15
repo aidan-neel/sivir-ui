@@ -135,8 +135,7 @@
 	class={cn(
 		className,
 		'relative inline-flex items-center',
-		variant === 'segmented' &&
-			'rounded-[var(--radius-xl)] bg-secondary p-[var(--tabs-list-padding)]',
+		variant === 'segmented' && 'rounded-[var(--radius-xl)] bg-secondary p-[3px]',
 		variant === 'ghost' && 'gap-1',
 		// bottom padding = the visible gap between the tabs and the underline
 		variant === 'default' && 'gap-1 pb-1'
@@ -153,7 +152,7 @@
 	{#if variant === 'default' && hover}
 		<div
 			aria-hidden="true"
-			class="pointer-events-none absolute rounded-[var(--radius-md)] bg-foreground/[0.06] transition-[left,top,width,height,opacity] duration-300 ease-[var(--ease-out)]"
+			class="pointer-events-none absolute rounded-[var(--radius-md)] bg-foreground/[0.06] transition-[left,top,width,height,opacity] [transition-duration:var(--motion-duration-panel)] ease-[var(--ease-out)] motion-reduce:transition-none"
 			style:left={`${hover.left}px`}
 			style:top={`${hover.top}px`}
 			style:width={`${hover.width}px`}
@@ -167,7 +166,7 @@
 	{#if variant === 'ghost' && ghostRect}
 		<div
 			aria-hidden="true"
-			class="pointer-events-none absolute rounded-[var(--radius-md)] bg-secondary/70 transition-[left,top,width,height] duration-300 ease-[var(--ease-out)]"
+			class="pointer-events-none absolute rounded-[var(--radius-md)] bg-secondary/70 transition-[left,top,width,height] [transition-duration:var(--motion-duration-panel)] ease-[var(--ease-out)] motion-reduce:transition-none"
 			style:left={`${ghostRect.left}px`}
 			style:top={`${ghostRect.top}px`}
 			style:width={`${ghostRect.width}px`}
@@ -183,7 +182,7 @@
 			     is the list's bottom padding (pb-3 below), so it reads as a real underline -->
 			<div
 				aria-hidden="true"
-				class="pointer-events-none absolute bottom-0 h-[var(--tabs-indicator-height)] rounded-full bg-foreground transition-[left,width] duration-[var(--motion-duration-panel)] ease-[var(--ease-out)]"
+				class="pointer-events-none absolute bottom-0 h-0.5 rounded-full bg-foreground transition-[left,width] [transition-duration:var(--motion-duration-panel)] ease-[var(--ease-out)] motion-reduce:transition-none"
 				style:left={`${indicator.left}px`}
 				style:width={`${indicator.width}px`}
 				style:transition={ready ? undefined : 'none'}
@@ -192,7 +191,7 @@
 			<!-- elevated white pill on the muted track (iOS-style segmented control) -->
 			<div
 				aria-hidden="true"
-				class="pointer-events-none absolute rounded-[var(--radius-lg)] bg-card shadow-[var(--card-shadow)] ring-1 ring-border/50 transition-[left,top,width,height] duration-300 ease-[var(--ease-out)]"
+				class="pointer-events-none absolute rounded-[var(--radius-lg)] bg-card shadow-[var(--elevation-1)] ring-1 ring-border/50 transition-[left,top,width,height] [transition-duration:var(--motion-duration-panel)] ease-[var(--ease-out)] motion-reduce:transition-none"
 				style:left={`${indicator.left}px`}
 				style:top={`${indicator.top}px`}
 				style:width={`${indicator.width}px`}

@@ -70,8 +70,6 @@
 		"cnfast": "^0.0.8",
 		"fuse.js": "^7.1.0",
 		"highlight.js": "^11.11.1",
-		"slot-text": "^0.3.1",
-		"tailwind-merge": "^3.5.0",
 		"tailwind-variants": "^3.2.2"
 	},
 	"peerDependencies": {

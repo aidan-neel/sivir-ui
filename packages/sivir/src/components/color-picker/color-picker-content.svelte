@@ -158,7 +158,7 @@
 	}
 </script>
 
-<Popover.Content class="w-[var(--color-picker-width)]" surfaceClass="overflow-hidden !p-0">
+<Popover.Content class="w-[244px]" surfaceClass="overflow-hidden !p-0">
 	<!-- SB picker (large) -->
 	<div
 		bind:this={sbEl}
@@ -177,7 +177,7 @@
 	</div>
 
 	<!-- Hue + preview row -->
-	<div class="flex items-center gap-2.5 border-b border-border/60 p-[var(--color-picker-padding)]">
+	<div class="flex items-center gap-2.5 border-b border-border/60 p-2">
 		<span
 			class="size-7 shrink-0 rounded-md ring-1 ring-inset ring-black/10"
 			style:background={previewHex}
@@ -218,7 +218,7 @@
 	</div>
 
 	<!-- HSL sliders -->
-	<div class="flex flex-col gap-1.5 border-b border-border/60 p-[var(--color-picker-padding)]">
+	<div class="flex flex-col gap-1.5 border-b border-border/60 p-2">
 		{#each [{ key: 'h', label: 'H', max: 360, value: hslH, unit: '°' }, { key: 's', label: 'S', max: 100, value: hslS, unit: '%' }, { key: 'l', label: 'L', max: 100, value: hslL, unit: '%' }] as channel (channel.key)}
 			<div class="flex items-center gap-2">
 				<span
@@ -248,7 +248,7 @@
 
 	<!-- Swatch grid -->
 	{#if hasOptions}
-		<div class="grid grid-cols-7 gap-1.5 p-[var(--color-picker-padding)]">
+		<div class="grid grid-cols-7 gap-1.5 p-2">
 			{#each ctx.options as opt (opt.value)}
 				{@const isActive = opt.value.toLowerCase() === (ctx.value ?? '').toLowerCase()}
 				<button

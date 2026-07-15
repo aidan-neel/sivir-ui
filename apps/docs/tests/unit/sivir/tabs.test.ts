@@ -125,7 +125,7 @@ describe('Tabs -- variants', () => {
 		await waitFor(() => {
 			const list = document.querySelector('[data-ui="tabs-list"]')!;
 			const indicator = list.querySelector('div[aria-hidden="true"]');
-			expect(indicator?.className).toContain('h-[var(--tabs-indicator-height)]');
+			expect(indicator?.className).toContain('h-0.5');
 		});
 	});
 

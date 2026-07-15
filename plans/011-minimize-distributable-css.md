@@ -8,6 +8,12 @@
 
 ## Status
 
+**DONE — 2026-07-15.** The distributable stylesheet is now a 160-line,
+5,566-byte public theme contract. Components express geometry with Tailwind,
+the tooltip no longer ships an external class stylesheet, retained keyframes
+are colocated/reduced-motion safe, and source/registry/fresh-consumer gates
+pass.
+
 - **Priority**: P1
 - **Effort**: L
 - **Risk**: MED
@@ -106,12 +112,21 @@ bun run format:check
 
 ## Done criteria
 
-- [ ] `ui.css` is <=175 lines and <=8 KiB
-- [ ] No private component-token prefixes or universal element rules remain
-- [ ] No external component class stylesheet is imported
-- [ ] All five retained keyframes are referenced and reduced-motion safe
-- [ ] Every component still has equivalent visual/interaction browser coverage
-- [ ] Source and registry output match; fresh consumer build passes
+- [x] `ui.css` is <=175 lines and <=8 KiB
+- [x] No private component-token prefixes or universal element rules remain
+- [x] No external component class stylesheet is imported
+- [x] All five retained keyframes are referenced and reduced-motion safe
+- [x] Every component still has equivalent visual/interaction browser coverage
+- [x] Source and registry output match; fresh consumer build passes
+
+## Completion report
+
+- `ui.css`: 160 lines / 5,566 bytes (from 323 lines / 11,485 bytes)
+- Package contract: 24 tests passing; static CSS/dependency/keyframe guards added
+- Docs unit + SSR: 466 tests passing
+- Browser: 183 tests passing, including computed reduced-motion and axe contrast
+- Fresh CLI consumer sandbox: 15/15 checks passing
+- Production workspace build and formatting: green
 
 ## STOP conditions
 

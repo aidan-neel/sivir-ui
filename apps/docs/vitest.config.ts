@@ -40,10 +40,28 @@ export default defineConfig({
 				test: {
 					name: 'browser',
 					include: ['tests/unit/**/*.browser.test.ts'],
+					exclude: ['tests/unit/**/*.reduced.browser.test.ts'],
 					setupFiles: ['tests/browser.setup.ts'],
 					browser: {
 						enabled: true,
 						provider: playwright(),
+						headless: true,
+						instances: [{ browser: 'chromium' }]
+					}
+				}
+			},
+			{
+				extends: true,
+				resolve: {
+					conditions: ['browser']
+				},
+				test: {
+					name: 'browser-reduced',
+					include: ['tests/unit/**/*.reduced.browser.test.ts'],
+					setupFiles: ['tests/browser.setup.ts'],
+					browser: {
+						enabled: true,
+						provider: playwright({ contextOptions: { reducedMotion: 'reduce' } }),
 						headless: true,
 						instances: [{ browser: 'chromium' }]
 					}

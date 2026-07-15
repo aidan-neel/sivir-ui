@@ -16,7 +16,7 @@
 <div
 	role="listbox"
 	id={`combobox-${String(key)}-listbox`}
-	class="flex max-h-full flex-col gap-0 overflow-y-auto p-[var(--menu-padding)]"
+	class="flex max-h-full flex-col gap-0 overflow-y-auto p-1"
 >
 	{#if uiState.searchContent === ''}
 		{@render children?.()}

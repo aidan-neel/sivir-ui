@@ -35,22 +35,25 @@
 	class={cn(
 		'group relative flex w-full flex-col overflow-hidden',
 		'rounded-[calc(var(--radius-lg)+0.15rem)] border border-border',
-		'bg-[var(--toast-bg)] shadow-[var(--toast-shadow)] backdrop-blur-[14px]',
+		'bg-panel shadow-[var(--elevation-float)] backdrop-blur-[14px]',
 		'ring-1 ring-black/4 sm:ring-0',
 		'text-foreground'
 	)}
 	onmouseenter={() => toast.id !== undefined && pauseToast(toast.id)}
 	onmouseleave={() => toast.id !== undefined && resumeToast(toast.id)}
 >
-	<div class="flex items-start gap-3 px-[var(--toast-padding-x)] py-[var(--toast-padding-y)]">
+	<div class="flex items-start gap-3 p-4">
 		{#if Icon}
 			<div
 				class={cn(
-					'mt-0.5 flex size-[var(--toast-icon-size)] shrink-0 items-center justify-center rounded-md',
+					'mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-md',
 					iconColorClass
 				)}
 			>
-				<Icon size="13" class={toast.type === 'loading' ? 'animate-spin' : ''} />
+				<Icon
+					size="13"
+					class={toast.type === 'loading' ? 'animate-spin motion-reduce:animate-none' : ''}
+				/>
 			</div>
 		{/if}
 
@@ -97,8 +100,8 @@
 				type="button"
 				onclick={() => dismissToast(toast.id!)}
 				class={cn(
-					'mt-0.5 inline-flex size-[var(--toast-close-size)] shrink-0 items-center justify-center rounded-md',
-					'text-foreground-muted opacity-0 transition-[opacity,background-color,color] [transition-duration:var(--motion-duration-hover)] ease-[var(--ease-out)]',
+					'mt-0.5 inline-flex size-5 shrink-0 items-center justify-center rounded-md',
+					'text-foreground-muted opacity-0 transition-[opacity,background-color,color] [transition-duration:var(--motion-duration-hover)] ease-[var(--ease-out)] motion-reduce:transition-none',
 					'hover:bg-secondary/50 hover:text-foreground',
 					'group-hover:opacity-100'
 				)}
@@ -113,11 +116,11 @@
 		<div
 			class={cn(
 				'absolute bottom-0 left-0 h-[2px] w-full origin-left opacity-40',
-				'animate-[sivir-toast-progress_var(--toast-duration)_linear_forwards]',
+				'animate-[sivir-toast-progress_linear_forwards] motion-reduce:animate-none',
 				toast.paused ? '[animation-play-state:paused]' : '[animation-play-state:running]',
 				progressColorClass
 			)}
-			style:--toast-duration={`${toast.duration}ms`}
+			style:animation-duration={`${toast.duration}ms`}
 		></div>
 	{/if}
 </div>

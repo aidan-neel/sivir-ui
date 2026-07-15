@@ -45,19 +45,22 @@ describe('ui.css Tier 2 semantic', () => {
 });
 
 describe('ui.css Tier 3 + structure', () => {
-	it('derives button tokens from semantic tokens (no fancy shadow tokens)', () => {
-		expect(css).toContain('--button-primary-bg: var(--color-primary)');
-		expect(css).toContain('--button-secondary-bg: var(--color-secondary)');
-		expect(css).not.toContain('--button-primary-shadow');
-		expect(css).not.toContain('--button-fancy-highlight');
+	it('keeps component defaults out of the public theme contract', () => {
+		expect(css).not.toMatch(
+			/^\s*--(?:button|badge|field|panel|card|menu|command|tooltip|switch|checkbox|toast|tabs|progress|modal|sheet|textarea|breadcrumb|toggle|shortcut|slider)-/m
+		);
 	});
 	it('sizes controls from the spacing scale', () => {
 		expect(css).toMatch(/--size-control-md:.*var\(--sivir-space-/);
-		expect(css).toContain('--button-height: var(--size-control-md)');
 	});
-	it('keeps the base layer and reduced-motion while excluding component keyframes', () => {
-		expect(css).toContain('@layer base');
+	it('keeps reduced-motion while excluding global rules and component keyframes', () => {
+		expect(css).not.toContain('@layer base');
+		expect(css).not.toMatch(/(^|})\s*\*\s*\{/);
 		expect(css).not.toContain('@keyframes');
 		expect(css).toContain('prefers-reduced-motion: reduce');
+	});
+	it('stays within the release size budget', () => {
+		expect(css.split('\n').length).toBeLessThanOrEqual(175);
+		expect(Buffer.byteLength(css)).toBeLessThanOrEqual(8 * 1024);
 	});
 });

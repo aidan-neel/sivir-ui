@@ -30,7 +30,7 @@
 	aria-describedby={undefined}
 	class={cn(
 		className,
-		'fixed top-[47%] flex max-h-[min(var(--command-dialog-max-height),calc(100dvh-2rem))] min-h-[5rem] w-[calc(100%-2*var(--command-dialog-width-margin))] max-w-[var(--command-dialog-max-width)] flex-col overflow-hidden'
+		'fixed top-[47%] flex max-h-[min(28rem,calc(100dvh-2rem))] min-h-20 w-[calc(100%-3rem)] max-w-xl flex-col overflow-hidden' // token-lint-disable-line no-literal-length
 	)}
 	surfaceClass="min-h-0 flex-1 gap-0 overflow-hidden p-0"
 	{...rest}

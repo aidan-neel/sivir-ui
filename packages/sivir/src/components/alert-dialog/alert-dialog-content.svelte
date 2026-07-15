@@ -4,7 +4,7 @@
 
 	type Props = {
 		allowClickOutside?: boolean;
-		/** Max-width preset (maps to the --modal-width-* tokens). Defaults to `md`. */
+		/** Max-width preset. Defaults to `md`. */
 		size?: 'sm' | 'md' | 'lg' | 'xl';
 		/** Show the top-right close (X) button. Defaults to `true`. */
 		showClose?: boolean;

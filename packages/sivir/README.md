@@ -22,8 +22,8 @@ bun add @sivir/ui
 # or: npm i @sivir/ui / pnpm add @sivir/ui
 ```
 
-Runtime dependencies (`@floating-ui/dom`, `@lucide/svelte`, `clsx`,
-`tailwind-merge`, `tailwind-variants`, …) install automatically.
+Runtime dependencies (`@floating-ui/dom`, `@lucide/svelte`, `cnfast`,
+`tailwind-variants`, …) install automatically.
 
 ## Wire up the styles
 

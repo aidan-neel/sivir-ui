@@ -4,14 +4,14 @@ import type { Manifest } from '@sivir/ui/_manifest/types';
  * Copy Button.
  *
  * 1.0.0 -- copies text to the clipboard with a Copy↔Check icon morph and a
- *          slot-text tooltip roll on the label.
+ *          shared tooltip label update.
  */
 export const manifest: Manifest = {
 	name: 'copy-button',
 	version: '1.0.0',
 	visibility: 'public',
 	description:
-		'One-tap clipboard button: a Copy↔Check icon morph plus a slot-text tooltip roll, reverting after a short hold.',
+		'One-tap clipboard button with a Copy↔Check icon morph and tooltip feedback, reverting after a short hold.',
 	files: [
 		'components/copy-button/copy-button.svelte',
 		'components/copy-button/index.ts',

@@ -31,20 +31,16 @@
 			id: 'tokens',
 			step: '2',
 			icon: Wand,
-			label: 'Override component tokens',
-			body: 'When a whole family of components needs to look different (taller fields, pill buttons), set component-level CSS variables once. No forks, no per-element classes.',
+			label: 'Tune public theme axes',
+			body: 'Use semantic colors, shared control sizes, radius, elevation, typography, and motion when the whole system should move together.',
 			lang: 'css',
-			code: `:root {
-	--button-radius: 999px;
-	--button-height: 2.75rem;
-	--button-primary-bg: #111827;
-	--button-primary-hover-bg: #1f2937;
-
-	--field-radius: 1rem;
-	--field-height: 3rem;
-
-	--panel-radius: 1.25rem;
-	--panel-shadow: 0 24px 80px rgb(15 23 42 / 0.16);
+			code: `@theme {
+	--color-primary: #111827;
+	--color-primary-hover: #1f2937;
+	--size-control-md: 2.75rem;
+	--radius-lg: 1rem;
+	--radius-xl: 1.25rem;
+	--elevation-float: 0 24px 80px rgb(15 23 42 / 0.16);
 }`
 		},
 		{
@@ -55,16 +51,13 @@
 			body: 'Every primitive renders `data-ui` (and often `data-variant`, `data-size`). Use them to scope styles to a specific component family -- cleaner than forking.',
 			lang: 'css',
 			code: `[data-ui='button'][data-variant='primary'] {
+	border-radius: 999px;
 	letter-spacing: 0.01em;
-}
-
-[data-ui='dialog-content'] {
-	--panel-radius: 1.5rem;
-	--panel-padding-lg: 1.75rem;
 }
 
 [data-ui='toast'] {
 	--color-border: color-mix(in srgb, var(--color-primary) 22%, var(--color-border));
+	padding: 0.25rem;
 }
 
 [data-ui='badge'][data-variant='secondary'] {
@@ -90,7 +83,7 @@ src/lib/sivir/components/button/
 	<title>Sivir · Styling</title>
 	<meta
 		name="description"
-		content="Four ways to style Sivir: class prop, component tokens, data attributes, and full ownership."
+		content="Four ways to style Sivir: Tailwind classes, public theme axes, data attributes, and full ownership."
 	/>
 </svelte:head>
 
@@ -200,8 +193,8 @@ src/lib/sivir/components/button/
 						<td class="px-4 py-2.5 font-mono text-foreground-muted">class="…"</td>
 					</tr>
 					<tr>
-						<td class="px-4 py-2.5">Change all buttons site-wide</td>
-						<td class="px-4 py-2.5 font-mono text-foreground-muted">--button-* tokens</td>
+						<td class="px-4 py-2.5">Change brand colors site-wide</td>
+						<td class="px-4 py-2.5 font-mono text-foreground-muted">--color-* tokens</td>
 					</tr>
 					<tr>
 						<td class="px-4 py-2.5">Restyle one component family</td>

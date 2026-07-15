@@ -60,10 +60,11 @@
 			out:sheetFly={{ x: side === 'left' ? 'calc(-100% - 1rem)' : 'calc(100% + 1rem)' }}
 			class={cn(
 				className,
-				`fixed top-[var(--sheet-margin)] bottom-[var(--sheet-margin)] z-50 flex w-[calc(100%-calc(var(--sheet-margin)*2))] max-w-[var(--sheet-max-width)] flex-col overflow-hidden text-[var(--color-foreground)] shadow-[var(--panel-shadow)] will-change-transform ${
-					side === 'left' ? 'left-[var(--sheet-margin)]' : 'right-[var(--sheet-margin)]'
+				// token-lint-disable-next-line no-literal-length
+				`fixed top-2 bottom-2 z-50 flex w-[calc(100%-1rem)] max-w-sm flex-col overflow-hidden text-foreground shadow-[var(--elevation-float)] will-change-transform ${
+					side === 'left' ? 'left-2' : 'right-2'
 				}`,
-				'rounded-[var(--radius-lg)] border border-[var(--panel-border,var(--color-border))] bg-[var(--color-panel)]'
+				'rounded-[var(--radius-lg)] border border-border bg-panel'
 			)}
 			role="dialog"
 			aria-modal="true"
@@ -75,9 +76,7 @@
 		>
 			<!-- Inset surface: the sheet body lives here, on the panel fill. -->
 			<div
-				class={cn(
-					'flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain bg-[var(--color-panel)] p-[var(--sheet-body-padding)]'
-				)}
+				class={cn('flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain bg-panel p-4')}
 			>
 				{@render children?.()}
 			</div>

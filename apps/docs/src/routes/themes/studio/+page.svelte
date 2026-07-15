@@ -185,7 +185,7 @@
 	>
 		<aside class="space-y-5">
 			<section
-				class="rounded-[var(--radius-lg)] border border-border bg-card p-4 shadow-[var(--card-shadow)]"
+				class="rounded-[var(--radius-lg)] border border-border bg-card p-4 shadow-[var(--elevation-1)]"
 			>
 				<h2 class="mb-4 text-sm font-semibold text-foreground">Preset</h2>
 				<label class="grid gap-1.5 text-xs font-medium text-foreground-muted">
@@ -206,7 +206,7 @@
 			</section>
 
 			<section
-				class="space-y-4 rounded-[var(--radius-lg)] border border-border bg-card p-4 shadow-[var(--card-shadow)]"
+				class="space-y-4 rounded-[var(--radius-lg)] border border-border bg-card p-4 shadow-[var(--elevation-1)]"
 			>
 				<h2 class="text-sm font-semibold text-foreground">Identity</h2>
 				<label class="grid gap-1.5 text-xs font-medium text-foreground-muted">
@@ -230,7 +230,7 @@
 
 		<div class="space-y-6">
 			<section
-				class="rounded-[var(--radius-xl)] border border-border bg-background p-5 shadow-[var(--panel-shadow)] md:p-7"
+				class="rounded-[var(--radius-xl)] border border-border bg-background p-5 shadow-[var(--elevation-float)] md:p-7"
 			>
 				<div class="mb-8 flex items-start justify-between gap-4">
 					<div>
@@ -244,7 +244,7 @@
 				</div>
 				<div class="grid gap-4 sm:grid-cols-2">
 					<div
-						class="rounded-[var(--radius-lg)] border border-border bg-card p-5 shadow-[var(--card-shadow)]"
+						class="rounded-[var(--radius-lg)] border border-border bg-card p-5 shadow-[var(--elevation-1)]"
 					>
 						<p class="text-sm font-semibold text-foreground">Release checklist</p>
 						<p class="mt-2 text-sm leading-6 text-foreground-muted">
@@ -353,7 +353,7 @@
 
 		<aside>
 			<section
-				class="rounded-[var(--radius-lg)] border border-border bg-card p-4 shadow-[var(--card-shadow)]"
+				class="rounded-[var(--radius-lg)] border border-border bg-card p-4 shadow-[var(--elevation-1)]"
 			>
 				<div class="mb-4 flex items-center justify-between">
 					<h2 class="text-sm font-semibold text-foreground">Saved locally</h2>

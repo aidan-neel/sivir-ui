@@ -1,7 +1,7 @@
 import { tv } from 'tailwind-variants';
 
 export const toggle = tv({
-	base: 'inline-flex select-none items-center justify-center gap-1.5 rounded-[var(--radius-md)] [font-weight:var(--font-weight-button,500)] [letter-spacing:var(--tracking-button,0em)] transition-[background-color,color,box-shadow,transform] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-out)] active:scale-[var(--motion-press-scale)] focus-visible:outline-none focus-visible:shadow-[var(--focus-ring)] disabled:cursor-not-allowed disabled:opacity-50',
+	base: 'inline-flex select-none items-center justify-center gap-1.5 rounded-[var(--radius-md)] [font-weight:var(--font-weight-button,500)] [letter-spacing:var(--tracking-button,0em)] transition-[background-color,color,box-shadow,transform] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-out)] motion-reduce:transition-none active:scale-[var(--motion-press-scale)] motion-reduce:active:scale-100 focus-visible:outline-none focus-visible:shadow-[var(--focus-ring)] disabled:cursor-not-allowed disabled:opacity-50',
 	variants: {
 		variant: {
 			default: '',
@@ -12,9 +12,9 @@ export const toggle = tv({
 			false: 'bg-transparent text-foreground-muted hover:bg-secondary/60 hover:text-foreground'
 		},
 		size: {
-			sm: 'h-7 px-[var(--toggle-padding-sm)] [font-size:var(--font-size-badge)]',
-			md: 'h-8 px-[var(--toggle-padding-md)] [font-size:var(--font-size-label)]',
-			lg: 'h-10 px-[var(--toggle-padding-lg)] [font-size:var(--font-size-button)]'
+			sm: 'h-7 px-2 [font-size:var(--font-size-badge)]',
+			md: 'h-8 px-3 [font-size:var(--font-size-label)]',
+			lg: 'h-10 px-4 [font-size:var(--font-size-button)]'
 		}
 	},
 	defaultVariants: {

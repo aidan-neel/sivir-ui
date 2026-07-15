@@ -42,7 +42,6 @@ const FRAMEWORK_PEERS: Record<string, string> = {
  * warning path can be exercised. */
 const COMPONENT_PEERS: Record<string, string> = {
 	cnfast: '^0.0.8',
-	'tailwind-merge': '^3.0.0',
 	'tailwind-variants': '^3.0.0',
 	'@floating-ui/dom': '^1.0.0',
 	'@lucide/svelte': '^1.0.0',

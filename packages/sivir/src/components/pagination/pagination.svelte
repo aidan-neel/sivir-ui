@@ -67,7 +67,7 @@
 				class={cn(
 					'inline-flex size-[var(--size-icon-md)] items-center justify-center rounded-[var(--radius-md)] text-[0.82rem] tabular-nums [font-weight:var(--font-weight-button,500)] [letter-spacing:var(--tracking-button,0em)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)]', // token-lint-disable-line no-literal-length
 					p === page
-						? 'bg-[var(--button-outlined-bg)] text-[var(--button-outlined-foreground)] shadow-[var(--button-outline-shadow)] hover:bg-[var(--button-outlined-hover-bg)]'
+						? 'bg-card text-foreground shadow-[var(--elevation-control)] hover:bg-muted'
 						: 'text-foreground-muted hover:bg-secondary hover:text-foreground'
 				)}
 			>

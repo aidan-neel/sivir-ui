@@ -17,10 +17,7 @@
 	<div
 		{...rest}
 		data-ui="menu-separator"
-		class={cn(
-			className,
-			'bg-[var(--separator-color)] rounded-[var(--radius-xl)] h-[var(--border-size)] w-[calc(100%-2*var(--command-dialog-width-margin))] mx-auto my-1'
-		)}
+		class={cn(className, 'mx-6 my-1 h-[var(--border-size)] rounded-[var(--radius-xl)] bg-border')}
 	>
 		{@render children?.()}
 	</div>

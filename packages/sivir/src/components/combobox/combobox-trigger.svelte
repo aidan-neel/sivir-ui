@@ -63,7 +63,7 @@
 	aria-label={uiState.selected?.label ? `Selected ${uiState.selected.label}` : 'Open combobox'}
 	class={cn(
 		className,
-		'flex flex-row items-center justify-between px-[var(--field-padding-x)] [font-weight:var(--font-weight-button,500)] [letter-spacing:var(--tracking-button,0em)] transition-[background-color,border-color,color,box-shadow,transform] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-out)] active:scale-[var(--motion-press-scale)] focus-within:shadow-[var(--focus-ring)]',
+		'flex flex-row items-center justify-between px-3 [font-weight:var(--font-weight-button,500)] [letter-spacing:var(--tracking-button,0em)] transition-[background-color,border-color,color,box-shadow,transform] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-out)] motion-reduce:transition-none active:scale-[var(--motion-press-scale)] motion-reduce:active:scale-100 focus-within:shadow-[var(--focus-ring)]',
 		uiState.selected?.label ? 'text-foreground' : 'text-foreground-muted'
 	)}
 >

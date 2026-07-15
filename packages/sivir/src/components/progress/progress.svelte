@@ -21,19 +21,16 @@
 	aria-valuemin={0}
 	aria-valuemax={safeMax}
 	aria-valuenow={indeterminate ? undefined : clamped}
-	class={cn(
-		className,
-		'relative h-[var(--progress-height)] w-full overflow-hidden rounded-full bg-secondary'
-	)}
+	class={cn(className, 'relative h-2 w-full overflow-hidden rounded-full bg-secondary')}
 	{...rest}
 >
 	{#if indeterminate}
 		<div
-			class="absolute inset-y-0 left-0 w-1/3 animate-[sivir-progress-slide_1.4s_cubic-bezier(0.4,0,0.2,1)_infinite] rounded-full bg-primary motion-reduce:[animation-duration:0.01ms]"
+			class="absolute inset-y-0 left-0 w-1/3 animate-[sivir-progress-slide_1.4s_cubic-bezier(0.4,0,0.2,1)_infinite] rounded-full bg-primary motion-reduce:animate-none"
 		></div>
 	{:else}
 		<div
-			class="h-full rounded-full bg-primary transition-[width] [transition-duration:var(--motion-duration-panel)] ease-out"
+			class="h-full rounded-full bg-primary transition-[width] [transition-duration:var(--motion-duration-panel)] ease-out motion-reduce:transition-none"
 			style:width={`${pct}%`}
 		></div>
 	{/if}

@@ -17,7 +17,7 @@
 	{...rest}
 	class={cn(
 		classProp,
-		`bg-[var(--card-bg)] border border-border rounded-[var(--radius-lg)] p-[var(--card-padding)] shadow-[var(--card-shadow)] flex flex-col`
+		'flex flex-col rounded-[var(--radius-lg)] border border-border bg-card p-6 shadow-[var(--elevation-1)]'
 	)}
 >
 	{@render children?.()}

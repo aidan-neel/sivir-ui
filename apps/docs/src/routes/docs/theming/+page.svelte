@@ -40,7 +40,7 @@
 			icon: Waypoints,
 			tone: 'motion',
 			title: 'Motion',
-			body: 'Durations and offsets for hover, menus, panels, sheets -- one source for how movement feels.',
+			body: 'Durations and easing for hover, menus, panels, and sheets -- one source for how movement feels.',
 			tokens: ['--motion-duration-hover', '--motion-duration-panel', '--motion-duration-sheet']
 		}
 	];
@@ -78,38 +78,32 @@
 	--color-ring: rgb(122 162 255 / 0.22);
 }`;
 
-	const componentCss = `:root {
-	/* Buttons */
-	--button-radius: 999px;
-	--button-height: 2.6rem;
-	--button-primary-bg: #155eef;
-	--button-primary-hover-bg: #0f4fd6;
+	const componentCss = `@theme {
+	/* Cross-control sizing */
+	--size-control-sm: 2rem;
+	--size-control-md: 2.5rem;
+	--size-control-lg: 2.75rem;
 
-	/* Fields */
-	--field-radius: 0.8rem;
-	--field-height: 2.75rem;
+	/* Shared shape and elevation */
+	--radius-md: 0.5rem;
+	--radius-lg: 0.75rem;
+	--radius-xl: 1rem;
+	--elevation-1: 0 4px 12px rgb(16 24 40 / 0.08);
+	--elevation-float: 0 18px 42px rgb(16 24 40 / 0.12);
 
-	/* Floating surfaces */
-	--panel-radius: 0.9rem;
-	--panel-shadow: 0 18px 42px rgb(16 24 40 / 0.12);
-
-	/* Motion */
+	/* Shared motion */
 	--motion-duration-panel: 240ms;
 	--motion-duration-sheet: 320ms;
-	--motion-overlay-blur: 6px;
 }`;
 
 	const overrideCss = `[data-ui='button'][data-variant='primary'] {
+	border-radius: 999px;
 	letter-spacing: 0.01em;
-}
-
-[data-ui='dialog-content'] {
-	--panel-radius: 1rem;
-	--panel-padding-lg: 1.5rem;
 }
 
 [data-ui='toast'] {
 	--color-border: color-mix(in srgb, var(--color-primary) 24%, var(--color-border));
+	box-shadow: var(--elevation-float);
 }
 
 [data-ui='dropdown-menu-content'] {
@@ -242,7 +236,7 @@
 		<Tabs.Root bind:value={activeTab} variant="segmented">
 			<Tabs.List>
 				<Tabs.Trigger value="semantic">1 · Semantic tokens</Tabs.Trigger>
-				<Tabs.Trigger value="component">2 · Component tokens</Tabs.Trigger>
+				<Tabs.Trigger value="component">2 · Theme axes</Tabs.Trigger>
 				<Tabs.Trigger value="overrides">3 · Per-component overrides</Tabs.Trigger>
 			</Tabs.List>
 
@@ -256,8 +250,8 @@
 
 			<Tabs.Content value="component">
 				<p class="m-0 pb-3 text-[0.86rem] leading-relaxed text-foreground-muted">
-					When a category needs to break from defaults (pill buttons, taller fields, denser
-					dropdowns), tune the component tokens. No forks needed.
+					Tune the public cross-component axes for control height, radius, elevation, and motion.
+					Component geometry stays in Tailwind classes instead of private variables.
 				</p>
 				<CodeBlock
 					code={codeBlocks.component.code}

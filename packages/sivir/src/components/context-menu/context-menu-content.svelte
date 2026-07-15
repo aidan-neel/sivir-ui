@@ -19,7 +19,7 @@
 	lockScroll={false}
 	{...rest}
 	class={className}
-	surfaceClass="flex flex-col gap-0 p-[var(--menu-padding)]"
+	surfaceClass="flex flex-col gap-0 p-1"
 >
 	{@render children?.()}
 </Popover.Content>

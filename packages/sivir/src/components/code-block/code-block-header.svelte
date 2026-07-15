@@ -10,7 +10,7 @@
 	data-ui="code-block-header"
 	class={cn(
 		className,
-		'flex items-center gap-4 bg-[var(--panel-header-bg,color-mix(in_oklab,var(--color-foreground)_3%,var(--color-card)))] px-2'
+		'flex items-center gap-4 bg-[color-mix(in_oklab,var(--color-foreground)_3%,var(--color-card))] px-2'
 	)}
 	{...rest}
 >

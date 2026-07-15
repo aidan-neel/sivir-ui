@@ -7,12 +7,11 @@ import { resetSharedTooltipForTests } from '@sivir/ui/components/tooltip/shared-
 
 /*
  * When a tooltip is already open and the pointer moves to another trigger, the
- * label must swap *instantly* -- no slot-text roll. The shared bubble still
- * slides/reshapes via CSS, but the glyphs are rebuilt synchronously.
+ * label must swap instantly. The shared bubble still slides/reshapes via CSS,
+ * but the text is replaced synchronously.
  *
- * We sample the visible glyphs (.char-face) 25ms after the swap: well inside the
- * old ~95ms roll window. Instant => the new label is already complete; a roll
- * would still be showing interleaved old/new glyphs at this point.
+ * We sample the visible label shortly after the swap to cover the immediate
+ * replacement contract.
  */
 
 async function flush(ms = 30) {

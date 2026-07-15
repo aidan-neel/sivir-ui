@@ -35,7 +35,7 @@
 	tabindex={-1}
 	data-ui="select-content"
 	class={cn(props.class, 'min-w-[var(--popover-trigger-width)] w-max')}
-	surfaceClass="flex flex-col gap-0 p-[var(--menu-padding)]"
+	surfaceClass="flex flex-col gap-0 p-1"
 >
 	{@render props.children?.()}
 </Popover.Content>

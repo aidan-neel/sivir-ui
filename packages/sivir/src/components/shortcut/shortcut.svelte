@@ -170,14 +170,14 @@
 >
 	{#if children}
 		<span
-			class="inline-flex min-w-[0.9em] items-center justify-center font-mono [font-size:var(--shortcut-font-size,0.72rem)] font-medium leading-none text-foreground-muted"
+			class="inline-flex min-w-[0.9em] items-center justify-center font-mono text-[11px] font-medium leading-none text-foreground-muted"
 		>
 			{@render children()}
 		</span>
 	{:else}
 		{#each caps as cap, i (i)}
 			<span
-				class="inline-flex min-w-[0.9em] items-center justify-center font-mono [font-size:var(--shortcut-font-size,0.72rem)] font-medium leading-none text-foreground-muted"
+				class="inline-flex min-w-[0.9em] items-center justify-center font-mono text-[11px] font-medium leading-none text-foreground-muted"
 			>
 				{cap}
 			</span>

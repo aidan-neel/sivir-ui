@@ -24,8 +24,8 @@
 	aria-modal="false"
 	allowClickOutside={false}
 	{...rest}
-	class={cn(className, 'w-[var(--hover-card-width)] text-[var(--font-size-body)]')}
-	surfaceClass="p-[var(--panel-padding)]"
+	class={cn(className, 'w-64 text-[var(--font-size-body)]')}
+	surfaceClass="p-3"
 >
 	{@render children?.()}
 </Popover.Content>

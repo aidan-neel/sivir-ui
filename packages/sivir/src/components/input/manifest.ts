@@ -11,8 +11,8 @@ import type { Manifest } from '@sivir/ui/_manifest/types';
  * 3.0.0: removed the `primary` variant (it duplicated the base field look).
  *        Default variant is now `outlined`.
  * 4.0.0: renamed variant `outlined` → `outline` to align with field taxonomy.
- *        `outline` now uses `--field-*` tokens instead of `--button-outlined-*`.
- *        Shared motion tokens replace hard-coded values. Default remains `outline`.
+ *        Both variants now use the public semantic field and motion tokens.
+ *        Default remains `outline`.
  */
 export const manifest: Manifest = {
 	name: 'input',
@@ -30,7 +30,6 @@ export const manifest: Manifest = {
 	shared: ['utils.cn'],
 	peerDependencies: {
 		cnfast: '^0.0.8',
-		'tailwind-merge': '^3.0.0',
 		'tailwind-variants': '^3.0.0',
 		svelte: '^5.0.0'
 	}

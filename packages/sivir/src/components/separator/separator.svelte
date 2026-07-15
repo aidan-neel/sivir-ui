@@ -17,10 +17,8 @@
 	aria-orientation={decorative ? undefined : orientation}
 	class={cn(
 		className,
-		'shrink-0 bg-[var(--separator-color)]',
-		orientation === 'horizontal'
-			? 'h-[var(--separator-thickness)] w-full'
-			: 'h-full w-[var(--separator-thickness)]'
+		'shrink-0 bg-border',
+		orientation === 'horizontal' ? 'h-[var(--border-size)] w-full' : 'h-full w-[var(--border-size)]'
 	)}
 	{...rest}
 ></div>

@@ -32,7 +32,7 @@
 <Popover.Trigger
 	class={cn(
 		className,
-		`flex flex-row justify-between px-[var(--field-padding-x)] items-center [font-weight:var(--font-weight-button,500)] [letter-spacing:var(--tracking-button,0em)] transition-[background-color,border-color,color,box-shadow,transform] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-out)] active:scale-[var(--motion-press-scale)] focus-visible:shadow-[var(--focus-ring)] ${uiState.data.value !== '' ? 'text-foreground' : 'text-foreground-muted'}`
+		`flex flex-row items-center justify-between px-3 [font-weight:var(--font-weight-button,500)] [letter-spacing:var(--tracking-button,0em)] transition-[background-color,border-color,color,box-shadow,transform] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-out)] motion-reduce:transition-none active:scale-[var(--motion-press-scale)] motion-reduce:active:scale-100 focus-visible:shadow-[var(--focus-ring)] ${uiState.data.value !== '' ? 'text-foreground' : 'text-foreground-muted'}`
 	)}
 	role="combobox"
 	aria-haspopup="listbox"

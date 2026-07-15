@@ -15,8 +15,8 @@ export type DefaultProps = {
 	children?: Snippet;
 } & Partial<Record<`data-${string}`, string | boolean | null>>;
 
-/** Merges class values and resolves Tailwind conflicts via cnfast (a faster
- * drop-in for clsx + tailwind-merge). Sivir uses the `cn(className,
+/** Merges class values and resolves Tailwind conflicts via cnfast. Sivir uses
+ * the `cn(className,
  * extraClasses)` convention -- consumer's `className` first, library-side
  * classes after. `.reverse()` flips into twMerge so the first argument wins
  * on conflicts (consumer overrides always take precedence). */

@@ -19,24 +19,8 @@
 	const labelId = `${uiState.key}-label`;
 	const descriptionId = `${uiState.key}-description`;
 
-	// Smoother + a touch slower than a plain ease. The thumb travels on a
-	// spring-y overshoot curve so it "ripples" into place, while the track colour
-	// cross-fades on a calm decel curve.
-	const trackTransition =
-		'background-color 300ms cubic-bezier(0.45, 0, 0.2, 1),' +
-		' border-color 300ms cubic-bezier(0.45, 0, 0.2, 1),' +
-		' box-shadow 220ms var(--ease-out)';
-
-	const thumbTransition =
-		'transform 360ms cubic-bezier(0.34, 1.5, 0.5, 1),' + ' box-shadow 220ms var(--ease-out)';
-
-	const thumbOnOffset =
-		'calc(var(--size-switch-track) - var(--size-switch-thumb) - (var(--switch-track-padding) * 2) - (var(--border-size) * 2))';
-
-	// sub-pixel compensation for thumb+padding height calc
 	const buttonClasses =
-		// token-lint-disable-next-line no-literal-length
-		'relative inline-flex h-[calc(var(--size-switch-thumb)+(var(--switch-track-padding)*2)+0.05rem)] w-[var(--size-switch-track)] shrink-0 items-center rounded-full border p-[var(--switch-track-padding)] focus-visible:outline-none focus-visible:ring-0 disabled:cursor-not-allowed disabled:opacity-[0.55]';
+		'relative inline-flex h-5 w-9 shrink-0 items-center rounded-full border p-0.5 transition-[background-color,border-color,box-shadow] [transition-duration:var(--motion-duration-panel)] ease-[var(--ease-out)] motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-0 focus-visible:shadow-[var(--focus-ring)] disabled:cursor-not-allowed disabled:opacity-[0.55]';
 
 	function toggle(event: Event) {
 		if (disabled) return;
@@ -58,22 +42,22 @@
 		data-ui="switch"
 		data-state={switched ? 'checked' : 'unchecked'}
 		{disabled}
-		class={cn(className, buttonClasses)}
-		style:background-color={switched ? 'var(--switch-track-active-bg)' : 'var(--switch-track-bg)'}
-		style:border-color={switched
-			? 'color-mix(in srgb, var(--switch-track-active-bg) 78%, black)'
-			: 'color-mix(in srgb, var(--color-border-strong) 88%, transparent)'}
-		style:box-shadow="none"
-		style:transition={trackTransition}
+		class={cn(
+			className,
+			buttonClasses,
+			switched
+				? 'border-[color-mix(in_srgb,var(--color-primary)_78%,black)] bg-primary'
+				: 'border-[color-mix(in_srgb,var(--color-border-strong)_88%,transparent)] bg-[color-mix(in_srgb,var(--color-foreground)_18%,transparent)] dark:bg-[color-mix(in_srgb,var(--color-foreground)_24%,transparent)]'
+		)}
 		onclick={toggle}
 	>
 		<span
 			aria-hidden="true"
 			data-state={switched ? 'checked' : 'unchecked'}
-			class="block h-[var(--size-switch-thumb)] w-[var(--size-switch-thumb)] rounded-full bg-[var(--switch-thumb-bg)] ring-1 ring-inset ring-black/[0.08] will-change-transform"
-			style:transform={switched ? `translateX(${thumbOnOffset})` : 'translateX(0px)'}
-			style:box-shadow="none"
-			style:transition={thumbTransition}
+			class={cn(
+				'block size-3.5 rounded-full bg-white ring-1 ring-inset ring-black/[0.08] will-change-transform transition-transform [transition-duration:var(--motion-duration-panel)] ease-[var(--ease-out)] motion-reduce:transition-none',
+				switched ? 'translate-x-4' : 'translate-x-0'
+			)}
 		></span>
 	</button>
 

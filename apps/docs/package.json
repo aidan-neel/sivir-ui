@@ -19,7 +19,7 @@
 		"test": "bun run test:ci",
 		"test:all": "vitest run",
 		"test:ci": "vitest run --project unit --project ssr",
-		"test:browser": "vitest run --project browser",
+		"test:browser": "vitest run --project browser --project browser-reduced",
 		"test:watch": "vitest"
 	},
 	"devDependencies": {
@@ -62,9 +62,7 @@
 		"clsx": "^2.1.1",
 		"fuse.js": "^7.1.0",
 		"mode-watcher": "^1.1.0",
-		"slot-text": "^0.3.1",
 		"svelte-persisted-state": "^1.4.0",
-		"tailwind-merge": "^3.5.0",
 		"tailwind-variants": "^3.2.2"
 	},
 	"trustedDependencies": [

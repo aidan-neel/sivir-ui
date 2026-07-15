@@ -1,18 +1,15 @@
 // A single shared tooltip surface. Every Tooltip.Trigger drives this one
 // element, so moving from one trigger to another *morphs* the same bubble —
-// the background stays put while it slides, reshapes, and rolls its text
-// (via slot-text) into the new label rather than fading out and back in.
+// the background stays put while it slides and reshapes around the new label.
 //
 // Centering trick: the bubble is anchored by its *center* (left = trigger
 // centre + translateX(-50%)), so its width can change freely without ever
 // drifting off the trigger.
 import { computePosition, offset, flip, shift, type Placement } from '@floating-ui/dom';
-import { slotText, buildSlotText, type SlotTextController } from 'slot-text';
-import 'slot-text/style.css';
 
 let bubble: HTMLDivElement | null = null;
 let measurer: HTMLSpanElement | null = null;
-let controller: SlotTextController | null = null;
+let label: HTMLSpanElement | null = null;
 
 let visible = false;
 let currentText = '';
@@ -23,10 +20,6 @@ let closeTimer: ReturnType<typeof setTimeout> | undefined;
 
 const SHOW = 'scale(1)';
 const HIDE = 'scale(0.94)';
-// Snappy roll, used only when a label changes in place on the active trigger
-// (e.g. Copy → Copied). Trigger-to-trigger swaps and first opens skip it.
-const ROLL = { direction: 'up' as const, skipUnchanged: false, duration: 95, stagger: 7 };
-const INSTANT = { duration: 0, stagger: 0 };
 
 function ensure() {
 	if (bubble || typeof document === 'undefined') return;
@@ -35,7 +28,7 @@ function ensure() {
 	el.setAttribute('data-sivir-tooltip', '');
 	el.setAttribute('role', 'tooltip');
 	el.className =
-		'pointer-events-none fixed top-0 left-0 z-[140] box-border max-w-[var(--tooltip-max-width,18rem)] origin-center whitespace-nowrap rounded-[var(--radius-lg,8px)] bg-[var(--color-tooltip)] px-[var(--tooltip-padding-x,10px)] py-[var(--tooltip-padding-y,6px)] [font-size:var(--font-size-label,13px)] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] leading-[1.3] text-[var(--color-tooltip-foreground)] opacity-0 shadow-[var(--tooltip-shadow,var(--elevation-float))] transition-[left,top,width,opacity,transform] [transition-duration:220ms,220ms,220ms,120ms,150ms] [transition-timing-function:var(--ease-out)]';
+		'pointer-events-none fixed top-0 left-0 z-[140] box-border max-w-72 origin-center whitespace-nowrap rounded-[var(--radius-lg)] bg-[var(--color-tooltip)] px-2 py-1 [font-size:var(--font-size-label)] [font-weight:var(--font-weight-label)] [letter-spacing:var(--tracking-label)] leading-[1.3] text-[var(--color-tooltip-foreground)] opacity-0 shadow-[var(--elevation-float)] transition-[left,top,width,opacity,transform] [transition-duration:var(--motion-duration-panel),var(--motion-duration-panel),var(--motion-duration-panel),var(--motion-duration-hover),var(--motion-duration-panel)] [transition-timing-function:var(--ease-out)] motion-reduce:transition-none';
 	el.style.transform = `translateX(-50%) ${HIDE}`;
 
 	const span = document.createElement('span');
@@ -48,12 +41,12 @@ function ensure() {
 	const m = document.createElement('span');
 	m.setAttribute('aria-hidden', 'true');
 	m.className =
-		'pointer-events-none invisible fixed top-0 left-0 box-border whitespace-nowrap px-[var(--tooltip-padding-x,10px)] py-[var(--tooltip-padding-y,6px)] [font-size:var(--font-size-label,13px)] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] leading-[1.3]';
+		'pointer-events-none invisible fixed top-0 left-0 box-border whitespace-nowrap px-2 py-1 [font-size:var(--font-size-label)] [font-weight:var(--font-weight-label)] [letter-spacing:var(--tracking-label)] leading-[1.3]';
 	document.body.appendChild(m);
 
 	bubble = el;
 	measurer = m;
-	controller = slotText(span, '', {});
+	label = span;
 }
 
 function applyWidth(text: string) {
@@ -100,20 +93,11 @@ function reposition(ref: HTMLElement, placement: Placement, animated: boolean) {
 }
 
 function present(ref: HTMLElement, text: string, placement: Placement) {
-	if (!bubble || !controller) return;
+	if (!bubble || !label) return;
 	clearTimeout(closeTimer);
 	const morph = visible; // a tooltip is already up → swap to this trigger's label
 	activeRef = ref;
-	if (morph) {
-		// Swapping from one trigger to another: the bubble still slides/reshapes
-		// via CSS, but the label is rebuilt instantly (no roll). buildSlotText
-		// replaces the glyphs synchronously — set(text, {duration:0}) can't, since
-		// its cleanup waits on a transitionend that never fires for a 0ms roll.
-		if (text !== currentText) buildSlotText(controller.element, text);
-	} else {
-		// First open of a normal tooltip: just place the text, no roll.
-		controller.set(text, INSTANT);
-	}
+	label.textContent = text;
 	currentText = text;
 	applyWidth(text);
 	reposition(ref, placement, morph);
@@ -138,10 +122,10 @@ export function showTooltip(
 	}
 }
 
-/** Re-label the active bubble in place with a roll (e.g. a Copy→Copied flip). */
+/** Re-label the active bubble in place (for example, a Copy→Copied flip). */
 export function updateTooltipText(ref: HTMLElement, text: string) {
-	if (!visible || activeRef !== ref || !controller || !text || text === currentText) return;
-	controller.set(text, ROLL);
+	if (!visible || activeRef !== ref || !label || !text || text === currentText) return;
+	label.textContent = text;
 	currentText = text;
 	applyWidth(text); // width transitions; centre-anchor keeps it aligned
 }
@@ -198,7 +182,7 @@ export function resetSharedTooltipForTests() {
 	measurer?.remove();
 	bubble = null;
 	measurer = null;
-	controller = null;
+	label = null;
 }
 
 export function isActiveTooltip(ref: HTMLElement) {

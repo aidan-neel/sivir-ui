@@ -29,7 +29,7 @@
 	{disabled}
 	class={cn(
 		className,
-		'relative z-10 select-none rounded-[var(--radius-lg)] hover:cursor-[var(--ui-cursor-interactive)] px-[var(--tabs-trigger-padding-x)] py-[var(--tabs-trigger-padding-y)] text-sm [font-weight:var(--font-weight-button,500)] [letter-spacing:var(--tracking-button,0em)] leading-tight transition-[color,transform,box-shadow] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-out)] active:scale-[var(--motion-press-scale)] focus-visible:outline-none focus-visible:ring-0 focus-visible:shadow-[var(--focus-ring)] disabled:cursor-not-allowed disabled:opacity-50',
+		'relative z-10 select-none rounded-[var(--radius-lg)] hover:cursor-[var(--ui-cursor-interactive)] px-3 py-2 text-sm [font-weight:var(--font-weight-button,500)] [letter-spacing:var(--tracking-button,0em)] leading-tight transition-[color,transform,box-shadow] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-out)] motion-reduce:transition-none active:scale-[var(--motion-press-scale)] motion-reduce:active:scale-100 focus-visible:outline-none focus-visible:ring-0 focus-visible:shadow-[var(--focus-ring)] disabled:cursor-not-allowed disabled:opacity-50',
 		active ? 'text-foreground' : 'text-foreground-muted hover:text-foreground',
 		ghostActive && '[font-weight:600]',
 		// Segmented pills sit a touch taller than their text padding; flex-center

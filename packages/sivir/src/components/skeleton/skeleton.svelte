@@ -38,7 +38,7 @@
 	{...rest}
 	class={cn(
 		classProp,
-		'animate-[skeleton-loading_2s_infinite_ease-in-out] rounded-lg bg-[linear-gradient(90deg,var(--skeleton-base)_0%,var(--skeleton-highlight)_50%,var(--skeleton-base)_100%)] bg-[length:200%_100%]'
+		'animate-[skeleton-loading_2s_infinite_ease-in-out] rounded-lg bg-[linear-gradient(90deg,var(--color-secondary)_0%,var(--color-muted)_50%,var(--color-secondary)_100%)] bg-[length:200%_100%] motion-reduce:animate-none'
 	)}
 	style:height={height == null ? undefined : `${height}${unit}`}
 	style:width={width == null ? undefined : `${width}${unit}`}

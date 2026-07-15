@@ -13,7 +13,7 @@ describe('resolveThemeCss', () => {
 		globalThis.fetch = (() =>
 			Promise.resolve(
 				new Response(JSON.stringify({ ...DEFAULT_THEME, slug: 'ocean', brand: '#0066cc' }))
-			)) as typeof fetch;
+			)) as unknown as typeof fetch;
 
 		const result = await resolveThemeCss('ocean', 'https://registry.example');
 		expect(result.source).toBe('registry');
@@ -22,7 +22,9 @@ describe('resolveThemeCss', () => {
 
 	test('rejects malformed and legacy remote payloads', async () => {
 		globalThis.fetch = (() =>
-			Promise.resolve(new Response(JSON.stringify({ slug: 'legacy-theme' })))) as typeof fetch;
+			Promise.resolve(
+				new Response(JSON.stringify({ slug: 'legacy-theme' }))
+			)) as unknown as typeof fetch;
 
 		expect(resolveThemeCss('legacy-theme', 'https://registry.example')).rejects.toThrow(
 			/invalid v2 theme/

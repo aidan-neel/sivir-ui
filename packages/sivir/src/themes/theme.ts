@@ -198,7 +198,7 @@ function brandDeclarations(brand: string, mode: 'light' | 'dark') {
 	const isDefault = brand.toLowerCase() === DEFAULT_THEME.brand;
 	return [
 		`--color-primary: ${brand};`,
-		`--color-primary-hover: ${isDefault ? '#1789cf' : `color-mix(in srgb, ${brand} 88%, black)`};`,
+		`--color-primary-hover: ${isDefault ? '#188bd2' : `color-mix(in srgb, ${brand} 88%, black)`};`,
 		`--color-ring: color-mix(in srgb, ${brand} 30%, transparent);`,
 		`--sivir-blue-500: ${
 			isDefault ? (mode === 'light' ? 'hsl(212.2 100% 64.5%)' : 'hsl(216.6 100% 67.8%)') : brand

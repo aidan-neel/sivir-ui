@@ -21,9 +21,7 @@
         "clsx": "^2.1.1",
         "fuse.js": "^7.1.0",
         "mode-watcher": "^1.1.0",
-        "slot-text": "^0.3.1",
         "svelte-persisted-state": "^1.4.0",
-        "tailwind-merge": "^3.5.0",
         "tailwind-variants": "^3.2.2",
       },
       "devDependencies": {
@@ -114,8 +112,6 @@
         "cnfast": "^0.0.8",
         "fuse.js": "^7.1.0",
         "highlight.js": "^11.11.1",
-        "slot-text": "^0.3.1",
-        "tailwind-merge": "^3.5.0",
         "tailwind-variants": "^3.2.2",
       },
       "devDependencies": {
@@ -1173,8 +1169,6 @@
     "sirv": ["sirv@3.0.2", "", { "dependencies": { "@polka/url": "^1.0.0-next.24", "mrmime": "^2.0.0", "totalist": "^3.0.0" } }, "sha512-2wcC/oGxHis/BoHkkPwldgiPSYcpZK3JU28WoMVv55yHJgcZ8rlXvuG9iZggz+sU1d4bRgIGASwyWqjxu3FM0g=="],
 
     "sisteransi": ["sisteransi@1.0.5", "", {}, "sha512-bLGGlR1QxBcynn2d5YmDX4MGjlZvy2MRBDRNHLJ8VI6l6+9FUiyTFNJ0IveOSP0bcXgVDPRcfGqA0pjaqUpfVg=="],
-
-    "slot-text": ["slot-text@0.3.1", "", { "peerDependencies": { "react": ">=18 <20", "solid-js": ">=1.8 <2", "svelte": ">=4 <6", "vue": ">=3.4 <4" }, "optionalPeers": ["react", "solid-js", "svelte", "vue"] }, "sha512-gDHfMnFrz4CxqD7H8F3CqWVGYwTbgjpJiIH1bQg1Tj60TzgnLe47vuQDHNeyg4zbhsEAPFvUp05nG7lKsboCVw=="],
 
     "source-map-js": ["source-map-js@1.2.1", "", {}, "sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA=="],
 

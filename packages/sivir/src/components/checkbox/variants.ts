@@ -28,12 +28,12 @@ export const checkbox = tv({
 });
 
 export const checkboxBox = tv({
-	base: 'flex h-[var(--checkbox-size)] w-[var(--checkbox-size)] items-center justify-center rounded-[var(--radius-sm)] p-0 transition-[box-shadow,transform] peer-focus-visible:shadow-[var(--focus-ring)] peer-active:scale-[var(--motion-press-scale)] active:scale-[var(--motion-press-scale)] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-out)]',
+	base: 'flex size-4 items-center justify-center rounded-[var(--radius-sm)] p-0 transition-[box-shadow,transform] peer-focus-visible:shadow-[var(--focus-ring)] peer-active:scale-[var(--motion-press-scale)] active:scale-[var(--motion-press-scale)] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-out)] motion-reduce:transition-none motion-reduce:active:scale-100',
 	variants: {
 		checked: {
-			true: 'bg-[var(--checkbox-checked-bg)]',
+			true: 'bg-primary',
 			false:
-				'border bg-[var(--checkbox-bg)] peer-hover:bg-[var(--color-field-hover)] peer-focus-visible:bg-[var(--color-field-hover)]'
+				'border border-border bg-[var(--color-field)] peer-hover:bg-[var(--color-field-hover)] peer-focus-visible:bg-[var(--color-field-hover)]'
 		}
 	}
 });

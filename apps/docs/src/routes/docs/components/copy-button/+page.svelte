@@ -66,7 +66,7 @@
 		</h2>
 		<p class="text-sm text-foreground-muted">Import Copy Button and pass the text to copy:</p>
 		<CodeBlock
-			code={`import { CopyButton } from '$lib/sivir/components/copy-button';\n\n<CopyButton text="npm install slot-text" />\n<CopyButton text={apiKey} label="Copy key" variant="outline" />`}
+			code={`import { CopyButton } from '$lib/sivir/components/copy-button';\n\n<CopyButton text="bun add @sivir/ui" />\n<CopyButton text={apiKey} label="Copy key" variant="outline" />`}
 			lang="svelte"
 			copy="overlay"
 		/>

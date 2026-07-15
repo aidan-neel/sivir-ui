@@ -33,7 +33,7 @@ export type ModalContentProps = {
 	surfaceClass?: string;
 	panelIdPrefix?: string;
 	showClose?: boolean;
-	/** Max-width preset (maps to the --modal-width-* tokens). Defaults to `md`. */
+	/** Max-width preset. Defaults to `md`. */
 	size?: 'sm' | 'md' | 'lg' | 'xl';
 } & DefaultProps &
 	Partial<Record<`aria-${string}`, string | boolean | null | undefined>>;

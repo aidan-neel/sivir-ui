@@ -5,7 +5,7 @@
 
 	const inverted = getContext('inverted') as boolean | undefined;
 	const INVERTED_MENU =
-		'[--color-panel:hsl(0_0%_13%)] [--panel-border:rgb(255_255_255/0.1)] [--color-foreground:hsl(0_0%_96%)] [--menu-item-foreground:hsl(0_0%_96%)] [--menu-label-foreground:hsl(0_0%_72%)] [--menu-item-hover-bg:rgb(255_255_255/0.08)] [--menu-item-active-bg:rgb(255_255_255/0.12)] [--separator-color:rgb(255_255_255/0.1)]';
+		'[--color-panel:hsl(0_0%_13%)] [--color-border:rgb(255_255_255/0.1)] [--color-foreground:hsl(0_0%_96%)] [--color-foreground-muted:hsl(0_0%_72%)] [--color-accent-tint:rgb(255_255_255/0.12)]';
 
 	type Props = {
 		children: Snippet;
@@ -20,7 +20,7 @@
 	tabindex={-1}
 	data-ui="dropdown-menu-content"
 	class={cn(props.class, 'min-w-[var(--popover-trigger-width)] w-max', inverted && INVERTED_MENU)}
-	surfaceClass="flex flex-col gap-0 p-[var(--menu-padding)]"
+	surfaceClass="flex flex-col gap-0 p-1"
 >
 	{@render props.children?.()}
 </Popover.Content>

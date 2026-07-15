@@ -12,7 +12,7 @@
 	focusTrap={false}
 	data-ui="combobox-content"
 	class={cn(className, 'min-w-[var(--popover-trigger-width)] w-[var(--popover-trigger-width)]')}
-	surfaceClass="p-[var(--menu-padding)]"
+	surfaceClass="p-1"
 >
 	{@render children?.()}
 </Popover.Content>

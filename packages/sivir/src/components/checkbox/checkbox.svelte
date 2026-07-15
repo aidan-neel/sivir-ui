@@ -30,16 +30,11 @@
 	)}
 >
 	{#if disabled}
-		<input
-			type="checkbox"
-			class="peer absolute size-[var(--checkbox-size)] opacity-0"
-			disabled
-			aria-checked={checked}
-		/>
+		<input type="checkbox" class="peer absolute size-4 opacity-0" disabled aria-checked={checked} />
 	{:else}
 		<input
 			type="checkbox"
-			class="peer absolute size-[var(--checkbox-size)] opacity-0"
+			class="peer absolute size-4 opacity-0"
 			bind:checked
 			aria-checked={checked}
 		/>
@@ -49,7 +44,7 @@
 			in:scaleFade={{ duration: 200, durationVar: '--motion-duration-hover' }}
 			class={checkboxBox({ checked: true })}
 		>
-			<Check size="12" class="text-[var(--checkbox-checked-foreground)]" />
+			<Check size="12" class="text-[var(--color-on-primary)]" />
 		</div>
 	{:else}
 		<div

@@ -14,17 +14,12 @@
 	let { children, class: className, heading, ...rest }: Props = $props();
 </script>
 
-<div
-	{...rest}
-	role="group"
-	aria-label={heading}
-	class="flex flex-col px-[var(--menu-padding)] pt-[var(--menu-padding)]"
->
+<div {...rest} role="group" aria-label={heading} class="flex flex-col px-1 pt-1">
 	{#if command.searchContent === ''}
 		<p
 			class={cn(
 				className,
-				'text-[length:var(--text-xs)] [font-size:var(--font-size-label,14px)] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-[var(--menu-label-foreground)] select-none px-[var(--menu-label-padding-x)] py-[var(--menu-label-padding-y)]'
+				'px-2 py-1 text-[length:var(--text-xs)] [font-size:var(--font-size-label,14px)] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted select-none'
 			)}
 		>
 			{heading}

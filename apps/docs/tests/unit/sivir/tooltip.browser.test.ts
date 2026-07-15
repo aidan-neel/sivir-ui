@@ -70,8 +70,7 @@ describe('Tooltip -- hover opens after the configured delay', () => {
 
 		const tooltipEl = document.querySelector('[role="tooltip"]');
 		expect(tooltipEl).toBeInTheDocument();
-		// The bubble renders its label via a slot-text roll (which interleaves
-		// glyphs), so assert the authored label through the off-screen reporter.
+		// Assert the authored label through the off-screen reporter.
 		const body = document.querySelector('[data-testid="tooltip-body"]');
 		expect(body?.textContent).toContain('Tooltip content');
 	});

@@ -20,10 +20,16 @@
 		...rest
 	}: ModalContentProps = $props();
 
-	// Rebind --modal-max-width for this panel to the chosen size token. A style
-	// directive (vs a class) sets the property directly, so it can't be dropped
-	// by class merging and survives the {...rest} spread.
-	const maxWidth = $derived(`var(--modal-width-${size})`);
+	const maxWidthClass = $derived(
+		(
+			{
+				sm: 'max-w-sm',
+				md: 'max-w-md',
+				lg: 'max-w-xl',
+				xl: 'max-w-3xl'
+			} as const
+		)[size]
+	);
 
 	const modal = getModalContext();
 	const contentId = $derived(`${panelIdPrefix}-${modal.id}`);
@@ -75,11 +81,11 @@
 			class={cn(
 				contentClass,
 				className, // token-lint-disable-next-line no-literal-length
-				'origin-center bg-[var(--color-panel)] text-[var(--color-foreground)] shadow-[var(--panel-shadow)]',
-				'rounded-[var(--radius-lg)] border border-[var(--panel-border,var(--color-border))]',
-				'fixed top-[45%] left-1/2 z-[120] m-auto min-h-[var(--modal-min-height)] w-[calc(100%-var(--modal-margin-x))] max-w-[var(--modal-max-width)] -translate-x-1/2 -translate-y-1/2 overflow-y-auto overscroll-contain md:w-full max-h-[calc(100dvh-var(--modal-max-height-adjust))]'
+				'origin-center bg-panel text-foreground shadow-[var(--elevation-float)]',
+				'rounded-[var(--radius-lg)] border border-border',
+				'fixed top-[45%] left-1/2 z-[120] m-auto min-h-20 w-[calc(100%-3rem)] -translate-x-1/2 -translate-y-1/2 overflow-y-auto overscroll-contain md:w-full max-h-[calc(100dvh-2rem)]', // token-lint-disable-line no-literal-length
+				maxWidthClass
 			)}
-			style:--modal-max-width={maxWidth}
 			{role}
 			aria-modal="true"
 			id={contentId}
@@ -90,13 +96,7 @@
 		>
 			<!-- Experiment: Modal.Content as a Panel. The box is Panel's outer frame;
 			     this is its inset surface, themed with the modal's own tokens. -->
-			<div
-				class={cn(
-					surfaceClass,
-					'bg-[var(--color-panel)]',
-					'relative flex h-full flex-col gap-[var(--modal-section-gap)] p-[var(--modal-padding)]'
-				)}
-			>
+			<div class={cn(surfaceClass, 'bg-panel', 'relative flex h-full flex-col gap-4 p-6')}>
 				{#if showClose}
 					<button
 						onclick={() => {
