@@ -1,10 +1,10 @@
 {
-	"name": "silk-bun",
+	"name": "sivir-bun",
 	"build": {
 		"dockerfile": "Dockerfile",
 		"context": ".."
 	},
-	"workspaceFolder": "/workspaces/silk",
+	"workspaceFolder": "/workspaces/sivir",
 	"forwardPorts": [5173],
 	"postCreateCommand": ".devcontainer/post-create.sh",
 	"mounts": ["source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"],
