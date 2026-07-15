@@ -109,13 +109,13 @@ describe('rewriteImports', () => {
 	test('rewrites subpath and bare imports', () => {
 		const source = [
 			"import { cn } from '@sivir/ui/utils';",
-			"import { states } from '@sivir/ui/internals/state.svelte.ts';",
+			"import { getPopoverContext } from '@sivir/ui/components/popover/context.svelte.ts';",
 			"import Button from '@sivir/ui';"
 		].join('\n');
 		expect(rewriteImports(source, '$lib/sivir')).toBe(
 			[
 				"import { cn } from '$lib/sivir/utils';",
-				"import { states } from '$lib/sivir/internals/state.svelte';",
+				"import { getPopoverContext } from '$lib/sivir/components/popover/context.svelte';",
 				"import Button from '$lib/sivir';"
 			].join('\n')
 		);

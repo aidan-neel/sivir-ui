@@ -1,22 +1,20 @@
 <script lang="ts">
 	import { cn } from '@sivir/ui/utils';
-	import type { SheetHeaderProps, SheetState } from '.';
+	import type { SheetHeaderProps } from '.';
 	import Button from '@sivir/ui/components/button';
 	import X from '@lucide/svelte/icons/x';
-	import { states } from '@sivir/ui/internals/state.svelte.ts';
-	import { getContext } from 'svelte';
+	import { getSheetContext } from './context.svelte';
 
 	let { class: className, children, ...rest }: SheetHeaderProps = $props();
 
-	const key = getContext<string>('key');
-	const uiState = states[key].data as SheetState;
+	const { state: sheetState } = getSheetContext();
 </script>
 
 <div {...rest} class={cn(className, 'flex flex-col gap-1 pb-6')}>
 	{@render children?.()}
 	<Button
 		onclick={() => {
-			uiState.open = false;
+			sheetState.open = false;
 		}}
 		class="absolute top-3 right-3 size-8 text-foreground-muted"
 		variant="ghost"

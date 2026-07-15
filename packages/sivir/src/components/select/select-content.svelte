@@ -1,12 +1,12 @@
 <script lang="ts">
 	import * as Popover from '@sivir/ui/components/popover';
-	import { states, type UIState } from '@sivir/ui/internals/state.svelte.ts';
 	import { cn } from '@sivir/ui/utils';
-	import { getContext, tick, type Snippet } from 'svelte';
-	import type { SelectState } from '.';
+	import { tick, type Snippet } from 'svelte';
+	import { getSelectContext } from './context.svelte';
+	import { getPopoverContext } from '@sivir/ui/components/popover/context.svelte';
 
-	const key = getContext('key') as string;
-	const uiState = states[key] as UIState<SelectState>;
+	const { state } = getSelectContext();
+	const { state: popoverState } = getPopoverContext();
 
 	type Props = {
 		children: Snippet;
@@ -16,10 +16,10 @@
 	let props: Props = $props();
 
 	$effect(() => {
-		if (!uiState.data.open) return;
+		if (!state.open) return;
 
 		void tick().then(() => {
-			const content = uiState.data.popoverRef as HTMLElement | undefined;
+			const content = popoverState.popoverRef;
 			if (!content) return;
 
 			const selected =

@@ -1,11 +1,12 @@
 <script lang="ts">
-	import { setContext, untrack } from 'svelte';
-	import { useState } from '@sivir/ui/internals/state.svelte.ts';
+	import { untrack } from 'svelte';
 	import type { CollapsibleProps, CollapsibleState } from '.';
+	import { setCollapsibleContext } from './context.svelte';
 
 	let { open = $bindable(false), children, disabled = false }: CollapsibleProps = $props();
 
-	const uiState = useState<CollapsibleState>({
+	const id = $props.id();
+	const collapsibleState = $state<CollapsibleState>({
 		open: untrack(() => open),
 		disabled: untrack(() => disabled)
 	});
@@ -14,20 +15,20 @@
 	$effect(() => {
 		if (open !== synced) {
 			synced = open;
-			uiState.data.open = open;
+			collapsibleState.open = open;
 		}
 	});
 	$effect(() => {
-		if (uiState.data.open !== synced) {
-			synced = uiState.data.open;
-			open = uiState.data.open;
+		if (collapsibleState.open !== synced) {
+			synced = collapsibleState.open;
+			open = collapsibleState.open;
 		}
 	});
 	$effect(() => {
-		uiState.data.disabled = disabled;
+		collapsibleState.disabled = disabled;
 	});
 
-	setContext('key', uiState.key);
+	setCollapsibleContext({ id, state: collapsibleState });
 </script>
 
 {@render children?.()}

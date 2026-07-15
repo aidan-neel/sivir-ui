@@ -1,18 +1,16 @@
 <script lang="ts">
-	import { getContext } from 'svelte';
-	import { states, UIState } from '@sivir/ui/internals/state.svelte.ts';
 	import { themedSlide } from '@sivir/ui/internals/transition';
 	import { cn } from '@sivir/ui/utils';
-	import type { CollapsibleContentProps, CollapsibleState } from '.';
+	import type { CollapsibleContentProps } from '.';
+	import { getCollapsibleContext } from './context.svelte';
 
 	let { class: className, children, ...rest }: CollapsibleContentProps = $props();
-	const key = getContext<string>('key');
-	const uiState = states[key] as UIState<CollapsibleState>;
+	const { id, state } = getCollapsibleContext();
 </script>
 
-{#if uiState.data.open}
+{#if state.open}
 	<div
-		id={`collapsible-${key}`}
+		id={`collapsible-${id}`}
 		data-ui="collapsible-content"
 		data-state="open"
 		transition:themedSlide={{ durationVar: '--motion-duration-panel', fallback: 220 }}

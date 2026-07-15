@@ -14,7 +14,7 @@ import type { Manifest } from '@sivir/ui/_manifest/types';
  *        - popover-content's aria-modal can now be overridden via prop.
  *        - popover-trigger allows aria-controls/aria-label override
  *          (consumer-supplied values now win).
- *        - popover.svelte initializes useState with actual prop values
+ *        - popover.svelte initializes scoped state with actual prop values
  *          (open/placement/hoverable/delay/closeDelay) -- fixes the
  *          hardcoded `open: false` bug.
  *        - Removed onpointerenter/onpointerleave from PopoverTriggerProps
@@ -33,17 +33,12 @@ export const manifest: Manifest = {
 		'components/popover/popover-trigger.svelte',
 		'components/popover/popover-content.svelte',
 		'components/popover/popover-title.svelte',
+		'components/popover/context.svelte.ts',
 		'components/popover/index.ts',
 		'components/popover/manifest.ts'
 	],
 	components: ['button'],
-	shared: [
-		'utils.cn',
-		'utils.clickOutside',
-		'utils.positionFloatingPanel',
-		'internals/state',
-		'internals/transition'
-	],
+	shared: ['utils.cn', 'utils.clickOutside', 'utils.positionFloatingPanel', 'internals/transition'],
 	peerDependencies: {
 		'@floating-ui/dom': '^1.0.0',
 		cnfast: '^0.0.8',

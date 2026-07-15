@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { cn } from '@sivir/ui/utils';
-	import { getContext } from 'svelte';
 	import type { PopoverTitleProps } from '.';
+	import { getPopoverContext } from './context.svelte';
 
-	const key = getContext('key') as string;
+	const { id: key } = getPopoverContext();
 
 	let { children, class: classProp, ...rest }: PopoverTitleProps = $props();
 </script>

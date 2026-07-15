@@ -22,11 +22,12 @@ export const manifest: Manifest = {
 		'components/combobox/combobox-results.svelte',
 		'components/combobox/combobox-item.svelte',
 		'components/combobox/combobox-label.svelte',
+		'components/combobox/context.svelte.ts',
 		'components/combobox/index.ts',
 		'components/combobox/manifest.ts'
 	],
 	components: ['popover', 'button'],
-	shared: ['utils.cn', 'internals/state', 'internals/menu'],
+	shared: ['utils.cn', 'internals/menu'],
 	peerDependencies: {
 		'@lucide/svelte': '^1.0.0',
 		'fuse.js': '^7.0.0',

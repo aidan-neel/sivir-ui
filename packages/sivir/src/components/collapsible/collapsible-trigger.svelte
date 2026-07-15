@@ -1,22 +1,20 @@
 <script lang="ts">
-	import { getContext } from 'svelte';
-	import { states, UIState } from '@sivir/ui/internals/state.svelte.ts';
 	import { cn } from '@sivir/ui/utils';
-	import type { CollapsibleTriggerProps, CollapsibleState } from '.';
+	import type { CollapsibleTriggerProps } from '.';
+	import { getCollapsibleContext } from './context.svelte';
 
 	let { class: className, children, ...rest }: CollapsibleTriggerProps = $props();
-	const key = getContext<string>('key');
-	const uiState = states[key] as UIState<CollapsibleState>;
+	const { id, state } = getCollapsibleContext();
 </script>
 
 <button
 	type="button"
 	data-ui="collapsible-trigger"
-	data-state={uiState.data.open ? 'open' : 'closed'}
-	aria-expanded={uiState.data.open}
-	aria-controls={`collapsible-${key}`}
-	disabled={uiState.data.disabled}
-	onclick={() => (uiState.data.open = !uiState.data.open)}
+	data-state={state.open ? 'open' : 'closed'}
+	aria-expanded={state.open}
+	aria-controls={`collapsible-${id}`}
+	disabled={state.disabled}
+	onclick={() => (state.open = !state.open)}
 	class={cn(
 		className,
 		'inline-flex items-center gap-2 transition-[transform] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-out)] active:scale-[var(--motion-press-scale)] focus-visible:outline-none focus-visible:shadow-[var(--focus-ring)]'

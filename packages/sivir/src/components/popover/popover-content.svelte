@@ -57,11 +57,10 @@
 
 <script lang="ts">
 	import { onDestroy, onMount } from 'svelte';
-	import { states } from '@sivir/ui/internals/state.svelte.ts';
 	import { clickOutside, cn, positionFloatingPanel, trapFocus } from '@sivir/ui/utils';
 	import { panelIn, panelOut } from '@sivir/ui/internals/transition';
-	import { getContext } from 'svelte';
-	import type { PopoverContentProps, PopoverState } from '.';
+	import type { PopoverContentProps } from '.';
+	import { getPopoverContext } from './context.svelte';
 
 	const {
 		children,
@@ -79,31 +78,31 @@
 		...rest
 	}: PopoverContentProps = $props();
 
-	const key = getContext('key') as string;
-	const uiState = states[key].data as PopoverState;
+	const { id: key, state: popoverState } = getPopoverContext();
 
 	let popover = $state<HTMLElement | undefined>();
 	let panelEl = $state<HTMLElement | undefined>();
 	let clickOutsideCleanup: (() => void) | undefined;
 	let positionFrame: number | undefined;
+	let mounted = false;
 
 	function handleKeydown(event: KeyboardEvent) {
 		if (event.key === 'Escape') {
-			uiState.open = false;
+			popoverState.open = false;
 		}
 	}
 
 	function updatePosition() {
-		if (!uiState || !popover) return;
-		const reference = refElement ?? uiState.buttonRef;
+		if (!popover) return;
+		const reference = refElement ?? popoverState.buttonRef;
 		if (!reference) return;
 
-		const triggerWidth = uiState.buttonRef?.getBoundingClientRect().width;
+		const triggerWidth = popoverState.buttonRef?.getBoundingClientRect().width;
 		if (triggerWidth) {
 			popover.style.setProperty('--popover-trigger-width', `${triggerWidth}px`);
 		}
 
-		positionFloatingPanel(reference, popover, refElement ? 'right-start' : uiState.placement);
+		positionFloatingPanel(reference, popover, refElement ? 'right-start' : popoverState.placement);
 	}
 
 	function schedulePosition() {
@@ -115,13 +114,14 @@
 	}
 
 	onMount(() => {
+		mounted = true;
 		document.addEventListener('keydown', handleKeydown);
 		document.addEventListener('scroll', schedulePosition);
 
 		window.addEventListener('resize', schedulePosition);
 		window.addEventListener('scroll', schedulePosition, true);
 
-		uiState.popoverRef = popover;
+		popoverState.popoverRef = popover;
 
 		if (portal && document && popover) {
 			document.body.appendChild(popover);
@@ -131,15 +131,15 @@
 			const outside = clickOutside(
 				popover,
 				() => {
-					uiState.open = false;
+					popoverState.open = false;
 				},
-				uiState.buttonRef ? [uiState.buttonRef] : []
+				popoverState.buttonRef ? [popoverState.buttonRef] : []
 			);
 			clickOutsideCleanup = outside.destroy;
 		}
 
 		const ro = new ResizeObserver(schedulePosition);
-		if (uiState?.buttonRef) ro.observe(uiState.buttonRef);
+		if (popoverState.buttonRef) ro.observe(popoverState.buttonRef);
 		if (popover) ro.observe(popover);
 
 		// These fire on document focus changes -- including the focusout that the
@@ -151,18 +151,18 @@
 			const target = e.target as HTMLElement;
 			if (!target) return;
 
-			const openPopovers = Array.from(document.body.children).filter(
-				(el) => el.id.startsWith('popover-') && !el.id.includes('controls')
+			const openPopovers = Array.from(
+				document.querySelectorAll<HTMLElement>('[data-floating-content]')
 			);
 			const inside = openPopovers.some((el) => el.contains(target));
 			queueMicrotask(() => {
-				uiState.focusedInside = inside;
+				if (mounted) popoverState.focusedInside = inside;
 			});
 		};
 
 		const handleFocusOut = () => {
 			queueMicrotask(() => {
-				uiState.focusedInside = false;
+				if (mounted) popoverState.focusedInside = false;
 			});
 		};
 
@@ -170,6 +170,7 @@
 		document.addEventListener('focusout', handleFocusOut);
 
 		onDestroy(() => {
+			mounted = false;
 			document.removeEventListener('keydown', handleKeydown);
 			document.removeEventListener('scroll', schedulePosition);
 			window.removeEventListener('resize', schedulePosition);
@@ -179,19 +180,17 @@
 			ro.disconnect();
 			if (positionFrame !== undefined) cancelAnimationFrame(positionFrame);
 			clickOutsideCleanup?.();
-			if (uiState.open) releaseLock();
-
-			uiState.open = false;
-			uiState.popoverRef?.remove();
+			popoverState.open = false;
+			popoverState.popoverRef?.remove();
 			popover?.remove();
 		});
 	});
 
 	function cancelClose() {
-		if (uiState?.closeTimeout) {
-			if (uiState?.hoverable) {
-				clearTimeout(uiState.closeTimeout);
-				uiState.closeTimeout = undefined;
+		if (popoverState.closeTimeout) {
+			if (popoverState.hoverable) {
+				clearTimeout(popoverState.closeTimeout);
+				popoverState.closeTimeout = undefined;
 			}
 		}
 	}
@@ -202,14 +201,14 @@
 	// on the trigger and cause an open/close flicker loop.
 	$effect(() => {
 		if (typeof document === 'undefined') return;
-		if (uiState.open && popover && !uiState.hoverable && lockScroll) {
+		if (popoverState.open && popover && !popoverState.hoverable && lockScroll) {
 			acquireLock();
 			return () => releaseLock();
 		}
 	});
 
 	$effect(() => {
-		if (!uiState.hovering && !uiState.focusedInside) {
+		if (!popoverState.hovering && !popoverState.focusedInside) {
 			cancelClose();
 		}
 	});
@@ -220,7 +219,7 @@
 	// nor at auto width before snapping to the trigger (the combobox jump).
 	// Without this we'd rely on the ResizeObserver firing a frame later.
 	$effect(() => {
-		if (uiState.open && popover) {
+		if (popoverState.open && popover) {
 			updatePosition();
 		}
 	});
@@ -229,7 +228,7 @@
 	// hover-card) are excluded -- they aren't keyboard-modal and stealing focus
 	// would fight their pointer-driven open/close.
 	$effect(() => {
-		if (uiState.open && panelEl && !uiState.hoverable && focusTrap) {
+		if (popoverState.open && panelEl && !popoverState.hoverable && focusTrap) {
 			const cleanup = trapFocus(panelEl);
 			return cleanup;
 		}
@@ -245,15 +244,15 @@
 	bind:this={popover as HTMLElement}
 	onmouseenter={cancelClose}
 	onmouseleave={() => {
-		if (uiState?.hoverable) {
+		if (popoverState.hoverable) {
 			if (popover && popover.contains(document.activeElement)) {
 				return;
 			}
-			uiState.open = false;
+			popoverState.open = false;
 		}
 	}}
 >
-	{#if uiState.open}
+	{#if popoverState.open}
 		<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
 		<div
 			{...rest}

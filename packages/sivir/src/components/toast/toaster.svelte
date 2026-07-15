@@ -1,13 +1,12 @@
 <!-- token-lint-disable-file -->
 <script lang="ts">
-	import { setToastUIState, type ToastUIState } from './lib.svelte';
-	import type { UIState } from '@sivir/ui/internals/state.svelte.ts';
+	import { setToastUIState, type ToastState } from './lib.svelte';
 	import Toast from './toast.svelte';
 	import { cubicOut, quartOut } from 'svelte/easing';
 	import type { TransitionConfig } from 'svelte/transition';
 	import { getCssDuration } from '@sivir/ui/internals/transition';
 
-	const toastState: UIState<ToastUIState> = setToastUIState();
+	const toastState: ToastState = setToastUIState();
 
 	let expanded = $state(false);
 	let heights = $state<Record<number, number>>({} as Record<number, number>);

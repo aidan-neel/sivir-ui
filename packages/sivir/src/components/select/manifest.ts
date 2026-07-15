@@ -21,11 +21,12 @@ export const manifest: Manifest = {
 		'components/select/select-content.svelte',
 		'components/select/select-item.svelte',
 		'components/select/select-label.svelte',
+		'components/select/context.svelte.ts',
 		'components/select/index.ts',
 		'components/select/manifest.ts'
 	],
 	components: ['popover', 'button'],
-	shared: ['utils.cn', 'internals/state', 'internals/menu'],
+	shared: ['utils.cn', 'internals/menu'],
 	peerDependencies: {
 		'@lucide/svelte': '^1.0.0',
 		cnfast: '^0.0.8',

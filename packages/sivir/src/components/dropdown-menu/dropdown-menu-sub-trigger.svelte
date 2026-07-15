@@ -1,11 +1,9 @@
 <script lang="ts">
 	import { cn } from '@sivir/ui/utils';
-	import { getContext, setContext, type Snippet } from 'svelte';
+	import { type Snippet } from 'svelte';
 	import { ChevronRight } from '@lucide/svelte';
 	import * as Popover from '@sivir/ui/components/popover';
 	import { MENU_ITEM } from '@sivir/ui/internals/menu';
-
-	setContext('parent', getContext('key'));
 
 	type SubTriggerProps = {
 		class?: string;

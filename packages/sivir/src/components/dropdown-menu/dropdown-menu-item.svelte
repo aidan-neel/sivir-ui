@@ -1,14 +1,13 @@
 <script lang="ts">
 	import { Button, type ButtonProps } from '@sivir/ui/components/button';
-	import { states, type UIState } from '@sivir/ui/internals/state.svelte.ts';
 	import { cn } from '@sivir/ui/utils';
-	import { getContext, type Snippet } from 'svelte';
-	import type { PopoverState } from '@sivir/ui/components/popover';
+	import { type Snippet } from 'svelte';
 	import { MENU_ITEM } from '@sivir/ui/internals/menu';
+	import { getPopoverContext } from '@sivir/ui/components/popover/context.svelte';
+	import { getDropdownMenuContext } from './context.svelte';
 
-	const key = getContext('key') as string;
-	const parent = getContext('parent') as string;
-	const uiState = states[key] as UIState<PopoverState>;
+	const { state: popoverState } = getPopoverContext();
+	const { parentState } = getDropdownMenuContext();
 
 	type Props = {
 		class?: string;
@@ -23,12 +22,8 @@
 	role="menuitem"
 	{...rest}
 	onclick={() => {
-		uiState.data.open = false;
-		setTimeout(() => {
-			if (parent) {
-				(states[parent].data as PopoverState).open = false;
-			}
-		}, 100);
+		popoverState.open = false;
+		if (parentState) parentState.open = false;
 		callback?.();
 		userOnclick?.();
 	}}

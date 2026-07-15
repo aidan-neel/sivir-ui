@@ -1,9 +1,8 @@
-import { describe, expect, it, vi, beforeEach } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page, userEvent } from 'vitest/browser';
 import { tick } from 'svelte';
 import ContextMenuFixture from '../../fixtures/ContextMenuFixture.svelte';
-import { states } from '@sivir/ui/internals/state.svelte.ts';
 
 async function flush() {
 	await tick();
@@ -22,12 +21,6 @@ async function openContextMenu() {
 	trigger.dispatchEvent(event);
 	await flush();
 }
-
-beforeEach(() => {
-	for (const key of Object.keys(states)) {
-		delete states[key];
-	}
-});
 
 describe('ContextMenu -- open via right-click', () => {
 	it('does not show items initially', async () => {

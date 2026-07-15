@@ -1,14 +1,14 @@
 <script lang="ts">
 	import { Button, type ButtonProps } from '@sivir/ui/components/button';
-	import { states, type UIState } from '@sivir/ui/internals/state.svelte.ts';
 	import { cn } from '@sivir/ui/utils';
-	import { getContext, tick } from 'svelte';
+	import { tick } from 'svelte';
 	import Check from '@lucide/svelte/icons/check';
-	import type { SelectState } from '.';
 	import { MENU_ITEM } from '@sivir/ui/internals/menu';
+	import { getSelectContext } from './context.svelte';
+	import { getPopoverContext } from '@sivir/ui/components/popover/context.svelte';
 
-	const key = getContext('key') as string;
-	const uiState = states[key] as UIState<SelectState>;
+	const { id, state: selectState } = getSelectContext();
+	const { state: popoverState } = getPopoverContext();
 
 	type Props = {
 		value: string;
@@ -30,36 +30,36 @@
 	$effect(() => {
 		const itemValue = value;
 		let active = true;
-		uiState.data.values.add(itemValue);
+		selectState.values.add(itemValue);
 		void tick().then(() => {
 			if (!active) return;
 			const resolved = resolveLabel();
 			if (!resolved) return;
-			uiState.data.labels.set(itemValue, resolved);
-			if (uiState.data.value === itemValue) {
-				uiState.data.selectedLabel = resolved;
+			selectState.labels.set(itemValue, resolved);
+			if (selectState.value === itemValue) {
+				selectState.selectedLabel = resolved;
 			}
 		});
 
 		return () => {
 			active = false;
-			uiState.data.values.delete(itemValue);
-			uiState.data.labels.delete(itemValue);
+			selectState.values.delete(itemValue);
+			selectState.labels.delete(itemValue);
 		};
 	});
 </script>
 
 <Button
 	bind:element
-	id={`select-${key}-option-${value}`}
+	id={`select-${id}-option-${value}`}
 	role="option"
-	aria-selected={uiState.data.value === value}
+	aria-selected={selectState.value === value}
 	{...rest}
 	onclick={() => {
-		uiState.data.value = value;
-		uiState.data.selectedLabel = resolveLabel() || uiState.data.labels.get(value) || value;
-		uiState.data.open = false;
-		uiState.data.buttonRef?.focus();
+		selectState.value = value;
+		selectState.selectedLabel = resolveLabel() || selectState.labels.get(value) || value;
+		selectState.open = false;
+		popoverState.buttonRef?.focus();
 		userOnclick?.();
 	}}
 	class={cn(className, MENU_ITEM)}
@@ -67,7 +67,7 @@
 >
 	{@render children?.()}
 
-	{#if uiState.data.value === value}
+	{#if selectState.value === value}
 		<div aria-hidden="true">
 			<Check />
 		</div>

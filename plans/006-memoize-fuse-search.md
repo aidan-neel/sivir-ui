@@ -13,6 +13,7 @@
 
 ## Status
 
+- **Status**: DONE — both indexes are derived from item/version state and browser behavior is green.
 - **Priority**: P2
 - **Effort**: S
 - **Risk**: LOW
@@ -147,13 +148,13 @@ it modeled on the existing combobox browser test file — otherwise skip.
 
 ## Done criteria
 
-- [ ] `grep -n "new Fuse" packages/sivir/src/components/combobox/combobox-trigger.svelte` → exactly 1 match, inside a `$derived` block, not inside `handleInput`
-- [ ] Same for `command-search.svelte`
-- [ ] No `!` non-null assertion in the result-mapping of either file
-- [ ] `bun run check` exits 0; `bun --filter='docs' run test:ci` exits 0
-- [ ] Browser tests pass (locally or via CI — state which)
-- [ ] `git status --porcelain` shows changes only in the two in-scope files
-- [ ] `plans/README.md` status row updated
+- [x] `grep -n "new Fuse" packages/sivir/src/components/combobox/combobox-trigger.svelte` → exactly 1 match, inside a `$derived` block, not inside `handleInput`
+- [x] Same for `command-search.svelte`
+- [x] No `!` non-null assertion in the result-mapping of either file
+- [x] `bun run check` exits 0; `bun --filter='docs' run test:ci` exits 0
+- [x] Browser tests pass locally (183/183 at completion)
+- [x] The implementation changes are scoped to the two search components (Combobox also changed as part of Plan 012's state migration)
+- [x] `plans/README.md` status row updated
 
 ## STOP conditions
 

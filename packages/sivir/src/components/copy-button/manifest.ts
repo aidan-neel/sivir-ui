@@ -18,7 +18,7 @@ export const manifest: Manifest = {
 		'components/copy-button/manifest.ts'
 	],
 	components: ['button', 'tooltip'],
-	shared: ['utils.cn', 'internals/state'],
+	shared: ['utils.cn'],
 	peerDependencies: {
 		'@lucide/svelte': '^1.0.0',
 		cnfast: '^0.0.8',

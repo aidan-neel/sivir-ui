@@ -3,7 +3,6 @@ import { render } from 'vitest-browser-svelte';
 import { page, userEvent } from 'vitest/browser';
 import { tick } from 'svelte';
 import AlertDialogFixture from '../../fixtures/AlertDialogFixture.svelte';
-import { states } from '@sivir/ui/internals/state.svelte.ts';
 
 /*
  * AlertDialog is a thin modal wrapper post-collapse-safe per pattern
@@ -22,9 +21,6 @@ async function flush() {
 }
 
 beforeEach(() => {
-	for (const key of Object.keys(states)) {
-		delete states[key];
-	}
 	document.body.style.overflow = '';
 });
 

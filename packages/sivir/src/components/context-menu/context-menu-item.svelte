@@ -1,14 +1,11 @@
 <script lang="ts">
-	import { getContext } from 'svelte';
-	import type { ContextMenuItemProps, ContextMenuState } from '.';
-	import { states } from '@sivir/ui/internals/state.svelte.ts';
+	import type { ContextMenuItemProps } from '.';
 	import { Button } from '@sivir/ui/components/button';
 	import { cn } from '@sivir/ui/utils';
 	import { MENU_ITEM } from '@sivir/ui/internals/menu';
+	import { getContextMenuContext } from './context.svelte';
 
-	const key = getContext<string>('key');
-	const parent = getContext<string>('parent');
-	const uiState = states[key].data as ContextMenuState;
+	const { state: contextMenuState, parentState } = getContextMenuContext();
 
 	let {
 		class: className,
@@ -23,10 +20,8 @@
 	role="menuitem"
 	{...rest}
 	onclick={() => {
-		uiState.open = false;
-		if (parent) {
-			(states[parent].data as ContextMenuState).open = false;
-		}
+		contextMenuState.open = false;
+		if (parentState) parentState.open = false;
 		callback?.();
 	}}
 	class={cn(className, `${MENU_ITEM} ${inset ? 'pl-8' : ''}`)}

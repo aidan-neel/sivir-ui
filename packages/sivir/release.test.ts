@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { readFile } from 'node:fs/promises';
+import { readFile, readdir } from 'node:fs/promises';
 
 import packageJson from './package.json';
 
@@ -67,6 +67,21 @@ describe('publishable package contract', () => {
 		expect(tooltip).not.toContain('slot-text/style.css');
 		expect(packageJson.dependencies).not.toHaveProperty('slot-text');
 		expect(packageJson.dependencies).not.toHaveProperty('tailwind-merge');
+	});
+
+	test('keeps compound component state instance-scoped', async () => {
+		const files = (await readdir(new URL('./src', import.meta.url), { recursive: true })).filter(
+			(file) => /\.(?:svelte|ts)$/.test(file)
+		);
+		const source = (
+			await Promise.all(
+				files.map((file) => readFile(new URL(`./src/${file}`, import.meta.url), 'utf8'))
+			)
+		).join('\n');
+
+		expect(files).not.toContain('internals/state.svelte.ts');
+		expect(source).not.toMatch(/\buseState\b|\bstates\s*\[/);
+		expect(source).not.toMatch(/(?:set|get)Context(?:<[^>]+>)?\(['"]key['"]\)/);
 	});
 
 	test('ships the repository license byte-for-byte', async () => {

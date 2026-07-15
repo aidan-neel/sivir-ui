@@ -1,9 +1,8 @@
-import { describe, expect, it, vi, beforeEach } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page, userEvent } from 'vitest/browser';
 import { tick } from 'svelte';
 import ComboboxFixture from '../../fixtures/ComboboxFixture.svelte';
-import { states } from '@sivir/ui/internals/state.svelte.ts';
 
 async function flush() {
 	await tick();
@@ -15,12 +14,6 @@ async function openCombobox() {
 	await page.getByTestId('combobox-trigger').click();
 	await flush();
 }
-
-beforeEach(() => {
-	for (const key of Object.keys(states)) {
-		delete states[key];
-	}
-});
 
 describe('Combobox -- open and close', () => {
 	it('hides items initially', async () => {
@@ -86,10 +79,6 @@ describe('Combobox -- search input', () => {
 		await userEvent.type(search, 'app');
 		await flush();
 
-		const comboState = Object.values(states).find(
-			(s) => s && s.data && typeof s.data === 'object' && 'searchContent' in (s.data ?? {})
-		);
-		expect(comboState).toBeDefined();
-		expect((comboState!.data as { searchContent: string }).searchContent).toBe('app');
+		expect(search.value).toBe('app');
 	});
 });

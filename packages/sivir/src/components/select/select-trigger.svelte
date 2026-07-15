@@ -1,14 +1,14 @@
 <script lang="ts">
 	import * as Popover from '@sivir/ui/components/popover';
 	import { cn } from '@sivir/ui/utils';
-	import { getContext, type Snippet } from 'svelte';
+	import { type Snippet } from 'svelte';
 	import { ChevronDown } from '@lucide/svelte';
-	import { states, type UIState } from '@sivir/ui/internals/state.svelte.ts';
 	import type { ButtonVariant } from '@sivir/ui/components/button';
-	import type { SelectState } from '.';
+	import { getSelectContext } from './context.svelte';
+	import { getPopoverContext } from '@sivir/ui/components/popover/context.svelte';
 
-	const key = getContext('key') as string;
-	const uiState = states[key] as UIState<SelectState>;
+	const { state } = getSelectContext();
+	const { id: popoverId } = getPopoverContext();
 
 	type Props = {
 		children: Snippet;
@@ -18,12 +18,10 @@
 
 	let { children, class: className, variant = 'outline', ...rest }: Props = $props();
 	const selectedLabel = $derived(
-		uiState.data.value !== ''
-			? uiState.data.selectedLabel || uiState.data.labels.get(uiState.data.value) || ''
-			: ''
+		state.value !== '' ? state.selectedLabel || state.labels.get(state.value) || '' : ''
 	);
 	const widestLabel = $derived(
-		Array.from(uiState.data.labels.values()).reduce((widest, current) => {
+		Array.from(state.labels.values()).reduce((widest, current) => {
 			return current.length > widest.length ? current : widest;
 		}, selectedLabel || 'Select')
 	);
@@ -32,14 +30,14 @@
 <Popover.Trigger
 	class={cn(
 		className,
-		`flex flex-row items-center justify-between px-3 [font-weight:var(--font-weight-button,500)] [letter-spacing:var(--tracking-button,0em)] transition-[background-color,border-color,color,box-shadow,transform] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-out)] motion-reduce:transition-none active:scale-[var(--motion-press-scale)] motion-reduce:active:scale-100 focus-visible:shadow-[var(--focus-ring)] ${uiState.data.value !== '' ? 'text-foreground' : 'text-foreground-muted'}`
+		`flex flex-row items-center justify-between px-3 [font-weight:var(--font-weight-button,500)] [letter-spacing:var(--tracking-button,0em)] transition-[background-color,border-color,color,box-shadow,transform] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-out)] motion-reduce:transition-none active:scale-[var(--motion-press-scale)] motion-reduce:active:scale-100 focus-visible:shadow-[var(--focus-ring)] ${state.value !== '' ? 'text-foreground' : 'text-foreground-muted'}`
 	)}
 	role="combobox"
 	aria-haspopup="listbox"
-	aria-controls={`popover-${String(key)}-content`}
-	aria-expanded={uiState.data.open}
-	aria-label={uiState.data.value !== ''
-		? `Selected value ${uiState.data.selectedLabel || uiState.data.value}`
+	aria-controls={`popover-${popoverId}-content`}
+	aria-expanded={state.open}
+	aria-label={state.value !== ''
+		? `Selected value ${state.selectedLabel || state.value}`
 		: ((rest as { 'aria-label'?: string })['aria-label'] ?? 'Open select')}
 	{variant}
 	{...rest}

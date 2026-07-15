@@ -17,11 +17,12 @@ export const manifest: Manifest = {
 		'components/context-menu/context-menu-sub.svelte',
 		'components/context-menu/context-menu-sub-trigger.svelte',
 		'components/context-menu/context-menu-sub-content.svelte',
+		'components/context-menu/context.svelte.ts',
 		'components/context-menu/index.ts',
 		'components/context-menu/manifest.ts'
 	],
 	components: ['popover', 'button'],
-	shared: ['utils.cn', 'internals/state', 'internals/menu'],
+	shared: ['utils.cn', 'internals/menu'],
 	peerDependencies: {
 		'@floating-ui/dom': '^1.0.0',
 		'@lucide/svelte': '^1.0.0',

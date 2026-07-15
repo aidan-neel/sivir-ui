@@ -1,9 +1,8 @@
-import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
+import { describe, expect, it, vi, afterEach } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page, userEvent } from 'vitest/browser';
 import { tick } from 'svelte';
 import CommandFixture from '../../fixtures/CommandFixture.svelte';
-import { states } from '@sivir/ui/internals/state.svelte.ts';
 
 async function flush() {
 	await tick();
@@ -15,12 +14,6 @@ async function openCommand() {
 	await page.getByTestId('command-trigger').click();
 	await flush();
 }
-
-beforeEach(() => {
-	for (const key of Object.keys(states)) {
-		delete states[key];
-	}
-});
 
 afterEach(() => {
 	document.body.style.overflow = '';

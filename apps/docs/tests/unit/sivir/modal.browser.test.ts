@@ -1,9 +1,8 @@
-import { describe, expect, it, beforeEach, afterEach } from 'vitest';
+import { describe, expect, it, afterEach } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page, userEvent } from 'vitest/browser';
 import { tick } from 'svelte';
 import ModalFixture from '../../fixtures/ModalFixture.svelte';
-import { states } from '@sivir/ui/internals/state.svelte.ts';
 import { dialogIn, dialogOut } from '@sivir/ui/internals/transition';
 
 /*
@@ -27,12 +26,6 @@ async function flush() {
 	await tick();
 	await tick();
 }
-
-beforeEach(() => {
-	for (const key of Object.keys(states)) {
-		delete states[key];
-	}
-});
 
 afterEach(() => {
 	document.body.style.overflow = '';
@@ -64,6 +57,21 @@ describe('Modal -- open/closed mount in real browser', () => {
 });
 
 describe('Modal -- close paths actually unmount (P3-F6 disambiguation)', () => {
+	it('releases body lock across repeated open and close cycles', async () => {
+		render(ModalFixture, { open: false });
+		await flush();
+
+		for (let cycle = 0; cycle < 5; cycle += 1) {
+			await page.getByTestId('trigger').click();
+			await flush();
+			expect(document.body.style.overflow).toBe('hidden');
+
+			await page.getByText('Close').click();
+			await flush();
+			expect(document.body.style.overflow).toBe('');
+		}
+	});
+
 	it('unmounts content when Close button is clicked', async () => {
 		render(ModalFixture, { open: true });
 		await flush();

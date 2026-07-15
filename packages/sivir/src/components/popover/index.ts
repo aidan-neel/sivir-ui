@@ -5,7 +5,6 @@ import Title from './popover-title.svelte';
 
 import type { DefaultProps } from '@sivir/ui/utils';
 import type { Snippet } from 'svelte';
-import type { UIState } from '@sivir/ui/internals/state.svelte.ts';
 import type { ButtonVariant } from '@sivir/ui/components/button';
 import type { VirtualElement } from '@floating-ui/dom';
 import type { HTMLAttributes, HTMLButtonAttributes } from 'svelte/elements';
@@ -32,8 +31,8 @@ export type PopoverProps = {
 	children?: Snippet;
 	open?: boolean;
 	placement?: Placement;
+	/** Stable identifier used to connect trigger and content ARIA attributes. */
 	state_key?: string;
-	state?: UIState<PopoverState>;
 	hoverable?: boolean;
 	delay?: number;
 	closeDelay?: number;

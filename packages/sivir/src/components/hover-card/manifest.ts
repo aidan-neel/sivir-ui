@@ -41,7 +41,7 @@ export const manifest: Manifest = {
 		'components/hover-card/manifest.ts'
 	],
 	components: ['popover'],
-	shared: ['utils.cn', 'internals/state'],
+	shared: ['utils.cn'],
 	peerDependencies: {
 		cnfast: '^0.0.8',
 		svelte: '^5.0.0'

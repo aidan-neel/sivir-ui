@@ -1,52 +1,49 @@
 <script lang="ts">
-	import { onDestroy, onMount, setContext, untrack } from 'svelte';
-	import { useState, states } from '@sivir/ui/internals/state.svelte.ts';
+	import { untrack } from 'svelte';
 	import type { ComboboxState } from '.';
 	import * as Popover from '@sivir/ui/components/popover';
+	import { setComboboxContext } from './context.svelte';
 
 	interface Props extends Popover.PopoverProps {
 		placeholder?: string;
 	}
 
-	const { children, state_key, placeholder = 'Select…', ...rest }: Props = $props();
+	let {
+		children,
+		state_key,
+		placeholder = 'Select…',
+		open = $bindable(false),
+		...rest
+	}: Props = $props();
 
-	const generatedKey = Math.random().toString(36).substring(2);
+	const generatedKey = $props.id();
 	const key = untrack(() => state_key ?? generatedKey);
-	setContext('key', key);
-	setContext(
-		'placeholder',
-		untrack(() => placeholder)
-	);
-
-	const uiState = useState<ComboboxState>(
-		{
-			open: false,
-			items: new Set(),
-			results: new Set(),
-			searchContent: ''
-		} as ComboboxState,
-		key
-	);
-
-	function handleKeydown(event: KeyboardEvent) {
-		if (event.key === 'Escape') {
-			if (uiState.data) {
-				uiState.data.open = false;
-				uiState.data.searchContent = '';
-			}
-		}
-	}
-
-	onMount(() => {
-		document.addEventListener('keydown', handleKeydown);
-		return () => document.removeEventListener('keydown', handleKeydown);
+	const comboboxState = $state<ComboboxState>({
+		open: untrack(() => open),
+		items: new Set(),
+		results: new Set(),
+		searchContent: ''
 	});
+	let syncedOpen = $state(untrack(() => open));
+	setComboboxContext({ id: key, placeholder: untrack(() => placeholder), state: comboboxState });
 
-	onDestroy(() => {
-		delete states[key];
+	$effect(() => {
+		if (!comboboxState.open) comboboxState.searchContent = '';
+	});
+	$effect(() => {
+		if (open !== syncedOpen) {
+			syncedOpen = open;
+			comboboxState.open = open;
+		}
+	});
+	$effect(() => {
+		if (comboboxState.open !== syncedOpen) {
+			syncedOpen = comboboxState.open;
+			open = comboboxState.open;
+		}
 	});
 </script>
 
-<Popover.Root {...rest} state={uiState}>
+<Popover.Root {...rest} state_key={key} bind:open={comboboxState.open}>
 	{@render children?.()}
 </Popover.Root>

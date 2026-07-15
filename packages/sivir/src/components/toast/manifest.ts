@@ -25,7 +25,7 @@ export const manifest: Manifest = {
 		'components/toast/manifest.ts'
 	],
 	components: ['button'],
-	shared: ['utils.cn', 'internals/state', 'internals/transition'],
+	shared: ['utils.cn', 'internals/transition'],
 	peerDependencies: {
 		'@lucide/svelte': '^1.0.0',
 		cnfast: '^0.0.8',

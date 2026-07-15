@@ -13,7 +13,7 @@ export const manifest: Manifest = {
 		'components/switch/manifest.ts'
 	],
 	components: [],
-	shared: ['utils.cn', 'internals/state'],
+	shared: ['utils.cn'],
 	peerDependencies: {
 		cnfast: '^0.0.8',
 		svelte: '^5.0.0'

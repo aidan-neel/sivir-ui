@@ -1,21 +1,21 @@
 <script lang="ts">
-	import { states } from '@sivir/ui/internals/state.svelte.ts';
-	import { getContext } from 'svelte';
-	import type { SheetState, SheetTriggerProps } from '.';
+	import type { SheetTriggerProps } from '.';
 	import { Button } from '@sivir/ui/components/button';
+	import { getSheetContext } from './context.svelte';
 
-	let { class: className, children, ...rest }: SheetTriggerProps = $props();
+	let { class: className, children, element = $bindable(), ...rest }: SheetTriggerProps = $props();
 
-	const key = getContext<string>('key');
-	const uiState = states[key].data as SheetState;
+	const { id, state: sheetState } = getSheetContext();
 </script>
 
 <Button
+	bind:element
 	aria-haspopup="dialog"
-	aria-expanded={uiState.open}
-	aria-controls={`sheet-${key}`}
+	aria-expanded={sheetState.open}
+	aria-controls={`sheet-${id}`}
 	onclick={() => {
-		uiState.open = !uiState.open;
+		sheetState.triggerRef = element;
+		sheetState.open = !sheetState.open;
 	}}
 	class={className}
 	{...rest}

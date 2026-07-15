@@ -1,9 +1,8 @@
-import { describe, expect, it, beforeEach } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page, userEvent } from 'vitest/browser';
 import { tick } from 'svelte';
 import PopoverFixture from '../../fixtures/PopoverFixture.svelte';
-import { states } from '@sivir/ui/internals/state.svelte.ts';
 
 /*
  * Browser-runner justified per strategy Sec.7.1: floating-ui positioning,
@@ -14,10 +13,8 @@ import { states } from '@sivir/ui/internals/state.svelte.ts';
  * floating-ui's own contract). We verify that positioning is APPLIED
  * (style.left/top set) and that the open/close lifecycle works.
  *
- * P3-F7: Popover.Root hardcodes `{ open: false, ... }` as the initial
- * state value in `useState(...)`, so passing `open: true` at mount
- * does NOT propagate. Tests therefore open via the trigger button,
- * not by the initial open prop.
+ * Initial and controlled open props are covered alongside trigger-driven
+ * state so SSR and client behavior stay aligned.
  */
 
 async function flush() {
@@ -30,12 +27,6 @@ async function openViaTrigger() {
 	await page.getByTestId('popover-trigger-label').click();
 	await flush();
 }
-
-beforeEach(() => {
-	for (const key of Object.keys(states)) {
-		delete states[key];
-	}
-});
 
 describe('Popover -- mount and unmount', () => {
 	it('does not render content when open=false', async () => {

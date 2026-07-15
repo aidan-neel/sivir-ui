@@ -3,7 +3,6 @@ import { render } from 'vitest-browser-svelte';
 import { page, userEvent } from 'vitest/browser';
 import { tick } from 'svelte';
 import axe from 'axe-core';
-import { states } from '@sivir/ui/internals/state.svelte.ts';
 
 import { createRawSnippet } from 'svelte';
 import Button from '@sivir/ui/components/button/button.svelte';
@@ -89,9 +88,6 @@ function expectNoViolations(label: string, violations: axe.Result[]) {
 }
 
 beforeEach(() => {
-	for (const key of Object.keys(states)) {
-		delete states[key];
-	}
 	document.body.style.overflow = '';
 });
 

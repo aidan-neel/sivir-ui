@@ -1,10 +1,8 @@
 <script lang="ts">
-	import { getContext, type Snippet } from 'svelte';
-	import { states } from '@sivir/ui/internals/state.svelte.ts';
-	import type { ComboboxState } from '.';
+	import { type Snippet } from 'svelte';
+	import { getComboboxContext } from './context.svelte';
 
-	const key = getContext('key') as string;
-	const uiState = states[key].data as ComboboxState;
+	const { id, state: comboboxState } = getComboboxContext();
 
 	type Props = {
 		children?: Snippet;
@@ -15,12 +13,12 @@
 
 <div
 	role="listbox"
-	id={`combobox-${String(key)}-listbox`}
+	id={`combobox-${id}-listbox`}
 	class="flex max-h-full flex-col gap-0 overflow-y-auto p-1"
 >
-	{#if uiState.searchContent === ''}
+	{#if comboboxState.searchContent === ''}
 		{@render children?.()}
-	{:else if uiState.results.size > 0}
+	{:else if comboboxState.results.size > 0}
 		{@render children?.()}
 	{:else}
 		<div class="flex w-full items-center justify-center p-3">

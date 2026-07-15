@@ -1,9 +1,12 @@
 <script lang="ts">
-	import { getContext, setContext, type Snippet } from 'svelte';
+	import { type Snippet } from 'svelte';
 	import * as Popover from '@sivir/ui/components/popover';
+	import { getPopoverContext } from '@sivir/ui/components/popover/context.svelte';
+	import { getDropdownMenuContext, setDropdownMenuContext } from './context.svelte';
 
-	const key = Math.random().toString(36).substring(2);
-	setContext('parent', getContext('key'));
+	const { state: parentState } = getPopoverContext();
+	const { inverted } = getDropdownMenuContext();
+	setDropdownMenuContext({ inverted, parentState });
 
 	type Props = {
 		children?: Snippet;
@@ -12,6 +15,6 @@
 	let { children }: Props = $props();
 </script>
 
-<Popover.Root state_key={key} hoverable={true} placement="right">
+<Popover.Root hoverable={true} placement="right">
 	{@render children?.()}
 </Popover.Root>

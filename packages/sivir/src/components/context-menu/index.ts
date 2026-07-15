@@ -10,7 +10,6 @@ import Trigger from './context-menu-trigger.svelte';
 
 import type { DefaultProps } from '@sivir/ui/utils';
 import type { Snippet } from 'svelte';
-import type { PopoverState } from '../popover';
 import type { VirtualElement } from '@floating-ui/dom';
 import type { ButtonProps } from '../button';
 
@@ -45,8 +44,9 @@ export type ContextMenuCheckboxItemState = {
 };
 
 export type ContextMenuState = {
+	open: boolean;
 	virtualElement?: VirtualElement;
-	checkboxItems: Set<ContextMenuCheckboxItemState>;
-} & PopoverState;
+	checkboxItems: Map<string, boolean>;
+};
 
 export { Root, Content, CheckboxItem, Item, Separator, SubContent, SubTrigger, Sub, Trigger };

@@ -1,93 +1,82 @@
 <script lang="ts">
-	import { onDestroy, onMount, setContext, untrack } from 'svelte';
-	import { useState, states } from '@sivir/ui/internals/state.svelte.ts';
+	import { onDestroy, onMount, untrack } from 'svelte';
 	import type { PopoverProps, PopoverState } from '.';
+	import { setPopoverContext } from './context.svelte';
 
 	let {
 		open = $bindable(false),
 		placement = 'bottom',
 		children,
 		state_key,
-		state: providedState,
 		hoverable,
 		delay = 0,
 		closeDelay = 150
 	}: PopoverProps = $props();
 
-	const generatedKey = Math.random().toString(36).substring(2);
+	const generatedKey = $props.id();
 	const initial = untrack(() => ({
-		key: state_key ?? providedState?.key ?? generatedKey,
-		state: providedState,
+		key: state_key ?? generatedKey,
 		placement,
 		hoverable: hoverable ?? false,
 		delay,
 		closeDelay
 	}));
-	const localState = useState<PopoverState>(
-		{
-			open,
-			trigger: null,
-			focusedElement: null,
-			buttonRef: null,
-			popoverRef: undefined,
-			placement: initial.placement,
-			onclick: undefined,
-			closeTimeout: undefined,
-			hoverable: initial.hoverable,
-			delay: initial.delay,
-			closeDelay: initial.closeDelay
-		} as PopoverState,
-		initial.key
-	);
+	const popoverState = $state<PopoverState>({
+		open,
+		trigger: null,
+		focusedElement: null,
+		buttonRef: null,
+		popoverRef: undefined,
+		placement: initial.placement,
+		onclick: undefined,
+		closeTimeout: undefined,
+		hoverable: initial.hoverable,
+		delay: initial.delay,
+		closeDelay: initial.closeDelay
+	});
 	const key = initial.key;
-	const uiState = initial.state ?? localState;
 	let syncedOpen = $state(open);
 
-	setContext('key', key);
+	setPopoverContext({ id: key, state: popoverState });
 
 	function handleKeydown(event: KeyboardEvent) {
 		if (event.key === 'Escape') {
-			if (uiState.data) {
-				uiState.data.open = false;
-			}
+			popoverState.open = false;
 		}
 	}
 
 	onMount(() => {
 		document.addEventListener('keydown', handleKeydown);
 
-		if (uiState.data) {
-			uiState.data.placement = placement;
-			uiState.data.hoverable = hoverable ?? false;
-			uiState.data.delay = delay;
-			uiState.data.closeDelay = closeDelay;
-		}
+		popoverState.placement = placement;
+		popoverState.hoverable = hoverable ?? false;
+		popoverState.delay = delay;
+		popoverState.closeDelay = closeDelay;
 
 		return () => document.removeEventListener('keydown', handleKeydown);
 	});
 
 	$effect(() => {
-		if (uiState.data) {
-			uiState.data.placement = placement;
-			uiState.data.hoverable = hoverable ?? false;
-			uiState.data.delay = delay;
-			uiState.data.closeDelay = closeDelay;
-			if (open !== syncedOpen) {
-				syncedOpen = open;
-				uiState.data.open = open;
-			}
+		popoverState.placement = placement;
+		popoverState.hoverable = hoverable ?? false;
+		popoverState.delay = delay;
+		popoverState.closeDelay = closeDelay;
+		if (open !== syncedOpen) {
+			syncedOpen = open;
+			popoverState.open = open;
 		}
 	});
 
 	$effect(() => {
-		if (uiState.data && uiState.data.open !== syncedOpen) {
-			syncedOpen = uiState.data.open;
-			open = uiState.data.open;
+		if (popoverState.open !== syncedOpen) {
+			syncedOpen = popoverState.open;
+			open = popoverState.open;
 		}
 	});
 
 	onDestroy(() => {
-		delete states[key];
+		if (popoverState.closeTimeout) clearTimeout(popoverState.closeTimeout);
+		if (popoverState.hoverTimeout) clearTimeout(popoverState.hoverTimeout);
 	});
 </script>
 

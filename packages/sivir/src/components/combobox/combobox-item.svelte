@@ -1,15 +1,16 @@
 <script lang="ts">
 	import { Button, type ButtonProps } from '@sivir/ui/components/button';
-	import { states } from '@sivir/ui/internals/state.svelte.ts';
 	import { cn } from '@sivir/ui/utils';
-	import { getContext, onMount } from 'svelte';
+	import { onMount } from 'svelte';
 	import Check from '@lucide/svelte/icons/check';
 	import { MENU_ITEM } from '@sivir/ui/internals/menu';
 
-	import type { ComboboxItem, ComboboxState } from '.';
+	import type { ComboboxItem } from '.';
+	import { getComboboxContext } from './context.svelte';
+	import { getPopoverContext } from '@sivir/ui/components/popover/context.svelte';
 
-	const key = getContext('key') as string;
-	const uiState = states[key].data as ComboboxState;
+	const { id, state: comboboxState } = getComboboxContext();
+	const { state: popoverState } = getPopoverContext();
 
 	type Props = {
 		class?: string;
@@ -28,32 +29,32 @@
 	}) as ComboboxItem;
 
 	function close() {
-		uiState.selected = item;
-		uiState.open = false;
-		uiState.searchContent = '';
-		uiState.buttonRef?.focus();
+		comboboxState.selected = item;
+		comboboxState.open = false;
+		comboboxState.searchContent = '';
+		popoverState.buttonRef?.focus();
 		callback?.();
 	}
 
 	onMount(() => {
-		uiState.items.add(item);
-		return () => uiState.items.delete(item);
+		comboboxState.items.add(item);
+		return () => comboboxState.items.delete(item);
 	});
 </script>
 
-{#if uiState.searchContent === '' || Array.from(uiState.results).some((r) => r.value === item.value)}
+{#if comboboxState.searchContent === '' || Array.from(comboboxState.results).some((r) => r.value === item.value)}
 	<Button
 		bind:element={el}
-		id={`combobox-${key}-option-${value}`}
+		id={`combobox-${id}-option-${value}`}
 		role="option"
-		aria-selected={uiState.selected?.value === item.value}
+		aria-selected={comboboxState.selected?.value === item.value}
 		{...rest}
 		onclick={close}
 		class={cn(className, MENU_ITEM)}
 		variant="ghost"
 	>
 		{label}
-		{#if uiState.selected?.value === item.value}
+		{#if comboboxState.selected?.value === item.value}
 			<div aria-hidden="true">
 				<Check />
 			</div>

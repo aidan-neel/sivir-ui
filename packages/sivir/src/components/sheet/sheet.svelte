@@ -1,31 +1,30 @@
 <script lang="ts">
-	import { useState } from '@sivir/ui/internals/state.svelte.ts';
-	import { setContext } from 'svelte';
 	import type { SheetState, SheetProps } from '.';
+	import { setSheetContext } from './context.svelte';
 
 	let { open = $bindable(false), children }: SheetProps = $props();
 
-	const uiState = useState<SheetState>({
+	const id = $props.id();
+	const sheetState = $state<SheetState>({
 		open,
 		triggerRef: null
 	});
 	let syncedOpen = $state(open);
+	setSheetContext({ id, state: sheetState });
 
 	$effect(() => {
 		if (open !== syncedOpen) {
 			syncedOpen = open;
-			uiState.data.open = open;
+			sheetState.open = open;
 		}
 	});
 
 	$effect(() => {
-		if (uiState.data.open !== syncedOpen) {
-			syncedOpen = uiState.data.open;
-			open = uiState.data.open;
+		if (sheetState.open !== syncedOpen) {
+			syncedOpen = sheetState.open;
+			open = sheetState.open;
 		}
 	});
-
-	setContext('key', uiState.key);
 </script>
 
 {@render children?.()}

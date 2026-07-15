@@ -123,6 +123,7 @@ export function trapFocus(
 
 /** Runs a callback when a pointer event lands outside the node and any excluded nodes. */
 export function clickOutside(node: Node, callback: () => void, exclude: Node[] = []) {
+	let destroyed = false;
 	const handleClick = (event: MouseEvent) => {
 		const path = typeof event.composedPath === 'function' ? event.composedPath() : [];
 		const target = event.target as Node | null;
@@ -146,12 +147,14 @@ export function clickOutside(node: Node, callback: () => void, exclude: Node[] =
 		}
 	};
 
-	setTimeout(() => {
-		document.addEventListener('click', handleClick);
+	const installTimeout = setTimeout(() => {
+		if (!destroyed) document.addEventListener('click', handleClick);
 	}, 0);
 
 	return {
 		destroy() {
+			destroyed = true;
+			clearTimeout(installTimeout);
 			document.removeEventListener('click', handleClick);
 		}
 	};

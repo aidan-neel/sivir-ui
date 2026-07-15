@@ -1,7 +1,6 @@
 <script lang="ts">
 	import type { HTMLButtonAttributes } from 'svelte/elements';
-	import type { SwitchState, SwitchProps } from '.';
-	import { useState } from '@sivir/ui/internals/state.svelte.ts';
+	import type { SwitchProps } from '.';
 	import { cn } from '@sivir/ui/utils';
 
 	let {
@@ -15,9 +14,9 @@
 		...rest
 	}: SwitchProps & { onclick?: (e: MouseEvent) => void } = $props();
 
-	const uiState = useState<SwitchState>({ switched });
-	const labelId = `${uiState.key}-label`;
-	const descriptionId = `${uiState.key}-description`;
+	const id = $props.id();
+	const labelId = `${id}-label`;
+	const descriptionId = `${id}-description`;
 
 	const buttonClasses =
 		'relative inline-flex h-5 w-9 shrink-0 items-center rounded-full border p-0.5 transition-[background-color,border-color,box-shadow] [transition-duration:var(--motion-duration-panel)] ease-[var(--ease-out)] motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-0 focus-visible:shadow-[var(--focus-ring)] disabled:cursor-not-allowed disabled:opacity-[0.55]';

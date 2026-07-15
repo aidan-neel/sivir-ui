@@ -1,11 +1,9 @@
 <script lang="ts">
 	import * as Popover from '@sivir/ui/components/popover';
-	import { getContext } from 'svelte';
-	import type { ContextMenuContentProps, ContextMenuState } from '.';
-	import { states } from '@sivir/ui/internals/state.svelte.ts';
+	import type { ContextMenuContentProps } from '.';
+	import { getContextMenuContext } from './context.svelte';
 
-	const key = getContext<string>('key');
-	const uiState = states[key].data as ContextMenuState;
+	const { state: contextMenuState } = getContextMenuContext();
 
 	let { class: className, children, ...rest }: ContextMenuContentProps = $props();
 </script>
@@ -14,7 +12,7 @@
 	role="menu"
 	tabindex={-1}
 	data-ui="context-menu-content"
-	refElement={uiState.virtualElement}
+	refElement={contextMenuState.virtualElement}
 	focusTrap={false}
 	lockScroll={false}
 	{...rest}

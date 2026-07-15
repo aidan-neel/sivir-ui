@@ -8,8 +8,7 @@ import {
 	__setActiveToastStateForTests,
 	__getActiveToastStateForTests
 } from '@sivir/ui/components/toast/lib.svelte.ts';
-import { UIState } from '@sivir/ui/internals/state.svelte.ts';
-import type { ToastUIState } from '@sivir/ui/components/toast/lib.svelte.ts';
+import type { ToastState } from '@sivir/ui/components/toast/lib.svelte.ts';
 
 /*
  * Toast tests use fake timers. The library's lifecycle is timer-driven
@@ -23,7 +22,7 @@ import type { ToastUIState } from '@sivir/ui/components/toast/lib.svelte.ts';
 
 // Access the active state through the test helper so tests stay in sync
 // with the production accessor when refactors happen later.
-function toastUIState(): UIState<ToastUIState> {
+function toastUIState(): ToastState {
 	const s = __getActiveToastStateForTests();
 	if (!s) throw new Error('No active toast state in test -- beforeEach setup missing?');
 	return s;
@@ -31,9 +30,7 @@ function toastUIState(): UIState<ToastUIState> {
 
 beforeEach(() => {
 	vi.useFakeTimers();
-	__setActiveToastStateForTests(
-		new UIState<ToastUIState>({ toasts: [] }, `test-toast-${Math.random().toString(36).slice(2)}`)
-	);
+	__setActiveToastStateForTests({ data: { toasts: [] } });
 });
 
 afterEach(() => {

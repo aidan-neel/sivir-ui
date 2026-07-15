@@ -1,9 +1,8 @@
-import { describe, expect, it, beforeEach } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page } from 'vitest/browser';
 import { tick } from 'svelte';
 import HoverCardFixture from '../../fixtures/HoverCardFixture.svelte';
-import { states } from '@sivir/ui/internals/state.svelte.ts';
 
 /*
  * HoverCard is now a popover wrapper post-F-29 collapse.
@@ -22,12 +21,6 @@ async function flush() {
 	await tick();
 	await new Promise((r) => setTimeout(r, 20));
 }
-
-beforeEach(() => {
-	for (const key of Object.keys(states)) {
-		delete states[key];
-	}
-});
 
 describe('HoverCard -- closed initially', () => {
 	it('content is not in the DOM before hover', async () => {

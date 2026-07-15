@@ -2,7 +2,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { HTMLInputAttributes } from 'svelte/elements';
-	import type { CommandItem } from '.';
 	import Search from '@lucide/svelte/icons/search';
 	import Fuse from 'fuse.js';
 	import { cn } from '@sivir/ui/utils';
@@ -17,11 +16,9 @@
 	} & HTMLInputAttributes;
 
 	const { class: classProp, threshold = 0.5, ...rest }: Props = $props();
-	let fuse = new Fuse<CommandItem>([], { keys: ['name'] });
-
-	$effect(() => {
+	const fuse = $derived.by(() => {
 		command.itemsVersion;
-		fuse = new Fuse(command.items, { keys: ['name'], threshold });
+		return new Fuse(command.items, { keys: ['name'], threshold });
 	});
 
 	onMount(() => {

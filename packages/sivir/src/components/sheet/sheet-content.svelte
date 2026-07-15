@@ -1,11 +1,10 @@
 <script lang="ts">
 	import { cn } from '@sivir/ui/utils';
-	import type { SheetContentProps, SheetState } from '.';
-	import { getContext } from 'svelte';
-	import { states, type UIState } from '@sivir/ui/internals/state.svelte.ts';
+	import type { SheetContentProps } from '.';
 	import { useOverlay } from '@sivir/ui/components/_internal/overlay';
 	import { getCssDuration } from '@sivir/ui/internals/transition';
 	import { fade, fly, type FlyParams } from 'svelte/transition';
+	import { getSheetContext } from './context.svelte';
 
 	let {
 		class: className,
@@ -15,18 +14,18 @@
 		...rest
 	}: SheetContentProps = $props();
 
-	const key = getContext<string>('key');
-	const uiState = states[key] as UIState<SheetState>;
+	const { id, state: sheetState } = getSheetContext();
 	let element = $state<HTMLElement>();
 
 	// Shared overlay behavior -- focus trap, click-outside, Escape, body lock.
 	useOverlay({
-		isOpen: () => uiState.data.open,
+		isOpen: () => sheetState.open,
 		panelEl: () => element,
 		onClose: () => {
-			uiState.data.open = false;
+			sheetState.open = false;
 		},
-		allowClickOutside: () => allowClickOutside
+		allowClickOutside: () => allowClickOutside,
+		returnFocus: () => sheetState.triggerRef ?? undefined
 	});
 
 	function sheetFly(node: Element, params: FlyParams) {
@@ -43,7 +42,7 @@
 	}
 </script>
 
-{#if uiState.data.open}
+{#if sheetState.open}
 	<div class="pointer-events-none fixed inset-0 z-40 [&>*]:pointer-events-auto">
 		<div
 			in:backdropFade
@@ -68,9 +67,9 @@
 			)}
 			role="dialog"
 			aria-modal="true"
-			id={`sheet-${uiState.key}`}
-			aria-labelledby={uiState.key + '-title'}
-			aria-describedby={uiState.key + '-desc'}
+			id={`sheet-${id}`}
+			aria-labelledby={id + '-title'}
+			aria-describedby={id + '-desc'}
 			tabindex="-1"
 			{...rest}
 		>

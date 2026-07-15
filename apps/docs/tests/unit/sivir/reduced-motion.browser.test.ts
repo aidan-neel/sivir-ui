@@ -2,7 +2,6 @@ import { describe, expect, it, beforeEach } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page } from 'vitest/browser';
 import { tick } from 'svelte';
-import { states } from '@sivir/ui/internals/state.svelte.ts';
 
 import ModalFixture from '../../fixtures/ModalFixture.svelte';
 import SheetFixture from '../../fixtures/SheetFixture.svelte';
@@ -39,12 +38,6 @@ async function flush() {
 	await tick();
 	await new Promise((r) => setTimeout(r, 30));
 }
-
-beforeEach(() => {
-	for (const key of Object.keys(states)) {
-		delete states[key];
-	}
-});
 
 describe('Reduced motion -- content visible within 50ms of open action under prefers-reduced-motion: reduce', () => {
 	// Emulate reduced motion via Playwright's CDP media override before each test.

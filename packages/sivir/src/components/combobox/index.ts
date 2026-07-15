@@ -4,7 +4,6 @@ import Trigger from './combobox-trigger.svelte';
 import Results from './combobox-results.svelte';
 import Item from './combobox-item.svelte';
 import Label from './combobox-label.svelte';
-import type { PopoverState } from '@sivir/ui/components/popover';
 import type { DefaultProps } from '@sivir/ui/utils';
 
 export type ComboboxItem = {
@@ -20,7 +19,7 @@ export type ComboboxState = {
 	results: Set<ComboboxItem>;
 	searchContent: string;
 	selected?: ComboboxItem;
-} & PopoverState;
+};
 
 export type ComboboxRootProps = {
 	placeholder?: string;

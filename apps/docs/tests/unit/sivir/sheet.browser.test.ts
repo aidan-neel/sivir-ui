@@ -1,9 +1,8 @@
-import { describe, expect, it, beforeEach, afterEach } from 'vitest';
+import { describe, expect, it, afterEach } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page, userEvent } from 'vitest/browser';
 import { tick } from 'svelte';
 import SheetFixture from '../../fixtures/SheetFixture.svelte';
-import { states } from '@sivir/ui/internals/state.svelte.ts';
 
 /*
  * Sheet has a `visible` state that stays true through the closing
@@ -30,12 +29,6 @@ async function waitForAnimationEnd() {
 	}
 	await flush();
 }
-
-beforeEach(() => {
-	for (const key of Object.keys(states)) {
-		delete states[key];
-	}
-});
 
 afterEach(() => {
 	document.body.style.overflow = '';

@@ -27,11 +27,12 @@ export const manifest: Manifest = {
 		'components/sheet/sheet-header.svelte',
 		'components/sheet/sheet-footer.svelte',
 		'components/sheet/sheet-close.svelte',
+		'components/sheet/context.svelte.ts',
 		'components/sheet/index.ts',
 		'components/sheet/manifest.ts'
 	],
 	components: ['button', '_internal/overlay'],
-	shared: ['utils.cn', 'internals/state', 'internals/transition'],
+	shared: ['utils.cn', 'internals/transition'],
 	peerDependencies: {
 		'@lucide/svelte': '^1.0.0',
 		cnfast: '^0.0.8',

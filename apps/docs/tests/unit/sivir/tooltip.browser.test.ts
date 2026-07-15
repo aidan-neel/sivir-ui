@@ -3,7 +3,6 @@ import { render } from 'vitest-browser-svelte';
 import { page } from 'vitest/browser';
 import { tick } from 'svelte';
 import TooltipFixture from '../../fixtures/TooltipFixture.svelte';
-import { states } from '@sivir/ui/internals/state.svelte.ts';
 import { resetSharedTooltipForTests } from '@sivir/ui/components/tooltip/shared-tooltip';
 
 /*
@@ -35,9 +34,6 @@ function tooltipShown() {
 
 beforeEach(() => {
 	resetSharedTooltipForTests();
-	for (const key of Object.keys(states)) {
-		delete states[key];
-	}
 });
 
 describe('Tooltip -- closed initially, no bubble shown', () => {

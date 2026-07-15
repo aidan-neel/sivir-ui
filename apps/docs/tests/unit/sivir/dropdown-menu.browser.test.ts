@@ -1,9 +1,8 @@
-import { describe, expect, it, vi, beforeEach } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page, userEvent } from 'vitest/browser';
 import { tick } from 'svelte';
 import DropdownMenuFixture from '../../fixtures/DropdownMenuFixture.svelte';
-import { states } from '@sivir/ui/internals/state.svelte.ts';
 
 /*
  * Browser-runner justified per strategy Sec.7.1: popover-based open/close,
@@ -20,12 +19,6 @@ async function openMenu() {
 	await page.getByTestId('dropdown-trigger').click();
 	await flush();
 }
-
-beforeEach(() => {
-	for (const key of Object.keys(states)) {
-		delete states[key];
-	}
-});
 
 describe('DropdownMenu -- open and close', () => {
 	it('does not show content initially', async () => {

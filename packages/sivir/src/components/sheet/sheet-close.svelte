@@ -1,19 +1,17 @@
 <script lang="ts">
-	import { states } from '@sivir/ui/internals/state.svelte.ts';
-	import { getContext } from 'svelte';
-	import type { SheetCloseProps, SheetState } from '.';
+	import type { SheetCloseProps } from '.';
 	import { Button } from '@sivir/ui/components/button';
+	import { getSheetContext } from './context.svelte';
 
 	let { class: className, children, ...rest }: SheetCloseProps = $props();
 
-	const key = getContext<string>('key');
-	const uiState = states[key].data as SheetState;
+	const { state: sheetState } = getSheetContext();
 </script>
 
 <Button
 	variant="outline"
 	onclick={() => {
-		uiState.open = false;
+		sheetState.open = false;
 	}}
 	class={className}
 	{...rest}

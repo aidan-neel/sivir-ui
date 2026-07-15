@@ -1,48 +1,46 @@
 <script lang="ts">
-	import { getContext, onMount, onDestroy } from 'svelte';
-	import { states, type UIState } from '@sivir/ui/internals/state.svelte.ts';
+	import { onMount, onDestroy } from 'svelte';
 	import { cn } from '@sivir/ui/utils';
 	import type { HoverCardTriggerProps } from '.';
-	import type { PopoverState } from '@sivir/ui/components/popover';
+	import { getPopoverContext } from '@sivir/ui/components/popover/context.svelte';
 
 	let { class: className, children, href, ...rest }: HoverCardTriggerProps = $props();
 
-	const key = getContext('key') as string;
-	const uiState = states[key] as UIState<PopoverState>;
+	const { state: popoverState } = getPopoverContext();
 	let element = $state<HTMLElement>();
 
 	function clearTimers() {
-		if (uiState.data.hoverTimeout) {
-			clearTimeout(uiState.data.hoverTimeout);
-			uiState.data.hoverTimeout = undefined;
+		if (popoverState.hoverTimeout) {
+			clearTimeout(popoverState.hoverTimeout);
+			popoverState.hoverTimeout = undefined;
 		}
-		if (uiState.data.closeTimeout) {
-			clearTimeout(uiState.data.closeTimeout);
-			uiState.data.closeTimeout = undefined;
+		if (popoverState.closeTimeout) {
+			clearTimeout(popoverState.closeTimeout);
+			popoverState.closeTimeout = undefined;
 		}
 	}
 
 	function open() {
 		clearTimers();
-		const delay = uiState.data.delay ?? 0;
-		uiState.data.hoverTimeout = setTimeout(() => {
-			uiState.data.open = true;
-			uiState.data.hovering = true;
+		const delay = popoverState.delay ?? 0;
+		popoverState.hoverTimeout = setTimeout(() => {
+			popoverState.open = true;
+			popoverState.hovering = true;
 		}, delay);
 	}
 
 	function close() {
 		clearTimers();
 		// Use --motion-duration-panel (default 180ms) for close delay consistency with panel motion
-		const closeDelay = uiState.data.closeDelay ?? 180;
-		uiState.data.closeTimeout = setTimeout(() => {
-			uiState.data.open = false;
-			uiState.data.hovering = false;
+		const closeDelay = popoverState.closeDelay ?? 180;
+		popoverState.closeTimeout = setTimeout(() => {
+			popoverState.open = false;
+			popoverState.hovering = false;
 		}, closeDelay);
 	}
 
 	onMount(() => {
-		uiState.data.buttonRef = element ?? null;
+		popoverState.buttonRef = element ?? null;
 	});
 
 	onDestroy(clearTimers);

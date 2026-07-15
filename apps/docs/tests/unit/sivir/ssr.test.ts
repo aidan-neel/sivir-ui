@@ -1,7 +1,6 @@
-import { describe, expect, it, beforeEach } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { render } from 'svelte/server';
 import type { Component } from 'svelte';
-import { states } from '@sivir/ui/internals/state.svelte.ts';
 
 // Tier 1 + Tier 2 components and fixtures, imported by name.
 import Button from '@sivir/ui/components/button/button.svelte';
@@ -54,15 +53,6 @@ import ToasterFixture from '../../fixtures/ToasterFixture.svelte';
  *   - `localStorage is not defined` in module-level reads.
  *   - Unhandled exceptions in $derived / $derived.by during render.
  */
-
-beforeEach(() => {
-	// Reset the singleton registry so prior tests don't poison this render.
-	// This does NOT prevent the multi-request leak test from running; that
-	// test deliberately exercises non-reset semantics.
-	for (const key of Object.keys(states)) {
-		delete states[key];
-	}
-});
 
 function ssrShouldNotThrow(name: string, Comp: unknown, props: Record<string, unknown> = {}) {
 	it(`${name} renders server-side without throwing`, () => {

@@ -1,14 +1,7 @@
-import { describe, expect, it, beforeEach } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
 import CollapsibleFixture from '../../fixtures/CollapsibleFixture.svelte';
-import { states } from '@sivir/ui/internals/state.svelte.ts';
-
-beforeEach(() => {
-	for (const key of Object.keys(states)) {
-		delete states[key];
-	}
-});
 
 describe('Collapsible -- rendering', () => {
 	it('renders the trigger always', () => {
@@ -46,12 +39,7 @@ describe('Collapsible -- toggle interaction', () => {
 		const user = userEvent.setup();
 		await user.click(screen.getByTestId('collapsible-trigger'));
 
-		// State-level verification: the collapsible's UIState.data.open is true.
-		const collapsibleState = Object.values(states).find(
-			(s) => s && s.data && typeof s.data === 'object' && 'open' in (s.data ?? {})
-		);
-		expect(collapsibleState).toBeDefined();
-		expect((collapsibleState!.data as { open: boolean }).open).toBe(true);
+		expect(screen.getByRole('button', { name: 'Toggle' })).toHaveAttribute('aria-expanded', 'true');
 	});
 });
 

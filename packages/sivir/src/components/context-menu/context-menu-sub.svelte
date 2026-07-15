@@ -1,14 +1,19 @@
 <script lang="ts">
-	import { getContext, setContext } from 'svelte';
 	import * as Popover from '@sivir/ui/components/popover';
-	import type { ContextMenuSubProps } from '.';
+	import type { ContextMenuState, ContextMenuSubProps } from '.';
+	import { getContextMenuContext, setContextMenuContext } from './context.svelte';
 
-	const key = Math.random().toString(36).substring(2);
-	setContext('parent', getContext('key'));
+	const { state: parentState } = getContextMenuContext();
+	const id = $props.id();
+	const contextMenuState = $state<ContextMenuState>({
+		open: false,
+		checkboxItems: new Map()
+	});
+	setContextMenuContext({ state: contextMenuState, parentState });
 
 	let { children }: ContextMenuSubProps = $props();
 </script>
 
-<Popover.Root state_key={key} hoverable={true} placement="right">
+<Popover.Root state_key={id} bind:open={contextMenuState.open} hoverable={true} placement="right">
 	{@render children?.()}
 </Popover.Root>

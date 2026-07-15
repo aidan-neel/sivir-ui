@@ -1,12 +1,11 @@
 <script lang="ts">
 	import { Button } from '@sivir/ui/components/button';
 	import { positionFloatingPanel } from '@sivir/ui/utils';
-	import { getContext, onMount, tick } from 'svelte';
-	import { states, type UIState } from '@sivir/ui/internals/state.svelte.ts';
-	import type { PopoverState, PopoverTriggerProps } from '.';
+	import { onMount, tick } from 'svelte';
+	import type { PopoverTriggerProps } from '.';
+	import { getPopoverContext } from './context.svelte';
 
-	const key = getContext('key') as string;
-	const uiState = states[key] as UIState<PopoverState>;
+	const { id: key, state: popoverState } = getPopoverContext();
 
 	let element = $state<HTMLButtonElement | undefined>();
 	type Props = PopoverTriggerProps;
@@ -24,48 +23,45 @@
 	}: Props = $props();
 
 	onMount(() => {
-		uiState.data.buttonRef = element ?? null;
+		popoverState.buttonRef = element ?? null;
 	});
 
 	function openPopover() {
-		if (!uiState.data) return;
-
-		if (uiState.data.closeTimeout) {
-			clearTimeout(uiState.data.closeTimeout);
-			uiState.data.closeTimeout = undefined;
+		if (popoverState.closeTimeout) {
+			clearTimeout(popoverState.closeTimeout);
+			popoverState.closeTimeout = undefined;
 		}
-		uiState.data.open = true;
+		popoverState.open = true;
 
 		const button = element;
-		const popover = uiState.data.popoverRef;
+		const popover = popoverState.popoverRef;
 
 		if (button && popover) {
-			positionFloatingPanel(button, popover, uiState.data.placement);
+			positionFloatingPanel(button, popover, popoverState.placement);
 		}
 	}
 
 	function closePopover(delay = 180) {
-		if (!uiState.data) return;
-		if (uiState.data.closeTimeout) clearTimeout(uiState.data.closeTimeout);
+		if (popoverState.closeTimeout) clearTimeout(popoverState.closeTimeout);
 
 		if (delay <= 0) {
-			uiState.data.open = false;
-			uiState.data.closeTimeout = undefined;
+			popoverState.open = false;
+			popoverState.closeTimeout = undefined;
 			return;
 		}
 
-		uiState.data.closeTimeout = setTimeout(() => {
-			uiState.data.open = false;
-			uiState.data.closeTimeout = undefined;
+		popoverState.closeTimeout = setTimeout(() => {
+			popoverState.open = false;
+			popoverState.closeTimeout = undefined;
 		}, delay);
 	}
 
 	async function handleEnter() {
-		if (uiState?.data?.hoverable) {
+		if (popoverState.hoverable) {
 			await tick();
-			const delay = uiState?.data?.delay ?? 0;
+			const delay = popoverState.delay ?? 0;
 			if (delay > 0) {
-				uiState.data.hoverTimeout = setTimeout(() => {
+				popoverState.hoverTimeout = setTimeout(() => {
 					if (element?.matches(':hover, :focus')) {
 						openPopover();
 					}
@@ -74,18 +70,18 @@
 				openPopover();
 			}
 
-			uiState.data.hovering = true;
+			popoverState.hovering = true;
 		}
 	}
 
 	function handleLeave() {
-		if (uiState?.data?.hoverable) {
-			if (uiState.data.hoverTimeout) {
-				clearTimeout(uiState.data.hoverTimeout);
-				uiState.data.hoverTimeout = undefined;
+		if (popoverState.hoverable) {
+			if (popoverState.hoverTimeout) {
+				clearTimeout(popoverState.hoverTimeout);
+				popoverState.hoverTimeout = undefined;
 			}
-			closePopover(uiState?.data?.closeDelay ?? 180);
-			uiState.data.hovering = false;
+			closePopover(popoverState.closeDelay ?? 180);
+			popoverState.hovering = false;
 		}
 	}
 </script>
@@ -96,7 +92,7 @@
 	class={classProp}
 	{style}
 	onclick={() => {
-		if (uiState.data.open) closePopover(0);
+		if (popoverState.open) closePopover(0);
 		else openPopover();
 		onclick?.();
 	}}
@@ -105,8 +101,8 @@
 	onfocus={handleEnter}
 	onblur={handleLeave}
 	aria-haspopup={ariaHaspopup ?? 'dialog'}
-	aria-expanded={uiState.data?.open ? 'true' : 'false'}
-	data-state={uiState.data?.open ? 'open' : 'closed'}
+	aria-expanded={popoverState.open ? 'true' : 'false'}
+	data-state={popoverState.open ? 'open' : 'closed'}
 	aria-controls={ariaControls ?? `popover-${String(key)}-content`}
 	aria-label={ariaLabel}
 	id={id ?? `popover-${String(key)}-controls`}

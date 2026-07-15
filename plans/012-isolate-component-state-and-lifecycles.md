@@ -5,6 +5,7 @@
 
 ## Status
 
+- **Status**: DONE — all compound families use typed symbol contexts; the global registry was deleted and lifecycle race coverage is green.
 - **Priority**: P1
 - **Effort**: L
 - **Risk**: MED
@@ -54,11 +55,11 @@ bun run build
 
 ## Done criteria
 
-- [ ] No component state is retained in a process-global registry
-- [ ] Compound children use typed symbol contexts and fail clearly when misused
-- [ ] Concurrent SSR instances cannot observe each other's state
-- [ ] Click-outside cannot install after destroy
-- [ ] Repeated open/mount/unmount tests show no listener or body-lock leakage
+- [x] No component state is retained in a process-global registry
+- [x] Compound children use typed symbol contexts and fail clearly when misused
+- [x] Concurrent SSR instances cannot observe each other's state
+- [x] Click-outside cannot install after destroy
+- [x] Repeated open/mount/unmount tests show no listener or body-lock leakage
 
 ## STOP conditions
 

@@ -1,9 +1,8 @@
-import { describe, expect, it, beforeEach } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { userEvent } from 'vitest/browser';
 import { tick } from 'svelte';
 import ColorPickerFixture from '../../fixtures/ColorPickerFixture.svelte';
-import { states } from '@sivir/ui/internals/state.svelte.ts';
 
 /*
  * Color-picker is a popover-using component. Sprint 2 covers the
@@ -29,12 +28,6 @@ async function openPicker() {
 	await flush();
 	await new Promise((r) => setTimeout(r, 100));
 }
-
-beforeEach(() => {
-	for (const key of Object.keys(states)) {
-		delete states[key];
-	}
-});
 
 describe('ColorPicker -- popover open and close', () => {
 	it('hides the picker content initially', async () => {

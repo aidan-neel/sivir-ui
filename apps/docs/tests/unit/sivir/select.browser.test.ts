@@ -1,9 +1,8 @@
-import { describe, expect, it, beforeEach } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page, userEvent } from 'vitest/browser';
 import { tick } from 'svelte';
 import SelectFixture from '../../fixtures/SelectFixture.svelte';
-import { states } from '@sivir/ui/internals/state.svelte.ts';
 
 async function flush() {
 	await tick();
@@ -15,12 +14,6 @@ async function openSelect() {
 	await page.getByTestId('select-trigger').click();
 	await flush();
 }
-
-beforeEach(() => {
-	for (const key of Object.keys(states)) {
-		delete states[key];
-	}
-});
 
 describe('Select -- open and close', () => {
 	it('hides options initially', async () => {
@@ -78,17 +71,7 @@ describe('Select -- selection behavior', () => {
 		await page.getByTestId('opt-banana').click();
 		await flush();
 
-		// State-level check: find the SelectState in the registry and assert its value.
-		const selectState = Object.values(states).find(
-			(s) =>
-				s &&
-				s.data &&
-				typeof s.data === 'object' &&
-				'value' in (s.data ?? {}) &&
-				'selectedLabel' in (s.data ?? {})
-		);
-		expect(selectState).toBeDefined();
-		expect((selectState!.data as { value: string }).value).toBe('banana');
+		await expect.element(page.getByRole('combobox')).toHaveTextContent('Banana');
 	});
 });
 

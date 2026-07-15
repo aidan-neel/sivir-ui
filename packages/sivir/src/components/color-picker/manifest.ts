@@ -27,7 +27,7 @@ export const manifest: Manifest = {
 		'components/color-picker/manifest.ts'
 	],
 	components: ['popover', 'button'],
-	shared: ['utils.cn', 'internals/state'],
+	shared: ['utils.cn'],
 	peerDependencies: {
 		'@lucide/svelte': '^1.0.0',
 		cnfast: '^0.0.8',
