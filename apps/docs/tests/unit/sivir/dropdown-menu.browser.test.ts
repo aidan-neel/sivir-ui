@@ -46,6 +46,25 @@ describe('DropdownMenu -- open and close', () => {
 		await expect.element(page.getByTestId('item-1')).not.toBeInTheDocument();
 	});
 
+	it('closes on click outside', async () => {
+		render(DropdownMenuFixture, {});
+		await flush();
+		await openMenu();
+		await expect.element(page.getByTestId('item-1')).toBeInTheDocument();
+
+		const outside = document.createElement('button');
+		outside.textContent = 'outside';
+		outside.style.position = 'fixed';
+		outside.style.left = '8px';
+		outside.style.top = '8px';
+		document.body.append(outside);
+		await new Promise((r) => setTimeout(r, 20));
+		outside.click();
+		await flush();
+		await expect.element(page.getByTestId('item-1')).not.toBeInTheDocument();
+		outside.remove();
+	});
+
 	it('shows the group label', async () => {
 		render(DropdownMenuFixture, {});
 		await flush();

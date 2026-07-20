@@ -6,9 +6,7 @@ const staticPaths = [
 	'/docs/introduction',
 	'/docs/installation',
 	'/docs/theming',
-	'/docs/styling',
-	'/docs/components',
-	'/themes'
+	'/docs/components'
 ];
 
 function escapeXml(value: string): string {

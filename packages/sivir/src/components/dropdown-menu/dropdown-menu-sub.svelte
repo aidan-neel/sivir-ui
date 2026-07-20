@@ -5,8 +5,12 @@
 	import { getDropdownMenuContext, setDropdownMenuContext } from './context.svelte';
 
 	const { state: parentState } = getPopoverContext();
-	const { inverted } = getDropdownMenuContext();
-	setDropdownMenuContext({ inverted, parentState });
+	const parentMenu = getDropdownMenuContext();
+	// Extend the cone: ancestors = path from root through this sub's parent.
+	setDropdownMenuContext({
+		inverted: parentMenu.inverted,
+		ancestors: [...parentMenu.ancestors, parentState]
+	});
 
 	type Props = {
 		children?: Snippet;

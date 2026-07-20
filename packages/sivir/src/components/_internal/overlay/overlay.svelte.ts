@@ -1,4 +1,10 @@
-import { clickOutside, getFocusableElements, trapFocus } from '@sivir/ui/utils';
+import {
+	clickOutside,
+	getFocusableElements,
+	lockBodyScroll,
+	pushEscapeLayer,
+	trapFocus
+} from '@sivir/ui/utils';
 
 /**
  * Shared overlay primitive for modal-content and sheet-content.
@@ -7,7 +13,7 @@ import { clickOutside, getFocusableElements, trapFocus } from '@sivir/ui/utils';
  *   - Focus trap (initial focus on first focusable, Tab cycling).
  *   - Click-outside detection (panel boundary; respects allowClickOutside).
  *   - Escape key handler (panel-scoped, fires onClose).
- *   - Body scroll lock while open.
+ *   - Body scroll lock while open (shared refcount with Popover).
  *
  * Consumer owns:
  *   - The panel DOM element (bind via `panelEl` getter).
@@ -46,9 +52,7 @@ export function useOverlay(opts: OverlayOptions) {
 			returnFocus: opts.returnFocus?.()
 		});
 
-		if (lockScroll) {
-			document.body.style.overflow = 'hidden';
-		}
+		const releaseScroll = lockScroll ? lockBodyScroll() : undefined;
 
 		const co = clickOutside(panel, () => {
 			if (opts.allowClickOutside?.() ?? true) {
@@ -56,21 +60,13 @@ export function useOverlay(opts: OverlayOptions) {
 			}
 		});
 
-		const handleKeydown = (event: KeyboardEvent) => {
-			if (event.key === 'Escape') {
-				event.preventDefault();
-				opts.onClose();
-			}
-		};
-		panel.addEventListener('keydown', handleKeydown);
+		const releaseEscape = pushEscapeLayer(() => opts.onClose());
 
 		return () => {
 			cleanupTrap?.();
 			co.destroy();
-			panel.removeEventListener('keydown', handleKeydown);
-			if (lockScroll) {
-				document.body.style.overflow = '';
-			}
+			releaseEscape();
+			releaseScroll?.();
 		};
 	});
 }

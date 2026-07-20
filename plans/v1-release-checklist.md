@@ -1,59 +1,47 @@
 # Sivir UI v1 Release Checklist
 
-Use this checklist for the final go/no-go review. Detailed work belongs in the
-[phase plans](v1-implementation.md); this file records release evidence.
+Final go/no-go evidence. Detail lives in [phase plans](v1-implementation.md).
 
 ## Scope And Identity
 
-- [ ] The [v1 scope](v1-scope.md) is approved and frozen.
-- [ ] Theme Studio is absent from public navigation, routes, metadata, docs,
-      examples, and calls to action.
-- [ ] Studio editing, saving, and publishing are not described as v1 features.
-- [ ] The public changelog page is absent from v1 docs navigation and sitemap.
-- [ ] The canonical domain `sivir.dev` is live and used consistently.
-- [ ] Package, site, CLI, and release notes consistently identify v1.0.0.
-- [ ] The public component count is 38 and component names agree everywhere.
-- [ ] Maintainer-created `sivir-skill` is verified before candidate approval.
+- [x] [v1 scope](v1-scope.md) approved (38 components; Studio + registry out)
+- [x] Theme Studio absent from public getting-started docs and sitemap
+- [x] Public changelog page removed from v1 nav/sitemap
+- [x] Canonical domain decision: `sivir.dev`
+- [ ] Live DNS/TLS for `sivir.dev` verified in production
+- [ ] Package/site/CLI/release notes all say `1.0.0` (at RC freeze)
+- [x] Public component count is 38 everywhere (package, CLI, docs catalog)
+- [ ] Maintainer `sivir-skill` verified
 
 ## Component Library
 
-- [ ] Every advertised component is exported from the package.
-- [ ] Every CLI-installable component has a complete manifest and dependency
-      graph.
-- [ ] Public props, variants, events, and composition behavior are documented.
-- [ ] Keyboard, focus, pointer, escape, click-outside, and reduced-motion
-      behaviors pass where applicable.
-- [ ] SSR and hydration checks pass.
-- [ ] No release-critical component test is skipped.
+- [x] Every advertised component exported (public-api contract tests)
+- [x] CLI manifests / isolated install graphs complete
+- [x] Component reference pages exist for the catalog
+- [x] Escape, outside-click, focus restore, submenu cone covered in browser tests
+- [x] SSR checks pass
+- [x] No skipped release-critical browser interactions
+- [x] Command fuzzy search fixed (word-token fuzzy ranking)
 
 ## Package And CLI
 
-- [ ] `@sivir/ui` package metadata, license, exports, and files are correct.
-- [ ] The package-import path passes in a fresh SvelteKit consumer.
-- [ ] `sivir init` passes in a fresh SvelteKit consumer.
-- [ ] The documented Bun invocation uses
-      `bunx --package @sivir/ui sivir ...` because the package and binary names
-      differ.
-- [ ] `sivir add <component>` passes for representative simple, compound, and
-      dependency-heavy components.
-- [ ] `sivir add theme <slug>` installs built-in presets without a service; if
-      remote themes are included, it uses the canonical registry and has a
-      clear failure mode.
-- [ ] Repeated CLI operations are safe and have tested overwrite behavior.
-- [ ] The exact tarball verified in CI is the artifact selected for publish.
+- [x] Package metadata, license, exports, files correct
+- [x] Package-import path: `verify:artifact`
+- [x] CLI path: sandbox + `verify:cli-artifact`
+- [x] Documented invocation: `bunx --package @sivir/ui sivir ...`
+- [x] Built-in `sivir add theme <slug>` works offline
+- [x] CI/publish run artifact + cli-artifact gates
 
-## Documentation And Themes
+## Documentation
 
-- [ ] Introduction, installation, styling, and theming pages match v1 behavior.
-- [ ] Every public component has a reachable reference page and example.
-- [ ] All install commands work when followed verbatim.
-- [ ] Built-in themes work without Theme Studio.
-- [ ] The gallery is read-only, or hidden if the registry is not a supported v1
-      service.
-- [ ] The sitemap and internal links contain no removed Studio route.
-- [ ] Changelog and release notes contain no stale or contradictory versions.
+- [x] Introduction + Installation document package and CLI paths
+- [x] Theming documents tokens + built-in presets (no Studio/registry product)
+- [ ] Styling merged into Theming (or Styling removed) if still duplicated
+- [ ] Components linked from Getting Started sidebar (not only top nav)
+- [x] Sitemap has no Studio; themes gallery not a public v1 entry
+- [ ] Release notes / known limitations drafted for GitHub release
 
-## Automated Gates
+## Automated Gates (run on RC SHA)
 
 - [ ] `bun install --frozen-lockfile`
 - [ ] `bun audit`
@@ -61,7 +49,7 @@ Use this checklist for the final go/no-go review. Detailed work belongs in the
 - [ ] `bun run lint`
 - [ ] `bun run check`
 - [ ] `bun --filter='docs' run test:ci`
-- [ ] `bun --filter='registry' run test`
+- [ ] `bun --filter='registry' run test` (in-tree service tests; not a v1 product)
 - [ ] `bun --filter='@sivir/ui' run test`
 - [ ] `bun --filter='docs' run test:browser`
 - [ ] `bun run build`
@@ -73,43 +61,29 @@ Use this checklist for the final go/no-go review. Detailed work belongs in the
 
 ## Production Readiness
 
-- [ ] Production docs environment variables are configured and documented.
-- [ ] The registry path is resolved: either the read-only service meets the
-      conditional gates below, or gallery and remote-theme features are hidden
-      and docs have no runtime registry dependency.
-- [ ] If included, registry migrations are applied before traffic reaches new
-      code.
-- [ ] If included, the docs site reaches the production registry over TLS.
-- [ ] If included, `POST /api/themes` and `POST /themes` return `405` and create
-      no data.
-- [ ] No critical or high reachable dependency advisory is accepted.
-- [ ] DNS, redirects, canonical metadata, and error pages are verified.
-- [ ] Rollback owners and commands are recorded before release.
+- [ ] Docs deploy without requiring `THEME_REGISTRY_URL`
+- [ ] No critical/high reachable dependency advisories
+- [ ] DNS, redirects, canonical metadata, 404 verified on `sivir.dev`
+- [ ] Rollback owner + commands recorded
 
 ## Publish
 
-- [ ] Package version is `1.0.0` and release tag will be `v1.0.0`.
-- [ ] The release commit exactly matches the validated candidate.
-- [ ] GitHub release notes describe v1 scope and known limitations.
-- [ ] The publish workflow passes and npm provenance is present.
-- [ ] `npm view @sivir/ui@1.0.0 version` returns `1.0.0`.
-- [ ] `npm view @sivir/ui dist-tags.latest` returns `1.0.0`.
-- [ ] A clean consumer installs from npm rather than the local tarball.
-- [ ] Production docs are deployed from the release commit.
+- [ ] Version `1.0.0`, tag `v1.0.0`
+- [ ] Release commit == validated candidate
+- [ ] GitHub release notes (scope, install, limitations: no Studio/registry)
+- [ ] Publish workflow green + npm provenance
+- [ ] `npm view @sivir/ui@1.0.0` and `dist-tags.latest` == `1.0.0`
+- [ ] Clean consumer installs from npm (package + CLI)
+- [ ] Production docs from release commit
 
 ## Post-release
 
-- [ ] Package import, CLI init/add, docs, and theme-read smoke tests pass in
-      production.
-- [ ] Error logs and availability are reviewed after release.
-- [ ] Any release regression has an owner and severity.
-- [ ] A patch release is prepared instead of overwriting the v1 artifact if a
-      package defect is found.
-- [ ] Theme Studio remains tracked as post-v1 work rather than an urgent v1
-      follow-up.
+- [ ] Production smoke: package, CLI, docs
+- [ ] Logs reviewed
+- [ ] Regressions owned; patch via `1.0.1` never overwrite `1.0.0`
+- [ ] Theme Studio + registry tracked as post-v1 milestones
 
-## Go Or No-go
+## Go / no-go
 
-Release only when all P0 and P1 items are closed, every automated gate above is
-green for the release commit, and rollback is available. Any exception requires
-an explicit written decision from the maintainer before the tag is created.
+Ship only with zero open P0/P1, green gates on the release commit, and rollback
+ready. Exceptions need a written maintainer decision before the tag.

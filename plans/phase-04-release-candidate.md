@@ -1,82 +1,34 @@
 # Phase 4: Validate The Release Candidate
 
+## Status
+
+**TODO** — start after Phase 3 open polish + Command search are closed or
+accepted.
+
 ## Objective
 
-Produce one immutable v1 candidate and gather enough automated and manual
-evidence for a go/no-go decision. This phase validates a commit, not a moving
-branch.
+One immutable commit SHA + one retained tarball pass every automated gate and
+manual QA. No moving branch.
 
-## Entry Criteria
+## Entry criteria
 
-- Phases 1 through 3 are complete.
-- Version, changelog, release date, badges, and release notes are final.
-- Canonical production services selected in Phase 1 are available for smoke
-  testing.
-- All known P0 and P1 issues are closed.
-- Release notes and rollback steps have draft owners.
-- The maintainer has created and manually verified `sivir-skill`, the Sivir UI
-  docs design skill used for docs pages and component reference quality.
+- [x] Phases 1–2 complete
+- [x] Phase 3 core complete
+- [ ] Phase 3 nav/docs polish done (styling merge, Components in sidebar)
+- [x] Command palette search fixed (word-token fuzzy ranking)
+- [ ] Package version set to `1.0.0` on the candidate commit only
+- [ ] GitHub release notes drafted (limitations: no Studio, no registry product)
+- [ ] Maintainer verified `sivir-skill` (docs quality gate)
+- [ ] Working tree clean aside from intentional RC metadata
 
 ## Work
 
-### 1. Freeze the candidate
+### 1. Freeze candidate
 
-- Choose and record the candidate commit SHA.
-- Reconcile generated files and remove accidental test artifacts.
-- Confirm the working tree is clean before running release gates.
-- Do not merge feature work into the candidate. Any blocker fix creates a new
-  candidate and resets affected evidence.
+- Record SHA.
+- No feature merges after freeze; any fix → new candidate.
 
-### 2. Reproduce CI from a clean environment
-
-- Install from the lockfile with the repository's pinned Bun version.
-- Run audit, formatting, lint, all checks, all test projects, and both docs
-  builds.
-- Run package registry generation, CLI sandbox, and exact-artifact consumer
-  verification.
-- Run Installer Lab tests.
-- Record command output or CI links against the candidate SHA.
-
-### 3. Inspect the release artifact
-
-- Build and retain the candidate tarball once.
-- Confirm version, package metadata, license, expected source, CSS, CLI bundle,
-  and generated registry are included.
-- Confirm temporary files, secrets, test artifacts, and Studio-only assets are
-  absent.
-- Install that exact tarball in fresh package-import and CLI consumer fixtures.
-- For the CLI fixture, invoke the tarball's installed `sivir` binary, run
-  `init` and representative `add` commands, then typecheck and build. A CLI
-  built directly from the working tree is not sufficient evidence.
-
-### 4. Perform manual release QA
-
-- Test homepage, installation, component navigation, representative component
-  interactions, theming, and the read-only gallery if included.
-- Test mobile and desktop widths, keyboard-only use, and reduced motion.
-- Verify `/themes/studio` is not linked or presented as v1 functionality.
-- Test canonical-domain URLs and, if included, production-like registry failure
-  behavior.
-- Review the v1 scope, changelog, release notes, and known limitations together.
-
-### 5. Confirm the docs skill gate
-
-- Confirm `sivir-skill` exists where the maintainer installed it.
-- Spot-check at least one getting-started page and one component page against
-  the skill's guidance.
-- Do not invent or auto-generate the skill contents in this phase; the
-  maintainer owns creation and verification.
-
-### 6. Hold the go/no-go review
-
-- Complete `plans/v1-release-checklist.md` through the pre-publish sections.
-- Confirm zero open P0/P1 defects and assign every accepted P2.
-- Confirm npm access, `NPM_TOKEN`, provenance permissions, DNS access, deploy
-  access, and rollback ownership.
-- Confirm the `sivir-skill` gate is complete.
-- Approve the fully finalized candidate SHA in writing.
-
-## Verification
+### 2. Full automated gauntlet
 
 ```sh
 bun install --frozen-lockfile
@@ -85,7 +37,7 @@ bun run format:check
 bun run lint
 bun run check
 bun --filter='docs' run test:ci
-bun --filter='registry' run test
+bun --filter='registry' run test   # in-tree only; not a v1 public service
 bun --filter='@sivir/ui' run test
 bun --filter='docs' run test:browser
 bun run build
@@ -96,21 +48,39 @@ bun --filter='@sivir/ui' run verify:cli-artifact
 bun --cwd apps/installer-lab test
 ```
 
-The release workflow in `.github/workflows/publish.yml` must enforce the same
-or stricter gates before `npm publish`.
+### 3. Artifact inspection
 
-## Exit Criteria
+- Single `.release/*.tgz`; version `1.0.0`
+- Allowlist contents; no secrets/Studio-only shipping requirements
+- Package-import + CLI-copy both from **that** tarball
 
-- [ ] One candidate SHA and tarball are recorded.
-- [ ] Every automated gate passes from a clean environment.
-- [ ] Both fresh-consumer installation models pass using the exact tarball.
-- [ ] Manual product, responsive, accessibility, and production smoke QA pass.
-- [ ] `sivir-skill` exists and was maintainer-verified against sample docs pages.
-- [ ] Release checklist has no unchecked pre-publish blocker.
-- [ ] Maintainer records a go decision and rollback owner.
+### 4. Manual QA
 
-## Reset Conditions
+- Homepage, Introduction, Installation, Theming, Components index
+- Representative components (overlay, menu cone, form controls)
+- Keyboard, mobile width, reduced motion
+- Confirm no Studio / no public registry gallery links
+- Docs usable **without** `THEME_REGISTRY_URL`
 
-Create and validate a new candidate if any code, dependency, generated output,
-configuration, or shipped documentation changes. A typo limited to private
-planning notes does not reset the candidate.
+### 5. `sivir-skill` gate
+
+- Maintainer-owned; spot-check one getting-started + one component page
+
+### 6. Go / no-go
+
+- Fill [v1-release-checklist.md](v1-release-checklist.md) pre-publish sections
+- Written approval of SHA + rollback owner
+
+## Exit criteria
+
+- [ ] Candidate SHA + tarball recorded
+- [ ] All automated gates green
+- [ ] Both install models verified on exact tarball
+- [ ] Manual QA pass
+- [ ] `sivir-skill` verified
+- [ ] Checklist clear of P0/P1
+- [ ] Written go decision
+
+## Reset
+
+Any shipped code/docs/config change after freeze → new candidate.

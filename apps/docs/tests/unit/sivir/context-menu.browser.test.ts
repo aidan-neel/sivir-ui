@@ -48,6 +48,25 @@ describe('ContextMenu -- open via right-click', () => {
 		await flush();
 		await expect.element(page.getByTestId('ctx-copy')).not.toBeInTheDocument();
 	});
+
+	it('closes on click outside', async () => {
+		render(ContextMenuFixture, {});
+		await flush();
+		await openContextMenu();
+		await expect.element(page.getByTestId('ctx-copy')).toBeInTheDocument();
+
+		const outside = document.createElement('button');
+		outside.textContent = 'outside';
+		outside.style.position = 'fixed';
+		outside.style.left = '8px';
+		outside.style.top = '8px';
+		document.body.append(outside);
+		await new Promise((r) => setTimeout(r, 20));
+		outside.click();
+		await flush();
+		await expect.element(page.getByTestId('ctx-copy')).not.toBeInTheDocument();
+		outside.remove();
+	});
 });
 
 describe('ContextMenu -- item activation', () => {

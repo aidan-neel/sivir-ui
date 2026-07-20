@@ -7,7 +7,7 @@ import CommandFixture from '../../fixtures/CommandFixture.svelte';
 async function flush() {
 	await tick();
 	await tick();
-	await new Promise((r) => setTimeout(r, 20));
+	await new Promise((r) => setTimeout(r, 70));
 }
 
 async function openCommand() {
@@ -196,13 +196,24 @@ describe('Command -- search input', () => {
 		render(CommandFixture, { open: true, onLogout });
 		await flush();
 
-		await page.getByPlaceholder('Search commands').fill('logout');
+		await page.getByPlaceholder('Search commands').click();
+		await userEvent.keyboard('logout');
 		await flush();
 		await expect.element(page.getByTestId('cmd-profile')).not.toBeVisible();
 		await expect.element(page.getByTestId('cmd-logout')).toBeVisible();
 		await userEvent.keyboard('{Enter}');
 		await flush();
 		expect(onLogout).toHaveBeenCalledTimes(1);
+	});
+
+	it('matches one-character queries', async () => {
+		render(CommandFixture, { open: true });
+		await flush();
+
+		await page.getByPlaceholder('Search commands').fill('p');
+		await flush();
+		await expect.element(page.getByTestId('cmd-profile')).toBeVisible();
+		await expect.element(page.getByTestId('cmd-logout')).not.toBeVisible();
 	});
 
 	it('keeps short unrelated queries from matching every item', async () => {

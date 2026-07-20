@@ -35,10 +35,9 @@ describe('Popover -- mount and unmount', () => {
 		await expect.element(page.getByText('Popover Title')).not.toBeInTheDocument();
 	});
 
-	it('renders content after opening via trigger (mount-with-open-true blocked by P3-F7)', async () => {
-		render(PopoverFixture, { open: false });
+	it('renders content when open=true on mount', async () => {
+		render(PopoverFixture, { open: true });
 		await flush();
-		await openViaTrigger();
 		await expect.element(page.getByText('Popover Title')).toBeInTheDocument();
 		await expect.element(page.getByText('Popover body content')).toBeInTheDocument();
 	});

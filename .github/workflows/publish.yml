@@ -107,6 +107,9 @@ jobs:
       - name: Pack and verify fresh SvelteKit consumer
         run: bun --filter='@sivir/ui' run verify:artifact
 
+      - name: Verify CLI source-copy from retained tarball
+        run: bun --filter='@sivir/ui' run verify:cli-artifact
+
       - name: Publish verified tarball
         run: npm publish packages/sivir/.release/*.tgz --access public --provenance --ignore-scripts
         env:

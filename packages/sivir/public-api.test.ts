@@ -80,7 +80,7 @@ const NAMESPACED = {
 		'Sub',
 		'SubContent',
 		'SubTrigger'
-	],
+	], // cone: Root → Sub → nested Sub
 	'hover-card': ['Root', 'Trigger', 'Content', 'Title', 'Description'],
 	modal: [
 		'Root',

@@ -151,11 +151,9 @@ describe('A11y -- overlay components (axe, open state)', () => {
 	});
 });
 
-describe('A11y -- floating components (axe, open state via trigger to work around P3-F7)', () => {
+describe('A11y -- floating components (axe, open state)', () => {
 	it('popover open -- no violations (P3-F13 aria fixed; color-contrast deferred)', async () => {
-		render(PopoverFixture, { open: false });
-		await flush();
-		await page.getByTestId('popover-trigger-label').click();
+		render(PopoverFixture, { open: true });
 		await flush();
 
 		const { violationsFiltered } = await runAxe();

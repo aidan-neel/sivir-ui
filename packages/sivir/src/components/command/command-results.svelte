@@ -16,11 +16,10 @@
 	id={`${command.id}-listbox`}
 	role="listbox"
 	aria-label="Command results"
-	class="max-h-full overflow-y-auto p-1 pb-2.5"
+	class="max-h-full overflow-y-auto px-1 pt-1"
 >
-	{#if command.searchContent === '' || command.results.length > 0}
-		{@render children?.()}
-	{:else}
+	{@render children?.()}
+	{#if command.searchContent !== '' && command.results.length === 0}
 		<div class="flex w-full items-center justify-center p-3">
 			<p class="text-sm text-foreground-muted">No results found</p>
 		</div>

@@ -3,13 +3,16 @@
 	import type { ContextMenuState, ContextMenuSubProps } from '.';
 	import { getContextMenuContext, setContextMenuContext } from './context.svelte';
 
-	const { state: parentState } = getContextMenuContext();
+	const parentMenu = getContextMenuContext();
 	const id = $props.id();
 	const contextMenuState = $state<ContextMenuState>({
 		open: false,
 		checkboxItems: new Map()
 	});
-	setContextMenuContext({ state: contextMenuState, parentState });
+	setContextMenuContext({
+		state: contextMenuState,
+		ancestors: [...parentMenu.ancestors, parentMenu.state]
+	});
 
 	let { children }: ContextMenuSubProps = $props();
 </script>

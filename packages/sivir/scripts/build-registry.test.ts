@@ -26,6 +26,16 @@ describe('built registry output schema', () => {
 		}
 	});
 
+	test('emits every Command search module', async () => {
+		const index = JSON.parse(
+			await readFile(path.join(registryRoot, 'index.json'), 'utf8')
+		) as RegistryIndex;
+		const command = index.components.find((component) => component.name === 'command');
+
+		expect(command?.files).toContain('components/command/search.ts');
+		expect(existsSync(path.join(registryRoot, 'files/components/command/search.ts'))).toBe(true);
+	});
+
 	test('emits usable built-in theme records', async () => {
 		const themes = JSON.parse(
 			await readFile(path.join(registryRoot, 'themes.json'), 'utf8')

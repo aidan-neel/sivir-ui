@@ -174,18 +174,15 @@ describe('SSR -- drift-prone bidirectional-sync components', () => {
 		expect(result.body).not.toMatch(/Sheet Title/);
 	});
 
-	it('sheet (open) -- visible state in SSR output', () => {
-		// Sheet has a `visible` $state that flips after animationend.
-		// On server render, `visible` defaults to false → no content.
-		// This is acceptable; the client mounts and the effect immediately
-		// sets visible=true. We pin SSR's observable shape here.
+	it('sheet (open) includes the title and role="dialog" in SSR output', () => {
+		// Sheet gates content on `{#if sheetState.open}` (no deferred visible
+		// flag). Open SSR should emit the dialog chrome like Modal does.
 		const result = render(SheetFixture as Component<Record<string, unknown>>, {
 			props: { open: true }
 		});
-		// At SSR snapshot time, the sheet content may or may not appear depending
-		// on whether the `visible` effect ran. We assert the consistent observable:
-		// the SSR output should not throw, and should at minimum render the trigger.
 		expect(result.body).toMatch(/data-testid="trigger"/);
+		expect(result.body).toMatch(/Sheet Title/);
+		expect(result.body).toMatch(/role="dialog"/);
 	});
 
 	it('popover (closed) does not include the content in SSR output', () => {

@@ -31,13 +31,12 @@ The browser suite runs separately with `bun --filter='docs' run test:browser`.
 
 ## Deployment
 
-The docs app deploys with the Vercel adapter by default. Production docs live at
-`https://sivir.dev` and talk to the theme registry at
-`https://registry.sivir.dev` via `THEME_REGISTRY_URL`; copy
-`apps/docs/.env.example` for the expected shape. The registry requires the
-values documented in [`apps/registry/.env.example`](apps/registry/.env.example)
-and [`apps/registry/README.md`](apps/registry/README.md).
+The docs app deploys with the Vercel adapter by default (production host:
+`https://sivir.dev`). v1 docs do **not** require a theme registry.
 
-For the included Docker deployment, `docker compose up --build` selects the Node
-adapter for docs and connects it to the registry service over the internal
-network.
+For local full-stack Docker (`docker compose up --build`), the Node adapter is
+selected for docs and an optional registry service is wired over the internal
+network. Registry env vars are documented in
+[`apps/registry/.env.example`](apps/registry/.env.example) and
+[`apps/registry/README.md`](apps/registry/README.md) — that path is post-v1 for
+the public product.

@@ -12,9 +12,8 @@
 	let { children, inverted = false }: Props = $props();
 
 	// Must run during init: Content reads this via getContext() while it
-	// initializes, which happens before any $effect fires. Setting it in an
-	// effect leaves Content with `undefined` and the inverted theme never applies.
-	setDropdownMenuContext({ inverted: untrack(() => inverted) });
+	// initializes, which happens before any $effect fires.
+	setDropdownMenuContext({ inverted: untrack(() => inverted), ancestors: [] });
 </script>
 
 <Popover.Root placement="bottom-start">

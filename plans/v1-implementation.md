@@ -1,56 +1,56 @@
 # Sivir UI v1 Implementation
 
-This is the execution index for the [v1 scope](v1-scope.md). Work proceeds in
-order because each phase establishes the contract or evidence required by the
-next one. A phase is complete only when its exit criteria are recorded.
+Execution index for [v1-scope.md](v1-scope.md).
 
-## Phase Sequence
+## Status (2026-07-19)
 
-| Phase | Plan                                                            | Outcome                                                                                                | Depends on |
-| ----- | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ | ---------- |
-| 1     | [Freeze the release contract](phase-01-release-contract.md)     | v1 surface is fixed, canonical identity is chosen, and Theme Studio is removed from the public product | None       |
-| 2     | [Stabilize library and CLI](phase-02-library-and-cli.md)        | Public components and both installation models meet the frozen contract                                | Phase 1    |
-| 3     | [Finish docs and deployment](phase-03-docs-and-deployment.md)   | Public guidance and production services accurately support v1                                          | Phase 2    |
-| 4     | [Validate the release candidate](phase-04-release-candidate.md) | One immutable candidate passes automated and manual release gates                                      | Phase 3    |
-| 5     | [Publish and verify v1](phase-05-publish-and-verify.md)         | The verified artifact is public and production workflows are confirmed                                 | Phase 4    |
+| Phase | Plan                                                   | Status                         |
+| ----- | ------------------------------------------------------ | ------------------------------ |
+| 1     | [Release contract](phase-01-release-contract.md)       | **DONE**                       |
+| 2     | [Library and CLI](phase-02-library-and-cli.md)         | **DONE**                       |
+| 3     | [Docs and deployment](phase-03-docs-and-deployment.md) | **DONE** (see open follow-ups) |
+| 4     | [Release candidate](phase-04-release-candidate.md)     | **TODO**                       |
+| 5     | [Publish and verify](phase-05-publish-and-verify.md)   | **TODO**                       |
 
-## Execution Rules
+## Phase outcomes
 
-- Do not add v1 scope while closing a phase. New product ideas go to post-v1.
-- Fix failures at the earliest phase that owns the behavior, then rerun every
-  affected downstream gate.
-- Use one commit or candidate SHA as the input to Phase 4. Do not validate a
-  moving branch and call it a release candidate.
-- Do not tag or publish while the canonical domain, version, or release notes
-  disagree.
-- Do not treat existing green tests as proof that the packaged consumer paths
-  work; both install models require fresh-app checks.
-- Do not restore Theme Studio as a workaround for theme gallery, registry, or
-  documentation gaps.
+| Phase | Outcome                                                                          |
+| ----- | -------------------------------------------------------------------------------- |
+| 1     | Identity fixed; Studio/changelog out of public surface; catalog frozen at 38     |
+| 2     | Public API locked; overlay/submenu blockers closed; package + CLI artifact gates |
+| 3     | Getting-started docs rewritten; registry not required for v1 docs                |
+| 4     | One immutable SHA + tarball passes full gates + manual QA                        |
+| 5     | `@sivir/ui@1.0.0` on npm; docs live on `sivir.dev`                               |
 
-## Release Blocker Policy
+## Open before Phase 4 freeze
 
-The following failures block progression:
+Track and close (or explicitly accept) before tagging:
 
-- **P0:** security exposure, data loss, package cannot install, application
-  crash, or a release workflow that could publish the wrong artifact.
-- **P1:** documented component or CLI behavior is broken, public accessibility
-  regression, production deployment failure, or major docs/install mismatch.
-- **P2:** non-critical defect with a practical workaround. It may be deferred
-  only with an owner and issue.
-- **P3:** polish or future enhancement. It does not block v1.
+1. **Docs nav polish (Phase 3 follow-up)** — merge Styling into Theming if still
+   separate; put Components under Getting Started sidebar; drop Components from
+   top nav; more spacing between install steps.
+2. **Command fuzzy search** — navbar/docs Command search still feels wrong;
+   fix or accept with issue before RC.
+3. **`sivir-skill`** — maintainer creates and verifies docs skill (Phase 4 gate).
+4. **Version bump** — set package to `1.0.0` only on the RC commit.
 
-## Evidence To Keep
+## Execution rules
 
-For each phase, add a short completion record to its plan containing:
+- No new v1 scope mid-phase; post-v1 ideas stay out of these plans.
+- Registry and Theme Studio must not re-enter public v1 docs or nav.
+- Phase 4 validates one clean SHA, not a moving branch.
+- Both install models need fresh-consumer evidence (`verify:artifact` +
+  `verify:cli-artifact`).
+- Do not tag while domain, version, or release notes disagree.
 
-- Completion date and candidate commit.
-- Commands run and their results.
-- Manual checks completed.
-- Deferred issues with severity and owner.
-- Any approved deviation from the plan.
+## Blocker policy
+
+- **P0** — install broken, crash, security, wrong publish artifact
+- **P1** — documented behavior broken, a11y regression, deploy failure
+- **P2** — workaround exists; needs owner if deferred
+- **P3** — polish; does not block
 
 ## Completion
 
-The implementation plan is complete only when every phase is complete and the
-[release checklist](v1-release-checklist.md) has no unchecked blocker.
+All five phases done and [v1-release-checklist.md](v1-release-checklist.md) has
+no open P0/P1.

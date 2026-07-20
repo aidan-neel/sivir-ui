@@ -39,21 +39,11 @@
 
 	setPopoverContext({ id: key, state: popoverState });
 
-	function handleKeydown(event: KeyboardEvent) {
-		if (event.key === 'Escape') {
-			popoverState.open = false;
-		}
-	}
-
 	onMount(() => {
-		document.addEventListener('keydown', handleKeydown);
-
 		popoverState.placement = placement;
 		popoverState.hoverable = hoverable ?? false;
 		popoverState.delay = delay;
 		popoverState.closeDelay = closeDelay;
-
-		return () => document.removeEventListener('keydown', handleKeydown);
 	});
 
 	$effect(() => {

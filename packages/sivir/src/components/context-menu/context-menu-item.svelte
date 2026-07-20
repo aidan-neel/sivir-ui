@@ -3,9 +3,9 @@
 	import { Button } from '@sivir/ui/components/button';
 	import { cn } from '@sivir/ui/utils';
 	import { MENU_ITEM } from '@sivir/ui/internals/menu';
-	import { getContextMenuContext } from './context.svelte';
+	import { dismissContextMenu, getContextMenuContext } from './context.svelte';
 
-	const { state: contextMenuState, parentState } = getContextMenuContext();
+	const { state: contextMenuState, ancestors } = getContextMenuContext();
 
 	let {
 		class: className,
@@ -20,8 +20,7 @@
 	role="menuitem"
 	{...rest}
 	onclick={() => {
-		contextMenuState.open = false;
-		if (parentState) parentState.open = false;
+		dismissContextMenu(contextMenuState, ancestors);
 		callback?.();
 	}}
 	class={cn(className, `${MENU_ITEM} ${inset ? 'pl-8' : ''}`)}

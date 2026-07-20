@@ -100,7 +100,7 @@
 	--color-foreground: var(--sivir-neutral-900);
 	--color-foreground-muted: var(--sivir-neutral-500);
 	--color-primary: #1f9be6;
-	--color-primary-hover: #1789cf;
+	--color-primary-hover: #1270ad;
 	--color-on-primary: hsl(0 0% 100%);
 	--color-accent-tint: var(--sivir-blue-50);
 	--color-ring: color-mix(in srgb, var(--color-primary) 30%, transparent);

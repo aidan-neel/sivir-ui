@@ -1,63 +1,14 @@
-<script lang="ts" module>
-	// Shared across all Popover.Content instances. Nested popovers
-	// (dropdown → submenu, etc.) reference-count so the body lock only
-	// releases when the last open one closes.
-	let openCount = 0;
-	let savedOverflow = '';
-	let savedPaddingRight = '';
-
-	function isOverlay(el: Element) {
-		// Popover wrappers are portaled to body without an id (the id lives on
-		// the inner content div) -- match the `data-floating-content` attribute
-		// they always carry, plus the well-known overlay id prefixes for Modal,
-		// Dialog, Sheet, Command (which portal the labeled element directly).
-		if (el.hasAttribute('data-floating-content')) return true;
-		const id = el.id;
-		return (
-			id.startsWith('popover-') ||
-			id.startsWith('modal-') ||
-			id.startsWith('dialog-') ||
-			id.startsWith('sheet-') ||
-			id.startsWith('command-')
-		);
-	}
-
-	function acquireLock() {
-		if (typeof document === 'undefined') return;
-		if (openCount === 0) {
-			savedOverflow = document.body.style.overflow;
-			const sbw = window.innerWidth - document.documentElement.clientWidth;
-			if (sbw > 0) {
-				savedPaddingRight = document.body.style.paddingRight;
-				document.body.style.paddingRight = `${sbw}px`;
-			}
-			document.body.style.overflow = 'hidden';
-			for (const el of Array.from(document.body.children) as HTMLElement[]) {
-				if (isOverlay(el)) continue;
-				el.classList.add('pointer-events-none');
-			}
-		}
-		openCount += 1;
-	}
-
-	function releaseLock() {
-		if (typeof document === 'undefined') return;
-		openCount = Math.max(0, openCount - 1);
-		if (openCount === 0) {
-			document.body.style.overflow = savedOverflow;
-			document.body.style.paddingRight = savedPaddingRight;
-			savedOverflow = '';
-			savedPaddingRight = '';
-			for (const el of Array.from(document.body.children) as HTMLElement[]) {
-				el.classList.remove('pointer-events-none');
-			}
-		}
-	}
-</script>
-
 <script lang="ts">
 	import { onDestroy, onMount } from 'svelte';
-	import { clickOutside, cn, positionFloatingPanel, trapFocus } from '@sivir/ui/utils';
+	import {
+		clickOutside,
+		cn,
+		lockBodyBackground,
+		lockBodyScroll,
+		positionFloatingPanel,
+		pushEscapeLayer,
+		trapFocus
+	} from '@sivir/ui/utils';
 	import { panelIn, panelOut } from '@sivir/ui/internals/transition';
 	import type { PopoverContentProps } from '.';
 	import { getPopoverContext } from './context.svelte';
@@ -86,12 +37,6 @@
 	let positionFrame: number | undefined;
 	let mounted = false;
 
-	function handleKeydown(event: KeyboardEvent) {
-		if (event.key === 'Escape') {
-			popoverState.open = false;
-		}
-	}
-
 	function updatePosition() {
 		if (!popover) return;
 		const reference = refElement ?? popoverState.buttonRef;
@@ -115,7 +60,6 @@
 
 	onMount(() => {
 		mounted = true;
-		document.addEventListener('keydown', handleKeydown);
 		document.addEventListener('scroll', schedulePosition);
 
 		window.addEventListener('resize', schedulePosition);
@@ -171,7 +115,6 @@
 
 		onDestroy(() => {
 			mounted = false;
-			document.removeEventListener('keydown', handleKeydown);
 			document.removeEventListener('scroll', schedulePosition);
 			window.removeEventListener('resize', schedulePosition);
 			window.removeEventListener('scroll', schedulePosition, true);
@@ -199,12 +142,29 @@
 	// Hoverable popovers (tooltip, hover-card) skip the lock because the
 	// pointer-events-none on body children would kill mouseleave/mouseenter
 	// on the trigger and cause an open/close flicker loop.
+	// Scroll lock is shared with Modal/Sheet so nested teardown cannot clear
+	// another layer's lock. Do not gate on `popover` existing — controlled
+	// open=true must lock even before the wrapper finishes binding.
 	$effect(() => {
 		if (typeof document === 'undefined') return;
-		if (popoverState.open && popover && !popoverState.hoverable && lockScroll) {
-			acquireLock();
-			return () => releaseLock();
+		if (popoverState.open && !popoverState.hoverable && lockScroll) {
+			const releaseScroll = lockBodyScroll();
+			const releaseBackground = lockBodyBackground();
+			return () => {
+				releaseBackground();
+				releaseScroll();
+			};
 		}
+	});
+
+	// Escape peels one layer (submenu cone). Hoverable layers still register so
+	// Escape closes the deepest open submenu before the parent menu.
+	$effect(() => {
+		if (typeof document === 'undefined') return;
+		if (!popoverState.open) return;
+		return pushEscapeLayer(() => {
+			popoverState.open = false;
+		});
 	});
 
 	$effect(() => {

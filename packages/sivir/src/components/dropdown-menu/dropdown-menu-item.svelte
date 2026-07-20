@@ -4,10 +4,10 @@
 	import { type Snippet } from 'svelte';
 	import { MENU_ITEM } from '@sivir/ui/internals/menu';
 	import { getPopoverContext } from '../popover/context.svelte';
-	import { getDropdownMenuContext } from './context.svelte';
+	import { dismissDropdownMenu, getDropdownMenuContext } from './context.svelte';
 
 	const { state: popoverState } = getPopoverContext();
-	const { parentState } = getDropdownMenuContext();
+	const { ancestors } = getDropdownMenuContext();
 
 	type Props = {
 		class?: string;
@@ -22,8 +22,7 @@
 	role="menuitem"
 	{...rest}
 	onclick={() => {
-		popoverState.open = false;
-		if (parentState) parentState.open = false;
+		dismissDropdownMenu(popoverState, ancestors);
 		callback?.();
 		userOnclick?.();
 	}}

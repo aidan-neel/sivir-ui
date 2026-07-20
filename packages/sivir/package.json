@@ -57,6 +57,7 @@
 		"build:registry": "bun scripts/build-registry.ts",
 		"build": "bun run build:registry && bun build cli/index.ts --outdir dist --target node --banner '#!/usr/bin/env node'",
 		"verify:artifact": "bun scripts/verify-packed-consumer.ts",
+		"verify:cli-artifact": "bun scripts/verify-cli-artifact.ts",
 		"prepublishOnly": "bun run build",
 		"check": "bun run check:cli && bun run check:components",
 		"check:cli": "tsc --noEmit -p tsconfig.cli.json",

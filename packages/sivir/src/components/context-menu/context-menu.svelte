@@ -8,7 +8,7 @@
 		open: false,
 		checkboxItems: new Map()
 	});
-	setContextMenuContext({ state: contextMenuState });
+	setContextMenuContext({ state: contextMenuState, ancestors: [] });
 
 	let { children }: ContextMenuProps = $props();
 </script>

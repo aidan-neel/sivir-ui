@@ -63,7 +63,7 @@
 </script>
 
 {#if modal.state.open}
-	<div bind:this={portalEl} class="fixed inset-0 z-[115]">
+	<div bind:this={portalEl} data-overlay-root class="fixed inset-0 z-[115]">
 		<div
 			in:overlayIn
 			out:overlayOut

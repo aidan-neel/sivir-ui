@@ -5,6 +5,22 @@ import packageJson from './package.json';
 
 describe('publishable package contract', () => {
 	test('declares the public package metadata used by npm', () => {
+		expect(packageJson.name).toBe('@sivir/ui');
+		expect(packageJson.license).toBe('MIT');
+		expect(packageJson.sideEffects).toEqual(['**/*.css']);
+		expect(packageJson.files).toEqual(expect.arrayContaining(['src', 'dist', 'registry']));
+		expect(packageJson.bin).toEqual({ sivir: 'dist/index.js' });
+		expect(packageJson.peerDependencies).toMatchObject({
+			svelte: '^5.0.0',
+			tailwindcss: '^4.0.0'
+		});
+		expect(packageJson.exports['.']).toBeTruthy();
+		expect(packageJson.exports['./ui.css']).toBe('./src/ui.css');
+		expect(packageJson.exports['./components/*']).toBe('./src/components/*/index.ts');
+		expect(packageJson.scripts['verify:artifact']).toBeTruthy();
+		expect(packageJson.scripts['verify:cli-artifact']).toBeTruthy();
+		expect(packageJson.scripts.check).toContain('check:cli');
+		expect(packageJson.scripts.check).toContain('check:components');
 		expect(packageJson.repository).toEqual({
 			type: 'git',
 			url: 'git+https://github.com/aidan-neel/sivir-ui.git',

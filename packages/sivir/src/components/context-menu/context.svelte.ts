@@ -6,7 +6,8 @@ const CONTEXT_MENU_CONTEXT = Symbol('sivir.context-menu');
 
 export type ContextMenuContext = {
 	state: ContextMenuState;
-	parentState?: ContextMenuState;
+	/** Open menu layers from root → immediate parent (submenu cone ancestors). */
+	ancestors: ContextMenuState[];
 };
 
 export function setContextMenuContext(context: ContextMenuContext) {
@@ -20,4 +21,12 @@ export function getContextMenuContext() {
 	}
 
 	return getContext<ContextMenuContext>(CONTEXT_MENU_CONTEXT);
+}
+
+/** Close the current layer and every ancestor (full cone collapse). */
+export function dismissContextMenu(current: ContextMenuState, ancestors: ContextMenuState[]) {
+	current.open = false;
+	for (let i = ancestors.length - 1; i >= 0; i -= 1) {
+		ancestors[i]!.open = false;
+	}
 }

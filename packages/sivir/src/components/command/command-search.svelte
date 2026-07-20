@@ -1,46 +1,79 @@
 <!-- token-lint-disable-file -->
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onMount, tick } from 'svelte';
 	import type { HTMLInputAttributes } from 'svelte/elements';
 	import Search from '@lucide/svelte/icons/search';
-	import Fuse from 'fuse.js';
 	import { cn } from '@sivir/ui/utils';
 	import { getCommandContext, getCommandResults } from './context.svelte';
+	import { DEFAULT_COMMAND_SEARCH_THRESHOLD, searchCommandItems } from './search';
 
 	const command = getCommandContext();
-
-	let element = $state<HTMLInputElement | undefined>();
 
 	type Props = {
 		threshold?: number;
 	} & HTMLInputAttributes;
 
-	const { class: classProp, threshold = 0.28, ...rest }: Props = $props();
-	const fuse = $derived.by(() => {
-		command.itemsVersion;
-		return new Fuse(command.items, {
-			keys: ['name'],
-			threshold,
-			ignoreLocation: true,
-			minMatchCharLength: 2
-		});
-	});
+	let searchInput = $state<HTMLInputElement | undefined>();
+	let searchTimeout: ReturnType<typeof setTimeout> | undefined;
+	let resultsAnimation: Animation | undefined;
+
+	const {
+		class: classProp,
+		threshold = DEFAULT_COMMAND_SEARCH_THRESHOLD,
+		...rest
+	}: Props = $props();
 
 	onMount(() => {
-		if (element) {
-			element.focus();
+		if (searchInput) {
+			searchInput.focus();
 		}
+
+		return () => {
+			if (searchTimeout) clearTimeout(searchTimeout);
+			resultsAnimation?.cancel();
+		};
 	});
 
-	function handleInput() {
-		if (command.searchContent.trim() === '') {
-			command.results = [...command.items];
-			command.activeId = getCommandResults(command)[0]?.id;
-			return;
-		}
+	async function updateResults(query: string) {
+		searchTimeout = undefined;
+		const resultsElement = document.getElementById(`${command.id}-listbox`);
+		const startHeight = resultsElement?.getBoundingClientRect().height;
+		resultsAnimation?.cancel();
 
-		command.results = fuse.search(command.searchContent).map((result) => result.item);
+		const q = query.trim();
+		if (q === '') {
+			command.results = [...command.items];
+		} else {
+			command.results = searchCommandItems(command.items, q, threshold);
+		}
 		command.activeId = getCommandResults(command)[0]?.id;
+
+		if (!resultsElement || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+		await tick();
+		if (!resultsElement.isConnected) return;
+
+		const endHeight = resultsElement.getBoundingClientRect().height;
+		if (startHeight === undefined || startHeight === endHeight) return;
+
+		const animation = resultsElement.animate(
+			[{ height: `${startHeight}px` }, { height: `${endHeight}px` }],
+			{ duration: 125, easing: 'cubic-bezier(0.16, 1, 0.3, 1)' }
+		);
+		resultsAnimation = animation;
+		animation.onfinish = animation.oncancel = () => {
+			if (resultsAnimation === animation) resultsAnimation = undefined;
+		};
+	}
+
+	function handleInput() {
+		if (searchTimeout) clearTimeout(searchTimeout);
+		searchTimeout = setTimeout(() => void updateResults(command.searchContent), 50);
+	}
+
+	function flushSearch() {
+		if (!searchTimeout) return;
+		clearTimeout(searchTimeout);
+		void updateResults(command.searchContent);
 	}
 
 	function setActive(index: number) {
@@ -53,6 +86,7 @@
 	}
 
 	function handleKeydown(event: KeyboardEvent) {
+		if (['ArrowDown', 'ArrowUp', 'Home', 'End', 'Enter'].includes(event.key)) flushSearch();
 		const results = getCommandResults(command);
 		const activeIndex = results.findIndex((item) => item.id === command.activeId);
 
@@ -87,7 +121,7 @@
 <div class="flex w-full items-center gap-2.5 border-b border-border px-3.5 py-3">
 	<Search size={16} class="shrink-0 text-foreground-muted" />
 	<input
-		bind:this={element}
+		bind:this={searchInput}
 		bind:value={command.searchContent}
 		oninput={handleInput}
 		onkeydown={handleKeydown}

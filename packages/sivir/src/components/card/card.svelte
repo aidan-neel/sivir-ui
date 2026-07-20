@@ -33,7 +33,7 @@
 		{...rest}
 		class={cn(
 			classProp,
-			'flex flex-col rounded-[var(--radius-lg)] border border-border bg-card p-6 shadow-[var(--elevation-1)]'
+			'flex flex-col rounded-[var(--radius-lg)] border border-border bg-card p-6'
 		)}
 	>
 		{@render children?.()}

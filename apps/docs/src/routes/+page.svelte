@@ -79,6 +79,7 @@
 
 <!-- ─── Component gallery ─────────────────────────────────────────── -->
 {#snippet galleryCard(c: CardDef, i: number)}
+	<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -- dynamic catalog of static component routes -->
 	<a class="gcard reveal" style="--d: {0.14 + i * 0.02}s" href={`/docs/components/${c.slug}`}>
 		<div class="gcard__preview">
 			<div class="gcard__demo">{@render c.demo()}</div>

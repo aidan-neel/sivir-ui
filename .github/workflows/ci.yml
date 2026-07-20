@@ -89,3 +89,6 @@ jobs:
 
       - name: Verify packed package in a fresh SvelteKit consumer
         run: bun --filter='@sivir/ui' run verify:artifact
+
+      - name: Verify CLI source-copy from retained tarball
+        run: bun --filter='@sivir/ui' run verify:cli-artifact

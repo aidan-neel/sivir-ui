@@ -11,6 +11,7 @@ export const manifest: Manifest = {
 		'components/command/command-content.svelte',
 		'components/command/command-results.svelte',
 		'components/command/command-search.svelte',
+		'components/command/search.ts',
 		'components/command/command-item.svelte',
 		'components/command/command-group.svelte',
 		'components/command/command-separator.svelte',

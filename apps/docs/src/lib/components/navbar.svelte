@@ -45,17 +45,10 @@
 
 	const navItems = [
 		{ href: '/', label: 'Home' },
-		{ href: '/docs/introduction', label: 'Docs' },
-		{ href: '/docs/components', label: 'Components' }
+		{ href: '/docs/introduction', label: 'Docs' }
 	];
 
 	const docsPages = [
-		{
-			title: 'Docs',
-			href: resolve('/docs'),
-			icon: BookOpen,
-			name: 'Docs'
-		},
 		{
 			title: 'Introduction',
 			href: resolve('/docs/introduction'),
@@ -72,13 +65,13 @@
 			title: 'Theming',
 			href: resolve('/docs/theming'),
 			icon: Palette,
-			name: 'Theming tokens colors'
+			name: 'Theming tokens colors styling'
 		},
 		{
-			title: 'Styling',
-			href: resolve('/docs/styling'),
-			icon: Palette,
-			name: 'Styling css classes'
+			title: 'Components',
+			href: resolve('/docs/components'),
+			icon: Component,
+			name: 'Components catalog index'
 		}
 	];
 

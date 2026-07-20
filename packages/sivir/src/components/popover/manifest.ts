@@ -38,7 +38,16 @@ export const manifest: Manifest = {
 		'components/popover/manifest.ts'
 	],
 	components: ['button'],
-	shared: ['utils.cn', 'utils.clickOutside', 'utils.positionFloatingPanel', 'internals/transition'],
+	shared: [
+		'utils.cn',
+		'utils.clickOutside',
+		'utils.lockBodyBackground',
+		'utils.lockBodyScroll',
+		'utils.positionFloatingPanel',
+		'utils.pushEscapeLayer',
+		'utils.trapFocus',
+		'internals/transition'
+	],
 	peerDependencies: {
 		'@floating-ui/dom': '^1.0.0',
 		cnfast: '^0.0.8',

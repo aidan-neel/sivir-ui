@@ -1,120 +1,90 @@
 # Sivir UI v1 Scope
 
-**Status:** Proposed release contract  
-**Target:** `@sivir/ui` 1.0.0  
-**Planned:** 2026-07-19
+**Status:** Approved release contract  
+**Target:** `@sivir/ui` 1.0.0 / tag `v1.0.0`  
+**Updated:** 2026-07-19
 
 ## Decision
 
-Sivir UI v1 will ship the component library, package and CLI installation
-paths, core theming, documentation, and a read-only theme discovery flow.
-Theme Studio is explicitly deferred until after v1.
+Sivir UI v1 ships the component library, package and CLI install paths, CSS-token
+theming, and documentation on `sivir.dev`.
 
-This boundary keeps the first stable release focused on the workflows already
-closest to production quality. It also avoids making the Studio's editor,
-persistence, publishing, and ownership model part of the v1 support contract.
+**Out of v1 (code may remain in-tree; not public product):**
+
+- Theme Studio
+- Theme registry / community gallery / remote theme hosting
+- Public changelog page
 
 ## Launch Promise
 
-A Svelte 5 and Tailwind v4 user can install Sivir UI as a package or copy
-component source with the CLI, follow the public documentation, customize the
-documented theme tokens, and use every advertised component in a production
-build.
+A Svelte 5 + Tailwind v4 user can install `@sivir/ui` from npm **or** copy
+source with the `sivir` CLI, follow the docs, customize documented tokens, and
+use every advertised component in a production build.
 
-## Included In v1
+## Included
 
-### Component library
+### Library (38 components)
 
-- The current 41-component public catalog.
-- Named and namespaced imports from `@sivir/ui`.
-- Direct component exports documented by the package.
-- Public `ui.css`, design tokens, component variants, and utilities.
-- Supported keyboard, focus, pointer, reduced-motion, and SSR behavior.
+accordion, alert, alert-dialog, avatar, badge, breadcrumb, button, card,
+checkbox, code-block, collapsible, color-picker, combobox, command,
+context-menu, copy-button, dropdown-menu, hover-card, input, label, modal,
+pagination, popover, progress, radio-group, scroll-area, select, sheet,
+shortcut, skeleton, slider, switch, tabs, textarea, toast, toggle,
+toggle-group, tooltip
+
+- Named and namespaced imports from `@sivir/ui`
+- Direct `@sivir/ui/components/<name>` imports
+- Public `ui.css`, tokens, variants, utilities
+- Keyboard, focus, pointer, reduced-motion, SSR behavior
 
 ### Distribution
 
-- Package installation from npm with `@sivir/ui`.
-- CLI commands `init`, `add`, `list`, and installation of supported themes.
-- Complete isolated component dependency manifests.
-- A repeatable release workflow with provenance and exact-artifact checks.
+- `bun add @sivir/ui` / npm / pnpm
+- CLI: `bunx --package @sivir/ui sivir {init,add,list}` and
+  `sivir add theme <built-in-slug>`
+- Isolated manifests + publish workflow with provenance and exact-artifact
+  checks (`verify:artifact`, `verify:cli-artifact`)
 
 ### Theming
 
-- CSS-variable customization and the documented public token contract.
-- Built-in theme presets.
-- Applying and copying CSS or JSON for existing themes.
-- A read-only theme gallery and CLI theme installation, provided the production
-  registry passes the v1 deployment gates.
+- CSS-variable customization
+- Built-in presets via CLI only
+- No Studio, no community registry in the public product
 
-### Documentation and operations
+### Docs (getting started)
 
-- Installation, introduction, styling, theming, and component reference pages.
-- Examples for every public component.
-- A canonical public domain and consistent package, CLI, and documentation
-  links.
-- Production docs and registry deployment instructions.
-- Release notes and a truthful v1 changelog.
+- Introduction, Installation, Theming (includes styling guidance)
+- Components index + per-component reference pages
+- Canonical host: `https://sivir.dev`
 
-## Explicitly Deferred
+## Deferred (post-v1)
 
-Theme Studio is not part of v1. The following capabilities must not be linked,
-advertised, or required by a v1 workflow:
+- Theme Studio (editor, local saves, publish UX)
+- Theme registry service as a public product (gallery, remote install, ownership)
+- Public changelog surface (release notes via GitHub/npm for v1)
+- New components beyond the frozen 38
+- Svelte 4 / Tailwind 3
 
-- The `/themes/studio` editor route and its live editing interface.
-- Saving custom Studio projects in browser storage.
-- Studio-specific CSS or JSON export.
-- Publishing custom themes from the Studio.
-- Theme ownership, update, delete, and moderation workflows.
-- Advanced Studio controls, per-component overrides, undo/redo, and preview
-  expansion.
-- Refactoring or extending the historical plans in `docs/theme-studio/`.
+## Identity
 
-The underlying theme engine is still required by v1. Studio removal must not
-remove public tokens, presets, theme parsing, or runtime theme application used
-outside the editor.
+| Item          | Value                                              |
+| ------------- | -------------------------------------------------- |
+| Docs          | `https://sivir.dev`                                |
+| npm           | `@sivir/ui`                                        |
+| Version / tag | `1.0.0` / `v1.0.0` (bump at Phase 4 freeze)        |
+| GitHub        | `aidan-neel/sivir-ui`                              |
+| Registry host | Not a v1 product surface (code may stay for later) |
 
-## Other Non-goals
+## Success criteria
 
-- Adding new components to the v1 catalog.
-- Supporting Svelte 4 or Tailwind 3.
-- Introducing a second package or framework integration.
-- Building theme author accounts or an administration console.
-- Large internal refactors that do not close a release blocker.
-- Automating a future major-version migration policy.
-
-## Release Success Criteria
-
-v1 is ready when all of the following are true:
-
-- The public site contains no Theme Studio entry point or launch claim.
-- The canonical domain is consistent in docs, CLI output, package metadata,
-  sitemap data, and deployment configuration.
-- All 41 advertised components match the package exports, CLI registry, and
-  documentation catalog.
-- Both the package-import and CLI source-copy paths pass in fresh SvelteKit
-  consumers.
-- The exact npm tarball passes typecheck and production build verification.
-- Format, lint, typecheck, unit, SSR, registry, package, browser, and workspace
-  build gates pass without a release-critical skipped interaction.
-- The production docs, theme reads, npm package, and CLI receive smoke tests
-  after release.
-- No open P0 or P1 issue affects installation, documented behavior,
-  accessibility, security, or data integrity.
-
-## Release Decisions
-
-These decisions must be recorded during Phase 1 and may not remain ambiguous at
-release-candidate time:
-
-- Canonical docs host: `https://sivir.dev`.
-- Theme registry host: `https://registry.sivir.dev`.
-- npm package remains `@sivir/ui`; target version/tag is `1.0.0` / `v1.0.0`.
-- GitHub repo is `aidan-neel/sivir-ui`.
-- Finalize release metadata before the Phase 4 candidate is frozen.
-- Production registry is included as a read-only service; public writes return
-  `405`.
+- No public Studio or registry gallery entry points
+- 38 components consistent across package, CLI registry, docs
+- Package + CLI fresh-consumer paths green
+- CI gates green (including browser, sandbox, both artifact verifiers)
+- Production docs on `sivir.dev` without registry dependency
+- No open P0/P1 on install, documented behavior, a11y, security
 
 ## Plans
 
-- [V1 implementation sequence](v1-implementation.md)
-- [V1 release checklist](v1-release-checklist.md)
+- [Implementation index](v1-implementation.md)
+- [Release checklist](v1-release-checklist.md)

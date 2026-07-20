@@ -42,14 +42,17 @@
 {#if sheetState.open}
 	<div
 		bind:this={portalEl}
+		data-overlay-root
 		class="pointer-events-none fixed inset-0 z-40 [&>*]:pointer-events-auto"
 	>
 		<div
 			in:overlayIn
 			out:overlayOut
 			data-ui="sheet-overlay"
-			class="absolute inset-0 bg-[var(--color-overlay)] backdrop-blur-[2px] [backface-visibility:hidden] [transform:translateZ(0)]"
-			// token-lint-disable-line no-literal-length
+			class={cn(
+				// token-lint-disable-next-line no-literal-length
+				'absolute inset-0 bg-[var(--color-overlay)] backdrop-blur-[2px] [backface-visibility:hidden] [transform:translateZ(0)]'
+			)}
 			aria-hidden="true"
 		></div>
 		<div

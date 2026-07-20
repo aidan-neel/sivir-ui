@@ -18,6 +18,8 @@ export class RegistryRequestError extends Error {
 function getRegistryBaseUrl() {
 	const configured = env.THEME_REGISTRY_URL?.trim();
 	if (configured) return configured.replace(/\/+$/, '');
+	// Local full-stack default only. v1 public docs do not require a registry;
+	// callers should catch and fall back (see themes/+page.server.ts).
 	if (dev) return DEFAULT_REGISTRY_URL;
 	throw new RegistryRequestError(503, 'Theme registry is not configured.');
 }

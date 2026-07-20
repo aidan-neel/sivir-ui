@@ -14,7 +14,6 @@
 	const docLanding = [
 		'/docs/introduction',
 		'/docs/installation',
-		'/docs/styling',
 		'/docs/theming',
 		'/docs/components'
 	];

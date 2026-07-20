@@ -249,3 +249,23 @@ describe('Modal -- focus management in browser', () => {
 		expect(document.activeElement).toBe(first);
 	});
 });
+
+describe('Modal -- focus restoration', () => {
+	it('returns focus to the trigger after close', async () => {
+		render(ModalFixture, { open: false });
+		await flush();
+
+		const trigger = page.getByTestId('trigger').element() as HTMLElement;
+		trigger.focus();
+		expect(document.activeElement).toBe(trigger);
+
+		await page.getByTestId('trigger').click();
+		await flush();
+		await expect.element(page.getByText('Modal Title')).toBeInTheDocument();
+
+		await page.getByText('Close').click();
+		await flush();
+		await expect.element(page.getByText('Modal Title')).not.toBeInTheDocument();
+		expect(document.activeElement).toBe(trigger);
+	});
+});

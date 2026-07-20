@@ -42,6 +42,25 @@ describe('Combobox -- open and close', () => {
 		await flush();
 		await expect.element(page.getByText('Apple')).not.toBeInTheDocument();
 	});
+
+	it('closes on click outside', async () => {
+		render(ComboboxFixture, {});
+		await flush();
+		await openCombobox();
+		await expect.element(page.getByText('Apple')).toBeInTheDocument();
+
+		const outside = document.createElement('button');
+		outside.textContent = 'outside';
+		outside.style.position = 'fixed';
+		outside.style.left = '8px';
+		outside.style.top = '8px';
+		document.body.append(outside);
+		await new Promise((r) => setTimeout(r, 20));
+		outside.click();
+		await flush();
+		await expect.element(page.getByText('Apple')).not.toBeInTheDocument();
+		outside.remove();
+	});
 });
 
 describe('Combobox -- item activation', () => {
@@ -80,5 +99,20 @@ describe('Combobox -- search input', () => {
 		await flush();
 
 		expect(search.value).toBe('app');
+	});
+
+	it('matches one-character queries and shows an empty state when none match', async () => {
+		render(ComboboxFixture, {});
+		await flush();
+		await openCombobox();
+
+		const search = page.getByPlaceholder('Search fruits');
+		await search.fill('h');
+		await flush();
+		await expect.element(page.getByText('Cherry')).toBeVisible();
+
+		await search.fill('z');
+		await flush();
+		await expect.element(page.getByText('No results found')).toBeVisible();
 	});
 });

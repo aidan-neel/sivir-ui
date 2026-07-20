@@ -5,9 +5,9 @@
 	import { cn } from '@sivir/ui/utils';
 	import Check from '@lucide/svelte/icons/check';
 	import { MENU_ITEM } from '@sivir/ui/internals/menu';
-	import { getContextMenuContext } from './context.svelte';
+	import { dismissContextMenu, getContextMenuContext } from './context.svelte';
 
-	const { state: contextMenuState, parentState } = getContextMenuContext();
+	const { state: contextMenuState, ancestors } = getContextMenuContext();
 
 	let {
 		class: className,
@@ -39,8 +39,7 @@
 
 	function toggle() {
 		internalChecked = !internalChecked;
-		contextMenuState.open = false;
-		if (parentState) parentState.open = false;
+		dismissContextMenu(contextMenuState, ancestors);
 		callback?.();
 	}
 </script>

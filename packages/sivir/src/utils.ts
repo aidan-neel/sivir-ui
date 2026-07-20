@@ -24,6 +24,142 @@ export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs.reverse()));
 }
 
+/** Shared document body scroll lock. Modal/Sheet and Popover both use this so
+ * nested overlays cannot clear each other's lock on teardown. */
+let bodyScrollLocks = 0;
+let savedBodyOverflow = '';
+let savedBodyPaddingRight = '';
+let bodyInertLocks = 0;
+
+function isFloatingOverlayElement(el: Element) {
+	// Popover wrappers, modal/sheet portals, and any labeled overlay root.
+	if (
+		el.hasAttribute('data-floating-content') ||
+		el.hasAttribute('data-overlay-root') ||
+		el.getAttribute('data-ui') === 'modal-overlay' ||
+		el.getAttribute('data-ui') === 'sheet-overlay'
+	) {
+		return true;
+	}
+	// Modal/Sheet portal wrappers don't always carry an id on the outer node.
+	if (
+		el.querySelector?.(
+			'[data-floating-content], [data-overlay-root], [role="dialog"], [role="alertdialog"], [data-ui="modal-overlay"], [data-ui="sheet-overlay"]'
+		)
+	) {
+		return true;
+	}
+	const id = el.id;
+	return (
+		id.startsWith('popover-') ||
+		id.startsWith('modal-') ||
+		id.startsWith('dialog-') ||
+		id.startsWith('sheet-') ||
+		id.startsWith('command-') ||
+		id.startsWith('alert-dialog-')
+	);
+}
+
+/** Lock document scrolling. Returns a disposer; only the last active lock restores. */
+export function lockBodyScroll() {
+	if (typeof document === 'undefined') return () => {};
+
+	if (bodyScrollLocks === 0) {
+		savedBodyOverflow = document.body.style.overflow;
+		const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+		if (scrollbarWidth > 0) {
+			savedBodyPaddingRight = document.body.style.paddingRight;
+			document.body.style.paddingRight = `${scrollbarWidth}px`;
+		}
+		document.body.style.overflow = 'hidden';
+	}
+	bodyScrollLocks += 1;
+
+	return () => {
+		bodyScrollLocks = Math.max(0, bodyScrollLocks - 1);
+		if (bodyScrollLocks === 0) {
+			document.body.style.overflow = savedBodyOverflow;
+			document.body.style.paddingRight = savedBodyPaddingRight;
+			savedBodyOverflow = '';
+			savedBodyPaddingRight = '';
+		}
+	};
+}
+
+/** Mark non-overlay body children as non-interactive while a floating layer is open. */
+export function lockBodyBackground() {
+	if (typeof document === 'undefined') return () => {};
+
+	if (bodyInertLocks === 0) {
+		for (const el of Array.from(document.body.children) as HTMLElement[]) {
+			if (isFloatingOverlayElement(el)) continue;
+			el.classList.add('pointer-events-none');
+		}
+	}
+	bodyInertLocks += 1;
+
+	return () => {
+		bodyInertLocks = Math.max(0, bodyInertLocks - 1);
+		if (bodyInertLocks === 0) {
+			for (const el of Array.from(document.body.children) as HTMLElement[]) {
+				el.classList.remove('pointer-events-none');
+			}
+		}
+	};
+}
+
+/** Test isolation for the process-local body locks. */
+export function resetBodyLocksForTests() {
+	bodyScrollLocks = 0;
+	bodyInertLocks = 0;
+	savedBodyOverflow = '';
+	savedBodyPaddingRight = '';
+	if (typeof document !== 'undefined') {
+		document.body.style.overflow = '';
+		document.body.style.paddingRight = '';
+		for (const el of Array.from(document.body.children) as HTMLElement[]) {
+			el.classList.remove('pointer-events-none');
+		}
+	}
+}
+
+/**
+ * Escape closes only the topmost registered layer (submenu cone peels one level
+ * at a time). Modal/Sheet/Popover push while open and pop on teardown.
+ */
+const escapeStack: Array<() => void> = [];
+let escapeListenerAttached = false;
+
+function onDocumentEscape(event: KeyboardEvent) {
+	if (event.key !== 'Escape' || escapeStack.length === 0) return;
+	event.preventDefault();
+	// Stop other document Escape handlers from also firing in the same tick.
+	event.stopImmediatePropagation();
+	escapeStack[escapeStack.length - 1]?.();
+}
+
+function ensureEscapeListener() {
+	if (typeof document === 'undefined' || escapeListenerAttached) return;
+	document.addEventListener('keydown', onDocumentEscape, true);
+	escapeListenerAttached = true;
+}
+
+/** Register a close handler while a layer is open. Returns a disposer. */
+export function pushEscapeLayer(close: () => void) {
+	if (typeof document === 'undefined') return () => {};
+	ensureEscapeListener();
+	escapeStack.push(close);
+	return () => {
+		const index = escapeStack.lastIndexOf(close);
+		if (index >= 0) escapeStack.splice(index, 1);
+	};
+}
+
+/** Test isolation for the escape stack. */
+export function resetEscapeStackForTests() {
+	escapeStack.length = 0;
+}
+
 const FOCUSABLE_SELECTOR = [
 	'a[href]',
 	'area[href]',

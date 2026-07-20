@@ -22,7 +22,7 @@
 			keys: ['value', 'label'],
 			threshold,
 			ignoreLocation: true,
-			minMatchCharLength: 2
+			minMatchCharLength: 1
 		})
 	);
 

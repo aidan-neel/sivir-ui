@@ -5,18 +5,22 @@
 	import BookOpen from '@lucide/svelte/icons/book-open';
 	import Download from '@lucide/svelte/icons/download';
 	import Palette from '@lucide/svelte/icons/palette';
+	import Component from '@lucide/svelte/icons/component';
 
 	let { class: classProp = '', onNavigate }: { class?: string; onNavigate?: () => void } = $props();
 	const pageName = $derived($page.url.pathname);
 
 	const gettingStartedItems = [
-		{ slug: 'introduction', label: 'Introduction', icon: BookOpen },
-		{ slug: 'installation', label: 'Installation', icon: Download },
-		{ slug: 'theming', label: 'Theming', icon: Palette },
-		{ slug: 'styling', label: 'Styling', icon: Palette }
+		{ href: '/docs/introduction', label: 'Introduction', icon: BookOpen },
+		{ href: '/docs/installation', label: 'Installation', icon: Download },
+		{ href: '/docs/theming', label: 'Theming', icon: Palette },
+		{ href: '/docs/components', label: 'Components', icon: Component }
 	];
 
 	function isActive(path: string) {
+		if (path === '/docs/components') {
+			return pageName === path || pageName.startsWith('/docs/components/');
+		}
 		return pageName === path;
 	}
 </script>
@@ -31,11 +35,11 @@
 			Getting Started
 		</h3>
 		<div class="flex flex-col gap-0.5">
-			{#each gettingStartedItems as item (item.slug)}
-				{@const active = isActive(`/docs/${item.slug}`)}
+			{#each gettingStartedItems as item (item.href)}
+				{@const active = isActive(item.href)}
 				<Button
 					variant="ghost"
-					href={`/docs/${item.slug}`}
+					href={item.href}
 					onclick={onNavigate}
 					class={`h-8 w-fit justify-start gap-2 rounded-lg px-3 text-left text-sm transition-[background-color,color] ${
 						active

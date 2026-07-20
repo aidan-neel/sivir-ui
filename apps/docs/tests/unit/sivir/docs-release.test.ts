@@ -53,16 +53,47 @@ describe('docs release contracts', () => {
 			expect(body).toContain(`<loc>https://preview.example/docs/components/${component}</loc>`);
 		}
 		expect(body).toContain('<loc>https://preview.example/docs/components</loc>');
-		expect(body.match(/<url>/g)).toHaveLength(components.length + 7);
+		// home + intro + install + theming + components index; themes gallery is post-v1.
+		expect(body.match(/<url>/g)).toHaveLength(components.length + 5);
+		expect(body).not.toContain('/themes</loc>');
+		expect(body).not.toContain('/themes/studio');
+		expect(body).not.toContain('/docs/styling');
 	});
 
-	it('keeps the Docker docs runtime connected to the registry service', () => {
+	it('keeps getting-started docs free of Theme Studio and wrong CLI invocations', () => {
+		const pages = [
+			'apps/docs/src/routes/docs/introduction/+page.svelte',
+			'apps/docs/src/routes/docs/installation/+page.svelte',
+			'apps/docs/src/routes/docs/theming/+page.svelte'
+		];
+		for (const page of pages) {
+			const source = readFileSync(resolve(root, page), 'utf8');
+			expect(source, page).not.toMatch(/Theme Studio|theme studio|\/themes\/studio/i);
+			expect(source, page).not.toContain('bunx @sivir/ui init');
+			expect(source, page).not.toContain('bunx @sivir/ui add');
+			expect(source, page).not.toContain('/docs/styling');
+		}
+		const install = readFileSync(
+			resolve(root, 'apps/docs/src/routes/docs/installation/+page.svelte'),
+			'utf8'
+		);
+		expect(install).toContain('bunx --package @sivir/ui sivir init');
+		expect(install).toContain('bun add @sivir/ui');
+		const stylingRedirect = readFileSync(
+			resolve(root, 'apps/docs/src/routes/docs/styling/+page.ts'),
+			'utf8'
+		);
+		expect(stylingRedirect).toContain("redirect(301, '/docs/theming')");
+	});
+
+	it('keeps Docker/docs deployment contracts intact (registry optional for v1)', () => {
 		const compose = readFileSync(resolve(root, 'docker-compose.yml'), 'utf8');
 		const dockerfile = readFileSync(resolve(root, 'apps/docs/Dockerfile'), 'utf8');
 		const registryDockerfile = readFileSync(resolve(root, 'apps/registry/Dockerfile'), 'utf8');
 		const config = readFileSync(resolve(root, 'apps/docs/svelte.config.js'), 'utf8');
 		const viteConfig = readFileSync(resolve(root, 'apps/docs/vite.config.ts'), 'utf8');
 
+		// Compose still wires registry for local full-stack dev; v1 public docs do not require it.
 		expect(compose).toContain("THEME_REGISTRY_URL: 'http://registry:4100'");
 		expect(dockerfile).toContain('FROM oven/bun:1.3.11');
 		expect(dockerfile).toContain('ENV DOCS_ADAPTER=node');

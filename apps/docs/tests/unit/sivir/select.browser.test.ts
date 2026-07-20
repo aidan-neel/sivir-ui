@@ -40,6 +40,25 @@ describe('Select -- open and close', () => {
 		await flush();
 		await expect.element(page.getByTestId('opt-apple')).not.toBeInTheDocument();
 	});
+
+	it('closes on click outside', async () => {
+		render(SelectFixture, {});
+		await flush();
+		await openSelect();
+		await expect.element(page.getByTestId('opt-apple')).toBeInTheDocument();
+
+		const outside = document.createElement('button');
+		outside.textContent = 'outside';
+		outside.style.position = 'fixed';
+		outside.style.left = '8px';
+		outside.style.top = '8px';
+		document.body.append(outside);
+		await new Promise((r) => setTimeout(r, 20));
+		outside.click();
+		await flush();
+		await expect.element(page.getByTestId('opt-apple')).not.toBeInTheDocument();
+		outside.remove();
+	});
 });
 
 describe('Select -- selection behavior', () => {
