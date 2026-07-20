@@ -25,7 +25,7 @@ const db = {
 mock.module('@lib/prisma', () => ({ prisma: db }));
 
 // Import the production app only after the database mock is registered.
-const { app } = await import('@src/index');
+const { app, default: vercelHandler } = await import('@src/index');
 
 /** Build a persisted DB row from a draft, as Prisma would return it. */
 function persisted(theme: Theme, id: string) {
@@ -71,6 +71,10 @@ afterEach(() => {
 });
 
 describe('GET /themes', () => {
+	it('exports the app as the Vercel Function handler', () => {
+		expect(vercelHandler).toBe(app);
+	});
+
 	it('returns the built-in default themes when the database is empty', async () => {
 		const res = await get('/themes');
 		expect(res.status).toBe(200);

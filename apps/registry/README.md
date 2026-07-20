@@ -49,7 +49,25 @@ psql "$DIRECT_URL" -f /tmp/themes-dump.sql
 
 Then `docker compose down -v` to delete the local volume.
 
-## Production env vars
+## Vercel deployment
+
+The registry is an Elysia Bun Function. Create a Vercel project with
+`apps/registry` as its Root Directory; `vercel.json` runs migrations and
+generates Prisma's client for every deployment.
+
+Set these environment variables in both Vercel environments:
+
+| Vercel environment | `DATABASE_URL` / `DIRECT_URL` target |
+| ------------------ | ------------------------------------ |
+| Production         | Production Supabase project          |
+| Preview            | Separate preview Supabase project    |
+
+Assign `registry.sivir.dev` to the production deployment and
+`registry-preview.sivir.dev` to the preview branch deployment. Do not share a
+database between those deployments: preview migrations must not affect
+production data.
+
+## Docker deployment
 
 Run the registry image (`./Dockerfile`) with these set:
 

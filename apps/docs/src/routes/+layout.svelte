@@ -7,8 +7,11 @@
 	import type { Snippet } from 'svelte';
 	import { dev } from '$app/environment';
 	import { page } from '$app/stores';
+	import { injectAnalytics } from '@vercel/analytics/sveltekit';
 
 	import type { LayoutData } from './$types';
+
+	injectAnalytics({ mode: dev ? 'development' : 'production' });
 
 	const { children, data }: { children: Snippet; data: LayoutData } = $props();
 

@@ -37,6 +37,8 @@ export const app = new Elysia({ serve: { maxRequestBodySize: 128 * 1024 } })
 	.use(themesController)
 	.get('/', () => 'Sivir theme registry');
 
+export default app;
+
 if (import.meta.main) {
 	app.listen(port);
 	console.log(`Sivir registry listening at ${app.server?.hostname}:${app.server?.port}`);
