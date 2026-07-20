@@ -16,7 +16,7 @@ permissions:
 
 jobs:
   verify:
-    name: Verify (format, lint, check, test, build)
+    name: Verify source and packed consumer
     runs-on: ubuntu-latest
     env:
       LEFTHOOK: 0
@@ -49,6 +49,9 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
+      - name: Dependency audit
+        run: bun audit
+
       - name: Format check
         run: bun run format:check
 
@@ -64,5 +67,28 @@ jobs:
       - name: Test (registry)
         run: bun --filter='registry' run test
 
+      - name: Test (sivir package)
+        run: bun --filter='@sivir/ui' run test
+
       - name: Build
         run: bun run build
+
+      - name: Build standalone docs deployment
+        run: DOCS_ADAPTER=node bun --filter='docs' run build
+
+      - name: Verify standalone docs handler has no runtime dependencies
+        run: |
+          runtime_dir=$(mktemp -d)
+          cp -R apps/docs/build "$runtime_dir/build"
+          cp package.json "$runtime_dir/package.json"
+          cd "$runtime_dir"
+          node -e "import('./build/handler.js')"
+
+      - name: Test CLI in a fresh consumer
+        run: bun --filter='@sivir/ui' run sandbox
+
+      - name: Verify packed package in a fresh SvelteKit consumer
+        run: bun --filter='@sivir/ui' run verify:artifact
+
+      - name: Verify CLI source-copy from retained tarball
+        run: bun --filter='@sivir/ui' run verify:cli-artifact

@@ -1,0 +1,103 @@
+<script lang="ts">
+	import { Button } from '@sivir/ui/components/button';
+	import { cn } from '@sivir/ui/utils';
+	import { onMount, type Snippet } from 'svelte';
+	import type { CommandItem } from '.';
+	import { MENU_ITEM } from '@sivir/ui/internals/menu';
+	import { getModalContext } from '../modal/context.svelte';
+	import { getCommandContext, resetCommand } from './context.svelte';
+
+	const command = getCommandContext();
+	const modal = getModalContext();
+	const localId = $props.id();
+	const itemId = `${command.id}-option-${localId}`;
+
+	type Props = {
+		class?: string;
+		name: string;
+		children?: Snippet;
+		callback?: () => void;
+		disabled?: boolean;
+		href?: string;
+		onclick?: () => void;
+	};
+
+	let {
+		children,
+		name,
+		class: className,
+		callback,
+		disabled = false,
+		href,
+		onclick
+	}: Props = $props();
+	let el = $state<HTMLButtonElement | HTMLAnchorElement | undefined>();
+	const item = {
+		id: itemId,
+		get name() {
+			return name;
+		},
+		get callback() {
+			return callback;
+		},
+		get ref() {
+			return el;
+		},
+		get disabled() {
+			return disabled;
+		}
+	} as CommandItem;
+
+	onMount(() => {
+		command.items.push(item);
+		command.results = [...command.items];
+		command.itemsVersion += 1;
+		command.activeId ??= command.items.find((candidate) => !candidate.disabled)?.id;
+
+		return () => {
+			command.items = command.items.filter((candidate) => candidate.id !== item.id);
+			command.results = command.results.filter((candidate) => candidate.id !== item.id);
+			command.itemsVersion += 1;
+			if (command.activeId === item.id) {
+				command.activeId = command.items.find((candidate) => !candidate.disabled)?.id;
+			}
+		};
+	});
+
+	function activate() {
+		if (disabled) return;
+		modal.state.open = false;
+		resetCommand(command);
+		callback?.();
+		onclick?.();
+	}
+
+	const filteredOut = $derived(
+		command.searchContent !== '' && !command.results.some((result) => result.id === item.id)
+	);
+</script>
+
+<Button
+	id={itemId}
+	role="option"
+	aria-selected={command.activeId === itemId}
+	tabindex={-1}
+	bind:element={el}
+	{disabled}
+	{href}
+	hidden={filteredOut}
+	onmouseenter={() => {
+		if (!disabled) command.activeId = itemId;
+	}}
+	onclick={activate}
+	class={cn(
+		className,
+		`${MENU_ITEM} justify-start gap-2`,
+		command.activeId === itemId && 'bg-secondary text-foreground'
+	)}
+	variant="ghost"
+>
+	<div class="flex w-full items-center gap-2 text-left">
+		{@render children?.()}
+	</div>
+</Button>

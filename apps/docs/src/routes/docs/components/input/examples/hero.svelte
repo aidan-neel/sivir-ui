@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { Input } from '@silk/ui/components/input';
-	import { Button } from '@silk/ui/components/button';
+	import { Input } from '@sivir/ui/components/input';
+	import { Button } from '@sivir/ui/components/button';
 
-	let projectName = $state('silk-ui');
+	let projectName = $state('sivir-ui');
 	let rootDirectory = $state('./');
 </script>
 

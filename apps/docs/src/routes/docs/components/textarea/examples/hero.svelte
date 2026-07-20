@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { Textarea } from '@silk/ui/components/textarea';
+	import { Textarea } from '@sivir/ui/components/textarea';
 
 	let value = $state(
-		"Silk's textarea uses the same field tokens as Input — labels, descriptions, and focus rings stay consistent."
+		"Sivir's textarea uses the same field tokens as Input — labels, descriptions, and focus rings stay consistent."
 	);
 </script>
 

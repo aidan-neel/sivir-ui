@@ -2,7 +2,7 @@
 	"compilerOptions": {
 		"target": "ES2021",
 		"module": "ES2022",
-		"moduleResolution": "node",
+		"moduleResolution": "bundler",
 		"baseUrl": ".",
 		"paths": {
 			"@lib/*": ["./src/lib/*"],

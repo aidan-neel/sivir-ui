@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { cn } from '@silk/ui/utils';
+	import { cn } from '@sivir/ui/utils';
 	import { highlight } from '$lib/highlight';
 
 	let {

@@ -1,6 +1,6 @@
 <script lang="ts">
-	import Shortcut from '@silk/ui/components/shortcut';
-	import { Button } from '@silk/ui/components/button';
+	import Shortcut from '@sivir/ui/components/shortcut';
+	import { Button } from '@sivir/ui/components/button';
 </script>
 
 <Button variant="outline">

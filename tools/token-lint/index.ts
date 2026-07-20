@@ -9,7 +9,10 @@ const RULES: { rule: string; re: RegExp }[] = [
 	// px/rem/em literals inside a Tailwind arbitrary value: [...2px...] / [...0.5rem...]
 	{ rule: 'no-literal-length', re: /\[[^\]]*\d+(?:\.\d+)?(?:px|rem|em)[^\]]*\]/ },
 	// direct Tier-1 primitive reference (only neutral, blue, space, success, warning, error)
-	{ rule: 'no-primitive-leak', re: /var\(\s*--silk-(?:neutral|blue|space|success|warning|error)\b/ }
+	{
+		rule: 'no-primitive-leak',
+		re: /var\(\s*--sivir-(?:neutral|blue|space|success|warning|error)\b/
+	}
 ];
 
 export function lintSource(file: string, source: string): Violation[] {
@@ -78,7 +81,7 @@ export function lintTree(root: string): Violation[] {
 // Accepts MULTIPLE roots so batch checks cover every directory passed (not just the first).
 if (import.meta.main) {
 	const roots = process.argv.slice(2);
-	if (roots.length === 0) roots.push('packages/silk/src/components');
+	if (roots.length === 0) roots.push('packages/sivir/src/components');
 	const v = roots.flatMap((r) => lintTree(r));
 	for (const x of v) console.log(`${x.file}:${x.line} [${x.rule}] ${x.text}`);
 	console.log(`\n${v.length} violations (report mode — enforced in Plan 2)`);

@@ -1,6 +1,6 @@
 <svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
-  <title id="title">Silk UI social share image</title>
-  <desc id="desc">A branded Silk UI card with a polished interface preview, gradient lighting, and the text Silk UI, Design-forward Svelte 5 components, and Calm defaults. Real theming. Production-ready primitives.</desc>
+  <title id="title">Sivir UI social share image</title>
+  <desc id="desc">A branded Sivir UI card with a polished interface preview, gradient lighting, and the text Sivir UI, Design-forward Svelte 5 components, and Calm defaults. Real theming. Production-ready primitives.</desc>
   <defs>
     <linearGradient id="bg" x1="86" y1="46" x2="1078" y2="608" gradientUnits="userSpaceOnUse">
       <stop stop-color="#F8FBFF"/>
@@ -58,10 +58,10 @@
 
   <rect x="76" y="80" width="132" height="38" rx="19" fill="#FFFFFF" fill-opacity="0.82" stroke="#D8E1EC"/>
   <circle cx="103" cy="99" r="9" fill="#101828"/>
-  <text x="122" y="105" fill="#344054" font-family="Geist, Inter, Arial, sans-serif" font-size="16" font-weight="600">Silk UI</text>
+  <text x="122" y="105" fill="#344054" font-family="Geist, Inter, Arial, sans-serif" font-size="16" font-weight="600">Sivir UI</text>
 
   <text x="76" y="202" fill="#101828" font-family="Geist, Inter, Arial, sans-serif" font-size="70" font-weight="650" letter-spacing="-3.4">
-    Silk UI
+    Sivir UI
   </text>
   <text x="76" y="262" fill="#344054" font-family="Geist, Inter, Arial, sans-serif" font-size="34" font-weight="500" letter-spacing="-1.1">
     Design-forward Svelte 5 components

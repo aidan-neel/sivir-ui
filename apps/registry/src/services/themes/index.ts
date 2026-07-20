@@ -1,14 +1,6 @@
 import { Elysia } from 'elysia';
-import {
-	publishResponseSchema,
-	slugConflictSchema,
-	slugParamsSchema,
-	themeDraftSchema,
-	themeListSchema,
-	themeNotFoundSchema,
-	themeRecordSchema
-} from './model';
-import { getThemeBySlug, listThemes, publishTheme } from './service';
+import { slugParamsSchema, themeListSchema, themeNotFoundSchema, themeRecordSchema } from './model';
+import { getThemeBySlug, listThemes } from './service';
 
 export const themesController = new Elysia({
 	prefix: '/themes',
@@ -26,11 +18,14 @@ export const themesController = new Elysia({
 			404: themeNotFoundSchema
 		}
 	})
-	.post('/', ({ body }) => publishTheme(body), {
-		body: themeDraftSchema,
-		detail: { summary: 'Publish a new theme to the registry.' },
-		response: {
-			200: publishResponseSchema,
-			409: slugConflictSchema
+	.post(
+		'/',
+		({ set }) => {
+			set.status = 405;
+			set.headers['allow'] = 'GET';
+			return 'Theme publishing is disabled in v1.';
+		},
+		{
+			detail: { summary: 'Publishing is disabled for the v1 read-only registry.' }
 		}
-	});
+	);

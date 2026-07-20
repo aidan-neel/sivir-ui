@@ -8,7 +8,7 @@
 		"bun": ">=1.3.11"
 	},
 	"scripts": {
-		"dev": "bunx --bun vite dev",
+		"dev": "bunx vite dev",
 		"build": "bunx --bun vite build",
 		"preview": "bunx --bun vite preview",
 		"prepare": "svelte-kit sync || echo ''",
@@ -16,14 +16,16 @@
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"format": "prettier --write .",
 		"lint": "prettier --check . && eslint . --max-warnings=0",
-		"test": "vitest run",
+		"test": "bun run test:ci",
+		"test:all": "vitest run",
 		"test:ci": "vitest run --project unit --project ssr",
-		"test:browser": "vitest run --project browser",
+		"test:browser": "vitest run --project browser --project browser-reduced",
 		"test:watch": "vitest"
 	},
 	"devDependencies": {
 		"@eslint/compat": "^2.0.3",
 		"@eslint/js": "^10.0.1",
+		"@sveltejs/adapter-node": "^5.3.2",
 		"@sveltejs/adapter-vercel": "^6.3.4",
 		"@sveltejs/kit": "^2.55.0",
 		"@sveltejs/vite-plugin-svelte": "^7.0.0",
@@ -40,7 +42,6 @@
 		"eslint-plugin-svelte": "^3.16.0",
 		"globals": "^17.4.0",
 		"jsdom": "^29.1.1",
-		"mdsvex": "^0.12.7",
 		"motion": "^12.38.0",
 		"playwright": "^1.60.0",
 		"prettier": "^3.8.1",
@@ -58,13 +59,10 @@
 	"dependencies": {
 		"@floating-ui/dom": "^1.7.6",
 		"@lucide/svelte": "^1.7.0",
-		"@silk/ui": "workspace:*",
+		"@sivir/ui": "workspace:*",
 		"clsx": "^2.1.1",
-		"fuse.js": "^7.1.0",
 		"mode-watcher": "^1.1.0",
-		"slot-text": "^0.3.1",
 		"svelte-persisted-state": "^1.4.0",
-		"tailwind-merge": "^3.5.0",
 		"tailwind-variants": "^3.2.2"
 	},
 	"trustedDependencies": [

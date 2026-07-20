@@ -1,9 +1,10 @@
 import { defineConfig } from 'vitest/config';
 import { sveltekit } from '@sveltejs/kit/vite';
 import { playwright } from '@vitest/browser-playwright';
+import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
-	plugins: [sveltekit()],
+	plugins: [sveltekit(), tailwindcss()],
 	test: {
 		projects: [
 			{
@@ -17,7 +18,7 @@ export default defineConfig({
 					exclude: [
 						'tests/unit/**/*.browser.test.ts',
 						'tests/unit/**/*.ssr.test.ts',
-						'tests/unit/silk/ssr.test.ts'
+						'tests/unit/sivir/ssr.test.ts'
 					],
 					environment: 'jsdom',
 					setupFiles: ['tests/setup.ts']
@@ -27,7 +28,7 @@ export default defineConfig({
 				extends: true,
 				test: {
 					name: 'ssr',
-					include: ['tests/unit/silk/ssr.test.ts', 'tests/unit/**/*.ssr.test.ts'],
+					include: ['tests/unit/sivir/ssr.test.ts', 'tests/unit/**/*.ssr.test.ts'],
 					environment: 'node'
 				}
 			},
@@ -39,9 +40,28 @@ export default defineConfig({
 				test: {
 					name: 'browser',
 					include: ['tests/unit/**/*.browser.test.ts'],
+					exclude: ['tests/unit/**/*.reduced.browser.test.ts'],
+					setupFiles: ['tests/browser.setup.ts'],
 					browser: {
 						enabled: true,
 						provider: playwright(),
+						headless: true,
+						instances: [{ browser: 'chromium' }]
+					}
+				}
+			},
+			{
+				extends: true,
+				resolve: {
+					conditions: ['browser']
+				},
+				test: {
+					name: 'browser-reduced',
+					include: ['tests/unit/**/*.reduced.browser.test.ts'],
+					setupFiles: ['tests/browser.setup.ts'],
+					browser: {
+						enabled: true,
+						provider: playwright({ contextOptions: { reducedMotion: 'reduce' } }),
 						headless: true,
 						instances: [{ browser: 'chromium' }]
 					}

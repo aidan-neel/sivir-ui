@@ -1,4 +1,4 @@
-# Silk Design System — Re-standardization Spec
+# Sivir Design System — Re-standardization Spec
 
 **Date:** 2026-06-19
 **Status:** Draft for review
@@ -8,12 +8,12 @@
 
 ## 1. Problem
 
-Silk became _too customizable_, and the result is inconsistent and visually inconsistent ("ugly"). The audit found three stacked, overlapping customization layers that fight each other:
+Sivir became _too customizable_, and the result is inconsistent and visually inconsistent ("ugly"). The audit found three stacked, overlapping customization layers that fight each other:
 
 | Layer                          | Surface                               | Location                                                   |
 | ------------------------------ | ------------------------------------- | ---------------------------------------------------------- |
-| Base CSS tokens                | **~280 CSS variables**                | `packages/silk/src/ui.css`                                 |
-| Theme engine (`ThemeDraft`)    | **~91 fields** → ~150 emitted vars    | `packages/silk/src/themes/presets.ts`                      |
+| Base CSS tokens                | **~280 CSS variables**                | `packages/sivir/src/ui.css`                                |
+| Theme engine (`ThemeDraft`)    | **~91 fields** → ~150 emitted vars    | `packages/sivir/src/themes/presets.ts`                     |
 | Theme Studio UI                | **~153 user-facing knobs**            | `apps/docs/src/routes/themes/studio/+page.svelte`          |
 | Presets · Styles · Transitions | 6 presets · 3 styles · 13 transitions | `themes/presets/`, `themes/styles/`, `themes/transitions/` |
 
@@ -61,7 +61,7 @@ Translated from the reference screenshots (Notion-style "memd" library app, ligh
 ### Naming convention
 
 ```
-Tier 1  --silk-{scale}-{step}        primitives, brandless, mode-agnostic
+Tier 1  --sivir-{scale}-{step}        primitives, brandless, mode-agnostic
 Tier 2  --color-{role}, --radius-*…  semantic, mode-aware (light/dark remap)
 Tier 3  --button-*, --field-*…       component, DERIVED from Tier 2 by recipe
 ```
@@ -80,33 +80,33 @@ These are the _only_ hand-picked numbers in the system.
 
 A 13-step gray ramp. Cool-neutral by default (Notion leans very slightly warm-neutral; "temperature" is a Studio control — see §6).
 
-| Step                 | Light value | Dark value | Typical role                       |
-| -------------------- | ----------- | ---------- | ---------------------------------- |
-| `--silk-neutral-0`   | `#ffffff`   | `#0d0d0d`  | pure base / cards (mode-dependent) |
-| `--silk-neutral-25`  | `#fbfbfa`   | `#141414`  | app background (light)             |
-| `--silk-neutral-50`  | `#f7f7f5`   | `#1a1a1a`  | muted surface                      |
-| `--silk-neutral-100` | `#f0f0ee`   | `#212121`  | secondary surface                  |
-| `--silk-neutral-150` | `#e8e8e6`   | `#282828`  | hover fill                         |
-| `--silk-neutral-200` | `#e2e2df`   | `#303030`  | border                             |
-| `--silk-neutral-300` | `#d4d4d0`   | `#3a3a3a`  | border-strong / input              |
-| `--silk-neutral-400` | `#b4b4ae`   | `#4a4a4a`  | disabled text                      |
-| `--silk-neutral-500` | `#8f8f88`   | `#6b6b6b`  | foreground-muted                   |
-| `--silk-neutral-600` | `#6f6f68`   | `#8a8a8a`  | secondary text                     |
-| `--silk-neutral-700` | `#52524c`   | `#a8a8a8`  | strong secondary text              |
-| `--silk-neutral-800` | `#33332e`   | `#d0d0d0`  | near-foreground                    |
-| `--silk-neutral-900` | `#1c1c19`   | `#ededed`  | foreground                         |
+| Step                  | Light value | Dark value | Typical role                       |
+| --------------------- | ----------- | ---------- | ---------------------------------- |
+| `--sivir-neutral-0`   | `#ffffff`   | `#0d0d0d`  | pure base / cards (mode-dependent) |
+| `--sivir-neutral-25`  | `#fbfbfa`   | `#141414`  | app background (light)             |
+| `--sivir-neutral-50`  | `#f7f7f5`   | `#1a1a1a`  | muted surface                      |
+| `--sivir-neutral-100` | `#f0f0ee`   | `#212121`  | secondary surface                  |
+| `--sivir-neutral-150` | `#e8e8e6`   | `#282828`  | hover fill                         |
+| `--sivir-neutral-200` | `#e2e2df`   | `#303030`  | border                             |
+| `--sivir-neutral-300` | `#d4d4d0`   | `#3a3a3a`  | border-strong / input              |
+| `--sivir-neutral-400` | `#b4b4ae`   | `#4a4a4a`  | disabled text                      |
+| `--sivir-neutral-500` | `#8f8f88`   | `#6b6b6b`  | foreground-muted                   |
+| `--sivir-neutral-600` | `#6f6f68`   | `#8a8a8a`  | secondary text                     |
+| `--sivir-neutral-700` | `#52524c`   | `#a8a8a8`  | strong secondary text              |
+| `--sivir-neutral-800` | `#33332e`   | `#d0d0d0`  | near-foreground                    |
+| `--sivir-neutral-900` | `#1c1c19`   | `#ededed`  | foreground                         |
 
 > Values above are the **starting proposal** and will be tuned for WCAG AA contrast during implementation (foreground vs background ≥ 7:1 body, ≥ 4.5:1 secondary). The dark ramp is intentionally _low-contrast between adjacent surface steps_ to match the flat reference look.
 
 #### Accent (blue) ramp — used sparingly
 
-| Step               | Light                    | Dark                     | Role                       |
-| ------------------ | ------------------------ | ------------------------ | -------------------------- |
-| `--silk-blue-50`   | `#eef4ff`                | `#13233d`                | tinted fill (selected row) |
-| `--silk-blue-100`  | `#dbe8ff`                | `#1c3357`                | hover tint                 |
-| `--silk-blue-500`  | `#4a8cff`                | `#5b9bff`                | **primary**                |
-| `--silk-blue-600`  | `#3b7af0`                | `#4a8cff`                | primary-hover              |
-| `--silk-blue-ring` | `rgb(74 140 255 / 0.40)` | `rgb(91 155 255 / 0.45)` | focus ring                 |
+| Step                | Light                    | Dark                     | Role                       |
+| ------------------- | ------------------------ | ------------------------ | -------------------------- |
+| `--sivir-blue-50`   | `#eef4ff`                | `#13233d`                | tinted fill (selected row) |
+| `--sivir-blue-100`  | `#dbe8ff`                | `#1c3357`                | hover tint                 |
+| `--sivir-blue-500`  | `#4a8cff`                | `#5b9bff`                | **primary**                |
+| `--sivir-blue-600`  | `#3b7af0`                | `#4a8cff`                | primary-hover              |
+| `--sivir-blue-ring` | `rgb(74 140 255 / 0.40)` | `rgb(91 155 255 / 0.45)` | focus ring                 |
 
 Light blue, deliberately soft — not Linear indigo. The current `#5e6ad2` is retired.
 
@@ -124,18 +124,18 @@ Each is a 3-stop mini-ramp (`-fg`, base, `-tint`) for success / warning / error.
 
 #### Spacing scale (4px base)
 
-`--silk-space-{n}` where token = `n × 4px`:
+`--sivir-space-{n}` where token = `n × 4px`:
 
-| Token             | px  |
-| ----------------- | --- |
-| `--silk-space-1`  | 4   |
-| `--silk-space-2`  | 8   |
-| `--silk-space-3`  | 12  |
-| `--silk-space-4`  | 16  |
-| `--silk-space-5`  | 20  |
-| `--silk-space-6`  | 24  |
-| `--silk-space-8`  | 32  |
-| `--silk-space-10` | 40  |
+| Token              | px  |
+| ------------------ | --- |
+| `--sivir-space-1`  | 4   |
+| `--sivir-space-2`  | 8   |
+| `--sivir-space-3`  | 12  |
+| `--sivir-space-4`  | 16  |
+| `--sivir-space-5`  | 20  |
+| `--sivir-space-6`  | 24  |
+| `--sivir-space-8`  | 32  |
+| `--sivir-space-10` | 40  |
 
 All component padding/heights/gaps are expressed as multiples of this scale. The Studio "density" control multiplies the base unit (4px) — so _every_ spacing token scales coherently from one number (replaces the 39 independent spacing knobs and the lossy `scaleSpacing` rounding).
 

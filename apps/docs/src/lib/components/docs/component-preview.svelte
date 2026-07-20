@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { onMount, type Snippet } from 'svelte';
-	import * as CodeBlock from '@silk/ui/components/code-block';
-	import { Panel } from '@silk/ui/components/panel';
-	import { cn } from '@silk/ui/utils';
-	import * as Tabs from '@silk/ui/components/tabs';
+	import * as CodeBlock from '@sivir/ui/components/code-block';
+	import * as Card from '@sivir/ui/components/card';
+	import { cn } from '@sivir/ui/utils';
+	import * as Tabs from '@sivir/ui/components/tabs';
 
 	let {
 		children,
@@ -42,8 +42,12 @@
 	</Tabs.Root>
 
 	{#if value === 'preview'}
-		<!-- Preview is a Panel: the demo sits on its inset surface. -->
-		<Panel {...rest} class={cn(classProp, 'w-full max-h-[40rem] overflow-hidden')}>
+		<!-- Preview sits on Card's panel surface. -->
+		<Card.Root
+			{...rest}
+			variant="panel"
+			class={cn(classProp, 'w-full max-h-[40rem] overflow-hidden [&>[data-ui=card-surface]]:p-0')}
+		>
 			<div
 				bind:this={previewBody}
 				tabindex="-1"
@@ -51,9 +55,9 @@
 			>
 				{@render children?.()}
 			</div>
-		</Panel>
+		</Card.Root>
 	{:else}
-		<!-- Code is a CodeBlock — it carries its own Panel frame, so it stands alone. -->
+		<!-- Code is a CodeBlock — it carries its own panel frame, so it stands alone. -->
 		<CodeBlock.Root
 			{...rest}
 			{code}

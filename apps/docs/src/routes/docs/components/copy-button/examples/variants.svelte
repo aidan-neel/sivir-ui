@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { CopyButton } from '@silk/ui/components/copy-button';
+	import { CopyButton } from '@sivir/ui/components/copy-button';
 </script>
 
 <div class="flex items-center gap-3">

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import * as Collapsible from '@silk/ui/components/collapsible';
+	import * as Collapsible from '@sivir/ui/components/collapsible';
 </script>
 
 <div class="w-full max-w-md">

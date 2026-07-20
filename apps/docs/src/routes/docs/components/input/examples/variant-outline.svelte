@@ -1,5 +1,7 @@
 <script lang="ts">
-	import { Input } from '@silk/ui/components/input';
+	import { Input } from '@sivir/ui/components/input';
 </script>
 
-<Input label="Outline" placeholder="Placeholder text" />
+<div class="w-full max-w-xs">
+	<Input label="Outline" placeholder="Placeholder text" />
+</div>

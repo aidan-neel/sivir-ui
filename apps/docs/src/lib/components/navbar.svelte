@@ -5,7 +5,7 @@
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
 	import { components, sanitizeComponent } from '$lib/components';
-	import Button from '@silk/ui/components/button';
+	import Button from '@sivir/ui/components/button';
 	import SideNavbar from '$lib/components/docs/side-navbar.svelte';
 	import Logo from './logo.svelte';
 	import Navbutton from './navbutton.svelte';
@@ -14,17 +14,16 @@
 	import Moon from '@lucide/svelte/icons/moon';
 	import Sun from '@lucide/svelte/icons/sun';
 	import { toggleMode, mode } from 'mode-watcher';
-	import * as Command from '@silk/ui/components/command';
-	import Shortcut from '@silk/ui/components/shortcut';
+	import * as Command from '@sivir/ui/components/command';
+	import Shortcut from '@sivir/ui/components/shortcut';
 	import Search from '@lucide/svelte/icons/search';
 	import BookOpen from '@lucide/svelte/icons/book-open';
 	import Component from '@lucide/svelte/icons/component';
 	import Download from '@lucide/svelte/icons/download';
 	import Rocket from '@lucide/svelte/icons/rocket';
 	import Globe from '@lucide/svelte/icons/globe';
-	import History from '@lucide/svelte/icons/history';
 	import Palette from '@lucide/svelte/icons/palette';
-	import * as Sheet from '@silk/ui/components/sheet';
+	import * as Sheet from '@sivir/ui/components/sheet';
 	import GitHubBlack from '$lib/assets/GitHub_Invertocat_Black.svg';
 	import GitHubWhite from '$lib/assets/GitHub_Invertocat_White.svg';
 
@@ -41,58 +40,38 @@
 
 	let scrolled = $state(false);
 	let mobileMenuOpen = $state(false);
-	const isStudio = $derived($page.url.pathname.startsWith('/themes/studio'));
 	const isHome = $derived($page.url.pathname === '/');
 	const isDocs = $derived($page.url.pathname.startsWith('/docs'));
 
 	const navItems = [
 		{ href: '/', label: 'Home' },
-		{ href: '/docs/introduction', label: 'Docs' },
-		{ href: '/docs/components', label: 'Components' }
+		{ href: '/docs/introduction', label: 'Docs' }
 	];
 
 	const docsPages = [
 		{
-			title: 'Docs',
-			description: 'Browse the documentation hub',
-			href: resolve('/docs'),
-			icon: BookOpen,
-			keywords: 'docs documentation hub overview'
-		},
-		{
 			title: 'Introduction',
-			description: 'Overview and getting started with Silk UI',
 			href: resolve('/docs/introduction'),
 			icon: BookOpen,
-			keywords: 'docs intro overview getting started'
+			name: 'Introduction getting started'
 		},
 		{
 			title: 'Installation',
-			description: 'Install and set up the library',
 			href: resolve('/docs/installation'),
 			icon: Download,
-			keywords: 'docs install setup package'
+			name: 'Installation setup install'
 		},
 		{
 			title: 'Theming',
-			description: 'Customize tokens, colors, and defaults',
 			href: resolve('/docs/theming'),
 			icon: Palette,
-			keywords: 'docs theme tokens colors styling'
+			name: 'Theming tokens colors styling'
 		},
 		{
-			title: 'Styling',
-			description: 'Learn how to style and override Silk UI components',
-			href: resolve('/docs/styling'),
-			icon: Palette,
-			keywords: 'docs styling css overrides classes tokens'
-		},
-		{
-			title: 'Changelog',
-			description: 'Recent releases and updates',
-			href: resolve('/docs/changelog'),
-			icon: History,
-			keywords: 'docs release notes updates versions'
+			title: 'Components',
+			href: resolve('/docs/components'),
+			icon: Component,
+			name: 'Components catalog index'
 		}
 	];
 
@@ -100,15 +79,14 @@
 		const title = sanitizeComponent(component);
 		return {
 			title,
-			description: `${title} component docs`,
-			href: resolve('/docs/components/[...slug]', { slug: component }),
+			href: `/docs/components/${component}`,
 			icon: Component,
-			keywords: `component docs ${component} ${title.toLowerCase()}`
+			name: `${title} ${component}`
 		};
 	});
 
-	function navigateTo(href: ResolvedPathname) {
-		void goto(href);
+	function navigateTo(href: string) {
+		void goto(href as ResolvedPathname);
 	}
 
 	onMount(() => {
@@ -135,24 +113,20 @@
 
 <nav
 	class={`fixed inset-x-0 top-0 z-20 transition-[background-color,backdrop-filter] duration-200 ${
-		isStudio
-			? 'border-b border-border bg-background'
-			: isDocs
-				? 'bg-background/72 backdrop-blur-[14px]'
-				: scrolled
-					? 'bg-background/58 backdrop-blur-[14px]'
-					: 'bg-transparent'
+		isDocs
+			? 'bg-background/72 backdrop-blur-[14px]'
+			: scrolled
+				? 'bg-background/58 backdrop-blur-[14px]'
+				: 'bg-transparent'
 	}`}
 >
 	<div
 		class={`relative mx-auto flex h-16 w-full items-center justify-between ${
-			isStudio
-				? 'max-w-none px-4'
-				: isHome
-					? 'nav-home-in max-w-[1400px] px-4 md:px-6'
-					: isDocs
-						? 'max-w-[1400px] px-4 md:px-6'
-						: 'px-4 md:px-6'
+			isHome
+				? 'nav-home-in max-w-[1400px] px-4 md:px-6'
+				: isDocs
+					? 'max-w-[1400px] px-4 md:px-6'
+					: 'px-4 md:px-6'
 		}`}
 	>
 		<Command.Root>
@@ -193,12 +167,26 @@
 						toggleMode();
 					}}
 					size="icon"
+					aria-label={mode.current === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
 				>
-					{#if mode.current === 'dark'}
-						<Moon size="16" />
-					{:else}
-						<Sun size="16" />
-					{/if}
+					<span class="relative size-4" aria-hidden="true">
+						<Sun
+							size="16"
+							class={`absolute inset-0 transition-[opacity,filter,scale] duration-300 ease-[cubic-bezier(0.2,0,0,1)] motion-reduce:transition-none ${
+								mode.current === 'dark'
+									? 'scale-[0.25] opacity-0 blur-[4px]'
+									: 'scale-100 opacity-100 blur-0'
+							}`}
+						/>
+						<Moon
+							size="16"
+							class={`absolute inset-0 transition-[opacity,filter,scale] duration-300 ease-[cubic-bezier(0.2,0,0,1)] motion-reduce:transition-none ${
+								mode.current === 'dark'
+									? 'scale-100 opacity-100 blur-0'
+									: 'scale-[0.25] opacity-0 blur-[4px]'
+							}`}
+						/>
+					</span>
 				</Button>
 				<Button
 					class="size-9 rounded-lg md:hidden"
@@ -215,23 +203,29 @@
 					{/if}
 				</Button>
 
-				<Button
-					class="hidden h-9 gap-1.5 rounded-lg flex items-center! justify-center! px-3"
-					variant="ghost"
-					onclick={() =>
-						window.open('https://github.com/aidan-neel/ui', '_blank', 'noopener,noreferrer')}
-					aria-label="Star Silk UI on GitHub"
-				>
-					<img
-						src={mode.current === 'dark' ? GitHubWhite : GitHubBlack}
-						alt="GitHub"
-						class="size-4 flex items-center justify-center"
-					/>
-					<span
-						class="text-[14px] mt-[1px] font-mono text-foreground-muted [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]"
-						>{formatStarCount(starCount)}</span
+				<div class="hidden md:block">
+					<Button
+						class="h-9 gap-1.5 rounded-lg px-3"
+						variant="ghost"
+						onclick={() =>
+							window.open(
+								'https://github.com/aidan-neel/sivir-ui',
+								'_blank',
+								'noopener,noreferrer'
+							)}
+						aria-label="Star Sivir UI on GitHub"
 					>
-				</Button>
+						<img
+							src={mode.current === 'dark' ? GitHubWhite : GitHubBlack}
+							alt="GitHub"
+							class="size-4 flex items-center justify-center"
+						/>
+						<span
+							class="mt-[1px] font-mono text-[14px] tabular-nums text-foreground-muted [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]"
+							>{formatStarCount(starCount)}</span
+						>
+					</Button>
+				</div>
 			</div>
 
 			<Command.Content>
@@ -246,10 +240,7 @@
 							<span>Home</span>
 						</Command.Item>
 						{#each docsPages as item (item.href)}
-							<Command.Item
-								name={`${item.title} ${item.description} ${item.keywords}`}
-								callback={() => navigateTo(item.href)}
-							>
+							<Command.Item name={item.name} callback={() => navigateTo(item.href)}>
 								<item.icon class="text-foreground-muted" />
 								<span>{item.title}</span>
 							</Command.Item>
@@ -258,10 +249,7 @@
 					<Command.Separator />
 					<Command.Group heading="Components">
 						{#each componentPages as item (item.href)}
-							<Command.Item
-								name={`${item.title} ${item.description} ${item.keywords}`}
-								callback={() => navigateTo(item.href)}
-							>
+							<Command.Item name={item.name} callback={() => navigateTo(item.href)}>
 								<item.icon class="text-foreground-muted" />
 								<span>{item.title}</span>
 							</Command.Item>
@@ -272,7 +260,11 @@
 						<Command.Item
 							name="GitHub repository source code external"
 							callback={() =>
-								window.open('https://github.com/aidan-neel/ui', '_blank', 'noopener,noreferrer')}
+								window.open(
+									'https://github.com/aidan-neel/sivir-ui',
+									'_blank',
+									'noopener,noreferrer'
+								)}
 						>
 							<Globe class="text-foreground-muted" />
 							<span>GitHub</span>
@@ -291,7 +283,7 @@
 	>
 		<div class="flex h-full flex-col">
 			<Sheet.Header class="border-b border-border/70 px-4 pb-4 pt-4">
-				<Sheet.Title>Browse Silk UI</Sheet.Title>
+				<Sheet.Title>Browse Sivir UI</Sheet.Title>
 				<Sheet.Description>
 					Jump between pages, docs, and components from the same mobile menu.
 				</Sheet.Description>
@@ -318,7 +310,11 @@
 							class="h-10 flex-1 justify-center rounded-lg"
 							variant="outline"
 							onclick={() => {
-								window.open('https://github.com/aidan-neel/ui', '_blank', 'noopener,noreferrer');
+								window.open(
+									'https://github.com/aidan-neel/sivir-ui',
+									'_blank',
+									'noopener,noreferrer'
+								);
 								closeMobileMenu();
 							}}
 						>
@@ -343,14 +339,14 @@
 <style>
 	@media (prefers-reduced-motion: no-preference) {
 		:global(.nav-home-in) {
-			animation: nav-home-in 0.6s var(--ease-out) 1.25s both;
+			animation: nav-home-in 0.35s var(--ease-out) 0.04s both;
 		}
 	}
 
 	@keyframes nav-home-in {
 		from {
 			opacity: 0;
-			transform: translateY(-10px);
+			transform: translateY(-6px);
 		}
 	}
 </style>

@@ -1,7 +1,7 @@
 <script lang="ts">
-	import * as CodeBlock from '@silk/ui/components/code-block';
-	import { Button } from '@silk/ui/components/button';
-	import * as Tooltip from '@silk/ui/components/tooltip';
+	import * as CodeBlock from '@sivir/ui/components/code-block';
+	import { Button } from '@sivir/ui/components/button';
+	import * as Tooltip from '@sivir/ui/components/tooltip';
 	import Info from '@lucide/svelte/icons/info';
 	import Sparkles from '@lucide/svelte/icons/sparkles';
 

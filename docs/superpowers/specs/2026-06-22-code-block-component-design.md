@@ -2,11 +2,11 @@
 
 **Date:** 2026-06-22
 **Status:** Approved (pending spec review)
-**Component:** `@silk/ui/components/code-block`
+**Component:** `@sivir/ui/components/code-block`
 
 ## Summary
 
-A new Silk UI component that renders source code with syntax highlighting, a
+A new Sivir UI component that renders source code with syntax highlighting, a
 multi-language tab switcher, a built-in copy button, and an optional actions
 slot. Modeled on the reference image: language tabs on the left (Python /
 JavaScript / Java / Go / C#), action icons on the right, and a dark,
@@ -14,14 +14,14 @@ syntax-highlighted code surface below.
 
 ## Decisions
 
-- **Highlighting:** bundle `highlight.js` as a dependency of `@silk/ui`.
+- **Highlighting:** bundle `highlight.js` as a dependency of `@sivir/ui`.
   Lightweight, synchronous, supports all required languages. Token classes
-  (`hljs-*`) styled via CSS variables so colors follow Silk theming.
+  (`hljs-*`) styled via CSS variables so colors follow Sivir theming.
   - Rationale: keeps highlighting self-contained (true drop-in `<CodeBlock>`)
     without Shiki's async loading and bundle weight. The library's existing
     custom tokenizer (`apps/docs/src/lib/highlight.ts`) does not cover Python /
     Java / Go / C#.
-- **Actions:** copy button built in (reuses Silk's `CopyButton`); info / AI
+- **Actions:** copy button built in (reuses Sivir's `CopyButton`); info / AI
   sparkle and any other buttons are caller-supplied via an `actions` snippet.
 - **API:** both a high-level form (single tag) and a compound form
   (`CodeBlock.Root/Header/Tab/Actions/Copy/Body`), matching the repo's existing
@@ -29,7 +29,7 @@ syntax-highlighted code surface below.
 
 ## Architecture
 
-New directory: `packages/silk/src/components/code-block/`
+New directory: `packages/sivir/src/components/code-block/`
 
 | File                        | Purpose                                                                                                                                                               |
 | --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -120,7 +120,7 @@ export type { CodeBlockProps, CodeBlockTab } from './types';
 ## Behavior
 
 - **Tab switching:** click + keyboard (Left/Right arrows move focus/selection,
-  Home/End to ends), mirroring Silk `Tabs`. Active tab shows the blue underline
+  Home/End to ends), mirroring Sivir `Tabs`. Active tab shows the blue underline
   indicator from the image.
 - **Copy:** copies the active tab's raw (un-highlighted) code; reuses
   `CopyButton`'s copied-state feedback.
@@ -133,7 +133,7 @@ export type { CodeBlockProps, CodeBlockTab } from './types';
 
 - Component CSS variables prefixed `--code-block-*` (surface bg, foreground,
   border, tab colors, token colors). Defined with sensible defaults that follow
-  Silk light/dark theming; the code surface is dark to match the image.
+  Sivir light/dark theming; the code surface is dark to match the image.
 - `hljs-*` token classes mapped to `--code-block-token-*` variables
   (keyword, string, comment, function, number, etc.) using the muted VS-Code
   palette from the image.
@@ -158,7 +158,7 @@ export type { CodeBlockProps, CodeBlockTab } from './types';
     `ComponentPreview`): single snippet, multi-language tabs, compound usage,
     custom actions, line numbers.
   - **Props tables** for each exported part + `InstallCommand`.
-- The docs page consumes the library component directly (`@silk/ui/components/code-block`).
+- The docs page consumes the library component directly (`@sivir/ui/components/code-block`).
 
 ## Out of scope
 
@@ -176,4 +176,4 @@ export type { CodeBlockProps, CodeBlockTab } from './types';
 - Single-snippet form renders without a tab row.
 - Docs page builds; component appears in sidebar; all examples render and show
   source.
-- Type-check / build passes for both `@silk/ui` and `apps/docs`.
+- Type-check / build passes for both `@sivir/ui` and `apps/docs`.

@@ -1,11 +1,12 @@
-import { themeToCss } from '@silk/ui/themes/theme';
-import { defaultThemeV2 } from '@silk/ui/themes/builtin-presets';
+import { themeToCss } from '@sivir/ui/themes/theme';
+import { builtInThemePresets } from '@sivir/ui/themes/builtin-presets';
 import { error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async ({ params }) => {
-	if (params.name === 'default') {
-		return new Response(themeToCss(defaultThemeV2), {
+	const theme = builtInThemePresets.find((preset) => preset.slug === params.name);
+	if (theme) {
+		return new Response(themeToCss(theme), {
 			headers: {
 				'content-type': 'text/css; charset=utf-8',
 				'cache-control': 'public, max-age=3600'
@@ -13,6 +14,5 @@ export const GET: RequestHandler = async ({ params }) => {
 		});
 	}
 
-	// For now, only the default v2 theme is served. Additional themes will be added in Phase B.
 	error(404, `Theme '${params.name}' not found`);
 };

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import * as AlertDialog from '@silk/ui/components/alert-dialog';
+	import * as AlertDialog from '@sivir/ui/components/alert-dialog';
 </script>
 
 <div class="grid place-items-center">

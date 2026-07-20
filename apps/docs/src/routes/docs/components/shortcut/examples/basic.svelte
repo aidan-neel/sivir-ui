@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Shortcut from '@silk/ui/components/shortcut';
+	import Shortcut from '@sivir/ui/components/shortcut';
 </script>
 
 <Shortcut shortcut="K" />

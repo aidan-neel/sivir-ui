@@ -1,5 +1,6 @@
 <script lang="ts">
-	import * as DropdownMenu from '@silk/ui/components/dropdown-menu';
+	import * as DropdownMenu from '@sivir/ui/components/dropdown-menu';
+	import Shortcut from '@sivir/ui/components/shortcut';
 	import Pencil from '@lucide/svelte/icons/pencil';
 	import Copy2 from '@lucide/svelte/icons/files';
 	import Archive from '@lucide/svelte/icons/archive';
@@ -17,11 +18,7 @@
 		</DropdownMenu.Item>
 		<DropdownMenu.Item>
 			<span class="flex items-center gap-2"><Copy2 size={13} /> Duplicate</span>
-			<kbd
-				class="rounded border border-border bg-secondary/60 px-1.5 py-0.5 font-mono text-[0.62rem] text-foreground-muted"
-			>
-				⌘D
-			</kbd>
+			<Shortcut shortcut="cmd+D" />
 		</DropdownMenu.Item>
 		<DropdownMenu.Item>
 			<span class="flex items-center gap-2"><Archive size={13} /> Archive</span>
@@ -31,11 +28,7 @@
 			<span class="flex items-center gap-2 text-[var(--color-error)]">
 				<Trash size={13} /> Delete
 			</span>
-			<kbd
-				class="rounded border border-border bg-secondary/60 px-1.5 py-0.5 font-mono text-[0.62rem] text-foreground-muted"
-			>
-				⌫
-			</kbd>
+			<Shortcut shortcut="backspace" />
 		</DropdownMenu.Item>
 	</DropdownMenu.Content>
 </DropdownMenu.Root>

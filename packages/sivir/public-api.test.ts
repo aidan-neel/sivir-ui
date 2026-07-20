@@ -1,0 +1,273 @@
+/**
+ * Phase 2 §1 — lock the public API.
+ *
+ * Frozen v1 catalog: 38 components. Named exports hang off the package root as
+ * identifiers; namespace exports hang off a PascalCase object (AlertDialog.Root).
+ * Every public component is also reachable at @sivir/ui/components/<slug>.
+ */
+import { describe, expect, test } from 'bun:test';
+import { existsSync } from 'node:fs';
+import { readdir, readFile } from 'node:fs/promises';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+import { loadRegistryIndex } from './cli/registry';
+
+const packageRoot = path.dirname(fileURLToPath(import.meta.url));
+const componentsDir = path.join(packageRoot, 'src/components');
+
+/** Single-element components: `import { Button } from '@sivir/ui'`. */
+const NAMED = {
+	badge: ['Badge'],
+	button: ['Button'],
+	checkbox: ['Checkbox'],
+	'code-block': ['CodeBlock'],
+	'copy-button': ['CopyButton'],
+	input: ['Input'],
+	label: ['Label'],
+	pagination: ['Pagination'],
+	progress: ['Progress'],
+	'scroll-area': ['ScrollArea'],
+	shortcut: ['Shortcut'],
+	skeleton: ['Skeleton'],
+	slider: ['Slider'],
+	switch: ['Switch'],
+	textarea: ['Textarea'],
+	toast: ['Toast', 'Toaster', 'toast', 'getToastUIState'],
+	toggle: ['Toggle']
+} as const;
+
+/** Compound components: `import { Modal } from '@sivir/ui'` then `<Modal.Root>`. */
+const NAMESPACED = {
+	accordion: ['Root', 'Item', 'Trigger', 'Content'],
+	alert: ['Root', 'Title', 'Description'],
+	'alert-dialog': [
+		'Root',
+		'Trigger',
+		'Content',
+		'Header',
+		'Title',
+		'Description',
+		'Exit',
+		'Footer',
+		'Confirm'
+	],
+	avatar: ['Root', 'Image', 'Fallback'],
+	breadcrumb: ['Root', 'Item', 'Separator'],
+	card: ['Root', 'Title', 'Header', 'Footer', 'Description', 'Content'],
+	collapsible: ['Root', 'Trigger', 'Content'],
+	'color-picker': ['Root', 'Trigger', 'Content'],
+	combobox: ['Root', 'Content', 'Trigger', 'Results', 'Item', 'Label'],
+	command: ['Root', 'Content', 'Trigger', 'Separator', 'Results', 'Search', 'Item', 'Group'],
+	'context-menu': [
+		'Root',
+		'Content',
+		'CheckboxItem',
+		'Item',
+		'Separator',
+		'SubContent',
+		'SubTrigger',
+		'Sub',
+		'Trigger'
+	],
+	'dropdown-menu': [
+		'Root',
+		'Trigger',
+		'Label',
+		'Item',
+		'Content',
+		'Separator',
+		'Sub',
+		'SubContent',
+		'SubTrigger'
+	], // cone: Root → Sub → nested Sub
+	'hover-card': ['Root', 'Trigger', 'Content', 'Title', 'Description'],
+	modal: [
+		'Root',
+		'Trigger',
+		'Content',
+		'Title',
+		'Description',
+		'Header',
+		'Body',
+		'Close',
+		'Footer',
+		'Confirm'
+	],
+	popover: ['Root', 'Trigger', 'Content', 'Title'],
+	'radio-group': ['Root', 'Item'],
+	select: ['Root', 'Trigger', 'Value', 'Label', 'Item', 'Content'],
+	sheet: ['Root', 'Trigger', 'Title', 'Header', 'Footer', 'Description', 'Content', 'Close'],
+	tabs: ['Root', 'List', 'Trigger', 'Content'],
+	'toggle-group': ['Root', 'Item'],
+	tooltip: ['Root', 'Content', 'Trigger']
+} as const;
+
+/** Parts available on the direct path even when the barrel only re-exports a shorthand. */
+const DIRECT_PARTS = {
+	...NAMESPACED,
+	'code-block': ['Root', 'Header', 'List', 'Trigger', 'Actions', 'Copy', 'Content', 'CodeBlock'],
+	card: [
+		'Root',
+		'Title',
+		'Header',
+		'Footer',
+		'Description',
+		'Content',
+		'CARD_PANEL_FRAME',
+		'CARD_PANEL_SURFACE'
+	]
+} as const;
+
+const FROZEN = [...Object.keys(NAMED), ...Object.keys(NAMESPACED)].sort((a, b) =>
+	a.localeCompare(b)
+);
+
+const REMOVED = ['marquee', 'panel', 'separator'] as const;
+
+function toPascalCase(slug: string) {
+	return slug
+		.split('-')
+		.map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+		.join('');
+}
+
+function parseExportedNames(source: string): string[] {
+	const names = new Set<string>();
+	for (const block of source.matchAll(/export\s*\{([^}]+)\}/g)) {
+		for (const part of block[1].split(',')) {
+			let cleaned = part.replace(/\btype\b/g, '').trim();
+			if (!cleaned) continue;
+			// `default as CodeBlock` / `Foo as Bar` → public name is the right-hand side.
+			if (/\bas\b/.test(cleaned)) {
+				cleaned = cleaned
+					.split(/\bas\b/)
+					.pop()!
+					.trim();
+			} else {
+				cleaned = cleaned.replace(/\bdefault\b/g, '').trim();
+			}
+			if (cleaned) names.add(cleaned);
+		}
+	}
+	for (const match of source.matchAll(/export\s+(?:async\s+)?function\s+([A-Za-z0-9_]+)/g)) {
+		names.add(match[1]);
+	}
+	for (const match of source.matchAll(/export\s+const\s+([A-Za-z0-9_]+)/g)) {
+		names.add(match[1]);
+	}
+	return [...names].sort((a, b) => a.localeCompare(b));
+}
+
+describe('public API contract (v1 freeze)', () => {
+	test('frozen catalog is exactly 38 components with no overlap', () => {
+		expect(FROZEN).toHaveLength(38);
+		expect(new Set(FROZEN).size).toBe(38);
+		for (const slug of Object.keys(NAMED)) {
+			expect(NAMESPACED).not.toHaveProperty(slug);
+		}
+	});
+
+	test('package component directories match the frozen catalog', async () => {
+		const dirs = (await readdir(componentsDir, { withFileTypes: true }))
+			.filter((entry) => entry.isDirectory() && !entry.name.startsWith('_'))
+			.map((entry) => entry.name)
+			.sort((a, b) => a.localeCompare(b));
+
+		expect(dirs).toEqual(FROZEN);
+		for (const removed of REMOVED) {
+			expect(dirs).not.toContain(removed);
+			expect(existsSync(path.join(componentsDir, removed))).toBe(false);
+		}
+	});
+
+	test('root barrel exports every named and namespaced component', async () => {
+		const barrel = await readFile(path.join(packageRoot, 'src/index.ts'), 'utf8');
+
+		for (const [slug, symbols] of Object.entries(NAMED)) {
+			for (const symbol of symbols) {
+				expect(barrel).toMatch(
+					new RegExp(
+						`export\\s*\\{[^}]*\\b${symbol}\\b[^}]*\\}\\s*from\\s*['"]\\./components/${slug}['"]`
+					)
+				);
+			}
+		}
+
+		for (const slug of Object.keys(NAMESPACED)) {
+			const pascal = toPascalCase(slug);
+			expect(barrel).toContain(`export * as ${pascal} from './components/${slug}'`);
+		}
+
+		for (const removed of REMOVED) {
+			expect(barrel).not.toContain(`./components/${removed}`);
+		}
+	});
+
+	test('direct component entrypoints export the locked public parts', async () => {
+		for (const slug of FROZEN) {
+			const indexPath = path.join(componentsDir, slug, 'index.ts');
+			expect(existsSync(indexPath)).toBe(true);
+			const source = await readFile(indexPath, 'utf8');
+			const exported = parseExportedNames(source);
+			const expected =
+				DIRECT_PARTS[slug as keyof typeof DIRECT_PARTS] ?? NAMED[slug as keyof typeof NAMED];
+			expect(expected, slug).toBeDefined();
+			for (const part of expected!) {
+				expect(exported, `${slug} missing ${part}`).toContain(part);
+			}
+		}
+	});
+
+	test('package exports map covers every public component path', async () => {
+		const packageJson = JSON.parse(
+			await readFile(path.join(packageRoot, 'package.json'), 'utf8')
+		) as { exports: Record<string, unknown> };
+
+		expect(packageJson.exports['./components/*']).toBe('./src/components/*/index.ts');
+		expect(packageJson.exports['.']).toBeTruthy();
+		expect(packageJson.exports['./ui.css']).toBe('./src/ui.css');
+
+		for (const slug of FROZEN) {
+			expect(existsSync(path.join(componentsDir, slug, 'index.ts'))).toBe(true);
+		}
+	});
+
+	test('CLI registry public list matches the frozen catalog', async () => {
+		const snapshot = await loadRegistryIndex();
+		const publicNames = snapshot.components
+			.filter((component) => component.visibility === 'public')
+			.map((component) => component.name)
+			.sort((a, b) => a.localeCompare(b));
+
+		expect(publicNames).toEqual(FROZEN);
+		for (const removed of REMOVED) {
+			expect(publicNames).not.toContain(removed);
+		}
+
+		for (const slug of FROZEN) {
+			const plan = resolveInstallable(snapshot, slug);
+			expect(plan).toBe(slug);
+		}
+	});
+
+	test('Card keeps the panel surface helpers used by CodeBlock and docs previews', async () => {
+		const cardIndex = await readFile(path.join(componentsDir, 'card/index.ts'), 'utf8');
+		const cardRoot = await readFile(path.join(componentsDir, 'card/card.svelte'), 'utf8');
+		const surface = await readFile(path.join(componentsDir, 'card/surface.ts'), 'utf8');
+
+		expect(cardIndex).toContain('CARD_PANEL_FRAME');
+		expect(cardIndex).toContain('CARD_PANEL_SURFACE');
+		expect(surface).toContain('export const CARD_PANEL_FRAME');
+		expect(surface).toContain('export const CARD_PANEL_SURFACE');
+		expect(cardRoot).toMatch(/variant\s*=\s*['"]default['"]/);
+		expect(cardRoot).toContain("'panel'");
+	});
+});
+
+function resolveInstallable(snapshot: Awaited<ReturnType<typeof loadRegistryIndex>>, slug: string) {
+	const entry = snapshot.components.find((component) => component.name === slug);
+	expect(entry, slug).toBeDefined();
+	expect(entry!.visibility).toBe('public');
+	return entry!.name;
+}

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import * as Breadcrumb from '@silk/ui/components/breadcrumb';
+	import * as Breadcrumb from '@sivir/ui/components/breadcrumb';
 
 	let {
 		items = [],

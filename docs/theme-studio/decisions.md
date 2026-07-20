@@ -27,7 +27,7 @@ Adopted, with components mapped:
 
 ### D0.4 — Scope of "make every token editable"
 
-Not all 77 Category-B tokens become controls. **Decision:** exclude B1 runtime/mechanism vars (`--ui-*`, `--popover-available-*`, `--silk-marquee-*`); promote all B3 (genuine missing axes) and a curated B2 subset (one representative override per variant family, plus all surface/menu/transient color anchors) into the schema. **Rationale:** "a control that exists must do something" cuts both ways — exposing runtime vars as controls would create dead/confusing controls. Full per-variant color override is delivered through the existing Advanced Colors modal pattern, not the primary sidebar.
+Not all 77 Category-B tokens become controls. **Decision:** exclude B1 runtime/mechanism vars (`--ui-*`, `--popover-available-*`, `--sivir-marquee-*`); promote all B3 (genuine missing axes) and a curated B2 subset (one representative override per variant family, plus all surface/menu/transient color anchors) into the schema. **Rationale:** "a control that exists must do something" cuts both ways — exposing runtime vars as controls would create dead/confusing controls. Full per-variant color override is delivered through the existing Advanced Colors modal pattern, not the primary sidebar.
 
 ### D0.5 — Half-wired `invertedPanels` feature
 
@@ -59,7 +59,7 @@ The Studio page (4,079 lines) was decomposed by extracting the **Playground prev
 
 ### D2.2 — Visual verification harness
 
-Playwright's `chrome` channel needs sudo for system deps (unavailable); installed `chromium` instead and drive it via a direct node script (`/tmp/silk-*.mjs`) against the dev server, rather than the Playwright MCP (which hard-looks for `/opt/google/chrome/chrome`). This gives a working before/after screenshot loop for the refactor/UI phases. **Note:** the `/themes/[name].css` endpoint returns 500 in this dev env — pre-existing, caused by the theme-**registry** backend not running (fails at `getRegistryThemeBySlug`, never reaches `themeToCss`); unrelated to this work and does not affect Studio rendering. **Lesson:** restart the dev server fresh before visual verification — accumulated HMR cycles can desync client bundles and (transiently) serve stale/wrong content with hydration_mismatch warnings; a fresh server renders correctly.
+Playwright's `chrome` channel needs sudo for system deps (unavailable); installed `chromium` instead and drive it via a direct node script (`/tmp/sivir-*.mjs`) against the dev server, rather than the Playwright MCP (which hard-looks for `/opt/google/chrome/chrome`). This gives a working before/after screenshot loop for the refactor/UI phases. **Note:** the `/themes/[name].css` endpoint returns 500 in this dev env — pre-existing, caused by the theme-**registry** backend not running (fails at `getRegistryThemeBySlug`, never reaches `themeToCss`); unrelated to this work and does not affect Studio rendering. **Lesson:** restart the dev server fresh before visual verification — accumulated HMR cycles can desync client bundles and (transiently) serve stale/wrong content with hydration_mismatch warnings; a fresh server renders correctly.
 
 ## Phase 3
 
@@ -81,7 +81,7 @@ Extracted the Padding-tab control config to `spacing-fields.ts` and added the fi
 
 ### D5.1 — Style = token-bundle layer applied via shared tokens; reference set bounded to 5 components
 
-A Style is a coherent named bundle of CSS-variable overrides (`StylePreset`) shipped one-file-per-style under `packages/silk/src/themes/styles/`, auto-registered by an `import.meta.glob` registry (mirrors transitions) so the future CLI can install a subset. `styleToCss(style)` serializes the bundle into a trailing `:root, .dark { … }` block appended to the theme CSS so it wins the cascade in both modes. **Coherence is achieved through shared tokens** (radius scale, elevation, padding) that all reference components consume — so a "Sharp" button matches a "Sharp" card with no per-component code. Shipped Flat/Soft/Sharp on the 5-component reference set (Button/Card/Modal/DropdownMenu/Tooltip), exposed as a Style picker in the Shape tab, verified live (Soft visibly rounds the Card). **Did NOT exceed the reference set** (per brief). Rollout + deferred per-group token directions documented in `style-rollout.md`.
+A Style is a coherent named bundle of CSS-variable overrides (`StylePreset`) shipped one-file-per-style under `packages/sivir/src/themes/styles/`, auto-registered by an `import.meta.glob` registry (mirrors transitions) so the future CLI can install a subset. `styleToCss(style)` serializes the bundle into a trailing `:root, .dark { … }` block appended to the theme CSS so it wins the cascade in both modes. **Coherence is achieved through shared tokens** (radius scale, elevation, padding) that all reference components consume — so a "Sharp" button matches a "Sharp" card with no per-component code. Shipped Flat/Soft/Sharp on the 5-component reference set (Button/Card/Modal/DropdownMenu/Tooltip), exposed as a Style picker in the Shape tab, verified live (Soft visibly rounds the Card). **Did NOT exceed the reference set** (per brief). Rollout + deferred per-group token directions documented in `style-rollout.md`.
 
 ### D5.2 — Style selection not persisted / not in undo-redo (bounded)
 

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { Button } from '@silk/ui/components/button';
+	import { Button } from '@sivir/ui/components/button';
 	import type { Snippet } from 'svelte';
 
 	type Props = {
@@ -14,10 +14,8 @@
 	const docLanding = [
 		'/docs/introduction',
 		'/docs/installation',
-		'/docs/styling',
 		'/docs/theming',
-		'/docs/components',
-		'/docs/changelog'
+		'/docs/components'
 	];
 </script>
 

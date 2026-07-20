@@ -1,20 +1,20 @@
 <script lang="ts">
-	import { Button } from '@silk/ui/components/button';
-	import * as Card from '@silk/ui/components/card';
+	import { Button } from '@sivir/ui/components/button';
+	import * as Card from '@sivir/ui/components/card';
 	import GitBranch from '@lucide/svelte/icons/git-branch';
 </script>
 
 <Card.Root class="w-full max-w-[28rem]">
 	<Card.Header>
 		<div class="flex items-center justify-between mb-2">
-			<Card.Title>silk-ui</Card.Title>
+			<Card.Title>sivir-ui</Card.Title>
 			<span
 				class="inline-flex items-center rounded-full bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700"
 			>
 				Next.js
 			</span>
 		</div>
-		<Card.Description>vercel.com/aidan-neel/silk-ui</Card.Description>
+		<Card.Description>vercel.com/aidan-neel/sivir-ui</Card.Description>
 	</Card.Header>
 	<Card.Content>
 		<div class="space-y-4">

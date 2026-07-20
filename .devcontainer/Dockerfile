@@ -21,6 +21,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && chsh -s /usr/bin/zsh root \
     && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /workspaces/silk
+WORKDIR /workspaces/sivir
 
 CMD ["/usr/bin/zsh"]

@@ -1,402 +1,216 @@
 <script lang="ts">
-	import { Button } from '@silk/ui/components/button';
-	import { Badge } from '@silk/ui/components/badge';
-	import * as Alert from '@silk/ui/components/alert';
-	import * as Tabs from '@silk/ui/components/tabs';
-	import { CodeBlock } from '@silk/ui/components/code-block';
+	import { resolve } from '$app/paths';
+	import { CodeBlock } from '@sivir/ui/components/code-block';
 
-	import ArrowRight from '@lucide/svelte/icons/arrow-right';
-	import Palette from '@lucide/svelte/icons/palette';
-	import Type from '@lucide/svelte/icons/type';
-	import Square from '@lucide/svelte/icons/square';
-	import Waypoints from '@lucide/svelte/icons/waypoints';
-	import Layers from '@lucide/svelte/icons/layers-3';
-	import Wand from '@lucide/svelte/icons/wand-sparkles';
-
-	const layerCards = [
-		{
-			icon: Palette,
-			tone: 'color',
-			title: 'Color',
-			body: 'Background, foreground, primary, border, ring -- the semantic layer the whole library reads from.',
-			tokens: ['--color-background', '--color-foreground', '--color-primary', '--color-ring']
-		},
-		{
-			icon: Type,
-			tone: 'type',
-			title: 'Typography',
-			body: 'Three font families: body, headers, and mono. Switch one to re-skin everything below it.',
-			tokens: ['--font-sans', '--font-header', '--font-mono']
-		},
-		{
-			icon: Square,
-			tone: 'radius',
-			title: 'Radius',
-			body: 'Soft corners through `--radius-*`. Set `--radius-lg` and most components inherit it.',
-			tokens: ['--radius-md', '--radius-lg', '--radius-xl']
-		},
-		{
-			icon: Waypoints,
-			tone: 'motion',
-			title: 'Motion',
-			body: 'Durations and offsets for hover, menus, panels, sheets -- one source for how movement feels.',
-			tokens: ['--motion-duration-hover', '--motion-duration-panel', '--motion-duration-sheet']
-		}
-	];
-
-	const semanticCss = `@theme {
-	--font-sans: 'Geist';
-	--font-mono: 'Geist Mono';
-	--font-header: 'Geist';
-
-	--color-background: #fcfcfd;
-	--color-foreground: #101828;
-	--color-foreground-muted: #667085;
-	--color-primary: #155eef;
-	--color-border: #dde2ea;
-	--color-input: #c9d1dc;
-	--color-secondary: #f2f4f7;
-	--color-panel: #ffffff;
-	--color-card: #ffffff;
-	--color-ring: rgb(21 94 239 / 0.18);
-
-	--radius-md: 0.4rem;
-	--radius-lg: 0.55rem;
-	--radius-xl: 0.67rem;
+	const overrideCss = `@theme {
+  --color-primary: #155eef;
+  --color-background: #fcfcfd;
+  --color-foreground: #101828;
+  --radius-lg: 0.55rem;
+  --font-sans: 'Inter', sans-serif;
 }
 
 .dark {
-	--color-background: #0d1118;
-	--color-foreground: #f5f7fb;
-	--color-foreground-muted: #98a2b3;
-	--color-primary: #7aa2ff;
-	--color-border: #27303f;
-	--color-secondary: #141b26;
-	--color-panel: #171f2b;
-	--color-card: #1a2431;
-	--color-ring: rgb(122 162 255 / 0.22);
+  --color-background: #0d1118;
+  --color-foreground: #f5f7fb;
+  --color-primary: #7aa2ff;
 }`;
 
-	const componentCss = `:root {
-	/* Buttons */
-	--button-radius: 999px;
-	--button-height: 2.6rem;
-	--button-primary-bg: #155eef;
-	--button-primary-hover-bg: #0f4fd6;
+	const themeImport = `@import './lib/sivir/ui.css';
+@import './lib/sivir/theme.css';`;
 
-	/* Fields */
-	--field-radius: 0.8rem;
-	--field-height: 2.75rem;
+	const classExample = '<Button class="w-full rounded-2xl">Continue</Button>';
 
-	/* Floating surfaces */
-	--panel-radius: 0.9rem;
-	--panel-shadow: 0 18px 42px rgb(16 24 40 / 0.12);
+	const dataUiExample = `[data-ui='button'][data-variant='primary'] {
+  border-radius: 999px;
+}
 
-	/* Motion */
-	--motion-duration-panel: 240ms;
-	--motion-duration-sheet: 320ms;
-	--motion-overlay-blur: 6px;
+[data-ui='badge'][data-variant='secondary'] {
+  text-transform: uppercase;
 }`;
 
-	const overrideCss = `[data-ui='button'][data-variant='primary'] {
-	letter-spacing: 0.01em;
-}
-
-[data-ui='dialog-content'] {
-	--panel-radius: 1rem;
-	--panel-padding-lg: 1.5rem;
-}
-
-[data-ui='toast'] {
-	--color-border: color-mix(in srgb, var(--color-primary) 24%, var(--color-border));
-}
-
-[data-ui='dropdown-menu-content'] {
-	--color-panel: color-mix(in srgb, var(--color-panel) 90%, white);
-}`;
-
-	const presetCmd = 'bunx @aidan-neel/ui theme install nordic';
-	const importCss = `/* app.css */
-@import './themes/nordic.css';`;
-
-	const codeBlocks = {
-		semantic: { code: semanticCss, lang: 'css' },
-		component: { code: componentCss, lang: 'css' },
-		overrides: { code: overrideCss, lang: 'css' }
-	};
-
-	let activeTab = $state('semantic');
+	const sourceExample = `# after: bunx --package @sivir/ui sivir add button
+src/lib/sivir/components/button/
+├── button.svelte
+└── index.ts`;
 </script>
 
 <svelte:head>
-	<title>Silk · Theming</title>
+	<title>Sivir · Theming</title>
 	<meta
 		name="description"
-		content="Build a theme system that controls color, shape, motion, and surface tone from one place."
+		content="Theme and style Sivir UI with CSS variables, classes, and data-ui selectors."
 	/>
 </svelte:head>
 
-<div class="flex flex-col gap-10" data-docs-page>
-	<header class="flex flex-col gap-5 border-b border-border/60 pb-10">
-		<div class="flex flex-wrap items-center gap-2">
-			<Badge variant="outline" class="gap-1.5 text-[0.66rem]">
-				<Palette size={11} class="text-primary" />
-				Theming
-			</Badge>
-			<Badge variant="ghost" class="text-[0.66rem]">CSS tokens</Badge>
-			<Badge variant="ghost" class="text-[0.66rem]">Light + dark</Badge>
-		</div>
-
-		<div class="flex flex-col gap-3">
+<div data-docs-page class="flex flex-col gap-16">
+	<header class="flex flex-col gap-4">
+		<div>
 			<h1
-				class="m-0 max-w-[24ch] text-[1.875rem] font-[var(--font-weight-header,600)] tracking-[-0.02em] leading-tight"
+				class="m-0 text-[1.875rem] font-[var(--font-weight-header,600)] tracking-[-0.02em] text-foreground leading-tight"
 				style="font-family: var(--font-header);"
 			>
-				One stylesheet. The whole library shifts.
+				Theming
 			</h1>
 			<p
-				class="m-0 max-w-2xl text-[1rem] text-foreground-muted leading-relaxed font-[var(--font-weight-description,450)]"
+				class="mt-2 text-[1rem] text-foreground leading-relaxed max-w-2xl font-[var(--font-weight-description,450)]"
 			>
-				Silk reads every visual decision from CSS variables. Edit your token sheet, save, and every
-				button, dialog, and dropdown updates in the same frame.
+				Components read CSS variables. Change tokens for system-wide look, or override a single
+				component with classes and selectors.
 			</p>
-		</div>
-
-		<div class="flex flex-wrap items-center gap-2">
-			<Button href="/themes/studio">
-				Open theme studio
-				<ArrowRight size={14} />
-			</Button>
-			<Button href="/themes" variant="outline">Browse presets</Button>
 		</div>
 	</header>
 
-	<!-- ─── Token surfaces ────────────────────────────────────────── -->
-	<section class="pt-12 flex flex-col gap-5">
-		<div class="flex items-center gap-2">
-			<span class="grid size-6 place-items-center rounded-md bg-primary/10 text-primary">
-				<Layers size={12} />
-			</span>
-			<h2
-				class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
-				style="font-family: var(--font-header);"
-			>
-				Four surfaces, one source
-			</h2>
-		</div>
-
-		<div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-			{#each layerCards as layer (layer.title)}
-				<div
-					class="flex flex-col gap-3 rounded-[var(--radius-lg)] border border-border bg-card p-5"
-				>
-					<div class="flex items-center justify-between">
-						<span class="grid size-9 place-items-center rounded-md bg-secondary/60 text-foreground">
-							<layer.icon size={15} />
-						</span>
-						<span
-							class="text-[0.6rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-[0.14em] text-foreground-muted"
-						>
-							Layer · {layer.tone}
-						</span>
-					</div>
-					<p
-						class="m-0 text-[1rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
-						style="font-family: var(--font-header);"
-					>
-						{layer.title}
-					</p>
-					<p class="m-0 text-[0.84rem] leading-relaxed text-foreground-muted">{layer.body}</p>
-					<div class="flex flex-wrap gap-1.5 pt-1">
-						{#each layer.tokens as token (token)}
-							<code
-								class="rounded-md border border-border/70 bg-secondary/40 px-1.5 py-0.5 font-mono text-[0.7rem] text-foreground-muted"
-							>
-								{token}
-							</code>
-						{/each}
-					</div>
-				</div>
-			{/each}
-		</div>
-	</section>
-
-	<!-- ─── Three layers — tabs ────────────────────────────────────── -->
-	<section class="pt-12 flex flex-col gap-5">
-		<div class="flex items-center gap-2">
-			<span class="grid size-6 place-items-center rounded-md bg-primary/10 text-primary">
-				<Wand size={12} />
-			</span>
-			<h2
-				class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
-				style="font-family: var(--font-header);"
-			>
-				Theme in three layers
-			</h2>
-		</div>
-		<p class="m-0 max-w-[44rem] text-[0.92rem] leading-relaxed text-foreground-muted">
-			Start at the top. Drop down a layer only when the one above isn't enough.
+	<section id="where-tokens-live" class="scroll-mt-20 flex flex-col gap-5">
+		<h2
+			class="text-[1.25rem] font-[var(--font-weight-header,600)] tracking-tight text-foreground docs-section-heading"
+		>
+			Where tokens live
+		</h2>
+		<p class="m-0 text-[1rem] text-foreground leading-relaxed max-w-2xl">
+			Package installs use <code class="font-mono">@sivir/ui/ui.css</code>. CLI installs use
+			<code class="font-mono">src/lib/sivir/ui.css</code>. Both define the same public axes: color,
+			type, radius, and motion.
 		</p>
-
-		<Tabs.Root bind:value={activeTab} variant="segmented">
-			<Tabs.List>
-				<Tabs.Trigger value="semantic">1 · Semantic tokens</Tabs.Trigger>
-				<Tabs.Trigger value="component">2 · Component tokens</Tabs.Trigger>
-				<Tabs.Trigger value="overrides">3 · Per-component overrides</Tabs.Trigger>
-			</Tabs.List>
-
-			<Tabs.Content value="semantic">
-				<p class="m-0 pb-3 text-[0.86rem] leading-relaxed text-foreground-muted">
-					Think in interfaces, not components. Get background, foreground, primary, and border right
-					and most of the library already feels cohesive.
-				</p>
-				<CodeBlock code={codeBlocks.semantic.code} lang={codeBlocks.semantic.lang} copy="overlay" />
-			</Tabs.Content>
-
-			<Tabs.Content value="component">
-				<p class="m-0 pb-3 text-[0.86rem] leading-relaxed text-foreground-muted">
-					When a category needs to break from defaults (pill buttons, taller fields, denser
-					dropdowns), tune the component tokens. No forks needed.
-				</p>
-				<CodeBlock
-					code={codeBlocks.component.code}
-					lang={codeBlocks.component.lang}
-					copy="overlay"
-				/>
-			</Tabs.Content>
-
-			<Tabs.Content value="overrides">
-				<p class="m-0 pb-3 text-[0.86rem] leading-relaxed text-foreground-muted">
-					When a single primitive needs special care, use the <code
-						class="font-mono text-foreground">data-ui</code
-					>
-					and <code class="font-mono text-foreground">data-variant</code> hooks. Cleaner than forking.
-				</p>
-				<CodeBlock
-					code={codeBlocks.overrides.code}
-					lang={codeBlocks.overrides.lang}
-					copy="overlay"
-				/>
-			</Tabs.Content>
-		</Tabs.Root>
 	</section>
 
-	<!-- ─── Two ways to author ────────────────────────────────────── -->
-	<section class="pt-12 flex flex-col gap-5">
-		<div class="flex items-center gap-2">
-			<span class="grid size-6 place-items-center rounded-md bg-primary/10 text-primary">
-				<Wand size={12} />
-			</span>
-			<h2
-				class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
-				style="font-family: var(--font-header);"
-			>
-				Two ways to author a theme
-			</h2>
-		</div>
-
-		<div class="grid grid-cols-1 gap-3 md:grid-cols-2">
-			<div class="flex flex-col gap-3 rounded-[var(--radius-lg)] border border-border bg-card p-5">
-				<div class="flex items-center justify-between">
-					<Badge variant="ghost">Visual</Badge>
-					<Badge variant="outline" class="text-[0.62rem]">/themes/studio</Badge>
-				</div>
-				<p
-					class="m-0 text-[1rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
-					style="font-family: var(--font-header);"
-				>
-					Theme Studio
-				</p>
-				<p class="m-0 text-[0.84rem] leading-relaxed text-foreground-muted">
-					A live editor for color, type, radius, and motion. Drag, type, paste a hex — preview every
-					component side-by-side. Export when it's right.
-				</p>
-				<div class="pt-1">
-					<Button href="/themes/studio" variant="outline" class="w-full justify-center">
-						Open studio
-						<ArrowRight size={14} />
-					</Button>
-				</div>
-			</div>
-
-			<div class="flex flex-col gap-3 rounded-[var(--radius-lg)] border border-border bg-card p-5">
-				<div class="flex items-center justify-between">
-					<Badge variant="ghost">Code</Badge>
-					<Badge variant="outline" class="text-[0.62rem]">@theme + .dark</Badge>
-				</div>
-				<p
-					class="m-0 text-[1rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
-					style="font-family: var(--font-header);"
-				>
-					Write a theme by hand
-				</p>
-				<p class="m-0 text-[0.84rem] leading-relaxed text-foreground-muted">
-					Drop tokens straight into <code class="font-mono text-foreground">app.css</code>. Light
-					goes in <code class="font-mono text-foreground">@theme</code>, dark goes in
-					<code class="font-mono text-foreground">.dark</code>. That's the whole API.
-				</p>
-				<div class="pt-1">
-					<Button href="#layers" variant="outline" class="w-full justify-center"
-						>See examples</Button
-					>
-				</div>
-			</div>
-		</div>
-	</section>
-
-	<!-- ─── Presets ───────────────────────────────────────────────── -->
-	<section class="pt-12 flex flex-col gap-5">
-		<div class="flex items-center gap-2">
-			<span class="grid size-6 place-items-center rounded-md bg-primary/10 text-primary">
-				<Palette size={12} />
-			</span>
-			<h2
-				class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
-				style="font-family: var(--font-header);"
-			>
-				Start from a preset
-			</h2>
-		</div>
-		<p class="m-0 max-w-[44rem] text-[0.86rem] leading-relaxed text-foreground-muted">
-			If a blank canvas is too much, install a preset and tweak from there.
+	<section id="override-tokens" class="scroll-mt-20 flex flex-col gap-5">
+		<h2
+			class="text-[1.25rem] font-[var(--font-weight-header,600)] tracking-tight text-foreground docs-section-heading"
+		>
+			Override tokens
+		</h2>
+		<p class="m-0 text-[1rem] text-foreground leading-relaxed max-w-2xl">
+			Set values in your app CSS after importing Sivir’s sheet. Light defaults go in
+			<code class="font-mono">@theme</code>. Dark values go under
+			<code class="font-mono">.dark</code>.
 		</p>
-
-		<div class="grid grid-cols-1 gap-3 md:grid-cols-2">
-			<CodeBlock code={presetCmd} lang="shell" copy="overlay" />
-
-			<CodeBlock code={importCss} lang="css" copy="overlay" />
-		</div>
-
-		<Alert.Root variant="info">
-			<Alert.Title>Presets aren't a fork</Alert.Title>
-			<Alert.Description>
-				They're just <code class="font-mono text-foreground">@theme</code> blocks. Override any token
-				beneath the import and yours wins.
-			</Alert.Description>
-		</Alert.Root>
+		<CodeBlock code={overrideCss} lang="css" copy="overlay" />
 	</section>
 
-	<!-- ─── Footer CTA ─────────────────────────────────────────────── -->
-	<section
-		class="mt-12 flex flex-col items-start justify-between gap-4 rounded-[var(--radius-lg)] border border-border bg-card p-6 sm:flex-row sm:items-center"
-	>
-		<div class="flex flex-col gap-1">
-			<p
-				class="m-0 text-[1rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
-				style="font-family: var(--font-header);"
+	<section id="useful-tokens" class="scroll-mt-20 flex flex-col gap-5">
+		<h2
+			class="text-[1.25rem] font-[var(--font-weight-header,600)] tracking-tight text-foreground docs-section-heading"
+		>
+			Useful public tokens
+		</h2>
+		<ul class="m-0 flex list-disc flex-col gap-2 pl-5 text-[1rem] text-foreground leading-relaxed">
+			<li>
+				Color:
+				<code class="font-mono">--color-background</code>,
+				<code class="font-mono">--color-foreground</code>,
+				<code class="font-mono">--color-primary</code>,
+				<code class="font-mono">--color-border</code>,
+				<code class="font-mono">--color-ring</code>
+			</li>
+			<li>
+				Type:
+				<code class="font-mono">--font-sans</code>,
+				<code class="font-mono">--font-header</code>,
+				<code class="font-mono">--font-mono</code>
+			</li>
+			<li>
+				Radius:
+				<code class="font-mono">--radius-md</code>,
+				<code class="font-mono">--radius-lg</code>,
+				<code class="font-mono">--radius-xl</code>
+			</li>
+			<li>
+				Motion:
+				<code class="font-mono">--motion-duration-hover</code>,
+				<code class="font-mono">--motion-duration-panel</code>
+			</li>
+		</ul>
+	</section>
+
+	<section id="built-in-presets" class="scroll-mt-20 flex flex-col gap-5">
+		<h2
+			class="text-[1.25rem] font-[var(--font-weight-header,600)] tracking-tight text-foreground docs-section-heading"
+		>
+			Built-in presets
+		</h2>
+		<p class="m-0 text-[1rem] text-foreground leading-relaxed max-w-2xl">
+			With the CLI, install a built-in preset into
+			<code class="font-mono">theme.css</code>:
+		</p>
+		<CodeBlock
+			code="bunx --package @sivir/ui sivir add theme default"
+			lang="shell"
+			copy="overlay"
+		/>
+		<p class="m-0 text-[1rem] text-foreground leading-relaxed max-w-2xl">
+			Import it after <code class="font-mono">ui.css</code> so it wins:
+		</p>
+		<CodeBlock code={themeImport} lang="css" copy="overlay" />
+		<p class="m-0 text-[1rem] text-foreground leading-relaxed max-w-2xl">
+			<code class="font-mono">sivir list</code> shows available built-in theme slugs. Community theme
+			registry hosting is not part of v1.
+		</p>
+	</section>
+
+	<section id="dark-mode" class="scroll-mt-20 flex flex-col gap-5">
+		<h2
+			class="text-[1.25rem] font-[var(--font-weight-header,600)] tracking-tight text-foreground docs-section-heading"
+		>
+			Dark mode
+		</h2>
+		<p class="m-0 text-[1rem] text-foreground leading-relaxed max-w-2xl">
+			Toggle a <code class="font-mono">.dark</code> class on
+			<code class="font-mono">&lt;html&gt;</code>. Components do not manage the class for you.
+		</p>
+	</section>
+
+	<section id="class-prop" class="scroll-mt-20 flex flex-col gap-5">
+		<h2
+			class="text-[1.25rem] font-[var(--font-weight-header,600)] tracking-tight text-foreground docs-section-heading"
+		>
+			class prop
+		</h2>
+		<p class="m-0 text-[1rem] text-foreground leading-relaxed max-w-2xl">
+			Every primitive accepts <code class="font-mono">class</code>. Use Tailwind utilities or your
+			own classes for one-off tweaks.
+		</p>
+		<CodeBlock code={classExample} lang="svelte" copy="overlay" />
+	</section>
+
+	<section id="data-ui" class="scroll-mt-20 flex flex-col gap-5">
+		<h2
+			class="text-[1.25rem] font-[var(--font-weight-header,600)] tracking-tight text-foreground docs-section-heading"
+		>
+			data-ui selectors
+		</h2>
+		<p class="m-0 text-[1rem] text-foreground leading-relaxed max-w-2xl">
+			Components render <code class="font-mono">data-ui</code> (and often
+			<code class="font-mono">data-variant</code> /
+			<code class="font-mono">data-size</code>). Scope CSS to a family without forking files.
+		</p>
+		<CodeBlock code={dataUiExample} lang="css" copy="overlay" />
+	</section>
+
+	<section id="edit-source" class="scroll-mt-20 flex flex-col gap-5">
+		<h2
+			class="text-[1.25rem] font-[var(--font-weight-header,600)] tracking-tight text-foreground docs-section-heading"
+		>
+			Edit the source
+		</h2>
+		<p class="m-0 text-[1rem] text-foreground leading-relaxed max-w-2xl">
+			With the CLI path, files live under
+			<code class="font-mono">src/lib/sivir/components/&lt;name&gt;/</code>. Edit them when you need
+			behavior changes, not just style.
+		</p>
+		<CodeBlock code={sourceExample} lang="shell" copy="overlay" />
+	</section>
+
+	<section id="next" class="scroll-mt-20 flex flex-col gap-5">
+		<h2
+			class="text-[1.25rem] font-[var(--font-weight-header,600)] tracking-tight text-foreground docs-section-heading"
+		>
+			Next
+		</h2>
+		<p class="m-0 text-[1rem] text-foreground leading-relaxed">
+			<a class="text-foreground underline underline-offset-2" href={resolve('/docs/components')}
+				>Components</a
 			>
-				Ready to make it yours?
-			</p>
-			<p class="m-0 text-[0.86rem] text-foreground-muted">
-				Open the studio, dial in your tokens, copy the CSS into your project.
-			</p>
-		</div>
-		<div class="flex flex-wrap items-center gap-2">
-			<Button href="/docs/styling" variant="outline">Styling guide</Button>
-			<Button href="/themes/studio">
-				Theme studio
-				<ArrowRight size={14} />
-			</Button>
-		</div>
+		</p>
 	</section>
 </div>

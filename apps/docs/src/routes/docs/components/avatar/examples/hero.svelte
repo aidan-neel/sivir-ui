@@ -1,5 +1,5 @@
 <script lang="ts">
-	import * as Avatar from '@silk/ui/components/avatar';
+	import * as Avatar from '@sivir/ui/components/avatar';
 </script>
 
 <div class="flex items-center justify-center">

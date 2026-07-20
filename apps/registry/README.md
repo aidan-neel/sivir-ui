@@ -1,4 +1,4 @@
-# Silk registry
+# Sivir registry
 
 Elysia + Bun service that backs the theme registry. Persists themes in
 Postgres via Prisma. Database lives on **Supabase** — there's no local pg
@@ -53,11 +53,18 @@ Then `docker compose down -v` to delete the local volume.
 
 Run the registry image (`./Dockerfile`) with these set:
 
-| Variable       | Required | Notes                                    |
-| -------------- | -------- | ---------------------------------------- |
-| `DATABASE_URL` | yes      | Supabase transaction pooler (port 6543). |
-| `DIRECT_URL`   | yes      | Supabase direct/session (port 5432).     |
-| `PORT`         | no       | Defaults to 4100 via docker-compose.     |
+| Variable                | Required | Notes                                             |
+| ----------------------- | -------- | ------------------------------------------------- |
+| `DATABASE_URL`          | yes      | Supabase transaction pooler (port 6543).          |
+| `DIRECT_URL`            | yes      | Supabase direct/session (port 5432); migrations.  |
+| `DATABASE_CA_CERT_PATH` | no       | Enables strict TLS verification with a CA bundle. |
+| `PORT`                  | no       | Defaults to 4100 via docker-compose.              |
+
+v1 exposes a read-only theme API. `POST /themes` returns `405 Method Not
+Allowed`. Existing rows can still be listed and fetched by slug.
+
+The container runs `prisma migrate deploy` before starting the API, so Prisma
+is intentionally retained as a production dependency.
 
 ## Tests
 
@@ -74,14 +81,13 @@ The tests **do not need a database or `prisma generate`**. They replace
 load, then drive the Elysia app with `app.handle(new Request(...))`. This keeps
 them hermetic and avoids the Prisma engine download (which fails behind
 restrictive proxies). They cover the happy paths plus validation and error
-cases for `GET /themes`, `GET /themes/:slug`, and `POST /themes`.
+cases for `GET /themes`, `GET /themes/:slug`, and the disabled `POST /themes`.
 
 `turbo run test` picks the registry suite up automatically alongside the other
 workspaces.
 
 ## Managing themes
 
-There's no built-in admin UI. The registry only exposes public read endpoints
-(`GET /themes`, `GET /themes/:slug`) and a public publish endpoint
-(`POST /themes`). To edit or delete a published theme, open the
-**Supabase dashboard → Table editor → Theme**.
+There's no built-in admin UI. The v1 registry only exposes public read
+endpoints (`GET /themes`, `GET /themes/:slug`). To edit or delete a published
+theme, open the **Supabase dashboard → Table editor → Theme**.

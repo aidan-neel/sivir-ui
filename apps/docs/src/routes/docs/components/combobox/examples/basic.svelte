@@ -1,5 +1,5 @@
 <script lang="ts">
-	import * as Combobox from '@silk/ui/components/combobox';
+	import * as Combobox from '@sivir/ui/components/combobox';
 
 	const languages = [
 		{ value: 'en', label: 'English' },

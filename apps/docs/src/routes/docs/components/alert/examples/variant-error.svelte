@@ -1,5 +1,5 @@
 <script lang="ts">
-	import * as Alert from '@silk/ui/components/alert';
+	import * as Alert from '@sivir/ui/components/alert';
 </script>
 
 <div class="w-full max-w-md">

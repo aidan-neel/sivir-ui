@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { Button } from '@silk/ui/components/button';
-	import * as Popover from '@silk/ui/components/popover';
-	import * as Avatar from '@silk/ui/components/avatar';
-	import { Input } from '@silk/ui/components/input';
+	import { Button } from '@sivir/ui/components/button';
+	import * as Popover from '@sivir/ui/components/popover';
+	import * as Avatar from '@sivir/ui/components/avatar';
+	import { Input } from '@sivir/ui/components/input';
 	import Share2 from '@lucide/svelte/icons/share-2';
 	import Link from '@lucide/svelte/icons/link';
 </script>
@@ -33,7 +33,7 @@
 							<p class="m-0 truncate text-sm [font-weight:var(--font-weight-label,500)]">
 								Aidan Neel
 							</p>
-							<p class="m-0 truncate text-xs text-foreground-muted">aidan@silk.dev</p>
+							<p class="m-0 truncate text-xs text-foreground-muted">aidan@sivir.dev</p>
 						</div>
 					</div>
 					<p class="m-0 whitespace-nowrap text-xs text-foreground-muted">Owner</p>
@@ -46,7 +46,7 @@
 							<p class="m-0 truncate text-sm [font-weight:var(--font-weight-label,500)]">
 								Maya Chen
 							</p>
-							<p class="m-0 truncate text-xs text-foreground-muted">maya@silk.dev</p>
+							<p class="m-0 truncate text-xs text-foreground-muted">maya@sivir.dev</p>
 						</div>
 					</div>
 					<p class="m-0 whitespace-nowrap text-xs text-foreground-muted">Can edit</p>

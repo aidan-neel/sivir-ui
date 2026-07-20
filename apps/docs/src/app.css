@@ -2,9 +2,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400..700&family=Fraunces:opsz,wght@9..144,400..700&family=Newsreader:opsz,wght@6..72,400..700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&family=IBM+Plex+Mono:wght@400;500;600;700&family=JetBrains+Mono:wght@100..800&display=swap');
 
-@source "./**/*.{svelte,svx,ts,html}";
-@source "../../../packages/silk/src/**/*.{svelte,ts}";
-
 @layer theme, base, components, utilities;
 
 @font-face {
@@ -26,6 +23,21 @@ body {
    never shifts centered content sideways. */
 html {
 	scrollbar-gutter: stable;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3 {
+	text-wrap: balance;
+}
+
+p,
+li,
+figcaption,
+blockquote {
+	text-wrap: pretty;
 }
 
 /* Hide scrollbar on the element itself */
@@ -55,6 +67,9 @@ html {
 		background-color: var(--color-background);
 		color: var(--color-foreground);
 		font-family: var(--font-sans), sans-serif;
+		font-size: var(--font-size-body, 14px);
+		font-weight: var(--font-weight-body, 400);
+		line-height: 1.5;
 		font-synthesis-weight: none;
 		text-rendering: optimizeLegibility;
 	}
@@ -143,12 +158,6 @@ pre {
 
 ::-webkit-scrollbar-thumb:hover {
 	background: var(--color-border-strong);
-}
-
-@layer utilities {
-	.shadow-outlined {
-		box-shadow: var(--button-outlined-shadow);
-	}
 }
 
 /* ─── Syntax highlighting tokens ────────────────────────────────

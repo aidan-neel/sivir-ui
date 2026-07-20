@@ -1,203 +1,103 @@
 <script lang="ts">
-	import { Button } from '@silk/ui/components/button';
-	import { Badge } from '@silk/ui/components/badge';
-	import * as Alert from '@silk/ui/components/alert';
-	import { CodeBlock } from '@silk/ui/components/code-block';
+	import { resolve } from '$app/paths';
+	import { CodeBlock } from '@sivir/ui/components/code-block';
 
-	import ArrowRight from '@lucide/svelte/icons/arrow-right';
-	import Sparkles from '@lucide/svelte/icons/sparkles';
-	import Layers from '@lucide/svelte/icons/layers-3';
-	import Palette from '@lucide/svelte/icons/palette';
-	import Box from '@lucide/svelte/icons/box';
-	import Type from '@lucide/svelte/icons/type';
-	import Wand from '@lucide/svelte/icons/wand-sparkles';
-	import Keyboard from '@lucide/svelte/icons/keyboard';
-	import Accessibility from '@lucide/svelte/icons/accessibility';
-	import Gauge from '@lucide/svelte/icons/gauge';
-	import GitFork from '@lucide/svelte/icons/git-fork';
+	const packageQuick = `bun add @sivir/ui
+# then in your CSS:
+# @import '@sivir/ui/ui.css';`;
 
-	const installCommand = 'bunx @aidan-neel/ui init';
+	const cliQuick = `bunx --package @sivir/ui sivir init -y
+bunx --package @sivir/ui sivir add button`;
 </script>
 
 <svelte:head>
-	<title>Silk · Introduction</title>
-	<meta
-		name="description"
-		content="A calmer, token-first Svelte 5 component library. Copy-paste, customizable, and built to feel right."
-	/>
+	<title>Sivir · Introduction</title>
+	<meta name="description" content="Sivir UI is a Svelte 5 and Tailwind v4 component library." />
 </svelte:head>
 
-<div class="flex flex-col gap-10" data-docs-page>
-	<!-- ─── Hero ─────────────────────────────────────────────────────── -->
-	<header class="flex flex-col gap-5 border-b border-border/60 pb-10">
-		<div class="flex flex-wrap items-center gap-2">
-			<Badge variant="outline" class="gap-1.5 text-[0.66rem]">
-				<Sparkles size={11} class="text-primary" />
-				Introduction
-			</Badge>
-			<Badge variant="ghost" class="text-[0.66rem]">v0.4.2</Badge>
-			<Badge variant="ghost" class="text-[0.66rem]">25 components</Badge>
-		</div>
-
-		<div class="flex flex-col gap-3">
+<div data-docs-page class="flex flex-col gap-16">
+	<header class="flex flex-col gap-4">
+		<div>
 			<h1
-				class="m-0 max-w-[20ch] text-[1.875rem] font-[var(--font-weight-header,600)] tracking-[-0.02em] leading-tight"
+				class="m-0 text-[1.875rem] font-[var(--font-weight-header,600)] tracking-[-0.02em] text-foreground leading-tight"
 				style="font-family: var(--font-header);"
 			>
-				Svelte components that feel designed, not generated.
+				Introduction
 			</h1>
 			<p
-				class="m-0 max-w-2xl text-[1rem] text-foreground-muted leading-relaxed font-[var(--font-weight-description,450)]"
+				class="mt-2 text-[1rem] text-foreground leading-relaxed max-w-2xl font-[var(--font-weight-description,450)]"
 			>
-				Silk is a small, opinionated set of Svelte 5 primitives built around real theming. You copy
-				what you need into your app, restyle from a single token sheet, and ship without fighting
-				anyone else's choices.
+				Sivir UI is a component library for Svelte 5 and Tailwind v4. It ships 38 components, a CSS
+				token sheet, and a small CLI.
 			</p>
 		</div>
-
-		<CodeBlock code={installCommand} lang="bash" copy="inline" />
 	</header>
 
-	<!-- ─── Pillars ─────────────────────────────────────────────────── -->
-	<section class="pt-12 flex flex-col gap-5">
-		<div class="flex items-center gap-2">
-			<span class="grid size-6 place-items-center rounded-md bg-primary/10 text-primary">
-				<Layers size={12} />
-			</span>
-			<h2
-				class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
-				style="font-family: var(--font-header);"
-			>
-				Why Silk
-			</h2>
-		</div>
-
-		<div class="grid grid-cols-1 gap-3 md:grid-cols-3">
-			{#each [{ icon: Box, title: 'Copy-paste, not opaque', body: 'Components live in your repo as plain Svelte files. Inspect, fork, or delete — nothing is hidden behind a node_module wall.' }, { icon: Palette, title: 'Token-first theming', body: 'Every visual decision flows from CSS variables. Swap a theme and the whole library re-skins in one frame.' }, { icon: Wand, title: 'Polished defaults', body: 'Focus rings, motion timings, hover states — calibrated so you can ship the first version without revisiting.' }] as pillar (pillar.title)}
-				<div
-					class="flex flex-col gap-3 rounded-[var(--radius-lg)] border border-border bg-card p-5"
-				>
-					<span class="grid size-9 place-items-center rounded-md bg-secondary/60 text-foreground">
-						<pillar.icon size={15} />
-					</span>
-					<p
-						class="m-0 text-[1rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
-						style="font-family: var(--font-header);"
-					>
-						{pillar.title}
-					</p>
-					<p class="m-0 text-[0.86rem] leading-relaxed text-foreground-muted">{pillar.body}</p>
-				</div>
-			{/each}
-		</div>
-	</section>
-
-	<!-- ─── What's inside ──────────────────────────────────────────── -->
-	<section class="pt-12 flex flex-col gap-5">
-		<div class="flex items-center gap-2">
-			<span class="grid size-6 place-items-center rounded-md bg-primary/10 text-primary">
-				<GitFork size={12} />
-			</span>
-			<h2
-				class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
-				style="font-family: var(--font-header);"
-			>
-				What's inside
-			</h2>
-		</div>
-
-		<div class="overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card">
-			<div class="grid grid-cols-2 divide-x divide-y divide-border/60 md:grid-cols-4">
-				{#each [{ value: '25', label: 'Components', sub: 'Buttons, dialogs, tabs, …' }, { value: '10', label: 'Variants per button', sub: 'Semantic + status + neutral' }, { value: '4', label: 'Token surfaces', sub: 'Color · type · radius · motion' }, { value: '0', label: 'Lock-in', sub: 'You own the files' }] as stat (stat.label)}
-					<div class="flex flex-col gap-1 p-5">
-						<span
-							class="text-[2rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
-							style="font-family: var(--font-header);"
-						>
-							{stat.value}
-						</span>
-						<p
-							class="m-0 text-[0.84rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]"
-						>
-							{stat.label}
-						</p>
-						<p class="m-0 text-[0.72rem] text-foreground-muted">{stat.sub}</p>
-					</div>
-				{/each}
-			</div>
-		</div>
-	</section>
-
-	<!-- ─── Design principles ──────────────────────────────────────── -->
-	<section class="pt-12 flex flex-col gap-5">
-		<div class="flex items-center gap-2">
-			<span class="grid size-6 place-items-center rounded-md bg-primary/10 text-primary">
-				<Sparkles size={12} />
-			</span>
-			<h2
-				class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
-				style="font-family: var(--font-header);"
-			>
-				Principles
-			</h2>
-		</div>
-
-		<div
-			class="flex flex-col divide-y divide-border/60 overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card"
+	<section id="two-ways" class="scroll-mt-20 flex flex-col gap-4">
+		<h2
+			class="text-[1.25rem] font-[var(--font-weight-header,600)] tracking-tight text-foreground docs-section-heading"
 		>
-			{#each [{ icon: Gauge, title: 'Fast feels intentional', body: 'Hover transitions cap at 240ms. Motion presets travel through a single CSS variable, so the whole UI changes tone together.' }, { icon: Keyboard, title: 'Keyboard-first', body: 'Tab order, escape handling, focus traps, and arrow-key navigation work out of the box — no extras to install.' }, { icon: Accessibility, title: 'Accessible by default', body: 'ARIA roles, labelled regions, and live-region toasts ship configured. Sensible focus rings even before you customize.' }, { icon: Type, title: 'Typography is a token', body: 'Headers, body, and mono each come from `--font-*` variables. Pair Geist with anything in seconds.' }] as principle (principle.title)}
-				<div class="flex items-start gap-4 px-5 py-4">
-					<span
-						class="grid size-9 shrink-0 place-items-center rounded-md bg-secondary/60 text-foreground"
-					>
-						<principle.icon size={15} />
-					</span>
-					<div class="flex flex-col gap-1">
-						<p
-							class="m-0 text-[0.94rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
-						>
-							{principle.title}
-						</p>
-						<p class="m-0 text-[0.84rem] leading-relaxed text-foreground-muted">{principle.body}</p>
-					</div>
-				</div>
-			{/each}
-		</div>
+			Two ways to use it
+		</h2>
+		<p class="m-0 text-[1rem] text-foreground leading-relaxed max-w-2xl">
+			<strong>Package import.</strong> Install
+			<code class="font-mono text-foreground">@sivir/ui</code> and import components from the package.
+			Fastest path when you want a dependency, not source ownership.
+		</p>
+		<p class="m-0 text-[1rem] text-foreground leading-relaxed max-w-2xl">
+			<strong>CLI source copy.</strong> Run the
+			<code class="font-mono text-foreground">sivir</code> CLI to copy component files into your repo.
+			You own the markup and can edit it freely.
+		</p>
 	</section>
 
-	<!-- ─── Quick note ─────────────────────────────────────────────── -->
-	<section class="pt-10">
-		<Alert.Root variant="info">
-			<Alert.Title>Built on tokens, not magic</Alert.Title>
-			<Alert.Description>
-				Silk reads from CSS variables for color, radius, type, and motion. The Theme Studio at
-				<code class="font-mono text-foreground">/themes/studio</code> is just a UI on top of them — change
-				a token there, change every page that imported a component.
-			</Alert.Description>
-		</Alert.Root>
+	<section id="requirements" class="scroll-mt-20 flex flex-col gap-4">
+		<h2
+			class="text-[1.25rem] font-[var(--font-weight-header,600)] tracking-tight text-foreground docs-section-heading"
+		>
+			Requirements
+		</h2>
+		<ul
+			class="m-0 flex list-disc flex-col gap-1.5 pl-5 text-[1rem] text-foreground leading-relaxed"
+		>
+			<li>Svelte 5 (SvelteKit is the usual host)</li>
+			<li>Tailwind CSS v4</li>
+		</ul>
+		<p class="m-0 text-[1rem] text-foreground leading-relaxed max-w-2xl">
+			npm, pnpm, and bun all work for consumers. Bun is only required to develop this monorepo.
+		</p>
 	</section>
 
-	<!-- ─── Footer CTA ─────────────────────────────────────────────── -->
-	<section
-		class="mt-12 flex flex-col items-start justify-between gap-4 rounded-[var(--radius-lg)] border border-border bg-card p-6 sm:flex-row sm:items-center"
-	>
-		<div class="flex flex-col gap-1">
-			<p
-				class="m-0 text-[1rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
-				style="font-family: var(--font-header);"
+	<section id="quick-start" class="scroll-mt-20 flex flex-col gap-4">
+		<h2
+			class="text-[1.25rem] font-[var(--font-weight-header,600)] tracking-tight text-foreground docs-section-heading"
+		>
+			Quick start
+		</h2>
+		<p class="m-0 text-[1rem] text-foreground leading-relaxed max-w-2xl">Package path:</p>
+		<CodeBlock code={packageQuick} lang="shell" copy="overlay" />
+		<p class="m-0 text-[1rem] text-foreground leading-relaxed max-w-2xl">CLI path:</p>
+		<CodeBlock code={cliQuick} lang="shell" copy="overlay" />
+	</section>
+
+	<section id="next" class="scroll-mt-20 flex flex-col gap-4">
+		<h2
+			class="text-[1.25rem] font-[var(--font-weight-header,600)] tracking-tight text-foreground docs-section-heading"
+		>
+			Next
+		</h2>
+		<p class="m-0 text-[1rem] text-foreground leading-relaxed">
+			<a class="text-foreground underline underline-offset-2" href={resolve('/docs/installation')}
+				>Installation</a
 			>
-				Ready in five minutes
-			</p>
-			<p class="m-0 text-[0.86rem] text-foreground-muted">
-				A fresh SvelteKit + Tailwind project plus three CLI commands.
-			</p>
-		</div>
-		<div class="flex flex-wrap items-center gap-2">
-			<Button href="/docs/installation">
-				Install Silk
-				<ArrowRight size={14} />
-			</Button>
-			<Button href="/themes/studio" variant="outline">Open theme studio</Button>
-		</div>
+			·
+			<a class="text-foreground underline underline-offset-2" href={resolve('/docs/theming')}
+				>Theming</a
+			>
+			·
+			<a class="text-foreground underline underline-offset-2" href={resolve('/docs/components')}
+				>Components</a
+			>
+		</p>
 	</section>
 </div>

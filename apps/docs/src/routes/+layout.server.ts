@@ -1,8 +1,6 @@
-import { themesV2 } from '@silk/ui/themes/builtin-presets';
-import { listRegistryThemes, type RegistryTheme } from '$lib/server/theme-registry';
 import type { LayoutServerLoad } from './$types';
 
-const GITHUB_REPO = 'aidan-neel/ui';
+const GITHUB_REPO = 'aidan-neel/sivir-ui';
 
 async function fetchStarCount(fetchImpl: typeof fetch): Promise<number | null> {
 	try {
@@ -17,23 +15,7 @@ async function fetchStarCount(fetchImpl: typeof fetch): Promise<number | null> {
 	}
 }
 
-export const load: LayoutServerLoad = async ({ fetch, setHeaders }) => {
-	let popularThemes: RegistryTheme[];
-	try {
-		const all = await listRegistryThemes(fetch);
-		popularThemes = [...all]
-			.sort((a, b) => (b.createdAt ?? '').localeCompare(a.createdAt ?? ''))
-			.slice(0, 5);
-	} catch {
-		const fallbackTimestamp = '2026-01-01T00:00:00.000Z';
-		popularThemes = themesV2.slice(0, 5).map((theme) => ({
-			...theme,
-			id: `builtin:${theme.slug}`,
-			createdAt: fallbackTimestamp,
-			updatedAt: fallbackTimestamp
-		}));
-	}
-
+export const load: LayoutServerLoad = async ({ fetch, setHeaders, url }) => {
 	const starCount = await fetchStarCount(fetch);
 
 	// Cache the layout response edge-side for a minute -- keeps the GitHub call
@@ -44,5 +26,5 @@ export const load: LayoutServerLoad = async ({ fetch, setHeaders }) => {
 		setHeaders({ 'cache-control': 'public, max-age=60, stale-while-revalidate=300' });
 	}
 
-	return { popularThemes, starCount };
+	return { starCount, origin: url.origin };
 };

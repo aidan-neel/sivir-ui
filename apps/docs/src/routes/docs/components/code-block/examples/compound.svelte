@@ -1,10 +1,10 @@
 <script lang="ts">
-	import * as CodeBlock from '@silk/ui/components/code-block';
-	import { Button } from '@silk/ui/components/button';
+	import * as CodeBlock from '@sivir/ui/components/code-block';
+	import { Button } from '@sivir/ui/components/button';
 	import Download from '@lucide/svelte/icons/download';
 
-	const sh = `npm install @silk/ui
-npx silk add code-block`;
+	const sh = `npm install @sivir/ui
+npx sivir add code-block`;
 
 	const yaml = `name: ci
 on: [push]

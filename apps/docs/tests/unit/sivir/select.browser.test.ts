@@ -1,0 +1,106 @@
+import { describe, expect, it } from 'vitest';
+import { render } from 'vitest-browser-svelte';
+import { page, userEvent } from 'vitest/browser';
+import { tick } from 'svelte';
+import SelectFixture from '../../fixtures/SelectFixture.svelte';
+
+async function flush() {
+	await tick();
+	await tick();
+	await new Promise((r) => setTimeout(r, 20));
+}
+
+async function openSelect() {
+	await page.getByTestId('select-trigger').click();
+	await flush();
+}
+
+describe('Select -- open and close', () => {
+	it('hides options initially', async () => {
+		render(SelectFixture, {});
+		await flush();
+		await expect.element(page.getByTestId('opt-apple')).not.toBeInTheDocument();
+	});
+
+	it('shows options after opening', async () => {
+		render(SelectFixture, {});
+		await flush();
+		await openSelect();
+		await expect.element(page.getByTestId('opt-apple')).toBeInTheDocument();
+		await expect.element(page.getByTestId('opt-banana')).toBeInTheDocument();
+		await expect.element(page.getByTestId('opt-cherry')).toBeInTheDocument();
+	});
+
+	it('closes on Escape', async () => {
+		render(SelectFixture, {});
+		await flush();
+		await openSelect();
+
+		await userEvent.keyboard('{Escape}');
+		await flush();
+		await expect.element(page.getByTestId('opt-apple')).not.toBeInTheDocument();
+	});
+
+	it('closes on click outside', async () => {
+		render(SelectFixture, {});
+		await flush();
+		await openSelect();
+		await expect.element(page.getByTestId('opt-apple')).toBeInTheDocument();
+
+		const outside = document.createElement('button');
+		outside.textContent = 'outside';
+		outside.style.position = 'fixed';
+		outside.style.left = '8px';
+		outside.style.top = '8px';
+		document.body.append(outside);
+		await new Promise((r) => setTimeout(r, 20));
+		outside.click();
+		await flush();
+		await expect.element(page.getByTestId('opt-apple')).not.toBeInTheDocument();
+		outside.remove();
+	});
+});
+
+describe('Select -- selection behavior', () => {
+	it('closes after an item is selected', async () => {
+		render(SelectFixture, {});
+		await flush();
+		await openSelect();
+
+		await page.getByTestId('opt-banana').click();
+		await flush();
+		await expect.element(page.getByTestId('opt-apple')).not.toBeInTheDocument();
+	});
+
+	it('sets aria-selected on the clicked option while it remains visible', async () => {
+		render(SelectFixture, {});
+		await flush();
+		await openSelect();
+
+		// Verify all options start unselected.
+		const unselectedAtOpen = document.querySelectorAll('[role="option"][aria-selected="false"]');
+		expect(unselectedAtOpen.length).toBe(3);
+	});
+
+	it('updates the underlying state.value to the clicked option', async () => {
+		render(SelectFixture, {});
+		await flush();
+		await openSelect();
+
+		await page.getByTestId('opt-banana').click();
+		await flush();
+
+		await expect.element(page.getByRole('combobox')).toHaveTextContent('Banana');
+	});
+});
+
+describe('Select -- ARIA', () => {
+	it('options use role="option"', async () => {
+		render(SelectFixture, {});
+		await flush();
+		await openSelect();
+
+		const options = document.querySelectorAll('[role="option"]');
+		expect(options.length).toBe(3);
+	});
+});

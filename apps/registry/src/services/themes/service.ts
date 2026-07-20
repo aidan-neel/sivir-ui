@@ -1,50 +1,55 @@
 import { status } from 'elysia';
 import { prisma } from '@lib/prisma';
-import type { ThemeDraft, ThemeMotion, ThemePalette, ThemeRecord } from './model';
+import { parseTheme } from '@sivir/ui/themes/theme';
+import type { Theme, ThemeRecord } from './model';
 import { defaultThemeRecord, defaultThemes, findDefaultTheme, isDefaultSlug } from './defaults';
 
 type PersistedTheme = Awaited<ReturnType<typeof prisma.theme.findFirst>>;
-
-const FALLBACK_INFO_LIGHT = '#2563eb';
-const FALLBACK_INFO_DARK = '#60a5fa';
 
 function toIso(value: Date | string): string {
 	return value instanceof Date ? value.toISOString() : value;
 }
 
-function normalizePalette(palette: unknown, fallbackInfo: string): ThemePalette {
-	const value = palette as Partial<ThemePalette> & {
-		info?: string;
-		panel?: string;
-		modal?: string;
-	};
-	const panel = value.panel ?? value.card ?? '#ffffff';
-	const modal = value.modal ?? panel;
-	return {
-		...(value as ThemePalette),
-		info: value.info ?? fallbackInfo,
-		panel,
-		modal
-	};
-}
-
 function serialize(theme: NonNullable<PersistedTheme>): ThemeRecord {
-	// Cast through `any` because the generated Prisma client lags the schema
-	// until `prisma generate` runs. After that this can be removed.
-	const t = theme as unknown as Record<string, unknown> & NonNullable<PersistedTheme>;
-	const { publisher, motion, light, dark, createdAt, updatedAt, ...rest } = t;
-	const typography = t.typography;
-	const record: ThemeRecord = {
-		...(rest as unknown as ThemeRecord),
-		motion: motion as ThemeMotion,
-		light: normalizePalette(light, FALLBACK_INFO_LIGHT),
-		dark: normalizePalette(dark, FALLBACK_INFO_DARK),
-		createdAt: toIso(createdAt as Date | string),
-		updatedAt: toIso(updatedAt as Date | string)
+	const row = theme as unknown as {
+		id: string;
+		version: number;
+		slug: string;
+		name: string;
+		description: string;
+		publisher: string | null;
+		brand: string;
+		neutral: string;
+		radius: string;
+		density: string;
+		motionFeel: string;
+		fontSans: string;
+		fontMono: string;
+		fontHeader: string;
+		createdAt: Date | string;
+		updatedAt: Date | string;
 	};
-	if (publisher) record.publisher = publisher as string;
-	if (typography) record.typography = typography as ThemeRecord['typography'];
-	return record;
+	const parsed = parseTheme({
+		version: row.version,
+		slug: row.slug,
+		name: row.name,
+		description: row.description,
+		publisher: row.publisher ?? undefined,
+		brand: row.brand,
+		neutral: row.neutral,
+		radius: row.radius,
+		density: row.density,
+		motion: row.motionFeel,
+		fontSans: row.fontSans,
+		fontMono: row.fontMono,
+		fontHeader: row.fontHeader
+	});
+	return {
+		...parsed,
+		id: row.id,
+		createdAt: toIso(row.createdAt),
+		updatedAt: toIso(row.updatedAt)
+	};
 }
 
 export async function listThemes(): Promise<ThemeRecord[]> {
@@ -55,7 +60,6 @@ export async function listThemes(): Promise<ThemeRecord[]> {
 	const published = rows.map(serialize);
 	const publishedSlugs = new Set(published.map((theme) => theme.slug));
 	const hiddenSlugs = new Set(hidden.map((row) => row.slug));
-
 	const unshadowedDefaults = defaultThemes
 		.filter((theme) => !publishedSlugs.has(theme.slug) && !hiddenSlugs.has(theme.slug))
 		.map(defaultThemeRecord);
@@ -75,32 +79,46 @@ export async function getThemeBySlug(slug: string): Promise<ThemeRecord> {
 	return serialize(theme);
 }
 
-export async function publishTheme(input: ThemeDraft) {
-	if (isDefaultSlug(input.slug)) {
+export async function publishTheme(input: Theme) {
+	const theme = parseTheme(input);
+	if (isDefaultSlug(theme.slug)) {
 		throw status(409, 'This slug is reserved for a built-in theme.' as const);
 	}
 
 	const existing = await prisma.theme.findUnique({
-		where: { slug: input.slug },
+		where: { slug: theme.slug },
 		select: { id: true }
 	});
 	if (existing) {
 		throw status(409, 'A theme with this slug already exists, try another one.' as const);
 	}
 
-	// Cast through `any` because the generated Prisma client lags the schema
-	// until `prisma generate` runs. The `typography` column exists in the DB
-	// (schema.prisma) but the regenerated types haven't propagated yet.
-	await prisma.theme.create({
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		data: {
-			...input,
-			light: normalizePalette(input.light, FALLBACK_INFO_LIGHT),
-			dark: normalizePalette(input.dark, FALLBACK_INFO_DARK),
-			publisher: input.publisher ?? null,
-			typography: input.typography ?? null
-		} as never
-	});
+	try {
+		await prisma.theme.create({
+			data: {
+				version: theme.version,
+				slug: theme.slug,
+				name: theme.name,
+				description: theme.description,
+				publisher: theme.publisher ?? null,
+				brand: theme.brand,
+				neutral: theme.neutral,
+				radius: theme.radius,
+				density: theme.density,
+				motionFeel: theme.motion,
+				fontSans: theme.fontSans,
+				fontMono: theme.fontMono,
+				fontHeader: theme.fontHeader
+			} as never
+		});
+	} catch (error) {
+		// Prisma's generated error class can be duplicated across adapters/builds,
+		// so the stable public `code` is safer than an instanceof check.
+		if (typeof error === 'object' && error !== null && 'code' in error && error.code === 'P2002') {
+			throw status(409, 'A theme with this slug already exists, try another one.' as const);
+		}
+		throw error;
+	}
 
 	return {
 		success: true as const,

@@ -1,24 +1,31 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
-	import { resolve } from '$app/paths';
-	import { themesV2 } from '@silk/ui/themes/builtin-presets';
-	import { themeToCss } from '@silk/ui/themes/theme';
-	import { Button } from '@silk/ui/components/button';
-	import { Input } from '@silk/ui/components/input';
-	import { toast } from '@silk/ui/components/toast';
-	import { applyLiveThemeCss, saveStudioThemeV2 } from '@silk/ui/themes/live';
-	import type { Theme } from '@silk/ui/themes/theme';
+	import { builtInThemePresets } from '@sivir/ui/themes/builtin-presets';
+	import { themeToCss, type Theme } from '@sivir/ui/themes/theme';
+	import { Button } from '@sivir/ui/components/button';
+	import { Input } from '@sivir/ui/components/input';
+	import { toast } from '@sivir/ui/components/toast';
+	import { applyLiveThemeCss } from '@sivir/ui/themes/live';
+	import type { PageData } from './$types';
 
 	import Search from '@lucide/svelte/icons/search';
 	import Sparkles from '@lucide/svelte/icons/sparkles';
-	import Wand from '@lucide/svelte/icons/wand-sparkles';
 	import Check from '@lucide/svelte/icons/check';
 	import X from '@lucide/svelte/icons/x';
 	import FileCode from '@lucide/svelte/icons/file-code';
 	import Braces from '@lucide/svelte/icons/braces';
 
+	const { data = { themes: builtInThemePresets } as PageData }: { data?: PageData } = $props();
+	const getInitialThemes = () => {
+		const builtInSlugs = new Set(builtInThemePresets.map((theme) => theme.slug));
+		const registryThemes = Array.isArray(data?.themes) ? data.themes : [];
+		return [
+			...builtInThemePresets,
+			...registryThemes.filter((theme) => !builtInSlugs.has(theme.slug))
+		];
+	};
+
 	let searchQuery = $state('');
-	let themes = $state<Theme[]>(themesV2);
+	let themes = $state<Theme[]>(getInitialThemes());
 
 	const filteredThemes = $derived.by(() => {
 		const needle = searchQuery.trim().toLowerCase();
@@ -67,19 +74,13 @@
 		}, 1600);
 	}
 
-	function openInStudio(theme: Theme) {
-		saveStudioThemeV2(theme);
-		applyLiveThemeCss(themeToCss(theme));
-		void goto(resolve('/themes/studio'));
-	}
-
 	const detailCss = $derived(detailTheme ? themeToCss(detailTheme) : '');
 	const detailJson = $derived(detailTheme ? JSON.stringify(detailTheme, null, 2) : '');
 </script>
 
 <svelte:head>
-	<title>Silk · Themes</title>
-	<meta name="description" content="Explore and customize Silk themes." />
+	<title>Sivir · Themes</title>
+	<meta name="description" content="Explore and customize Sivir themes." />
 </svelte:head>
 
 <div class="mt-16 min-h-[calc(100vh-4rem)] bg-background">
@@ -91,17 +92,15 @@
 					class="m-0 text-[2.9rem] font-[500] leading-[1.05] tracking-tight md:text-[3.6rem]"
 					style="font-family: var(--font-header);"
 				>
-					Silk themes.
+					Sivir themes.
 				</h1>
 				<p class="m-0 max-w-[42rem] text-[0.95rem] leading-relaxed text-foreground-muted">
-					Explore or customize a theme. All themes are built from 6 constrained controls.
+					Explore a complete theme preset, apply it live, and copy CSS or JSON into your project.
 				</p>
 			</div>
 
-			<div
-				class="mx-auto flex w-full max-w-[44rem] flex-col items-stretch gap-2.5 sm:flex-row sm:items-center"
-			>
-				<div class="relative flex-1">
+			<div class="mx-auto w-full max-w-[44rem]">
+				<div class="relative">
 					<Search
 						size={14}
 						class="pointer-events-none absolute left-3 top-1/2 z-10 -translate-y-1/2 text-foreground-muted"
@@ -113,15 +112,6 @@
 						bind:value={searchQuery}
 					/>
 				</div>
-				<Button
-					variant="primary"
-					size="sm"
-					class="h-9 gap-1.5 text-[0.82rem]"
-					onclick={() => void goto(resolve('/themes/studio'))}
-				>
-					<Wand size={13} />
-					Open studio
-				</Button>
 			</div>
 
 			{#if true}
@@ -154,7 +144,7 @@
 					<div class="flex flex-col gap-1">
 						<p class="m-0 text-[1rem] font-[500] text-foreground">No themes found</p>
 						<p class="m-0 text-[0.84rem] text-foreground-muted">
-							Try a different keyword or create a new theme in the studio.
+							Try a different keyword, or clear the search to see every theme.
 						</p>
 					</div>
 				{/if}
@@ -196,14 +186,13 @@
 								<div><span class="text-foreground">Brand:</span> {theme.brand}</div>
 								<div><span class="text-foreground">Neutral:</span> {theme.neutral}</div>
 								<div><span class="text-foreground">Radius:</span> {theme.radius}</div>
-								<div><span class="text-foreground">Density:</span> {theme.density}</div>
 								<div><span class="text-foreground">Motion:</span> {theme.motion}</div>
 								<div><span class="text-foreground">Fonts:</span> {theme.fontSans}</div>
 							</div>
 
 							<!-- Actions -->
 							<div
-								class="mt-auto flex items-center justify-between gap-2 border-t border-border/60 px-3 py-2.5"
+								class="mt-auto flex items-center justify-end gap-2 border-t border-border/60 px-3 py-2.5"
 								onclick={(e) => e.stopPropagation()}
 								onkeydown={(e) => e.stopPropagation()}
 								role="presentation"
@@ -215,15 +204,6 @@
 									onclick={() => applyTheme(theme)}
 								>
 									Apply
-								</Button>
-								<Button
-									variant="outline"
-									size="sm"
-									class="h-8 gap-1.5 text-[0.78rem]"
-									onclick={() => openInStudio(theme)}
-								>
-									<Wand size={12} />
-									Studio
 								</Button>
 							</div>
 						</div>
@@ -292,10 +272,6 @@
 						<p class="m-0 mt-1 text-foreground">{detailTheme.radius}</p>
 					</div>
 					<div>
-						<span class="text-foreground-muted">Density</span>
-						<p class="m-0 mt-1 text-foreground">{detailTheme.density}</p>
-					</div>
-					<div>
 						<span class="text-foreground-muted">Motion</span>
 						<p class="m-0 mt-1 text-foreground">{detailTheme.motion}</p>
 					</div>
@@ -346,10 +322,6 @@
 					<Button size="sm" onclick={() => applyTheme(detailTheme!)}>
 						<Sparkles size={14} />
 						Apply theme
-					</Button>
-					<Button variant="secondary" size="sm" onclick={() => openInStudio(detailTheme!)}>
-						<Wand size={14} />
-						Edit
 					</Button>
 				</div>
 			</div>

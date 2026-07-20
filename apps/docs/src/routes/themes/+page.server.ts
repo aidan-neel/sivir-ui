@@ -1,7 +1,11 @@
-import { error } from '@sveltejs/kit';
+import { builtInThemePresets } from '@sivir/ui/themes/builtin-presets';
+import { listRegistryThemes } from '$lib/server/theme-registry';
 import type { PageServerLoad } from './$types';
 
-// Themes gallery is disabled for now. Block direct access until it's reworked.
-export const load: PageServerLoad = async () => {
-	error(404, 'Not Found');
+export const load: PageServerLoad = async ({ fetch }) => {
+	try {
+		return { themes: await listRegistryThemes(fetch) };
+	} catch {
+		return { themes: builtInThemePresets };
+	}
 };

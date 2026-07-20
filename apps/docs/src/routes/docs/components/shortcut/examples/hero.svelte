@@ -1,8 +1,18 @@
 <script lang="ts">
-	import Shortcut from '@silk/ui/components/shortcut';
+	import Shortcut from '@sivir/ui/components/shortcut';
+	import { toast } from '@sivir/ui/components/toast';
+
+	function ontrigger() {
+		toast({
+			title: 'Shortcut activated',
+			description: 'Pressed K',
+			duration: 2000,
+			type: 'success'
+		});
+	}
 </script>
 
-<div class="flex items-center gap-4">
-	<span class="text-sm">Search</span>
-	<Shortcut shortcut="K" />
+<div class="flex flex-col items-center gap-4">
+	<Shortcut shortcut="K" {ontrigger} />
+	<p class="m-0 text-sm text-foreground-muted">Press <kbd class="font-mono">K</kbd> to trigger</p>
 </div>

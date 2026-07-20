@@ -1,8 +1,7 @@
-import { afterEach, beforeEach, describe, expect, it, mock } from 'bun:test';
-import { Elysia } from 'elysia';
+import { afterEach, beforeEach, describe, expect, it, mock, spyOn } from 'bun:test';
 
 import { defaultThemes } from '@src/services/themes/defaults';
-import type { ThemeDraft } from '@src/services/themes/model';
+import type { Theme } from '@src/services/themes/model';
 
 // The registry talks to Postgres through a Prisma client that is generated at
 // build time (`prisma generate`) and instantiates a real pg pool on import.
@@ -25,14 +24,15 @@ const db = {
 
 mock.module('@lib/prisma', () => ({ prisma: db }));
 
-// Import the controller only after the mock is registered.
-const { themesController } = await import('@src/services/themes');
-const app = new Elysia().use(themesController);
+// Import the production app only after the database mock is registered.
+const { app } = await import('@src/index');
 
 /** Build a persisted DB row from a draft, as Prisma would return it. */
-function persisted(draft: ThemeDraft, id: string) {
+function persisted(theme: Theme, id: string) {
+	const { motion, ...rest } = theme;
 	return {
-		...draft,
+		...rest,
+		motionFeel: motion,
 		id,
 		createdAt: new Date('2026-01-02T00:00:00.000Z'),
 		updatedAt: new Date('2026-01-02T00:00:00.000Z')
@@ -53,7 +53,7 @@ function post(body: unknown) {
 	);
 }
 
-function validDraft(slug: string): ThemeDraft {
+function validTheme(slug: string): Theme {
 	// Reuse a built-in theme's shape so every required field is present, then
 	// give it a fresh, non-reserved slug.
 	return { ...defaultThemes[0], slug };
@@ -83,7 +83,7 @@ describe('GET /themes', () => {
 	});
 
 	it('merges published themes with the built-in defaults', async () => {
-		db.theme.findMany = async () => [persisted(validDraft('ocean'), 'db-1')];
+		db.theme.findMany = async () => [persisted(validTheme('ocean'), 'db-1')];
 		const res = await get('/themes');
 		const body = (await res.json()) as { slug: string }[];
 		const slugs = body.map((t) => t.slug);
@@ -117,7 +117,7 @@ describe('GET /themes/:slug', () => {
 
 	it('returns a published theme by slug', async () => {
 		db.theme.findUnique = async ({ where }) =>
-			where.slug === 'ocean' ? persisted(validDraft('ocean'), 'db-1') : null;
+			where.slug === 'ocean' ? persisted(validTheme('ocean'), 'db-1') : null;
 		const res = await get('/themes/ocean');
 		expect(res.status).toBe(200);
 		const body = (await res.json()) as { slug: string; id: string };
@@ -134,41 +134,36 @@ describe('GET /themes/:slug', () => {
 });
 
 describe('POST /themes', () => {
-	it('publishes a new theme', async () => {
-		let created: Record<string, unknown> | undefined;
+	it('rejects publishes while the registry is read-only for v1', async () => {
+		let created = false;
 		db.theme.create = async (args: CreateArgs) => {
-			created = args.data;
+			created = true;
 			return args.data;
 		};
-		const res = await post(validDraft('ocean'));
-		expect(res.status).toBe(200);
-		const body = await res.json();
-		expect(body).toEqual({ success: true, message: 'Successfully published theme!' });
-		expect(created?.slug).toBe('ocean');
+		const res = await post(validTheme('ocean'));
+		expect(res.status).toBe(405);
+		expect(res.headers.get('allow')).toContain('GET');
+		expect(await res.text()).toContain('disabled');
+		expect(created).toBe(false);
+	});
+});
+
+describe('registry request guards', () => {
+	it('caps request bodies at 128 KiB', () => {
+		expect(app.config.serve?.maxRequestBodySize).toBe(128 * 1024);
 	});
 
-	it('rejects a slug reserved for a built-in theme', async () => {
-		const res = await post(validDraft('default'));
-		expect(res.status).toBe(409);
+	it('does not leak unexpected service errors', async () => {
+		const errorLog = spyOn(console, 'error').mockImplementation(() => {});
+		db.theme.findMany = async () => {
+			throw new Error('boom: secret detail');
+		};
+
+		const res = await get('/themes');
 		const body = await res.text();
-		expect(body).toBe('This slug is reserved for a built-in theme.');
-	});
-
-	it('rejects a slug that already exists', async () => {
-		db.theme.findUnique = async () => ({ id: 'db-1' });
-		const res = await post(validDraft('ocean'));
-		expect(res.status).toBe(409);
-		const body = await res.text();
-		expect(body).toBe('A theme with this slug already exists, try another one.');
-	});
-
-	it('rejects a malformed slug with a validation error', async () => {
-		const res = await post({ ...validDraft('ocean'), slug: 'Not A Slug' });
-		expect(res.status).toBe(422);
-	});
-
-	it('rejects a body missing required fields', async () => {
-		const res = await post({ slug: 'ocean' });
-		expect(res.status).toBe(422);
+		expect(res.status).toBe(500);
+		expect(body).toBe('Internal error.');
+		expect(body).not.toContain('boom');
+		expect(errorLog).toHaveBeenCalled();
 	});
 });

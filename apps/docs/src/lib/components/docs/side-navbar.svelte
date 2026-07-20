@@ -1,29 +1,32 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { components, sanitizeComponent } from '$lib/components';
-	import { Button } from '@silk/ui/components/button';
+	import { Button } from '@sivir/ui/components/button';
 	import BookOpen from '@lucide/svelte/icons/book-open';
 	import Download from '@lucide/svelte/icons/download';
 	import Palette from '@lucide/svelte/icons/palette';
-	import History from '@lucide/svelte/icons/history';
+	import Component from '@lucide/svelte/icons/component';
 
 	let { class: classProp = '', onNavigate }: { class?: string; onNavigate?: () => void } = $props();
 	const pageName = $derived($page.url.pathname);
 
 	const gettingStartedItems = [
-		{ slug: 'introduction', label: 'Introduction', icon: BookOpen },
-		{ slug: 'installation', label: 'Installation', icon: Download },
-		{ slug: 'theming', label: 'Theming', icon: Palette },
-		{ slug: 'changelog', label: 'Changelog', icon: History }
+		{ href: '/docs/introduction', label: 'Introduction', icon: BookOpen },
+		{ href: '/docs/installation', label: 'Installation', icon: Download },
+		{ href: '/docs/theming', label: 'Theming', icon: Palette },
+		{ href: '/docs/components', label: 'Components', icon: Component }
 	];
 
 	function isActive(path: string) {
+		if (path === '/docs/components') {
+			return pageName === path || pageName.startsWith('/docs/components/');
+		}
 		return pageName === path;
 	}
 </script>
 
 <aside
-	class={`${classProp} silk-docs-sidebar hide-scrollbar-all flex flex-col gap-5 overflow-y-auto pb-8 pr-4`}
+	class={`${classProp} sivir-docs-sidebar hide-scrollbar-all flex flex-col gap-5 overflow-y-auto pb-8 pr-4`}
 >
 	<section class="flex flex-col gap-1.5">
 		<h3
@@ -32,16 +35,16 @@
 			Getting Started
 		</h3>
 		<div class="flex flex-col gap-0.5">
-			{#each gettingStartedItems as item (item.slug)}
-				{@const active = isActive(`/docs/${item.slug}`)}
+			{#each gettingStartedItems as item (item.href)}
+				{@const active = isActive(item.href)}
 				<Button
 					variant="ghost"
-					href={`/docs/${item.slug}`}
+					href={item.href}
 					onclick={onNavigate}
 					class={`h-8 w-fit justify-start gap-2 rounded-lg px-3 text-left text-sm transition-[background-color,color] ${
 						active
 							? 'bg-secondary/85 [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]'
-							: ' hover:bg-secondary/55 hover:text-foreground'
+							: 'hover:bg-secondary/55 hover:text-foreground'
 					}`}
 				>
 					<item.icon size={14} />
@@ -81,24 +84,24 @@
 </aside>
 
 <style>
-	.silk-docs-sidebar {
+	.sivir-docs-sidebar {
 		scrollbar-width: thin;
 		scrollbar-color: color-mix(in srgb, var(--color-foreground) 18%, transparent) transparent;
 		overscroll-behavior: contain;
 	}
-	.silk-docs-sidebar::-webkit-scrollbar {
+	.sivir-docs-sidebar::-webkit-scrollbar {
 		width: 8px;
 	}
-	.silk-docs-sidebar::-webkit-scrollbar-track {
+	.sivir-docs-sidebar::-webkit-scrollbar-track {
 		background: transparent;
 	}
-	.silk-docs-sidebar::-webkit-scrollbar-thumb {
+	.sivir-docs-sidebar::-webkit-scrollbar-thumb {
 		background: color-mix(in srgb, var(--color-foreground) 14%, transparent);
 		border: 2px solid transparent;
 		background-clip: padding-box;
 		border-radius: 9999px;
 	}
-	.silk-docs-sidebar:hover::-webkit-scrollbar-thumb {
+	.sivir-docs-sidebar:hover::-webkit-scrollbar-thumb {
 		background: color-mix(in srgb, var(--color-foreground) 26%, transparent);
 		background-clip: padding-box;
 	}

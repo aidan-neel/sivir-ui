@@ -2,9 +2,9 @@
 
 Empirically derived on 2026-05-29 from the working tree, not from estimates. Method:
 
-- **Declared** = `--token:` declarations in `packages/silk/src/ui.css` → 198 unique.
-- **Emitted** = `--token:` lines inside the `themeToCss()` template literal in `packages/silk/src/themes/presets.ts` → 129 unique.
-- **Consumed** = `var(--token…)` **and** `'--token'` / `"--token"` string literals (JS reads via `getCssNumber`/`getCssDuration`) across **all** `.svelte`/`.ts` under `packages/silk/src` except the two definition files → 182 unique.
+- **Declared** = `--token:` declarations in `packages/sivir/src/ui.css` → 198 unique.
+- **Emitted** = `--token:` lines inside the `themeToCss()` template literal in `packages/sivir/src/themes/presets.ts` → 129 unique.
+- **Consumed** = `var(--token…)` **and** `'--token'` / `"--token"` string literals (JS reads via `getCssNumber`/`getCssDuration`) across **all** `.svelte`/`.ts` under `packages/sivir/src` except the two definition files → 182 unique.
 - **Internal refs** = `var()` chains inside `ui.css`/`presets.ts` themselves (so intermediate tokens aren't misflagged as dead).
 
 > Correction to the pre-audit "126 unused tokens / button colors hardcoded" claim: **false**. Buttons consume `var(--button-*-bg)` etc.; several "unused" motion tokens are consumed via **JS** (`getCssNumber(node, '--motion-sheet-offset')`, `getCssDuration(node, '--motion-duration-toast-in')`). The real gaps are smaller and different, below.
@@ -36,7 +36,7 @@ These produce no effect. Each is either a genuine dead token to delete, or evide
 
 The actionable core. Split by intent:
 
-**B1 — Runtime / mechanism vars (must stay uneditable):** `--popover-available-height`, `--popover-available-width`, `--popover-trigger-width` (set by floating-ui), `--ui-button-shadow`, `--ui-field-bg`, `--ui-field-hover-bg`, `--ui-field-focus-border`, `--ui-field-foreground`, `--ui-field-placeholder`, `--ui-badge-shadow` (variant-local indirection), `--silk-marquee-duration`, `--silk-marquee-gap` (Marquee props). → **Exclude from Studio.**
+**B1 — Runtime / mechanism vars (must stay uneditable):** `--popover-available-height`, `--popover-available-width`, `--popover-trigger-width` (set by floating-ui), `--ui-button-shadow`, `--ui-field-bg`, `--ui-field-hover-bg`, `--ui-field-focus-border`, `--ui-field-foreground`, `--ui-field-placeholder`, `--ui-badge-shadow` (variant-local indirection), `--sivir-marquee-duration`, `--sivir-marquee-gap` (Marquee props). → **Exclude from Studio.**
 
 **B2 — Derived color tokens that already track the palette** (`--button-{primary,secondary,success,warning,error,destructive,flat,ghost,outlined,alternate}-{bg,foreground,hover-bg,border}`, `--card-bg`, `--checkbox-bg`, `--color-field*`, `--color-panel-foreground`, `--color-tooltip`, `--color-tooltip-foreground`, `--toast-bg`, `--skeleton-base`, `--skeleton-highlight`, `--menu-item-*`, `--menu-label-foreground`, `--switch-track-*`, `--separator-color`). These follow semantic palette edits, so they "work" — but are not directly overridable. → **Expose a curated subset as advanced/group overrides (Phase 4); not all 77.**
 

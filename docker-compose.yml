@@ -25,5 +25,6 @@ services:
     environment:
       PORT: '3000'
       HOST: '0.0.0.0'
+      THEME_REGISTRY_URL: 'http://registry:4100'
     ports:
       - '3000:3000'

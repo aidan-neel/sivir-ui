@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Slider } from '@silk/ui/components/slider';
+	import { Slider } from '@sivir/ui/components/slider';
 
 	let volume = $state(64);
 </script>

@@ -1,13 +1,13 @@
 <script lang="ts">
-	import { Button } from '@silk/ui/components/button';
-	import { toast } from '@silk/ui/components/toast';
+	import { Button } from '@sivir/ui/components/button';
+	import { toast } from '@sivir/ui/components/toast';
 </script>
 
 <div class="flex items-center justify-center">
 	<Button
 		onclick={() =>
 			toast.success('Deployment ready', {
-				description: 'silk-ui.vercel.app is now live.',
+				description: 'sivir-ui.vercel.app is now live.',
 				actions: [
 					{
 						label: 'Visit',
