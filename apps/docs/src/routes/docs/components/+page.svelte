@@ -9,7 +9,7 @@
 	<title>Sivir · Components</title>
 	<meta
 		name="description"
-		content="Browse all 41 accessible, themeable Svelte 5 components in Sivir UI."
+		content="Browse all 38 accessible, themeable Svelte 5 components in Sivir UI."
 	/>
 </svelte:head>
 
@@ -38,7 +38,7 @@
 			<li>
 				<a
 					href={resolve(`/docs/components/${component}` as '/docs/components/accordion')}
-					class="group flex min-h-16 items-center justify-between gap-4 rounded-[var(--radius-lg)] border border-border bg-card px-4 py-3 text-foreground transition-[border-color,background-color,transform] duration-200 hover:border-border-strong hover:bg-secondary/45 active:scale-[0.96] motion-reduce:transition-none"
+					class="group flex min-h-16 items-center justify-between gap-4 rounded-[var(--radius-lg)] border border-border bg-card px-4 py-3 text-foreground transition-[border-color,background-color] duration-200 hover:border-border-strong hover:bg-secondary/45 motion-reduce:transition-none"
 				>
 					<span class="font-medium">{sanitizeComponent(component)}</span>
 					<ArrowRight

@@ -15,10 +15,15 @@
 		threshold?: number;
 	} & HTMLInputAttributes;
 
-	const { class: classProp, threshold = 0.5, ...rest }: Props = $props();
+	const { class: classProp, threshold = 0.28, ...rest }: Props = $props();
 	const fuse = $derived.by(() => {
 		command.itemsVersion;
-		return new Fuse(command.items, { keys: ['name'], threshold });
+		return new Fuse(command.items, {
+			keys: ['name'],
+			threshold,
+			ignoreLocation: true,
+			minMatchCharLength: 2
+		});
 	});
 
 	onMount(() => {

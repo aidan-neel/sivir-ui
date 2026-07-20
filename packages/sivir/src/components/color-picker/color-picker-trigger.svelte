@@ -22,10 +22,7 @@
 
 <Popover.Trigger
 	{variant}
-	class={cn(
-		className,
-		'group h-8 w-full justify-start gap-2 pl-1.5 pr-2.5 text-sm [font-weight:var(--font-weight-button,500)] [letter-spacing:var(--tracking-button,0em)]'
-	)}
+	class={cn(className, 'group w-full justify-start gap-1.5 pl-1.5 pr-2.5')}
 >
 	<span
 		class="size-5 shrink-0 rounded-md ring-1 ring-inset ring-black/10"

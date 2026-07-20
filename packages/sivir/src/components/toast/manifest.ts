@@ -9,13 +9,16 @@ import type { Manifest } from '@sivir/ui/_manifest/types';
  *        (e.g., SSR). Breaking change: the `toastUIState` named export
  *        is gone; consumers reading state directly switch to
  *        `getToastUIState()`.
+ * 2.1.0: client-side shared store + single primary renderer + body
+ *        portal. Toasts stack across page navigations; nested Toasters
+ *        no longer split or mis-position the stack. SSR still no-ops.
  */
 export const manifest: Manifest = {
 	name: 'toast',
-	version: '2.0.0',
+	version: '2.1.0',
 	visibility: 'public',
 	description:
-		'Toast notification system with Toaster portal, free-function toast() API, and per-Toaster-mount state isolation (SSR-safe).',
+		'Toast notification system with body-portaled Toaster, free-function toast() API, and a shared client stack (SSR-safe).',
 	files: [
 		'components/toast/lib.svelte.ts',
 		'components/toast/toaster.svelte',

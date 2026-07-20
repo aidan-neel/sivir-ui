@@ -20,12 +20,11 @@ it('computes every retained keyframe animation to none under reduced motion', as
 
 	const skeleton = document.querySelector<HTMLElement>('[data-testid="motion-skeleton"] > div');
 	const progress = document.querySelector<HTMLElement>('[data-testid="motion-progress"] > div');
-	const marquee = document.querySelector<HTMLElement>('[data-testid="motion-marquee"] > div');
 	const toastProgress = document.querySelector<HTMLElement>(
 		'[data-ui="toast"] [style*="animation-duration"]'
 	);
 
-	for (const element of [skeleton, progress, marquee, toastProgress]) {
+	for (const element of [skeleton, progress, toastProgress]) {
 		expect(element).toBeInTheDocument();
 		expect(getComputedStyle(element!).animationName).toBe('none');
 	}

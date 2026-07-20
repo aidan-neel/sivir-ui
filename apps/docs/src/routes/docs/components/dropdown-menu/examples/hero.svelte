@@ -16,7 +16,7 @@
 	</DropdownMenu.Trigger>
 	<DropdownMenu.Content class="min-w-[16rem]">
 		<DropdownMenu.Label>
-			<span class="text-[0.7rem] text-foreground-muted">aidan@sivir-ui.dev</span>
+			<span class="text-[0.7rem] text-foreground-muted">aidan@sivir.dev</span>
 		</DropdownMenu.Label>
 		<DropdownMenu.Item>
 			<span class="flex items-center gap-2"><User size={13} /> Profile</span>

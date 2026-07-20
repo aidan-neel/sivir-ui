@@ -36,8 +36,8 @@
 				<Sparkles size={11} class="text-primary" />
 				Introduction
 			</Badge>
-			<Badge variant="ghost" class="text-[0.66rem]">v0.1</Badge>
-			<Badge variant="ghost" class="text-[0.66rem]">41 components</Badge>
+			<Badge variant="ghost" class="text-[0.66rem]">v1</Badge>
+			<Badge variant="ghost" class="text-[0.66rem]">38 components</Badge>
 		</div>
 
 		<div class="flex flex-col gap-3">
@@ -171,9 +171,8 @@
 		<Alert.Root variant="info">
 			<Alert.Title>Built on tokens, not magic</Alert.Title>
 			<Alert.Description>
-				Sivir reads from CSS variables for color, radius, type, and motion. The Theme Studio at
-				<code class="font-mono text-foreground">/themes/studio</code> is just a UI on top of them — change
-				a token there, change every page that imported a component.
+				Sivir reads from CSS variables for color, radius, type, and motion. Edit your token sheet
+				and every imported component restyles in the same frame.
 			</Alert.Description>
 		</Alert.Root>
 	</section>
@@ -198,7 +197,7 @@
 				Install Sivir
 				<ArrowRight size={14} />
 			</Button>
-			<Button href={resolve('/themes/studio')} variant="outline">Open theme studio</Button>
+			<Button href={resolve('/docs/theming')} variant="outline">Theming guide</Button>
 		</div>
 	</section>
 </div>

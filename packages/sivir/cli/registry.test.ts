@@ -128,11 +128,14 @@ describe('rewriteImports', () => {
 });
 
 describe('registry snapshot', () => {
-	test('keeps documented Panel directly installable', async () => {
+	test('keeps documented Card directly installable', async () => {
 		const snapshot = await loadRegistryIndex();
-		const panel = snapshot.components.find((component) => component.name === 'panel');
-		expect(panel?.visibility).toBe('public');
-		expect(resolveInstallPlan(snapshot, ['panel']).components[0]?.name).toBe('panel');
+		const card = snapshot.components.find((component) => component.name === 'card');
+		expect(card?.visibility).toBe('public');
+		expect(resolveInstallPlan(snapshot, ['card']).components[0]?.name).toBe('card');
+		expect(snapshot.components.some((component) => component.name === 'panel')).toBe(false);
+		expect(snapshot.components.some((component) => component.name === 'marquee')).toBe(false);
+		expect(snapshot.components.some((component) => component.name === 'separator')).toBe(false);
 	});
 
 	test('index loads and every referenced file exists', async () => {

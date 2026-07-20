@@ -1,18 +1,19 @@
 <script lang="ts">
 	import { Button, type ButtonProps } from '@sivir/ui/components/button';
 	import { cn } from '@sivir/ui/utils';
-	import { tick } from 'svelte';
+	import { onMount, type Snippet } from 'svelte';
 	import Check from '@lucide/svelte/icons/check';
 	import { MENU_ITEM } from '@sivir/ui/internals/menu';
 	import { getSelectContext } from './context.svelte';
 	import { getPopoverContext } from '../popover/context.svelte';
 
-	const { id, state: selectState } = getSelectContext();
+	const { id, state: selectState, labels, values } = getSelectContext();
 	const { state: popoverState } = getPopoverContext();
 
 	type Props = {
 		value: string;
 		label?: string;
+		children?: Snippet;
 	} & ButtonProps;
 
 	let { children, class: className, value, label, onclick: userOnclick, ...rest }: Props = $props();
@@ -27,24 +28,27 @@
 		return element?.textContent?.trim() ?? '';
 	}
 
-	$effect(() => {
+	onMount(() => {
 		const itemValue = value;
-		let active = true;
-		selectState.values.add(itemValue);
-		void tick().then(() => {
-			if (!active) return;
-			const resolved = resolveLabel();
-			if (!resolved) return;
-			selectState.labels.set(itemValue, resolved);
-			if (selectState.value === itemValue) {
-				selectState.selectedLabel = resolved;
-			}
-		});
+		values.add(itemValue);
+
+		// Register the display label only. Do NOT touch selectedLabel here —
+		// writing it on menu open made pre-filled triggers jump when labels resolved.
+		const resolved = resolveLabel();
+		if (resolved) labels.set(itemValue, resolved);
+		else {
+			const raf = requestAnimationFrame(() => {
+				const again = resolveLabel();
+				if (again) labels.set(itemValue, again);
+			});
+			return () => {
+				cancelAnimationFrame(raf);
+				values.delete(itemValue);
+			};
+		}
 
 		return () => {
-			active = false;
-			selectState.values.delete(itemValue);
-			selectState.labels.delete(itemValue);
+			values.delete(itemValue);
 		};
 	});
 </script>
@@ -56,8 +60,10 @@
 	aria-selected={selectState.value === value}
 	{...rest}
 	onclick={() => {
+		const resolved = resolveLabel() || labels.get(value) || value;
+		labels.set(value, resolved);
 		selectState.value = value;
-		selectState.selectedLabel = resolveLabel() || selectState.labels.get(value) || value;
+		selectState.selectedLabel = resolved;
 		selectState.open = false;
 		popoverState.buttonRef?.focus();
 		userOnclick?.();

@@ -8,7 +8,7 @@ import {
 	themeToCss
 } from '@sivir/ui/themes/theme';
 
-describe('Theme Studio public-axis coverage', () => {
+describe('Theme engine public-axis coverage', () => {
 	it('generates non-empty declarations for every supported axis value', () => {
 		for (const neutral of neutralTemperatures) {
 			expect(themeToCss({ ...DEFAULT_THEME, neutral })).toContain('--sivir-neutral-900:');

@@ -18,7 +18,7 @@
 				href={`/docs/components/${prevComponent}`}
 				variant="outline"
 				size="icon"
-				class="size-10"
+				class="size-8"
 				aria-label={`Previous: ${sanitizeComponent(prevComponent)}`}
 				title={`Previous: ${sanitizeComponent(prevComponent)}`}
 			>
@@ -30,7 +30,7 @@
 				href={`/docs/components/${nextComponent}`}
 				variant="outline"
 				size="icon"
-				class="size-10"
+				class="size-8"
 				aria-label={`Next: ${sanitizeComponent(nextComponent)}`}
 				title={`Next: ${sanitizeComponent(nextComponent)}`}
 			>

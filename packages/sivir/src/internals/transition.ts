@@ -19,6 +19,37 @@ export function getCssDuration(node: Element, variableName: string, fallback: nu
 	return Number.isFinite(parsed) ? parsed : fallback;
 }
 
+/**
+ * Unit-interval cubic-bezier easing (CSS-compatible control points).
+ * Used for the iOS drawer curve — Svelte's built-ins can't express it.
+ */
+export function cubicBezier(x1: number, y1: number, x2: number, y2: number): EasingFunction {
+	return (t: number) => {
+		if (t <= 0) return 0;
+		if (t >= 1) return 1;
+		let lo = 0;
+		let hi = 1;
+		let mid = t;
+		for (let i = 0; i < 12; i++) {
+			const x = sampleBezier(mid, x1, x2);
+			if (Math.abs(x - t) < 1e-4) break;
+			if (x < t) lo = mid;
+			else hi = mid;
+			mid = (lo + hi) / 2;
+		}
+		return sampleBezier(mid, y1, y2);
+	};
+}
+
+function sampleBezier(t: number, p1: number, p2: number) {
+	// B(t) = 3(1-t)²t·p1 + 3(1-t)t²·p2 + t³  (p0=0, p3=1)
+	const u = 1 - t;
+	return 3 * u * u * t * p1 + 3 * u * t * t * p2 + t * t * t;
+}
+
+/** iOS-like drawer curve: cubic-bezier(0.32, 0.72, 0, 1) */
+const drawerEase = cubicBezier(0.32, 0.72, 0, 1);
+
 function getCssNumber(node: Element, variableName: string, fallback: number) {
 	const parsed = Number.parseFloat(getComputedStyle(node).getPropertyValue(variableName));
 	return Number.isFinite(parsed) ? parsed : fallback;
@@ -81,6 +112,36 @@ export function overlayIn(node: Element) {
 }
 
 export const overlayOut = overlayIn;
+
+export type SheetSide = 'left' | 'right';
+
+function sheetSlide(
+	node: Element,
+	side: SheetSide,
+	durationVariable: string,
+	fallbackDuration: number
+): TransitionConfig {
+	const dir = side === 'left' ? -1 : 1;
+	const style = getComputedStyle(node);
+	const baseTransform = style.transform === 'none' ? '' : style.transform;
+
+	return {
+		duration: getCssDuration(node, durationVariable, fallbackDuration),
+		easing: drawerEase,
+		// Pure translate — no opacity. A drawer is a physical panel, not a ghost.
+		css: (t) => `transform:${baseTransform} translate3d(${(1 - t) * 100 * dir}%, 0, 0)`
+	};
+}
+
+/** Sheet enter: slides in from the anchored edge with the drawer curve. */
+export function sheetIn(node: Element, params: { side?: SheetSide } = {}) {
+	return sheetSlide(node, params.side ?? 'right', '--motion-duration-sheet', 280);
+}
+
+/** Sheet exit: same path, slightly faster so dismiss feels snappy. */
+export function sheetOut(node: Element, params: { side?: SheetSide } = {}) {
+	return sheetSlide(node, params.side ?? 'right', '--motion-duration-sheet-out', 200);
+}
 
 type ThemedSlideParams = {
 	durationVar?: string;

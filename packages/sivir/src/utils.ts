@@ -121,6 +121,35 @@ export function trapFocus(
 	};
 }
 
+const PRESS_FLOOR = 0.94;
+
+/** Constant-pixel press scale. Sets `--sivir-press-sx/sy` from element size + `--motion-press-px`. */
+export function pressable(node: HTMLElement) {
+	function measure() {
+		const raw = getComputedStyle(node).getPropertyValue('--motion-press-px').trim();
+		const px = Number.parseFloat(raw) || 2;
+		const { width, height } = node.getBoundingClientRect();
+		const sx = width > 0 ? Math.max((width - px) / width, PRESS_FLOOR) : 0.98;
+		const sy = height > 0 ? Math.max((height - px) / height, PRESS_FLOOR) : 0.98;
+		node.style.setProperty('--sivir-press-sx', sx.toFixed(4));
+		node.style.setProperty('--sivir-press-sy', sy.toFixed(4));
+	}
+
+	function onKeyDown(e: KeyboardEvent) {
+		if (e.key === ' ' || e.key === 'Enter') measure();
+	}
+
+	// Capture so vars are ready before :active paints.
+	node.addEventListener('pointerdown', measure, true);
+	node.addEventListener('keydown', onKeyDown);
+	return {
+		destroy() {
+			node.removeEventListener('pointerdown', measure, true);
+			node.removeEventListener('keydown', onKeyDown);
+		}
+	};
+}
+
 /** Runs a callback when a pointer event lands outside the node and any excluded nodes. */
 export function clickOutside(node: Node, callback: () => void, exclude: Node[] = []) {
 	let destroyed = false;
@@ -167,10 +196,11 @@ export function positionFloatingPanel(
 	placement: Placement
 ) {
 	return computePosition(reference, floating, {
+		strategy: 'fixed',
 		placement,
 		middleware: [
 			offset(8),
-			flip({ padding: 8, crossAxis: true, fallbackAxisSideDirection: 'start' }),
+			flip({ padding: 8 }),
 			shift({ padding: 8, crossAxis: true }),
 			size({
 				padding: 8,

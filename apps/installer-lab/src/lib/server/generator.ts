@@ -110,7 +110,7 @@ body { margin: 0; min-width: 320px; min-height: 100vh; }
 @layer base { button, input { font: inherit; } }
 * { box-sizing: border-box; }
 
-body { font-size: var(--font-size-body); line-height: 1.5; }
+body { font-size: var(--font-size-body); font-weight: var(--font-weight-body); line-height: 1.5; }
 
 .showcase-shell { min-height: 100vh; background: var(--color-background); color: var(--color-foreground); }
 .showcase-nav { position: sticky; top: 0; z-index: 20; height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; background: color-mix(in srgb, var(--color-background) 88%, transparent); border-bottom: 1px solid var(--color-border); backdrop-filter: blur(18px); }

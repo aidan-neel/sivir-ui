@@ -24,7 +24,7 @@ export async function resolveThemeCss(slug: string, registry: string) {
 		throw new Error(`theme registry unreachable at ${url}`);
 	}
 	if (response.status === 404) {
-		throw new Error(`no theme "${slug}" in the registry -- browse https://sivir-ui.dev/themes`);
+		throw new Error(`no theme "${slug}" in the registry -- browse https://sivir.dev/themes`);
 	}
 	if (!response.ok) {
 		throw new Error(`theme registry responded ${response.status} for ${url}`);

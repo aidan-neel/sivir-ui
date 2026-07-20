@@ -22,7 +22,6 @@
 	import Download from '@lucide/svelte/icons/download';
 	import Rocket from '@lucide/svelte/icons/rocket';
 	import Globe from '@lucide/svelte/icons/globe';
-	import History from '@lucide/svelte/icons/history';
 	import Palette from '@lucide/svelte/icons/palette';
 	import * as Sheet from '@sivir/ui/components/sheet';
 	import GitHubBlack from '$lib/assets/GitHub_Invertocat_Black.svg';
@@ -41,57 +40,45 @@
 
 	let scrolled = $state(false);
 	let mobileMenuOpen = $state(false);
-	const isStudio = $derived($page.url.pathname.startsWith('/themes/studio'));
 	const isHome = $derived($page.url.pathname === '/');
 	const isDocs = $derived($page.url.pathname.startsWith('/docs'));
 
 	const navItems = [
 		{ href: '/', label: 'Home' },
+		{ href: '/docs/introduction', label: 'Docs' },
 		{ href: '/docs/components', label: 'Components' }
 	];
 
 	const docsPages = [
 		{
 			title: 'Docs',
-			description: 'Browse the documentation hub',
 			href: resolve('/docs'),
 			icon: BookOpen,
-			keywords: 'docs documentation hub overview'
+			name: 'Docs'
 		},
 		{
 			title: 'Introduction',
-			description: 'Overview and getting started with Sivir UI',
 			href: resolve('/docs/introduction'),
 			icon: BookOpen,
-			keywords: 'docs intro overview getting started'
+			name: 'Introduction getting started'
 		},
 		{
 			title: 'Installation',
-			description: 'Install and set up the library',
 			href: resolve('/docs/installation'),
 			icon: Download,
-			keywords: 'docs install setup package'
+			name: 'Installation setup install'
 		},
 		{
 			title: 'Theming',
-			description: 'Customize tokens, colors, and defaults',
 			href: resolve('/docs/theming'),
 			icon: Palette,
-			keywords: 'docs theme tokens colors styling'
+			name: 'Theming tokens colors'
 		},
 		{
 			title: 'Styling',
-			description: 'Learn how to style and override Sivir UI components',
 			href: resolve('/docs/styling'),
 			icon: Palette,
-			keywords: 'docs styling css overrides classes tokens'
-		},
-		{
-			title: 'Changelog',
-			description: 'Recent releases and updates',
-			href: resolve('/docs/changelog'),
-			icon: History,
-			keywords: 'docs release notes updates versions'
+			name: 'Styling css classes'
 		}
 	];
 
@@ -99,15 +86,14 @@
 		const title = sanitizeComponent(component);
 		return {
 			title,
-			description: `${title} component docs`,
-			href: resolve('/docs/components/[...slug]', { slug: component }),
+			href: `/docs/components/${component}`,
 			icon: Component,
-			keywords: `component docs ${component} ${title.toLowerCase()}`
+			name: `${title} ${component}`
 		};
 	});
 
-	function navigateTo(href: ResolvedPathname) {
-		void goto(href);
+	function navigateTo(href: string) {
+		void goto(href as ResolvedPathname);
 	}
 
 	onMount(() => {
@@ -134,24 +120,20 @@
 
 <nav
 	class={`fixed inset-x-0 top-0 z-20 transition-[background-color,backdrop-filter] duration-200 ${
-		isStudio
-			? 'border-b border-border bg-background'
-			: isDocs
-				? 'bg-background/72 backdrop-blur-[14px]'
-				: scrolled
-					? 'bg-background/58 backdrop-blur-[14px]'
-					: 'bg-transparent'
+		isDocs
+			? 'bg-background/72 backdrop-blur-[14px]'
+			: scrolled
+				? 'bg-background/58 backdrop-blur-[14px]'
+				: 'bg-transparent'
 	}`}
 >
 	<div
 		class={`relative mx-auto flex h-16 w-full items-center justify-between ${
-			isStudio
-				? 'max-w-none px-4'
-				: isHome
-					? 'nav-home-in max-w-[1400px] px-4 md:px-6'
-					: isDocs
-						? 'max-w-[1400px] px-4 md:px-6'
-						: 'px-4 md:px-6'
+			isHome
+				? 'nav-home-in max-w-[1400px] px-4 md:px-6'
+				: isDocs
+					? 'max-w-[1400px] px-4 md:px-6'
+					: 'px-4 md:px-6'
 		}`}
 	>
 		<Command.Root>
@@ -167,7 +149,7 @@
 			<div class="flex flex-row items-center gap-1.5 md:gap-2">
 				<div class="hidden md:block">
 					<Command.Trigger
-						class="h-10 w-60 justify-between rounded-md px-3 text-[0.78rem] text-foreground-muted"
+						class="h-8 w-60 justify-between rounded-md px-2 text-[0.78rem] text-foreground-muted"
 						variant="outline"
 					>
 						Search docs...
@@ -178,7 +160,7 @@
 					</Command.Trigger>
 				</div>
 				<Command.Trigger
-					class="inline-flex size-10 items-center justify-center rounded-lg md:hidden"
+					class="inline-flex size-9 items-center justify-center rounded-lg md:hidden"
 					variant="ghost"
 					aria-label="Search pages and docs"
 				>
@@ -186,7 +168,7 @@
 				</Command.Trigger>
 
 				<Button
-					class="size-10 rounded-lg"
+					class="size-9 rounded-lg"
 					variant="ghost"
 					onclick={() => {
 						toggleMode();
@@ -214,7 +196,7 @@
 					</span>
 				</Button>
 				<Button
-					class="size-10 rounded-lg md:hidden"
+					class="size-9 rounded-lg md:hidden"
 					variant="ghost"
 					size="icon"
 					onclick={toggleMobileMenu}
@@ -230,7 +212,7 @@
 
 				<div class="hidden md:block">
 					<Button
-						class="h-10 gap-1.5 rounded-lg px-3"
+						class="h-9 gap-1.5 rounded-lg px-3"
 						variant="ghost"
 						onclick={() =>
 							window.open(
@@ -265,10 +247,7 @@
 							<span>Home</span>
 						</Command.Item>
 						{#each docsPages as item (item.href)}
-							<Command.Item
-								name={`${item.title} ${item.description} ${item.keywords}`}
-								callback={() => navigateTo(item.href)}
-							>
+							<Command.Item name={item.name} callback={() => navigateTo(item.href)}>
 								<item.icon class="text-foreground-muted" />
 								<span>{item.title}</span>
 							</Command.Item>
@@ -277,10 +256,7 @@
 					<Command.Separator />
 					<Command.Group heading="Components">
 						{#each componentPages as item (item.href)}
-							<Command.Item
-								name={`${item.title} ${item.description} ${item.keywords}`}
-								callback={() => navigateTo(item.href)}
-							>
+							<Command.Item name={item.name} callback={() => navigateTo(item.href)}>
 								<item.icon class="text-foreground-muted" />
 								<span>{item.title}</span>
 							</Command.Item>
@@ -370,14 +346,14 @@
 <style>
 	@media (prefers-reduced-motion: no-preference) {
 		:global(.nav-home-in) {
-			animation: nav-home-in 0.6s var(--ease-out) 1.25s both;
+			animation: nav-home-in 0.35s var(--ease-out) 0.04s both;
 		}
 	}
 
 	@keyframes nav-home-in {
 		from {
 			opacity: 0;
-			transform: translateY(-10px);
+			transform: translateY(-6px);
 		}
 	}
 </style>

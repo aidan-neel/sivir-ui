@@ -7,30 +7,26 @@
 	import { getSelectContext } from './context.svelte';
 	import { getPopoverContext } from '../popover/context.svelte';
 
-	const { state } = getSelectContext();
+	const { state, labels } = getSelectContext();
 	const { id: popoverId } = getPopoverContext();
 
 	type Props = {
-		children: Snippet;
+		children?: Snippet;
 		class?: string;
 		variant?: ButtonVariant;
 	} & Omit<Popover.PopoverTriggerProps, 'children' | 'class' | 'variant'>;
 
 	let { children, class: className, variant = 'outline', ...rest }: Props = $props();
+
 	const selectedLabel = $derived(
-		state.value !== '' ? state.selectedLabel || state.labels.get(state.value) || '' : ''
-	);
-	const widestLabel = $derived(
-		Array.from(state.labels.values()).reduce((widest, current) => {
-			return current.length > widest.length ? current : widest;
-		}, selectedLabel || 'Select')
+		state.value !== '' ? state.selectedLabel || labels.get(state.value) || '' : ''
 	);
 </script>
 
 <Popover.Trigger
 	class={cn(
 		className,
-		`flex flex-row items-center justify-between px-3 [font-weight:var(--font-weight-button,500)] [letter-spacing:var(--tracking-button,0em)] transition-[background-color,border-color,color,box-shadow,transform] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-out)] motion-reduce:transition-none active:scale-[var(--motion-press-scale)] motion-reduce:active:scale-100 focus-visible:shadow-[var(--focus-ring)] ${state.value !== '' ? 'text-foreground' : 'text-foreground-muted'}`
+		`flex flex-row items-center justify-between focus-visible:shadow-[var(--focus-ring)] ${state.value !== '' ? 'text-foreground' : 'text-foreground-muted'}`
 	)}
 	role="combobox"
 	aria-haspopup="listbox"
@@ -42,17 +38,18 @@
 	{variant}
 	{...rest}
 >
-	<div class="relative min-w-0 flex-1 pr-2 text-left">
-		<span class="invisible block truncate leading-tight">{widestLabel}</span>
-		<span class="absolute inset-0 flex items-center">
-			<span class="block min-w-0 flex-1 truncate leading-tight">
-				{#if selectedLabel}
-					{selectedLabel}
-				{:else}
-					{@render children?.()}
-				{/if}
-			</span>
-		</span>
+	<!--
+	  Always render children so icons/avatars stay mounted.
+	  Use <Select.Value /> inside for the label that updates on select.
+	-->
+	<div
+		class="flex min-w-0 flex-1 items-center gap-2 overflow-hidden pr-2 text-left [&_svg]:shrink-0"
+	>
+		{#if children}
+			{@render children()}
+		{:else if selectedLabel}
+			<span class="truncate">{selectedLabel}</span>
+		{/if}
 	</div>
-	<ChevronDown aria-hidden="true" />
+	<ChevronDown aria-hidden="true" class="shrink-0" />
 </Popover.Trigger>

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { getContext } from 'svelte';
-	import { cn } from '@sivir/ui/utils';
+	import { cn, pressable } from '@sivir/ui/utils';
 	import ChevronDown from '@lucide/svelte/icons/chevron-down';
 	import type { AccordionTriggerProps, AccordionContext } from '.';
 
@@ -13,6 +13,7 @@
 
 <button
 	type="button"
+	use:pressable
 	data-ui="accordion-trigger"
 	data-state={open ? 'open' : 'closed'}
 	aria-expanded={open}
@@ -22,7 +23,7 @@
 	onclick={() => ctx.toggle(item.value)}
 	class={cn(
 		className,
-		'flex w-full items-center justify-between gap-3 py-4 text-left text-[0.95rem] [font-weight:var(--font-weight-button,500)] [letter-spacing:var(--tracking-button,0em)] text-foreground transition-[color,transform] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-out)] active:scale-[var(--motion-press-scale)] hover:underline focus-visible:outline-none focus-visible:shadow-[var(--focus-ring)] disabled:cursor-not-allowed disabled:opacity-50' // token-lint-disable-line no-literal-length
+		'sivir-press flex w-full items-center justify-between gap-3 py-4 text-left text-[0.95rem] [font-weight:var(--font-weight-button,500)] [letter-spacing:var(--tracking-button,0em)] text-foreground transition-[color,transform,scale] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-press)] motion-reduce:transition-none hover:underline focus-visible:outline-none focus-visible:shadow-[var(--focus-ring)] disabled:cursor-not-allowed disabled:opacity-50' // token-lint-disable-line no-literal-length
 	)}
 	{...rest}
 >

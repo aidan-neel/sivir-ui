@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { cn } from '@sivir/ui/utils';
+	import { cn, pressable } from '@sivir/ui/utils';
 	import type { ToggleProps } from '.';
 	import { toggle } from './variants';
 
@@ -23,6 +23,7 @@
 
 <button
 	type="button"
+	use:pressable
 	data-ui="toggle"
 	data-state={pressed ? 'on' : 'off'}
 	aria-pressed={pressed}

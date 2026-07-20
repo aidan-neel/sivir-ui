@@ -173,6 +173,7 @@
 			class="pointer-events-none absolute size-[14px] -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white shadow-[0_1px_4px_rgb(0_0_0_/_0.5)]"
 			style:left={`${sat}%`}
 			style:top={`${100 - val}%`}
+			style:background={previewHex}
 		></div>
 	</div>
 
@@ -220,6 +221,12 @@
 	<!-- HSL sliders -->
 	<div class="flex flex-col gap-1.5 border-b border-border/60 p-2">
 		{#each [{ key: 'h', label: 'H', max: 360, value: hslH, unit: '°' }, { key: 's', label: 'S', max: 100, value: hslS, unit: '%' }, { key: 'l', label: 'L', max: 100, value: hslL, unit: '%' }] as channel (channel.key)}
+			{@const thumbBg =
+				channel.key === 'h'
+					? `hsl(${channel.value}, ${hslS}%, ${hslL}%)`
+					: channel.key === 's'
+						? `hsl(${hslH}, ${channel.value}%, ${hslL}%)`
+						: `hsl(${hslH}, ${hslS}%, ${channel.value}%)`}
 			<div class="flex items-center gap-2">
 				<span
 					class="w-3 shrink-0 font-mono [font-size:var(--font-size-body,16px)] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted"
@@ -232,12 +239,13 @@
 					max={channel.max}
 					step="1"
 					value={channel.value}
+					style:--thumb-bg={thumbBg}
 					oninput={(e) =>
 						setHslChannel(
 							channel.key as 'h' | 's' | 'l',
 							(e.currentTarget as HTMLInputElement).value
 						)}
-					class="h-1 flex-1 cursor-pointer appearance-none rounded-full bg-secondary outline-none dark:bg-[var(--color-border-strong)] focus-visible:shadow-[0_0_0_3px_var(--color-ring)] [&::-webkit-slider-thumb]:size-3 [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-[var(--color-background)] [&::-webkit-slider-thumb]:bg-primary [&::-webkit-slider-thumb]:shadow-[0_1px_3px_rgb(0_0_0_/_0.2)] [&::-moz-range-thumb]:size-3 [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-[var(--color-background)] [&::-moz-range-thumb]:bg-primary [&::-moz-range-thumb]:shadow-[0_1px_3px_rgb(0_0_0_/_0.2)]"
+					class="h-1 flex-1 cursor-pointer appearance-none rounded-full bg-secondary outline-none dark:bg-[var(--color-border-strong)] focus-visible:shadow-[0_0_0_3px_var(--color-ring)] [&::-webkit-slider-thumb]:size-3 [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-[var(--color-background)] [&::-webkit-slider-thumb]:[background:var(--thumb-bg)] [&::-webkit-slider-thumb]:shadow-[0_1px_3px_rgb(0_0_0_/_0.2)] [&::-moz-range-thumb]:size-3 [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-[var(--color-background)] [&::-moz-range-thumb]:[background:var(--thumb-bg)] [&::-moz-range-thumb]:shadow-[0_1px_3px_rgb(0_0_0_/_0.2)]"
 				/>
 				<span class="w-9 shrink-0 text-right font-mono text-[0.66rem] tabular-nums text-foreground">
 					{channel.value}{channel.unit}

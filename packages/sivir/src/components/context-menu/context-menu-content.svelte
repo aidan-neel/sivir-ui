@@ -14,7 +14,6 @@
 	data-ui="context-menu-content"
 	refElement={contextMenuState.virtualElement}
 	focusTrap={false}
-	lockScroll={false}
 	{...rest}
 	class={className}
 	surfaceClass="flex flex-col gap-0 p-1"

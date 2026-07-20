@@ -29,10 +29,12 @@ beforeAll(() => {
 				--motion-duration-menu: 0ms;
 				--motion-duration-panel: 0ms;
 				--motion-duration-sheet: 0ms;
+				--motion-duration-sheet-out: 0ms;
 				--motion-duration-overlay: 0ms;
 				--motion-duration-tooltip: 0ms;
 				--motion-duration-toast-in: 0ms;
 				--motion-duration-toast-out: 0ms;
+				--motion-duration-press: 0ms;
 			}
 		`;
 		document.head.appendChild(style);

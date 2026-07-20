@@ -95,13 +95,13 @@ import {Button} from '@sivir/ui/components/button'; import * as AlertDialog from
 ## What's exported
 
 - **Named:** `Badge`, `Button`, `Checkbox`, `CodeBlock`, `CopyButton`, `Input`,
-  `Label`, `Marquee`, `Pagination`, `Panel`, `Progress`, `ScrollArea`,
-  `Separator`, `Shortcut`, `Skeleton`, `Slider`, `Switch`, `Textarea`, `Toggle`,
-  and the toast API (`Toast`, `Toaster`, `toast`, `getToastUIState`).
+  `Label`, `Pagination`, `Progress`, `ScrollArea`, `Shortcut`, `Skeleton`,
+  `Slider`, `Switch`, `Textarea`, `Toggle`, and the toast API (`Toast`,
+  `Toaster`, `toast`, `getToastUIState`).
 - **Namespaced:** `Accordion`, `Alert`, `AlertDialog`, `Avatar`, `Breadcrumb`,
-  `Card`, `Collapsible`, `ColorPicker`, `Combobox`, `Command`, `ContextMenu`,
-  `DropdownMenu`, `HoverCard`, `Modal`, `Popover`, `RadioGroup`, `Select`,
-  `Sheet`, `Tabs`, `ToggleGroup`, `Tooltip`.
+  `Card` (includes `variant="panel"`), `Collapsible`, `ColorPicker`, `Combobox`,
+  `Command`, `ContextMenu`, `DropdownMenu`, `HoverCard`, `Modal`, `Popover`,
+  `RadioGroup`, `Select`, `Sheet`, `Tabs`, `ToggleGroup`, `Tooltip`.
 
 ## License
 

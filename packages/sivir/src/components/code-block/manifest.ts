@@ -19,7 +19,7 @@ export const manifest: Manifest = {
 		'components/code-block/index.ts',
 		'components/code-block/manifest.ts'
 	],
-	components: ['tabs', 'copy-button', 'panel'],
+	components: ['tabs', 'copy-button', 'card'],
 	shared: ['utils.cn'],
 	peerDependencies: {
 		'highlight.js': '^11.0.0',

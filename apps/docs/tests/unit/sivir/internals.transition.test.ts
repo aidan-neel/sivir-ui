@@ -1,5 +1,5 @@
 import { describe, expect, it, beforeEach } from 'vitest';
-import { getCssDuration } from '@sivir/ui/internals/transition';
+import { cubicBezier, getCssDuration, sheetIn, sheetOut } from '@sivir/ui/internals/transition';
 
 /*
  * getCssDuration reads CSS custom properties via getComputedStyle.
@@ -61,5 +61,47 @@ describe('getCssDuration', () => {
 	it('handles decimal seconds', () => {
 		node.style.setProperty('--d', '0.25s');
 		expect(getCssDuration(node, '--d', 0)).toBe(250);
+	});
+});
+
+describe('cubicBezier', () => {
+	it('is clamped at the endpoints', () => {
+		const ease = cubicBezier(0.32, 0.72, 0, 1);
+		expect(ease(0)).toBe(0);
+		expect(ease(1)).toBe(1);
+	});
+
+	it('is ahead of linear at mid-progress (strong ease-out)', () => {
+		const ease = cubicBezier(0.32, 0.72, 0, 1);
+		expect(ease(0.5)).toBeGreaterThan(0.5);
+	});
+});
+
+describe('sheetIn / sheetOut', () => {
+	let node: HTMLDivElement;
+
+	beforeEach(() => {
+		node = document.createElement('div');
+		document.body.appendChild(node);
+	});
+
+	it('slides from the right by default with no opacity channel', () => {
+		const enter = sheetIn(node);
+		expect(enter.css?.(0, 1)).toBe('transform: translate3d(100%, 0, 0)');
+		expect(enter.css?.(1, 0)).toBe('transform: translate3d(0%, 0, 0)');
+	});
+
+	it('slides from the left when side=left', () => {
+		const enter = sheetIn(node, { side: 'left' });
+		expect(enter.css?.(0, 1)).toBe('transform: translate3d(-100%, 0, 0)');
+	});
+
+	it('exits faster than it enters', () => {
+		node.style.setProperty('--motion-duration-sheet', '320ms');
+		node.style.setProperty('--motion-duration-sheet-out', '220ms');
+		const enter = sheetIn(node);
+		const exit = sheetOut(node);
+		expect(enter.duration).toBe(320);
+		expect(exit.duration).toBe(220);
 	});
 });

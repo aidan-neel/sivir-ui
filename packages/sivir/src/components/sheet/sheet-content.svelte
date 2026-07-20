@@ -2,8 +2,7 @@
 	import { cn } from '@sivir/ui/utils';
 	import type { SheetContentProps } from '.';
 	import { useOverlay } from '@sivir/ui/components/_internal/overlay';
-	import { getCssDuration } from '@sivir/ui/internals/transition';
-	import { fade, fly, type FlyParams } from 'svelte/transition';
+	import { overlayIn, overlayOut, sheetIn, sheetOut } from '@sivir/ui/internals/transition';
 	import { getSheetContext } from './context.svelte';
 
 	let {
@@ -16,6 +15,17 @@
 
 	const { id, state: sheetState } = getSheetContext();
 	let element = $state<HTMLElement>();
+	let portalEl = $state<HTMLDivElement>();
+
+	// Portal to <body> so the sheet escapes ancestor stacking contexts
+	// (same pattern as Modal) and the slide always paints over the page.
+	$effect(() => {
+		if (!portalEl || typeof document === 'undefined') return;
+		document.body.appendChild(portalEl);
+		return () => {
+			portalEl?.remove();
+		};
+	});
 
 	// Shared overlay behavior -- focus trap, click-outside, Escape, body lock.
 	useOverlay({
@@ -27,40 +37,32 @@
 		allowClickOutside: () => allowClickOutside,
 		returnFocus: () => sheetState.triggerRef ?? undefined
 	});
-
-	function sheetFly(node: Element, params: FlyParams) {
-		return fly(node, {
-			...params,
-			duration: getCssDuration(node, '--motion-duration-sheet', 220)
-		});
-	}
-
-	function backdropFade(node: Element) {
-		return fade(node, {
-			duration: getCssDuration(node, '--motion-duration-overlay', 150)
-		});
-	}
 </script>
 
 {#if sheetState.open}
-	<div class="pointer-events-none fixed inset-0 z-40 [&>*]:pointer-events-auto">
+	<div
+		bind:this={portalEl}
+		class="pointer-events-none fixed inset-0 z-40 [&>*]:pointer-events-auto"
+	>
 		<div
-			in:backdropFade
-			out:backdropFade
+			in:overlayIn
+			out:overlayOut
 			data-ui="sheet-overlay"
-			class="absolute inset-0 bg-[var(--color-overlay)] backdrop-blur-sm [backface-visibility:hidden] [transform:translateZ(0)]"
+			class="absolute inset-0 bg-[var(--color-overlay)] backdrop-blur-[2px] [backface-visibility:hidden] [transform:translateZ(0)]"
+			// token-lint-disable-line no-literal-length
 			aria-hidden="true"
 		></div>
 		<div
 			bind:this={element}
 			data-ui="sheet-content"
 			data-side={side}
-			in:sheetFly={{ x: side === 'left' ? 'calc(-100% - 1rem)' : 'calc(100% + 1rem)' }}
-			out:sheetFly={{ x: side === 'left' ? 'calc(-100% - 1rem)' : 'calc(100% + 1rem)' }}
+			data-motion="sheet"
+			in:sheetIn={{ side }}
+			out:sheetOut={{ side }}
 			class={cn(
 				className,
 				// token-lint-disable-next-line no-literal-length
-				`fixed top-2 bottom-2 z-50 flex w-[calc(100%-1rem)] max-w-sm flex-col overflow-hidden text-foreground shadow-[var(--elevation-float)] will-change-transform ${
+				`fixed top-2 bottom-2 z-50 flex w-[calc(100%-1rem)] max-w-sm flex-col overflow-hidden text-foreground shadow-[var(--elevation-float)] will-change-transform [backface-visibility:hidden] ${
 					side === 'left' ? 'left-2' : 'right-2'
 				}`,
 				'rounded-[var(--radius-lg)] border border-border bg-panel'

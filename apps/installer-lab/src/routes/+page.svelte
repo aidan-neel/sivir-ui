@@ -5,7 +5,7 @@
 	import { Badge } from '@sivir/ui/components/badge';
 	import { Button } from '@sivir/ui/components/button';
 	import { Input } from '@sivir/ui/components/input';
-	import { Panel } from '@sivir/ui/components/panel';
+	import * as Card from '@sivir/ui/components/card';
 	import { Progress } from '@sivir/ui/components/progress';
 	import { ScrollArea } from '@sivir/ui/components/scroll-area';
 	import {
@@ -364,7 +364,7 @@
 
 	<div class="lab-workspace">
 		<div class="lab-runner">
-			<Panel class="controls">
+			<Card.Root variant="panel" class="controls">
 				<div class="control-row">
 					<span class="control-label">Mode</span>
 					<div class="button-group">
@@ -444,7 +444,7 @@
 						</Button>
 					{/if}
 				</div>
-			</Panel>
+			</Card.Root>
 
 			{#if requestError}
 				<Alert.Root variant="error">
@@ -479,11 +479,11 @@
 					</Alert.Root>
 				{/if}
 
-				<Panel class="log-panel">
+				<Card.Root variant="panel" class="log-panel">
 					<ScrollArea class="log-scroll">
 						<pre>{log || '$ Waiting for a run…'}</pre>
 					</ScrollArea>
-				</Panel>
+				</Card.Root>
 
 				{#if snapshot.phase === 'ready' && snapshot.previewUrl}
 					<div class="preview-actions">
@@ -492,9 +492,9 @@
 							Open in new tab
 						</Button>
 					</div>
-					<Panel class="preview-panel">
+					<Card.Root variant="panel" class="preview-panel">
 						<iframe src={snapshot.previewUrl} title="Generated Sivir consumer preview"></iframe>
-					</Panel>
+					</Card.Root>
 				{/if}
 			{:else}
 				<section class="manual-layout">
@@ -508,7 +508,7 @@
 						<code>{manualPlan?.workspace ?? 'Preparing workspace…'}</code>
 					</div>
 
-					<Panel class="guide-panel">
+					<Card.Root variant="panel" class="guide-panel">
 						<ScrollArea class="guide-scroll">
 							<ol class="guide-list">
 								{#each manualPlan?.steps ?? [] as step, index (step.id)}
@@ -530,7 +530,7 @@
 								{/each}
 							</ol>
 						</ScrollArea>
-					</Panel>
+					</Card.Root>
 
 					<div class="terminal-heading">
 						<div class="terminal-status" aria-live="polite">
@@ -539,7 +539,7 @@
 						</div>
 						<code title={terminal.cwd}>{terminal.cwd || 'Preparing…'}</code>
 					</div>
-					<Panel class="terminal-panel">
+					<Card.Root variant="panel" class="terminal-panel">
 						<ScrollArea class="terminal-scroll">
 							<pre>{terminalLog ||
 									(terminal.preparing
@@ -573,7 +573,7 @@
 								<Button type="submit" size="sm" disabled={!terminalInput.trim()}>Run</Button>
 							{/if}
 						</form>
-					</Panel>
+					</Card.Root>
 				</section>
 			{/if}
 		</div>
@@ -588,13 +588,13 @@
 			</div>
 			<div class="developer-sample-grid">
 				{#each developerSamples as sample (sample.title)}
-					<Panel class="developer-sample">
+					<Card.Root variant="panel" class="developer-sample">
 						<div class="developer-sample-heading">
 							<span>{sample.title}</span>
 							<code>{sample.language}</code>
 						</div>
 						<pre><code>{sample.code}</code></pre>
-					</Panel>
+					</Card.Root>
 				{/each}
 			</div>
 		</aside>

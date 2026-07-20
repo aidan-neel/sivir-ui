@@ -11,20 +11,20 @@
 	};
 
 	let { children, value = $bindable('') }: Props = $props();
+
+	// Plain Maps/Sets live on context, NOT inside $state — item registration
+	// mutates them freely without invalidating reactive effects.
+	const labels = new Map<string, string>();
+	const values = new Set<string>();
+
 	const selectState = $state({
 		open: false,
-		values: new Set<string>(),
-		labels: new Map<string, string>(),
 		value: value ?? '',
 		selectedLabel: ''
 	});
 	let syncedValue = $state(value ?? '');
-	setSelectContext({ id: key, state: selectState });
+	setSelectContext({ id: key, state: selectState, labels, values });
 
-	// Sync the initial value prop into internal state immediately on mount.
-	// Do NOT seed selectedLabel from the raw value -- it would render as the
-	// slug until items mount and populate the labels Map. Leaving it empty lets
-	// the trigger fall back to its children (the user's display expression).
 	if (value && value !== '') {
 		selectState.value = value;
 	}
@@ -34,7 +34,7 @@
 		if (nextValue !== syncedValue) {
 			syncedValue = nextValue;
 			selectState.value = nextValue;
-			selectState.selectedLabel = nextValue ? (selectState.labels.get(nextValue) ?? '') : '';
+			selectState.selectedLabel = nextValue ? (labels.get(nextValue) ?? '') : '';
 		}
 	});
 

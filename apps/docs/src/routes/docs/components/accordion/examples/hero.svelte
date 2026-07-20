@@ -20,7 +20,7 @@
 		<Accordion.Item value="item-3">
 			<Accordion.Trigger>Does it theme?</Accordion.Trigger>
 			<Accordion.Content
-				>Yes — open the theme studio and watch the chevron, duration, and colors update live.</Accordion.Content
+				>Yes — change a CSS variable and watch the chevron, duration, and colors update live.</Accordion.Content
 			>
 		</Accordion.Item>
 	</Accordion.Root>

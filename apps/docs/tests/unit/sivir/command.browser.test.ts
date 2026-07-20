@@ -204,4 +204,16 @@ describe('Command -- search input', () => {
 		await flush();
 		expect(onLogout).toHaveBeenCalledTimes(1);
 	});
+
+	it('keeps short unrelated queries from matching every item', async () => {
+		render(CommandFixture, { open: true });
+		await flush();
+
+		await page.getByPlaceholder('Search commands').fill('road');
+		await flush();
+		await expect.element(page.getByText('No results found')).toBeVisible();
+		expect(
+			[...document.querySelectorAll('[role="option"]')].filter((el) => !(el as HTMLElement).hidden)
+		).toHaveLength(0);
+	});
 });

@@ -88,7 +88,7 @@ const MOTION: Record<MotionFeel, MotionSet> = {
 		hover: '90ms',
 		menu: '30ms',
 		panel: '130ms',
-		sheet: '160ms',
+		sheet: '220ms',
 		overlay: '90ms',
 		toastIn: '240ms',
 		toastOut: '180ms'
@@ -97,7 +97,7 @@ const MOTION: Record<MotionFeel, MotionSet> = {
 		hover: '120ms',
 		menu: '40ms',
 		panel: '180ms',
-		sheet: '220ms',
+		sheet: '320ms',
 		overlay: '120ms',
 		toastIn: '320ms',
 		toastOut: '240ms'
@@ -106,7 +106,7 @@ const MOTION: Record<MotionFeel, MotionSet> = {
 		hover: '180ms',
 		menu: '120ms',
 		panel: '260ms',
-		sheet: '300ms',
+		sheet: '400ms',
 		overlay: '160ms',
 		toastIn: '400ms',
 		toastOut: '300ms'
@@ -213,6 +213,13 @@ function brandDeclarations(brand: string, mode: 'light' | 'dark') {
 	];
 }
 
+/** Scales a `Nms` motion token (keeps `0ms` as-is). */
+function scaleMotionMs(value: string, factor: number): string {
+	const n = Number.parseFloat(value);
+	if (!Number.isFinite(n) || n === 0) return value;
+	return `${Math.round(n * factor)}ms`;
+}
+
 /** Generates complete, acyclic overrides for every public theme axis. */
 export function themeToCss(themeInput: Theme): string {
 	const theme = parseTheme(themeInput);
@@ -231,6 +238,7 @@ export function themeToCss(themeInput: Theme): string {
 		`--motion-duration-menu: ${motion.menu};`,
 		`--motion-duration-panel: ${motion.panel};`,
 		`--motion-duration-sheet: ${motion.sheet};`,
+		`--motion-duration-sheet-out: ${scaleMotionMs(motion.sheet, 0.7)};`,
 		`--motion-duration-overlay: ${motion.overlay};`,
 		`--motion-duration-toast-in: ${motion.toastIn};`,
 		`--motion-duration-toast-out: ${motion.toastOut};`

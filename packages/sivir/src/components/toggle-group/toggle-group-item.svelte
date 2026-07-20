@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { cn } from '@sivir/ui/utils';
+	import { cn, pressable } from '@sivir/ui/utils';
 	import { getContext } from 'svelte';
 	import type { ToggleGroupItemProps, ToggleGroupContext } from '.';
 
@@ -12,6 +12,7 @@
 
 <button
 	type="button"
+	use:pressable
 	data-ui="toggle-group-item"
 	data-state={active ? 'on' : 'off'}
 	aria-pressed={active}
@@ -19,7 +20,7 @@
 	onclick={() => ctx.setValue(value)}
 	class={cn(
 		className,
-		'inline-flex h-8 select-none items-center justify-center gap-1.5 rounded-[var(--radius-md)] px-3 [font-size:var(--font-size-label,14px)] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] transition-[background-color,color,transform] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-out)] motion-reduce:transition-none active:scale-[var(--motion-press-scale)] motion-reduce:active:scale-100 focus-visible:outline-none focus-visible:shadow-[var(--focus-ring)] disabled:cursor-not-allowed disabled:opacity-50',
+		'sivir-press inline-flex h-8 select-none items-center justify-center gap-1.5 rounded-[var(--radius-md)] px-3 [font-size:var(--font-size-label,14px)] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] transition-[background-color,color,transform,scale] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-press)] motion-reduce:transition-none focus-visible:outline-none focus-visible:shadow-[var(--focus-ring)] disabled:cursor-not-allowed disabled:opacity-50',
 		active
 			? 'bg-secondary text-foreground'
 			: 'bg-transparent text-foreground-muted hover:bg-secondary/60 hover:text-foreground'

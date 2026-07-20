@@ -1,15 +1,48 @@
 <script lang="ts">
 	import { Button } from '@sivir/ui/components/button';
 	import { Input } from '@sivir/ui/components/input';
+	import { Label } from '@sivir/ui/components/label';
 	import { Textarea } from '@sivir/ui/components/textarea';
+	import * as Avatar from '@sivir/ui/components/avatar';
+	import * as Select from '@sivir/ui/components/select';
 	import * as Sheet from '@sivir/ui/components/sheet';
 	import SquarePen from '@lucide/svelte/icons/square-pen';
 	import Circle from '@lucide/svelte/icons/circle';
-	import Signal from '@lucide/svelte/icons/signal';
-	import User from '@lucide/svelte/icons/user';
+	import SignalHigh from '@lucide/svelte/icons/signal-high';
+	import SignalMedium from '@lucide/svelte/icons/signal-medium';
+	import SignalLow from '@lucide/svelte/icons/signal-low';
+	import CircleAlert from '@lucide/svelte/icons/circle-alert';
+	import Minus from '@lucide/svelte/icons/minus';
 
 	let issueTitle = $state('');
 	let issueDescription = $state('');
+	let status = $state('');
+	let priority = $state('');
+	let assignee = $state('');
+
+	const statuses = [
+		{ value: 'todo', label: 'Todo', icon: Circle },
+		{ value: 'in-progress', label: 'In progress', icon: Circle },
+		{ value: 'done', label: 'Done', icon: Circle }
+	];
+
+	const priorities = [
+		{ value: 'none', label: 'No priority', icon: Minus },
+		{ value: 'urgent', label: 'Urgent', icon: CircleAlert },
+		{ value: 'high', label: 'High', icon: SignalHigh },
+		{ value: 'medium', label: 'Medium', icon: SignalMedium },
+		{ value: 'low', label: 'Low', icon: SignalLow }
+	];
+
+	const assignees = [
+		{ value: 'an', label: 'Aidan N.', initials: 'AN' },
+		{ value: 'sk', label: 'Sam K.', initials: 'SK' },
+		{ value: 'unassigned', label: 'Unassigned', initials: '?' }
+	];
+
+	const statusMeta = $derived(statuses.find((s) => s.value === status));
+	const priorityMeta = $derived(priorities.find((p) => p.value === priority));
+	const assigneeMeta = $derived(assignees.find((a) => a.value === assignee));
 </script>
 
 <div class="flex items-center justify-center">
@@ -25,40 +58,98 @@
 			</Sheet.Header>
 
 			<div class="flex flex-col gap-4 py-4">
-				<Input bind:value={issueTitle} placeholder="Issue title" class="text-base font-medium" />
+				<Input bind:value={issueTitle} label="Title" placeholder="Issue title" />
 
 				<Textarea
 					bind:value={issueDescription}
+					label="Description"
 					placeholder="Add description…"
 					class="min-h-[120px]"
 				/>
 
-				<div class="flex flex-col gap-2">
-					<div class="flex gap-2 flex-wrap">
-						<div
-							class="flex items-center gap-2 px-2.5 py-1.5 rounded border border-border text-sm text-foreground-muted"
-						>
-							<Circle size={12} />
-							<span>Todo</span>
-						</div>
-						<div
-							class="flex items-center gap-2 px-2.5 py-1.5 rounded border border-border text-sm text-foreground-muted"
-						>
-							<Signal size={12} />
-							<span>Medium</span>
-						</div>
-						<div
-							class="flex items-center gap-2 px-2.5 py-1.5 rounded border border-border text-sm text-foreground-muted"
-						>
-							<User size={12} />
-							<span>AN</span>
-						</div>
+				<div class="h-px w-full bg-border" role="separator"></div>
+
+				<div class="flex flex-col gap-3">
+					<div class="flex flex-col gap-1.5">
+						<Label>Status</Label>
+						<Select.Root bind:value={status}>
+							<Select.Trigger class="w-full" variant="outline">
+								<span class="flex min-w-0 items-center gap-2">
+									{#if statusMeta}
+										<statusMeta.icon size={14} class="shrink-0 text-foreground-muted" />
+									{/if}
+									<Select.Value placeholder="Status" />
+								</span>
+							</Select.Trigger>
+							<Select.Content>
+								{#each statuses as item (item.value)}
+									<Select.Item value={item.value} label={item.label}>
+										<span class="flex items-center gap-2">
+											<item.icon size={14} class="text-foreground-muted" />
+											{item.label}
+										</span>
+									</Select.Item>
+								{/each}
+							</Select.Content>
+						</Select.Root>
+					</div>
+
+					<div class="flex flex-col gap-1.5">
+						<Label>Priority</Label>
+						<Select.Root bind:value={priority}>
+							<Select.Trigger class="w-full" variant="outline">
+								<span class="flex min-w-0 items-center gap-2">
+									{#if priorityMeta}
+										<priorityMeta.icon size={14} class="shrink-0 text-foreground-muted" />
+									{/if}
+									<Select.Value placeholder="Priority" />
+								</span>
+							</Select.Trigger>
+							<Select.Content>
+								{#each priorities as item (item.value)}
+									<Select.Item value={item.value} label={item.label}>
+										<span class="flex items-center gap-2">
+											<item.icon size={14} class="text-foreground-muted" />
+											{item.label}
+										</span>
+									</Select.Item>
+								{/each}
+							</Select.Content>
+						</Select.Root>
+					</div>
+
+					<div class="flex flex-col gap-1.5">
+						<Label>Assignee</Label>
+						<Select.Root bind:value={assignee}>
+							<Select.Trigger class="w-full" variant="outline">
+								<span class="flex min-w-0 items-center gap-2">
+									{#if assigneeMeta}
+										<Avatar.Root size="sm" class="size-5 shrink-0 text-[10px]">
+											<Avatar.Fallback>{assigneeMeta.initials}</Avatar.Fallback>
+										</Avatar.Root>
+									{/if}
+									<Select.Value placeholder="Assignee" />
+								</span>
+							</Select.Trigger>
+							<Select.Content>
+								{#each assignees as person (person.value)}
+									<Select.Item value={person.value} label={person.label}>
+										<span class="flex items-center gap-2">
+											<Avatar.Root size="sm" class="size-5 text-[10px]">
+												<Avatar.Fallback>{person.initials}</Avatar.Fallback>
+											</Avatar.Root>
+											{person.label}
+										</span>
+									</Select.Item>
+								{/each}
+							</Select.Content>
+						</Select.Root>
 					</div>
 				</div>
 			</div>
 
 			<Sheet.Footer>
-				<Sheet.Close>Cancel</Sheet.Close>
+				<Sheet.Close variant="ghost">Cancel</Sheet.Close>
 				<Button>Create issue</Button>
 			</Sheet.Footer>
 		</Sheet.Content>

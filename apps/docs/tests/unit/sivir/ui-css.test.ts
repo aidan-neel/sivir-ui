@@ -23,6 +23,27 @@ describe('ui.css Tier 1 primitives', () => {
 	});
 });
 
+describe('ui.css typography tokens', () => {
+	it('defines all semantic font-weight roles', () => {
+		expect(css).toContain('--font-weight-header: 600;');
+		expect(css).toContain('--font-weight-body: 400;');
+		expect(css).toContain('--font-weight-label: 500;');
+		expect(css).toContain('--font-weight-button: 500;');
+		expect(css).toContain('--font-weight-badge: 500;');
+		expect(css).toContain('--font-weight-description: 400;');
+	});
+	it('defines the press motion contract', () => {
+		expect(css).toContain('--motion-press-px: 2px;');
+		expect(css).toContain('--motion-duration-press: 160ms;');
+		expect(css).toContain('--ease-press:');
+		expect(css).toContain('.sivir-press:active');
+	});
+	it('zeroes press duration under reduced motion', () => {
+		const reducedBlock = css.slice(css.indexOf('prefers-reduced-motion'));
+		expect(reducedBlock).toContain('--motion-duration-press: 0ms;');
+	});
+});
+
 describe('ui.css Tier 2 semantic', () => {
 	it('maps semantic color tokens to neutral/blue primitives', () => {
 		expect(css).toContain('--color-background: var(--sivir-neutral-10)');

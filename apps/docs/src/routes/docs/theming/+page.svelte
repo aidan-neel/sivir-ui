@@ -158,11 +158,11 @@
 		</div>
 
 		<div class="flex flex-wrap items-center gap-2">
-			<Button href={resolve('/themes/studio')}>
-				Open theme studio
+			<Button href={resolve('/themes')}>
+				Browse presets
 				<ArrowRight size={14} />
 			</Button>
-			<Button href={resolve('/themes')} variant="outline">Browse presets</Button>
+			<Button href={resolve('/docs/styling')} variant="outline">Styling guide</Button>
 		</div>
 	</header>
 
@@ -286,29 +286,29 @@
 				class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
 				style="font-family: var(--font-header);"
 			>
-				Two ways to author a theme
+				Author themes in CSS
 			</h2>
 		</div>
 
 		<div class="grid grid-cols-1 gap-3 md:grid-cols-2">
 			<div class="flex flex-col gap-3 rounded-[var(--radius-lg)] border border-border bg-card p-5">
 				<div class="flex items-center justify-between">
-					<Badge variant="ghost">Visual</Badge>
-					<Badge variant="outline" class="text-[0.62rem]">/themes/studio</Badge>
+					<Badge variant="ghost">Presets</Badge>
+					<Badge variant="outline" class="text-[0.62rem]">/themes</Badge>
 				</div>
 				<p
 					class="m-0 text-[1rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
 					style="font-family: var(--font-header);"
 				>
-					Theme Studio
+					Browse and apply presets
 				</p>
 				<p class="m-0 text-[0.84rem] leading-relaxed text-foreground-muted">
-					A live editor for color, type, radius, and motion. Drag, type, paste a hex — preview every
-					component side-by-side. Export when it's right.
+					Explore built-in and community themes, apply them live, and copy CSS or JSON into your
+					project.
 				</p>
 				<div class="pt-1">
-					<Button href={resolve('/themes/studio')} variant="outline" class="w-full justify-center">
-						Open studio
+					<Button href={resolve('/themes')} variant="outline" class="w-full justify-center">
+						Browse themes
 						<ArrowRight size={14} />
 					</Button>
 				</div>
@@ -383,13 +383,13 @@
 				Ready to make it yours?
 			</p>
 			<p class="m-0 text-[0.86rem] text-foreground-muted">
-				Open the studio, dial in your tokens, copy the CSS into your project.
+				Browse a preset, dial in your tokens, and copy the CSS into your project.
 			</p>
 		</div>
 		<div class="flex flex-wrap items-center gap-2">
 			<Button href={resolve('/docs/styling')} variant="outline">Styling guide</Button>
-			<Button href={resolve('/themes/studio')}>
-				Theme studio
+			<Button href={resolve('/themes')}>
+				Browse themes
 				<ArrowRight size={14} />
 			</Button>
 		</div>

@@ -18,6 +18,7 @@ export const manifest: Manifest = {
 	files: [
 		'components/select/select.svelte',
 		'components/select/select-trigger.svelte',
+		'components/select/select-value.svelte',
 		'components/select/select-content.svelte',
 		'components/select/select-item.svelte',
 		'components/select/select-label.svelte',

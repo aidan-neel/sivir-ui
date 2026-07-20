@@ -26,7 +26,6 @@ mock.module('@lib/prisma', () => ({ prisma: db }));
 
 // Import the production app only after the database mock is registered.
 const { app } = await import('@src/index');
-const { resetPublishRateLimitForTests } = await import('@src/services/themes');
 
 /** Build a persisted DB row from a draft, as Prisma would return it. */
 function persisted(theme: Theme, id: string) {
@@ -61,7 +60,6 @@ function validTheme(slug: string): Theme {
 }
 
 beforeEach(() => {
-	resetPublishRateLimitForTests();
 	db.theme.findMany = async () => [];
 	db.theme.findUnique = async () => null;
 	db.theme.create = async (args: CreateArgs) => args.data;
@@ -136,66 +134,17 @@ describe('GET /themes/:slug', () => {
 });
 
 describe('POST /themes', () => {
-	it('publishes a new theme', async () => {
-		let created: Record<string, unknown> | undefined;
+	it('rejects publishes while the registry is read-only for v1', async () => {
+		let created = false;
 		db.theme.create = async (args: CreateArgs) => {
-			created = args.data;
+			created = true;
 			return args.data;
 		};
 		const res = await post(validTheme('ocean'));
-		expect(res.status).toBe(200);
-		const body = await res.json();
-		expect(body).toEqual({ success: true, message: 'Successfully published theme!' });
-		expect(created?.slug).toBe('ocean');
-	});
-
-	it('rejects a slug reserved for a built-in theme', async () => {
-		const res = await post(validTheme('default'));
-		expect(res.status).toBe(409);
-		const body = await res.text();
-		expect(body).toBe('This slug is reserved for a built-in theme.');
-	});
-
-	it('rejects a slug that already exists', async () => {
-		db.theme.findUnique = async () => ({ id: 'db-1' });
-		const res = await post(validTheme('ocean'));
-		expect(res.status).toBe(409);
-		const body = await res.text();
-		expect(body).toBe('A theme with this slug already exists, try another one.');
-	});
-
-	it('rejects a malformed slug with a validation error', async () => {
-		const res = await post({ ...validTheme('ocean'), slug: 'Not A Slug' });
-		expect(res.status).toBe(422);
-	});
-
-	it('rejects a body missing required fields', async () => {
-		const res = await post({ slug: 'ocean' });
-		expect(res.status).toBe(422);
-	});
-
-	it('rejects unbounded public text fields', async () => {
-		const res = await post({ ...validTheme('ocean'), name: 'x'.repeat(5_000) });
-		expect(res.status).toBe(422);
-	});
-
-	it('maps a concurrent unique-constraint race to conflict', async () => {
-		db.theme.create = async () => {
-			throw { code: 'P2002' };
-		};
-		const res = await post(validTheme('ocean'));
-		expect(res.status).toBe(409);
-		expect(await res.text()).toBe('A theme with this slug already exists, try another one.');
-	});
-
-	it('limits rapid anonymous publishes per client', async () => {
-		for (let attempt = 0; attempt < 5; attempt++) {
-			const res = await post(validTheme(`rate-${attempt}`));
-			expect(res.status).toBe(200);
-		}
-		const limited = await post(validTheme('rate-limited'));
-		expect(limited.status).toBe(429);
-		expect(await limited.text()).toBe('Too many publishes, try again later.');
+		expect(res.status).toBe(405);
+		expect(res.headers.get('allow')).toContain('GET');
+		expect(await res.text()).toContain('disabled');
+		expect(created).toBe(false);
 	});
 });
 

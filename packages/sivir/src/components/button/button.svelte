@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { button } from './variants';
 	import type { HTMLAnchorAttributes, HTMLButtonAttributes } from 'svelte/elements';
-	import { cn } from '@sivir/ui/utils';
+	import { cn, pressable } from '@sivir/ui/utils';
 	import type { ButtonProps } from '.';
 
 	let {
@@ -19,6 +19,7 @@
 {#if href}
 	<a
 		bind:this={element as HTMLAnchorElement}
+		use:pressable
 		{href}
 		data-ui="button"
 		data-variant={variant}
@@ -39,6 +40,7 @@
 {:else}
 	<button
 		bind:this={element as HTMLButtonElement}
+		use:pressable
 		type={(rest as HTMLButtonAttributes).type ?? 'button'}
 		data-ui="button"
 		data-variant={variant}

@@ -134,9 +134,9 @@
 			Browse the <a
 				class="text-foreground underline underline-offset-2"
 				href={resolve('/docs/components')}>component catalog</a
-			>, or open the
-			<a class="text-foreground underline underline-offset-2" href={resolve('/themes/studio')}
-				>Theme Studio</a
+			>, or read the
+			<a class="text-foreground underline underline-offset-2" href={resolve('/docs/theming')}
+				>theming guide</a
 			>
 			to match Sivir to your brand.
 		</p>

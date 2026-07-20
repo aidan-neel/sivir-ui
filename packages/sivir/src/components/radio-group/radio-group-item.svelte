@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { getContext } from 'svelte';
-	import { cn } from '@sivir/ui/utils';
+	import { cn, pressable } from '@sivir/ui/utils';
 	import type { RadioGroupItemProps, RadioGroupContext } from '.';
 
 	let {
@@ -27,18 +27,24 @@
 		isDisabled && 'cursor-not-allowed opacity-50'
 	)}
 >
+	<!-- Single ring: border crossfades; dot scales in (same motion as checkbox). -->
 	<span
+		use:pressable
 		data-ui="radio-group-item"
 		data-state={selected ? 'checked' : 'unchecked'}
 		class={cn(
-			'mt-0.5 flex size-4 shrink-0 items-center justify-center rounded-full border border-border bg-background transition-[border-color,box-shadow,transform] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-out)] active:scale-[var(--motion-press-scale)] focus-visible:shadow-[var(--focus-ring)]',
-			selected && 'border-primary',
-			!isDisabled && 'hover:border-primary'
+			'sivir-press mt-0.5 flex size-4 shrink-0 items-center justify-center rounded-full border bg-background transition-[background-color,border-color,box-shadow,transform,scale] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-press)] motion-reduce:transition-none focus-visible:shadow-[var(--focus-ring)]',
+			selected ? 'border-primary' : 'border-border',
+			!isDisabled && !selected && 'hover:border-primary'
 		)}
+		aria-hidden="true"
 	>
-		{#if selected}
-			<span class="size-2 rounded-full bg-primary"></span>
-		{/if}
+		<span
+			class={cn(
+				'size-2 rounded-full bg-primary transition-[opacity,scale] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-press)] motion-reduce:transition-none',
+				selected ? 'scale-100 opacity-100' : 'scale-[0.25] opacity-0'
+			)}
+		></span>
 	</span>
 	<input
 		type="radio"

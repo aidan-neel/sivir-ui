@@ -5,7 +5,7 @@
 @import 'tailwindcss';
 @import '@sivir/ui/ui.css';
 @source '../../../packages/sivir/src/brand-mark.svelte';
-@source '../../../packages/sivir/src/components/{alert,badge,button,input,panel,progress,scroll-area}/**/*.{svelte,ts}';
+@source '../../../packages/sivir/src/components/{alert,badge,button,card,input,progress,scroll-area}/**/*.{svelte,ts}';
 
 html {
 	-webkit-font-smoothing: antialiased;
@@ -55,7 +55,7 @@ body {
 	letter-spacing: -0.015em;
 }
 
-.controls[data-ui='panel'] > div {
+.controls[data-ui='card'][data-variant='panel'] > [data-ui='card-surface'] {
 	padding: 8px;
 }
 
@@ -138,7 +138,7 @@ body {
 	grid-column: auto;
 }
 
-.developer-sample[data-ui='panel'] > div {
+.developer-sample[data-ui='card'][data-variant='panel'] > [data-ui='card-surface'] {
 	padding: 0;
 }
 
@@ -209,7 +209,7 @@ body {
 	margin-top: 16px;
 }
 
-.log-panel[data-ui='panel'] > div {
+.log-panel[data-ui='card'][data-variant='panel'] > [data-ui='card-surface'] {
 	padding: 0;
 }
 
@@ -293,8 +293,8 @@ body {
 	white-space: nowrap;
 }
 
-.guide-panel[data-ui='panel'] > div,
-.terminal-panel[data-ui='panel'] > div {
+.guide-panel[data-ui='card'][data-variant='panel'] > [data-ui='card-surface'],
+.terminal-panel[data-ui='card'][data-variant='panel'] > [data-ui='card-surface'] {
 	padding: 0;
 }
 

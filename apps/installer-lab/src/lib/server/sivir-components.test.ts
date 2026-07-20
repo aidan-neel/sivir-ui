@@ -12,7 +12,7 @@ describe('launcher component usage', () => {
 
 		const page = await readFile(path.join(appRoot, 'src', 'routes', '+page.svelte'), 'utf8');
 		expect(page).toContain("from '@sivir/ui/brand-mark'");
-		expect(page).toContain("from '@sivir/ui/components/panel'");
+		expect(page).toContain("from '@sivir/ui/components/card'");
 		expect(page).not.toMatch(/<(?:button|input|textarea|select)\b/);
 	});
 });

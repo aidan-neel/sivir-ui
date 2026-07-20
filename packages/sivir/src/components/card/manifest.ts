@@ -12,6 +12,7 @@ export const manifest: Manifest = {
 		'components/card/card-description.svelte',
 		'components/card/card-content.svelte',
 		'components/card/card-footer.svelte',
+		'components/card/surface.ts',
 		'components/card/index.ts',
 		'components/card/manifest.ts'
 	],

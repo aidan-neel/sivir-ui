@@ -14,13 +14,15 @@
 		threshold?: number;
 	}
 
-	const { class: className, threshold = 0.5, variant = 'outline', ...rest }: Props = $props();
+	const { class: className, threshold = 0.28, variant = 'outline', ...rest }: Props = $props();
 
 	let inputElement: HTMLInputElement | undefined = $state();
 	const fuse = $derived(
 		new Fuse(Array.from(comboboxState.items), {
 			keys: ['value', 'label'],
-			threshold
+			threshold,
+			ignoreLocation: true,
+			minMatchCharLength: 2
 		})
 	);
 
@@ -64,7 +66,7 @@
 		: 'Open combobox'}
 	class={cn(
 		className,
-		'flex flex-row items-center justify-between px-3 [font-weight:var(--font-weight-button,500)] [letter-spacing:var(--tracking-button,0em)] transition-[background-color,border-color,color,box-shadow,transform] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-out)] motion-reduce:transition-none active:scale-[var(--motion-press-scale)] motion-reduce:active:scale-100 focus-within:shadow-[var(--focus-ring)]',
+		'flex flex-row items-center justify-between focus-within:shadow-[var(--focus-ring)]',
 		comboboxState.selected?.label ? 'text-foreground' : 'text-foreground-muted'
 	)}
 >

@@ -54,7 +54,9 @@ describe('showcase generation', () => {
 			expect(css).toContain("@import '@fontsource/inter/latin-400.css';");
 			expect(css).toContain("@import '@fontsource/inter/latin-700.css';");
 			expect(css).toContain('@layer base { button, input { font: inherit; } }');
-			expect(css).toContain('body { font-size: var(--font-size-body); line-height: 1.5; }');
+			expect(css).toContain(
+				'body { font-size: var(--font-size-body); font-weight: var(--font-weight-body); line-height: 1.5; }'
+			);
 			expect(css).toContain('font-size: 30px');
 			expect(css).toContain('min-height: 320px');
 			expect(css).not.toMatch(/^button, input \{ font: inherit; \}$/m);

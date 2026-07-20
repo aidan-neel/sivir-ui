@@ -71,6 +71,10 @@
 		callback?.();
 		onclick?.();
 	}
+
+	const filteredOut = $derived(
+		command.searchContent !== '' && !command.results.some((result) => result.id === item.id)
+	);
 </script>
 
 <Button
@@ -81,6 +85,7 @@
 	bind:element={el}
 	{disabled}
 	{href}
+	hidden={filteredOut}
 	onmouseenter={() => {
 		if (!disabled) command.activeId = itemId;
 	}}
@@ -88,10 +93,7 @@
 	class={cn(
 		className,
 		`${MENU_ITEM} justify-start gap-2`,
-		command.activeId === itemId && 'bg-secondary text-foreground',
-		command.searchContent !== '' &&
-			!command.results.some((result) => result.id === item.id) &&
-			'hidden'
+		command.activeId === itemId && 'bg-secondary text-foreground'
 	)}
 	variant="ghost"
 >

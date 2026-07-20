@@ -4,11 +4,18 @@
 
 <Select.Root>
 	<Select.Trigger>
-		<span data-testid="select-trigger">Select an option</span>
+		<span data-testid="select-trigger">
+			<Select.Value placeholder="Select an option" />
+		</span>
 	</Select.Trigger>
 	<Select.Content>
-		<Select.Item value="apple"><span data-testid="opt-apple">Apple</span></Select.Item>
-		<Select.Item value="banana"><span data-testid="opt-banana">Banana</span></Select.Item>
-		<Select.Item value="cherry"><span data-testid="opt-cherry">Cherry</span></Select.Item>
+		<Select.Item value="apple" label="Apple"><span data-testid="opt-apple">Apple</span></Select.Item
+		>
+		<Select.Item value="banana" label="Banana"
+			><span data-testid="opt-banana">Banana</span></Select.Item
+		>
+		<Select.Item value="cherry" label="Cherry"
+			><span data-testid="opt-cherry">Cherry</span></Select.Item
+		>
 	</Select.Content>
 </Select.Root>

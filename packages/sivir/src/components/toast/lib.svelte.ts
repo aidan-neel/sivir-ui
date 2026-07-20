@@ -10,12 +10,23 @@ const TOAST_EXIT_DURATION = 340;
 let nextToastId = 0;
 
 /**
- * Per-Toaster-mount state. The most recently mounted Toaster registers
- * here for free-function toast(...) calls. On SSR there is no Toaster
- * mount, so activeState stays undefined and all toast functions become
- * no-ops -- eliminating the cross-request bleed bug (P3-F12).
+ * Client toast runtime.
+ *
+ * - Browser: one shared store for every <Toaster />. Free-function
+ *   toast(...) always writes here, so toasts survive page navigations
+ *   and stack together. Only the primary host renders (first mounted;
+ *   next host promoted on unmount) so nested Toasters cannot duplicate
+ *   or mis-position the stack.
+ * - SSR: activeState stays undefined and toast(...) is a no-op —
+ *   eliminating the cross-request bleed bug (P3-F12). Each server
+ *   Toaster gets an inert local state it never publishes.
  */
 let activeState: ToastState | undefined;
+let clientState: ToastState | undefined;
+let nextHostId = 0;
+const liveHosts: number[] = [];
+/** Reactive primary host id — Toaster instances $derived against this. */
+let primaryHostId = $state<number | null>(null);
 
 export interface ToastUIState {
 	toasts: Toast[];
@@ -277,26 +288,55 @@ function getToastUIState(): ToastState | undefined {
 	return getContext(STATE_KEY);
 }
 
+export interface ToastHost {
+	state: ToastState;
+	hostId: number;
+}
+
 /**
- * Per-mount state. Each <Toaster /> instance gets its own scoped state and
- * registers as the active state for free-function toast(...) calls.
- * On the server there is no Toaster mount, so activeState stays
- * undefined and toast(...) is a no-op -- eliminating the cross-request
- * bleed bug (P3-F12).
+ * Registers a <Toaster /> host.
+ *
+ * Browser: joins the shared client store and claims primary render if
+ * none exists. SSR: returns inert local state and never publishes it
+ * as activeState (P3-F12).
  */
-function setToastUIState(): ToastState {
-	const state = $state<ToastState>({ data: { toasts: [] } });
-	setContext(STATE_KEY, state);
+function setToastUIState(): ToastHost {
+	// $state must be a declaration initializer — always create, then either
+	// keep as the shared client store or discard (SSR / subsequent hosts).
+	const fresh = $state<ToastState>({ data: { toasts: [] } });
+
+	// SSR / non-DOM: isolated inert state, toast() stays a no-op.
+	if (typeof document === 'undefined') {
+		setContext(STATE_KEY, fresh);
+		return { state: fresh, hostId: -1 };
+	}
+
+	if (!clientState) clientState = fresh;
+	const state = clientState;
+	const hostId = (nextHostId += 1);
+	liveHosts.push(hostId);
+	if (primaryHostId === null) primaryHostId = hostId;
 	activeState = state;
+	setContext(STATE_KEY, state);
+
 	onDestroy(() => {
-		for (const [id, entry] of toastTimeouts) {
-			if (entry.state !== state) continue;
-			clearTimeout(entry.timeout);
-			toastTimeouts.delete(id);
+		const idx = liveHosts.indexOf(hostId);
+		if (idx !== -1) liveHosts.splice(idx, 1);
+
+		if (primaryHostId === hostId) {
+			primaryHostId = liveHosts[0] ?? null;
 		}
-		if (activeState === state) activeState = undefined;
+		// Keep activeState + clientState across host gaps so toast()/dismiss
+		// and in-flight timers survive page Toaster remounts. Nothing renders
+		// until a primary host mounts again.
 	});
-	return state;
+
+	return { state, hostId };
+}
+
+/** Reactive primary host id for Toaster render gating. */
+function getToastPrimaryHostId(): number | null {
+	return primaryHostId;
 }
 
 /**
@@ -306,6 +346,18 @@ function setToastUIState(): ToastState {
  */
 function __setActiveToastStateForTests(state: ToastState | undefined) {
 	activeState = state;
+	if (state === undefined) {
+		clientState = undefined;
+		liveHosts.length = 0;
+		primaryHostId = null;
+		nextHostId = 0;
+		for (const [id, entry] of toastTimeouts) {
+			clearTimeout(entry.timeout);
+			toastTimeouts.delete(id);
+		}
+	} else {
+		clientState = state;
+	}
 }
 
 /**
@@ -323,6 +375,7 @@ export {
 	resumeToast,
 	updateToast,
 	getToastUIState,
+	getToastPrimaryHostId,
 	setToastUIState,
 	__setActiveToastStateForTests,
 	__getActiveToastStateForTests

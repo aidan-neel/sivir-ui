@@ -8,7 +8,7 @@ export const CONFIG_FILE = 'sivir.json';
 export const DEFAULT_CONFIG: SivirConfig = {
 	dir: 'src/lib/sivir',
 	alias: '$lib/sivir',
-	registry: 'https://sivir-ui.dev/api',
+	registry: 'https://registry.sivir.dev',
 	components: {}
 };
 

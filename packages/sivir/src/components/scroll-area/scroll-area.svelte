@@ -41,7 +41,7 @@
 	data-orientation={orientation}
 	class={cn(
 		className,
-		'relative overscroll-contain p-1 [scrollbar-color:color-mix(in_srgb,var(--color-foreground)_22%,transparent)_transparent] [scrollbar-width:thin]',
+		'relative overscroll-contain [scrollbar-color:color-mix(in_srgb,var(--color-foreground)_22%,transparent)_transparent] [scrollbar-width:thin]',
 		'[&::-webkit-scrollbar]:size-2.5 [&::-webkit-scrollbar-track]:bg-transparent',
 		'[&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:border-2 [&::-webkit-scrollbar-thumb]:border-transparent [&::-webkit-scrollbar-thumb]:bg-[color-mix(in_srgb,var(--color-foreground)_18%,transparent)] [&::-webkit-scrollbar-thumb]:bg-clip-padding',
 		'[&::-webkit-scrollbar-thumb:hover]:bg-[color-mix(in_srgb,var(--color-foreground)_32%,transparent)] [&::-webkit-scrollbar-thumb:hover]:bg-clip-padding',

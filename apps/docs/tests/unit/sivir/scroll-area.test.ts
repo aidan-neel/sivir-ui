@@ -85,6 +85,14 @@ describe('ScrollArea -- overscroll behavior', () => {
 		const root = container.querySelector('[data-ui="scroll-area"]')!;
 		expect(root.className).toContain('overscroll-contain');
 	});
+
+	it('does not pad the scrollport so edge fades sit flush', () => {
+		const { container } = render(ScrollArea, {
+			props: { children: textSnippet('x') }
+		});
+		const root = container.querySelector('[data-ui="scroll-area"]')!;
+		expect(root.className.split(/\s+/)).not.toContain('p-1');
+	});
 });
 
 describe('ScrollArea -- attribute spreading', () => {

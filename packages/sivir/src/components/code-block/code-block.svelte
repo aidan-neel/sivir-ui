@@ -3,7 +3,7 @@
 	import { cn } from '@sivir/ui/utils';
 	import { setContext, untrack } from 'svelte';
 	import * as Tabs from '@sivir/ui/components/tabs';
-	import { PANEL_FRAME, PANEL_SURFACE } from '../panel';
+	import { CARD_PANEL_FRAME, CARD_PANEL_SURFACE } from '../card/surface';
 	import type { CodeBlockProps, CodeBlockRegistry, CodeBlockTab } from '.';
 	import Header from './code-block-header.svelte';
 	import List from './code-block-list.svelte';
@@ -65,7 +65,7 @@
 	data-ui="code-block"
 	class={cn(
 		className,
-		PANEL_FRAME,
+		CARD_PANEL_FRAME,
 		'flex w-full flex-col overflow-hidden text-foreground',
 		'[--code-block-gutter:var(--color-foreground-muted)] [--code-block-padding-x:1.1rem] [--code-block-padding-y:0.9rem] [--code-block-line-height:1.7] [--code-block-slide:1.25rem]',
 		'[--code-block-token-comment:#b0b0b0] [--code-block-token-keyword:#565656] [--code-block-token-string:#565656] [--code-block-token-number:#868686] [--code-block-token-function:#565656] [--code-block-token-property:#868686] [--code-block-token-builtin:#868686] [--code-block-token-meta:#868686]',
@@ -92,7 +92,7 @@
 			{#if hasTabRow || code != null}
 				<!-- The static card: holds the background/ring while only the text
 				     panels slide inside it (and clips the slide). -->
-				<div class={cn(PANEL_SURFACE, 'relative w-full overflow-hidden')}>
+				<div class={cn(CARD_PANEL_SURFACE, 'relative w-full overflow-hidden')}>
 					{#if hasTabRow}
 						{#each resolvedTabs as t (t.value)}
 							<Content

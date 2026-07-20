@@ -14,7 +14,6 @@ import Slider from '@sivir/ui/components/slider/slider.svelte';
 import Toggle from '@sivir/ui/components/toggle/toggle.svelte';
 import Progress from '@sivir/ui/components/progress/progress.svelte';
 import Pagination from '@sivir/ui/components/pagination/pagination.svelte';
-import Separator from '@sivir/ui/components/separator/separator.svelte';
 import Skeleton from '@sivir/ui/components/skeleton/skeleton.svelte';
 import Label from '@sivir/ui/components/label/label.svelte';
 import Shortcut from '@sivir/ui/components/shortcut/shortcut.svelte';
@@ -78,7 +77,6 @@ describe('SSR -- leaf components (Tier 1)', () => {
 	ssrShouldNotThrow('toggle', Toggle, { pressed: false });
 	ssrShouldNotThrow('progress', Progress, { value: 50, max: 100 });
 	ssrShouldNotThrow('pagination', Pagination, { page: 1, total: 5 });
-	ssrShouldNotThrow('separator', Separator, { orientation: 'horizontal' });
 	ssrShouldNotThrow('skeleton', Skeleton, {});
 	ssrShouldNotThrow('label', Label, {});
 	ssrShouldNotThrow('shortcut', Shortcut, { shortcut: 'cmd+k' });

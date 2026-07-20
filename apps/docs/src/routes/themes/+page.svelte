@@ -1,17 +1,14 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
-	import { resolve } from '$app/paths';
 	import { builtInThemePresets } from '@sivir/ui/themes/builtin-presets';
 	import { themeToCss, type Theme } from '@sivir/ui/themes/theme';
 	import { Button } from '@sivir/ui/components/button';
 	import { Input } from '@sivir/ui/components/input';
 	import { toast } from '@sivir/ui/components/toast';
-	import { applyLiveThemeCss, saveStudioTheme } from '@sivir/ui/themes/live';
+	import { applyLiveThemeCss } from '@sivir/ui/themes/live';
 	import type { PageData } from './$types';
 
 	import Search from '@lucide/svelte/icons/search';
 	import Sparkles from '@lucide/svelte/icons/sparkles';
-	import Wand from '@lucide/svelte/icons/wand-sparkles';
 	import Check from '@lucide/svelte/icons/check';
 	import X from '@lucide/svelte/icons/x';
 	import FileCode from '@lucide/svelte/icons/file-code';
@@ -77,12 +74,6 @@
 		}, 1600);
 	}
 
-	function openInStudio(theme: Theme) {
-		applyLiveThemeCss(themeToCss(theme));
-		saveStudioTheme(theme);
-		void goto(resolve('/themes/studio'));
-	}
-
 	const detailCss = $derived(detailTheme ? themeToCss(detailTheme) : '');
 	const detailJson = $derived(detailTheme ? JSON.stringify(detailTheme, null, 2) : '');
 </script>
@@ -104,14 +95,12 @@
 					Sivir themes.
 				</h1>
 				<p class="m-0 max-w-[42rem] text-[0.95rem] leading-relaxed text-foreground-muted">
-					Explore a complete theme preset, apply it live, or customize every token in Studio.
+					Explore a complete theme preset, apply it live, and copy CSS or JSON into your project.
 				</p>
 			</div>
 
-			<div
-				class="mx-auto flex w-full max-w-[44rem] flex-col items-stretch gap-2.5 sm:flex-row sm:items-center"
-			>
-				<div class="relative flex-1">
+			<div class="mx-auto w-full max-w-[44rem]">
+				<div class="relative">
 					<Search
 						size={14}
 						class="pointer-events-none absolute left-3 top-1/2 z-10 -translate-y-1/2 text-foreground-muted"
@@ -123,15 +112,6 @@
 						bind:value={searchQuery}
 					/>
 				</div>
-				<Button
-					variant="primary"
-					size="sm"
-					class="h-9 gap-1.5 text-[0.82rem]"
-					onclick={() => void goto(resolve('/themes/studio'))}
-				>
-					<Wand size={13} />
-					Open studio
-				</Button>
 			</div>
 
 			{#if true}
@@ -164,7 +144,7 @@
 					<div class="flex flex-col gap-1">
 						<p class="m-0 text-[1rem] font-[500] text-foreground">No themes found</p>
 						<p class="m-0 text-[0.84rem] text-foreground-muted">
-							Try a different keyword or create a new theme in the studio.
+							Try a different keyword, or clear the search to see every theme.
 						</p>
 					</div>
 				{/if}
@@ -212,7 +192,7 @@
 
 							<!-- Actions -->
 							<div
-								class="mt-auto flex items-center justify-between gap-2 border-t border-border/60 px-3 py-2.5"
+								class="mt-auto flex items-center justify-end gap-2 border-t border-border/60 px-3 py-2.5"
 								onclick={(e) => e.stopPropagation()}
 								onkeydown={(e) => e.stopPropagation()}
 								role="presentation"
@@ -224,15 +204,6 @@
 									onclick={() => applyTheme(theme)}
 								>
 									Apply
-								</Button>
-								<Button
-									variant="outline"
-									size="sm"
-									class="h-8 gap-1.5 text-[0.78rem]"
-									onclick={() => openInStudio(theme)}
-								>
-									<Wand size={12} />
-									Studio
 								</Button>
 							</div>
 						</div>
@@ -351,10 +322,6 @@
 					<Button size="sm" onclick={() => applyTheme(detailTheme!)}>
 						<Sparkles size={14} />
 						Apply theme
-					</Button>
-					<Button variant="secondary" size="sm" onclick={() => openInStudio(detailTheme!)}>
-						<Wand size={14} />
-						Edit
 					</Button>
 				</div>
 			</div>

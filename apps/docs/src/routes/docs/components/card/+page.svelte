@@ -10,6 +10,8 @@
 	import ContentOnlySrc from './examples/content-only.svelte?raw';
 	import HeaderFooter from './examples/header-footer.svelte';
 	import HeaderFooterSrc from './examples/header-footer.svelte?raw';
+	import Panel from './examples/panel.svelte';
+	import PanelSrc from './examples/panel.svelte?raw';
 
 	const installCommand = 'bunx @sivir/ui add card';
 </script>
@@ -112,6 +114,17 @@
 			</h3>
 			<ComponentPreview code={HeaderFooterSrc}>
 				<HeaderFooter />
+			</ComponentPreview>
+		</div>
+
+		<div id="panel" class="scroll-mt-20 flex flex-col gap-3">
+			<h3
+				class="text-[1rem] font-[var(--font-weight-header,600)] tracking-tight text-foreground docs-subsection-heading"
+			>
+				Panel frame
+			</h3>
+			<ComponentPreview code={PanelSrc}>
+				<Panel />
 			</ComponentPreview>
 		</div>
 	</section>

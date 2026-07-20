@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { cn } from '@sivir/ui/utils';
+	import { cn, pressable } from '@sivir/ui/utils';
 	import type { CollapsibleTriggerProps } from '.';
 	import { getCollapsibleContext } from './context.svelte';
 
@@ -9,6 +9,7 @@
 
 <button
 	type="button"
+	use:pressable
 	data-ui="collapsible-trigger"
 	data-state={state.open ? 'open' : 'closed'}
 	aria-expanded={state.open}
@@ -17,7 +18,7 @@
 	onclick={() => (state.open = !state.open)}
 	class={cn(
 		className,
-		'inline-flex items-center gap-2 transition-[transform] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-out)] active:scale-[var(--motion-press-scale)] focus-visible:outline-none focus-visible:shadow-[var(--focus-ring)]'
+		'sivir-press inline-flex items-center gap-2 transition-[transform,scale] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-press)] motion-reduce:transition-none focus-visible:outline-none focus-visible:shadow-[var(--focus-ring)]'
 	)}
 	{...rest}
 >

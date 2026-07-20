@@ -1,15 +1,28 @@
 <!-- token-lint-disable-file -->
 <script lang="ts">
-	import { setToastUIState, type ToastState } from './lib.svelte';
+	import { getToastPrimaryHostId, setToastUIState } from './lib.svelte';
 	import Toast from './toast.svelte';
 	import { cubicOut, quartOut } from 'svelte/easing';
 	import type { TransitionConfig } from 'svelte/transition';
 	import { getCssDuration } from '@sivir/ui/internals/transition';
 
-	const toastState: ToastState = setToastUIState();
+	const { state: toastState, hostId } = setToastUIState();
+	const isPrimary = $derived(getToastPrimaryHostId() === hostId);
 
 	let expanded = $state(false);
 	let heights = $state<Record<number, number>>({} as Record<number, number>);
+	let portalEl = $state<HTMLDivElement>();
+
+	// Portal to <body> so position:fixed is viewport-relative even when a
+	// Toaster is mounted under transformed / overflow-clipped ancestors
+	// (docs previews, nested page hosts, etc.).
+	$effect(() => {
+		if (!portalEl || typeof document === 'undefined') return;
+		document.body.appendChild(portalEl);
+		return () => {
+			portalEl?.remove();
+		};
+	});
 
 	const COLLAPSED_OFFSET = 14;
 	const COLLAPSED_SCALE_STEP = 0.05;
@@ -79,8 +92,9 @@
 	}
 </script>
 
-{#if toastState.data}
+{#if isPrimary && toastState.data}
 	<div
+		bind:this={portalEl}
 		class="pointer-events-none fixed inset-x-0 bottom-0 z-200 flex justify-center px-4 pb-4 pt-6 sm:justify-end sm:p-6"
 	>
 		<div

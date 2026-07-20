@@ -2,6 +2,7 @@ import { describe, expect, it, afterEach } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page, userEvent } from 'vitest/browser';
 import { tick } from 'svelte';
+import { sheetIn, sheetOut } from '@sivir/ui/internals/transition';
 import SheetFixture from '../../fixtures/SheetFixture.svelte';
 
 /*
@@ -129,6 +130,23 @@ describe('Sheet -- ARIA', () => {
 		await flush();
 		const panel = document.querySelector('[data-ui="sheet-content"]');
 		expect(panel?.getAttribute('data-side')).toBe('left');
+	});
+
+	it('slides from the anchored edge without opacity fade', async () => {
+		render(SheetFixture, { open: true, side: 'right' });
+		await flush();
+		const panel = document.querySelector('[data-ui="sheet-content"]')!;
+		expect(panel.getAttribute('data-motion')).toBe('sheet');
+
+		const enter = sheetIn(panel, { side: 'right' });
+		const exit = sheetOut(panel, { side: 'right' });
+		expect(enter.css?.(0, 1)).toContain('translate3d(100%, 0, 0)');
+		expect(enter.css?.(1, 0)).toContain('translate3d(0%, 0, 0)');
+		expect(enter.css?.(0, 1)).not.toContain('opacity');
+		expect(exit.duration ?? 0).toBeLessThan(enter.duration ?? 0);
+
+		const leftEnter = sheetIn(panel, { side: 'left' });
+		expect(leftEnter.css?.(0, 1)).toContain('translate3d(-100%, 0, 0)');
 	});
 
 	it('sets aria-labelledby to a resolvable id', async () => {

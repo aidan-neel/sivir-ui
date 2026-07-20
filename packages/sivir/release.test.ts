@@ -33,8 +33,7 @@ describe('publishable package contract', () => {
 		const animationFiles = [
 			'./src/components/skeleton/skeleton.svelte',
 			'./src/components/progress/progress.svelte',
-			'./src/components/toast/toast.svelte',
-			'./src/components/marquee/marquee.svelte'
+			'./src/components/toast/toast.svelte'
 		] as const;
 		const source = (
 			await Promise.all(
@@ -42,13 +41,7 @@ describe('publishable package contract', () => {
 			)
 		).join('\n');
 
-		for (const name of [
-			'skeleton-loading',
-			'sivir-progress-slide',
-			'sivir-toast-progress',
-			'sivir-marquee-x',
-			'sivir-marquee-y'
-		]) {
+		for (const name of ['skeleton-loading', 'sivir-progress-slide', 'sivir-toast-progress']) {
 			expect(source).toContain(`@keyframes ${name}`);
 			expect(source.split(name)).toHaveLength(3);
 		}
@@ -116,10 +109,5 @@ describe('publishable package contract', () => {
 		expect(packageLicense).not.toContain('Copyright (c) 2025 Name');
 	});
 
-	test('exports every documented single-element component from the public barrel', async () => {
-		const barrel = await readFile(new URL('./src/index.ts', import.meta.url), 'utf8');
-
-		expect(barrel).toContain("export { Panel } from './components/panel';");
-		expect(barrel).toContain("export { Separator } from './components/separator';");
-	});
+	// Full barrel/catalog lock lives in public-api.test.ts (Phase 2 §1).
 });

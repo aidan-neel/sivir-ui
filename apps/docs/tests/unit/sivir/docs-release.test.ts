@@ -53,7 +53,7 @@ describe('docs release contracts', () => {
 			expect(body).toContain(`<loc>https://preview.example/docs/components/${component}</loc>`);
 		}
 		expect(body).toContain('<loc>https://preview.example/docs/components</loc>');
-		expect(body.match(/<url>/g)).toHaveLength(components.length + 9);
+		expect(body.match(/<url>/g)).toHaveLength(components.length + 7);
 	});
 
 	it('keeps the Docker docs runtime connected to the registry service', () => {

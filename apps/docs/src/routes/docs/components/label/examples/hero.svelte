@@ -5,5 +5,5 @@
 
 <div class="flex flex-col gap-1.5">
 	<Label for="email">Email address</Label>
-	<Input id="email" type="email" placeholder="you@sivir-ui.dev" />
+	<Input id="email" type="email" placeholder="you@sivir.dev" />
 </div>
