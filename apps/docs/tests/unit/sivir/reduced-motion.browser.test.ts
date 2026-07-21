@@ -1,4 +1,4 @@
-import { describe, expect, it, beforeEach } from 'vitest';
+import { describe, expect, it, beforeEach, afterEach } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page } from 'vitest/browser';
 import { tick } from 'svelte';
@@ -33,6 +33,8 @@ import CommandFixture from '../../fixtures/CommandFixture.svelte';
  * currently implemented in sivir -- see P3-F14 below.
  */
 
+let originalMatchMedia: typeof window.matchMedia;
+
 async function flush() {
 	await tick();
 	await tick();
@@ -66,7 +68,7 @@ describe('Reduced motion -- content visible within 50ms of open action under pre
 
 		// Override matchMedia to report reduced motion is preferred. The
 		// stylesheet above won't trigger without this in a test env.
-		const originalMatchMedia = window.matchMedia;
+		originalMatchMedia = window.matchMedia;
 		window.matchMedia = (query: string) =>
 			({
 				matches: query.includes('reduce'),
@@ -78,8 +80,11 @@ describe('Reduced motion -- content visible within 50ms of open action under pre
 				onchange: null,
 				dispatchEvent: () => true
 			}) as MediaQueryList;
-		// @ts-expect-error stash for cleanup
-		window.__originalMatchMedia = originalMatchMedia;
+	});
+
+	afterEach(() => {
+		document.getElementById('reduced-motion-override')?.remove();
+		window.matchMedia = originalMatchMedia;
 	});
 
 	it('modal -- content present immediately on open (~no transition)', async () => {
