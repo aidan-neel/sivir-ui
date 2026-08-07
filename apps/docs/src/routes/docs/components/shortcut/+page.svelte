@@ -1,15 +1,14 @@
 <script lang="ts">
-    import { ComponentPreview, InstallCommand } from '$lib/components/docs';
     import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
-
-    import Hero from './examples/hero.svelte';
-    import HeroSrc from './examples/hero.svelte?raw';
+    import { ComponentPreview, InstallCommand } from '$lib/components/docs';
     import Basic from './examples/basic.svelte';
     import BasicSrc from './examples/basic.svelte?raw';
-    import Modifiers from './examples/modifiers.svelte';
-    import ModifiersSrc from './examples/modifiers.svelte?raw';
     import Context from './examples/context.svelte';
     import ContextSrc from './examples/context.svelte?raw';
+    import Hero from './examples/hero.svelte';
+    import HeroSrc from './examples/hero.svelte?raw';
+    import Modifiers from './examples/modifiers.svelte';
+    import ModifiersSrc from './examples/modifiers.svelte?raw';
 
     const TITLE = 'Shortcut';
 

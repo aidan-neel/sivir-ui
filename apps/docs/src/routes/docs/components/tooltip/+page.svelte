@@ -1,15 +1,14 @@
 <script lang="ts">
-    import { ComponentPreview, InstallCommand } from '$lib/components/docs';
     import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
-
-    import Hero from './examples/hero.svelte';
-    import HeroSrc from './examples/hero.svelte?raw';
-    import Top from './examples/top.svelte';
-    import TopSrc from './examples/top.svelte?raw';
-    import Right from './examples/right.svelte';
-    import RightSrc from './examples/right.svelte?raw';
+    import { ComponentPreview, InstallCommand } from '$lib/components/docs';
     import Bottom from './examples/bottom.svelte';
     import BottomSrc from './examples/bottom.svelte?raw';
+    import Hero from './examples/hero.svelte';
+    import HeroSrc from './examples/hero.svelte?raw';
+    import Right from './examples/right.svelte';
+    import RightSrc from './examples/right.svelte?raw';
+    import Top from './examples/top.svelte';
+    import TopSrc from './examples/top.svelte?raw';
 
     const TITLE = 'Tooltip';
 

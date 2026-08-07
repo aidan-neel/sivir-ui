@@ -1,11 +1,10 @@
 <script lang="ts">
-    import { ComponentPreview, InstallCommand } from '$lib/components/docs';
     import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
-
-    import Hero from './examples/hero.svelte';
-    import HeroSrc from './examples/hero.svelte?raw';
+    import { ComponentPreview, InstallCommand } from '$lib/components/docs';
     import Default from './examples/default.svelte';
     import DefaultSrc from './examples/default.svelte?raw';
+    import Hero from './examples/hero.svelte';
+    import HeroSrc from './examples/hero.svelte?raw';
 
     const TITLE = 'Collapsible';
     const SLUG = 'collapsible';

@@ -1,13 +1,12 @@
 <script lang="ts">
-    import { ComponentPreview, InstallCommand } from '$lib/components/docs';
     import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
-
-    import Hero from './examples/hero.svelte';
-    import HeroSrc from './examples/hero.svelte?raw';
+    import { ComponentPreview, InstallCommand } from '$lib/components/docs';
     import Descriptions from './examples/descriptions.svelte';
     import DescriptionsSrc from './examples/descriptions.svelte?raw';
     import Disabled from './examples/disabled.svelte';
     import DisabledSrc from './examples/disabled.svelte?raw';
+    import Hero from './examples/hero.svelte';
+    import HeroSrc from './examples/hero.svelte?raw';
 
     const _TITLE = 'Radio Group';
 

@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { ComponentPreview } from '$lib/components/docs';
     import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
+    import { ComponentPreview } from '$lib/components/docs';
 
     import Hero from './examples/hero.svelte';
     import HeroSrc from './examples/hero.svelte?raw';

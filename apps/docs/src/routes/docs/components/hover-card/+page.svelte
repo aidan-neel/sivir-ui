@@ -1,13 +1,12 @@
 <script lang="ts">
-    import { ComponentPreview, InstallCommand } from '$lib/components/docs';
     import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
-
-    import UserPreview from './examples/user-preview.svelte';
-    import UserPreviewSrc from './examples/user-preview.svelte?raw';
-    import LinkPreview from './examples/link-preview.svelte';
-    import LinkPreviewSrc from './examples/link-preview.svelte?raw';
+    import { ComponentPreview, InstallCommand } from '$lib/components/docs';
     import Definition from './examples/definition.svelte';
     import DefinitionSrc from './examples/definition.svelte?raw';
+    import LinkPreview from './examples/link-preview.svelte';
+    import LinkPreviewSrc from './examples/link-preview.svelte?raw';
+    import UserPreview from './examples/user-preview.svelte';
+    import UserPreviewSrc from './examples/user-preview.svelte?raw';
 
     const _TITLE = 'Hover Card';
     const SLUG = 'hover-card';

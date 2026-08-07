@@ -1,13 +1,13 @@
 <script lang="ts">
-    import { ComponentPreview, InstallCommand } from '$lib/components/docs';
     import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
+    import { ComponentPreview, InstallCommand } from '$lib/components/docs';
 
     import Hero from './examples/hero.svelte';
     import HeroSrc from './examples/hero.svelte?raw';
-    import SingleMode from './examples/single-mode.svelte';
-    import SingleModeSrc from './examples/single-mode.svelte?raw';
     import MultipleMode from './examples/multiple-mode.svelte';
     import MultipleModeSrc from './examples/multiple-mode.svelte?raw';
+    import SingleMode from './examples/single-mode.svelte';
+    import SingleModeSrc from './examples/single-mode.svelte?raw';
 
     const TITLE = 'Accordion';
     const SLUG = 'accordion';

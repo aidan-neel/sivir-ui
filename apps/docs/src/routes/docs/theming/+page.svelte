@@ -7,7 +7,7 @@
   --color-background: #fcfcfd;
   --color-foreground: #101828;
   --radius-lg: 0.55rem;
-   --font-sans: 'DM Sans', sans-serif;
+    --font-sans: 'Inter', sans-serif;
 }
 
 .dark {
