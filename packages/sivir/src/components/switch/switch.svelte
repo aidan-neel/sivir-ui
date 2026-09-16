@@ -39,7 +39,7 @@
     }
 </script>
 
-<div class="flex min-h-[var(--size-touch)] flex-row items-start gap-2.5 md:min-h-0">
+<div class="flex min-h-[var(--size-touch)] flex-row items-center gap-2.5 md:min-h-0">
     <button
         bind:this={element}
         {...rest as HTMLButtonAttributes}
@@ -74,7 +74,7 @@
 
     {#if label || description}
         <div
-            class={`flex min-w-0 flex-col gap-0.5 pt-px select-none ${disabled ? 'cursor-not-allowed opacity-60' : 'cursor-[var(--ui-cursor-interactive)]'}`}
+            class={`flex min-w-0 flex-col gap-0.5 select-none ${disabled ? 'cursor-not-allowed opacity-60' : 'cursor-[var(--ui-cursor-interactive)]'}`}
             onclick={toggle}
             onkeydown={(e) => {
                 if (disabled) {

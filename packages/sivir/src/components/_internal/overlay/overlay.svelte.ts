@@ -40,6 +40,16 @@ export function parentOverlayDepth() {
     return getContext<number>(OVERLAY_DEPTH) ?? 0;
 }
 
+/** False when `node` lives inside a receded (non-topmost) stacked overlay panel. */
+export function isFrontmostOverlay(node: Node) {
+    const containing = overlayStack.filter((layer) => layer.panel.contains(node));
+    if (containing.length === 0) {
+        return true;
+    }
+    const maxDepth = Math.max(...overlayStack.map((layer) => layer.depth));
+    return containing.some((layer) => layer.depth === maxDepth);
+}
+
 function applyOverlayRootLayer(panel: HTMLElement, depth: number) {
     const root = panel.closest('[data-overlay-root]');
     if (!(root instanceof HTMLElement)) {

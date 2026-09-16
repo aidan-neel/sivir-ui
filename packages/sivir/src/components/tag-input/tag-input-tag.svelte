@@ -78,7 +78,7 @@
         onclick={handleRemove}
         class={cn(
             className,
-            'group ml-0.5 h-auto max-w-full gap-1.5 rounded-[var(--radius-md)] px-0 py-1 pr-1.5 pl-2.5 [font-size:var(--font-size-body)] leading-tight [font-weight:var(--font-weight-badge)] [letter-spacing:var(--tracking-body)]'
+            'group ml-0.5 h-auto max-w-full gap-1.5 rounded-[var(--radius-md)] bg-[var(--color-input)] px-0 py-1 pr-1.5 pl-2.5 [font-size:var(--font-size-body)] leading-tight [font-weight:var(--font-weight-badge)] [letter-spacing:var(--tracking-body)] hover:bg-[color-mix(in_srgb,var(--color-input)_92%,var(--color-foreground))]'
         )}
     >
         {@render label()}
@@ -90,7 +90,7 @@
         data-disabled={context.disabled || undefined}
         class={cn(
             className,
-            'ml-0.5 inline-flex max-w-full items-center gap-1.5 rounded-[var(--radius-md)] bg-secondary py-1 pr-2.5 pl-2.5 [font-size:var(--font-size-body)] leading-tight [font-weight:var(--font-weight-badge)] [letter-spacing:var(--tracking-body)] text-foreground'
+            'ml-0.5 inline-flex max-w-full items-center gap-1.5 rounded-[var(--radius-md)] bg-[var(--color-input)] py-1 pr-2.5 pl-2.5 [font-size:var(--font-size-body)] leading-tight [font-weight:var(--font-weight-badge)] [letter-spacing:var(--tracking-body)] text-foreground'
         )}
     >
         {@render label()}

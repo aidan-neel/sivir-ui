@@ -224,7 +224,7 @@
     </div>
     <div
         aria-hidden="true"
-        class="pointer-events-none absolute inset-y-0 right-0 hidden w-[55rem] flex-col justify-between gap-6 overflow-hidden py-4 text-5xl text-foreground-muted opacity-20 blur-[1px] select-none md:flex [mask-image:linear-gradient(to_right,transparent,black_25%)]"
+        class="pointer-events-none absolute inset-y-0 right-0 hidden w-[55rem] flex-col justify-between gap-6 overflow-hidden py-4 text-5xl text-foreground-muted opacity-20 select-none md:flex [mask-image:linear-gradient(to_right,transparent,black_25%)]"
     >
         {#each cloudRows as row, i (i)}
             <div

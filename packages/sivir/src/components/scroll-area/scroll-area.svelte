@@ -79,7 +79,7 @@
     >
         {#if cuesVisible}
             <!-- Top edge cue: sticky so it pins to the top of the scrollport. -->
-            <div aria-hidden="true" class="sticky top-0 z-10 h-0">
+            <div aria-hidden="true" class="sticky top-0 z-10 h-0 rounded-[inherit]">
                 <div
                     class={cn(
                         'pointer-events-none absolute inset-x-0 -top-px flex h-7 items-start justify-center rounded-t-[inherit] bg-[linear-gradient(to_bottom,color-mix(in_srgb,var(--color-panel)_96%,transparent),transparent)] [-webkit-mask-image:linear-gradient(to_bottom,black_0%,black_40%,transparent_100%)] [mask-image:linear-gradient(to_bottom,black_0%,black_40%,transparent_100%)] transition-opacity duration-150',
@@ -96,7 +96,7 @@
 
         {#if cuesVisible}
             <!-- Bottom edge cue: sticky so it pins to the bottom of the scrollport. -->
-            <div aria-hidden="true" class="sticky bottom-0 z-10 h-0">
+            <div aria-hidden="true" class="sticky bottom-0 z-10 h-0 rounded-[inherit]">
                 <div
                     class={cn(
                         'pointer-events-none absolute inset-x-0 -bottom-px flex h-7 items-end justify-center rounded-b-[inherit] bg-[linear-gradient(to_top,color-mix(in_srgb,var(--color-panel)_96%,transparent),transparent)] [-webkit-mask-image:linear-gradient(to_top,black_0%,black_40%,transparent_100%)] [mask-image:linear-gradient(to_top,black_0%,black_40%,transparent_100%)] transition-opacity duration-150',

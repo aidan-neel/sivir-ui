@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { isFrontmostOverlay } from '@sivir-ui/svelte/components/_internal/overlay';
     import { cn } from '@sivir-ui/svelte/utils';
     import { onMount } from 'svelte';
     import type { ShortcutProps } from '.';
@@ -138,7 +139,7 @@
     }
 
     function handleKey(event: KeyboardEvent) {
-        if (!parsed || event.repeat) {
+        if (!parsed || event.repeat || !isFrontmostOverlay(element)) {
             return;
         }
 
