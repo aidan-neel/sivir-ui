@@ -447,13 +447,12 @@
     }
 
     [data-ui='modal-panel'] {
-        transition-property: scale;
-        transition-duration: var(--motion-duration-modal-in);
-        transition-timing-function: var(--ease-out);
+        transition: scale var(--motion-duration-modal-out) var(--ease-out);
     }
 
     [data-ui='modal-panel'][data-stacked='behind'] {
         scale: 0.925;
+        transition-duration: var(--motion-duration-modal-in);
     }
 
     [data-ui='modal-overlay'][data-nested] {

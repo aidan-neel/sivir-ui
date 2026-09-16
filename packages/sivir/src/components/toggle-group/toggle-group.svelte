@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { cn, travelingHighlight } from '@sivir-ui/svelte/utils';
+    import { cn } from '@sivir-ui/svelte/utils';
     import { setContext } from 'svelte';
     import type { ToggleGroupContext, ToggleGroupProps } from '.';
 
@@ -56,7 +56,6 @@
 <div
     data-ui="toggle-group"
     role={type === 'single' ? 'radiogroup' : 'group'}
-    use:travelingHighlight
     class={cn(className, 'inline-flex items-center gap-1')}
     {...rest}
 >

@@ -25,7 +25,7 @@
         'sivir-press inline-flex h-8 select-none items-center justify-center gap-1.5 rounded-[var(--radius-md)] px-3 [font-size:var(--font-size-label)] [font-weight:var(--font-weight-label)] [letter-spacing:var(--tracking-label)] transition-[background-color,color,transform,scale] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-press)] motion-reduce:transition-none focus-visible:outline-none focus-visible:shadow-[var(--focus-ring)] disabled:cursor-not-allowed disabled:opacity-[var(--opacity-disabled)]',
         active
             ? 'bg-secondary text-foreground'
-            : 'relative z-10 bg-transparent text-foreground-muted hover:text-foreground'
+            : 'bg-transparent text-foreground-muted hover:text-foreground'
     )}
     {...rest}
 >
