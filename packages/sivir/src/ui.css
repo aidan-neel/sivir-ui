@@ -124,6 +124,8 @@
     --motion-duration-panel-out: 150ms;
     --motion-duration-modal-in: 180ms;
     --motion-duration-modal-out: 110ms;
+    --motion-duration-modal-stack-in: 260ms;
+    --motion-duration-modal-stack-out: 180ms;
     --motion-press-px: var(--size-hairline);
     --motion-duration-press: 160ms;
     --motion-duration-item: 160ms;
@@ -447,16 +449,12 @@
     }
 
     [data-ui='modal-panel'] {
-        transition: scale var(--motion-duration-modal-out) var(--ease-out);
+        transition: scale var(--motion-duration-modal-stack-out) var(--ease-out);
     }
 
     [data-ui='modal-panel'][data-stacked='behind'] {
         scale: 0.925;
-        transition-duration: var(--motion-duration-modal-in);
-    }
-
-    [data-ui='modal-overlay'][data-nested] {
-        --overlay-blur: 0px;
+        transition-duration: var(--motion-duration-modal-stack-in);
     }
 
     .sivir-menu-label {
@@ -531,6 +529,8 @@
         --motion-duration-panel-out: 0ms;
         --motion-duration-modal-in: 0ms;
         --motion-duration-modal-out: 0ms;
+        --motion-duration-modal-stack-in: 0ms;
+        --motion-duration-modal-stack-out: 0ms;
         --motion-duration-sheet: 0ms;
         --motion-duration-sheet-out: 0ms;
         --motion-duration-overlay: 0ms;

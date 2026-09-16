@@ -163,21 +163,26 @@ export function panelOut(node: Element) {
     return panelTransition(node, '--motion-duration-panel-out', 150, { ...MENU_MOVEMENT });
 }
 
-/** Dialog enter: a soft centered scale that rises into place. */
-export function dialogIn(node: Element) {
-    return panelTransition(node, '--motion-duration-modal-in', 180, {
-        ...MODAL_MOVEMENT,
-        easing: quintOut
-    });
+type DialogParams = { nested?: boolean };
+
+/** Dialog enter: a soft centered scale that rises into place. Nested reads the slower stack duration to stay in step with the receding parent panel. */
+export function dialogIn(node: Element, params: DialogParams = {}) {
+    return panelTransition(
+        node,
+        params.nested ? '--motion-duration-modal-stack-in' : '--motion-duration-modal-in',
+        180,
+        { ...MODAL_MOVEMENT, easing: quintOut }
+    );
 }
 
 /** Dialog exit: move slightly upward instead of retracing the enter path. */
-export function dialogOut(node: Element) {
-    return panelTransition(node, '--motion-duration-modal-out', 110, {
-        ...MODAL_MOVEMENT,
-        easing: cubicIn,
-        exit: true
-    });
+export function dialogOut(node: Element, params: DialogParams = {}) {
+    return panelTransition(
+        node,
+        params.nested ? '--motion-duration-modal-stack-out' : '--motion-duration-modal-out',
+        110,
+        { ...MODAL_MOVEMENT, easing: cubicIn, exit: true }
+    );
 }
 
 export function overlayIn(node: Element) {
