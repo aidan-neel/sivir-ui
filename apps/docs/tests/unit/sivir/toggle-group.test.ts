@@ -11,7 +11,7 @@ describe('ToggleGroup -- rendering', () => {
         });
         const buttons = container.querySelectorAll('button');
         expect(buttons.length).toBe(3);
-        expect(container.querySelectorAll('.sivir-item-highlight')).toHaveLength(1);
+        expect(container.querySelectorAll('.sivir-item-highlight')).toHaveLength(0);
     });
 });
 

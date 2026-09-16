@@ -1,6 +1,6 @@
 <script lang="ts">
     import X from '@lucide/svelte/icons/x';
-    import { useOverlay } from '@sivir-ui/svelte/components/_internal/overlay';
+    import { parentOverlayDepth, useOverlay } from '@sivir-ui/svelte/components/_internal/overlay';
     import { dialogIn, dialogOut, overlayIn, overlayOut } from '@sivir-ui/svelte/transition';
     import { cn, visualViewportBounds } from '@sivir-ui/svelte/utils';
     import type { ModalContentProps } from '.';
@@ -22,6 +22,7 @@
     }: ModalContentProps = $props();
 
     const modal = getModalContext();
+    const isNested = parentOverlayDepth() > 0;
     const resolvedSize = $derived(size ?? (modal.state.orientation === 'horizontal' ? 'lg' : 'md'));
     const sizeClass = $derived(
         (modal.state.orientation === 'horizontal'
@@ -90,8 +91,8 @@
                 )}
             ></div>
             <div
-                in:dialogIn
-                out:dialogOut
+                in:dialogIn={{ nested: isNested }}
+                out:dialogOut={{ nested: isNested }}
                 bind:this={element}
                 data-motion="dialog"
                 class={cn(
