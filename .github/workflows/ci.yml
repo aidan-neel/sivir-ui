@@ -144,6 +144,11 @@ jobs:
             - name: Setup workspace
               uses: ./.github/actions/setup-workspace
 
+            - name: Build sivir package
+              # apps/registry imports @sivir-ui/svelte's built output (e.g. dist/svelte/themes/*),
+              # which the mega job used to get for free from an earlier turbo-driven step.
+              run: ./node_modules/.bin/turbo run build --filter='@sivir-ui/svelte'
+
             - name: Test (registry)
               run: bun --filter='registry' run test
 
