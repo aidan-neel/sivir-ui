@@ -1,2 +1,3 @@
 - Make the Scroll Area edge-cue blur optional. `blur` defaults to `true` and keeps the current look; set it to `false` to keep the fade and chevrons while dropping the `backdrop-filter`, which is expensive over large or animated content and smears text behind the cue on some GPUs.
 - Stop the Color Picker stranding a divider hairline across its rounded bottom edge. The channel-slider block drew a bottom border unconditionally, so without preset swatches it was the last block in the surface and its border had nothing to divide.
+- Fix the Command palette's hover highlight showing up smaller than the active row, and offset from it, when the palette first opens. Dropdown Menu, Context Menu, and Select panels that open with a scale animation get the same fix.
