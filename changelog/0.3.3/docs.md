@@ -1,0 +1,1 @@
+- Rework the Popover documentation examples around real tasks: the hero now shares a document with working invites, per-person access selects, and a copyable link, and the basic example is a titled feedback form in place of placeholder text.

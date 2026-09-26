@@ -1,0 +1,2 @@
+- Question Content animates between steps when you pass `step`: the outgoing question blurs away, the next slides in from the direction of travel, and the height eases to fit. Tune it with the new `--motion-duration-step-in`, `--motion-duration-step-out`, `--motion-step-x`, and `--motion-step-blur` tokens; theme motion presets and reduced motion scale them.
+- Question Submit crossfades between its label and the submitting spinner instead of swapping them, and Question Option indicators sharpen in from a light blur when selected.

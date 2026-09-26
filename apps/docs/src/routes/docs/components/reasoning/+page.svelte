@@ -46,8 +46,16 @@
     <section id="usage" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading">Usage</Typography.H2>
         <Typography.Text variant="supporting">
-            Use <Typography.InlineCode>streaming</Typography.InlineCode> while the model is
-            thinking; use <Typography.InlineCode>duration</Typography.InlineCode> when it completes.
+            Reasoning starts collapsed. Set <Typography.InlineCode>streaming</Typography.InlineCode>
+            while the model is thinking and pass an updating
+            <Typography.InlineCode>duration</Typography.InlineCode>
+            for a live timer; the label settles from Thinking to Thought for when streaming ends.
+            Content mounts on its first open and stays mounted, so a streamed trace keeps growing in
+            place. Use
+            <Typography.InlineCode>open</Typography.InlineCode>
+            to control visibility and
+            <Typography.InlineCode>title</Typography.InlineCode>
+            for a one-line summary under the label.
         </Typography.Text>
         <CodeBlock
             code={`import * as Reasoning from '@sivir-ui/svelte/components/reasoning';

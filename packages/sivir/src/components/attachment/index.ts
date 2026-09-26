@@ -1,10 +1,14 @@
+import type { ButtonProps } from '@sivir-ui/svelte/components/button';
 import type { Snippet } from 'svelte';
 import type { HTMLAttributes, HTMLButtonAttributes } from 'svelte/elements';
-import type { ButtonProps } from '@sivir-ui/svelte/components/button';
 import Root from './attachment.svelte';
-import Trigger from './attachment-trigger.svelte';
-import List from './attachment-list.svelte';
 import Item from './attachment-item.svelte';
+import List from './attachment-list.svelte';
+import Name from './attachment-name.svelte';
+import Preview from './attachment-preview.svelte';
+import Remove from './attachment-remove.svelte';
+import Status from './attachment-status.svelte';
+import Trigger from './attachment-trigger.svelte';
 
 export type AttachmentRejectionCode =
     | 'duplicate-file'
@@ -27,6 +31,8 @@ export type AttachmentProps = {
     maxFiles?: number;
     maxSize?: number;
     disabled?: boolean;
+    /** Attaches files pasted into any focused element inside the root. */
+    addOnPaste?: boolean;
     onReject?: (rejections: AttachmentRejection[]) => void;
     class?: string;
     children?: Snippet;
@@ -44,6 +50,7 @@ export type AttachmentTriggerProps = {
 export type AttachmentListProps = {
     label?: string;
     class?: string;
+    children?: Snippet<[File]>;
 } & Omit<HTMLAttributes<HTMLUListElement>, 'children' | 'class'>;
 
 export type AttachmentItemProps = {
@@ -54,6 +61,24 @@ export type AttachmentItemProps = {
     onRemove?: (file: File) => void;
     removable?: boolean;
     class?: string;
+    children?: Snippet;
 } & Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'class'>;
 
-export { Root, Trigger, List, Item };
+export type AttachmentPreviewProps = {
+    class?: string;
+} & Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'class'>;
+
+export type AttachmentNameProps = {
+    class?: string;
+} & Omit<HTMLAttributes<HTMLSpanElement>, 'children' | 'class' | 'title'>;
+
+export type AttachmentStatusProps = {
+    class?: string;
+} & Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'class'>;
+
+export type AttachmentRemoveProps = {
+    class?: string;
+    onclick?: (event: MouseEvent) => void;
+} & Omit<HTMLButtonAttributes, 'children' | 'class' | 'type' | 'onclick'>;
+
+export { Item, List, Name, Preview, Remove, Root, Status, Trigger };

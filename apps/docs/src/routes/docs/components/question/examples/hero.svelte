@@ -88,7 +88,7 @@
 
 <div class="w-full max-w-xl">
     <Question.Root variant="inset" bind:value={answers[step]} required={!complete} onSubmit={next}>
-        <Question.Content class="min-h-80">
+        <Question.Content {step}>
             {#if complete}
                 <Question.Title>Ready to get started</Question.Title>
                 <Question.Description>

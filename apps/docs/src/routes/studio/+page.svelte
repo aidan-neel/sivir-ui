@@ -374,6 +374,7 @@
     let pendingPreset = $state<string | null>(null);
     let presetDialogOpen = $state(false);
     let studioView = $state('invoices');
+    let inspectorTab = $state('color');
     let dashboardRange = $state('30d');
     let invoices = $state<Invoice[]>(initialInvoices.map((invoice) => ({ ...invoice })));
     let invoiceQuery = $state('');
@@ -1325,8 +1326,8 @@
         openAdvanced: () => void,
         onChange: (value: string) => void
     )}
-    <div class="flex min-w-0 flex-col gap-2">
-        <Typography.Metadata>{label}</Typography.Metadata>
+    <div class="grid min-w-0 grid-cols-[minmax(0,1fr)_10rem] items-center gap-3">
+        <span class="truncate text-[13px] text-foreground">{label}</span>
         <Select.Root
             {value}
             onValueChange={(next) => {
@@ -1368,7 +1369,7 @@
     )}
     {@const selection = valueBinding(value, onChange)}
     <div class="flex items-center gap-2" role="group" aria-label={`${label} weight`}>
-        <span class="w-[76px] shrink-0 text-[13px] font-medium text-foreground-muted">{label}</span>
+        <span class="w-[84px] shrink-0 truncate text-[13px] text-foreground">{label}</span>
         <Tabs.Root bind:value={selection.value} variant="ghost" class="min-w-0 flex-1">
             <Tabs.List class="grid w-full grid-cols-4">
                 {#each fontWeights as weight (weight)}
@@ -1387,8 +1388,12 @@
     options: { label: string; value: string }[],
     onChange: (value: string) => void
 )}
-    <div class="flex min-w-0 flex-col gap-2" role="group" aria-label={`${label} color`}>
-        <span class="text-[13px] font-medium text-foreground-muted">{label}</span>
+    <div
+        class="grid min-w-0 grid-cols-[minmax(0,1fr)_10rem] items-center gap-3"
+        role="group"
+        aria-label={`${label} color`}
+    >
+        <span class="truncate text-[13px] text-foreground">{label}</span>
         <ColorPicker.Root {value} onValueChange={onChange} {options}>
             <ColorPicker.Trigger class="h-[34px] w-full" />
             <ColorPicker.Content />

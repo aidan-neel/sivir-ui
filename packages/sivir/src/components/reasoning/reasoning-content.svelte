@@ -1,61 +1,77 @@
 <script lang="ts">
-    import { themedSlide } from '@sivir-ui/svelte/transition';
     import { cn } from '@sivir-ui/svelte/utils';
-    import { onDestroy } from 'svelte';
+    import { onDestroy, untrack } from 'svelte';
     import type { ReasoningContentProps } from '.';
     import { getReasoningContext } from './context.svelte';
 
-    let {
-        class: className,
-        children,
-        onintrostart,
-        onintroend,
-        onoutrostart,
-        onoutroend,
-        ...rest
-    }: ReasoningContentProps = $props();
+    let { class: className, children, ...rest }: ReasoningContentProps = $props();
+
     const reasoning = getReasoningContext();
-    const unregister = reasoning.registerContent();
-    let transitionRevision = 0;
-    onDestroy(unregister);
+    onDestroy(reasoning.registerContent());
 
-    type TransitionEvent = CustomEvent<null> & {
-        currentTarget: EventTarget & HTMLDivElement;
-    };
+    let panel = $state<HTMLDivElement>();
+    let opened = false;
+    let previousOpen = untrack(() => reasoning.open);
+    const mounted = $derived.by(() => {
+        if (reasoning.open) {
+            opened = true;
+        }
 
-    function handleIntroStart(event: TransitionEvent) {
-        transitionRevision = reasoning.transitionStart(true);
-        onintrostart?.(event);
+        return opened;
+    });
+
+    function hasTransition(node: HTMLElement) {
+        const durations = getComputedStyle(node).transitionDuration.split(',');
+
+        return durations.some((value) => {
+            return Number.parseFloat(value) > 0;
+        });
     }
 
-    function handleIntroEnd(event: TransitionEvent) {
-        reasoning.transitionComplete(true, transitionRevision);
-        onintroend?.(event);
+    function handleTransitionEnd(event: TransitionEvent) {
+        if (event.target !== event.currentTarget || event.propertyName !== 'grid-template-rows') {
+            return;
+        }
+        reasoning.settle(reasoning.open);
     }
 
-    function handleOutroStart(event: TransitionEvent) {
-        transitionRevision = reasoning.transitionStart(false);
-        onoutrostart?.(event);
-    }
+    $effect(() => {
+        const open = reasoning.open;
 
-    function handleOutroEnd(event: TransitionEvent) {
-        reasoning.transitionComplete(false, transitionRevision);
-        onoutroend?.(event);
-    }
+        if (open === previousOpen) {
+            return;
+        }
+        previousOpen = open;
+
+        if (panel && hasTransition(panel)) {
+            return;
+        }
+        queueMicrotask(() => {
+            reasoning.settle(open);
+        });
+    });
 </script>
 
-{#if reasoning.open}
-    <div
-        {...rest}
-        id={`reasoning-${reasoning.id}`}
-        data-ui="reasoning-content"
-        transition:themedSlide={{ durationVar: '--motion-duration-panel', fallback: 220 }}
-        onintrostart={handleIntroStart}
-        onintroend={handleIntroEnd}
-        onoutrostart={handleOutroStart}
-        onoutroend={handleOutroEnd}
-        class={cn(className, 'mt-1 overflow-hidden text-sm leading-body text-foreground-muted')}
-    >
-        {@render children?.()}
+<div
+    bind:this={panel}
+    id={`reasoning-${reasoning.id}`}
+    data-ui="reasoning-content"
+    data-state={reasoning.open ? 'open' : 'closed'}
+    inert={!reasoning.open}
+    ontransitionend={handleTransitionEnd}
+    class="grid w-full grid-rows-[0fr] opacity-0 transition-[grid-template-rows,opacity] [transition-duration:calc(var(--motion-duration-panel)*1.5),var(--motion-duration-panel)] ease-[cubic-bezier(0.4,0,0.2,1)] data-[state=open]:grid-rows-[1fr] data-[state=open]:opacity-100"
+>
+    <div class="min-h-0 overflow-hidden">
+        <div
+            {...rest}
+            class={cn(
+                className,
+                'mt-1.5 mb-1 ml-1.5 border-l-[length:var(--border-size)] border-border pl-3.5 text-sm leading-body text-foreground-muted'
+            )}
+        >
+            {#if mounted}
+                {@render children?.()}
+            {/if}
+        </div>
     </div>
-{/if}
+</div>

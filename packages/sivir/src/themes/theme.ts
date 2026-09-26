@@ -139,6 +139,8 @@ type MotionSet = {
     overlay: string;
     toastIn: string;
     toastOut: string;
+    stepIn: string;
+    stepOut: string;
 };
 
 const MOTION: Record<MotionFeel, MotionSet> = {
@@ -149,7 +151,9 @@ const MOTION: Record<MotionFeel, MotionSet> = {
         sheet: '0ms',
         overlay: '0ms',
         toastIn: '0ms',
-        toastOut: '0ms'
+        toastOut: '0ms',
+        stepIn: '0ms',
+        stepOut: '0ms'
     },
     subtle: {
         hover: '90ms',
@@ -158,7 +162,9 @@ const MOTION: Record<MotionFeel, MotionSet> = {
         sheet: '220ms',
         overlay: '90ms',
         toastIn: '240ms',
-        toastOut: '180ms'
+        toastOut: '180ms',
+        stepIn: '260ms',
+        stepOut: '100ms'
     },
     default: {
         hover: '120ms',
@@ -167,7 +173,9 @@ const MOTION: Record<MotionFeel, MotionSet> = {
         sheet: '320ms',
         overlay: '120ms',
         toastIn: '320ms',
-        toastOut: '240ms'
+        toastOut: '240ms',
+        stepIn: '360ms',
+        stepOut: '130ms'
     },
     expressive: {
         hover: '180ms',
@@ -176,7 +184,9 @@ const MOTION: Record<MotionFeel, MotionSet> = {
         sheet: '400ms',
         overlay: '160ms',
         toastIn: '400ms',
-        toastOut: '300ms'
+        toastOut: '300ms',
+        stepIn: '460ms',
+        stepOut: '170ms'
     }
 };
 
@@ -428,7 +438,9 @@ export function themeToCss(themeInput: Theme): string {
         `--motion-duration-sheet-out: ${scaleMotionMs(motion.sheet, 0.7)};`,
         `--motion-duration-overlay: ${motion.overlay};`,
         `--motion-duration-toast-in: ${motion.toastIn};`,
-        `--motion-duration-toast-out: ${motion.toastOut};`
+        `--motion-duration-toast-out: ${motion.toastOut};`,
+        `--motion-duration-step-in: ${motion.stepIn};`,
+        `--motion-duration-step-out: ${motion.stepOut};`
     ];
     if (theme.motion === 'none') {
         shared.push(

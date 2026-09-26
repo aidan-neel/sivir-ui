@@ -594,6 +594,26 @@ export const animationTokenDefinitions = [
         step: 10
     },
     {
+        name: '--motion-duration-step-in',
+        label: 'Step enter',
+        group: 'Speed',
+        fallback: '360ms',
+        kind: 'duration',
+        min: 0,
+        max: 800,
+        step: 10
+    },
+    {
+        name: '--motion-duration-step-out',
+        label: 'Step exit',
+        group: 'Speed',
+        fallback: '130ms',
+        kind: 'duration',
+        min: 0,
+        max: 600,
+        step: 10
+    },
+    {
         name: '--motion-duration-press',
         label: 'Press duration',
         group: 'Speed',
@@ -688,6 +708,26 @@ export const animationTokenDefinitions = [
         label: 'Modal blur',
         group: 'Movement',
         fallback: '2px',
+        kind: 'length',
+        min: 0,
+        max: 12,
+        step: 1
+    },
+    {
+        name: '--motion-step-x',
+        label: 'Step offset',
+        group: 'Movement',
+        fallback: '16px',
+        kind: 'length',
+        min: 0,
+        max: 48,
+        step: 1
+    },
+    {
+        name: '--motion-step-blur',
+        label: 'Step blur',
+        group: 'Movement',
+        fallback: '3px',
         kind: 'length',
         min: 0,
         max: 12,

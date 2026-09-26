@@ -46,10 +46,14 @@ export * as AlertDialog from './components/alert-dialog';
 export type {
     AttachmentItemProps,
     AttachmentListProps,
+    AttachmentNameProps,
+    AttachmentPreviewProps,
     AttachmentProps,
     AttachmentRejection,
     AttachmentRejectionCode,
+    AttachmentRemoveProps,
     AttachmentStatus,
+    AttachmentStatusProps,
     AttachmentTriggerProps
 } from './components/attachment';
 export * as Attachment from './components/attachment';

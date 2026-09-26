@@ -1,0 +1,2 @@
+- Reasoning now starts collapsed: `open` defaults to `false`. Pass `open` to show the trace on first render.
+- Reasoning Trigger no longer defaults `title` to "Draft". The summary line renders only when `title` is set.
