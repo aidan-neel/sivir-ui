@@ -88,9 +88,9 @@
         !registry?.contained && 'sivir-inset-surface',
         !isActive && !registry?.contained && 'hidden',
         registry?.contained &&
-            'max-h-none overflow-visible rounded-none border-0 bg-transparent shadow-none ring-0 transition-[transform,opacity] [transition-duration:var(--motion-duration-panel)] ease-[var(--ease-out)] motion-reduce:transition-none will-change-[transform,opacity]',
-        registry?.contained && isActive && 'relative z-[1]',
-        registry?.contained && !isActive && 'pointer-events-none absolute inset-0 block'
+            'max-h-none overflow-visible rounded-none border-0 bg-transparent shadow-none ring-0 transition-[transform,opacity,filter] [transition-duration:var(--motion-duration-panel)] ease-[var(--ease-out)] motion-reduce:transition-none will-change-[transform,opacity,filter]',
+        registry?.contained && isActive && 'relative z-[1] blur-[0px]',
+        registry?.contained && !isActive && 'pointer-events-none absolute inset-0 block blur-[2px]'
     )}
     style:transform={`translateX(calc(${shift} * var(--code-block-slide)))`}
     style:opacity={isActive ? '1' : '0'}

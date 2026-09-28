@@ -59,6 +59,12 @@
             lang="svelte"
             copy="overlay"
         />
+        <Typography.Text variant="supporting">
+            The tooltip opens after 125ms. Pass
+            <Typography.InlineCode>tooltipDelay</Typography.InlineCode>
+            to wait longer, such as in a row of quiet message actions where tooltips should only
+            appear when someone lingers.
+        </Typography.Text>
     </section>
 
     <!-- ─── Examples ──────────────────────────────────────────────── -->

@@ -160,10 +160,11 @@ src/lib/sivir/components/button/
             <Typography.InlineCode>magic</Typography.InlineCode>,
             <Typography.InlineCode>bitsy</Typography.InlineCode>,
             <Typography.InlineCode>open</Typography.InlineCode>, and
-            <Typography.InlineCode>functional</Typography.InlineCode>. Preview them live on the
-            <a class="text-foreground underline underline-offset-2" href={resolve('/themes')}
-                >themes page</a
-            >, where you can copy each preset’s CSS or JSON.
+            <Typography.InlineCode>functional</Typography.InlineCode>. Switch between them live on
+            the
+            <a class="text-foreground underline underline-offset-2" href={resolve('/')}
+                >homepage</a
+            >.
         </Typography.Text>
         <Typography.Text variant="body" class="m-0 max-w-2xl">
             With the CLI, install a preset into

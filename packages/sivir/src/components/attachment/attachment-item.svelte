@@ -53,7 +53,7 @@
     data-state={status}
     class={cn(
         className,
-        'grid min-w-0 grid-flow-col grid-cols-[auto_minmax(0,1fr)] grid-rows-[auto_auto] items-center rounded-[var(--radius-lg)] border-[length:var(--border-size)] border-border bg-card p-2 text-foreground transition-[border-color] [transition-duration:var(--motion-duration-panel)] ease-[var(--ease-out)] motion-reduce:transition-none data-[state=error]:border-error not-has-[>[data-ui=attachment-status]]:[&>[data-ui=attachment-name]]:row-span-2 [&>:not([data-ui=attachment-preview],[data-ui=attachment-name],[data-ui=attachment-status])]:row-span-2 [&>:not([data-ui=attachment-preview],[data-ui=attachment-name],[data-ui=attachment-status])]:ms-2'
+        'grid min-w-0 grid-flow-col grid-cols-[auto_minmax(0,1fr)] grid-rows-[auto_auto] items-center rounded-[var(--radius-lg)] border-[length:var(--border-size)] border-border bg-card p-1.5 pe-1 text-foreground shadow-[var(--elevation-1)] transition-[border-color,background-color] [transition-duration:var(--motion-duration-panel)] ease-[var(--ease-out)] motion-reduce:transition-none data-[state=error]:border-[color-mix(in_srgb,var(--color-error)_40%,var(--color-border))] data-[state=error]:bg-[color-mix(in_srgb,var(--color-error)_5%,var(--color-card))] not-has-[>[data-ui=attachment-status]]:[&>[data-ui=attachment-name]]:row-span-2 [&>:not([data-ui=attachment-preview],[data-ui=attachment-name],[data-ui=attachment-status])]:row-span-2'
     )}
 >
     {#if children}

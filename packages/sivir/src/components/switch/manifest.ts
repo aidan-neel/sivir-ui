@@ -2,13 +2,14 @@ import type { Manifest } from '@sivir-ui/svelte/_manifest/types';
 
 export const manifest: Manifest = {
     name: 'switch',
-    version: '1.0.0',
+    version: '1.1.0',
     visibility: 'public',
     description:
-        'Toggle switch with role="switch", bindable switched state, optional label and description.',
+        'Toggle switch with role="switch", bindable switched state, spring-driven thumb, drag to toggle, optional label and description.',
     role: 'switch',
     files: [
         'components/switch/switch.svelte',
+        'components/switch/switch-spring.svelte.ts',
         'components/switch/index.ts',
         'components/switch/manifest.ts'
     ],

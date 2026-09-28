@@ -1,24 +1,36 @@
 <script lang="ts">
-    import ArrowRight from '@lucide/svelte/icons/arrow-right';
     import Search from '@lucide/svelte/icons/search';
-    import type { ScrittoProps } from '@scritto/core';
     import { Button } from '@sivir-ui/svelte/components/button';
-    import * as Combobox from '@sivir-ui/svelte/components/combobox';
+    import { Input } from '@sivir-ui/svelte/components/input';
     import * as Typography from '@sivir-ui/svelte/components/typography';
-    import type { Component } from 'svelte';
-    import type { HTMLAttributes } from 'svelte/elements';
     import { goto } from '$app/navigation';
     import { resolve } from '$app/paths';
+    import type { ComponentSlug } from '$lib/component-anatomy';
+    import { componentSummaries } from '$lib/component-summaries';
     import { components, sanitizeComponent } from '$lib/components';
     import DocsPager from '$lib/components/docs/docs-pager.svelte';
 
     type Group = {
         id: string;
         heading: string;
-        items: string[];
+        items: ComponentSlug[];
     };
 
     const groups: Group[] = [
+        {
+            id: 'ai',
+            heading: 'AI',
+            items: [
+                'conversation',
+                'message',
+                'composer',
+                'attachment',
+                'question',
+                'reasoning',
+                'tool',
+                'response-stream'
+            ]
+        },
         {
             id: 'inputs',
             heading: 'Inputs',
@@ -90,78 +102,63 @@
             id: 'content',
             heading: 'Content',
             items: ['code-block', 'copy-button', 'file-diff', 'markdown', 'shortcut', 'typography']
-        },
-        {
-            id: 'ai',
-            heading: 'AI',
-            items: [
-                'attachment',
-                'conversation',
-                'message',
-                'composer',
-                'question',
-                'reasoning',
-                'response-stream',
-                'tool'
-            ]
         }
     ];
 
-    const ROLL_TRANSITION = { duration: 300 };
-
-    const canRoll =
-        typeof window !== 'undefined' &&
-        typeof window.matchMedia === 'function' &&
-        typeof Element !== 'undefined' &&
-        typeof Element.prototype.getAnimations === 'function';
-
-    type ScrittoComponent = Component<ScrittoProps & HTMLAttributes<HTMLElement>>;
-    let Scritto = $state<ScrittoComponent | null>(null);
-
-    $effect(() => {
-        if (!canRoll) {
-            return;
-        }
-        let cancelled = false;
-        import('@scritto/svelte').then((module) => {
-            if (!cancelled) {
-                Scritto = module.default as ScrittoComponent;
-            }
-        });
-        return () => {
-            cancelled = true;
-        };
-    });
-
     let query = $state('');
 
-    function matches(component: string): boolean {
-        const needle = query.trim().toLowerCase();
+    const needle = $derived(query.trim().toLowerCase());
+    const visibleGroups = $derived(
+        groups
+            .map((group) => {
+                return {
+                    ...group,
+                    items: group.items.filter(matches)
+                };
+            })
+            .filter((group) => {
+                return group.items.length > 0;
+            })
+    );
+    const visibleItems = $derived(
+        visibleGroups.flatMap((group) => {
+            return group.items;
+        })
+    );
+    const countLabel = $derived(
+        needle === ''
+            ? `${components.length} components`
+            : `${visibleItems.length} of ${components.length}`
+    );
+
+    function matches(component: ComponentSlug) {
         if (needle === '') {
             return true;
         }
-        return (
-            component.includes(needle) ||
-            sanitizeComponent(component).toLowerCase().includes(needle)
-        );
+
+        const name = sanitizeComponent(component).toLowerCase();
+        const summary = componentSummaries[component].toLowerCase();
+
+        return component.includes(needle) || name.includes(needle) || summary.includes(needle);
     }
 
-    const visibleGroups = $derived(
-        groups
-            .map((group) => ({ ...group, items: group.items.filter(matches) }))
-            .filter((group) => group.items.length > 0)
-    );
-    const visibleTotal = $derived(
-        visibleGroups.reduce((sum, group) => sum + group.items.length, 0)
-    );
-    const countLabel = $derived(
-        query.trim() === ''
-            ? `${components.length} components`
-            : `${visibleTotal} of ${components.length} components`
-    );
+    function componentHref(component: ComponentSlug) {
+        return resolve(`/docs/components/${component}` as '/docs/components/accordion');
+    }
 
-    function componentHref(component: string): string {
-        return `/docs/components/${component}`;
+    function handleSearchKeydown(event: KeyboardEvent) {
+        if (event.key === 'Escape' && query !== '') {
+            event.preventDefault();
+            query = '';
+            return;
+        }
+
+        const first = visibleItems[0];
+
+        if (event.key === 'Enter' && needle !== '' && first) {
+            event.preventDefault();
+            void goto(componentHref(first));
+        }
     }
 </script>
 
@@ -169,7 +166,7 @@
     <title>Sivir · Components</title>
     <meta
         name="description"
-        content="Browse all 57 accessible, themeable Svelte 5 components in Sivir UI."
+        content={`Browse all ${components.length} accessible, themeable Svelte 5 components in Sivir UI.`}
     />
 </svelte:head>
 
@@ -177,89 +174,89 @@
     <header class="flex items-start justify-between gap-4">
         <div>
             <Typography.H1 class="m-0">Components</Typography.H1>
-
             <Typography.Text variant="lead" class="mt-2 max-w-2xl">
-                Build with easy-to-style UI components.
+                Accessible Svelte 5 components that follow your theme, from buttons and menus to the
+                parts of an AI chat.
             </Typography.Text>
         </div>
         <DocsPager />
     </header>
 
-    <section aria-label="Search components" class="flex flex-col gap-3">
-        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <Combobox.Root bind:value={query}>
-                <Combobox.Trigger
-                    appearance="input"
-                    placeholder="Search components"
-                    class="w-full sm:max-w-sm"
-                >
-                    {#snippet trailing()}
-                        <Search size={16} />
-                    {/snippet}
-                </Combobox.Trigger>
-                <Combobox.Content class="max-h-56">
-                    <Combobox.Results>
-                        {#each visibleGroups as group (group.id)}
-                            {#each group.items as component (component)}
-                                <Combobox.Item
-                                    value={component}
-                                    label={sanitizeComponent(component)}
-                                    callback={() => {
-                                        void goto(componentHref(component));
-                                    }}
-                                />
-                            {/each}
-                        {/each}
-                    </Combobox.Results>
-                </Combobox.Content>
-            </Combobox.Root>
-            <Typography.Metadata class="tabular-nums" aria-live="polite">
-                {#if Scritto}
-                    <Scritto value={countLabel} transition={ROLL_TRANSITION} />
-                {:else}
-                    {countLabel}
-                {/if}
-            </Typography.Metadata>
+    <search class="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
+        <div class="w-full sm:max-w-sm">
+            <Input
+                type="text"
+                bind:value={query}
+                placeholder="Filter by name or purpose"
+                aria-label="Filter components"
+                aria-describedby="component-count"
+                autocomplete="off"
+                spellcheck="false"
+                onkeydown={handleSearchKeydown}
+            >
+                {#snippet leading()}
+                    <Search size={15} aria-hidden="true" />
+                {/snippet}
+            </Input>
         </div>
-    </section>
+        <Typography.Metadata
+            id="component-count"
+            class="whitespace-nowrap tabular-nums"
+            aria-live="polite"
+        >
+            {countLabel}
+        </Typography.Metadata>
+    </search>
 
-    {#if visibleTotal === 0}
+    {#if visibleItems.length === 0}
         <section aria-label="No matching components" class="flex flex-col items-start gap-3">
             <Typography.Text variant="supporting">
                 No components match “{query.trim()}”.
             </Typography.Text>
-            <Button variant="outline" size="md" onclick={() => (query = '')}>Clear search</Button>
+            <Button
+                variant="outline"
+                size="md"
+                onclick={() => {
+                    query = '';
+                }}
+            >
+                Clear filter
+            </Button>
         </section>
-    {/if}
-
-    {#each visibleGroups as group (group.id)}
-        <section aria-labelledby={group.id} class="flex flex-col gap-4">
-            <div class="flex items-baseline gap-2">
-                <Typography.H2 id={group.id} class="m-0">{group.heading}</Typography.H2>
-                <Typography.Metadata class="tabular-nums">{group.items.length}</Typography.Metadata>
-            </div>
-            <ul class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                {#each group.items as component, i (component)}
-                    <li
-                        class="motion-safe:[animation:docs-block-in_280ms_var(--ease-out)_both]"
-                        style={`animation-delay: ${Math.min(i * 24, 240)}ms;`}
+    {:else}
+        <div class="flex flex-col">
+            {#each visibleGroups as group (group.id)}
+                <section
+                    aria-labelledby={`group-${group.id}`}
+                    class="flex flex-col gap-3 border-t-[length:var(--border-size)] border-border py-6 first:border-t-0 first:pt-0"
+                >
+                    <Typography.H2
+                        id={`group-${group.id}`}
+                        class="m-0 [font-size:var(--font-size-body)] [font-weight:var(--font-weight-header)]"
                     >
-                        <a
-                            href={resolve(
-                                `/docs/components/${component}` as '/docs/components/accordion'
-                            )}
-                            class="group flex min-h-16 items-center justify-between gap-4 rounded-[var(--radius-lg)] border border-border bg-card px-4 py-3 text-foreground transition-[border-color,background-color] duration-200 hover:border-border-strong hover:bg-secondary/45 motion-reduce:transition-none"
-                        >
-                            <span class="font-medium">{sanitizeComponent(component)}</span>
-                            <ArrowRight
-                                size={15}
-                                class="text-foreground-muted transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none"
-                                aria-hidden="true"
-                            />
-                        </a>
-                    </li>
-                {/each}
-            </ul>
-        </section>
-    {/each}
+                        {group.heading}
+                    </Typography.H2>
+                    <ul class="m-0 grid list-none gap-x-8 gap-y-0.5 p-0 sm:grid-cols-2">
+                        {#each group.items as component (component)}
+                            <li>
+                                <a
+                                    href={componentHref(component)}
+                                    class="-mx-3 flex flex-col gap-0.5 rounded-[var(--radius-md)] px-3 py-2 no-underline outline-none transition-colors [transition-duration:var(--motion-duration-hover)] hover:bg-secondary/60 focus-visible:shadow-[var(--focus-ring)] motion-reduce:transition-none"
+                                >
+                                    <span
+                                        class="[font-weight:var(--font-weight-label)] text-foreground"
+                                    >
+                                        {sanitizeComponent(component)}
+                                    </span>
+                                    <span class="text-sm text-foreground-muted">
+                                        {componentSummaries[component]}
+                                    </span>
+                                </a>
+                            </li>
+                        {/each}
+                    </ul>
+                </section>
+            {/each}
+        </div>
+    {/if}
 </div>

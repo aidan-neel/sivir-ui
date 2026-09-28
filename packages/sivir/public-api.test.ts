@@ -34,7 +34,7 @@ const NAMED = {
     'show-more': ['ShowMore'],
     shortcut: ['Shortcut'],
     skeleton: ['Skeleton', 'SkeletonSwap'],
-    slider: ['Slider'],
+    slider: ['Slider', 'SliderField'],
     spinner: ['Spinner'],
     switch: ['Switch'],
     'task-steps': ['TaskSteps'],

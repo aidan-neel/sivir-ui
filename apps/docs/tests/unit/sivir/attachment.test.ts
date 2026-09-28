@@ -84,4 +84,63 @@ describe('Attachment', () => {
         expect(screen.getByTestId('attachment-count')).toHaveTextContent('1');
         expect(screen.getByText('one.txt')).toBeInTheDocument();
     });
+
+    it('attaches files pasted into a field inside the root', async () => {
+        render(AttachmentFixture);
+        const file = new File(['pasted'], 'pasted.txt', { type: 'text/plain', lastModified: 7 });
+
+        await fireEvent.paste(screen.getByRole('textbox', { name: 'Prompt' }), {
+            clipboardData: { files: [file] }
+        });
+
+        expect(screen.getByTestId('attachment-count')).toHaveTextContent('1');
+        expect(screen.getByText('pasted.txt')).toBeInTheDocument();
+    });
+
+    it('ignores pasted files when addOnPaste is false', async () => {
+        render(AttachmentFixture, { props: { addOnPaste: false } });
+        const file = new File(['pasted'], 'pasted.txt', { type: 'text/plain', lastModified: 8 });
+
+        await fireEvent.paste(screen.getByRole('textbox', { name: 'Prompt' }), {
+            clipboardData: { files: [file] }
+        });
+
+        expect(screen.getByTestId('attachment-count')).toHaveTextContent('0');
+    });
+
+    it('moves focus to the next file, then the trigger, after removal', async () => {
+        const user = userEvent.setup();
+        const { container } = render(AttachmentFixture);
+        const input = queryRequired<HTMLInputElement>(container, 'input[type="file"]');
+        const first = new File(['one'], 'one.txt', { type: 'text/plain', lastModified: 9 });
+        const second = new File(['two'], 'two.txt', { type: 'text/plain', lastModified: 10 });
+
+        await chooseFiles(input, [first, second]);
+        screen.getByRole('button', { name: 'Remove one.txt' }).focus();
+        await user.keyboard('{Enter}');
+
+        await waitFor(() => {
+            expect(screen.getByRole('button', { name: 'Remove two.txt' })).toHaveFocus();
+        });
+
+        await user.keyboard('{Enter}');
+
+        await waitFor(() => {
+            expect(screen.getByRole('button', { name: 'Choose files' })).toHaveFocus();
+        });
+    });
+
+    it('renders composed items from the list snippet', async () => {
+        const { container } = render(AttachmentFixture, { props: { composed: true } });
+        const input = queryRequired<HTMLInputElement>(container, 'input[type="file"]');
+        const file = new File(['draft'], 'draft.txt', { type: 'text/plain', lastModified: 11 });
+
+        await chooseFiles(input, [file]);
+
+        expect(screen.getByText('draft.txt')).toBeInTheDocument();
+        expect(
+            screen.getByRole('progressbar', { name: 'Upload progress for draft.txt' })
+        ).toHaveAttribute('aria-valuenow', '40');
+        expect(screen.queryByRole('button', { name: 'Remove draft.txt' })).not.toBeInTheDocument();
+    });
 });

@@ -5,11 +5,13 @@
     let { label = 'Input', children, class: className, ...rest }: ToolInputProps = $props();
 </script>
 
-<div data-ui="tool-input" class={cn(className, 'flex flex-col gap-1.5')} {...rest}>
-    <span class="text-xs font-[var(--font-weight-label)] text-foreground-muted">{label}</span>
-    <pre
-        class="overflow-x-auto rounded-[var(--radius-md)] border-[length:var(--border-size)] border-border bg-card px-2.5 py-2 font-mono text-xs leading-5 text-foreground"
-    ><code
-            >{@render children?.()}</code
-        ></pre>
+<div data-ui="tool-input" class={cn(className, 'flex min-w-0 flex-col gap-1')} {...rest}>
+    <span class="text-xs text-foreground-muted">{label}</span>
+    <div class="max-h-72 overflow-auto rounded-[var(--radius-md)] bg-secondary/60 px-2.5 py-2">
+        <pre
+            class="m-0 bg-transparent p-0 font-mono text-xs leading-5 whitespace-pre-wrap break-all text-foreground"
+        ><code
+                >{@render children?.()}</code
+            ></pre>
+    </div>
 </div>

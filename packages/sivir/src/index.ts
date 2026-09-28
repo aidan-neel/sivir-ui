@@ -268,7 +268,13 @@ export type { ShowMoreProps } from './components/show-more';
 export { ShowMore } from './components/show-more';
 export type { SkeletonProps, SkeletonSwapProps } from './components/skeleton';
 export { Skeleton, SkeletonSwap } from './components/skeleton';
-export type { SliderProps } from './components/slider';
+export type {
+    SliderLabelProps,
+    SliderProps,
+    SliderRangeProps,
+    SliderThumbProps,
+    SliderValueProps
+} from './components/slider';
 export { Slider } from './components/slider';
 export type { SpinnerProps } from './components/spinner';
 export { Spinner } from './components/spinner';
@@ -310,13 +316,14 @@ export { Toggle } from './components/toggle';
 export type { ToggleGroupItemProps, ToggleGroupProps } from './components/toggle-group';
 export * as ToggleGroup from './components/toggle-group';
 export type {
+    ToolCallProps,
+    ToolContentProps,
     ToolInputProps,
-    ToolItemProps,
     ToolOutputProps,
-    ToolProps,
+    ToolRootProps,
     ToolState,
-    ToolTriggerState,
-    ToolVariant
+    ToolTriggerProps,
+    ToolTriggerState
 } from './components/tool';
 export * as Tool from './components/tool';
 export type { ToolbarProps } from './components/toolbar';

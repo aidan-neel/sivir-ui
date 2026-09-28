@@ -1,10 +1,30 @@
 <script lang="ts">
-    import type { ScrittoProps } from '@scritto/core';
-    import { getCssDuration } from '@sivir-ui/svelte/transition';
     import { cn } from '@sivir-ui/svelte/utils';
-    import { type Component, onDestroy } from 'svelte';
-    import type { HTMLAttributes } from 'svelte/elements';
+    import { onDestroy, untrack } from 'svelte';
     import type { ResponseStreamProps } from '.';
+
+    type Segment = {
+        id: number;
+        start: number;
+        end: number;
+        born: number;
+    };
+
+    type Piece =
+        | {
+              key: string;
+              kind: 'caret';
+          }
+        | {
+              key: string;
+              kind: 'settled' | 'fresh';
+              text: string;
+          };
+
+    const fadeWindow = 240;
+    const maxFrameGap = 64;
+    const catchUpFactor = 3;
+    const dotDelays = [0, 1, 2, 1, 2, 3, 2, 3, 4];
 
     let {
         textStream,
@@ -18,263 +38,45 @@
         ...rest
     }: ResponseStreamProps = $props();
 
-    let displayedText = $state('');
+    let shown = $state('');
+    let segments = $state<Segment[]>([]);
+    let sourceDone = $state(false);
     let isComplete = $state(false);
-    let isWaiting = $state(false);
-    let currentIndex = 0;
-    let streamId = 0;
-    let sourceKind: 'static' | 'snapshot' | 'finalized-snapshot' | 'async' | undefined;
-    let previousSource: string | AsyncIterable<string> | undefined;
-    let previousSnapshot = '';
-    let animationFrame: number | undefined;
+    let target = '';
+    let kind: 'static' | 'live' | 'async' | undefined;
+    let currentAsync: AsyncIterable<string> | undefined;
     let abortController: AbortController | undefined;
+    let frame: number | undefined;
+    let lastFrame = 0;
+    let budget = 0;
+    let nextSegmentId = 0;
 
-    type ScrittoComponent = Component<ScrittoProps & HTMLAttributes<HTMLElement>>;
-    let Scritto = $state<ScrittoComponent | null>(null);
-
-    const canRoll =
-        typeof window !== 'undefined' &&
-        typeof window.matchMedia === 'function' &&
-        typeof Element !== 'undefined' &&
-        typeof Element.prototype.getAnimations === 'function';
-
-    const rollTransition = $derived({
-        duration: getRollDuration(),
-        easing: 'cubic-bezier(0.23, 1, 0.32, 1)'
-    });
-
-    $effect(() => {
-        if (!canRoll) {
-            return;
-        }
-        let cancelled = false;
-        import('@scritto/svelte').then((module) => {
-            if (!cancelled) {
-                Scritto = module.default as ScrittoComponent;
-            }
-        });
-
-        return () => {
-            cancelled = true;
-        };
-    });
-
-    let box: HTMLElement | undefined;
-
-    $effect(() => {
-        const el = box;
-        if (!el || typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
-            return;
-        }
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-            return;
-        }
-        let target = el.offsetHeight;
-        let flight: Animation | undefined;
-        const settle = () => {
-            const grown = el.scrollHeight;
-            if (grown === target) {
-                flight = undefined;
-                el.style.overflow = '';
-                return;
-            }
-            play(Math.round(el.getBoundingClientRect().height), grown);
-        };
-        const play = (from: number, to: number) => {
-            if (from === to) {
-                return;
-            }
-            target = to;
-            flight?.cancel();
-            el.style.overflow = 'hidden';
-            const animation = el.animate([{ height: `${from}px` }, { height: `${to}px` }], {
-                duration: getCssDuration(el, '--motion-duration-panel', 180),
-                easing: 'cubic-bezier(0.23, 1, 0.32, 1)'
-            });
-            flight = animation;
-            animation.onfinish = settle;
-            animation.oncancel = () => {
-                if (flight === animation) {
-                    flight = undefined;
+    const isWaiting = $derived(shown.length === 0 && !sourceDone);
+    const pieces = $derived.by((): Piece[] => {
+        if (isWaiting) {
+            return [
+                {
+                    key: 'caret',
+                    kind: 'caret'
                 }
+            ];
+        }
+
+        const settled: Piece = {
+            key: 'settled',
+            kind: 'settled',
+            text: shown.slice(0, segments[0]?.start ?? shown.length)
+        };
+        const fresh = segments.map((segment): Piece => {
+            return {
+                key: `fresh-${segment.id}`,
+                kind: 'fresh',
+                text: shown.slice(segment.start, segment.end)
             };
-        };
-        const observer = new ResizeObserver(() => {
-            if (flight) {
-                return;
-            }
-            const height = el.offsetHeight;
-            if (height === target) {
-                return;
-            }
-            play(target, height);
         });
-        observer.observe(el);
 
-        return () => {
-            observer.disconnect();
-            flight?.cancel();
-            flight = undefined;
-            el.style.overflow = '';
-        };
+        return [settled, ...fresh];
     });
-
-    function getChunkSize() {
-        if (typeof characterChunkSize === 'number') {
-            return Math.max(1, characterChunkSize);
-        }
-        return speed < 25
-            ? 1
-            : Math.max(1, Math.round((Math.min(100, Math.max(1, speed)) - 25) / 10));
-    }
-
-    function getProcessingDelay() {
-        return Math.max(1, Math.round(100 / Math.sqrt(Math.min(100, Math.max(1, speed)))));
-    }
-
-    function getRollDuration() {
-        return Math.round(1000 / Math.sqrt(Math.min(100, Math.max(1, speed))));
-    }
-
-    function complete() {
-        if (isComplete) {
-            return;
-        }
-        isComplete = true;
-        isWaiting = false;
-        onComplete?.();
-    }
-
-    function stopStreaming() {
-        if (animationFrame) {
-            cancelAnimationFrame(animationFrame);
-        }
-        animationFrame = undefined;
-        abortController?.abort();
-        abortController = undefined;
-    }
-
-    function reset() {
-        stopStreaming();
-        currentIndex = 0;
-        displayedText = '';
-        isComplete = false;
-        isWaiting = false;
-    }
-
-    function applySnapshot(text: string) {
-        displayedText = text;
-        previousSnapshot = text;
-        isWaiting = text.length === 0;
-    }
-
-    function renderString(text: string, id: number) {
-        let lastFrameTime = 0;
-
-        const nextFrame = (timestamp: number) => {
-            if (id !== streamId) {
-                return;
-            }
-            if (timestamp - lastFrameTime < getProcessingDelay()) {
-                animationFrame = requestAnimationFrame(nextFrame);
-                return;
-            }
-            lastFrameTime = timestamp;
-
-            const endIndex = Math.min(currentIndex + getChunkSize(), text.length);
-            displayedText = text.slice(0, endIndex);
-            currentIndex = endIndex;
-
-            if (endIndex < text.length) {
-                animationFrame = requestAnimationFrame(nextFrame);
-            } else {
-                complete();
-            }
-        };
-
-        animationFrame = requestAnimationFrame(nextFrame);
-    }
-
-    async function renderAsync(stream: AsyncIterable<string>, id: number) {
-        const controller = new AbortController();
-        abortController = controller;
-
-        try {
-            for await (const chunk of stream) {
-                if (controller.signal.aborted || id !== streamId) {
-                    return;
-                }
-                displayedText += chunk;
-                if (displayedText.length > 0) {
-                    isWaiting = false;
-                }
-            }
-            complete();
-        } catch (error) {
-            if (!controller.signal.aborted) {
-                onError?.(error);
-                complete();
-            }
-        }
-    }
-
-    function startAsync(stream: AsyncIterable<string>) {
-        reset();
-        const id = ++streamId;
-        isWaiting = true;
-        sourceKind = 'async';
-        renderAsync(stream, id);
-    }
-
-    $effect(() => {
-        if (typeof textStream !== 'string') {
-            if (sourceKind !== 'async' || previousSource !== textStream) {
-                previousSource = textStream;
-                startAsync(textStream);
-            }
-            return;
-        }
-
-        if (streaming) {
-            const fresh = sourceKind !== 'snapshot';
-            if (fresh) {
-                reset();
-                sourceKind = 'snapshot';
-                applySnapshot(textStream);
-                return;
-            }
-            if (textStream === previousSnapshot) {
-                return;
-            }
-            if (!textStream.startsWith(previousSnapshot)) {
-                applySnapshot(textStream);
-                return;
-            }
-            applySnapshot(textStream);
-            return;
-        }
-
-        if (sourceKind === 'snapshot') {
-            stopStreaming();
-            if (textStream !== previousSnapshot) {
-                applySnapshot(textStream);
-            }
-            sourceKind = 'finalized-snapshot';
-            complete();
-            return;
-        }
-
-        if (sourceKind === 'finalized-snapshot' && textStream === previousSnapshot) {
-            return;
-        }
-
-        reset();
-        const id = ++streamId;
-        sourceKind = 'static';
-        previousSource = textStream;
-        renderString(textStream, id);
-    });
-
     const streamState = $derived.by(() => {
         if (isWaiting) {
             return 'waiting';
@@ -285,50 +87,277 @@
         return 'streaming';
     });
 
-    onDestroy(stopStreaming);
+    function prefersReducedMotion() {
+        return (
+            typeof window === 'undefined' ||
+            typeof window.requestAnimationFrame !== 'function' ||
+            window.matchMedia?.('(prefers-reduced-motion: reduce)').matches === true
+        );
+    }
+
+    function baseRate() {
+        const clamped = Math.min(100, Math.max(1, speed));
+
+        return 12 + clamped * 2.4;
+    }
+
+    function stopFrame() {
+        if (frame !== undefined) {
+            cancelAnimationFrame(frame);
+        }
+        frame = undefined;
+        lastFrame = 0;
+        budget = 0;
+    }
+
+    function reset() {
+        stopFrame();
+        abortController?.abort();
+        abortController = undefined;
+        currentAsync = undefined;
+        target = '';
+        shown = '';
+        segments = [];
+        sourceDone = false;
+        isComplete = false;
+    }
+
+    function maybeComplete() {
+        if (isComplete || !sourceDone || shown !== target) {
+            return;
+        }
+        isComplete = true;
+        onComplete?.();
+    }
+
+    function snap(text: string) {
+        stopFrame();
+        target = text;
+        shown = text;
+        segments = [];
+    }
+
+    function nextStep(elapsed: number, backlog: number) {
+        const rate = kind === 'static' ? baseRate() : Math.max(baseRate(), backlog * catchUpFactor);
+        budget += (elapsed / 1000) * rate;
+
+        const whole = Math.floor(budget);
+        if (whole < 1) {
+            return 0;
+        }
+        budget -= whole;
+
+        return Math.min(backlog, Math.max(whole, characterChunkSize ?? 1));
+    }
+
+    function tick(now: number) {
+        frame = undefined;
+        const elapsed = lastFrame ? Math.min(maxFrameGap, now - lastFrame) : 16;
+        lastFrame = now;
+
+        const backlog = target.length - shown.length;
+        if (backlog > 0) {
+            const step = nextStep(elapsed, backlog);
+            if (step > 0) {
+                const start = shown.length;
+                const end = start + step;
+                shown = target.slice(0, end);
+                segments.push({
+                    id: nextSegmentId++,
+                    start,
+                    end,
+                    born: now
+                });
+            }
+        } else {
+            budget = 0;
+        }
+
+        const firstLive = segments.findIndex((segment) => {
+            return now - segment.born < fadeWindow;
+        });
+        if (firstLive === -1) {
+            segments = [];
+        } else if (firstLive > 0) {
+            segments = segments.slice(firstLive);
+        }
+
+        if (target.length > shown.length || segments.length > 0) {
+            frame = requestAnimationFrame(tick);
+            return;
+        }
+        lastFrame = 0;
+        maybeComplete();
+    }
+
+    function schedule() {
+        if (prefersReducedMotion()) {
+            snap(target);
+            maybeComplete();
+            return;
+        }
+        if (frame === undefined) {
+            frame = requestAnimationFrame(tick);
+        }
+    }
+
+    async function consume(stream: AsyncIterable<string>) {
+        const controller = new AbortController();
+        abortController = controller;
+
+        try {
+            for await (const chunk of stream) {
+                if (controller.signal.aborted) {
+                    return;
+                }
+                target += chunk;
+                schedule();
+            }
+        } catch (error) {
+            if (controller.signal.aborted) {
+                return;
+            }
+            onError?.(error);
+        }
+
+        if (controller.signal.aborted) {
+            return;
+        }
+        sourceDone = true;
+        schedule();
+    }
+
+    function syncAsync(stream: AsyncIterable<string>) {
+        if (kind === 'async' && currentAsync === stream) {
+            return;
+        }
+        reset();
+        kind = 'async';
+        currentAsync = stream;
+        consume(stream);
+    }
+
+    function syncLive(text: string) {
+        if (kind !== 'live') {
+            reset();
+            kind = 'live';
+        }
+        if (!text.startsWith(shown)) {
+            snap(text);
+        }
+        target = text;
+        sourceDone = false;
+        isComplete = false;
+        schedule();
+    }
+
+    function syncStatic(text: string) {
+        if (kind === 'live' && text.startsWith(shown)) {
+            target = text;
+            sourceDone = true;
+            schedule();
+            return;
+        }
+        if (kind === 'static' && target === text) {
+            return;
+        }
+        reset();
+        kind = 'static';
+        target = text;
+        sourceDone = true;
+        schedule();
+    }
+
+    $effect(() => {
+        const source = textStream;
+        const live = streaming;
+
+        untrack(() => {
+            if (typeof source !== 'string') {
+                syncAsync(source);
+                return;
+            }
+            if (live) {
+                syncLive(source);
+                return;
+            }
+            syncStatic(source);
+        });
+    });
+
+    onDestroy(() => {
+        stopFrame();
+        abortController?.abort();
+    });
 </script>
 
 <svelte:element
     this={as}
-    bind:this={box}
+    {...rest}
     data-ui="response-stream"
     data-state={streamState}
     aria-live="polite"
-    aria-busy={streaming || !isComplete}
+    aria-busy={!isComplete}
     class={cn(
         className,
         'block font-medium whitespace-pre-wrap text-[length:var(--font-size-body)] leading-body text-foreground'
     )}
-    {...rest}
 >
-    {#if Scritto}
-        <Scritto value={displayedText} transition={rollTransition} />
-    {:else}
-        {displayedText}
-    {/if}
-    {#if isWaiting}
-        <span
-            aria-hidden="true"
-            data-ui="response-stream-caret"
-            class="sivir-response-stream-caret ms-0.5 inline-block h-4 w-px -translate-y-px bg-foreground-muted align-middle"
-        ></span>
-    {/if}
+    {#each pieces as piece (piece.key)}
+        {#if piece.kind === 'caret'}
+            <span
+                aria-hidden="true"
+                data-ui="response-stream-caret"
+                class="inline-grid -translate-y-px grid-cols-[repeat(3,3px)] gap-[1.5px] align-middle"
+            >
+                {#each dotDelays as delay, index (index)}
+                    <span
+                        class="sivir-response-stream-dot size-[3px] rounded-full bg-foreground opacity-20"
+                        style:animation-delay={`${delay * 110}ms`}
+                    ></span>
+                {/each}
+            </span>
+        {:else}
+            <span class={piece.kind === 'fresh' ? 'sivir-response-stream-fresh' : undefined}
+                >{piece.text}</span
+            >
+        {/if}
+    {/each}
 </svelte:element>
 
 <style>
-    .sivir-response-stream-caret {
-        animation: sivir-response-stream-caret 1.1s steps(1, end) infinite;
+    .sivir-response-stream-fresh {
+        animation: sivir-response-stream-fresh 240ms cubic-bezier(0.23, 1, 0.32, 1) both;
     }
 
-    @keyframes sivir-response-stream-caret {
-        50% {
+    .sivir-response-stream-dot {
+        animation: sivir-response-stream-dot 1.1s ease-in-out infinite;
+    }
+
+    @keyframes sivir-response-stream-fresh {
+        from {
             opacity: 0;
         }
     }
 
+    @keyframes sivir-response-stream-dot {
+        0%,
+        100% {
+            opacity: 0.2;
+        }
+        40% {
+            opacity: 1;
+        }
+    }
+
     @media (prefers-reduced-motion: reduce) {
-        .sivir-response-stream-caret {
+        .sivir-response-stream-fresh {
             animation: none;
+        }
+
+        .sivir-response-stream-dot {
+            animation: none;
+            opacity: 0.6;
         }
     }
 </style>

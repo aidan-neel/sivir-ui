@@ -19,7 +19,6 @@
 
     let form: HTMLFormElement | undefined;
     let pending = $state(false);
-    let insetToolbar = $state(false);
     const effectiveStatus = $derived<ComposerStatus>(
         status === 'submitting' || pending ? 'submitting' : status
     );
@@ -47,9 +46,6 @@
         get pending() {
             return pending || (generating !== undefined && status === 'submitting');
         },
-        get insetToolbar() {
-            return insetToolbar;
-        },
         submit() {
             if (!disabled && !pending) {
                 form?.requestSubmit();
@@ -62,9 +58,6 @@
             ) {
                 onStop?.();
             }
-        },
-        setInsetToolbar(next: boolean) {
-            insetToolbar = next;
         }
     });
 
@@ -103,7 +96,7 @@
             data-ui="composer-error"
             role={effectiveStatus === 'error' ? 'alert' : undefined}
             aria-hidden={effectiveStatus !== 'error'}
-            class={errorNoticeClass}
+            class={cn(errorNoticeClass, 'ml-4')}
             data-state={effectiveStatus}
         >
             <CircleAlert size={14} strokeWidth={2} aria-hidden="true" />
@@ -122,7 +115,7 @@
         onsubmit={handleSubmit}
         class={cn(
             className,
-            'sivir-modal-frame flex w-full flex-col overflow-hidden text-foreground shadow-[var(--elevation-1)] [--sivir-modal-inset:calc(var(--spacing)*0.5)] transition-[background-color,border-color,box-shadow] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-out)] motion-reduce:transition-none focus-within:border-primary focus-within:shadow-[var(--focus-ring),var(--elevation-1)] data-[state=error]:border-[color-mix(in_srgb,var(--color-error)_70%,transparent)] data-[state=error]:shadow-[0_0_0_calc(var(--border-size)*2)_color-mix(in_srgb,var(--color-error)_25%,transparent),var(--elevation-1)]'
+            'flex w-full flex-col rounded-[calc(var(--radius-xl)+var(--spacing)*2)] border-[length:var(--border-size)] border-border bg-card text-foreground shadow-[var(--elevation-1)] transition-[border-color,box-shadow] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-out)] motion-reduce:transition-none focus-within:border-border-strong focus-within:shadow-[var(--elevation-float)] data-[state=error]:border-[color-mix(in_srgb,var(--color-error)_70%,transparent)] data-[state=error]:shadow-[0_0_0_calc(var(--border-size)*2)_color-mix(in_srgb,var(--color-error)_25%,transparent),var(--elevation-1)]'
         )}
     >
         {@render children?.()}

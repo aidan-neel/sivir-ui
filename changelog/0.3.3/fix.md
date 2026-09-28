@@ -1,3 +1,12 @@
 - Make the Scroll Area edge-cue blur optional. `blur` defaults to `true` and keeps the current look; set it to `false` to keep the fade and chevrons while dropping the `backdrop-filter`, which is expensive over large or animated content and smears text behind the cue on some GPUs.
 - Stop the Color Picker stranding a divider hairline across its rounded bottom edge. The channel-slider block drew a bottom border unconditionally, so without preset swatches it was the last block in the surface and its border had nothing to divide.
-- Fix Reasoning jitter and lost content while streaming. Content now mounts on its first open and stays mounted, opening and closing with a height transition that follows streamed text instead of re-measuring a fixed height. The trigger label crossfades from Thinking to Thought for, shows `duration` as a live timer while streaming, and uses a folding dot indicator.
+- Fix Reasoning jitter and lost content while streaming. Content now mounts on its first open and stays mounted, opening and closing with a height transition that follows streamed text instead of re-measuring a fixed height. The trigger label crossfades from Thinking to Thought for, shows `duration` as a live timer while streaming, and shows a dot indicator while thinking.
+- Smooth Response Stream reveals. Live text now trails arrivals by about a third of a second at an even pace instead of jumping by network chunk, and keeps draining after the stream ends instead of snapping to the full text.
+- Stop the Attachment drop overlay sticking after a drag leaves through a nested element, and list the Spinner dependency in the Attachment registry manifest so installs no longer miss it.
+- Stop the Attachment Trigger's default `aria-label` overriding its visible text: "Add attachments" now applies only to the icon-only trigger.
+- Restore the spaces between words in the homepage headline.
+- Stop the outline and other non-ghost Attachment Trigger variants from rendering muted text that looked disabled.
+- Theme Studio token reset now restores the field to the preset value instead of leaving the slider or color showing the discarded override.
+- Dismissed toasts start leaving immediately instead of holding still for a third of a second: the front toast slides back down as it fades, and the rest of the stack moves forward at the same time.
+- Stop the Theme Studio inspector clipping a slider's right edge and value while it stretches past its limit.
+- Drop the CSS variable name under each Theme Studio token field. Reset now slides in below a field once it changes and slides away when the field is reset.

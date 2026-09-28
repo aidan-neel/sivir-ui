@@ -10,7 +10,7 @@ import type { Manifest } from '@sivir-ui/svelte/_manifest/types';
  */
 export const manifest: Manifest = {
     name: 'copy-button',
-    version: '1.1.0',
+    version: '1.2.0',
     visibility: 'public',
     description:
         'One-tap clipboard button with a Copy↔Check icon morph and tooltip feedback, reverting after a short hold.',
