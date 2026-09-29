@@ -1,0 +1,1 @@
+- Update the CLI installation steps for the `src/routes/layout.css` stylesheet that current `sv add tailwindcss` creates, and explain that `init` wires it.

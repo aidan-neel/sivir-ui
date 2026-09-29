@@ -1,0 +1,2 @@
+- `sivir init` now installs the shared dependencies, prompting unless `-y` is passed, the same way `sivir add` does.
+- `sivir init` points the root stylesheet from `sv add tailwindcss` (`src/routes/layout.css` or `src/app.css`) at `ui.css`, replacing its `@import 'tailwindcss';` because `ui.css` already includes Tailwind.

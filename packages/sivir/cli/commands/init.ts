@@ -1,15 +1,11 @@
-import * as clack from '@clack/prompts';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
+import * as clack from '@clack/prompts';
 import pc from 'picocolors';
 import { CONFIG_FILE, DEFAULT_CONFIG, loadConfig, saveConfig } from '../config';
 import { BASE_PEER_DEPENDENCIES, loadRegistryIndex } from '../registry';
-import {
-    declaredDependencies,
-    detectPackageManager,
-    installCommand,
-    installFile
-} from '../utils/project';
+import { installFile, installMissingDependencies } from '../utils/project';
+import { applyStylesheet, planStylesheet } from '../utils/stylesheet';
 import { ok, warn } from '../utils/ui';
 
 export type InitOptions = {
@@ -22,9 +18,45 @@ export async function baseFiles() {
     const index = await loadRegistryIndex();
     const files = new Set<string>(['ui.css']);
     for (const component of index.components) {
-        for (const file of component.sharedFiles) files.add(file);
+        for (const file of component.sharedFiles) {
+            files.add(file);
+        }
     }
     return [...files].sort();
+}
+
+/**
+ * Points the root stylesheet at `ui.css`, which already includes Tailwind, or
+ * explains how to when the stylesheet is not one `sv add tailwindcss` writes.
+ */
+async function wireStylesheet(cwd: string, dir: string, yes: boolean) {
+    const plan = await planStylesheet(cwd, dir);
+    const uiCss = pc.cyan(`${dir}/ui.css`);
+    const tailwindImport = pc.cyan("@import 'tailwindcss';");
+
+    if (plan.status === 'imported') {
+        ok(`${pc.cyan(plan.file)} already imports ${uiCss}.`);
+        return;
+    }
+    if (plan.status === 'unknown') {
+        warn(`import ${uiCss} in your root stylesheet, in place of ${tailwindImport}`);
+        return;
+    }
+
+    let apply = yes;
+    if (!yes && process.stdout.isTTY) {
+        const answer = await clack.confirm({
+            message: `Replace ${tailwindImport} in ${pc.cyan(plan.file)} with ${pc.cyan(plan.statement)}? (ui.css includes Tailwind)`
+        });
+        apply = answer === true;
+    }
+    if (!apply) {
+        warn(`replace ${tailwindImport} in ${pc.cyan(plan.file)} with ${pc.cyan(plan.statement)}`);
+        return;
+    }
+
+    await applyStylesheet(cwd, plan.file, plan.statement);
+    ok(`${pc.cyan(plan.file)} now imports ${uiCss}.`);
 }
 
 export async function init(options: InitOptions) {
@@ -86,16 +118,9 @@ export async function init(options: InitOptions) {
         `Installed ${pc.cyan(`${dir}/ui.css`)}, utils, shared modules, and ${CONFIG_FILE}`
     );
 
-    const declared = await declaredDependencies(cwd);
-    const missing = BASE_PEER_DEPENDENCIES.filter((dep) => !declared.has(dep));
-    if (missing.length > 0) {
-        const pm = detectPackageManager(cwd);
-        warn(`missing peer dependencies: ${missing.map((d) => pc.yellow(d)).join(', ')}`);
-        console.log(`  install with ${pc.cyan(installCommand(pm, missing))}`);
-    }
-
-    ok(`import ${pc.cyan(`${dir}/ui.css`)} in your root layout or app stylesheet.`);
+    await installMissingDependencies(cwd, BASE_PEER_DEPENDENCIES, yes);
+    await wireStylesheet(cwd, dir, yes);
     clack.outro(
-        `Ready -- run ${pc.cyan('sivir add button')} to install a component, or ${pc.cyan('sivir add *')} for all components.`
+        `Ready -- run ${pc.cyan('sivir add button')} to install a component, or ${pc.cyan("sivir add '*'")} for all components.`
     );
 }

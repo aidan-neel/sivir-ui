@@ -106,9 +106,9 @@ bunx --package @sivir-ui/svelte sivir init -y
 bunx --package @sivir-ui/svelte sivir add <component-slug>
 ```
 
-Import the generated token sheet once and use the aliases recorded in `sivir.json`; do not assume the default path if configuration already exists. Let the CLI resolve transitive Sivir dependencies. Add only components required by the design.
+`init` points the root stylesheet from `sv add tailwindcss` at the generated token sheet, which includes Tailwind. For any other stylesheet, import it once in place of `@import 'tailwindcss';`. Use the aliases recorded in `sivir.json`; do not assume the default path if configuration already exists. Let the CLI resolve transitive Sivir dependencies. Add only components required by the design.
 
-Treat `sivir add` as an operation for missing source, not a safe update command. It skips existing files unless `--overwrite` is passed but can still advance recorded versions in `sivir.json`. Before updating copied components, inspect local modifications and the upstream change, then ask before using `--overwrite` because it replaces owned source.
+Treat `sivir add` as an operation for missing source, not a safe update command. It skips existing files that differ from the registry unless `--overwrite` is passed but can still advance recorded versions in `sivir.json`. Before updating copied components, inspect local modifications and the upstream change, then ask before using `--overwrite` because it replaces owned source.
 
 ## Step 6: Implement in Sivir's Language
 

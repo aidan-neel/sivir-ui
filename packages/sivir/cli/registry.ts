@@ -1,17 +1,21 @@
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import pkg from '../package.json';
 import type { RegistryComponent, RegistryIndex, RegistryTheme } from './types';
 
-/** Dependencies installed by `sivir init` for shared files and theme tokens. */
-export const BASE_PEER_DEPENDENCIES = [
-    'svelte',
-    'tailwindcss',
-    'cnfast',
-    '@floating-ui/dom',
-    '@fontsource/inter',
-    '@fontsource/jetbrains-mono'
-];
+/**
+ * Dependencies installed by `sivir init` for shared files and theme tokens, at
+ * the ranges this release is built against.
+ */
+export const BASE_PEER_DEPENDENCIES: Record<string, string> = {
+    svelte: pkg.peerDependencies.svelte,
+    tailwindcss: pkg.peerDependencies.tailwindcss,
+    cnfast: pkg.dependencies.cnfast,
+    '@floating-ui/dom': pkg.dependencies['@floating-ui/dom'],
+    '@fontsource/inter': pkg.dependencies['@fontsource/inter'],
+    '@fontsource/jetbrains-mono': pkg.dependencies['@fontsource/jetbrains-mono']
+};
 
 /**
  * The registry snapshot lives at the package root (next to dist/), so it

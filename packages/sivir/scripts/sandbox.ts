@@ -53,6 +53,8 @@ const COMPONENT_PEERS: Record<string, string> = {
     'tailwind-merge': '^3.0.0',
     'tailwind-variants': '^3.0.0',
     '@floating-ui/dom': '^1.0.0',
+    '@fontsource/inter': '^5.0.0',
+    '@fontsource/jetbrains-mono': '^5.0.0',
     '@lucide/svelte': '^1.0.0',
     'fuse.js': '^7.0.0'
 };
@@ -183,8 +185,8 @@ const config = () =>
     >;
 
 /** Fresh app + `sivir init -y`; returns the init result for assertions. */
-function initApp(bare = false) {
-    createApp(bare);
+function initApp() {
+    createApp(false);
     return sivir(['init', '-y']);
 }
 
@@ -210,6 +212,20 @@ const CHECKS: Check[] = [
                 if (cfg.dir !== 'src/lib/sivir') f.push(`sivir.json dir = ${String(cfg.dir)}`);
                 if (cfg.alias !== '$lib/sivir') f.push(`sivir.json alias = ${String(cfg.alias)}`);
                 if (!cfg.registry) f.push('sivir.json missing registry');
+            }
+            return f;
+        }
+    },
+    {
+        label: 'init points a bare Tailwind stylesheet at ui.css',
+        run: () => {
+            const f: string[] = [];
+            createApp(false);
+            writeFileSync(path.join(appDir, 'src/app.css'), "@import 'tailwindcss';\n");
+            const r = sivir(['init', '-y']);
+            if (r.status !== 0) f.push(`init exited ${r.status}`);
+            if (read('src/app.css') !== "@import './lib/sivir/ui.css';\n") {
+                f.push('src/app.css not rewired to ui.css');
             }
             return f;
         }
@@ -287,14 +303,29 @@ const CHECKS: Check[] = [
         }
     },
     {
-        label: 'add is idempotent (re-add skips existing)',
+        label: 'add is idempotent (re-add reports no conflicts)',
         run: () => {
             const f: string[] = [];
             initApp();
             sivir(['add', 'button']);
             const r = sivir(['add', 'button']);
             if (r.status !== 0) f.push(`re-add exited ${r.status}`);
-            if (!r.out.includes('already existed')) f.push('no skip notice on re-add');
+            if (r.out.includes('differ from the registry')) f.push('unchanged files reported');
+            return f;
+        }
+    },
+    {
+        label: 'add leaves modified files alone without --overwrite',
+        run: () => {
+            const f: string[] = [];
+            initApp();
+            sivir(['add', 'button']);
+            const target = `${SIVIR}/components/button/button.svelte`;
+            writeFileSync(path.join(appDir, target), '// tampered\n');
+            const r = sivir(['add', 'button']);
+            if (r.status !== 0) f.push(`re-add exited ${r.status}`);
+            if (!r.out.includes('differ from the registry')) f.push('no conflict notice');
+            if (read(target) !== '// tampered\n') f.push('modified file was replaced');
             return f;
         }
     },
@@ -385,12 +416,18 @@ const CHECKS: Check[] = [
         }
     },
     {
-        label: 'bare project reports missing peer dependencies',
+        label: 'bare project reports range-pinned peer dependencies',
         run: () => {
             const f: string[] = [];
-            const r = initApp(true);
-            if (r.status !== 0) f.push(`init exited ${r.status}`);
+            createApp(true);
+            writeFileSync(
+                path.join(appDir, 'sivir.json'),
+                `${JSON.stringify({ dir: SIVIR, alias: '$lib/sivir', components: {} })}\n`
+            );
+            const r = sivir(['add', 'button']);
+            if (r.status !== 0) f.push(`add exited ${r.status}`);
             if (!r.out.includes('missing peer dependencies')) f.push('no missing-peer warning');
+            if (!r.out.includes("'tailwind-variants@^")) f.push('install hint not range-pinned');
             return f;
         }
     }
