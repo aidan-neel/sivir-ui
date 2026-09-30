@@ -43,6 +43,7 @@
 >
     <ColorField {label} value={hex} onChange={changeColor} {changed} />
     <Slider.Root
+        editable
         value={percent}
         min={0}
         max={100}

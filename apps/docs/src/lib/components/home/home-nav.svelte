@@ -6,7 +6,6 @@
     import Moon from '@lucide/svelte/icons/moon';
     import Palette from '@lucide/svelte/icons/palette';
     import Sun from '@lucide/svelte/icons/sun';
-    import SwatchBook from '@lucide/svelte/icons/swatch-book';
     import { Button } from '@sivir-ui/svelte/components/button';
     import { cn } from '@sivir-ui/svelte/utils';
     import { mode, toggleMode } from 'mode-watcher';
@@ -43,11 +42,6 @@
             href: resolve('/docs/components'),
             title: 'Components',
             icon: Blocks
-        },
-        {
-            href: resolve('/themes'),
-            title: 'Themes',
-            icon: SwatchBook
         },
         {
             href: resolve('/studio'),

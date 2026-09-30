@@ -24,15 +24,15 @@
         moved: boolean;
     };
 
-    const TRACK_WIDTH = 40;
+    const TRACK_WIDTH = 32;
     const INSET = 3;
-    const THUMB = 18;
+    const THUMB = 14;
     const TRAVEL = TRACK_WIDTH - INSET * 2 - THUMB;
-    const PRESS_STRETCH = 5;
+    const PRESS_STRETCH = 4;
     const DRAG_THRESHOLD = 3;
     const TAP_SLOP = 6;
     const MOTION_STRETCH = 0.45;
-    const MOTION_STRETCH_LIMIT = 6;
+    const MOTION_STRETCH_LIMIT = 5;
     const RUBBER_BAND = 2;
     const TOGGLE = {
         stiffness: 560,
@@ -205,10 +205,10 @@
     }
     const thumbClass =
         // token-lint-disable-next-line no-literal-length: switch track and thumb geometry
-        'pointer-events-none absolute top-[3px] left-0 h-[18px] rounded-full bg-[var(--color-on-primary)] shadow-[0_1px_2px_rgb(0_0_0/0.18),0_2px_6px_rgb(0_0_0/0.08),0_0_0_0.5px_rgb(0_0_0/0.06)]';
+        'pointer-events-none absolute top-[3px] left-0 h-[14px] rounded-full bg-[var(--color-on-primary)] shadow-[0_1px_2px_rgb(0_0_0/0.18),0_2px_6px_rgb(0_0_0/0.08),0_0_0_0.5px_rgb(0_0_0/0.06)]';
     const labelClass =
         // token-lint-disable-next-line no-literal-length: label line height matches the track
-        'leading-[24px] [font-size:var(--font-size-label)] [font-weight:var(--font-weight-label)] [letter-spacing:var(--tracking-label)] text-foreground';
+        'leading-[20px] [font-size:var(--font-size-label)] [font-weight:var(--font-weight-label)] [letter-spacing:var(--tracking-label)] text-foreground';
 </script>
 
 <div
@@ -231,7 +231,7 @@
         class={cn(
             className,
             // token-lint-disable-next-line no-literal-length: switch track and thumb geometry
-            'relative isolate inline-flex h-[24px] w-[40px] shrink-0 cursor-[var(--ui-cursor-interactive)] touch-pan-y select-none rounded-full bg-foreground/[0.12] transition-[background-color,box-shadow] [transition-duration:var(--motion-duration-hover)] ease-[var(--ease-out)] group-hover/switch:bg-foreground/[0.16] focus-visible:outline-none focus-visible:shadow-[var(--focus-ring)] disabled:cursor-not-allowed disabled:opacity-[var(--opacity-disabled)] group-hover/switch:disabled:bg-foreground/[0.12] motion-reduce:transition-none'
+            'relative isolate inline-flex h-[20px] w-[32px] shrink-0 cursor-[var(--ui-cursor-interactive)] touch-pan-y select-none rounded-full bg-foreground/[0.12] transition-[background-color,box-shadow] [transition-duration:var(--motion-duration-hover)] ease-[var(--ease-out)] group-hover/switch:bg-foreground/[0.16] focus-visible:outline-none focus-visible:shadow-[var(--focus-ring)] disabled:cursor-not-allowed disabled:opacity-[var(--opacity-disabled)] group-hover/switch:disabled:bg-foreground/[0.12] motion-reduce:transition-none'
         )}
         onpointerdown={handlePointerDown}
         onpointermove={handlePointerMove}

@@ -17,3 +17,7 @@
 - Stop the Studio overriding a preset's foundation colors with the Sivir defaults, and let the radius control change presets that set their own radius tokens.
 - Copy JSON in the Studio now exports a portable theme that `parseTheme`, the CLI, and the registry accept, and Copy CSS matches `themeToCss` for that theme.
 - Limit the Studio heading size to the theme contract's range (12–32px); larger values produced theme JSON that failed validation.
+- Fix dropdown menus and selects offsetting the scroll area's edge cues and scrollbar by the menu padding. The padding now lives inside the scroll area.
+- Studio sliders show Reset beside the value, and other fields show it as a corner pill, instead of a row below, so changing a value no longer shifts the layout.
+- Studio shadow tokens that use variables for their size, such as Control and Outline button, now open in the layer editor with X, Y, Blur, Spread, and Color controls instead of a clipped CSS input.
+- Fix modal, card, and code block footers and headers hugging the edge when surface paneling is off. They now get their own padding.

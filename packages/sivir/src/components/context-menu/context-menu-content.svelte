@@ -1,6 +1,6 @@
 <script lang="ts">
     import * as Popover from '@sivir-ui/svelte/components/popover';
-    import { travelingHighlight } from '@sivir-ui/svelte/utils';
+    import { cn, travelingHighlight } from '@sivir-ui/svelte/utils';
     import type { ContextMenuContentProps } from '.';
     import { getContextMenuContext } from './context.svelte';
 
@@ -16,7 +16,7 @@
     refElement={contextMenuState.virtualElement}
     focusTrap={false}
     {...rest}
-    class={className}
+    class={cn(className, 'sivir-menu-panel')}
     surfaceClass="p-0"
 >
     <div use:travelingHighlight class="flex flex-col gap-0 p-1">

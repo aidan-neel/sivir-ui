@@ -20,7 +20,7 @@
 - Code Block eases its height when switching between tabs of different lengths instead of jumping, and the outgoing snippet blurs slightly as it slides away.
 - Smoother Toast motion: new toasts rise their full height from below while fading in, stack moves use one interruptible transition driven by the toast motion tokens, and collapsed toasts behind the front peek evenly whatever their height, with their content hidden.
 - Slider's label turns bold while you drag, without shifting the value or the thumb.
-- Redesign Switch with a spring-driven thumb that stretches while pressed or moving, a track that fills with the primary color as the thumb travels, and drag to toggle. The track is now 40 by 24 pixels.
+- Redesign Switch with a spring-driven thumb that stretches while pressed or moving, a track that fills with the primary color as the thumb travels, and drag to toggle. The track is 32 by 20 pixels.
 - `sivir init` now installs the shared dependencies, prompting unless `-y` is passed, the same way `sivir add` does.
 - `sivir init` points the root stylesheet from `sv add tailwindcss` (`src/routes/layout.css` or `src/app.css`) at `ui.css`, replacing its `@import 'tailwindcss';` because `ui.css` already includes Tailwind.
 - Publish themes from the Studio to the community theme registry, then publish updates or unpublish them from the same browser.
@@ -28,3 +28,12 @@
 - Open any built-in or community theme in the Studio with `/studio?theme=<slug>`.
 - Install community themes with `sivir add theme <slug>`, and load any theme as a stylesheet from `/themes/<slug>.css`.
 - Community themes keep their foundation colors, token overrides, typography, and chrome when published, previewed, and installed.
+- Turn off menu paneling with `chrome.menuPaneling: false` in a theme, or the new Menu paneling switch in the Studio. Dropdown, context, select, and combobox menus drop the inset frame and render as a plain 1px border with their shadow.
+- The Studio Feel tab has a Motion section with menu duration, menu blur, menu start scale, and movement opacity sliders, so you no longer need to open Tokens to tune them.
+- Add `--motion-menu-x`, `--motion-modal-x`, `--motion-menu-opacity-start`, and `--motion-modal-opacity-start` tokens so menus and modals can enter from the side and fade in independently. They default to no sideways offset and the shared `--motion-opacity-start`.
+- The Studio Feel tab now groups motion into Menu motion and Modal motion, each with In duration, Out duration, Blur, Scale, Opacity, X offset, and Y offset sliders, and the Tokens motion labels match.
+- Sliders and Studio fields darken slightly on hover.
+- Slider takes `editable` so you can click the value, or press Enter, and type an exact number. The number snaps to `step` and clamps to `min` and `max`, and `parse` reads custom formats. Every Studio slider is editable.
+- Add six theme presets modeled on well-known design systems: Figma, Apple, Claude, Google, shadcn, and Linear. Each sets its own control sizes, type scale, shadows, focus ring, overlay, code colors, and motion, not just colors and corners.
+- Rename the Open theme preset to OpenAI (slug `openai`) and update it to the Studio-tuned palette.
+- Turn off surface paneling with `chrome.surfacePaneling: false` in a theme, or the new Surface paneling switch in the Studio. Modals, sheets, popovers, and cards drop the inset frame and render as one continuous container.

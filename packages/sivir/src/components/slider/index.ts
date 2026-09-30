@@ -15,6 +15,10 @@ export type SliderProps = {
     label?: string;
     name?: string;
     format?: (value: number) => string;
+    /** Lets the value be clicked and typed into. Typed numbers snap to `step` and clamp to `min` and `max`. */
+    editable?: boolean;
+    /** Turns typed text into a number. Return `null` to reject it. Defaults to the first number in the text, so units like `px` are ignored. */
+    parse?: (text: string) => number | null;
     onValueChange?: (value: number) => void;
     /** Fires once per gesture on pointer release, and on each keyboard change. */
     onValueCommit?: (value: number) => void;

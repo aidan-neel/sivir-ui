@@ -69,7 +69,7 @@ describe('docs release contracts', () => {
         }
         expect(body).toContain('<loc>https://preview.example/docs/components</loc>');
         expect(body.match(/<url>/g)).toHaveLength(
-            components.length * 2 + 18 + changelogVersions.length + changelogLlmVersions.length
+            components.length * 2 + 17 + changelogVersions.length + changelogLlmVersions.length
         );
         expect(body).toContain('<loc>https://preview.example/docs/changelog</loc>');
         expect(body).toContain('<loc>https://preview.example/docs/changelog.md</loc>');
@@ -91,7 +91,7 @@ describe('docs release contracts', () => {
                 `<loc>https://preview.example/docs/components/${component}.md</loc>`
             );
         }
-        expect(body).toContain('<loc>https://preview.example/themes</loc>');
+        expect(body).not.toContain('<loc>https://preview.example/themes</loc>');
         expect(body).not.toContain('/themes/studio');
         expect(body).not.toContain('/docs/styling');
     });

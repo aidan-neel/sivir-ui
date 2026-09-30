@@ -57,6 +57,8 @@ export type StudioChrome = {
     controlShadows: boolean;
     dialogShadows: boolean;
     travelingHighlight: boolean;
+    menuPaneling: boolean;
+    surfacePaneling: boolean;
     primaryStroke: boolean;
     interactiveCursor: InteractiveCursor;
 };
@@ -194,6 +196,16 @@ function toChrome(chrome: StudioChrome): ThemeChrome {
             : {
                   travelingHighlight: false as const
               }),
+        ...(chrome.menuPaneling
+            ? {}
+            : {
+                  menuPaneling: false
+              }),
+        ...(chrome.surfacePaneling
+            ? {}
+            : {
+                  surfacePaneling: false
+              }),
         primaryStroke: chrome.primaryStroke,
         interactiveCursor: chrome.interactiveCursor
     };
@@ -207,6 +219,8 @@ function fromChrome(chrome: ThemeChrome | undefined): StudioChrome {
         controlShadows: shadows && chrome?.controlShadows !== false,
         dialogShadows: shadows && chrome?.dialogShadows !== false,
         travelingHighlight: chrome?.travelingHighlight !== false,
+        menuPaneling: chrome?.menuPaneling !== false,
+        surfacePaneling: chrome?.surfacePaneling !== false,
         primaryStroke: chrome?.primaryStroke === true,
         interactiveCursor: chrome?.interactiveCursor ?? 'default'
     };

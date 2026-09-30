@@ -8,7 +8,6 @@ export const htmlDocPaths = [
     '/docs/theming',
     '/docs/changelog',
     '/docs/components',
-    '/themes',
     '/studio',
     ...components.map((component) => `/docs/components/${component}`)
 ];

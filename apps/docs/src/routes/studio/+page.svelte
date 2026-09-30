@@ -64,9 +64,9 @@
         type ThemeTokenOverrides,
         themeToCss
     } from '@sivir-ui/svelte/themes/theme';
-    import { themedSlide } from '@sivir-ui/svelte/transition';
     import { mode } from 'mode-watcher';
     import { onMount, tick, untrack } from 'svelte';
+    import { fade } from 'svelte/transition';
     import { replaceState } from '$app/navigation';
     import { resolve } from '$app/paths';
     import { page } from '$app/state';
@@ -336,6 +336,41 @@
         };
     });
     const layoutRowGroups = [...spacingRowGroups, ...detailRowGroups];
+    const feelMotionGroups = [
+        {
+            title: 'Menu motion',
+            fields: [
+                ['--motion-duration-panel-in', 'In duration'],
+                ['--motion-duration-panel-out', 'Out duration'],
+                ['--motion-menu-blur', 'Blur'],
+                ['--motion-menu-scale-start', 'Scale'],
+                ['--motion-menu-opacity-start', 'Opacity'],
+                ['--motion-menu-x', 'X offset'],
+                ['--motion-menu-y', 'Y offset']
+            ]
+        },
+        {
+            title: 'Modal motion',
+            fields: [
+                ['--motion-duration-modal-in', 'In duration'],
+                ['--motion-duration-modal-out', 'Out duration'],
+                ['--motion-modal-blur', 'Blur'],
+                ['--motion-modal-scale-start', 'Scale'],
+                ['--motion-modal-opacity-start', 'Opacity'],
+                ['--motion-modal-x', 'X offset'],
+                ['--motion-modal-y', 'Y offset']
+            ]
+        }
+    ].map((group) => {
+        const rows = animationRowGroups.flatMap((rowGroup) => rowGroup.rows);
+        const fields = group.fields.flatMap(([name, label]) => {
+            const row = rows.find((candidate) => candidate.definition.name === name);
+
+            return row ? [{ row, label }] : [];
+        });
+
+        return { title: group.title, fields };
+    });
 
     const tokenSections: TokenSection[] = [
         {
@@ -481,6 +516,8 @@
     let controlShadows = $state(true);
     let dialogShadows = $state(true);
     let travelingHighlight = $state(true);
+    let menuPaneling = $state(true);
+    let surfacePaneling = $state(true);
     let primaryStroke = $state(false);
     let interactiveCursor = $state<InteractiveCursor>('default');
     let publishOpen = $state(false);
@@ -630,6 +667,8 @@
             controlShadows,
             dialogShadows,
             travelingHighlight,
+            menuPaneling,
+            surfacePaneling,
             primaryStroke,
             interactiveCursor
         }
@@ -744,6 +783,8 @@
         controlShadows = draft.chrome.controlShadows;
         dialogShadows = draft.chrome.dialogShadows;
         travelingHighlight = draft.chrome.travelingHighlight;
+        menuPaneling = draft.chrome.menuPaneling;
+        surfacePaneling = draft.chrome.surfacePaneling;
         primaryStroke = draft.chrome.primaryStroke;
         interactiveCursor = draft.chrome.interactiveCursor;
         previousRadius = theme.radius;
@@ -867,6 +908,8 @@
                 controlShadows: legacyShadow(value.controlShadows, draft.chrome.controlShadows),
                 dialogShadows: legacyShadow(value.dialogShadows, draft.chrome.dialogShadows),
                 travelingHighlight: value.travelingHighlight ?? draft.chrome.travelingHighlight,
+                menuPaneling: draft.chrome.menuPaneling,
+                surfacePaneling: draft.chrome.surfacePaneling,
                 primaryStroke: value.primaryStroke ?? draft.chrome.primaryStroke,
                 interactiveCursor: value.interactiveCursor ?? draft.chrome.interactiveCursor
             }
@@ -1876,6 +1919,7 @@
 
 {#snippet weightField(label: string, value: FontWeight, onChange: (value: FontWeight) => void)}
     <Slider.Root
+        editable
         value={Number(value)}
         min={400}
         max={700}
@@ -1898,12 +1942,17 @@
 {/snippet}
 
 {#snippet tokenMeta(row: TokenRow)}
-    <div
-        class="flex min-w-0 items-center justify-end px-3 pt-1"
-        transition:themedSlide={{ durationVar: '--motion-duration-panel', fallback: 220 }}
+    <button
+        type="button"
+        class="absolute -top-2 right-2 z-10 rounded-full border-[length:var(--border-size)] border-[var(--color-border)] bg-[var(--color-card)] px-2 text-[11px] leading-4 text-foreground-muted transition-colors [transition-duration:var(--motion-duration-hover)] hover:cursor-[var(--ui-cursor-interactive)] hover:text-foreground focus-visible:shadow-[var(--focus-ring)] focus-visible:outline-none"
+        aria-label={`Reset ${row.definition.label}`}
+        transition:fade={{ duration: 120 }}
+        onclick={() => {
+            resetTokenRow(row);
+        }}
     >
-        {@render tokenResetButton(row)}
-    </div>
+        Reset
+    </button>
 {/snippet}
 
 {#snippet tokenResetButton(row: TokenRow)}
@@ -1919,11 +1968,11 @@
     </button>
 {/snippet}
 
-{#snippet tokenRow(row: TokenRow)}
+{#snippet tokenRow(row: TokenRow, label?: string)}
     {@const changed = tokenOverride(row) !== ''}
     {@const slider = tokenSlider(row)}
     {@const isShadow = row.bucket === 'detail' && row.definition.kind === 'shadow'}
-    <div class={`flex min-w-0 flex-col ${isShadow ? 'gap-1 pb-5' : ''}`}>
+    <div class={`relative flex min-w-0 flex-col ${isShadow ? 'gap-1 pb-5' : ''}`}>
         {#if row.bucket === 'color'}
             {@const definition = row.definition}
             {@const resolved = resolveColorToken(definition)}
@@ -2000,11 +2049,12 @@
             </div>
         {:else if slider}
             <Slider.Root
+                editable
                 value={slider.value}
                 min={slider.min}
                 max={slider.max}
                 step={slider.step}
-                label={row.definition.label}
+                label={label ?? row.definition.label}
                 format={slider.format}
                 onValueChange={slider.commit}
                 class="min-h-[34px] text-[13px]"
@@ -2012,13 +2062,32 @@
                 <Slider.Range />
                 <Slider.Thumb />
                 <Slider.Label class="flex items-center gap-1.5">
-                    <span class="truncate">{row.definition.label}</span>
+                    <span class="truncate">{label ?? row.definition.label}</span>
                     <ChangedDot {changed} />
                 </Slider.Label>
-                <Slider.Value class="text-xs" />
+                <span class="relative z-[1] flex shrink-0 items-center gap-2">
+                    {#if changed}
+                        <button
+                            type="button"
+                            class="rounded-[var(--radius-sm)] text-xs text-foreground-muted transition-colors [transition-duration:var(--motion-duration-hover)] hover:cursor-[var(--ui-cursor-interactive)] hover:text-foreground focus-visible:shadow-[var(--focus-ring)] focus-visible:outline-none"
+                            aria-label={`Reset ${label ?? row.definition.label}`}
+                            transition:fade={{ duration: 120 }}
+                            onpointerdown={(event) => {
+                                event.stopPropagation();
+                            }}
+                            onclick={(event) => {
+                                event.preventDefault();
+                                resetTokenRow(row);
+                            }}
+                        >
+                            Reset
+                        </button>
+                    {/if}
+                    <Slider.Value class="text-xs" />
+                </span>
             </Slider.Root>
         {/if}
-        {#if changed && !isShadow}
+        {#if changed && !isShadow && !slider}
             {@render tokenMeta(row)}
         {/if}
     </div>
@@ -2266,6 +2335,7 @@
                         <section class="flex flex-col gap-2">
                             {@render sectionHeading('Size')}
                             <Slider.Root
+                                editable
                                 bind:value={headerSize}
                                 min={HEADER_SIZE_RANGE.min}
                                 max={HEADER_SIZE_RANGE.max}
@@ -2360,6 +2430,17 @@
                             </div>
                         </section>
 
+                        {#each feelMotionGroups as group (group.title)}
+                            <section class="flex flex-col gap-2">
+                                {@render sectionHeading(group.title)}
+                                <div class="flex flex-col gap-1.5">
+                                    {#each group.fields as field (field.row.definition.name)}
+                                        {@render tokenRow(field.row, field.label)}
+                                    {/each}
+                                </div>
+                            </section>
+                        {/each}
+
                         <section class="flex flex-col gap-2">
                             {@render sectionHeading('Depth')}
                             <div class="flex flex-col gap-4 px-0.5 pt-1">
@@ -2379,6 +2460,16 @@
                                     description="Lift on modals and sheets."
                                 />
                                 <Switch
+                                    bind:checked={menuPaneling}
+                                    label="Menu paneling"
+                                    description="Inset frame around menus. Off leaves a plain 1px border with the shadow."
+                                />
+                                <Switch
+                                    bind:checked={surfacePaneling}
+                                    label="Surface paneling"
+                                    description="Inset frame around modals, sheets, popovers, and cards. Off makes each one a single container."
+                                />
+                                <Switch
                                     bind:checked={primaryStroke}
                                     label="Primary stroke"
                                     description="A light inset edge on primary buttons."
@@ -2388,7 +2479,7 @@
 
                         <section class="flex flex-col gap-2">
                             {@render sectionHeading('Interaction')}
-                            <div class="flex flex-col gap-4 px-0.5 pt-1">
+                            <div class="flex flex-col gap-4 px-0.5 pt-1 pb-2">
                                 <Switch
                                     bind:checked={travelingHighlight}
                                     label="Traveling highlight"

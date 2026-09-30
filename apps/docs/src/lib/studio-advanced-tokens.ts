@@ -660,7 +660,7 @@ export const animationTokenDefinitions = [
     },
     {
         name: '--motion-duration-panel-in',
-        label: 'Panel open',
+        label: 'Menu open duration',
         group: 'Speed',
         fallback: '110ms',
         kind: 'duration',
@@ -670,7 +670,7 @@ export const animationTokenDefinitions = [
     },
     {
         name: '--motion-duration-panel-out',
-        label: 'Panel close',
+        label: 'Menu close duration',
         group: 'Speed',
         fallback: '150ms',
         kind: 'duration',
@@ -680,7 +680,7 @@ export const animationTokenDefinitions = [
     },
     {
         name: '--motion-duration-modal-in',
-        label: 'Modal open',
+        label: 'Modal open duration',
         group: 'Speed',
         fallback: '180ms',
         kind: 'duration',
@@ -690,7 +690,7 @@ export const animationTokenDefinitions = [
     },
     {
         name: '--motion-duration-modal-out',
-        label: 'Modal close',
+        label: 'Modal close duration',
         group: 'Speed',
         fallback: '110ms',
         kind: 'duration',
@@ -779,8 +779,28 @@ export const animationTokenDefinitions = [
         step: 0.01
     },
     {
+        name: '--motion-menu-x',
+        label: 'Menu X offset',
+        group: 'Movement',
+        fallback: '0px',
+        kind: 'length',
+        min: -24,
+        max: 24,
+        step: 1
+    },
+    {
+        name: '--motion-menu-opacity-start',
+        label: 'Menu opacity',
+        group: 'Movement',
+        fallback: '0',
+        kind: 'opacity',
+        min: 0,
+        max: 1,
+        step: 0.05
+    },
+    {
         name: '--motion-menu-y',
-        label: 'Menu offset',
+        label: 'Menu Y offset',
         group: 'Movement',
         fallback: '2px',
         kind: 'length',
@@ -790,7 +810,7 @@ export const animationTokenDefinitions = [
     },
     {
         name: '--motion-menu-scale-start',
-        label: 'Menu start scale',
+        label: 'Menu scale',
         group: 'Movement',
         fallback: '0.97',
         kind: 'scale',
@@ -809,8 +829,28 @@ export const animationTokenDefinitions = [
         step: 1
     },
     {
+        name: '--motion-modal-x',
+        label: 'Modal X offset',
+        group: 'Movement',
+        fallback: '0px',
+        kind: 'length',
+        min: -24,
+        max: 24,
+        step: 1
+    },
+    {
+        name: '--motion-modal-opacity-start',
+        label: 'Modal opacity',
+        group: 'Movement',
+        fallback: '0',
+        kind: 'opacity',
+        min: 0,
+        max: 1,
+        step: 0.05
+    },
+    {
         name: '--motion-modal-y',
-        label: 'Modal offset',
+        label: 'Modal Y offset',
         group: 'Movement',
         fallback: '4px',
         kind: 'length',
@@ -820,7 +860,7 @@ export const animationTokenDefinitions = [
     },
     {
         name: '--motion-modal-scale-start',
-        label: 'Modal start scale',
+        label: 'Modal scale',
         group: 'Movement',
         fallback: '0.93',
         kind: 'scale',
@@ -860,7 +900,7 @@ export const animationTokenDefinitions = [
     },
     {
         name: '--motion-opacity-start',
-        label: 'Movement opacity',
+        label: 'Default opacity',
         group: 'Movement',
         fallback: '0',
         kind: 'opacity',

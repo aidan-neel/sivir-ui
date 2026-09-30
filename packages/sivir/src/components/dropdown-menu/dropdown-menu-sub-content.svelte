@@ -1,6 +1,6 @@
 <script lang="ts">
     import * as Popover from '@sivir-ui/svelte/components/popover';
-    import { dynamicWidth, travelingHighlight } from '@sivir-ui/svelte/utils';
+    import { cn, dynamicWidth, travelingHighlight } from '@sivir-ui/svelte/utils';
     import type { Snippet } from 'svelte';
 
     type Props = {
@@ -16,7 +16,7 @@
     role="menu"
     tabindex={-1}
     data-ui="dropdown-submenu-content"
-    class={props.class}
+    class={cn(props.class, 'sivir-menu-panel')}
     surfaceClass="p-0"
 >
     <div

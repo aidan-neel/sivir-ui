@@ -20,6 +20,8 @@
         label,
         name,
         format,
+        editable = false,
+        parse,
         onValueChange,
         onValueCommit,
         ...rest
@@ -57,6 +59,7 @@
     let dragging = $state(false);
     let tracking = $state(false);
     let focusVisible = $state(false);
+    let editing = $state(false);
     let session: PointerSession | null = null;
 
     const percent = $derived(toPercent(value));
@@ -91,7 +94,22 @@
         },
         get disabled() {
             return disabled;
-        }
+        },
+        get editable() {
+            return editable;
+        },
+        get editing() {
+            return editing;
+        },
+        get label() {
+            return label;
+        },
+        get rawValue() {
+            return String(value);
+        },
+        beginEdit,
+        commitEdit,
+        cancelEdit
     });
 
     $effect(() => {
@@ -175,6 +193,55 @@
         input?.focus({
             preventScroll: true
         });
+    }
+
+    function beginEdit() {
+        if (!editable || disabled) {
+            return;
+        }
+
+        editing = true;
+    }
+
+    function parseTyped(text: string) {
+        if (parse) {
+            return parse(text);
+        }
+
+        const match = text.match(/-?(?:\d+\.?\d*|\.\d+)(?:e[+-]?\d+)?/i);
+
+        return match ? Number(match[0]) : null;
+    }
+
+    function commitEdit(text: string) {
+        if (!editing) {
+            return;
+        }
+
+        const previous = value;
+        const parsed = parseTyped(text);
+
+        editing = false;
+        focusInput();
+
+        if (parsed === null || !Number.isFinite(parsed)) {
+            return;
+        }
+
+        setValue(snap(parsed));
+
+        if (value !== previous) {
+            onValueCommit?.(value);
+        }
+    }
+
+    function cancelEdit() {
+        if (!editing) {
+            return;
+        }
+
+        editing = false;
+        focusInput();
     }
 
     function startTracking() {
@@ -288,6 +355,12 @@
 
         focusVisible = true;
 
+        if (editable && event.key === 'Enter') {
+            event.preventDefault();
+            beginEdit();
+            return;
+        }
+
         if (direction === 0) {
             return;
         }
@@ -314,7 +387,7 @@
     data-disabled={disabled ? '' : undefined}
     class={cn(
         className,
-        'group/slider relative isolate flex min-h-[var(--size-control-lg)] w-full cursor-ew-resize touch-pan-y select-none items-center justify-between gap-3 overflow-hidden rounded-[var(--radius-lg)] border-[length:var(--border-size)] bg-[var(--color-field)] px-3 text-sm text-[var(--color-field-foreground)] transition-[border-color,box-shadow] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-out)] motion-reduce:transition-none',
+        'group/slider relative isolate flex min-h-[var(--size-control-lg)] w-full cursor-ew-resize touch-pan-y select-none items-center justify-between gap-3 overflow-hidden rounded-[var(--radius-lg)] border-[length:var(--border-size)] bg-[var(--color-field)] px-3 text-sm text-[var(--color-field-foreground)] transition-[border-color,box-shadow,background-color] hover:bg-[color-mix(in_oklab,var(--color-field),var(--color-foreground)_4%)] data-[disabled]:hover:bg-[var(--color-field)] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-out)] motion-reduce:transition-none',
         focusVisible ? 'border-primary shadow-[var(--focus-ring)]' : 'border-input',
         disabled && 'cursor-not-allowed opacity-[var(--opacity-disabled)]'
     )}

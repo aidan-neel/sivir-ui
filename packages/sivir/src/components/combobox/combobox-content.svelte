@@ -15,7 +15,7 @@
     focusTrap={false}
     dismissLayer={comboboxState.appearance !== 'input'}
     data-ui="combobox-content"
-    class={cn(className, 'min-w-[var(--popover-trigger-width)] w-[var(--popover-trigger-width)]')}
+    class={cn(className, 'sivir-menu-panel min-w-[var(--popover-trigger-width)] w-[var(--popover-trigger-width)]')}
     surfaceClass="flex min-h-0 flex-col overflow-hidden p-0"
 >
     <div class={cn(className, 'flex min-h-0 min-w-0 flex-1 flex-col')}>

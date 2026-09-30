@@ -78,8 +78,9 @@ src/lib/sivir/components/button/
             axes — brand, neutral temperature, radius, density, motion, and fonts — plus typography
             (header size and per-role weights for body, label, button, badge, and description),
             per-mode foundation colors, and chrome flags (surface, control, and dialog shadows, the
-            traveling highlight, primary stroke, and the interactive cursor). The Tokens tab
-            overrides individual theme variables, per light and dark mode where they differ.
+            traveling highlight, menu and surface paneling, primary stroke, and the interactive
+            cursor). The Tokens tab overrides individual theme variables, per light and dark mode
+            where they differ.
         </Typography.Text>
         <Typography.Text variant="body" class="m-0 max-w-2xl">
             Copy the generated <Typography.InlineCode>theme.css</Typography.InlineCode> to use the
@@ -237,6 +238,10 @@ src/lib/sivir/components/button/
             <Typography.InlineCode>dialogShadows</Typography.InlineCode>,
             <Typography.InlineCode>travelingHighlight: false</Typography.InlineCode>
             (item fill stays, the slide does not),
+            <Typography.InlineCode>menuPaneling: false</Typography.InlineCode>
+            (menus become a plain 1px border with the shadow, no inset frame),
+            <Typography.InlineCode>surfacePaneling: false</Typography.InlineCode>
+            (modals, sheets, popovers, and cards become one continuous container),
             <Typography.InlineCode>primaryStroke</Typography.InlineCode>, and
             <Typography.InlineCode>interactiveCursor</Typography.InlineCode>. Setting
             <Typography.InlineCode>motion: "none"</Typography.InlineCode>
