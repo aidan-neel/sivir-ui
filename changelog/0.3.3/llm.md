@@ -302,6 +302,6 @@ and Movement selects can still replace preset values.
 without the registry). The Studio persists the portable theme under
 `sivir-studio-theme-v2` and the chosen preset under `sivir-studio-meta-v2`; the
 old `sivir-studio-extensions-v1` draft is migrated on first load and then
-removed. Edit tokens for themes published from a browser live in
-`sivir-studio-edit-tokens-v1`; clearing site data forfeits the ability to
-update those themes.
+removed. Edit tokens for themes published from a browser live under one key
+per slug, `sivir-studio-edit-token-v1:<slug>`, so tabs never overwrite each
+other's tokens; clearing site data forfeits the ability to update those themes.

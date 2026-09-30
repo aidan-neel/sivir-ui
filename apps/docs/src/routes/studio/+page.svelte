@@ -169,7 +169,7 @@
 
     const LEGACY_EXTENSIONS_KEY = 'sivir-studio-extensions-v1';
     const STUDIO_META_KEY = 'sivir-studio-meta-v2';
-    const EDIT_TOKENS_KEY = 'sivir-studio-edit-tokens-v1';
+    const EDIT_TOKEN_KEY_PREFIX = 'sivir-studio-edit-token-v1:';
     const FLAT_CONTROL_SHADOW = 'inset 0 0 0 var(--border-size) var(--color-border)';
     const fontWeights = ['400', '500', '600', '700'] as const;
     const cursorChoices = ['default', 'pointer'] as const;
@@ -903,26 +903,39 @@
     }
 
     function readEditTokens(): Record<string, string> {
-        const value = readJson(EDIT_TOKENS_KEY);
-        if (typeof value !== 'object' || value === null) {
-            return {};
+        const tokens: Record<string, string> = {};
+
+        for (let index = 0; index < localStorage.length; index += 1) {
+            const key = localStorage.key(index);
+            if (!key?.startsWith(EDIT_TOKEN_KEY_PREFIX)) {
+                continue;
+            }
+
+            const token = localStorage.getItem(key);
+            if (token) {
+                tokens[key.slice(EDIT_TOKEN_KEY_PREFIX.length)] = token;
+            }
         }
 
-        return Object.fromEntries(
-            Object.entries(value).filter(
-                (entry): entry is [string, string] => typeof entry[1] === 'string'
-            )
-        );
+        return tokens;
     }
 
-    function updateEditTokens(update: (current: Record<string, string>) => Record<string, string>) {
-        const next = update(readEditTokens());
-        editTokens = next;
-        localStorage.setItem(EDIT_TOKENS_KEY, JSON.stringify(next));
+    function storeEditToken(slug: string, token: string) {
+        localStorage.setItem(`${EDIT_TOKEN_KEY_PREFIX}${slug}`, token);
+        editTokens = {
+            ...editTokens,
+            [slug]: token
+        };
+    }
+
+    function forgetEditToken(slug: string) {
+        localStorage.removeItem(`${EDIT_TOKEN_KEY_PREFIX}${slug}`);
+        const { [slug]: _removed, ...remaining } = editTokens;
+        editTokens = remaining;
     }
 
     function syncEditTokens(event: StorageEvent) {
-        if (event.key === EDIT_TOKENS_KEY) {
+        if (event.key === null || event.key.startsWith(EDIT_TOKEN_KEY_PREFIX)) {
             editTokens = readEditTokens();
         }
     }
@@ -1100,12 +1113,7 @@
                 const published = (await response.json()) as {
                     editToken: string;
                 };
-                updateEditTokens((current) => {
-                    return {
-                        ...current,
-                        [identity.slug]: published.editToken
-                    };
-                });
+                storeEditToken(identity.slug, published.editToken);
             }
 
             theme = {
@@ -1147,11 +1155,7 @@
                 return;
             }
 
-            updateEditTokens((current) => {
-                const { [publishSlug]: _removed, ...remaining } = current;
-
-                return remaining;
-            });
+            forgetEditToken(publishSlug);
             publishOpen = false;
             toast({
                 title: `${publishName} unpublished`,
