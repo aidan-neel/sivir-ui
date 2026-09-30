@@ -22,7 +22,12 @@
     const submitting = $derived(context.status === 'submitting');
     const faceClass =
         'col-start-1 row-start-1 flex items-center justify-center gap-1.5 transition-[opacity,translate,filter] [transition-duration:var(--motion-duration-panel)] ease-[var(--ease-out)] motion-reduce:transition-none';
+    // token-lint-disable-next-line no-literal-length: crossfade blur is part of the swap motion
     const restingFaceClass = 'translate-y-0 opacity-100 blur-[0px]';
+    // token-lint-disable-next-line no-literal-length: crossfade blur is part of the swap motion
+    const exitUpClass = '-translate-y-[3px] opacity-0 blur-[3px]';
+    // token-lint-disable-next-line no-literal-length: crossfade blur is part of the swap motion
+    const enterDownClass = 'translate-y-[3px] opacity-0 blur-[3px]';
 </script>
 
 <Button
@@ -48,7 +53,7 @@
     <span class="grid">
         <span
             aria-hidden={submitting || undefined}
-            class={cn(faceClass, submitting ? '-translate-y-[3px] opacity-0 blur-[3px]' : restingFaceClass)}
+            class={cn(faceClass, submitting ? exitUpClass : restingFaceClass)}
         >
             {#if children}
                 {@render children()}
@@ -59,7 +64,7 @@
         </span>
         <span
             aria-hidden={!submitting || undefined}
-            class={cn(faceClass, submitting ? restingFaceClass : 'translate-y-[3px] opacity-0 blur-[3px]')}
+            class={cn(faceClass, submitting ? restingFaceClass : enterDownClass)}
         >
             <Spinner size={14} aria-hidden="true" />
             {loadingLabel}

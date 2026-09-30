@@ -40,9 +40,9 @@ describe('docs release contracts', () => {
     it('uses the live component count in homepage copy', () => {
         const homepage = readFileSync(resolve(root, 'apps/docs/src/routes/+page.svelte'), 'utf8');
         const readme = readFileSync(resolve(root, 'README.md'), 'utf8');
-        expect(homepage.match(new RegExp(`${components.length} Svelte`, 'g'))).toHaveLength(1);
-        expect(homepage).toContain(`Restyle ${components.length} components`);
-        expect(homepage).toContain(`Browse all ${components.length} components`);
+        // biome-ignore lint/suspicious/noTemplateCurlyInString: matches the template literal in the homepage source
+        expect(homepage).toContain('all ${components.length} components follow');
+        expect(homepage).not.toMatch(/\b\d+ (?:Svelte )?components\b/);
         expect(readme).toContain(`badge/Components-${components.length}-`);
     });
 
@@ -201,8 +201,8 @@ describe('docs release contracts', () => {
         const reasoningReference = componentMarkdown('reasoning');
 
         expect(buttonReference).toContain('Quiet matches ghost text color without a hover fill.');
-        expect(toolReference).toContain('variant="quiet"');
-        expect(toolReference).toContain('### Quiet');
+        expect(toolReference).toContain('Tool.Call');
+        expect(toolReference).toContain('Tool.Trigger');
         expect(reasoningReference).toContain('Button quiet variant');
         expect(buttonReference).toContain('Changes to those source files are reflected here');
     });

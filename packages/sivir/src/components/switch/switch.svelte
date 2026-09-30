@@ -203,6 +203,12 @@
             release();
         }
     }
+    const thumbClass =
+        // token-lint-disable-next-line no-literal-length: switch track and thumb geometry
+        'pointer-events-none absolute top-[3px] left-0 h-[18px] rounded-full bg-[var(--color-on-primary)] shadow-[0_1px_2px_rgb(0_0_0/0.18),0_2px_6px_rgb(0_0_0/0.08),0_0_0_0.5px_rgb(0_0_0/0.06)]';
+    const labelClass =
+        // token-lint-disable-next-line no-literal-length: label line height matches the track
+        'leading-[24px] [font-size:var(--font-size-label)] [font-weight:var(--font-weight-label)] [letter-spacing:var(--tracking-label)] text-foreground';
 </script>
 
 <div
@@ -224,6 +230,7 @@
         {disabled}
         class={cn(
             className,
+            // token-lint-disable-next-line no-literal-length: switch track and thumb geometry
             'relative isolate inline-flex h-[24px] w-[40px] shrink-0 cursor-[var(--ui-cursor-interactive)] touch-pan-y select-none rounded-full bg-foreground/[0.12] transition-[background-color,box-shadow] [transition-duration:var(--motion-duration-hover)] ease-[var(--ease-out)] group-hover/switch:bg-foreground/[0.16] focus-visible:outline-none focus-visible:shadow-[var(--focus-ring)] disabled:cursor-not-allowed disabled:opacity-[var(--opacity-disabled)] group-hover/switch:disabled:bg-foreground/[0.12] motion-reduce:transition-none'
         )}
         onpointerdown={handlePointerDown}
@@ -244,7 +251,7 @@
         <span
             aria-hidden="true"
             data-state={isOn ? 'checked' : 'unchecked'}
-            class="pointer-events-none absolute top-[3px] left-0 h-[18px] rounded-full bg-[var(--color-on-primary)] shadow-[0_1px_2px_rgb(0_0_0/0.18),0_2px_6px_rgb(0_0_0/0.08),0_0_0_0.5px_rgb(0_0_0/0.06)]"
+            class={thumbClass}
             style:width={`${thumbWidth}px`}
             style:transform={`translateX(${thumbOffset}px)`}
         ></span>
@@ -269,10 +276,7 @@
             )}
         >
             {#if label}
-                <span
-                    id={labelId}
-                    class="leading-[24px] [font-size:var(--font-size-label)] [font-weight:var(--font-weight-label)] [letter-spacing:var(--tracking-label)] text-foreground"
-                >
+                <span id={labelId} class={labelClass}>
                     {label}
                 </span>
             {/if}

@@ -69,6 +69,7 @@
                     strokeWidth={2.5}
                     class={cn(
                         'text-[var(--color-on-primary)] transition-[opacity,scale,filter] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-press)] motion-reduce:transition-none',
+                        // token-lint-disable-next-line no-literal-length: crossfade blur is part of the swap motion
                         selected ? 'scale-100 opacity-100 blur-[0px]' : 'scale-[0.25] opacity-0 blur-[2px]'
                     )}
                 />
@@ -76,6 +77,7 @@
                 <span
                     class={cn(
                         'size-1.5 rounded-full bg-[var(--color-on-primary)] transition-[opacity,scale,filter] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-press)] motion-reduce:transition-none',
+                        // token-lint-disable-next-line no-literal-length: crossfade blur is part of the swap motion
                         selected ? 'scale-100 opacity-100 blur-[0px]' : 'scale-[0.25] opacity-0 blur-[2px]'
                     )}
                 ></span>

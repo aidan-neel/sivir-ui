@@ -13,6 +13,7 @@
     const tool = getToolContext();
     const glyphClass =
         'col-start-1 row-start-1 inline-flex items-center justify-center transition-[opacity,filter,scale] [transition-duration:var(--motion-duration-panel)] ease-[var(--ease-out)]';
+    // token-lint-disable-next-line no-literal-length: crossfade blur is part of the swap motion
     const hiddenGlyphClass = 'scale-75 opacity-0 blur-[2px]';
 </script>
 

@@ -21,14 +21,14 @@ describe('Attachment', () => {
         await chooseFiles(input, [file]);
 
         expect(screen.getByRole('list', { name: 'Attachments' })).toBeInTheDocument();
-        expect(screen.getByText('release-notes.txt')).toBeInTheDocument();
+        expect(screen.getByTitle('release-notes.txt')).toBeInTheDocument();
         expect(screen.getByTestId('attachment-count')).toHaveTextContent('1');
         await userEvent
             .setup()
             .click(screen.getByRole('button', { name: 'Remove release-notes.txt' }));
 
         await waitFor(() => {
-            expect(screen.queryByText('release-notes.txt')).not.toBeInTheDocument();
+            expect(screen.queryByTitle('release-notes.txt')).not.toBeInTheDocument();
             expect(screen.queryByRole('list', { name: 'Attachments' })).not.toBeInTheDocument();
         });
     });
@@ -82,7 +82,7 @@ describe('Attachment', () => {
 
         expect(screen.getByTestId('rejection-codes')).toHaveTextContent('two.txt:too-many-files');
         expect(screen.getByTestId('attachment-count')).toHaveTextContent('1');
-        expect(screen.getByText('one.txt')).toBeInTheDocument();
+        expect(screen.getByTitle('one.txt')).toBeInTheDocument();
     });
 
     it('attaches files pasted into a field inside the root', async () => {
@@ -94,7 +94,7 @@ describe('Attachment', () => {
         });
 
         expect(screen.getByTestId('attachment-count')).toHaveTextContent('1');
-        expect(screen.getByText('pasted.txt')).toBeInTheDocument();
+        expect(screen.getByTitle('pasted.txt')).toBeInTheDocument();
     });
 
     it('ignores pasted files when addOnPaste is false', async () => {
@@ -137,7 +137,7 @@ describe('Attachment', () => {
 
         await chooseFiles(input, [file]);
 
-        expect(screen.getByText('draft.txt')).toBeInTheDocument();
+        expect(screen.getByTitle('draft.txt')).toBeInTheDocument();
         expect(
             screen.getByRole('progressbar', { name: 'Upload progress for draft.txt' })
         ).toHaveAttribute('aria-valuenow', '40');

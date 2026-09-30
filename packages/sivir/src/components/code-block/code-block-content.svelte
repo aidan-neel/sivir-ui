@@ -89,7 +89,9 @@
         !isActive && !registry?.contained && 'hidden',
         registry?.contained &&
             'max-h-none overflow-visible rounded-none border-0 bg-transparent shadow-none ring-0 transition-[transform,opacity,filter] [transition-duration:var(--motion-duration-panel)] ease-[var(--ease-out)] motion-reduce:transition-none will-change-[transform,opacity,filter]',
+        // token-lint-disable-next-line no-literal-length: crossfade blur is part of the swap motion
         registry?.contained && isActive && 'relative z-[1] blur-[0px]',
+        // token-lint-disable-next-line no-literal-length: crossfade blur is part of the swap motion
         registry?.contained && !isActive && 'pointer-events-none absolute inset-0 block blur-[2px]'
     )}
     style:transform={`translateX(calc(${shift} * var(--code-block-slide)))`}

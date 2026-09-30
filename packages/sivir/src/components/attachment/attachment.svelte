@@ -201,6 +201,9 @@
             announcement = `${file.name} removed.`;
         }
     });
+    const dropOverlayClass =
+        // token-lint-disable-next-line no-literal-length: drop-zone dashed stroke
+        'pointer-events-none absolute inset-0 z-10 grid place-items-center rounded-[var(--radius-lg)] border-[1.5px] border-dashed border-[color-mix(in_srgb,var(--color-primary)_55%,transparent)] bg-[color-mix(in_srgb,var(--color-primary)_6%,var(--color-card))] px-3 text-primary data-[state=invalid]:border-[color-mix(in_srgb,var(--color-error)_55%,transparent)] data-[state=invalid]:bg-[color-mix(in_srgb,var(--color-error)_6%,var(--color-card))] data-[state=invalid]:text-error';
 </script>
 
 <div
@@ -294,7 +297,7 @@
             data-ui="attachment-drop-overlay"
             data-state={dragRejection ? 'invalid' : 'dragging'}
             aria-hidden="true"
-            class="pointer-events-none absolute inset-0 z-10 grid place-items-center rounded-[var(--radius-lg)] border-[1.5px] border-dashed border-[color-mix(in_srgb,var(--color-primary)_55%,transparent)] bg-[color-mix(in_srgb,var(--color-primary)_6%,var(--color-card))] px-3 text-primary data-[state=invalid]:border-[color-mix(in_srgb,var(--color-error)_55%,transparent)] data-[state=invalid]:bg-[color-mix(in_srgb,var(--color-error)_6%,var(--color-card))] data-[state=invalid]:text-error"
+            class={dropOverlayClass}
         >
             <span
                 in:panelIn

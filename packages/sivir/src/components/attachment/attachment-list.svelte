@@ -172,6 +172,7 @@
     hidden={empty}
     class={cn(
         className,
+        // token-lint-disable-next-line no-literal-length: minimum attachment card width
         'relative grid min-w-0 grid-cols-[repeat(auto-fill,minmax(min(100%,14rem),1fr))] gap-2 [&>li]:min-w-0'
     )}
 >

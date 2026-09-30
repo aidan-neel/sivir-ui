@@ -41,10 +41,12 @@
                     reasoning.streaming ? 'mr-2 w-3 opacity-100' : 'mr-0 w-0 opacity-0'
                 )}
             >
+                <!-- token-lint-disable-next-line no-literal-length: typing-indicator dot geometry -->
                 <span class="grid grid-cols-[repeat(3,3px)] gap-[1.5px]">
                     {#each dotDelays as delay, index (index)}
                         <span
                             class={cn(
+                                // token-lint-disable-next-line no-literal-length: typing-indicator dot geometry
                                 'size-[3px] rounded-full bg-foreground opacity-20',
                                 reasoning.streaming && 'sivir-reasoning-dot'
                             )}
@@ -72,7 +74,9 @@
                         class={cn(
                             'w-max transition-[opacity,filter] [grid-area:1/1] [transition-duration:var(--reasoning-settle)] ease-[var(--ease-out)]',
                             reasoning.streaming
+                                // token-lint-disable-next-line no-literal-length: crossfade blur is part of the swap motion
                                 ? 'sivir-reasoning-shimmer opacity-100 blur-[0px]'
+                                // token-lint-disable-next-line no-literal-length: crossfade blur is part of the swap motion
                                 : 'opacity-0 blur-[2px]'
                         )}
                         >Thinking</span
@@ -82,12 +86,14 @@
                         aria-hidden={reasoning.streaming}
                         class={cn(
                             'w-max transition-[opacity,filter] [grid-area:1/1] [transition-duration:var(--reasoning-settle)] ease-[var(--ease-out)]',
+                            // token-lint-disable-next-line no-literal-length: crossfade blur is part of the swap motion
                             reasoning.streaming ? 'opacity-0 blur-[2px]' : 'opacity-100 blur-[0px]'
                         )}
                         >{duration ? 'Thought for' : 'Thought'}</span
                     >
                 </span>
                 {#if duration}
+                    <!-- token-lint-disable-next-line no-literal-length: gap scales with the label text -->
                     <span class="ml-[0.3em] tabular-nums opacity-70">{duration}</span>
                 {/if}
             {/if}
