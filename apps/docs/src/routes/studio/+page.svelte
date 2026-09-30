@@ -150,6 +150,7 @@
     };
 
     const STUDIO_EXTENSIONS_KEY = 'sivir-studio-extensions-v1';
+    const FLAT_CONTROL_SHADOW = 'inset 0 0 0 var(--border-size) var(--color-border)';
     const DEFAULT_FOUNDATION_COLORS: FoundationColors = {
         light: {
             base: '#ffffff',
@@ -678,7 +679,7 @@
             .filter((section) => section.groups.length > 0);
     });
     const generatedCss = $derived(
-        `${themeToCss(theme)}\n:root,\n.dark {\n\t--font-size-header: ${headerSize}px;\n\t--font-weight-header: ${headerWeight};\n\t--font-weight-body: ${roleWeights.body};\n\t--font-weight-label: ${roleWeights.label};\n\t--font-weight-button: ${roleWeights.button};\n\t--font-weight-badge: ${roleWeights.badge};\n\t--font-weight-description: ${roleWeights.description};\n}\n${brandCssBlock(':root:not(.dark)', brandColors.light)}${brandCssBlock('.dark', brandColors.dark)}${foundationCssBlock(':root:not(.dark)', foundationColors.light)}${foundationCssBlock('.dark', foundationColors.dark)}${chromeCssBlock()}${tokenOverridesCssBlock(':root:not(.dark)', advancedTokens.colors.light)}${tokenOverridesCssBlock('.dark', advancedTokens.colors.dark)}${tokenOverridesCssBlock(':root,\n.dark', advancedTokens.spacing)}${tokenOverridesCssBlock(':root,\n.dark', advancedTokens.animation)}${tokenOverridesCssBlock(':root:not(.dark)', advancedTokens.details.light)}${tokenOverridesCssBlock('.dark', advancedTokens.details.dark)}${tokenOverridesCssBlock(':root,\n.dark', advancedTokens.details.shared)}`
+        `${themeToCss(theme)}\n:root,\n.dark {\n\t--font-size-header: ${headerSize}px;\n\t--font-weight-header: ${headerWeight};\n\t--font-weight-body: ${roleWeights.body};\n\t--font-weight-label: ${roleWeights.label};\n\t--font-weight-button: ${roleWeights.button};\n\t--font-weight-badge: ${roleWeights.badge};\n\t--font-weight-description: ${roleWeights.description};\n}\n${brandCssBlock(':root:not(.dark)', brandColors.light)}${brandCssBlock('.dark', brandColors.dark)}${foundationCssBlock(':root:not(.dark)', foundationColors.light)}${foundationCssBlock('.dark', foundationColors.dark)}${tokenOverridesCssBlock(':root:not(.dark)', advancedTokens.colors.light)}${tokenOverridesCssBlock('.dark', advancedTokens.colors.dark)}${tokenOverridesCssBlock(':root,\n.dark', advancedTokens.spacing)}${tokenOverridesCssBlock(':root,\n.dark', advancedTokens.animation)}${tokenOverridesCssBlock(':root:not(.dark)', advancedTokens.details.light)}${tokenOverridesCssBlock('.dark', advancedTokens.details.dark)}${tokenOverridesCssBlock(':root,\n.dark', advancedTokens.details.shared)}${chromeCssBlock()}`
     );
     const generatedJson = $derived(
         JSON.stringify(
@@ -747,6 +748,25 @@
         return `${selector} {\n${declarations.map((declaration) => `\t${declaration}`).join('\n')}\n}\n`;
     }
 
+    function chromeShadowValue(name: DetailTokenName): string | null {
+        if (!surfaceShadows && (name === '--elevation-1' || name === '--elevation-float')) {
+            return 'none';
+        }
+
+        if (!dialogShadows && name === '--elevation-modal') {
+            return 'none';
+        }
+
+        if (
+            !controlShadows &&
+            (name === '--elevation-control' || name === '--elevation-button-outline')
+        ) {
+            return FLAT_CONTROL_SHADOW;
+        }
+
+        return null;
+    }
+
     function chromeCssBlock() {
         const shared = [`--ui-cursor-interactive: ${interactiveCursor};`];
         if (!surfaceShadows) {
@@ -757,8 +777,8 @@
         }
         if (!controlShadows) {
             shared.push(
-                '--elevation-control: inset 0 0 0 var(--border-size) var(--color-border);',
-                '--elevation-button-outline: inset 0 0 0 var(--border-size) var(--color-border);'
+                `--elevation-control: ${FLAT_CONTROL_SHADOW};`,
+                `--elevation-button-outline: ${FLAT_CONTROL_SHADOW};`
             );
         }
         if (!travelingHighlight) {
@@ -1171,6 +1191,11 @@
     }
 
     function resolveDetailRaw(definition: DetailTokenDefinition) {
+        const chromeValue = chromeShadowValue(definition.name);
+        if (chromeValue) {
+            return chromeValue;
+        }
+
         const override = advancedTokens.details[detailScope(definition)][definition.name]?.trim();
         if (override) {
             return override;
@@ -1828,6 +1853,7 @@
             </Select.Root>
         {:else if row.bucket === 'detail' && row.definition.kind === 'shadow'}
             {@const definition = row.definition}
+            {@const disabledByChrome = chromeShadowValue(definition.name) !== null}
             <div class="flex min-h-7 min-w-0 items-center gap-2">
                 <span class="flex shrink-0 items-center gap-1.5 text-[13px] text-foreground">
                     {definition.label}
@@ -1840,14 +1866,16 @@
                     {@render tokenResetButton(row)}
                 {/if}
             </div>
-            <ShadowField
-                label={definition.label}
-                value={resolveDetailRaw(definition)}
-                resolveVar={resolveTokenRaw}
-                onChange={(value) => {
-                    updateDetailToken(definition, value);
-                }}
-            />
+            <div inert={disabledByChrome} class={disabledByChrome ? 'opacity-50' : undefined}>
+                <ShadowField
+                    label={definition.label}
+                    value={resolveDetailRaw(definition)}
+                    resolveVar={resolveTokenRaw}
+                    onChange={(value) => {
+                        updateDetailToken(definition, value);
+                    }}
+                />
+            </div>
         {:else if slider}
             <Slider.Root
                 value={slider.value}

@@ -218,6 +218,8 @@
                 return;
             }
             onError?.(error);
+
+            return;
         }
 
         if (controller.signal.aborted) {
@@ -289,6 +291,12 @@
         stopFrame();
         abortController?.abort();
     });
+    const caretClass =
+        // token-lint-disable-next-line no-literal-length: typing-indicator dot geometry
+        'inline-grid -translate-y-px grid-cols-[repeat(3,3px)] gap-[1.5px] align-middle';
+    const caretDotClass =
+        // token-lint-disable-next-line no-literal-length: typing-indicator dot geometry
+        'sivir-response-stream-dot size-[3px] rounded-full bg-foreground opacity-20';
 </script>
 
 <svelte:element
@@ -305,16 +313,9 @@
 >
     {#each pieces as piece (piece.key)}
         {#if piece.kind === 'caret'}
-            <span
-                aria-hidden="true"
-                data-ui="response-stream-caret"
-                class="inline-grid -translate-y-px grid-cols-[repeat(3,3px)] gap-[1.5px] align-middle"
-            >
+            <span aria-hidden="true" data-ui="response-stream-caret" class={caretClass}>
                 {#each dotDelays as delay, index (index)}
-                    <span
-                        class="sivir-response-stream-dot size-[3px] rounded-full bg-foreground opacity-20"
-                        style:animation-delay={`${delay * 110}ms`}
-                    ></span>
+                    <span class={caretDotClass} style:animation-delay={`${delay * 110}ms`}></span>
                 {/each}
             </span>
         {:else}

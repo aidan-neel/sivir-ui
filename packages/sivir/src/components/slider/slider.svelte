@@ -137,6 +137,10 @@
             return min;
         }
 
+        if (!(step > 0) || !Number.isFinite(step)) {
+            return clamp(raw, min, max);
+        }
+
         const precision = Math.max(decimals(step), decimals(min));
         const snapped = min + Math.round((raw - min) / step) * step;
 

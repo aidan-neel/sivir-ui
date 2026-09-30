@@ -52,8 +52,11 @@
         event.preventDefault();
 
         const email = invite.trim();
+        const alreadyInvited = collaborators.some((collaborator) => {
+            return collaborator.email.toLowerCase() === email.toLowerCase();
+        });
 
-        if (!email) {
+        if (!email || alreadyInvited) {
             return;
         }
 

@@ -49,6 +49,7 @@
     const metaClass = '[font-size:var(--font-size-label)] text-foreground-muted';
 
     let themeSlug = $state<string | undefined>('default');
+    let appliedSlug: string | undefined = 'default';
     let tab = $state('general');
     let workspaceName = $state('Northwind');
     let region = $state('fra');
@@ -92,14 +93,18 @@
         const match = builtInThemePresets.find((preset) => themeToCss(preset) === stored);
 
         themeSlug = match?.slug;
+        appliedSlug = themeSlug;
     });
 
     function selectTheme(value: string | string[] | undefined) {
         const preset = builtInThemePresets.find((option) => option.slug === value);
 
         if (!preset) {
+            themeSlug = appliedSlug;
             return;
         }
+
+        appliedSlug = preset.slug;
 
         if (preset.slug === 'default') {
             clearLiveThemeCss();
