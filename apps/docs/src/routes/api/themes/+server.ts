@@ -1,27 +1,61 @@
+import { parseTheme, type Theme } from '@sivir-ui/svelte/themes/theme';
+import { json } from '@sveltejs/kit';
+import {
+    listRegistryThemes,
+    publishRegistryTheme,
+    RegistryRequestError,
+    registryErrorResponse
+} from '$lib/server/theme-registry';
+import type { ThemeSourceFilter } from '$lib/theme-registry';
 import type { RequestHandler } from './$types';
-import { RegistryRequestError, listRegistryThemes } from '$lib/server/theme-registry';
 
-export const GET: RequestHandler = async ({ fetch }) => {
+const SOURCE_FILTERS: readonly ThemeSourceFilter[] = ['all', 'sivir', 'community'];
+
+function optionalInteger(value: string | null): number | undefined {
+    if (value === null || !/^\d+$/.test(value)) {
+        return undefined;
+    }
+
+    return Number(value);
+}
+
+export const GET: RequestHandler = async ({ fetch, url }) => {
+    const source = SOURCE_FILTERS.find((filter) => filter === url.searchParams.get('source'));
+
     try {
-        const themes = await listRegistryThemes(fetch);
-        return new Response(JSON.stringify(themes), {
-            headers: {
-                'content-type': 'application/json; charset=utf-8'
-            }
+        const page = await listRegistryThemes(fetch, {
+            q: url.searchParams.get('q') ?? undefined,
+            source,
+            limit: optionalInteger(url.searchParams.get('limit')),
+            offset: optionalInteger(url.searchParams.get('offset'))
         });
-    } catch (requestError) {
-        const status = requestError instanceof RegistryRequestError ? requestError.status : 500;
-        const message =
-            requestError instanceof Error ? requestError.message : 'Failed to fetch theme catalog.';
-        return new Response(message, { status });
+
+        return json(page);
+    } catch (error) {
+        return registryErrorResponse(error, 'Failed to fetch the theme catalog.');
     }
 };
 
-export const POST: RequestHandler = async () => {
-    return new Response('Theme publishing is disabled in v1.', {
-        status: 405,
-        headers: {
-            allow: 'GET'
-        }
-    });
+async function readTheme(request: Request): Promise<Theme> {
+    try {
+        return parseTheme(await request.json());
+    } catch (error) {
+        throw new RegistryRequestError(
+            400,
+            error instanceof Error ? error.message : 'Invalid theme.'
+        );
+    }
+}
+
+export const POST: RequestHandler = async ({ fetch, getClientAddress, request }) => {
+    try {
+        const theme = await readTheme(request);
+        const published = await publishRegistryTheme(fetch, theme, getClientAddress());
+
+        return json(published, {
+            status: 201
+        });
+    } catch (error) {
+        return registryErrorResponse(error, 'Failed to publish the theme.');
+    }
 };

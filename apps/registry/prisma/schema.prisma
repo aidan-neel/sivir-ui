@@ -1,8 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client"
   output   = "./generated/prisma"
@@ -15,23 +13,34 @@ datasource db {
   provider = "postgresql"
 }
 
+/// A community theme. `document` holds the complete, validated portable `Theme`
+/// from `@sivir-ui/svelte/themes/theme`; the scalar columns mirror its identity
+/// fields so listing, search, and slug uniqueness never have to read JSON.
 model Theme {
-  id          String   @id @default(cuid())
-  version     Int      @default(2)
-  slug        String   @unique
-  name        String
-  description String
-  publisher   String?
-  brand       String
-  neutral     String
-  radius      String
-  density     String
-  motionFeel  String
-  fontSans    String
-  fontMono    String
-  fontHeader  String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id            String   @id @default(cuid())
+  slug          String   @unique
+  name          String
+  description   String
+  publisher     String?
+  version       Int
+  document      Json
+  /// SHA-256 of the edit token returned once at publish time.
+  editTokenHash String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([createdAt])
+}
+
+/// Append-only publish log for rate limiting. Unpublishing a theme never
+/// removes its event, so deletes cannot free quota.
+model PublishEvent {
+  id        String   @id @default(cuid())
+  /// Opaque, salted client fingerprint supplied by the trusted publishing proxy.
+  clientKey String
+  createdAt DateTime @default(now())
+
+  @@index([clientKey, createdAt])
 }
 
 /// Tombstone for built-in default themes that an admin has chosen to hide.

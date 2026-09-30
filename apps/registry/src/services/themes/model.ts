@@ -1,60 +1,83 @@
+import type { Theme } from '@sivir-ui/svelte/themes/theme';
 import { type Static, t } from 'elysia';
 
-export const themeSchema = t.Object({
-    version: t.Union([t.Literal(2), t.Literal(3), t.Literal(4)]),
-    slug: t.String({
-        minLength: 1,
-        maxLength: 80,
-        pattern: '^[a-z0-9]+(?:-[a-z0-9]+)*$'
-    }),
-    name: t.String({ minLength: 1, maxLength: 80 }),
-    description: t.String({ maxLength: 500 }),
-    publisher: t.Optional(t.String({ maxLength: 80 })),
-    brand: t.String({ minLength: 7, maxLength: 7, pattern: '^#[0-9a-fA-F]{6}$' }),
-    neutral: t.Union([t.Literal('cool'), t.Literal('true'), t.Literal('warm')]),
-    radius: t.Union([t.Literal('sharp'), t.Literal('default'), t.Literal('rounded')]),
-    density: t.Union([t.Literal('compact'), t.Literal('default'), t.Literal('comfortable')]),
-    motion: t.Union([
-        t.Literal('none'),
-        t.Literal('subtle'),
-        t.Literal('default'),
-        t.Literal('expressive')
-    ]),
-    fontSans: t.String({ minLength: 1, maxLength: 200 }),
-    fontMono: t.String({ minLength: 1, maxLength: 200 }),
-    fontHeader: t.String({ minLength: 1, maxLength: 200 })
-});
+export const SLUG_PATTERN = '^[a-z0-9]+(?:-[a-z0-9]+)*$';
 
-export const themeRecordSchema = t.Intersect([
-    themeSchema,
-    t.Object({
-        id: t.String(),
-        createdAt: t.String(),
-        updatedAt: t.String()
-    })
-]);
+export const themeSources = ['sivir', 'community'] as const;
 
-export const themeListSchema = t.Array(themeRecordSchema);
+export type ThemeSource = (typeof themeSources)[number];
+
+/** A registry entry: the portable theme plus the metadata the registry owns. */
+export type RegistryThemeRecord = Theme & {
+    id: string;
+    source: ThemeSource;
+    createdAt: string;
+    updatedAt: string;
+};
+
+export type ThemeListResponse = {
+    items: RegistryThemeRecord[];
+    total: number;
+    limit: number;
+    offset: number;
+};
+
+export type PublishResponse = {
+    theme: RegistryThemeRecord;
+    editToken: string;
+};
 
 export const slugParamsSchema = t.Object({
     slug: t.String({
         minLength: 1,
         maxLength: 80,
-        pattern: '^[a-z0-9]+(?:-[a-z0-9]+)*$'
+        pattern: SLUG_PATTERN
     })
 });
 
-export const publishResponseSchema = t.Object({
-    success: t.Literal(true),
-    message: t.Literal('Successfully published theme!')
+export const listQuerySchema = t.Object({
+    q: t.Optional(
+        t.String({
+            maxLength: 80
+        })
+    ),
+    source: t.Optional(t.Union([t.Literal('all'), t.Literal('sivir'), t.Literal('community')])),
+    limit: t.Optional(
+        t.Numeric({
+            minimum: 1,
+            maximum: 100
+        })
+    ),
+    offset: t.Optional(
+        t.Numeric({
+            minimum: 0
+        })
+    )
 });
 
-export const slugConflictSchema = t.Union([
-    t.Literal('A theme with this slug already exists, try another one.'),
-    t.Literal('This slug is reserved for a built-in theme.')
-]);
-export const publishRateLimitSchema = t.Literal('Too many publishes, try again later.');
-export const themeNotFoundSchema = t.Literal('A theme with this slug does not exist.');
+export type ListQuery = Static<typeof listQuerySchema>;
 
-export type Theme = Static<typeof themeSchema>;
-export type ThemeRecord = Static<typeof themeRecordSchema>;
+export const writeHeadersSchema = t.Object({
+    'x-registry-secret': t.Optional(t.String()),
+    'x-registry-client': t.Optional(
+        t.String({
+            maxLength: 128
+        })
+    ),
+    authorization: t.Optional(t.String())
+});
+
+export type WriteHeaders = Static<typeof writeHeadersSchema>;
+
+export const registryMessages = {
+    notFound: 'A theme with this slug does not exist.',
+    slugTaken: 'A theme with this slug already exists, try another one.',
+    slugReserved: 'This slug is reserved for a built-in theme.',
+    builtInReadOnly: 'Built-in themes cannot be changed.',
+    slugMismatch: 'The theme slug cannot be changed after publishing.',
+    rateLimited: 'Too many publishes, try again later.',
+    publishingDisabled: 'Theme publishing is not configured on this registry.',
+    unauthorizedProxy: 'This registry only accepts writes from the Sivir docs server.',
+    missingEditToken: 'An edit token is required to change this theme.',
+    invalidEditToken: 'The edit token does not match this theme.'
+} as const;

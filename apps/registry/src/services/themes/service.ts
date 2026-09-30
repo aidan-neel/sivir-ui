@@ -1,132 +1,303 @@
-import { status } from 'elysia';
 import { prisma } from '@lib/prisma';
-import { parseTheme } from '@sivir-ui/svelte/themes/theme';
-import type { Theme, ThemeRecord } from './model';
-import { defaultThemeRecord, defaultThemes, findDefaultTheme, isDefaultSlug } from './defaults';
+import type { Prisma } from '@root/prisma/generated/prisma/client';
+import { parseTheme, type Theme } from '@sivir-ui/svelte/themes/theme';
+import { registryConfig } from '@src/config';
+import { status } from 'elysia';
+import { createEditToken, hashEditToken, verifyEditToken } from './auth';
+import { builtInRecord, builtInThemes, findBuiltInTheme, isBuiltInSlug } from './defaults';
+import {
+    type ListQuery,
+    type PublishResponse,
+    type RegistryThemeRecord,
+    registryMessages,
+    type ThemeListResponse
+} from './model';
+import { parsePublishableTheme, ThemeValidationError } from './validation';
 
-type PersistedTheme = Awaited<ReturnType<typeof prisma.theme.findFirst>>;
+type ThemeRow = {
+    id: string;
+    document: unknown;
+    createdAt: Date;
+    updatedAt: Date;
+};
 
-function toIso(value: Date | string): string {
-    return value instanceof Date ? value.toISOString() : value;
-}
-
-function serialize(theme: NonNullable<PersistedTheme>): ThemeRecord {
-    const row = theme as unknown as {
-        id: string;
-        version: number;
-        slug: string;
-        name: string;
-        description: string;
-        publisher: string | null;
-        brand: string;
-        neutral: string;
-        radius: string;
-        density: string;
-        motionFeel: string;
-        fontSans: string;
-        fontMono: string;
-        fontHeader: string;
-        createdAt: Date | string;
-        updatedAt: Date | string;
-    };
-    const parsed = parseTheme({
-        version: row.version,
-        slug: row.slug,
-        name: row.name,
-        description: row.description,
-        publisher: row.publisher ?? undefined,
-        brand: row.brand,
-        neutral: row.neutral,
-        radius: row.radius,
-        density: row.density,
-        motion: row.motionFeel,
-        fontSans: row.fontSans,
-        fontMono: row.fontMono,
-        fontHeader: row.fontHeader
-    });
+function toRecord(row: ThemeRow): RegistryThemeRecord {
     return {
-        ...parsed,
+        ...parseTheme(row.document),
         id: row.id,
-        createdAt: toIso(row.createdAt),
-        updatedAt: toIso(row.updatedAt)
+        source: 'community',
+        createdAt: row.createdAt.toISOString(),
+        updatedAt: row.updatedAt.toISOString()
     };
 }
 
-export async function listThemes(): Promise<ThemeRecord[]> {
-    const [rows, hidden] = await Promise.all([
-        prisma.theme.findMany({ orderBy: { name: 'asc' } }),
-        prisma.hiddenDefault.findMany({ select: { slug: true } })
-    ]);
-    const published = rows.map(serialize);
-    const publishedSlugs = new Set(published.map((theme) => theme.slug));
-    const hiddenSlugs = new Set(hidden.map((row) => row.slug));
-    const unshadowedDefaults = defaultThemes
-        .filter((theme) => !publishedSlugs.has(theme.slug) && !hiddenSlugs.has(theme.slug))
-        .map(defaultThemeRecord);
+function toRecords(rows: ThemeRow[]): RegistryThemeRecord[] {
+    return rows.flatMap((row) => {
+        try {
+            return [toRecord(row)];
+        } catch (error) {
+            console.error(`Skipping unreadable theme row ${row.id}:`, error);
 
-    return [...unshadowedDefaults, ...published].sort((a, b) => a.name.localeCompare(b.name));
-}
-
-export async function getThemeBySlug(slug: string): Promise<ThemeRecord> {
-    const builtIn = findDefaultTheme(slug);
-    if (builtIn) return defaultThemeRecord(builtIn);
-
-    const theme = await prisma.theme.findUnique({ where: { slug } });
-    if (!theme) {
-        throw status(404, 'A theme with this slug does not exist.' as const);
-    }
-
-    return serialize(theme);
-}
-
-export async function publishTheme(input: Theme) {
-    const theme = parseTheme(input);
-    if (isDefaultSlug(theme.slug)) {
-        throw status(409, 'This slug is reserved for a built-in theme.' as const);
-    }
-
-    const existing = await prisma.theme.findUnique({
-        where: { slug: theme.slug },
-        select: { id: true }
-    });
-    if (existing) {
-        throw status(409, 'A theme with this slug already exists, try another one.' as const);
-    }
-
-    try {
-        await prisma.theme.create({
-            data: {
-                version: theme.version,
-                slug: theme.slug,
-                name: theme.name,
-                description: theme.description,
-                publisher: theme.publisher ?? null,
-                brand: theme.brand,
-                neutral: theme.neutral,
-                radius: theme.radius,
-                density: theme.density,
-                motionFeel: theme.motion,
-                fontSans: theme.fontSans,
-                fontMono: theme.fontMono,
-                fontHeader: theme.fontHeader
-            } as never
-        });
-    } catch (error) {
-        // Prisma's generated error class can be duplicated across adapters/builds,
-        // so the stable public `code` is safer than an instanceof check.
-        if (
-            typeof error === 'object' &&
-            error !== null &&
-            'code' in error &&
-            error.code === 'P2002'
-        ) {
-            throw status(409, 'A theme with this slug already exists, try another one.' as const);
+            return [];
         }
+    });
+}
+
+function matchesQuery(theme: Theme, needle: string): boolean {
+    const haystack = [theme.name, theme.description, theme.publisher ?? ''].join(' ');
+
+    return haystack.toLowerCase().includes(needle);
+}
+
+function searchWhere(needle: string): Prisma.ThemeWhereInput | undefined {
+    if (!needle) {
+        return undefined;
+    }
+
+    const contains = {
+        contains: needle,
+        mode: 'insensitive' as const
+    };
+
+    return {
+        OR: [
+            {
+                name: contains
+            },
+            {
+                description: contains
+            },
+            {
+                publisher: contains
+            }
+        ]
+    };
+}
+
+function parseOrReject(input: unknown): Theme {
+    try {
+        return parsePublishableTheme(input);
+    } catch (error) {
+        if (error instanceof ThemeValidationError) {
+            throw status(400, error.message);
+        }
+
         throw error;
     }
+}
+
+function isUniqueViolation(error: unknown): boolean {
+    return (
+        typeof error === 'object' &&
+        error !== null &&
+        'code' in error &&
+        (error as { code: unknown }).code === 'P2002'
+    );
+}
+
+function documentColumns(theme: Theme) {
+    return {
+        name: theme.name,
+        description: theme.description,
+        publisher: theme.publisher ?? null,
+        version: theme.version,
+        document: theme
+    };
+}
+
+async function listBuiltIns(needle: string, includeBuiltIns: boolean): Promise<Theme[]> {
+    if (!includeBuiltIns) {
+        return [];
+    }
+
+    const hidden = await prisma.hiddenDefault.findMany({
+        select: {
+            slug: true
+        }
+    });
+    const hiddenSlugs = new Set(hidden.map((row) => row.slug));
+
+    return builtInThemes.filter((theme) => {
+        return !hiddenSlugs.has(theme.slug) && (!needle || matchesQuery(theme, needle));
+    });
+}
+
+/** Lists built-in themes first, then community themes newest first. */
+export async function listThemes(query: ListQuery): Promise<ThemeListResponse> {
+    const needle = query.q?.trim().toLowerCase() ?? '';
+    const source = query.source ?? 'all';
+    const limit = query.limit ?? registryConfig.defaultPageSize;
+    const offset = query.offset ?? 0;
+    const includeCommunity = source !== 'sivir';
+    const builtIns = await listBuiltIns(needle, source !== 'community');
+    const builtInPage = builtIns.slice(offset, offset + limit).map(builtInRecord);
+
+    if (!includeCommunity) {
+        return {
+            items: builtInPage,
+            total: builtIns.length,
+            limit,
+            offset
+        };
+    }
+
+    const where = searchWhere(needle);
+    const communityTake = limit - builtInPage.length;
+    const communitySkip = Math.max(0, offset - builtIns.length);
+    const [communityTotal, rows] = await Promise.all([
+        prisma.theme.count({
+            where
+        }),
+        communityTake > 0
+            ? prisma.theme.findMany({
+                  where,
+                  orderBy: {
+                      createdAt: 'desc'
+                  },
+                  skip: communitySkip,
+                  take: communityTake
+              })
+            : Promise.resolve([])
+    ]);
 
     return {
-        success: true as const,
-        message: 'Successfully published theme!' as const
+        items: [...builtInPage, ...toRecords(rows)],
+        total: builtIns.length + communityTotal,
+        limit,
+        offset
     };
+}
+
+export async function getThemeBySlug(slug: string): Promise<RegistryThemeRecord> {
+    const builtIn = findBuiltInTheme(slug);
+    if (builtIn) {
+        return builtInRecord(builtIn);
+    }
+
+    const row = await prisma.theme.findUnique({
+        where: {
+            slug
+        }
+    });
+    if (!row) {
+        throw status(404, registryMessages.notFound);
+    }
+
+    return toRecord(row);
+}
+
+/**
+ * Serializes publishes per client with a transaction-scoped advisory lock, so
+ * concurrent requests cannot all pass the count before any of them commits.
+ */
+async function reservePublishSlot(tx: Prisma.TransactionClient, clientKey: string) {
+    await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${clientKey}))`;
+
+    const since = new Date(Date.now() - registryConfig.publishWindowMs);
+    const recent = await tx.publishEvent.count({
+        where: {
+            clientKey,
+            createdAt: {
+                gte: since
+            }
+        }
+    });
+    if (recent >= registryConfig.publishLimit) {
+        throw status(429, registryMessages.rateLimited);
+    }
+
+    await tx.publishEvent.create({
+        data: {
+            clientKey
+        }
+    });
+}
+
+export async function publishTheme(input: unknown, clientKey: string): Promise<PublishResponse> {
+    const theme = parseOrReject(input);
+    if (isBuiltInSlug(theme.slug)) {
+        throw status(409, registryMessages.slugReserved);
+    }
+
+    const editToken = createEditToken();
+    try {
+        const row = await prisma.$transaction(async (tx) => {
+            await reservePublishSlot(tx, clientKey);
+
+            return tx.theme.create({
+                data: {
+                    ...documentColumns(theme),
+                    slug: theme.slug,
+                    editTokenHash: hashEditToken(editToken)
+                }
+            });
+        });
+
+        return {
+            theme: toRecord(row),
+            editToken
+        };
+    } catch (error) {
+        if (isUniqueViolation(error)) {
+            throw status(409, registryMessages.slugTaken);
+        }
+
+        throw error;
+    }
+}
+
+async function findEditableTheme(slug: string, editToken: string) {
+    if (isBuiltInSlug(slug)) {
+        throw status(403, registryMessages.builtInReadOnly);
+    }
+
+    const row = await prisma.theme.findUnique({
+        where: {
+            slug
+        },
+        select: {
+            id: true,
+            editTokenHash: true
+        }
+    });
+    if (!row) {
+        throw status(404, registryMessages.notFound);
+    }
+
+    if (!row.editTokenHash || !verifyEditToken(editToken, row.editTokenHash)) {
+        throw status(403, registryMessages.invalidEditToken);
+    }
+
+    return row;
+}
+
+export async function updateTheme(
+    slug: string,
+    input: unknown,
+    editToken: string
+): Promise<RegistryThemeRecord> {
+    const theme = parseOrReject(input);
+    if (theme.slug !== slug) {
+        throw status(400, registryMessages.slugMismatch);
+    }
+
+    const existing = await findEditableTheme(slug, editToken);
+    const row = await prisma.theme.update({
+        where: {
+            id: existing.id
+        },
+        data: documentColumns(theme)
+    });
+
+    return toRecord(row);
+}
+
+export async function deleteTheme(slug: string, editToken: string): Promise<void> {
+    const existing = await findEditableTheme(slug, editToken);
+
+    await prisma.theme.delete({
+        where: {
+            id: existing.id
+        }
+    });
 }

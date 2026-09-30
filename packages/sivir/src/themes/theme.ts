@@ -736,9 +736,9 @@ export function parseTheme(value: unknown): Theme {
         radius: enumValue(value.radius, 'radius', radiusScales),
         density: enumValue(value.density, 'density', densities),
         motion: enumValue(value.motion, 'motion', motionFeels),
-        fontSans: requiredString(value.fontSans, 'fontSans'),
-        fontMono: requiredString(value.fontMono, 'fontMono'),
-        fontHeader: requiredString(value.fontHeader, 'fontHeader')
+        fontSans: cssValue(value.fontSans, 'fontSans'),
+        fontMono: cssValue(value.fontMono, 'fontMono'),
+        fontHeader: cssValue(value.fontHeader, 'fontHeader')
     };
     if (typeof value.publisher === 'string' && value.publisher.trim()) {
         theme.publisher = value.publisher;

@@ -26,5 +26,8 @@ services:
             PORT: '3000'
             HOST: '0.0.0.0'
             THEME_REGISTRY_URL: 'http://registry:4100'
+            # Compose reads REGISTRY_PUBLISH_SECRET from the shell or the root .env,
+            # not apps/registry/.env. Use the registry's value to enable publishing.
+            THEME_REGISTRY_SECRET: '${REGISTRY_PUBLISH_SECRET:-}'
         ports:
             - '3000:3000'
