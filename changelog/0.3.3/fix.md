@@ -10,3 +10,4 @@
 - Dismissed toasts start leaving immediately instead of holding still for a third of a second: the front toast slides back down as it fades, and the rest of the stack moves forward at the same time.
 - Stop the Theme Studio inspector clipping a slider's right edge and value while it stretches past its limit.
 - Drop the CSS variable name under each Theme Studio token field. Reset now slides in below a field once it changes and slides away when the field is reset.
+- Fix the Command palette's hover highlight showing up smaller than the active row, and offset from it, when the palette first opens. Dropdown Menu, Context Menu, and Select panels that open with a scale animation get the same fix.
