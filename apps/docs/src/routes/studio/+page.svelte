@@ -915,9 +915,16 @@
         );
     }
 
-    function storeEditTokens(next: Record<string, string>) {
+    function updateEditTokens(update: (current: Record<string, string>) => Record<string, string>) {
+        const next = update(readEditTokens());
         editTokens = next;
         localStorage.setItem(EDIT_TOKENS_KEY, JSON.stringify(next));
+    }
+
+    function syncEditTokens(event: StorageEvent) {
+        if (event.key === EDIT_TOKENS_KEY) {
+            editTokens = readEditTokens();
+        }
     }
 
     function applyPreset(slug: string) {
@@ -1093,9 +1100,11 @@
                 const published = (await response.json()) as {
                     editToken: string;
                 };
-                storeEditTokens({
-                    ...editTokens,
-                    [identity.slug]: published.editToken
+                updateEditTokens((current) => {
+                    return {
+                        ...current,
+                        [identity.slug]: published.editToken
+                    };
                 });
             }
 
@@ -1138,8 +1147,11 @@
                 return;
             }
 
-            const { [publishSlug]: _removed, ...remaining } = editTokens;
-            storeEditTokens(remaining);
+            updateEditTokens((current) => {
+                const { [publishSlug]: _removed, ...remaining } = current;
+
+                return remaining;
+            });
             publishOpen = false;
             toast({
                 title: `${publishName} unpublished`,
@@ -1716,8 +1728,12 @@
             appliedDark = root.classList.contains('dark');
         });
         observer.observe(root, { attributes: true, attributeFilter: ['class'] });
+        window.addEventListener('storage', syncEditTokens);
 
-        return () => observer.disconnect();
+        return () => {
+            observer.disconnect();
+            window.removeEventListener('storage', syncEditTokens);
+        };
     });
 
     $effect(() => {
