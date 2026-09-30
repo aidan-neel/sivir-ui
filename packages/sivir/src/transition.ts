@@ -127,7 +127,7 @@ function panelTransition(
         duration: getCssDuration(node, durationVariable, fallbackDuration),
         easing: options?.easing ?? cubicOut,
         css: (t) => {
-            return `opacity:${(opacityStart + (1 - opacityStart) * t) * opacity};transform:${baseTransform} translate(${(1 - t) * offsetX}px, ${(1 - t) * offsetY}px) scale(${endScale + (1 - endScale) * t});filter:${baseFilter} blur(${(1 - t) * blur}px)`;
+            return `opacity:${(opacityStart + (1 - opacityStart) * t) * opacity};transform:${baseTransform} ${offsetX === 0 ? '' : `translateX(${(1 - t) * offsetX}px) `}translateY(${(1 - t) * offsetY}px) scale(${endScale + (1 - endScale) * t});filter:${baseFilter} blur(${(1 - t) * blur}px)`;
         }
     };
 }
