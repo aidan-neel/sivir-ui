@@ -68,23 +68,33 @@ src/lib/sivir/components/button/
     </section>
 
     <section id="theme-studio" class="scroll-mt-20 flex flex-col gap-5">
-        <Typography.H2 class="docs-section-heading">Theme Studio</Typography.H2>
+        <Typography.H2 class="docs-section-heading">Studio</Typography.H2>
         <Typography.Text variant="body" class="m-0 max-w-2xl">
             The
             <a class="text-foreground underline underline-offset-2" href={resolve('/studio')}
-                >Theme Studio</a
+                >Studio</a
             >
             is the visual way to build a theme. Start from a built-in preset and adjust the shared
             axes — brand, neutral temperature, radius, density, motion, and fonts — plus typography
             (header size and per-role weights for body, label, button, badge, and description),
             per-mode foundation colors, and chrome flags (surface, control, and dialog shadows, the
-            traveling highlight, primary stroke, and the interactive cursor). The Advanced section
-            overrides individual color, spacing, and animation tokens per light and dark mode.
+            traveling highlight, primary stroke, and the interactive cursor). The Tokens tab
+            overrides individual theme variables, per light and dark mode where they differ.
         </Typography.Text>
         <Typography.Text variant="body" class="m-0 max-w-2xl">
             Copy the generated <Typography.InlineCode>theme.css</Typography.InlineCode> to use the
-            theme in your app, or copy the theme JSON to share it. The studio keeps your draft in
+            theme in your app, or copy the theme JSON to share it. The Studio keeps your draft in
             local storage between visits.
+        </Typography.Text>
+        <Typography.Text variant="body" class="m-0 max-w-2xl">
+            Publish a draft to share it on the
+            <a class="text-foreground underline underline-offset-2" href={resolve('/themes')}
+                >themes page</a
+            >, where anyone can preview it and install it by slug. The browser that publishes a
+            theme keeps its edit key, so only that browser can publish updates or unpublish it. Open
+            any theme in the Studio with
+            <Typography.InlineCode>/studio?theme=&lt;slug&gt;</Typography.InlineCode>
+            to start a new draft from it.
         </Typography.Text>
     </section>
 
@@ -160,11 +170,10 @@ src/lib/sivir/components/button/
             <Typography.InlineCode>magic</Typography.InlineCode>,
             <Typography.InlineCode>bitsy</Typography.InlineCode>,
             <Typography.InlineCode>open</Typography.InlineCode>, and
-            <Typography.InlineCode>functional</Typography.InlineCode>. Switch between them live on
-            the
-            <a class="text-foreground underline underline-offset-2" href={resolve('/')}
-                >homepage</a
-            >.
+            <Typography.InlineCode>functional</Typography.InlineCode>. Preview them live on the
+            <a class="text-foreground underline underline-offset-2" href={resolve('/themes')}
+                >themes page</a
+            >, where you can copy each preset’s CSS or JSON.
         </Typography.Text>
         <Typography.Text variant="body" class="m-0 max-w-2xl">
             With the CLI, install a preset into
@@ -181,8 +190,8 @@ src/lib/sivir/components/button/
         <CodeBlock code={themeImport} lang="css" copy="overlay" />
         <Typography.Text variant="body" class="m-0 max-w-2xl">
             <Typography.InlineCode>sivir list</Typography.InlineCode>
-            shows available built-in theme slugs. Community theme registry hosting is not part of
-            v1.
+            shows available built-in theme slugs. The same command installs community themes
+            published from the Studio; pass the slug shown on the themes page.
         </Typography.Text>
     </section>
 
@@ -198,7 +207,7 @@ src/lib/sivir/components/button/
     <section id="theme-json" class="scroll-mt-20 flex flex-col gap-5">
         <Typography.H2 class="docs-section-heading">Theme JSON</Typography.H2>
         <Typography.Text variant="body" class="m-0 max-w-2xl">
-            Theme JSON (version 4) captures a theme as data, so the studio, the CLI, and the theme
+            Theme JSON (version 4) captures a theme as data, so the Studio, the CLI, and the theme
             registry all speak the same format. Beyond the shared axes, theme JSON accepts per-mode
             surfaces in <Typography.InlineCode>foundation.light</Typography.InlineCode>
             /

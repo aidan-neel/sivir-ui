@@ -69,7 +69,7 @@ describe('docs release contracts', () => {
         }
         expect(body).toContain('<loc>https://preview.example/docs/components</loc>');
         expect(body.match(/<url>/g)).toHaveLength(
-            components.length * 2 + 17 + changelogVersions.length + changelogLlmVersions.length
+            components.length * 2 + 18 + changelogVersions.length + changelogLlmVersions.length
         );
         expect(body).toContain('<loc>https://preview.example/docs/changelog</loc>');
         expect(body).toContain('<loc>https://preview.example/docs/changelog.md</loc>');
@@ -91,7 +91,7 @@ describe('docs release contracts', () => {
                 `<loc>https://preview.example/docs/components/${component}.md</loc>`
             );
         }
-        expect(body).not.toContain('/themes</loc>');
+        expect(body).toContain('<loc>https://preview.example/themes</loc>');
         expect(body).not.toContain('/themes/studio');
         expect(body).not.toContain('/docs/styling');
     });
@@ -207,7 +207,7 @@ describe('docs release contracts', () => {
         expect(buttonReference).toContain('Changes to those source files are reflected here');
     });
 
-    it('keeps getting-started docs free of Theme Studio and wrong CLI invocations', () => {
+    it('keeps getting-started docs free of the Studio and wrong CLI invocations', () => {
         const pages = [
             'apps/docs/src/routes/docs/introduction/+page.svelte',
             'apps/docs/src/routes/docs/installation/+page.svelte',
@@ -223,7 +223,7 @@ describe('docs release contracts', () => {
         // path pages stay free of it.
         for (const page of pages.slice(0, 2)) {
             const source = readFileSync(resolve(root, page), 'utf8');
-            expect(source, page).not.toMatch(/Theme Studio|theme studio|\/themes\/studio/i);
+            expect(source, page).not.toMatch(/\bStudio\b|\/studio\b/);
         }
         const install = readFileSync(
             resolve(root, 'apps/docs/src/routes/docs/installation/+page.svelte'),

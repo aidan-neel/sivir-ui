@@ -1,10 +1,20 @@
+import { createHash } from 'node:crypto';
+import { builtInThemePresets } from '@sivir-ui/svelte/themes/builtin-presets';
+import { parseTheme, type Theme } from '@sivir-ui/svelte/themes/theme';
 import { dev } from '$app/environment';
 import { env } from '$env/dynamic/private';
-import { parseTheme, type Theme, type ThemeRecord } from '@sivir-ui/svelte/themes/theme';
+import {
+    type PublishedTheme,
+    type RegistryListOptions,
+    type RegistryTheme,
+    type RegistryThemePage,
+    THEME_SLUG_PATTERN,
+    themeSources
+} from '$lib/theme-registry';
 
-export type RegistryTheme = ThemeRecord;
-
-const DEFAULT_REGISTRY_URL = 'http://localhost:4100';
+const LOCAL_REGISTRY_URL = 'http://localhost:4100';
+const BUILT_IN_TIMESTAMP = '2026-07-14T00:00:00.000Z';
+const THEME_NOT_FOUND = 'A theme with this slug does not exist.';
 
 export class RegistryRequestError extends Error {
     constructor(
@@ -15,98 +25,290 @@ export class RegistryRequestError extends Error {
     }
 }
 
-function getRegistryBaseUrl() {
+function registryBaseUrl(): string {
     const configured = env.THEME_REGISTRY_URL?.trim();
-    if (configured) return configured.replace(/\/+$/, '');
-    // Local full-stack default only. v1 public docs do not require a registry;
-    // callers should catch and fall back (see themes/+page.server.ts).
-    if (dev) return DEFAULT_REGISTRY_URL;
+    if (configured) {
+        return configured.replace(/\/+$/, '');
+    }
+
+    if (dev) {
+        return LOCAL_REGISTRY_URL;
+    }
+
     throw new RegistryRequestError(503, 'Theme registry is not configured.');
 }
 
-async function parseErrorMessage(response: Response) {
-    const body = await response.text();
-    return body.trim() || `Registry request failed with status ${response.status}`;
+function registrySecret(): string {
+    const secret = env.THEME_REGISTRY_SECRET?.trim();
+    if (!secret) {
+        throw new RegistryRequestError(503, 'Theme publishing is not configured.');
+    }
+
+    return secret;
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+    return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
 function parseRegistryTheme(value: unknown): RegistryTheme {
-    if (typeof value !== 'object' || value === null) {
+    if (!isRecord(value)) {
         throw new TypeError('Theme registry returned a non-object record.');
     }
-    const record = value as Record<string, unknown>;
-    const theme = parseTheme(record);
+
+    const source = themeSources.find((candidate) => candidate === value.source);
     if (
-        typeof record.id !== 'string' ||
-        typeof record.createdAt !== 'string' ||
-        typeof record.updatedAt !== 'string'
+        !source ||
+        typeof value.id !== 'string' ||
+        typeof value.createdAt !== 'string' ||
+        typeof value.updatedAt !== 'string'
     ) {
         throw new TypeError('Theme registry returned invalid record metadata.');
     }
+
+    return {
+        ...parseTheme(value),
+        id: value.id,
+        source,
+        createdAt: value.createdAt,
+        updatedAt: value.updatedAt
+    };
+}
+
+function parseThemePage(value: unknown): RegistryThemePage {
+    if (!isRecord(value) || !Array.isArray(value.items)) {
+        throw new TypeError('Theme registry returned no theme list.');
+    }
+
+    return {
+        items: value.items.map(parseRegistryTheme),
+        total: typeof value.total === 'number' ? value.total : value.items.length,
+        limit: typeof value.limit === 'number' ? value.limit : value.items.length,
+        offset: typeof value.offset === 'number' ? value.offset : 0
+    };
+}
+
+async function readRegistryError(response: Response): Promise<string> {
+    const fallback = `Theme registry responded with ${response.status}.`;
+    const text = (await response.text()).trim();
+    if (!text.startsWith('{')) {
+        return text || fallback;
+    }
+
+    let body: unknown;
+    try {
+        body = JSON.parse(text);
+    } catch {
+        return fallback;
+    }
+
+    if (isRecord(body) && body.type === 'validation') {
+        return 'The theme registry rejected this request as invalid.';
+    }
+
+    return isRecord(body) && typeof body.message === 'string' ? body.message : fallback;
+}
+
+async function registryRequest<T>(
+    fetchImpl: typeof fetch,
+    path: string,
+    parse: (body: unknown) => T,
+    init: RequestInit = {}
+): Promise<T> {
+    let response: Response;
+    try {
+        response = await fetchImpl(`${registryBaseUrl()}${path}`, init);
+    } catch (error) {
+        if (error instanceof RegistryRequestError) {
+            throw error;
+        }
+
+        throw new RegistryRequestError(503, 'Theme registry is unreachable.');
+    }
+
+    if (!response.ok) {
+        throw new RegistryRequestError(response.status, await readRegistryError(response));
+    }
+
+    if (response.status === 204) {
+        return parse(null);
+    }
+
+    try {
+        return parse(await response.json());
+    } catch (error) {
+        throw new RegistryRequestError(
+            502,
+            error instanceof Error ? error.message : 'Theme registry returned invalid data.'
+        );
+    }
+}
+
+function writeHeaders(extra: Record<string, string>): Record<string, string> {
+    return {
+        'x-registry-secret': registrySecret(),
+        ...extra
+    };
+}
+
+/** A salted fingerprint so the registry can rate limit without seeing addresses. */
+export function registryClientKey(clientAddress: string): string {
+    return createHash('sha256').update(`${registrySecret()}:${clientAddress}`).digest('hex');
+}
+
+export function builtInRegistryTheme(theme: Theme): RegistryTheme {
     return {
         ...theme,
-        id: record.id,
-        createdAt: record.createdAt,
-        updatedAt: record.updatedAt
+        id: `sivir:${theme.slug}`,
+        source: 'sivir',
+        createdAt: BUILT_IN_TIMESTAMP,
+        updatedAt: BUILT_IN_TIMESTAMP
     };
 }
 
-export async function listRegistryThemes(fetchImpl: typeof fetch) {
-    const response = await fetchImpl(`${getRegistryBaseUrl()}/themes`);
-    if (!response.ok) {
-        throw new RegistryRequestError(response.status, await parseErrorMessage(response));
-    }
+export function findBuiltInTheme(slug: string): RegistryTheme | undefined {
+    const theme = builtInThemePresets.find((preset) => preset.slug === slug);
 
-    const data: unknown = await response.json();
-    if (!Array.isArray(data))
-        throw new RegistryRequestError(502, 'Theme registry returned no list.');
-    try {
-        return data.map(parseRegistryTheme).sort((a, b) => a.name.localeCompare(b.name));
-    } catch (error) {
-        throw new RegistryRequestError(
-            502,
-            error instanceof Error ? error.message : 'Theme registry returned invalid data.'
-        );
-    }
+    return theme ? builtInRegistryTheme(theme) : undefined;
 }
 
-export async function getRegistryThemeBySlug(fetchImpl: typeof fetch, slug: string) {
-    const response = await fetchImpl(`${getRegistryBaseUrl()}/themes/${encodeURIComponent(slug)}`);
-    if (!response.ok) {
-        throw new RegistryRequestError(response.status, await parseErrorMessage(response));
-    }
+/** Built-in presets as a registry page, for when the registry cannot be reached. */
+export function builtInThemePage(options: RegistryListOptions): RegistryThemePage {
+    const needle = options.q?.trim().toLowerCase() ?? '';
+    const limit = options.limit ?? builtInThemePresets.length;
+    const offset = options.offset ?? 0;
+    const matches =
+        options.source === 'community'
+            ? []
+            : builtInThemePresets.filter((theme) => {
+                  const haystack = [theme.name, theme.description, theme.publisher ?? '']
+                      .join(' ')
+                      .toLowerCase();
 
-    try {
-        return parseRegistryTheme(await response.json());
-    } catch (error) {
-        throw new RegistryRequestError(
-            502,
-            error instanceof Error ? error.message : 'Theme registry returned invalid data.'
-        );
-    }
+                  return haystack.includes(needle);
+              });
+
+    return {
+        items: matches.slice(offset, offset + limit).map(builtInRegistryTheme),
+        total: matches.length,
+        limit,
+        offset
+    };
 }
 
-export async function publishRegistryTheme(fetchImpl: typeof fetch, value: unknown) {
-    let theme: Theme;
-    try {
-        theme = parseTheme(value);
-    } catch (error) {
-        throw new RegistryRequestError(
-            400,
-            error instanceof Error ? error.message : 'Invalid version-2 theme.'
-        );
+export function listRegistryThemes(
+    fetchImpl: typeof fetch,
+    options: RegistryListOptions
+): Promise<RegistryThemePage> {
+    const params = new URLSearchParams();
+    if (options.q?.trim()) {
+        params.set('q', options.q.trim());
     }
-    const response = await fetchImpl(`${getRegistryBaseUrl()}/themes`, {
+
+    if (options.source && options.source !== 'all') {
+        params.set('source', options.source);
+    }
+
+    if (options.limit !== undefined) {
+        params.set('limit', String(options.limit));
+    }
+
+    if (options.offset) {
+        params.set('offset', String(options.offset));
+    }
+
+    const search = params.toString();
+    const query = search ? `?${search}` : '';
+
+    return registryRequest(fetchImpl, `/themes${query}`, parseThemePage);
+}
+
+/** Resolves a slug the way the CLI does: built-in presets first, then the registry. */
+export async function getRegistryTheme(
+    fetchImpl: typeof fetch,
+    slug: string
+): Promise<RegistryTheme> {
+    const builtIn = findBuiltInTheme(slug);
+    if (builtIn) {
+        return builtIn;
+    }
+
+    if (!THEME_SLUG_PATTERN.test(slug)) {
+        throw new RegistryRequestError(404, THEME_NOT_FOUND);
+    }
+
+    return registryRequest(fetchImpl, `/themes/${encodeURIComponent(slug)}`, parseRegistryTheme);
+}
+
+function parsePublishedTheme(value: unknown): PublishedTheme {
+    if (!isRecord(value) || typeof value.editToken !== 'string') {
+        throw new TypeError('Theme registry returned no edit token.');
+    }
+
+    return {
+        theme: parseRegistryTheme(value.theme),
+        editToken: value.editToken
+    };
+}
+
+export function publishRegistryTheme(
+    fetchImpl: typeof fetch,
+    theme: Theme,
+    clientAddress: string
+): Promise<PublishedTheme> {
+    return registryRequest(fetchImpl, '/themes', parsePublishedTheme, {
         method: 'POST',
-        headers: { 'content-type': 'application/json' },
+        headers: writeHeaders({
+            'content-type': 'application/json',
+            'x-registry-client': registryClientKey(clientAddress)
+        }),
         body: JSON.stringify(theme)
     });
+}
 
-    if (!response.ok) {
-        throw new RegistryRequestError(response.status, await parseErrorMessage(response));
+export function updateRegistryTheme(
+    fetchImpl: typeof fetch,
+    theme: Theme,
+    editToken: string
+): Promise<RegistryTheme> {
+    return registryRequest(
+        fetchImpl,
+        `/themes/${encodeURIComponent(theme.slug)}`,
+        parseRegistryTheme,
+        {
+            method: 'PUT',
+            headers: writeHeaders({
+                'content-type': 'application/json',
+                authorization: `Bearer ${editToken}`
+            }),
+            body: JSON.stringify(theme)
+        }
+    );
+}
+
+export function deleteRegistryTheme(
+    fetchImpl: typeof fetch,
+    slug: string,
+    editToken: string
+): Promise<void> {
+    return registryRequest(fetchImpl, `/themes/${encodeURIComponent(slug)}`, () => undefined, {
+        method: 'DELETE',
+        headers: writeHeaders({
+            authorization: `Bearer ${editToken}`
+        })
+    });
+}
+
+export function registryErrorResponse(error: unknown, fallback: string): Response {
+    if (error instanceof RegistryRequestError) {
+        return new Response(error.message, {
+            status: error.status
+        });
     }
 
-    return (await response.json()) as {
-        success: boolean;
-        message: 'Successfully published theme!';
-    };
+    console.error(fallback, error);
+
+    return new Response(fallback, {
+        status: 500
+    });
 }

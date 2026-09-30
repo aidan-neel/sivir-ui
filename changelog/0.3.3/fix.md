@@ -5,11 +5,15 @@
 - Stop the Attachment Trigger's default `aria-label` overriding its visible text: "Add attachments" now applies only to the icon-only trigger.
 - Restore the spaces between words in the homepage headline.
 - Stop the outline and other non-ghost Attachment Trigger variants from rendering muted text that looked disabled.
-- Theme Studio token reset now restores the field to the preset value instead of leaving the slider or color showing the discarded override.
+- Studio token reset now restores the field to the preset value instead of leaving the slider or color showing the discarded override.
 - Dismissed toasts start leaving immediately instead of holding still for a third of a second: the front toast slides back down as it fades, and the rest of the stack moves forward at the same time.
-- Stop the Theme Studio inspector clipping a slider's right edge and value while it stretches past its limit.
-- Drop the CSS variable name under each Theme Studio token field. Reset now slides in below a field once it changes and slides away when the field is reset.
+- Stop the Studio inspector clipping a slider's right edge and value while it stretches past its limit.
+- Drop the CSS variable name under each Studio token field. Reset now slides in below a field once it changes and slides away when the field is reset.
 - Fix the Command palette's hover highlight showing up smaller than the active row, and offset from it, when the palette first opens. Dropdown Menu, Context Menu, and Select panels that open with a scale animation get the same fix.
 - Install CLI peer dependencies at the ranges Sivir declares. `sivir init` and `sivir add` passed bare package names, so `cnfast` resolved to an incompatible `0.2.x` release.
 - Stop `sivir add` from reporting the shared `utils.ts` and `transition.ts` from `sivir init` as conflicts once per component. Shared files are listed once, and files that already match the registry show as unchanged. Only files that differ ask for `--overwrite`.
 - Quote `'*'` in the `sivir init` hint so the shell does not expand it into file names.
+- Reject font values in theme JSON that contain `{`, `}`, or `;`, so a theme cannot break out of its CSS declaration.
+- Stop the Studio overriding a preset's foundation colors with the Sivir defaults, and let the radius control change presets that set their own radius tokens.
+- Copy JSON in the Studio now exports a portable theme that `parseTheme`, the CLI, and the registry accept, and Copy CSS matches `themeToCss` for that theme.
+- Limit the Studio heading size to the theme contract's range (12–32px); larger values produced theme JSON that failed validation.

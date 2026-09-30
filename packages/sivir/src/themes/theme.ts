@@ -86,13 +86,13 @@ export type Theme = {
     fontSans: string;
     fontMono: string;
     fontHeader: string;
-    /** Optional per-mode surface colors. Mirrors the theme studio foundation section. */
+    /** Optional per-mode surface colors. Mirrors the Studio foundation section. */
     foundation?: ThemeFoundation;
     /** Optional raw token overrides keyed by CSS custom property name. */
     tokens?: ThemeTokenOverrides;
-    /** Optional type-scale overrides. Mirrors the theme studio typography section. */
+    /** Optional type-scale overrides. Mirrors the Studio typography section. */
     typography?: ThemeTypography;
-    /** Optional chrome flags. Mirrors the theme studio chrome section. */
+    /** Optional chrome flags. Mirrors the Studio chrome section. */
     chrome?: ThemeChrome;
 };
 
@@ -736,9 +736,9 @@ export function parseTheme(value: unknown): Theme {
         radius: enumValue(value.radius, 'radius', radiusScales),
         density: enumValue(value.density, 'density', densities),
         motion: enumValue(value.motion, 'motion', motionFeels),
-        fontSans: requiredString(value.fontSans, 'fontSans'),
-        fontMono: requiredString(value.fontMono, 'fontMono'),
-        fontHeader: requiredString(value.fontHeader, 'fontHeader')
+        fontSans: cssValue(value.fontSans, 'fontSans'),
+        fontMono: cssValue(value.fontMono, 'fontMono'),
+        fontHeader: cssValue(value.fontHeader, 'fontHeader')
     };
     if (typeof value.publisher === 'string' && value.publisher.trim()) {
         theme.publisher = value.publisher;

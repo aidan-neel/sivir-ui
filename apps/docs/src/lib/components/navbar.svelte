@@ -33,6 +33,7 @@
     const navItems = [
         { href: '/docs/introduction', label: 'Docs' },
         { href: '/docs/components', label: 'Components' },
+        { href: '/themes', label: 'Themes' },
         { href: '/studio', label: 'Studio' }
     ];
     const docsPages = [

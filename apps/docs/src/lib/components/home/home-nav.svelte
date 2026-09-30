@@ -6,10 +6,12 @@
     import Moon from '@lucide/svelte/icons/moon';
     import Palette from '@lucide/svelte/icons/palette';
     import Sun from '@lucide/svelte/icons/sun';
+    import SwatchBook from '@lucide/svelte/icons/swatch-book';
     import { Button } from '@sivir-ui/svelte/components/button';
     import { cn } from '@sivir-ui/svelte/utils';
     import { mode, toggleMode } from 'mode-watcher';
     import { resolve } from '$app/paths';
+    import { page } from '$app/state';
     import GitHubBlack from '$lib/assets/GitHub_Invertocat_Black.svg';
     import GitHubWhite from '$lib/assets/GitHub_Invertocat_White.svg';
 
@@ -30,32 +32,32 @@
         {
             href: resolve('/'),
             title: 'Home',
-            icon: House,
-            current: true
+            icon: House
         },
         {
             href: resolve('/docs/introduction'),
             title: 'Docs',
-            icon: BookOpen,
-            current: false
+            icon: BookOpen
         },
         {
             href: resolve('/docs/components'),
             title: 'Components',
-            icon: Blocks,
-            current: false
+            icon: Blocks
+        },
+        {
+            href: resolve('/themes'),
+            title: 'Themes',
+            icon: SwatchBook
         },
         {
             href: resolve('/studio'),
-            title: 'Theme studio',
-            icon: Palette,
-            current: false
+            title: 'Studio',
+            icon: Palette
         },
         {
             href: resolve('/docs/changelog'),
             title: 'Changelog',
-            icon: History,
-            current: false
+            icon: History
         }
     ];
 
@@ -86,6 +88,12 @@
         }
 
         return String(count);
+    }
+
+    function isCurrent(href: string) {
+        const path = page.url.pathname;
+
+        return href === resolve('/') ? path === href : path.startsWith(href);
     }
 
     function entranceDelay(index: number) {
@@ -159,8 +167,8 @@
                 href={link.href}
                 unstyled
                 data-home-nav-item
-                aria-current={link.current ? 'page' : undefined}
-                class={cn(itemClass, link.current && 'bg-secondary text-foreground')}
+                aria-current={isCurrent(link.href) ? 'page' : undefined}
+                class={cn(itemClass, isCurrent(link.href) && 'bg-secondary text-foreground')}
                 style={entranceDelay(index)}
             >
                 <Icon size={16} strokeWidth={1.7} aria-hidden="true" class={iconClass} />

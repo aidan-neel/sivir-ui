@@ -1,20 +1,25 @@
-import { Elysia } from 'elysia';
 import { openapi } from '@elysiajs/openapi';
-
+import { Elysia } from 'elysia';
+import { registryConfig } from './config';
 import { themesController } from './services/themes';
 
-const port = Number(process.env.PORT ?? 4100);
+const FRAMEWORK_ERROR_CODES = new Set([
+    'VALIDATION',
+    'NOT_FOUND',
+    'PARSE',
+    'INVALID_COOKIE_SIGNATURE'
+]);
 
-export const app = new Elysia({ serve: { maxRequestBodySize: 128 * 1024 } })
+export const app = new Elysia({
+    serve: {
+        maxRequestBodySize: registryConfig.maxRequestBodyBytes
+    }
+})
     .onError(({ code, error, set }) => {
-        if (
-            code === 'VALIDATION' ||
-            code === 'NOT_FOUND' ||
-            code === 'PARSE' ||
-            code === 'INVALID_COOKIE_SIGNATURE'
-        ) {
+        if (typeof code === 'string' && FRAMEWORK_ERROR_CODES.has(code)) {
             return;
         }
+
         if (
             typeof code === 'number' &&
             typeof error === 'object' &&
@@ -22,11 +27,13 @@ export const app = new Elysia({ serve: { maxRequestBodySize: 128 * 1024 } })
             'response' in error
         ) {
             set.status = code;
+
             return error.response;
         }
 
         console.error('Unhandled registry request error:', error);
         set.status = 500;
+
         return 'Internal error.';
     })
     .use(
@@ -40,6 +47,6 @@ export const app = new Elysia({ serve: { maxRequestBodySize: 128 * 1024 } })
 export default app;
 
 if (import.meta.main) {
-    app.listen(port);
+    app.listen(registryConfig.port);
     console.log(`Sivir registry listening at ${app.server?.hostname}:${app.server?.port}`);
 }

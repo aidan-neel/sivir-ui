@@ -1,19 +1,19 @@
 - Rework the Popover documentation examples around real tasks: the hero now shares a document with working invites, per-person access selects, and a copyable link, and the basic example is a titled feedback form in place of placeholder text.
 - Rework the Attachment documentation with a drop-zone hero, a composition section, and examples for per-file upload progress with retry, inline rejection reasons, and attachments inside a composer.
-- Rebuild the Theme Studio panel around Color, Type, Feel, and Tokens tabs. Tokens lists every theme variable in searchable sections, including the type scale, line heights, letter spacing, shadows, focus ring, overlay, disabled opacity, status tints, and code colors, with a changed marker and per-token reset. Copy CSS and Copy JSON stay pinned at the bottom.
+- Rebuild the Studio panel around Color, Type, Feel, and Tokens tabs. Tokens lists every theme variable in searchable sections, including the type scale, line heights, letter spacing, shadows, focus ring, overlay, disabled opacity, status tints, and code colors, with a changed marker and per-token reset. Copy CSS and Copy JSON stay pinned at the bottom.
 - Rework the homepage: a clearer headline, a top-aligned layout, and a live workspace settings demo with tabs, forms, and usage meters that you can switch between the built-in themes.
-- Remove the Themes page. Preview the built-in presets from the homepage demo instead.
 - Redesign the docs sidebar: section headings lead the hierarchy, the components index sits at the top of the Components list as Overview, the current page is marked with a dot, and the active link scrolls into view.
 - Rework the Tool documentation around a coding agent: a hero with expandable command output, a live example where calls arrive and settle, and a failed build.
 - Rework the Slider page around the scrub field: a stacked adjustments hero, its interactions, a composition example, and step and disabled examples.
 - Remove the docs top bar on wide screens; the GitHub link and theme toggle now sit quietly beside the logo in the sidebar, and smaller screens keep a slim menu bar.
 - Switching a docs example between Preview and Code now crossfades the two panes and eases the height between them instead of jumping, and the preview keeps its state while the code is showing.
 - Vertically center the home page hero and demo so they line up with the side navigation on wide screens.
-- Redesign the Theme Studio panel as one column of labeled fields: presets, fonts, scale choices, and colors read label-left, value-right, and every numeric setting, including heading size, font weights, and length, duration, and blur tokens, is a Slider.
-- Theme Studio translucent colors get an inline opacity control, and shadow tokens edit as layers with X, Y, blur, spread, color, opacity, and inset, with a raw CSS fallback.
-- Theme Studio edits the colors for whichever light or dark mode the site is showing, so switching the site theme switches what you edit. The separate editing toggle is gone.
+- Redesign the Studio panel as one column of labeled fields: presets, fonts, scale choices, and colors read label-left, value-right, and every numeric setting, including heading size, font weights, and length, duration, and blur tokens, is a Slider.
+- Studio translucent colors get an inline opacity control, and shadow tokens edit as layers with X, Y, blur, spread, color, opacity, and inset, with a raw CSS fallback.
+- Studio edits the colors for whichever light or dark mode the site is showing, so switching the site theme switches what you edit. The separate editing toggle is gone.
 - Redesign the components overview as a compact index: each component shows a one-line summary, groups sit in a labeled column with AI first, and the filter matches what a component does as well as its name. Press Enter to open the first match.
 - Copy the install command on the home page by clicking anywhere on it, not just the copy button. The command text is no longer selectable.
 - Simplify the components index: each category heading now sits above its list instead of in a side column, without a per-category count.
 - Redesign the Hover Card user preview: a larger avatar with the Follow action beside it, the handle and location on one line, and follower counts as plain text instead of icon rows.
 - Update the CLI installation steps for the `src/routes/layout.css` stylesheet that current `sv add tailwindcss` creates, and explain that `init` wires it.
+- Call the theme builder Studio everywhere on the site, in navigation, page titles, and docs, instead of mixing Studio and Theme Studio.

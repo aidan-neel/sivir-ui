@@ -29,6 +29,7 @@
         { href: '/docs/installation', label: 'Installation' },
         { href: '/docs/theming', label: 'Theming' },
         { href: '/docs/changelog', label: 'Changelog' },
+        { href: '/themes', label: 'Themes' },
         { href: '/studio', label: 'Studio' }
     ];
 

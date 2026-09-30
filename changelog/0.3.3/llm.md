@@ -272,3 +272,60 @@ outside the supported range.
 `sivir add` now reports files that already match the registry as unchanged
 (`=`) and only counts files that differ as conflicts (`!`). The
 `--overwrite` warning therefore means local changes would be lost.
+
+## Theme registry and publishing
+
+The theme registry now stores and serves complete portable `Theme` documents
+(the contract in `@sivir-ui/svelte/themes/theme`), including `foundation`,
+`tokens`, `typography`, and `chrome`. `GET /themes/:slug` still returns one
+theme with `id`, `createdAt`, and `updatedAt`, plus a new `source` of `'sivir'`
+or `'community'`, so `parseTheme(await response.json())` keeps working.
+`GET /themes` changed shape: it returns `{ items, total, limit, offset }`
+instead of a bare array, lists built-ins first and community themes newest
+first, and accepts `q`, `source` (`all`, `sivir`, `community`), `limit`
+(1–100), and `offset`. Stop treating the list response as an array.
+
+Writes go through the docs server, never straight to the registry. Browsers and
+tools call `POST /api/themes` with a `Theme` body and receive
+`201 { theme, editToken }`; the token is shown once and is the only way to
+change the theme later. Send it as `Authorization: Bearer <token>` to
+`PUT /api/themes/<slug>` (same slug, full replacement) or
+`DELETE /api/themes/<slug>`. The docs server authenticates to the registry with
+a shared secret (`THEME_REGISTRY_SECRET` on the docs app,
+`REGISTRY_PUBLISH_SECRET` on the registry); without it, writes return `503`.
+The registry rate limits to five publishes per visitor per hour and returns
+`429` beyond that; unpublishing does not give quota back. Built-in slugs are
+reserved (`409`).
+
+Registry policy is stricter than `parseTheme`: identity fields are
+length-limited (name and publisher 80, description 500, slug 80, fonts 200),
+and no font, foundation, or token value may contain `url(`, `image(`,
+`image-set(`, `src(`, `@import`, `expression(`, braces, semicolons, angle
+brackets, backslashes, or CSS comments. Build themes from plain color, length,
+and font values.
+
+`parseTheme` now validates `fontSans`, `fontMono`, and `fontHeader` like other
+CSS values: a font containing `{`, `}`, or `;` throws. Font stacks such as
+`'Inter', sans-serif` and `var(--font-sans)` are unaffected.
+
+## Studio draft model
+
+The Studio's single source of truth is now the portable `Theme` it exports.
+Copy JSON emits exactly that theme (no `studio` or `css` keys), Copy CSS is
+`themeToCss` of it, and Publish sends it. Studio controls are a projection of
+the theme: foundation palettes are exported in full for both modes, typography
+and chrome are always explicit, a dark brand that differs from the light one
+becomes `tokens.dark` `--color-primary` / `--color-primary-hover` /
+`--color-ring`, and token overrides the Studio has no control for are preserved
+untouched. Loading a preset or a registry theme maps its token overrides onto
+the Tokens tab controls (colors per mode; spacing, motion, and shared details
+from `tokens.shared`; shadows and focus ring per mode), so the Radius, Density,
+and Movement selects can still replace preset values.
+
+`/studio?theme=<slug>` loads a built-in or community theme (built-ins resolve
+without the registry). The Studio persists the portable theme under
+`sivir-studio-theme-v2` and the chosen preset under `sivir-studio-meta-v2`; the
+old `sivir-studio-extensions-v1` draft is migrated on first load and then
+removed. Edit tokens for themes published from a browser live under one key
+per slug, `sivir-studio-edit-token-v1:<slug>`, so tabs never overwrite each
+other's tokens; clearing site data forfeits the ability to update those themes.
