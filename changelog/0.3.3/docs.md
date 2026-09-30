@@ -16,5 +16,5 @@
 - Simplify the components index: each category heading now sits above its list instead of in a side column, without a per-category count.
 - Redesign the Hover Card user preview: a larger avatar with the Follow action beside it, the handle and location on one line, and follower counts as plain text instead of icon rows.
 - Update the CLI installation steps for the `src/routes/layout.css` stylesheet that current `sv add tailwindcss` creates, and explain that `init` wires it.
-- Call the theme builder Studio everywhere on the site, in navigation, page titles, and docs, instead of mixing Studio and Studio.
+- Call the theme builder Studio everywhere on the site, in navigation, page titles, and docs, instead of mixing Studio and Theme Studio.
 - The docs sidebar uses muted section labels, larger rows, and a soft filled pill for the current page instead of a dot.
