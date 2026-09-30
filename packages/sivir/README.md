@@ -54,7 +54,7 @@ and no network access at runtime — including containerized deployments.
 
 Do not add a remote font link to match older screenshots. To use a different
 face, override `--font-sans`, `--font-mono`, or `--font-header` in your own CSS
-and bring that font yourself; non-default Theme Studio presets already work
+and bring that font yourself; non-default Studio presets already work
 this way.
 
 ## Use it

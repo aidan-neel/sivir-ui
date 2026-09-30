@@ -117,7 +117,7 @@ quota.
 
 A publish returns an edit token exactly once; the registry stores only its
 SHA-256 hash. Updates and deletes must send it as `Authorization: Bearer
-<token>`. The Theme Studio keeps the tokens for themes published from that
+<token>`. The Studio keeps the tokens for themes published from that
 browser.
 
 Every payload goes through `parseTheme`, then registry policy: length limits

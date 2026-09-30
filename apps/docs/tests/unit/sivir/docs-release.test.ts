@@ -207,7 +207,7 @@ describe('docs release contracts', () => {
         expect(buttonReference).toContain('Changes to those source files are reflected here');
     });
 
-    it('keeps getting-started docs free of Theme Studio and wrong CLI invocations', () => {
+    it('keeps getting-started docs free of the Studio and wrong CLI invocations', () => {
         const pages = [
             'apps/docs/src/routes/docs/introduction/+page.svelte',
             'apps/docs/src/routes/docs/installation/+page.svelte',
@@ -223,7 +223,7 @@ describe('docs release contracts', () => {
         // path pages stay free of it.
         for (const page of pages.slice(0, 2)) {
             const source = readFileSync(resolve(root, page), 'utf8');
-            expect(source, page).not.toMatch(/Theme Studio|theme studio|\/themes\/studio/i);
+            expect(source, page).not.toMatch(/\bStudio\b|\/studio\b/);
         }
         const install = readFileSync(
             resolve(root, 'apps/docs/src/routes/docs/installation/+page.svelte'),

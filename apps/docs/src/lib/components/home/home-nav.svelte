@@ -51,7 +51,7 @@
         },
         {
             href: resolve('/studio'),
-            title: 'Theme studio',
+            title: 'Studio',
             icon: Palette
         },
         {

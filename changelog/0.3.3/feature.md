@@ -21,8 +21,8 @@
 - Smoother Toast motion: new toasts rise their full height from below while fading in, stack moves use one interruptible transition driven by the toast motion tokens, and collapsed toasts behind the front peek evenly whatever their height, with their content hidden.
 - Slider's label turns bold while you drag, without shifting the value or the thumb.
 - Redesign Switch with a spring-driven thumb that stretches while pressed or moving, a track that fills with the primary color as the thumb travels, and drag to toggle. The track is now 40 by 24 pixels.
-- Publish themes from the Theme Studio to the community theme registry, then publish updates or unpublish them from the same browser.
+- Publish themes from the Studio to the community theme registry, then publish updates or unpublish them from the same browser.
 - Bring back the themes page as a searchable catalog of built-in and community themes. Picking a theme previews it across the page, and each theme links to the Studio, its stylesheet, and its CLI install command.
-- Open any built-in or community theme in the Theme Studio with `/studio?theme=<slug>`.
+- Open any built-in or community theme in the Studio with `/studio?theme=<slug>`.
 - Install community themes with `sivir add theme <slug>`, and load any theme as a stylesheet from `/themes/<slug>.css`.
 - Community themes keep their foundation colors, token overrides, typography, and chrome when published, previewed, and installed.

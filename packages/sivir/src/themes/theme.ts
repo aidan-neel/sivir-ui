@@ -86,13 +86,13 @@ export type Theme = {
     fontSans: string;
     fontMono: string;
     fontHeader: string;
-    /** Optional per-mode surface colors. Mirrors the theme studio foundation section. */
+    /** Optional per-mode surface colors. Mirrors the Studio foundation section. */
     foundation?: ThemeFoundation;
     /** Optional raw token overrides keyed by CSS custom property name. */
     tokens?: ThemeTokenOverrides;
-    /** Optional type-scale overrides. Mirrors the theme studio typography section. */
+    /** Optional type-scale overrides. Mirrors the Studio typography section. */
     typography?: ThemeTypography;
-    /** Optional chrome flags. Mirrors the theme studio chrome section. */
+    /** Optional chrome flags. Mirrors the Studio chrome section. */
     chrome?: ThemeChrome;
 };
 

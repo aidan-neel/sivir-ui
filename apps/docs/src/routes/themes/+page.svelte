@@ -272,7 +272,7 @@
                 <h1 class={cn(titleClass, 'max-w-[40rem]')}>
                     <span class="text-foreground">Themes.</span>
                     Pick one to preview it across this page, then use it on the site, customize it
-                    in the studio, or install it with the CLI.
+                    in the Studio, or install it with the CLI.
                 </h1>
                 <Button href={resolve('/studio')} variant="outline" class="group self-start">
                     Make your own
@@ -425,7 +425,7 @@
                                     variant="outline"
                                     href={`${resolve('/studio')}?theme=${encodeURIComponent(selected.slug)}`}
                                 >
-                                    Customize in studio
+                                    Customize in Studio
                                 </Button>
                             </div>
                         </div>

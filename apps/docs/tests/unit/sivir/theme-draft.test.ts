@@ -10,7 +10,7 @@ import {
 } from '$lib/studio/theme-draft';
 import { themePreviewCss } from '$lib/theme-registry';
 
-describe('Theme Studio draft', () => {
+describe('Studio draft', () => {
     it('exports a portable theme that parseTheme accepts for every preset', () => {
         for (const preset of builtInThemePresets) {
             const exported = draftToTheme(themeToDraft(preset));

@@ -1810,7 +1810,7 @@
 </script>
 
 <svelte:head>
-    <title>Sivir · Theme Studio</title>
+    <title>Sivir · Studio</title>
     <meta name="description" content="Build, preview, and export a Sivir theme." />
 </svelte:head>
 
@@ -2031,7 +2031,7 @@
     <div class="flex h-full min-h-0 flex-col">
         <div class="flex shrink-0 flex-col gap-3 pb-3">
             <div class="flex h-8 items-center justify-between gap-2">
-                <Typography.Title level={1}>Theme studio</Typography.Title>
+                <Typography.Title level={1}>Studio</Typography.Title>
                 <Tooltip.Root>
                     <Tooltip.Trigger>
                         <Button

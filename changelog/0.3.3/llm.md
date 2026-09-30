@@ -284,7 +284,7 @@ and font values.
 CSS values: a font containing `{`, `}`, or `;` throws. Font stacks such as
 `'Inter', sans-serif` and `var(--font-sans)` are unaffected.
 
-## Theme Studio draft model
+## Studio draft model
 
 The Studio's single source of truth is now the portable `Theme` it exports.
 Copy JSON emits exactly that theme (no `studio` or `css` keys), Copy CSS is
