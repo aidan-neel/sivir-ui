@@ -42,6 +42,12 @@
 
     const roles = ['Owner', 'Editor', 'Viewer'];
 
+    let {
+        themePicker = true
+    }: {
+        themePicker?: boolean;
+    } = $props();
+
     const sectionTitleClass =
         'm-0 [font-size:var(--font-size-body)] [font-weight:var(--font-weight-label)] text-foreground';
     const fieldLabelClass =
@@ -128,16 +134,18 @@
             <Breadcrumb.Item>Settings</Breadcrumb.Item>
         </Breadcrumb.Root>
 
-        <div
-            class="flex max-w-full min-w-0 items-center gap-3 overflow-x-auto [scrollbar-width:none]"
-        >
-            <span class={metaClass}>Theme</span>
-            <ToggleGroup.Root type="single" bind:value={themeSlug} onValueChange={selectTheme}>
-                {#each builtInThemePresets as preset (preset.slug)}
-                    <ToggleGroup.Item value={preset.slug}>{preset.name}</ToggleGroup.Item>
-                {/each}
-            </ToggleGroup.Root>
-        </div>
+        {#if themePicker}
+            <div
+                class="flex max-w-full min-w-0 items-center gap-3 overflow-x-auto [scrollbar-width:none]"
+            >
+                <span class={metaClass}>Theme</span>
+                <ToggleGroup.Root type="single" bind:value={themeSlug} onValueChange={selectTheme}>
+                    {#each builtInThemePresets as preset (preset.slug)}
+                        <ToggleGroup.Item value={preset.slug}>{preset.name}</ToggleGroup.Item>
+                    {/each}
+                </ToggleGroup.Root>
+            </div>
+        {/if}
     </div>
 
     <Tabs.Root bind:value={tab} variant="ghost">

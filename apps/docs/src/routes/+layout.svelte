@@ -20,7 +20,9 @@
 
     const { children, data }: { children: Snippet; data: LayoutData } = $props();
 
-    const isHome = $derived($page.url.pathname === '/');
+    const isShellPage = $derived(
+        $page.url.pathname === '/' || $page.url.pathname.startsWith('/themes')
+    );
     const isDocs = $derived($page.url.pathname.startsWith('/docs'));
     const isThemeStudio = $derived($page.url.pathname.startsWith('/studio'));
 
@@ -75,9 +77,9 @@
 <Toaster />
 
 <main
-    class={`w-screen bg-background ${isDocs ? 'h-[100svh] overflow-hidden p-0 sm:p-3' : isThemeStudio ? 'h-[100svh] overflow-hidden' : isHome ? 'min-h-[100svh]' : 'min-h-screen p-3'}`}
+    class={`w-screen bg-background ${isDocs ? 'h-[100svh] overflow-hidden p-0 sm:p-3' : isThemeStudio ? 'h-[100svh] overflow-hidden' : isShellPage ? 'min-h-[100svh]' : 'min-h-screen p-3'}`}
 >
-    {#if isHome}
+    {#if isShellPage}
         {@render children?.()}
     {:else if isDocs}
         <div class="flex h-full sm:h-[calc(100svh-1.5rem)] w-full gap-3">
