@@ -31,10 +31,17 @@ export const componentAnatomy = {
         { name: 'AlertDialog.Confirm', description: 'Confirms and closes the dialog.' }
     ],
     attachment: [
-        { name: 'Attachment.Root', description: 'Manages selected files.' },
+        {
+            name: 'Attachment.Root',
+            description: 'Manages selected files and accepts drops and pastes.'
+        },
         { name: 'Attachment.Trigger', description: 'Opens the file picker.' },
         { name: 'Attachment.List', description: 'Lists selected files.' },
-        { name: 'Attachment.Item', description: 'Displays one selected file.' }
+        { name: 'Attachment.Item', description: 'Holds one file and its upload state.' },
+        { name: 'Attachment.Preview', description: 'Shows an image thumbnail or file icon.' },
+        { name: 'Attachment.Name', description: 'Shows the file name.' },
+        { name: 'Attachment.Status', description: 'Shows size, progress, or the outcome.' },
+        { name: 'Attachment.Remove', description: 'Removes the file.' }
     ],
     avatar: [
         { name: 'Avatar.Root', description: 'Provides the avatar container.' },
@@ -242,7 +249,13 @@ export const componentAnatomy = {
         { name: 'Skeleton', description: 'Displays a static loading placeholder.' },
         { name: 'SkeletonSwap', description: 'Swaps a delayed placeholder into reserved content.' }
     ],
-    slider: [{ name: 'Slider', description: 'Selects a numeric value from a range.' }],
+    slider: [
+        { name: 'Slider.Root', description: 'Scrubs a labeled value by dragging the field.' },
+        { name: 'Slider.Range', description: 'Fills the field up to the value.' },
+        { name: 'Slider.Thumb', description: 'Marks the value edge and reacts to press.' },
+        { name: 'Slider.Label', description: 'Names the value inside the field.' },
+        { name: 'Slider.Value', description: 'Shows the formatted value.' }
+    ],
     spinner: [{ name: 'Spinner', description: 'Indicates loading activity.' }],
     switch: [{ name: 'Switch', description: 'Toggles a boolean value.' }],
     'task-steps': [{ name: 'TaskSteps', description: 'Narrates ordered asynchronous work.' }],
@@ -269,8 +282,10 @@ export const componentAnatomy = {
         { name: 'ToggleGroup.Item', description: 'Defines a toggle group option.' }
     ],
     tool: [
-        { name: 'Tool.Root', description: 'Provides a tool execution summary.' },
-        { name: 'Tool.Item', description: 'Displays one tool call.' },
+        { name: 'Tool.Root', description: 'Controls tool group visibility and state.' },
+        { name: 'Tool.Trigger', description: 'Summarizes the group and toggles it.' },
+        { name: 'Tool.Content', description: 'Aligns tool call rows behind a rail.' },
+        { name: 'Tool.Call', description: 'Displays one tool call.' },
         { name: 'Tool.Input', description: 'Displays tool input.' },
         { name: 'Tool.Output', description: 'Displays tool output.' }
     ],

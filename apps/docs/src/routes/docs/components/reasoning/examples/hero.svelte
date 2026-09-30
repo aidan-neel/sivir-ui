@@ -3,7 +3,7 @@
 </script>
 
 <Reasoning.Root class="w-full max-w-xl">
-    <Reasoning.Trigger title="Investigated checkout failures" duration="4.8s" />
+    <Reasoning.Trigger duration="4.8s" />
     <Reasoning.Content>
         <div class="space-y-3">
             <p>Compared the incident timeline with the last five production deployments.</p>

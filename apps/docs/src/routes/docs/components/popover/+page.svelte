@@ -49,7 +49,11 @@
     <section id="usage" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading">Usage</Typography.H2>
         <Typography.Text variant="supporting">
-            Import Popover and compose it with sub-components:
+            Import Popover and compose it with sub-components. Content with
+            <Typography.InlineCode>role="dialog"</Typography.InlineCode>
+            takes its accessible name from
+            <Typography.InlineCode>Popover.Title</Typography.InlineCode>, so include one or pass
+            <Typography.InlineCode>aria-label</Typography.InlineCode>.
         </Typography.Text>
         <Typography.Text variant="supporting">
             Open non-hover popovers make outside document content inert by default. Set
@@ -58,7 +62,7 @@
             page must remain interactive.
         </Typography.Text>
         <CodeBlock
-            code={`import * as Popover from '$lib/sivir/components/popover';\n\n<Popover.Root>\n  <Popover.Trigger>Open</Popover.Trigger>\n  <Popover.Content class="w-64">\n    Content here\n  </Popover.Content>\n</Popover.Root>`}
+            code={`import * as Popover from '$lib/sivir/components/popover';\nimport { Textarea } from '$lib/sivir/components/textarea';\n\n<Popover.Root>\n  <Popover.Trigger>Feedback</Popover.Trigger>\n  <Popover.Content class="w-80">\n    <Popover.Title>Send feedback</Popover.Title>\n    <Textarea placeholder="What’s working, and what isn’t?" />\n  </Popover.Content>\n</Popover.Root>`}
             lang="svelte"
             copy="overlay"
         />

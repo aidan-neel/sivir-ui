@@ -99,7 +99,7 @@ describe('ui.css Tier 3 + structure', () => {
     /** Mirrors the budget in packages/sivir/release.test.ts -- keep the two in step. */
     it('stays within the release size budget', () => {
         const normalizedCss = css.replace(/\s+/g, ' ').trim();
-        expect(css.split('\n').length).toBeLessThanOrEqual(557);
+        expect(css.split('\n').length).toBeLessThanOrEqual(562);
         expect(Buffer.byteLength(normalizedCss)).toBeLessThanOrEqual(18 * 1024);
     });
 

@@ -5,16 +5,43 @@
     let {
         accept = '.txt',
         maxFiles = 2,
-        maxSize = 1024
-    }: { accept?: string; maxFiles?: number; maxSize?: number } = $props();
+        maxSize = 1024,
+        addOnPaste = true,
+        composed = false
+    }: {
+        accept?: string;
+        maxFiles?: number;
+        maxSize?: number;
+        addOnPaste?: boolean;
+        composed?: boolean;
+    } = $props();
 
     let files = $state<File[]>([]);
     let rejections = $state<AttachmentRejection[]>([]);
 </script>
 
-<Attachment.Root bind:files {accept} {maxFiles} {maxSize} onReject={(next) => (rejections = next)}>
+<Attachment.Root
+    bind:files
+    {accept}
+    {maxFiles}
+    {maxSize}
+    {addOnPaste}
+    onReject={(next) => (rejections = next)}
+>
     <Attachment.Trigger>Choose files</Attachment.Trigger>
-    <Attachment.List />
+    <textarea aria-label="Prompt"></textarea>
+    {#if composed}
+        <Attachment.List>
+            {#snippet children(file)}
+                <Attachment.Item {file} status="uploading" progress={40}>
+                    <Attachment.Name />
+                    <Attachment.Status />
+                </Attachment.Item>
+            {/snippet}
+        </Attachment.List>
+    {:else}
+        <Attachment.List />
+    {/if}
 </Attachment.Root>
 
 <p data-testid="attachment-count">{files.length}</p>

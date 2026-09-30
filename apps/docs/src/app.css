@@ -133,12 +133,29 @@ pre {
     }
 }
 
-@keyframes hero-cloud-drift {
+@keyframes home-word {
     from {
-        transform: translateX(0);
+        opacity: 0;
+        filter: blur(8px);
+        transform: translateY(0.3em);
     }
     to {
-        transform: translateX(-50%);
+        opacity: 1;
+        filter: none;
+        transform: none;
+    }
+}
+
+@keyframes home-rise {
+    from {
+        opacity: 0;
+        filter: blur(4px);
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        filter: none;
+        transform: none;
     }
 }
 

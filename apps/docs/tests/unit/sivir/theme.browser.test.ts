@@ -17,6 +17,8 @@ const PARITY_PROPERTIES = [
     '--motion-duration-overlay',
     '--motion-duration-toast-in',
     '--motion-duration-toast-out',
+    '--motion-duration-step-in',
+    '--motion-duration-step-out',
     '--color-primary',
     '--color-primary-hover',
     '--sivir-blue-50',

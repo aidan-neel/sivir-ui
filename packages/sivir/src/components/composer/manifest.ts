@@ -16,7 +16,7 @@ export const manifest: Manifest = {
         'components/composer/index.ts',
         'components/composer/manifest.ts'
     ],
-    components: ['button', 'shortcut'],
+    components: ['button'],
     shared: ['utils.cn', 'utils.createContext'],
     peerDependencies: {
         '@lucide/svelte': '^1.7.0',

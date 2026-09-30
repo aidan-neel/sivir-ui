@@ -1,19 +1,22 @@
 <script lang="ts">
     import ChevronRight from '@lucide/svelte/icons/chevron-right';
-    import Moon from '@lucide/svelte/icons/moon';
-    import Sun from '@lucide/svelte/icons/sun';
     import { Button } from '@sivir-ui/svelte/components/button';
     import * as FullscreenNav from '@sivir-ui/svelte/components/fullscreen-nav';
-    import { mode, toggleMode } from 'mode-watcher';
     import { resolve } from '$app/paths';
     import { page } from '$app/state';
 
-    import GitHubBlack from '$lib/assets/GitHub_Invertocat_Black.svg';
-    import GitHubWhite from '$lib/assets/GitHub_Invertocat_White.svg';
     import { components, sanitizeComponent } from '$lib/components';
     import Logo from '../logo.svelte';
+    import GitHubLink from './github-link.svelte';
+    import ThemeToggle from './theme-toggle.svelte';
 
-    const { starCount = null }: { starCount?: number | null } = $props();
+    const {
+        starCount = null,
+        sidebar = false
+    }: {
+        starCount?: number | null;
+        sidebar?: boolean;
+    } = $props();
     let mobileMenuOpen = $state(false);
 
     $effect(() => {
@@ -68,111 +71,88 @@
             .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
             .join(' ');
     }
-
-    function formatStarCount(count: number | null): string {
-        if (count === null || Number.isNaN(count)) {
-            return 'Star';
-        }
-
-        if (count >= 1000) {
-            const thousands = count / 1000;
-
-            return `${thousands >= 10 ? Math.round(thousands) : thousands.toFixed(1)}k`;
-        }
-
-        return String(count);
-    }
 </script>
 
 <FullscreenNav.Root bind:open={mobileMenuOpen}>
-    <header
-        class="z-20 mx-auto flex h-16 w-full max-w-[960px] items-center justify-between gap-4 px-2 sm:px-5 lg:px-10"
-    >
-        <div class="flex min-w-0 items-center gap-2 sm:hidden">
-            <FullscreenNav.Trigger class="size-9 rounded-[var(--radius-md)]" />
-            <Logo />
-        </div>
+    {#if sidebar}
+        <header
+            class="z-20 flex h-12 w-full shrink-0 items-center justify-between gap-2 px-2 lg:hidden"
+        >
+            <div class="flex min-w-0 items-center gap-2">
+                <FullscreenNav.Trigger class="size-9 rounded-[var(--radius-md)]" />
+                <Logo />
+            </div>
 
-        <nav aria-label="Breadcrumb" class="hidden min-w-0 sm:block">
-            <ol
-                class="flex min-w-0 items-center gap-1 overflow-hidden text-sm text-foreground-muted [font-weight:var(--font-weight-label,500)]"
-            >
-                {#each breadcrumbs as breadcrumb, index (breadcrumb.href)}
-                    <li class="flex min-w-0 items-center gap-1">
-                        {#if index < breadcrumbs.length - 1}
-                            <a
-                                href={breadcrumb.href}
-                                class="truncate transition-colors hover:text-foreground focus-visible:rounded-sm focus-visible:outline-none focus-visible:shadow-[var(--focus-ring)]"
-                            >
-                                {breadcrumb.label}
-                            </a>
-                        {:else}
-                            <span class="truncate text-foreground" aria-current="page"
-                                >{breadcrumb.label}</span
-                            >
-                        {/if}
-                        {#if index < breadcrumbs.length - 1}
-                            <ChevronRight size={14} class="shrink-0" aria-hidden="true" />
-                        {/if}
-                    </li>
-                {/each}
-            </ol>
-        </nav>
-
-        <div class="flex shrink-0 items-center gap-1.5">
-            <Button
-                class="h-9 rounded-[var(--radius-md)] px-2.5 text-[0.8125rem]"
-                variant="outline"
-                href={resolve('/studio')}
-            >
-                Studio
-            </Button>
-            <Button
-                class="h-9 gap-1.5 rounded-[var(--radius-md)] px-2.5 text-[0.8125rem] tabular-nums"
-                variant="outline"
-                href="https://github.com/aidan-neel/sivir-ui"
-                target="_blank"
-                rel="noreferrer"
-                aria-label={starCount === null
-                    ? 'Star Sivir UI on GitHub'
-                    : `${formatStarCount(starCount)} GitHub stars`}
-            >
-                <img
-                    src={mode.current === 'dark' ? GitHubWhite : GitHubBlack}
-                    alt=""
-                    class="size-[0.9375rem]"
+            <div class="flex shrink-0 items-center">
+                <GitHubLink
+                    {starCount}
+                    variant="quiet"
+                    iconClass="size-3.5 opacity-60 transition-opacity group-hover:opacity-100"
+                    class="h-8 gap-1.5 rounded-[var(--radius-md)] px-2 text-xs text-foreground-muted hover:text-foreground"
                 />
-                <span>{formatStarCount(starCount)}</span>
-            </Button>
+                <ThemeToggle
+                    variant="quiet"
+                    iconSize={15}
+                    class="size-8 rounded-[var(--radius-md)] text-foreground-muted hover:text-foreground"
+                />
+            </div>
+        </header>
+    {:else}
+        <header
+            class="z-20 mx-auto flex h-16 w-full max-w-[960px] items-center justify-between gap-4 px-2 sm:px-5 lg:px-10"
+        >
+            <div class="flex min-w-0 items-center gap-2 sm:hidden">
+                <FullscreenNav.Trigger class="size-9 rounded-[var(--radius-md)]" />
+                <Logo />
+            </div>
 
-            <Button
-                class="size-9 rounded-[var(--radius-md)]"
-                variant="outline"
-                onclick={() => {
-                    toggleMode();
-                }}
-                size="icon"
-                aria-label={mode.current === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-            >
-                <span class="relative block size-4" aria-hidden="true">
-                    <Sun
-                        size={16}
-                        class={mode.current === 'dark'
-                            ? 'absolute inset-0 scale-[0.25] opacity-0 blur-[4px] transition-[filter,opacity,scale] duration-300 ease-[cubic-bezier(0.2,0,0,1)] motion-reduce:transition-none'
-                            : 'absolute inset-0 transition-[filter,opacity,scale] duration-300 ease-[cubic-bezier(0.2,0,0,1)] motion-reduce:transition-none'}
-                    />
-                    <Moon
-                        size={16}
-                        class={mode.current === 'dark'
-                            ? 'absolute inset-0 transition-[filter,opacity,scale] duration-300 ease-[cubic-bezier(0.2,0,0,1)] motion-reduce:transition-none'
-                            : 'absolute inset-0 scale-[0.25] opacity-0 blur-[4px] transition-[filter,opacity,scale] duration-300 ease-[cubic-bezier(0.2,0,0,1)] motion-reduce:transition-none'}
-                    />
-                </span>
-            </Button>
-        </div>
-    </header>
+            <nav aria-label="Breadcrumb" class="hidden min-w-0 sm:block">
+                <ol
+                    class="flex min-w-0 items-center gap-1 overflow-hidden text-sm text-foreground-muted [font-weight:var(--font-weight-label,500)]"
+                >
+                    {#each breadcrumbs as breadcrumb, index (breadcrumb.href)}
+                        <li class="flex min-w-0 items-center gap-1">
+                            {#if index < breadcrumbs.length - 1}
+                                <a
+                                    href={breadcrumb.href}
+                                    class="truncate transition-colors hover:text-foreground focus-visible:rounded-sm focus-visible:outline-none focus-visible:shadow-[var(--focus-ring)]"
+                                >
+                                    {breadcrumb.label}
+                                </a>
+                            {:else}
+                                <span class="truncate text-foreground" aria-current="page"
+                                    >{breadcrumb.label}</span
+                                >
+                            {/if}
+                            {#if index < breadcrumbs.length - 1}
+                                <ChevronRight size={14} class="shrink-0" aria-hidden="true" />
+                            {/if}
+                        </li>
+                    {/each}
+                </ol>
+            </nav>
 
-    <FullscreenNav.Content label="Browse Sivir UI" class="p-0 sm:hidden">
+            <div class="flex shrink-0 items-center gap-1.5">
+                <Button
+                    class="h-9 rounded-[var(--radius-md)] px-2.5 text-[0.8125rem]"
+                    variant="outline"
+                    href={resolve('/studio')}
+                >
+                    Studio
+                </Button>
+                <GitHubLink
+                    {starCount}
+                    class="h-9 gap-1.5 rounded-[var(--radius-md)] px-2.5 text-[0.8125rem]"
+                />
+                <ThemeToggle class="size-9 rounded-[var(--radius-md)]" />
+            </div>
+        </header>
+    {/if}
+
+    <FullscreenNav.Content
+        label="Browse Sivir UI"
+        class={sidebar ? 'p-0 lg:hidden' : 'p-0 sm:hidden'}
+    >
         <header class="flex shrink-0 items-center justify-between px-3 py-3">
             <a href={resolve('/')} class="font-semibold tracking-tight text-foreground no-underline"
                 >Sivir UI</a
@@ -187,7 +167,7 @@
                 {/each}
             </FullscreenNav.Group>
 
-            <FullscreenNav.Group heading="Getting Started" class="mt-10">
+            <FullscreenNav.Group heading="Getting started" class="mt-10">
                 {#each docsPages as item (item.href)}
                     <FullscreenNav.Link href={item.href}>{item.title}</FullscreenNav.Link>
                 {/each}

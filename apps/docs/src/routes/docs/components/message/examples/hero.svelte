@@ -5,6 +5,7 @@
     import { Markdown } from '@sivir-ui/svelte/components/markdown';
     import * as Message from '@sivir-ui/svelte/components/message';
     import * as Reasoning from '@sivir-ui/svelte/components/reasoning';
+    import * as Tooltip from '@sivir-ui/svelte/components/tooltip';
 
     const response = [
         '### Billing API v2',
@@ -18,7 +19,7 @@
         '> Main migration risk: consumers that infer payment state from invoice updates.'
     ].join('\n');
 
-    let helpful = $state(false);
+    let liked = $state(false);
     let status = $state('');
 </script>
 
@@ -45,23 +46,29 @@
         <Message.Actions aria-label="Assistant response actions">
             <CopyButton
                 text={response}
-                label="Copy response"
-                copiedLabel="Response copied"
-                variant="ghost"
-                size="md"
-                class="size-8 rounded-[var(--radius-md)] p-0"
+                label="Copy"
+                copiedLabel="Copied"
+                tooltipDelay={500}
                 oncopy={() => (status = 'Response copied to clipboard.')}
             />
-            <Button
-                variant="ghost"
-                size="md"
-                class="size-8 rounded-[var(--radius-md)] p-0"
-                aria-label={helpful ? 'Remove helpful rating' : 'Mark response as helpful'}
-                aria-pressed={helpful}
-                onclick={() => (helpful = !helpful)}
-            >
-                <ThumbsUp size={15} fill={helpful ? 'currentColor' : 'none'} aria-hidden="true" />
-            </Button>
+            <Tooltip.Root delay={500}>
+                <Tooltip.Trigger>
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        aria-label="Like"
+                        aria-pressed={liked}
+                        onclick={() => (liked = !liked)}
+                    >
+                        <ThumbsUp
+                            size={15}
+                            fill={liked ? 'currentColor' : 'none'}
+                            aria-hidden="true"
+                        />
+                    </Button>
+                </Tooltip.Trigger>
+                <Tooltip.Content>Like</Tooltip.Content>
+            </Tooltip.Root>
         </Message.Actions>
     </Message.Root>
 

@@ -1,101 +1,111 @@
 import Slider from '@sivir-ui/svelte/components/slider/slider.svelte';
-import { render } from '@testing-library/svelte';
+import { fireEvent, render } from '@testing-library/svelte';
 import { describe, expect, it, vi } from 'vitest';
 import { queryRequired } from '../../test-utils';
 
 describe('Slider -- rendering', () => {
-    it('renders a range input', () => {
+    it('renders a range input inside a labeled field', () => {
         const { container } = render(Slider, { props: { value: 50 } });
-        const range = container.querySelector('input[type="range"]');
-        expect(range).toBeInTheDocument();
+
+        expect(container.querySelector('[data-ui="slider"]')?.tagName).toBe('LABEL');
+        expect(container.querySelector('input[type="range"]')).toBeInTheDocument();
     });
 
-    it('exposes the value via aria-valuenow', () => {
-        const { container } = render(Slider, { props: { value: 42 } });
-        expect(container.querySelector('input[type="range"]')?.getAttribute('aria-valuenow')).toBe(
-            '42'
+    it('shows the label and value inside the field', () => {
+        const { container } = render(Slider, {
+            props: {
+                value: 42,
+                label: 'Volume'
+            }
+        });
+
+        expect(container.querySelector('[data-ui="slider-label"]')).toHaveTextContent('Volume');
+        expect(container.querySelector('[data-ui="slider-value"]')).toHaveTextContent('42');
+        expect(container.querySelector('input[type="range"]')?.getAttribute('aria-label')).toBe(
+            'Volume'
         );
     });
 
-    it('exposes min and max via aria attributes', () => {
+    it('formats the visible value and the spoken value', () => {
         const { container } = render(Slider, {
-            props: { value: 0, min: -10, max: 200 }
+            props: {
+                value: 72,
+                format: (value: number) => `${value}%`
+            }
         });
-        const range = queryRequired(container, 'input[type="range"]');
-        expect(range.getAttribute('aria-valuemin')).toBe('-10');
-        expect(range.getAttribute('aria-valuemax')).toBe('200');
-    });
 
-    it('uses the label prop as aria-label', () => {
-        const { container } = render(Slider, {
-            props: { value: 0, label: 'Volume' }
-        });
-        expect(container.querySelector('input[type="range"]')?.getAttribute('aria-label')).toBe(
-            'Volume'
+        expect(container.querySelector('[data-ui="slider-value"]')).toHaveTextContent('72%');
+        expect(container.querySelector('input[type="range"]')?.getAttribute('aria-valuetext')).toBe(
+            '72%'
         );
     });
 });
 
 describe('Slider -- bounds and step', () => {
-    it('reflects min and max on the underlying input', () => {
+    it('reflects min, max, step, and name on the underlying input', () => {
         const { container } = render(Slider, {
-            props: { value: 5, min: 0, max: 10 }
+            props: {
+                value: 5,
+                min: 0,
+                max: 10,
+                step: 5,
+                name: 'volume'
+            }
         });
         const range = queryRequired<HTMLInputElement>(container, 'input[type="range"]');
+
         expect(range.min).toBe('0');
         expect(range.max).toBe('10');
-    });
-
-    it('reflects step on the underlying input', () => {
-        const { container } = render(Slider, {
-            props: { value: 0, step: 5 }
-        });
-        expect(container.querySelector<HTMLInputElement>('input[type="range"]')?.step).toBe('5');
+        expect(range.step).toBe('5');
+        expect(range.name).toBe('volume');
     });
 });
 
-describe('Slider -- onValueChange callback', () => {
-    it('fires onValueChange with the numeric new value on input', () => {
+describe('Slider -- callbacks', () => {
+    it('fires onValueChange with the numeric new value on input', async () => {
         const onValueChange = vi.fn();
         const { container } = render(Slider, {
-            props: { value: 0, min: 0, max: 100, onValueChange }
+            props: {
+                value: 0,
+                onValueChange
+            }
         });
         const range = queryRequired<HTMLInputElement>(container, 'input[type="range"]');
 
         range.value = '37';
-        range.dispatchEvent(new Event('input', { bubbles: true }));
+        await fireEvent.input(range);
 
         expect(onValueChange).toHaveBeenCalledWith(37);
     });
-});
 
-describe('Slider -- interaction feedback', () => {
-    it('keeps the dragging state until the pointer is released', () => {
-        const { container } = render(Slider, { props: { value: 0 } });
+    it('fires onValueCommit when the input commits a change', async () => {
+        const onValueCommit = vi.fn();
+        const { container } = render(Slider, {
+            props: {
+                value: 0,
+                onValueCommit
+            }
+        });
         const range = queryRequired<HTMLInputElement>(container, 'input[type="range"]');
 
-        range.dispatchEvent(new Event('pointerdown', { bubbles: true }));
-        expect(range).toHaveAttribute('data-dragging');
+        range.value = '20';
+        await fireEvent.input(range);
+        await fireEvent.change(range);
 
-        range.dispatchEvent(new Event('pointerup', { bubbles: true }));
-        expect(range).not.toHaveAttribute('data-dragging');
-    });
-
-    it('does not enter the dragging state when disabled', () => {
-        const { container } = render(Slider, { props: { value: 0, disabled: true } });
-        const range = queryRequired<HTMLInputElement>(container, 'input[type="range"]');
-
-        range.dispatchEvent(new Event('pointerdown', { bubbles: true }));
-
-        expect(range).not.toHaveAttribute('data-dragging');
+        expect(onValueCommit).toHaveBeenCalledWith(20);
     });
 });
 
 describe('Slider -- disabled state', () => {
-    it('disables the underlying range input', () => {
+    it('disables the underlying range input and marks the field', () => {
         const { container } = render(Slider, {
-            props: { value: 50, disabled: true }
+            props: {
+                value: 50,
+                disabled: true
+            }
         });
+
         expect(container.querySelector('input[type="range"]')).toBeDisabled();
+        expect(container.querySelector('[data-ui="slider"]')).toHaveAttribute('data-disabled');
     });
 });

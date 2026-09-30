@@ -56,6 +56,12 @@
             lang="svelte"
             copy="overlay"
         />
+        <Typography.Text variant="supporting">
+            Click, tap, or press Space to toggle, or drag the thumb across the track and release it
+            on either side. The thumb follows a spring, stretches while pressed or moving, and the
+            track fills with the primary color as the thumb travels. Clicking the label toggles the
+            switch too. With reduced motion, the thumb moves without animating.
+        </Typography.Text>
     </section>
 
     <!-- ─── Examples ──────────────────────────────────────────────── -->

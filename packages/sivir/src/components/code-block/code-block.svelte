@@ -1,7 +1,8 @@
 <script lang="ts">
     import * as Tabs from '@sivir-ui/svelte/components/tabs';
+    import { getCssDuration } from '@sivir-ui/svelte/transition';
     import { cn } from '@sivir-ui/svelte/utils';
-    import { setContext, untrack } from 'svelte';
+    import { setContext, tick, untrack } from 'svelte';
     import type { CodeBlockProps, CodeBlockRegistry, CodeBlockTab } from '.';
     import Actions from './code-block-actions.svelte';
     import Content from './code-block-content.svelte';
@@ -72,6 +73,87 @@
         registry.contained = isHighLevel;
         registry.theme = theme;
     });
+
+    let surface = $state<HTMLDivElement>();
+    let previousValue = untrack(() => value);
+    let renderedHeight = 0;
+    let resize: Animation | undefined;
+
+    $effect(() => {
+        const node = surface;
+
+        if (!node) {
+            return;
+        }
+        renderedHeight = node.getBoundingClientRect().height;
+        const observer = new ResizeObserver(() => {
+            renderedHeight = node.getBoundingClientRect().height;
+        });
+
+        observer.observe(node);
+
+        return () => {
+            observer.disconnect();
+        };
+    });
+
+    /**
+     * Eases the shared surface from its last rendered height to the incoming
+     * panel's height so switching between snippets of different lengths does not
+     * jump the layout. The observer lags the DOM by a frame, which is what keeps
+     * the outgoing height available here.
+     */
+    $effect.pre(() => {
+        const next = value;
+
+        if (next === previousValue) {
+            return;
+        }
+        previousValue = next;
+
+        const node = untrack(() => surface);
+
+        if (!node || renderedHeight === 0) {
+            return;
+        }
+        const from = renderedHeight;
+
+        resize?.cancel();
+        tick().then(() => {
+            animateSurface(node, from);
+        });
+    });
+
+    function animateSurface(node: HTMLDivElement, from: number) {
+        const to = node.getBoundingClientRect().height;
+        const duration = getCssDuration(node, '--motion-duration-panel', 180) * 1.5;
+        if (Math.abs(to - from) < 1 || duration <= 0) {
+            return;
+        }
+        if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+            return;
+        }
+        const easing = getComputedStyle(node).getPropertyValue('--ease-out').trim() || 'ease-out';
+
+        resize = node.animate(
+            [
+                {
+                    flexGrow: 0,
+                    flexBasis: `${from}px`,
+                    overflow: 'hidden'
+                },
+                {
+                    flexGrow: 0,
+                    flexBasis: `${to}px`,
+                    overflow: 'hidden'
+                }
+            ],
+            {
+                duration,
+                easing
+            }
+        );
+    }
 </script>
 
 <div
@@ -102,6 +184,7 @@
                 <!-- The static card: holds the background/ring while only the text
 				     panels slide inside it (and clips the slide). -->
                 <div
+                    bind:this={surface}
                     data-ui="code-block-surface"
                     class={cn(
                         'sivir-inset-surface relative flex min-h-0 w-full self-stretch flex-1 overflow-auto'

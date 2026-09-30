@@ -9,7 +9,7 @@
         children,
         orientation = 'vertical',
         showCues = true,
-        blur = true,
+        blur = false,
         element = $bindable(),
         onscroll,
         ...rest

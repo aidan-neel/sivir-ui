@@ -1,2 +1,25 @@
+- Question Content animates between steps when you pass `step`: the outgoing question blurs away, the next slides in from the direction of travel, and the height eases to fit. Tune it with the new `--motion-duration-step-in`, `--motion-duration-step-out`, `--motion-step-x`, and `--motion-step-blur` tokens; theme motion presets and reduced motion scale them.
+- Question Submit crossfades between its label and the submitting spinner instead of swapping them, and Question Option indicators sharpen in from a light blur when selected.
+- Attach files pasted into any focused field inside `Attachment.Root`, validated like picked and dropped files. Set `addOnPaste={false}` to opt out.
+- Split `Attachment.Item` into composable `Attachment.Preview`, `Attachment.Name`, `Attachment.Status`, and `Attachment.Remove` parts. An item without children still renders all four.
+- Give `Attachment.List` a `children` snippet that receives each file, so the high-level list can show per-file upload status and custom controls.
+- Animate Attachment items in and out, reflow the list as files are removed, fade the drop overlay, and fade image thumbnails in once they load.
+- Warn in the Attachment drop overlay before the drop when the dragged files would break the file limit or a MIME type in `accept`.
+- Move focus to the next attachment, or back to the trigger, after removing a file, and announce added, removed, and rejected files to screen readers.
+- Keep Attachment items a stable height across ready, uploading, complete, and error states, show upload percentage beside the progress bar, keep file extensions visible when names truncate, and pick a file-type icon for non-image files.
+- Response Stream shows the same pulsing 3×3 dot grid as Reasoning while it waits for the first chunk, replacing the blinking caret.
+- Redesign Composer as a single rounded card: the input and toolbar share one surface, the input starts shorter, and `Composer.Submit` defaults to a round icon button (arrow to send, list-plus to queue, square to stop) that keeps its accessible labels.
+- `Composer.Toolbar variant="inset"` now seats the toolbar in a recessed tray along the bottom of the card; the default `chrome` variant sits on the card surface.
+- Redesign Tool to match Reasoning: a quiet one-line trigger with a status glyph that settles from a spinner to a check or alert, a shimmering title while running, and calls that open behind a left rail and stay mounted as more arrive.
+- Tool Call rows share columns, so targets line up under one another, and a Call with children expands to show its Input and Output. Running calls show a spinner and failed calls say so.
+- `Composer.Submit` draws a spinning ring around its edge while a message is sending or a reply is generating, and turns neutral while it acts as Stop. Under reduced motion the ring holds still.
+- Slider puts its label and formatted value inside a scrubbable field. It springs to the pressed point, stretches against its limits, fades its thumb behind text, and supports Shift+Arrow for ten steps. New `format`, `name`, and `onValueCommit` props, plus `Range`, `Thumb`, `Label`, and `Value` parts for composing your own layout.
+- Restyle Attachment items as compact chips with a smaller preview, a lighter error state, and a muted "Complete" status, and dim image thumbnails while they upload.
+- Lay out `Attachment.List` as a grid that fills columns of at least 14rem instead of fixed-width wrapping cards. Add `grid-cols-1` for full-width rows.
+- Attachment items now fade and scale in and out, status changes crossfade, image thumbnails crossfade in from the file icon once decoded, the remaining files slide into place as soon as one is removed, and the list eases its height as rows are added or removed instead of jumping the surrounding layout.
+- Code Block eases its height when switching between tabs of different lengths instead of jumping, and the outgoing snippet blurs slightly as it slides away.
+- Smoother Toast motion: new toasts rise their full height from below while fading in, stack moves use one interruptible transition driven by the toast motion tokens, and collapsed toasts behind the front peek evenly whatever their height, with their content hidden.
+- Slider's label turns bold while you drag, without shifting the value or the thumb.
+- Redesign Switch with a spring-driven thumb that stretches while pressed or moving, a track that fills with the primary color as the thumb travels, and drag to toggle. The track is now 40 by 24 pixels.
 - `sivir init` now installs the shared dependencies, prompting unless `-y` is passed, the same way `sivir add` does.
 - `sivir init` points the root stylesheet from `sv add tailwindcss` (`src/routes/layout.css` or `src/app.css`) at `ui.css`, replacing its `@import 'tailwindcss';` because `ui.css` already includes Tailwind.

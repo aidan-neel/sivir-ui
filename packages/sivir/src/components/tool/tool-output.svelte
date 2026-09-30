@@ -5,10 +5,10 @@
     let { label = 'Output', children, class: className, ...rest }: ToolOutputProps = $props();
 </script>
 
-<div data-ui="tool-output" class={cn(className, 'mt-3 flex flex-col gap-1.5')} {...rest}>
-    <span class="text-xs font-[var(--font-weight-label)] text-foreground-muted">{label}</span>
+<div data-ui="tool-output" class={cn(className, 'flex min-w-0 flex-col gap-1')} {...rest}>
+    <span class="text-xs text-foreground-muted">{label}</span>
     <div
-        class="rounded-[var(--radius-md)] border-[length:var(--border-size)] border-border bg-card px-2.5 py-2 text-sm leading-5 text-foreground"
+        class="max-h-72 overflow-auto rounded-[var(--radius-md)] bg-secondary/60 px-2.5 py-2 text-sm leading-5 text-foreground"
     >
         {@render children?.()}
     </div>

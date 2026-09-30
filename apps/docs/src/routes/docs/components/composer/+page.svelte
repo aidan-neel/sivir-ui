@@ -114,9 +114,9 @@ async function sendPrompt(prompt: string) {
         <div id="toolbar-inset" class="scroll-mt-20 flex flex-col gap-3">
             <Typography.H3 class="docs-subsection-heading">Toolbar inset</Typography.H3>
             <Typography.Text variant="supporting">
-                The toolbar defaults to the frame chrome outside the input well. Set
+                The toolbar defaults to sitting on the same surface as the input. Set
                 <Typography.InlineCode>variant="inset"</Typography.InlineCode>
-                to merge it into the same inset surface as the input.
+                to seat it in a recessed tray along the bottom edge.
             </Typography.Text>
             <ComponentPreview code={ToolbarInsetSrc}><ToolbarInset /></ComponentPreview>
         </div>

@@ -7,7 +7,7 @@ import Trigger from './reasoning-trigger.svelte';
 
 export type ReasoningRootProps = {
     streaming?: boolean;
-    /** Whether the reasoning content is visible. */
+    /** Whether the reasoning content is visible. Defaults to `false`. */
     open?: boolean;
     onOpenChange?: (open: boolean) => void;
     onOpenChangeComplete?: (open: boolean) => void;
@@ -16,8 +16,9 @@ export type ReasoningRootProps = {
     Omit<HTMLAttributes<HTMLElement>, 'children'>;
 
 export type ReasoningTriggerProps = {
+    /** Replaces the Thinking and Thought for label, such as a one-line summary of the reasoning. */
     title?: string;
-    /** A compact summary of the completed reasoning time, such as 2.4s. */
+    /** Elapsed reasoning time, such as 2.4s. Update it while streaming for a live timer. Hidden when `title` is set. */
     duration?: string;
     children?: Snippet<[ReasoningTriggerState]>;
 } & Omit<DefaultProps, 'children'> &

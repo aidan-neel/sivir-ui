@@ -5,7 +5,7 @@
     import * as CodeBlock from '@sivir-ui/svelte/components/code-block';
     import * as Tabs from '@sivir-ui/svelte/components/tabs';
     import { cn } from '@sivir-ui/svelte/utils';
-    import { onMount, type Snippet } from 'svelte';
+    import { onMount, type Snippet, untrack } from 'svelte';
 
     let {
         children,
@@ -24,6 +24,58 @@
     let previewBody = $state<HTMLElement>();
     let previewVersion = $state(0);
     let refreshVersion = $state(0);
+    let frame = $state<HTMLDivElement>();
+    let previewPane = $state<HTMLDivElement>();
+    let codePane = $state<HTMLDivElement>();
+    let frameHeight = $state<number>();
+    let codeMounted = $state(false);
+    let previousValue = untrack(() => value);
+
+    $effect.pre(() => {
+        const next = value;
+
+        if (next === previousValue) {
+            return;
+        }
+        previousValue = next;
+
+        untrack(() => {
+            if (frame) {
+                frameHeight = frame.offsetHeight;
+            }
+            if (next === 'code') {
+                codeMounted = true;
+            }
+        });
+
+        requestAnimationFrame(() => {
+            const pane = next === 'code' ? codePane : previewPane;
+
+            if (value !== next) {
+                return;
+            }
+            if (!pane || !frame || !hasTransition(frame) || pane.offsetHeight === frameHeight) {
+                frameHeight = undefined;
+                return;
+            }
+            frameHeight = pane.offsetHeight;
+        });
+    });
+
+    function hasTransition(node: HTMLElement) {
+        const durations = getComputedStyle(node).transitionDuration.split(',');
+
+        return durations.some((duration) => {
+            return Number.parseFloat(duration) > 0;
+        });
+    }
+
+    function releaseHeight(event: TransitionEvent) {
+        if (event.target !== event.currentTarget || event.propertyName !== 'height') {
+            return;
+        }
+        frameHeight = undefined;
+    }
 
     function refreshPreview() {
         previewVersion += 1;
@@ -70,36 +122,69 @@
         {/if}
     </div>
 
-    {#if value === 'preview'}
-        <!-- Preview sits on Card's panel surface. -->
-        <Card.Root
-            {...rest}
-            variant="panel"
+    <div
+        bind:this={frame}
+        ontransitionend={releaseHeight}
+        style:height={frameHeight === undefined ? undefined : `${frameHeight}px`}
+        class={[
+            'relative transition-[height] [transition-duration:calc(var(--motion-duration-panel)*1.5)] ease-[var(--ease-out)] motion-reduce:transition-none',
+            frameHeight !== undefined && 'overflow-hidden'
+        ]}
+    >
+        <div
+            bind:this={previewPane}
+            inert={value !== 'preview'}
+            aria-hidden={value !== 'preview'}
             class={cn(
-                classProp,
-                'w-full max-h-[40rem] overflow-hidden [&>[data-ui=card-surface]]:p-0'
+                'w-full transition-[opacity,filter] [transition-duration:var(--motion-duration-panel)] ease-[var(--ease-out)] motion-reduce:transition-none',
+                value === 'preview'
+                    ? 'relative opacity-100 blur-[0px]'
+                    : 'pointer-events-none absolute inset-x-0 top-0 opacity-0 blur-[2px]'
             )}
         >
-            <div
-                bind:this={previewBody}
-                tabindex="-1"
-                class="flex min-h-[20rem] w-full items-center justify-center overflow-hidden p-6 sm:p-10 focus:outline-none"
+            <!-- Preview sits on Card's panel surface. -->
+            <Card.Root
+                {...rest}
+                variant="panel"
+                class={cn(
+                    classProp,
+                    'w-full max-h-[40rem] overflow-hidden [&>[data-ui=card-surface]]:p-0'
+                )}
             >
-                {#key previewVersion}
-                    {@render children?.()}
-                {/key}
+                <div
+                    bind:this={previewBody}
+                    tabindex="-1"
+                    class="flex min-h-[20rem] w-full items-center justify-center overflow-hidden p-6 sm:p-10 focus:outline-none"
+                >
+                    {#key previewVersion}
+                        {@render children?.()}
+                    {/key}
+                </div>
+            </Card.Root>
+        </div>
+        {#if codeMounted}
+            <div
+                bind:this={codePane}
+                inert={value !== 'code'}
+                aria-hidden={value !== 'code'}
+                class={cn(
+                    'w-full transition-[opacity,filter] [transition-duration:var(--motion-duration-panel)] ease-[var(--ease-out)] motion-reduce:transition-none',
+                    value === 'code'
+                        ? 'relative opacity-100 blur-[0px]'
+                        : 'pointer-events-none absolute inset-x-0 top-0 opacity-0 blur-[2px]'
+                )}
+            >
+                <!-- Code is a CodeBlock — it carries its own panel frame, so it stands alone. -->
+                <CodeBlock.Root
+                    {...rest}
+                    {code}
+                    lang="svelte"
+                    copy="overlay"
+                    class={cn(classProp, 'w-full max-h-[40rem] overflow-auto')}
+                />
             </div>
-        </Card.Root>
-    {:else}
-        <!-- Code is a CodeBlock — it carries its own panel frame, so it stands alone. -->
-        <CodeBlock.Root
-            {...rest}
-            {code}
-            lang="svelte"
-            copy="overlay"
-            class={cn(classProp, 'w-full max-h-[40rem] overflow-auto')}
-        />
-    {/if}
+        {/if}
+    </div>
 </div>
 
 <style>

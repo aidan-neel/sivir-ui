@@ -28,6 +28,8 @@ beforeAll(() => {
 				--motion-duration-hover: 0ms;
 				--motion-duration-menu: 0ms;
 				--motion-duration-panel: 0ms;
+				--motion-duration-panel-in: 0ms;
+				--motion-duration-panel-out: 0ms;
 				--motion-duration-sheet: 0ms;
 				--motion-duration-sheet-out: 0ms;
 				--motion-duration-overlay: 0ms;
@@ -35,6 +37,8 @@ beforeAll(() => {
 				--motion-duration-toast-in: 0ms;
 				--motion-duration-toast-out: 0ms;
 				--motion-duration-press: 0ms;
+				--motion-duration-step-in: 0ms;
+				--motion-duration-step-out: 0ms;
 			}
 		`;
         document.head.appendChild(style);
@@ -68,6 +72,15 @@ beforeAll(() => {
                 (animation as unknown as { finished: Promise<Animation> }).finished =
                     Promise.resolve(animation);
                 return animation;
+            }
+        });
+    }
+
+    if (!('getAnimations' in Element.prototype)) {
+        Object.defineProperty(Element.prototype, 'getAnimations', {
+            configurable: true,
+            value: () => {
+                return [];
             }
         });
     }

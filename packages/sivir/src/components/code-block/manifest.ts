@@ -1,8 +1,14 @@
 import type { Manifest } from '@sivir-ui/svelte/_manifest/types';
 
+/**
+ * Version history:
+ *   2.1.0:
+ *           - Ease the surface height between tabs of different lengths and blur
+ *             the outgoing panel as it slides away.
+ */
 export const manifest: Manifest = {
     name: 'code-block',
-    version: '2.0.0',
+    version: '2.1.0',
     visibility: 'public',
     description:
         'Code block with syntax-highlighted snippets, a multi-language tab switcher, built-in copy button, and an actions slot. Highlighting via highlight.js with a built-in GitHub palette; theme="custom" skips the token colors for any highlight.js theme stylesheet.',
@@ -20,7 +26,7 @@ export const manifest: Manifest = {
         'components/code-block/manifest.ts'
     ],
     components: ['tabs', 'copy-button', 'card', '_internal/highlight'],
-    shared: ['utils.cn'],
+    shared: ['utils.cn', 'transition'],
     peerDependencies: {
         'highlight.js': '^11.0.0',
         cnfast: '^0.0.8',

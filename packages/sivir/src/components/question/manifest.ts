@@ -2,7 +2,7 @@ import type { Manifest } from '@sivir-ui/svelte/_manifest/types';
 
 export const manifest: Manifest = {
     name: 'question',
-    version: '1.0.0',
+    version: '1.1.0',
     visibility: 'public',
     description:
         'Inline agent question form with single-choice, multiple-choice, and free-text answers.',
@@ -18,6 +18,7 @@ export const manifest: Manifest = {
         'components/question/question-cancel.svelte',
         'components/question/question-submit.svelte',
         'components/question/context.svelte.ts',
+        'components/question/step-transition.ts',
         'components/question/index.ts',
         'components/question/manifest.ts'
     ],
