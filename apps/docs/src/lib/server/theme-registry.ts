@@ -8,11 +8,13 @@ import {
     type RegistryListOptions,
     type RegistryTheme,
     type RegistryThemePage,
+    THEME_SLUG_PATTERN,
     themeSources
 } from '$lib/theme-registry';
 
 const LOCAL_REGISTRY_URL = 'http://localhost:4100';
 const BUILT_IN_TIMESTAMP = '2026-07-14T00:00:00.000Z';
+const THEME_NOT_FOUND = 'A theme with this slug does not exist.';
 
 export class RegistryRequestError extends Error {
     constructor(
@@ -86,6 +88,27 @@ function parseThemePage(value: unknown): RegistryThemePage {
     };
 }
 
+async function readRegistryError(response: Response): Promise<string> {
+    const fallback = `Theme registry responded with ${response.status}.`;
+    const text = (await response.text()).trim();
+    if (!text.startsWith('{')) {
+        return text || fallback;
+    }
+
+    let body: unknown;
+    try {
+        body = JSON.parse(text);
+    } catch {
+        return fallback;
+    }
+
+    if (isRecord(body) && body.type === 'validation') {
+        return 'The theme registry rejected this request as invalid.';
+    }
+
+    return isRecord(body) && typeof body.message === 'string' ? body.message : fallback;
+}
+
 async function registryRequest<T>(
     fetchImpl: typeof fetch,
     path: string,
@@ -104,12 +127,7 @@ async function registryRequest<T>(
     }
 
     if (!response.ok) {
-        const message = (await response.text()).trim();
-
-        throw new RegistryRequestError(
-            response.status,
-            message || `Theme registry responded with ${response.status}.`
-        );
+        throw new RegistryRequestError(response.status, await readRegistryError(response));
     }
 
     if (response.status === 204) {
@@ -213,6 +231,10 @@ export async function getRegistryTheme(
     const builtIn = findBuiltInTheme(slug);
     if (builtIn) {
         return builtIn;
+    }
+
+    if (!THEME_SLUG_PATTERN.test(slug)) {
+        throw new RegistryRequestError(404, THEME_NOT_FOUND);
     }
 
     return registryRequest(fetchImpl, `/themes/${encodeURIComponent(slug)}`, parseRegistryTheme);

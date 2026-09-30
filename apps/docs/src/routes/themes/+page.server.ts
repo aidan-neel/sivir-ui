@@ -1,3 +1,4 @@
+import { redirect } from '@sveltejs/kit';
 import { builtInThemePage, getRegistryTheme, listRegistryThemes } from '$lib/server/theme-registry';
 import {
     type RegistryListOptions,
@@ -54,6 +55,18 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
         catalog = await listRegistryThemes(fetch, options);
     } catch {
         registryAvailable = false;
+    }
+
+    const lastPage = Math.max(1, Math.ceil(catalog.total / THEMES_PAGE_SIZE));
+    if (page > lastPage) {
+        const target = new URL(url);
+        if (lastPage === 1) {
+            target.searchParams.delete('page');
+        } else {
+            target.searchParams.set('page', String(lastPage));
+        }
+
+        redirect(307, `${target.pathname}${target.search}`);
     }
 
     return {

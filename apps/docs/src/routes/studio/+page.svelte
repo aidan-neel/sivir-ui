@@ -123,6 +123,7 @@
         spacingTokenDefinitions,
         spacingTokenGroups
     } from '$lib/studio-advanced-tokens';
+    import { THEME_SLUG_PATTERN } from '$lib/theme-registry';
 
     type FontWeight = ThemeFontWeight;
 
@@ -169,7 +170,6 @@
     const LEGACY_EXTENSIONS_KEY = 'sivir-studio-extensions-v1';
     const STUDIO_META_KEY = 'sivir-studio-meta-v2';
     const EDIT_TOKENS_KEY = 'sivir-studio-edit-tokens-v1';
-    const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
     const FLAT_CONTROL_SHADOW = 'inset 0 0 0 var(--border-size) var(--color-border)';
     const fontWeights = ['400', '500', '600', '700'] as const;
     const cursorChoices = ['default', 'pointer'] as const;
@@ -936,7 +936,8 @@
         selectedPreset = loaded.slug;
         previousPreset = loaded.slug;
         baseTheme = { ...loaded };
-        applyDraft(themeToDraft(loaded));
+        const draft = themeToDraft(loaded);
+        applyDraft(loaded.slug in editTokens ? draft : withIdentity(draft, identityOf(theme)));
         toast({
             title: `${loaded.name} loaded`,
             description: 'Customize it, then copy it or publish your own version.',
@@ -1007,7 +1008,7 @@
         publishName = theme.name;
         publishSlug = theme.slug;
         publishDescription = theme.description;
-        publisherName = theme.publisher ?? '';
+        publisherName = theme.slug in editTokens ? (theme.publisher ?? '') : '';
         publishSlugEdited = theme.slug !== slugify(theme.name);
         publishError = null;
         publishOpen = true;
@@ -1030,7 +1031,7 @@
             return 'Give the theme a name.';
         }
 
-        if (!SLUG_PATTERN.test(publishSlug)) {
+        if (!THEME_SLUG_PATTERN.test(publishSlug)) {
             return 'Use lowercase letters, numbers, and single hyphens for the slug.';
         }
 
