@@ -10,6 +10,9 @@
 - Stop the Studio inspector clipping a slider's right edge and value while it stretches past its limit.
 - Drop the CSS variable name under each Studio token field. Reset now slides in below a field once it changes and slides away when the field is reset.
 - Fix the Command palette's hover highlight showing up smaller than the active row, and offset from it, when the palette first opens. Dropdown Menu, Context Menu, and Select panels that open with a scale animation get the same fix.
+- Install CLI peer dependencies at the ranges Sivir declares. `sivir init` and `sivir add` passed bare package names, so `cnfast` resolved to an incompatible `0.2.x` release.
+- Stop `sivir add` from reporting the shared `utils.ts` and `transition.ts` from `sivir init` as conflicts once per component. Shared files are listed once, and files that already match the registry show as unchanged. Only files that differ ask for `--overwrite`.
+- Quote `'*'` in the `sivir init` hint so the shell does not expand it into file names.
 - Reject font values in theme JSON that contain `{`, `}`, or `;`, so a theme cannot break out of its CSS declaration.
 - Stop the Studio overriding a preset's foundation colors with the Sivir defaults, and let the radius control change presets that set their own radius tokens.
 - Copy JSON in the Studio now exports a portable theme that `parseTheme`, the CLI, and the registry accept, and Copy CSS matches `themeToCss` for that theme.

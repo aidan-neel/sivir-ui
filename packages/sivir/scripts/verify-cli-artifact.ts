@@ -121,7 +121,7 @@ async function writeCliConsumer(cwd: string, tarball: string) {
         path.join(cwd, 'src/app.html'),
         '<!doctype html>\n<html lang="en">\n\t<head>\n\t\t<meta charset="utf-8" />\n\t\t<meta name="viewport" content="width=device-width, initial-scale=1" />\n\t\t%sveltekit.head%\n\t</head>\n\t<body>\n\t\t<div style="display: contents">%sveltekit.body%</div>\n\t</body>\n</html>\n'
     );
-    await writeFile(path.join(cwd, 'src/app.css'), "@import './lib/sivir/ui.css';\n");
+    await writeFile(path.join(cwd, 'src/app.css'), "@import 'tailwindcss';\n");
     await writeFile(
         path.join(cwd, 'src/routes/+layout.svelte'),
         '<script lang="ts">\n\timport \'../app.css\';\n\tlet { children } = $props();\n</script>\n\n{@render children()}\n'
@@ -193,6 +193,10 @@ try {
     }
 
     runSivir(consumer, ['init', '--yes']);
+    const appCss = await readFile(path.join(consumer, 'src/app.css'), 'utf8');
+    if (appCss !== "@import './lib/sivir/ui.css';\n") {
+        throw new Error(`sivir init did not point src/app.css at ui.css:\n${appCss}`);
+    }
     runSivir(consumer, ['list']);
     runSivir(consumer, ['add', 'button', '--yes']);
     runSivir(consumer, ['add', 'modal', '--yes']);

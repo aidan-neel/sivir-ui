@@ -199,9 +199,11 @@ Add the token sheet to your CSS:
 ## CLI
 
 ~~~~sh
-bunx --package @sivir-ui/svelte sivir init
+bunx --package @sivir-ui/svelte sivir init -y
 bunx --package @sivir-ui/svelte sivir add button
 ~~~~
+
+\`init\` installs the shared dependencies and replaces \`@import 'tailwindcss';\` in the root stylesheet \`sv add tailwindcss\` creates (\`src/routes/layout.css\` or \`src/app.css\`) with an import of \`src/lib/sivir/ui.css\`, which includes Tailwind. For any other stylesheet, make that replacement yourself. Quote \`'*'\` to add every component.
 `,
     theming: `# Theming
 

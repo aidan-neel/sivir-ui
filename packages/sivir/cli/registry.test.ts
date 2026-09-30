@@ -190,7 +190,7 @@ describe('registry snapshot', () => {
         )) {
             const plan = resolveInstallPlan(snapshot, [entry.name]);
             const declared = new Set([
-                ...BASE_PEER_DEPENDENCIES,
+                ...Object.keys(BASE_PEER_DEPENDENCIES),
                 ...Object.keys(plan.peerDependencies)
             ]);
             const imported = new Set<string>();
