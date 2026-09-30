@@ -248,6 +248,93 @@ export const colorTokenDefinitions = [
         group: 'Status',
         fallback: 'rgb(0 0 0 / 0.18)',
         darkFallback: 'rgb(0 0 0 / 0.55)'
+    },
+    {
+        name: '--color-success-soft',
+        label: 'Success tint',
+        group: 'Status tints',
+        fallback: 'color-mix(in srgb, var(--color-success) 12%, transparent)'
+    },
+    {
+        name: '--color-warning-soft',
+        label: 'Warning tint',
+        group: 'Status tints',
+        fallback: 'color-mix(in srgb, var(--color-warning) 12%, transparent)'
+    },
+    {
+        name: '--color-error-soft',
+        label: 'Error tint',
+        group: 'Status tints',
+        fallback: 'color-mix(in srgb, var(--color-error) 12%, transparent)'
+    },
+    {
+        name: '--color-info-soft',
+        label: 'Info tint',
+        group: 'Status tints',
+        fallback: 'color-mix(in srgb, var(--color-info) 12%, transparent)'
+    },
+    {
+        name: '--color-code-comment',
+        label: 'Comment',
+        group: 'Code',
+        fallback: '#6a737d',
+        darkFallback: '#8b949e'
+    },
+    {
+        name: '--color-code-keyword',
+        label: 'Keyword',
+        group: 'Code',
+        fallback: '#d73a49',
+        darkFallback: '#ff7b72'
+    },
+    {
+        name: '--color-code-string',
+        label: 'String',
+        group: 'Code',
+        fallback: '#032f62',
+        darkFallback: '#a5d6ff'
+    },
+    {
+        name: '--color-code-number',
+        label: 'Number',
+        group: 'Code',
+        fallback: '#005cc5',
+        darkFallback: '#79c0ff'
+    },
+    {
+        name: '--color-code-function',
+        label: 'Function',
+        group: 'Code',
+        fallback: '#6f42c1',
+        darkFallback: '#d2a8ff'
+    },
+    {
+        name: '--color-code-property',
+        label: 'Property',
+        group: 'Code',
+        fallback: '#005cc5',
+        darkFallback: '#79c0ff'
+    },
+    {
+        name: '--color-code-builtin',
+        label: 'Builtin',
+        group: 'Code',
+        fallback: '#e36209',
+        darkFallback: '#ffa657'
+    },
+    {
+        name: '--color-code-entity',
+        label: 'Entity',
+        group: 'Code',
+        fallback: '#22863a',
+        darkFallback: '#7ee787'
+    },
+    {
+        name: '--color-code-meta',
+        label: 'Meta',
+        group: 'Code',
+        fallback: '#005cc5',
+        darkFallback: '#79c0ff'
     }
 ] as const;
 
@@ -422,6 +509,24 @@ export const spacingTokenDefinitions = [
         min: 0,
         max: 4,
         step: 1
+    },
+    {
+        name: '--size-touch',
+        label: 'Touch target',
+        group: 'Controls',
+        fallback: '44px',
+        min: 32,
+        max: 64,
+        step: 1
+    },
+    {
+        name: '--overlay-gutter',
+        label: 'Overlay gutter',
+        group: 'Overlay',
+        fallback: '32px',
+        min: 0,
+        max: 96,
+        step: 1
     }
 ] as const;
 
@@ -594,6 +699,26 @@ export const animationTokenDefinitions = [
         step: 10
     },
     {
+        name: '--motion-duration-step-in',
+        label: 'Step enter',
+        group: 'Speed',
+        fallback: '360ms',
+        kind: 'duration',
+        min: 0,
+        max: 800,
+        step: 10
+    },
+    {
+        name: '--motion-duration-step-out',
+        label: 'Step exit',
+        group: 'Speed',
+        fallback: '130ms',
+        kind: 'duration',
+        min: 0,
+        max: 600,
+        step: 10
+    },
+    {
         name: '--motion-duration-press',
         label: 'Press duration',
         group: 'Speed',
@@ -608,6 +733,26 @@ export const animationTokenDefinitions = [
         label: 'Item',
         group: 'Speed',
         fallback: '160ms',
+        kind: 'duration',
+        min: 0,
+        max: 600,
+        step: 10
+    },
+    {
+        name: '--motion-duration-modal-stack-in',
+        label: 'Stacked modal open',
+        group: 'Speed',
+        fallback: '260ms',
+        kind: 'duration',
+        min: 0,
+        max: 600,
+        step: 10
+    },
+    {
+        name: '--motion-duration-modal-stack-out',
+        label: 'Stacked modal close',
+        group: 'Speed',
+        fallback: '180ms',
         kind: 'duration',
         min: 0,
         max: 600,
@@ -694,6 +839,26 @@ export const animationTokenDefinitions = [
         step: 1
     },
     {
+        name: '--motion-step-x',
+        label: 'Step offset',
+        group: 'Movement',
+        fallback: '16px',
+        kind: 'length',
+        min: 0,
+        max: 48,
+        step: 1
+    },
+    {
+        name: '--motion-step-blur',
+        label: 'Step blur',
+        group: 'Movement',
+        fallback: '3px',
+        kind: 'length',
+        min: 0,
+        max: 12,
+        step: 1
+    },
+    {
         name: '--motion-opacity-start',
         label: 'Movement opacity',
         group: 'Movement',
@@ -736,12 +901,297 @@ export const animationTokenDefinitions = [
     }
 ] as const;
 
+export const detailTokenDefinitions = [
+    {
+        name: '--font-size-title',
+        label: 'Title',
+        group: 'Type scale',
+        fallback: '20px',
+        kind: 'px',
+        scope: 'shared',
+        min: 8,
+        max: 56,
+        step: 0.5
+    },
+    {
+        name: '--font-size-display',
+        label: 'Display',
+        group: 'Type scale',
+        fallback: '30px',
+        kind: 'px',
+        scope: 'shared',
+        min: 8,
+        max: 56,
+        step: 0.5
+    },
+    {
+        name: '--font-size-body',
+        label: 'Body',
+        group: 'Type scale',
+        fallback: '14px',
+        kind: 'px',
+        scope: 'shared',
+        min: 8,
+        max: 56,
+        step: 0.5
+    },
+    {
+        name: '--font-size-label',
+        label: 'Label',
+        group: 'Type scale',
+        fallback: '13px',
+        kind: 'px',
+        scope: 'shared',
+        min: 8,
+        max: 56,
+        step: 0.5
+    },
+    {
+        name: '--font-size-button',
+        label: 'Button',
+        group: 'Type scale',
+        fallback: '14px',
+        kind: 'px',
+        scope: 'shared',
+        min: 8,
+        max: 56,
+        step: 0.5
+    },
+    {
+        name: '--font-size-badge',
+        label: 'Badge',
+        group: 'Type scale',
+        fallback: '12px',
+        kind: 'px',
+        scope: 'shared',
+        min: 8,
+        max: 56,
+        step: 0.5
+    },
+    {
+        name: '--font-size-meta',
+        label: 'Metadata',
+        group: 'Type scale',
+        fallback: '10.5px',
+        kind: 'px',
+        scope: 'shared',
+        min: 8,
+        max: 56,
+        step: 0.5
+    },
+    {
+        name: '--leading-none',
+        label: 'None',
+        group: 'Line height',
+        fallback: '1',
+        kind: 'number',
+        scope: 'shared',
+        min: 0.8,
+        max: 2.4,
+        step: 0.025
+    },
+    {
+        name: '--leading-tight',
+        label: 'Tight',
+        group: 'Line height',
+        fallback: '1.25',
+        kind: 'number',
+        scope: 'shared',
+        min: 0.8,
+        max: 2.4,
+        step: 0.025
+    },
+    {
+        name: '--leading-label',
+        label: 'Label',
+        group: 'Line height',
+        fallback: '1.3',
+        kind: 'number',
+        scope: 'shared',
+        min: 0.8,
+        max: 2.4,
+        step: 0.025
+    },
+    {
+        name: '--leading-snug',
+        label: 'Snug',
+        group: 'Line height',
+        fallback: '1.375',
+        kind: 'number',
+        scope: 'shared',
+        min: 0.8,
+        max: 2.4,
+        step: 0.025
+    },
+    {
+        name: '--leading-body',
+        label: 'Body',
+        group: 'Line height',
+        fallback: '1.5',
+        kind: 'number',
+        scope: 'shared',
+        min: 0.8,
+        max: 2.4,
+        step: 0.025
+    },
+    {
+        name: '--leading-relaxed',
+        label: 'Relaxed',
+        group: 'Line height',
+        fallback: '1.625',
+        kind: 'number',
+        scope: 'shared',
+        min: 0.8,
+        max: 2.4,
+        step: 0.025
+    },
+    {
+        name: '--tracking-header',
+        label: 'Headings',
+        group: 'Letter spacing',
+        fallback: '-0.015em',
+        kind: 'em',
+        scope: 'shared',
+        min: -0.08,
+        max: 0.12,
+        step: 0.005
+    },
+    {
+        name: '--tracking-body',
+        label: 'Body',
+        group: 'Letter spacing',
+        fallback: '0em',
+        kind: 'em',
+        scope: 'shared',
+        min: -0.08,
+        max: 0.12,
+        step: 0.005
+    },
+    {
+        name: '--tracking-label',
+        label: 'Labels',
+        group: 'Letter spacing',
+        fallback: '0em',
+        kind: 'em',
+        scope: 'shared',
+        min: -0.08,
+        max: 0.12,
+        step: 0.005
+    },
+    {
+        name: '--tracking-button',
+        label: 'Buttons',
+        group: 'Letter spacing',
+        fallback: '0em',
+        kind: 'em',
+        scope: 'shared',
+        min: -0.08,
+        max: 0.12,
+        step: 0.005
+    },
+    {
+        name: '--tracking-badge',
+        label: 'Badges',
+        group: 'Letter spacing',
+        fallback: '0em',
+        kind: 'em',
+        scope: 'shared',
+        min: -0.08,
+        max: 0.12,
+        step: 0.005
+    },
+    {
+        name: '--elevation-1',
+        label: 'Card',
+        group: 'Shadows',
+        fallback: '0 4px 2px rgb(0 0 0 / 0.04)',
+        darkFallback: '0 1px 2px rgb(0 0 0 / 0.4)',
+        kind: 'shadow',
+        scope: 'mode'
+    },
+    {
+        name: '--elevation-float',
+        label: 'Floating',
+        group: 'Shadows',
+        fallback: '0 8px 24px -8px rgb(0 0 0 / 0.12), 0 2px 6px rgb(0 0 0 / 0.06)',
+        kind: 'shadow',
+        scope: 'mode'
+    },
+    {
+        name: '--elevation-modal',
+        label: 'Modal',
+        group: 'Shadows',
+        fallback: '0 16px 40px -16px rgb(0 0 0 / 0.28), 0 4px 12px -6px rgb(0 0 0 / 0.14)',
+        kind: 'shadow',
+        scope: 'mode'
+    },
+    {
+        name: '--elevation-control',
+        label: 'Control',
+        group: 'Shadows',
+        fallback: 'inset 0 0 0 var(--border-size) var(--color-border)',
+        kind: 'shadow',
+        scope: 'mode'
+    },
+    {
+        name: '--elevation-button-outline',
+        label: 'Outline button',
+        group: 'Shadows',
+        fallback: 'inset 0 0 0 var(--border-size) var(--color-border)',
+        kind: 'shadow',
+        scope: 'mode'
+    },
+    {
+        name: '--focus-ring',
+        label: 'Focus ring shadow',
+        group: 'Shadows',
+        fallback: '0 0 0 3px var(--color-ring)',
+        kind: 'shadow',
+        scope: 'mode'
+    },
+    {
+        name: '--overlay-blur',
+        label: 'Backdrop blur',
+        group: 'Overlay',
+        fallback: '2px',
+        kind: 'px',
+        scope: 'shared',
+        min: 0,
+        max: 24,
+        step: 0.5
+    },
+    {
+        name: '--overlay-brightness',
+        label: 'Backdrop brightness',
+        group: 'Overlay',
+        fallback: '0.9',
+        kind: 'number',
+        scope: 'shared',
+        min: 0.4,
+        max: 1,
+        step: 0.01
+    },
+    {
+        name: '--opacity-disabled',
+        label: 'Disabled opacity',
+        group: 'Overlay',
+        fallback: '0.4',
+        kind: 'number',
+        scope: 'shared',
+        min: 0.1,
+        max: 1,
+        step: 0.05
+    }
+] as const;
+
 export type ColorTokenName = (typeof colorTokenDefinitions)[number]['name'];
 export type SpacingTokenName = (typeof spacingTokenDefinitions)[number]['name'];
 export type AnimationTokenName = (typeof animationTokenDefinitions)[number]['name'];
 export type ColorTokenDefinition = (typeof colorTokenDefinitions)[number];
 export type SpacingTokenDefinition = (typeof spacingTokenDefinitions)[number];
 export type AnimationTokenDefinition = (typeof animationTokenDefinitions)[number];
+export type DetailTokenName = (typeof detailTokenDefinitions)[number]['name'];
+export type DetailTokenDefinition = (typeof detailTokenDefinitions)[number];
 
 export type TokenGroup<T> = {
     label: string;
@@ -756,6 +1206,7 @@ export type ParsedCssColor = {
 export const colorTokenGroups = groupTokens(colorTokenDefinitions);
 export const spacingTokenGroups = groupTokens(spacingTokenDefinitions);
 export const animationTokenGroups = groupTokens(animationTokenDefinitions);
+export const detailTokenGroups = groupTokens(detailTokenDefinitions);
 
 export function groupTokens<T extends { group: string }>(tokens: readonly T[]): TokenGroup<T>[] {
     const groups: TokenGroup<T>[] = [];
@@ -789,6 +1240,14 @@ export function formatMs(value: number): string {
 
 export function formatScale(value: number): string {
     return String(Math.round(value * 100) / 100);
+}
+
+export function formatNumber(value: number): string {
+    return String(Math.round(value * 1000) / 1000);
+}
+
+export function formatEm(value: number): string {
+    return `${Math.round(value * 1000) / 1000}em`;
 }
 
 export function formatCssColor(hex: string, alpha: number): string {
@@ -899,6 +1358,10 @@ function parsePxLengthValue(
     const parsed = Number.parseFloat(trimmed);
     if (!Number.isFinite(parsed)) {
         return 0;
+    }
+
+    if (trimmed.endsWith('rem')) {
+        return parsed * 16;
     }
 
     return parsed;

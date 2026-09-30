@@ -22,8 +22,9 @@
         <div>
             <Typography.H1>{TITLE}</Typography.H1>
             <Typography.Text variant="lead" class="mt-2 max-w-2xl">
-                Render complete responses at a chosen pace, while asynchronously arriving AI chunks
-                appear immediately as the model yields them.
+                Reveal AI responses at a steady pace. Live text speeds up with its backlog, so it
+                stays about a third of a second behind the model without jumping in network-sized
+                chunks.
             </Typography.Text>
         </div>
         <DocsPager />
@@ -44,8 +45,10 @@
             <div>
                 <Typography.H3>Live responses</Typography.H3>
                 <Typography.Text variant="supporting" class="mt-1">
-                    Pass the async iterable returned by your model. A caret marks the wait before
-                    the first chunk; later chunks render as soon as they arrive.
+                    Pass the async iterable returned by your model, or a cumulative string with
+                    <Typography.InlineCode>streaming</Typography.InlineCode>. A pulsing dot grid
+                    marks the wait before the first chunk; later text reveals character by character
+                    and keeps draining after the stream ends instead of snapping.
                 </Typography.Text>
             </div>
             <CodeBlock

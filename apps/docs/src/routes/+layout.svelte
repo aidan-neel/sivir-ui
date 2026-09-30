@@ -75,17 +75,18 @@
 <Toaster />
 
 <main
-    class={`w-screen bg-background ${isDocs ? 'h-[100svh] overflow-hidden p-0 sm:p-3' : isThemeStudio ? 'h-[100svh] overflow-hidden' : isHome ? 'h-[100svh] overflow-hidden' : 'min-h-screen p-3'}`}
+    class={`w-screen bg-background ${isDocs ? 'h-[100svh] overflow-hidden p-0 sm:p-3' : isThemeStudio ? 'h-[100svh] overflow-hidden' : isHome ? 'min-h-[100svh]' : 'min-h-screen p-3'}`}
 >
     {#if isHome}
-        <div class="relative mx-auto flex h-[100svh] w-full max-w-none flex-col overflow-hidden">
-            {@render children?.()}
-        </div>
+        {@render children?.()}
     {:else if isDocs}
         <div class="flex h-full sm:h-[calc(100svh-1.5rem)] w-full gap-3">
-            <SideNavbar class="hidden h-full w-[17.5rem] shrink-0 px-3 pt-5 lg:flex" />
+            <SideNavbar
+                starCount={data?.starCount ?? null}
+                class="hidden h-full w-[17.5rem] shrink-0 px-3 pt-5 lg:flex"
+            />
             <div class="flex min-w-0 flex-1 flex-col overflow-hidden">
-                <DocsToolbar starCount={data?.starCount ?? null} />
+                <DocsToolbar sidebar starCount={data?.starCount ?? null} />
                 <div bind:this={docsScrollEl} class="min-h-0 flex-1 overflow-y-auto">
                     {@render children?.()}
                 </div>

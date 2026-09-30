@@ -7,8 +7,9 @@ export type ResponseStreamProps = {
     textStream: string | AsyncIterable<string>;
     /** Treat string values as cumulative snapshots of one live response. */
     streaming?: boolean;
-    /** 1 is slowest and 100 is fastest: reveal pace for static strings, roll duration for arrivals. Live chunks render on arrival. */
+    /** Baseline reveal pace from 1 (slowest) to 100 (fastest). Live text speeds up with its backlog so it trails arrivals by about a third of a second. */
     speed?: number;
+    /** Minimum characters revealed per step. */
     characterChunkSize?: number;
     onComplete?: () => void;
     onError?: (error: unknown) => void;

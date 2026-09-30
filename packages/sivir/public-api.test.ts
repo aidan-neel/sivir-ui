@@ -126,7 +126,7 @@ const NAMESPACED = {
     sheet: ['Root', 'Trigger', 'Title', 'Header', 'Footer', 'Description', 'Content', 'Close'],
     tabs: ['Root', 'List', 'Trigger', 'Content'],
     'tag-input': ['Root', 'List', 'Tag', 'Input'],
-    tool: ['Root', 'Item', 'Input', 'Output'],
+    tool: ['Root', 'Trigger', 'Content', 'Call', 'Input', 'Output'],
     'toggle-group': ['Root', 'Item'],
     tooltip: ['Root', 'Content', 'Trigger'],
     typography: [

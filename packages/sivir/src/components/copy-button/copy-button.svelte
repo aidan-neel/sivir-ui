@@ -12,6 +12,7 @@
         label = 'Copy',
         copiedLabel = 'Copied',
         duration = 2000,
+        tooltipDelay = 125,
         variant = 'ghost',
         size = 'icon',
         class: className,
@@ -64,7 +65,7 @@
     onDestroy(() => clearTimeout(timer));
 </script>
 
-<Tooltip.Root placement="top" delay={125} closeDelay={80}>
+<Tooltip.Root placement="top" delay={tooltipDelay} closeDelay={80}>
     <!-- Positioning/layout lives on the trigger wrapper so the tooltip anchors to
 	     the same box the button actually renders in (e.g. an absolutely-placed
 	     copy button in a code block). -->

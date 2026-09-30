@@ -101,7 +101,7 @@ let answer = $state<QuestionAnswer>();
             lang="svelte"
             copy="overlay"
             code={`<Question.Root variant="inset" bind:value={answer} onSubmit={next}>
-  <Question.Content>
+  <Question.Content step={index}>
     <Question.Title>{question.title}</Question.Title>
     <Question.Options>
       {#each question.options as option (option.value)}
@@ -120,9 +120,20 @@ let answer = $state<QuestionAnswer>();
         />
         <Typography.Text variant="supporting">
             <Typography.InlineCode>Question.Content</Typography.InlineCode>
-            is a static fieldset grouping for the title, description, and answer controls. Keep
-            navigation state and any transitions in the parent when a flow needs them. The component
-            itself stays still so the question remains easy to read and answer.
+            groups the title, description, and answer controls in one fieldset. Pass the current
+            step index as <Typography.InlineCode>step</Typography.InlineCode> to animate between
+            questions: the outgoing step blurs away, the next one slides in from the direction of
+            travel, and the height eases to fit. A higher index moves forward and a lower index
+            moves back. Without <Typography.InlineCode>step</Typography.InlineCode>, content changes
+            in place.
+        </Typography.Text>
+        <Typography.Text variant="supporting">
+            The motion reads theme tokens:
+            <Typography.InlineCode>--motion-duration-step-in</Typography.InlineCode>,
+            <Typography.InlineCode>--motion-duration-step-out</Typography.InlineCode>,
+            <Typography.InlineCode>--motion-step-x</Typography.InlineCode>, and
+            <Typography.InlineCode>--motion-step-blur</Typography.InlineCode>. The theme’s motion
+            preset scales the durations, and reduced motion turns the animation off.
         </Typography.Text>
         <Typography.Text variant="supporting">
             Keep the step index and each answer in the parent, as in the example above. Content

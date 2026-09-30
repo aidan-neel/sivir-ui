@@ -119,6 +119,8 @@
     --motion-modal-y: 4px;
     --motion-modal-scale-start: 0.93;
     --motion-modal-blur: 2px;
+    --motion-step-x: 16px;
+    --motion-step-blur: 3px;
     --motion-opacity-start: 0;
     --motion-duration-panel-in: 110ms;
     --motion-duration-panel-out: 150ms;
@@ -126,6 +128,8 @@
     --motion-duration-modal-out: 110ms;
     --motion-duration-modal-stack-in: 260ms;
     --motion-duration-modal-stack-out: 180ms;
+    --motion-duration-step-in: 360ms;
+    --motion-duration-step-out: 130ms;
     --motion-press-px: var(--size-hairline);
     --motion-duration-press: 160ms;
     --motion-duration-item: 160ms;
@@ -531,6 +535,8 @@
         --motion-duration-modal-out: 0ms;
         --motion-duration-modal-stack-in: 0ms;
         --motion-duration-modal-stack-out: 0ms;
+        --motion-duration-step-in: 0ms;
+        --motion-duration-step-out: 0ms;
         --motion-duration-sheet: 0ms;
         --motion-duration-sheet-out: 0ms;
         --motion-duration-overlay: 0ms;

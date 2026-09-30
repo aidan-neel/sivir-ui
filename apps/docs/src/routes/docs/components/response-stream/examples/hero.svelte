@@ -2,7 +2,7 @@
     import { ResponseStream } from '@sivir-ui/svelte/components/response-stream';
 
     const text =
-        'This text rolls in word by word. Use response streaming to make an AI answer feel immediate while preserving the layout of the surrounding message. Each arrival eases in through the roller, the block grows smoothly as new lines wrap into view, and speed sets how quickly every word settles.';
+        'This text streams in at a steady pace. Use response streaming to make an AI answer feel immediate while preserving the layout of the surrounding message. Arrivals queue behind the reveal, which speeds up when it falls behind, and the newest characters fade in as they land.';
 
     function wait(ms: number) {
         return new Promise<void>((resolve) => {

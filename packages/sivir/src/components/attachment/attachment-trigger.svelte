@@ -10,7 +10,7 @@
         element = $bindable(),
         disabled = false,
         class: className,
-        'aria-label': ariaLabel = 'Add attachments',
+        'aria-label': ariaLabel,
         variant = 'ghost',
         size = children ? 'md' : 'icon',
         onclick,
@@ -28,7 +28,7 @@
     {size}
     data-ui="attachment-trigger"
     data-state={context.disabled || disabled ? 'disabled' : 'idle'}
-    aria-label={ariaLabel}
+    aria-label={ariaLabel ?? (children ? undefined : 'Add attachments')}
     disabled={context.disabled || disabled}
     onclick={(event: MouseEvent) => {
         onclick?.(event);
@@ -36,7 +36,11 @@
             context.open();
         }
     }}
-    class={cn(className, 'rounded-[var(--radius-md)] text-foreground-muted hover:text-foreground')}
+    class={cn(
+        className,
+        size === 'icon' && 'rounded-[var(--radius-md)]',
+        (variant === 'ghost' || variant === 'quiet') && 'text-foreground-muted hover:text-foreground'
+    )}
 >
     <Paperclip size={17} strokeWidth={2} aria-hidden="true" />
     {@render children?.()}

@@ -103,7 +103,7 @@ describe('ScrollArea -- overscroll behavior', () => {
 describe('ScrollArea -- edge cues', () => {
     it('clips blurred cues within the root shell and overlaps the viewport edges', async () => {
         const { container } = render(ScrollArea, {
-            props: { children: textSnippet('x') }
+            props: { blur: true, children: textSnippet('x') } as never
         });
         const root = queryRequired<HTMLElement>(container, '[data-ui="scroll-area"]');
         const viewport = queryRequired<HTMLElement>(container, '[data-ui="scroll-area-viewport"]');
@@ -139,9 +139,9 @@ describe('ScrollArea -- edge cues', () => {
         );
     });
 
-    it('drops the backdrop blur for blur={false} while keeping the fade', async () => {
+    it('leaves the backdrop blur off by default while keeping the fade', async () => {
         const { container } = render(ScrollArea, {
-            props: { blur: false, children: textSnippet('x') } as never
+            props: { children: textSnippet('x') }
         });
         const viewport = queryRequired<HTMLElement>(container, '[data-ui="scroll-area-viewport"]');
 

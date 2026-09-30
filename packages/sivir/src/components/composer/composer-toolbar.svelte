@@ -12,16 +12,6 @@
     }: ComposerToolbarProps = $props();
 
     const context = getComposerContext();
-    const inset = $derived(variant === 'inset');
-
-    $effect(() => {
-        if (inset) {
-            context.setInsetToolbar(true);
-            return () => {
-                context.setInsetToolbar(false);
-            };
-        }
-    });
 </script>
 
 <div
@@ -33,10 +23,10 @@
     aria-label={ariaLabel}
     class={cn(
         className,
-        'flex min-w-0 flex-wrap items-center justify-between gap-2',
-        inset
-            ? 'sivir-inset-surface -mt-[var(--sivir-modal-inset)] min-h-10 rounded-t-none px-3 py-2'
-            : 'min-h-10 px-1 py-1'
+        'flex min-h-11 min-w-0 flex-wrap items-center justify-between gap-2',
+        variant === 'inset'
+            ? 'm-1.5 mt-1 rounded-[calc(var(--radius-xl)+var(--spacing)*0.5-var(--border-size))] bg-secondary py-1 pr-1 pl-1.5'
+            : 'px-2.5 pt-1 pb-2.5'
     )}
 >
     {@render children?.()}

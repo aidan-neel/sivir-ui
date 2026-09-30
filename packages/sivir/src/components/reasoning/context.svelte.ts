@@ -6,8 +6,7 @@ export type ReasoningContext = {
     set open(value: boolean);
     get streaming(): boolean;
     registerContent: () => () => void;
-    transitionStart: (open: boolean) => number;
-    transitionComplete: (open: boolean, revision: number) => void;
+    settle: (open: boolean) => void;
 };
 
 const { set: setReasoningContext, get: getReasoningContext } =

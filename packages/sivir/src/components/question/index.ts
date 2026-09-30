@@ -42,6 +42,8 @@ export type QuestionProps = {
 >;
 
 export type QuestionContentProps = {
+    /** Changing it animates between steps; a higher value travels forward and a lower value travels back. */
+    step?: number;
     class?: string;
     children?: Snippet;
 } & Omit<HTMLFieldsetAttributes, 'children' | 'class'>;

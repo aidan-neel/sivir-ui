@@ -51,3 +51,4 @@ vite.config.ts.timestamp-*
 /.claude/
 /.codex/
 /.opencode/
+/opencode.json

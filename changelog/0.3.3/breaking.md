@@ -1,0 +1,8 @@
+- Reasoning now starts collapsed: `open` defaults to `false`. Pass `open` to show the trace on first render.
+- Reasoning Trigger renders on one line. `title` no longer defaults to "Draft" or renders as a second line; when set, it replaces the Thinking and Thought for label.
+- Response Stream no longer uses the Scritto roller or eases its height. Text reveals at a steady pace with the newest characters fading in, and `@scritto/core` and `@scritto/svelte` are no longer peers of `sivir add response-stream`.
+- Tool is now composed from `Tool.Root`, `Tool.Trigger`, `Tool.Content`, and `Tool.Call`. Root no longer takes `name`, `duration`, `variant`, or a `trigger` snippet; pass `title` and `duration` to `Tool.Trigger` instead. The `ToolProps` and `ToolVariant` types are removed.
+- `Tool.Item` is replaced by `Tool.Call`, which takes `action`, `target`, `state`, and `duration` in place of `name`, `detail`, and `kind`. The `ToolItemProps` type is removed.
+- Tool now starts collapsed: `open` defaults to `false`. Pass `open` to show the calls on first render.
+- Scroll Area edge cues no longer blur the content under them: `blur` now defaults to `false`. Pass `blur` to keep the backdrop blur.
+- Slider is now the labeled scrub field, and the plain range-track slider is removed. `label` is visible inside the field instead of only naming the input, so drop any label or value you rendered next to it. `SliderField` and its `SliderField*Props` types are removed; compose with `Slider.Root`, `Slider.Range`, `Slider.Thumb`, `Slider.Label`, and `Slider.Value` instead.

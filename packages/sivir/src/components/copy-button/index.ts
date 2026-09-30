@@ -12,6 +12,8 @@ export type CopyButtonProps = {
     copiedLabel?: string;
     /** How long (ms) to hold the copied state before reverting. */
     duration?: number;
+    /** How long (ms) the pointer rests on the button before the tooltip opens. */
+    tooltipDelay?: number;
     /** Button variant (defaults to `ghost`). */
     variant?: ButtonVariant;
     /** Button size (defaults to `icon`). Pass a text size when rendering children. */
