@@ -11,7 +11,7 @@
         "packages/*"
     ],
     "overrides": {
-        "brace-expansion": "5.0.9",
+        "brace-expansion": "5.0.12",
         "cookie": "1.1.1",
         "deepmerge-ts": "8.0.2",
         "devalue": "5.9.4",
