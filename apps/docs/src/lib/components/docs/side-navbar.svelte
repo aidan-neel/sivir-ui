@@ -29,7 +29,6 @@
         { href: '/docs/installation', label: 'Installation' },
         { href: '/docs/theming', label: 'Theming' },
         { href: '/docs/changelog', label: 'Changelog' },
-        { href: '/themes', label: 'Themes' },
         { href: '/studio', label: 'Studio' }
     ];
 
@@ -77,19 +76,8 @@
         aria-current={active ? 'page' : undefined}
         data-collection-item
         data-collection-active={active ? 'true' : undefined}
-        class={`h-8 w-full justify-start gap-2.5 rounded-[var(--radius-md)] px-2 text-left text-sm ${
-            active
-                ? 'text-foreground [font-weight:var(--font-weight-label,500)]'
-                : 'text-foreground-muted [font-weight:var(--font-weight-body,400)] hover:text-foreground'
-        }`}
+        class="h-9 w-fit justify-start rounded-[var(--radius-lg)] px-3 text-left text-sm text-foreground [font-weight:var(--font-weight-label,500)]"
     >
-        <span class="flex size-4 shrink-0 items-center justify-center" aria-hidden="true">
-            <span
-                class={`size-1.5 rounded-full bg-foreground transition-[opacity,scale] duration-200 motion-reduce:transition-none ${
-                    active ? 'scale-100 opacity-100' : 'scale-50 opacity-0'
-                }`}
-            ></span>
-        </span>
         {item.label}
     </Button>
 {/snippet}
@@ -116,11 +104,11 @@
         </div>
     </div>
 
-    <nav aria-label="Documentation" class="mt-8 flex flex-col gap-7">
+    <nav aria-label="Documentation" class="mt-8 flex flex-col gap-8">
         <section aria-labelledby="nav-getting-started" class="flex flex-col gap-1">
             <h3
                 id="nav-getting-started"
-                class="px-2 text-sm text-foreground [font-weight:var(--font-weight-label,500)]"
+                class="px-3 pb-1 text-[13px] text-foreground-muted [font-weight:var(--font-weight-body,400)]"
             >
                 Getting started
             </h3>
@@ -134,10 +122,10 @@
         <section aria-labelledby="nav-components" class="flex flex-col gap-1">
             <h3
                 id="nav-components"
-                class="flex items-baseline gap-2 px-2 text-sm text-foreground [font-weight:var(--font-weight-label,500)]"
+                class="flex items-baseline gap-2 px-3 pb-1 text-[13px] text-foreground-muted [font-weight:var(--font-weight-body,400)]"
             >
                 Components
-                <span class="font-normal tabular-nums text-foreground-muted">
+                <span class="tabular-nums text-foreground-muted/70">
                     {components.length}
                 </span>
             </h3>

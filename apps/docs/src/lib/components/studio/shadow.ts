@@ -54,7 +54,9 @@ function splitTopLevel(value: string, separator: ',' | ' ') {
     return parts;
 }
 
-function parseLayer(value: string): ShadowLayer | null {
+export type ResolveLength = (token: string) => number | null;
+
+function parseLayer(value: string, resolveLength?: ResolveLength): ShadowLayer | null {
     const tokens = splitTopLevel(value, ' ');
     const lengths: number[] = [];
     const colors: string[] = [];
@@ -68,6 +70,13 @@ function parseLayer(value: string): ShadowLayer | null {
 
         if (LENGTH_PATTERN.test(token)) {
             lengths.push(Number.parseFloat(token));
+            continue;
+        }
+
+        const resolved = resolveLength?.(token) ?? null;
+
+        if (resolved !== null) {
+            lengths.push(resolved);
             continue;
         }
 
@@ -99,9 +108,10 @@ function parseLayer(value: string): ShadowLayer | null {
 
 /**
  * Parses a `box-shadow` value into editable layers. Returns `null` when any layer
- * uses a length the editor cannot represent, such as `var()` or `calc()`.
+ * uses a length the editor cannot represent. `resolveLength` turns `var()` and
+ * `calc()` lengths into pixels; editing a layer writes the resolved pixel values.
  */
-export function parseShadow(value: string): ShadowLayer[] | null {
+export function parseShadow(value: string, resolveLength?: ResolveLength): ShadowLayer[] | null {
     const trimmed = value.trim();
 
     if (!trimmed || trimmed === 'none') {
@@ -111,7 +121,7 @@ export function parseShadow(value: string): ShadowLayer[] | null {
     const layers: ShadowLayer[] = [];
 
     for (const part of splitTopLevel(trimmed, ',')) {
-        const layer = parseLayer(part);
+        const layer = parseLayer(part, resolveLength);
 
         if (!layer) {
             return null;

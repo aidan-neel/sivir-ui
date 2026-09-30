@@ -107,6 +107,18 @@
                 <Typography.InlineCode>step</Typography.InlineCode>, Shift with an arrow moves by
                 ten steps, and Home and End jump to the limits.
             </li>
+            <li>
+                With
+                <Typography.InlineCode>editable</Typography.InlineCode>, clicking the value, or
+                pressing Enter while the slider is focused, turns it into a text field. Enter or
+                blur commits the number, snapped to
+                <Typography.InlineCode>step</Typography.InlineCode>
+                and clamped to the limits, and Escape cancels. Units such as
+                <Typography.InlineCode>px</Typography.InlineCode>
+                are ignored; pass
+                <Typography.InlineCode>parse</Typography.InlineCode>
+                to read other formats. Pressing on the value edits instead of scrubbing.
+            </li>
             <li>With reduced motion, the fill moves instantly and the field never stretches.</li>
         </ul>
     </section>

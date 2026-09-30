@@ -6,7 +6,7 @@
     import * as Slider from '@sivir-ui/svelte/components/slider';
     import { Toggle } from '@sivir-ui/svelte/components/toggle';
     import { cn } from '@sivir-ui/svelte/utils';
-    import { formatCssColor, parseCssColor } from '$lib/studio-advanced-tokens';
+    import { formatCssColor, parseCssColor, parsePxLength } from '$lib/studio-advanced-tokens';
     import ColorAlphaField from './color-alpha-field.svelte';
     import { defaultShadowLayer, parseShadow, type ShadowLayer, serializeShadow } from './shadow';
 
@@ -58,7 +58,27 @@
 
     let editingCss = $state(false);
 
-    const layers = $derived(parseShadow(value));
+    function resolveLength(token: string) {
+        const isVar = /^var\(/i.test(token);
+        const isCalc = /^calc\(/i.test(token);
+
+        if (!isVar && !isCalc) {
+            return null;
+        }
+
+        if (isVar) {
+            const name = token.match(/^var\(\s*(--[\w-]+)/i)?.[1];
+            const resolved = name ? resolveVar(name).trim() : '';
+
+            if (!/^-?[\d.]/.test(resolved)) {
+                return null;
+            }
+        }
+
+        return parsePxLength(token, resolveVar);
+    }
+
+    const layers = $derived(parseShadow(value, resolveLength));
     const showCss = $derived(editingCss || layers === null);
 
     function formatPx(next: number) {
@@ -173,6 +193,7 @@
                     {#each lengthControls as control (control.key)}
                         {@const current = layer[control.key]}
                         <Slider.Root
+                            editable
                             value={current}
                             min={Math.min(control.min, Math.floor(current))}
                             max={Math.max(control.max, Math.ceil(current))}

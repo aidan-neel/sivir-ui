@@ -14,7 +14,7 @@ export const manifest: Manifest = {
     version: '2.0.0',
     visibility: 'public',
     description:
-        'Labeled scrub slider with a bindable value, min/max/step, formatted value text, and spring motion. The label and value sit inside the field; compose Range, Thumb, Label, and Value to omit, reorder, or restyle them.',
+        'Labeled scrub slider with a bindable value, min/max/step, formatted value text, optional click-to-type editing, and spring motion. The label and value sit inside the field; compose Range, Thumb, Label, and Value to omit, reorder, or restyle them.',
     role: 'slider',
     files: [
         'components/slider/slider.svelte',

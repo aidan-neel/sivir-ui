@@ -12,7 +12,7 @@
     tabindex={-1}
     portal={false}
     data-ui="context-submenu-content"
-    class={cn(className, 'min-w-44')}
+    class={cn(className, 'sivir-menu-panel min-w-44')}
     surfaceClass="p-0"
 >
     <div use:travelingHighlight class="flex flex-col gap-0 p-1">

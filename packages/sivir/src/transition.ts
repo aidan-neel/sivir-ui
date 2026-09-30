@@ -84,6 +84,7 @@ function panelTransition(
         easing?: EasingFunction;
         /** Exit mirrors the enter path upward instead of retracing it. */
         exit?: boolean;
+        offsetXVars?: string[];
         offsetVars?: string[];
         offsetFallback?: number;
         scaleVars?: string[];
@@ -99,6 +100,7 @@ function panelTransition(
     const baseTransform = style.transform === 'none' ? '' : style.transform;
     const baseFilter = style.filter === 'none' ? '' : style.filter;
     const direction = options?.exit ? -1 : 1;
+    const offsetX = readCssNumber(node, options?.offsetXVars ?? [], 0);
     const offsetY =
         direction *
         readCssNumber(
@@ -125,34 +127,43 @@ function panelTransition(
         duration: getCssDuration(node, durationVariable, fallbackDuration),
         easing: options?.easing ?? cubicOut,
         css: (t) => {
-            return `opacity:${(opacityStart + (1 - opacityStart) * t) * opacity};transform:${baseTransform} translateY(${(1 - t) * offsetY}px) scale(${endScale + (1 - endScale) * t});filter:${baseFilter} blur(${(1 - t) * blur}px)`;
+            return `opacity:${(opacityStart + (1 - opacityStart) * t) * opacity};transform:${baseTransform} translate(${(1 - t) * offsetX}px, ${(1 - t) * offsetY}px) scale(${endScale + (1 - endScale) * t});filter:${baseFilter} blur(${(1 - t) * blur}px)`;
         }
     };
 }
 
 const MENU_MOVEMENT: {
+    offsetXVars: string[];
     offsetVars: string[];
     offsetFallback: number;
     scaleVars: string[];
     scaleFallback: number;
     blurVars: string[];
     blurFallback: number;
+    opacityVars: string[];
+    opacityFallback: number;
 } = {
+    offsetXVars: ['--motion-menu-x'],
     offsetVars: ['--motion-menu-y', '--motion-panel-y'],
     offsetFallback: 2,
     scaleVars: ['--motion-menu-scale-start', '--motion-panel-scale-start'],
     scaleFallback: 0.97,
     blurVars: ['--motion-menu-blur'],
-    blurFallback: 2
+    blurFallback: 2,
+    opacityVars: ['--motion-menu-opacity-start', '--motion-opacity-start'],
+    opacityFallback: 0
 };
 
 const MODAL_MOVEMENT: typeof MENU_MOVEMENT = {
+    offsetXVars: ['--motion-modal-x'],
     offsetVars: ['--motion-modal-y'],
     offsetFallback: 4,
     scaleVars: ['--motion-modal-scale-start'],
     scaleFallback: 0.93,
     blurVars: ['--motion-modal-blur'],
-    blurFallback: 2
+    blurFallback: 2,
+    opacityVars: ['--motion-modal-opacity-start', '--motion-opacity-start'],
+    opacityFallback: 0
 };
 
 export function panelIn(node: Element) {

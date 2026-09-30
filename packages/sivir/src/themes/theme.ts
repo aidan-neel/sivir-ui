@@ -65,6 +65,10 @@ export type ThemeChrome = {
     dialogShadows?: boolean;
     /** Keeps the item highlight but disables the slide between items. */
     travelingHighlight?: false;
+    /** Set `false` for plain 1px-border menus: drops the inset frame around dropdown, context, select, and combobox menus. */
+    menuPaneling?: boolean;
+    /** Set `false` to make modals, sheets, popovers, cards, and code blocks a single continuous container instead of an inset surface inside a frame. */
+    surfacePaneling?: boolean;
     primaryStroke?: boolean;
     interactiveCursor?: InteractiveCursor;
 };
@@ -365,6 +369,43 @@ function typographyDeclarations(typography: ThemeTypography | undefined): string
     return declarations;
 }
 
+/** Stylesheet that flattens menu frames into a single bordered container. */
+export function menuPanelingOffCss(): string {
+    return block(".sivir-menu-panel[data-ui='popover-content']", [
+        '--sivir-modal-inset: 0px;',
+        'background-color: var(--color-card);'
+    ]);
+}
+
+/** Stylesheet that flattens modal, sheet, popover, card, and code block frames into one container. */
+export function surfacePanelingOffCss(): string {
+    return (
+        block('.sivir-modal-frame,\n.sivir-inset-frame', [
+            '--sivir-modal-inset: 0px;',
+            'background-color: var(--color-card);'
+        ]) +
+        block(".sivir-modal-frame > [data-ui='modal-frame-header']", [
+            'padding: calc(var(--spacing) * 5) calc(var(--spacing) * 5) 0;'
+        ]) +
+        block(".sivir-modal-frame > [data-ui='modal-frame-header'] + [data-ui='modal-surface']", [
+            'padding-top: calc(var(--spacing) * 3);'
+        ]) +
+        block(
+            ".sivir-modal-frame > [data-ui='modal-footer'],\n.sivir-modal-frame > [data-ui='card-footer']",
+            ['padding: 0 calc(var(--spacing) * 5) calc(var(--spacing) * 5);']
+        ) +
+        block(
+            ".sivir-modal-frame > [data-ui='modal-surface']:has(+ [data-ui='modal-footer']),\n.sivir-modal-frame > [data-ui='card-surface']:has(+ [data-ui='card-footer'])",
+            ['padding-bottom: calc(var(--spacing) * 4);']
+        ) +
+        block(".sivir-inset-frame > [data-ui='code-block-header']", [
+            'padding: calc(var(--spacing) * 2) calc(var(--spacing) * 3);'
+        ]) +
+        block('.sivir-card-frame', ['padding: 0;', 'background-color: var(--color-card);']) +
+        block('.sivir-card-surface', ['box-shadow: var(--elevation-1);'])
+    );
+}
+
 function chromeBlocks(chrome: ThemeChrome | undefined): string {
     if (!chrome) {
         return '';
@@ -409,12 +450,16 @@ function chromeBlocks(chrome: ThemeChrome | undefined): string {
         !controlShadows ||
         !dialogShadows ||
         chrome.travelingHighlight === false ||
+        chrome.menuPaneling === false ||
+        chrome.surfacePaneling === false ||
         chrome.primaryStroke === true ||
         chrome.interactiveCursor === 'pointer';
     if (!hasChromeWork) {
         return '';
     }
-    return block(':root:not(.dark)', light) + block('.dark', dark);
+    const menuPaneling = chrome.menuPaneling === false ? menuPanelingOffCss() : '';
+    const surfacePaneling = chrome.surfacePaneling === false ? surfacePanelingOffCss() : '';
+    return block(':root:not(.dark)', light) + block('.dark', dark) + menuPaneling + surfacePaneling;
 }
 
 /** Generates complete, acyclic overrides for every public theme axis. */
@@ -682,6 +727,18 @@ function optionalChrome(value: unknown): ThemeChrome | undefined {
             );
         }
         chrome.travelingHighlight = false;
+    }
+    if (value.menuPaneling !== undefined) {
+        if (typeof value.menuPaneling !== 'boolean') {
+            throw new TypeError('Invalid theme: chrome.menuPaneling must be a boolean.');
+        }
+        chrome.menuPaneling = value.menuPaneling;
+    }
+    if (value.surfacePaneling !== undefined) {
+        if (typeof value.surfacePaneling !== 'boolean') {
+            throw new TypeError('Invalid theme: chrome.surfacePaneling must be a boolean.');
+        }
+        chrome.surfacePaneling = value.surfacePaneling;
     }
     if (value.primaryStroke !== undefined) {
         if (typeof value.primaryStroke !== 'boolean') {
