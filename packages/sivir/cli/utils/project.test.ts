@@ -1,9 +1,15 @@
 import { afterEach, describe, expect, test } from 'bun:test';
-import { mkdtemp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 
-import { declaredDependencies, detectPackageManager, installFile } from './project';
+import {
+    declaredDependencies,
+    detectPackageManager,
+    formatCommand,
+    installCommand,
+    installFile
+} from './project';
 
 const tempDirs: string[] = [];
 
@@ -33,6 +39,28 @@ describe('detectPackageManager', () => {
 
     test('defaults to npm without a recognized lockfile', async () => {
         expect(detectPackageManager(await tempDir())).toBe('npm');
+    });
+});
+
+describe('installCommand', () => {
+    test('pins every dependency to its declared range', () => {
+        expect(installCommand('bun', { cnfast: '^0.0.8', svelte: '^5.0.0' })).toEqual([
+            'bun',
+            'add',
+            'cnfast@^0.0.8',
+            'svelte@^5.0.0'
+        ]);
+        expect(installCommand('npm', { cnfast: '^0.0.8' })).toEqual([
+            'npm',
+            'install',
+            'cnfast@^0.0.8'
+        ]);
+    });
+
+    test('formats ranges so they paste safely into any shell', () => {
+        expect(formatCommand(installCommand('pnpm', { '@lucide/svelte': '^1.7.0' }))).toBe(
+            "pnpm add '@lucide/svelte@^1.7.0'"
+        );
     });
 });
 
@@ -111,6 +139,18 @@ describe('installFile', () => {
             )
         ).toBe('overwritten');
         expect(await readFile(target, 'utf8')).not.toBe('// consumer-owned\n');
+    });
+
+    test('reports an existing file that matches the registry as unchanged', async () => {
+        const cwd = await tempDir();
+        await installFile(cwd, 'src/lib/sivir', 'utils.ts', '$lib/sivir', false);
+
+        expect(await installFile(cwd, 'src/lib/sivir', 'utils.ts', '$lib/sivir', false)).toBe(
+            'unchanged'
+        );
+        expect(await installFile(cwd, 'src/lib/sivir', 'utils.ts', '$lib/sivir', true)).toBe(
+            'unchanged'
+        );
     });
 
     test('rejects traversal and absolute registry paths', async () => {

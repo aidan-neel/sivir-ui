@@ -10,3 +10,6 @@
 - Stop the Theme Studio inspector clipping a slider's right edge and value while it stretches past its limit.
 - Drop the CSS variable name under each Theme Studio token field. Reset now slides in below a field once it changes and slides away when the field is reset.
 - Fix the Command palette's hover highlight showing up smaller than the active row, and offset from it, when the palette first opens. Dropdown Menu, Context Menu, and Select panels that open with a scale animation get the same fix.
+- Install CLI peer dependencies at the ranges Sivir declares. `sivir init` and `sivir add` passed bare package names, so `cnfast` resolved to an incompatible `0.2.x` release.
+- Stop `sivir add` from reporting the shared `utils.ts` and `transition.ts` from `sivir init` as conflicts once per component. Shared files are listed once, and files that already match the registry show as unchanged. Only files that differ ask for `--overwrite`.
+- Quote `'*'` in the `sivir init` hint so the shell does not expand it into file names.

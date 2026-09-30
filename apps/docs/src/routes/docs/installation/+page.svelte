@@ -16,8 +16,8 @@
 
 <Button>Get started</Button>`;
 
-    const cliCss = `/* src/app.css */
-@import './lib/sivir/ui.css';`;
+    const cliCss = `/* src/routes/layout.css */
+@import '../lib/sivir/ui.css';`;
 
     const cliAdd = `bunx --package @sivir-ui/svelte sivir add button
 bunx --package @sivir-ui/svelte sivir list`;
@@ -97,7 +97,8 @@ bunx --package @sivir-ui/svelte sivir list`;
         <Typography.H3 class="m-0 docs-subsection-heading">3. Initialize Sivir</Typography.H3>
         <Typography.Text variant="body" class="m-0 max-w-2xl">
             Creates <Typography.InlineCode>src/lib/sivir/</Typography.InlineCode> (tokens +
-            utilities) and <Typography.InlineCode>sivir.json</Typography.InlineCode>.
+            utilities) and <Typography.InlineCode>sivir.json</Typography.InlineCode>, then installs
+            the shared dependencies.
         </Typography.Text>
         <CodeBlock
             code="bunx --package @sivir-ui/svelte sivir init -y"
@@ -108,9 +109,24 @@ bunx --package @sivir-ui/svelte sivir list`;
         <Typography.H3 class="m-0 docs-subsection-heading">
             4. Import the stylesheet
         </Typography.H3>
+        <Typography.Text variant="body" class="m-0 max-w-2xl">
+            <Typography.InlineCode>ui.css</Typography.InlineCode>
+            includes Tailwind, so it replaces
+            <Typography.InlineCode>@import 'tailwindcss';</Typography.InlineCode>.
+            <Typography.InlineCode>init</Typography.InlineCode>
+            makes this change in the stylesheet
+            <Typography.InlineCode>sv add tailwindcss</Typography.InlineCode>
+            creates. Make it yourself if your root stylesheet lives elsewhere:
+        </Typography.Text>
         <CodeBlock code={cliCss} lang="css" copy="overlay" />
 
         <Typography.H3 class="m-0 docs-subsection-heading">5. Add components</Typography.H3>
+        <Typography.Text variant="body" class="m-0 max-w-2xl">
+            <Typography.InlineCode>add</Typography.InlineCode>
+            copies each component with its dependencies and offers to install the npm packages they
+            need. Pass
+            <Typography.InlineCode>'*'</Typography.InlineCode>, quoted, to add every component.
+        </Typography.Text>
         <CodeBlock code={cliAdd} lang="shell" copy="overlay" />
 
         <Typography.H3 class="m-0 docs-subsection-heading">6. Use them</Typography.H3>

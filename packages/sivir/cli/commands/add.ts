@@ -1,4 +1,3 @@
-import { spawnSync } from 'node:child_process';
 import * as clack from '@clack/prompts';
 import pc from 'picocolors';
 import { CONFIG_FILE, loadConfig, saveConfig } from '../config';
@@ -9,14 +8,8 @@ import {
     ResolveError,
     resolveInstallPlan
 } from '../registry';
-import {
-    type CopyResult,
-    declaredDependencies,
-    detectPackageManager,
-    installCommand,
-    installFile
-} from '../utils/project';
-import { fail, ok, tree, warn } from '../utils/ui';
+import { type CopyResult, installFile, installMissingDependencies } from '../utils/project';
+import { fail, tree, warn } from '../utils/ui';
 
 export type AddOptions = {
     cwd: string;
@@ -27,7 +20,8 @@ export type AddOptions = {
 const RESULT_MARK: Record<CopyResult, string> = {
     created: pc.green('+'),
     overwritten: pc.yellow('~'),
-    skipped: pc.dim('=')
+    unchanged: pc.dim('='),
+    skipped: pc.yellow('!')
 };
 
 export async function add(names: string[], options: AddOptions) {
@@ -67,53 +61,51 @@ export async function add(names: string[], options: AddOptions) {
     const spinner = clack.spinner();
     spinner.start(`Installing ${plan.components.length} component(s) into ${config.dir}`);
 
+    const groups = plan.components.map((component) => {
+        config.components[component.name] = component.version;
+
+        return {
+            heading: `${pc.bold(component.name)} ${pc.dim(`v${component.version}`)}`,
+            files: installableFiles(component)
+        };
+    });
+    const sharedFiles = [...new Set(plan.components.flatMap((c) => c.sharedFiles))].sort();
+    if (sharedFiles.length > 0) {
+        groups.push({
+            heading: pc.bold('shared'),
+            files: sharedFiles
+        });
+    }
+
     const summaries: { heading: string; lines: string[] }[] = [];
     let skipped = 0;
-    for (const component of plan.components) {
+    for (const group of groups) {
         const lines: string[] = [];
-        const files = [...installableFiles(component), ...component.sharedFiles];
-        for (const file of files) {
+        for (const file of group.files) {
             const result = await installFile(cwd, config.dir, file, config.alias, overwrite);
-            if (result === 'skipped') skipped++;
+            if (result === 'skipped') {
+                skipped++;
+            }
             lines.push(`${RESULT_MARK[result]} ${file}`);
         }
-        config.components[component.name] = component.version;
         summaries.push({
-            heading: `${pc.bold(component.name)} ${pc.dim(`v${component.version}`)}`,
+            heading: group.heading,
             lines
         });
     }
     await saveConfig(cwd, config);
     spinner.stop(`Installed into ${pc.cyan(config.dir)}`);
 
-    for (const summary of summaries) tree(summary.heading, summary.lines);
+    for (const summary of summaries) {
+        tree(summary.heading, summary.lines);
+    }
     if (skipped > 0) {
         warn(
-            `${skipped} file(s) already existed and were left alone -- pass --overwrite to replace.`
+            `${skipped} existing file(s) differ from the registry and were left alone -- pass --overwrite to replace.`
         );
     }
 
-    const declared = await declaredDependencies(cwd);
-    const missing = Object.keys(plan.peerDependencies).filter((dep) => !declared.has(dep));
-    if (missing.length > 0) {
-        const pm = detectPackageManager(cwd);
-        const command = installCommand(pm, missing);
-        warn(`missing peer dependencies: ${missing.map((d) => pc.yellow(d)).join(', ')}`);
-
-        let install = yes;
-        if (!yes && process.stdout.isTTY) {
-            const answer = await clack.confirm({ message: `Run ${pc.cyan(command)} now?` });
-            install = answer === true;
-        }
-        if (install) {
-            const [bin, ...args] = command.split(' ');
-            const result = spawnSync(bin, args, { cwd, stdio: 'inherit' });
-            if (result.status === 0) ok('peer dependencies installed.');
-            else warn(`"${command}" exited with ${result.status} -- install them manually.`);
-        } else {
-            console.log(`  install with ${pc.cyan(command)}`);
-        }
-    }
+    await installMissingDependencies(cwd, plan.peerDependencies, yes);
 
     clack.outro(
         `Done -- ${plan.components.length} component(s) ready under ${pc.cyan(config.alias)}.`

@@ -21,3 +21,5 @@
 - Smoother Toast motion: new toasts rise their full height from below while fading in, stack moves use one interruptible transition driven by the toast motion tokens, and collapsed toasts behind the front peek evenly whatever their height, with their content hidden.
 - Slider's label turns bold while you drag, without shifting the value or the thumb.
 - Redesign Switch with a spring-driven thumb that stretches while pressed or moving, a track that fills with the primary color as the thumb travels, and drag to toggle. The track is now 40 by 24 pixels.
+- `sivir init` now installs the shared dependencies, prompting unless `-y` is passed, the same way `sivir add` does.
+- `sivir init` points the root stylesheet from `sv add tailwindcss` (`src/routes/layout.css` or `src/app.css`) at `ui.css`, replacing its `@import 'tailwindcss';` because `ui.css` already includes Tailwind.
