@@ -55,20 +55,44 @@
     import {
         DEFAULT_THEME,
         densities,
+        type InteractiveCursor,
         motionFeels,
+        parseTheme,
         radiusScales,
         type Theme,
+        type ThemeFontWeight,
+        type ThemeTokenOverrides,
         themeToCss
     } from '@sivir-ui/svelte/themes/theme';
     import { themedSlide } from '@sivir-ui/svelte/transition';
     import { mode } from 'mode-watcher';
     import { onMount, tick, untrack } from 'svelte';
+    import { replaceState } from '$app/navigation';
+    import { resolve } from '$app/paths';
+    import { page } from '$app/state';
     import ChangedDot from '$lib/components/studio/changed-dot.svelte';
     import ColorAlphaField from '$lib/components/studio/color-alpha-field.svelte';
     import ColorField from '$lib/components/studio/color-field.svelte';
     import SelectFieldTrigger from '$lib/components/studio/select-field-trigger.svelte';
     import ShadowField from '$lib/components/studio/shadow-field.svelte';
     import { fonts } from '$lib/fonts.svelte';
+    import {
+        type AdvancedTokens,
+        type BrandColors,
+        clampHeaderSize,
+        DEFAULT_FOUNDATION_COLORS,
+        DEFAULT_ROLE_WEIGHTS,
+        draftToTheme,
+        emptyAdvancedTokens,
+        type FoundationColors,
+        type FoundationPalette,
+        HEADER_SIZE_RANGE,
+        type RoleWeights,
+        type StudioDraft,
+        sameThemeDesign,
+        themeAxes,
+        themeToDraft
+    } from '$lib/studio/theme-draft';
     import {
         type AnimationTokenDefinition,
         type AnimationTokenName,
@@ -100,86 +124,53 @@
         spacingTokenGroups
     } from '$lib/studio-advanced-tokens';
 
-    type FoundationPalette = {
-        base: string;
-        border: string;
-        background: string;
-        secondary: string;
-        foreground: string;
-        foregroundMuted: string;
-        onPrimary: string;
-        buttonForeground: string;
+    type FontWeight = ThemeFontWeight;
+
+    type LegacyPalette = Partial<FoundationPalette> & {
+        muted?: string;
     };
 
-    type FoundationColors = {
-        light: FoundationPalette;
-        dark: FoundationPalette;
+    type LegacyTokenMap = Record<string, string | undefined>;
+
+    type LegacyStudioExtensions = {
+        presetSlug?: string;
+        headerSize?: number;
+        headerWeight?: FontWeight;
+        roleWeights?: Partial<RoleWeights>;
+        brandColors?: Partial<BrandColors>;
+        foundationColors?: {
+            light?: LegacyPalette;
+            dark?: LegacyPalette;
+        };
+        advancedTokens?: {
+            colors?: {
+                light?: LegacyTokenMap;
+                dark?: LegacyTokenMap;
+            };
+            spacing?: LegacyTokenMap;
+            animation?: LegacyTokenMap;
+            details?: {
+                light?: LegacyTokenMap;
+                dark?: LegacyTokenMap;
+                shared?: LegacyTokenMap;
+            };
+        };
+        shadows?: boolean;
+        surfaceShadows?: boolean;
+        controlShadows?: boolean;
+        dialogShadows?: boolean;
+        travelingHighlight?: boolean;
+        primaryStroke?: boolean;
+        interactiveCursor?: InteractiveCursor;
     };
 
-    type BrandColors = {
-        light: string;
-        dark: string;
-    };
+    type ThemeIdentity = Pick<Theme, 'slug' | 'name' | 'description' | 'publisher'>;
 
-    type InteractiveCursor = 'default' | 'pointer';
-
-    type StudioExtensions = {
-        presetSlug: string;
-        headerSize: number;
-        headerWeight: FontWeight;
-        roleWeights: RoleWeights;
-        brandColors: BrandColors;
-        foundationColors: FoundationColors;
-        advancedTokens: AdvancedTokens;
-        surfaceShadows: boolean;
-        controlShadows: boolean;
-        dialogShadows: boolean;
-        travelingHighlight: boolean;
-        primaryStroke: boolean;
-        interactiveCursor: InteractiveCursor;
-    };
-
-    type FontWeight = '400' | '500' | '600' | '700';
-
-    type RoleWeights = {
-        body: FontWeight;
-        label: FontWeight;
-        button: FontWeight;
-        badge: FontWeight;
-        description: FontWeight;
-    };
-
-    const STUDIO_EXTENSIONS_KEY = 'sivir-studio-extensions-v1';
+    const LEGACY_EXTENSIONS_KEY = 'sivir-studio-extensions-v1';
+    const STUDIO_META_KEY = 'sivir-studio-meta-v2';
+    const EDIT_TOKENS_KEY = 'sivir-studio-edit-tokens-v1';
+    const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
     const FLAT_CONTROL_SHADOW = 'inset 0 0 0 var(--border-size) var(--color-border)';
-    const DEFAULT_FOUNDATION_COLORS: FoundationColors = {
-        light: {
-            base: '#ffffff',
-            border: '#e8e8e6',
-            background: '#fdfdfc',
-            secondary: '#efefee',
-            foreground: '#1c1c1b',
-            foregroundMuted: '#737373',
-            onPrimary: '#ffffff',
-            buttonForeground: '#1c1c1b'
-        },
-        dark: {
-            base: '#171717',
-            border: '#2a2a2a',
-            background: '#0a0a0a',
-            secondary: '#252525',
-            foreground: '#ededed',
-            foregroundMuted: '#a3a3a3',
-            onPrimary: '#ffffff',
-            buttonForeground: '#ededed'
-        }
-    };
-    const DEFAULT_ROLE_WEIGHTS: RoleWeights = {
-        body: '400',
-        label: '500',
-        button: '500',
-        badge: '500',
-        description: '400'
-    };
     const fontWeights = ['400', '500', '600', '700'] as const;
     const cursorChoices = ['default', 'pointer'] as const;
 
@@ -226,13 +217,6 @@
         { label: 'Ink', value: '#1c1c1b' },
         { label: 'Night', value: '#0a0a0a' }
     ];
-
-    type AdvancedTokens = {
-        colors: Record<'light' | 'dark', Partial<Record<ColorTokenName, string>>>;
-        spacing: Partial<Record<SpacingTokenName, string>>;
-        animation: Partial<Record<AnimationTokenName, string>>;
-        details: Record<'light' | 'dark' | 'shared', Partial<Record<DetailTokenName, string>>>;
-    };
 
     type TokenRow =
         | {
@@ -288,16 +272,6 @@
         ...serifFonts,
         ...sansFonts
     ];
-    const themeAxes = [
-        'brand',
-        'neutral',
-        'radius',
-        'density',
-        'motion',
-        'fontSans',
-        'fontMono',
-        'fontHeader'
-    ] as const;
     const radiusTokenNames = ['--radius-sm', '--radius-md', '--radius-lg', '--radius-xl'] as const;
     const movementPresets = ['subtle', 'default', 'expressive'] as const;
 
@@ -501,6 +475,7 @@
         dark: { ...DEFAULT_FOUNDATION_COLORS.dark }
     });
     let advancedTokens = $state<AdvancedTokens>(emptyAdvancedTokens());
+    let extraTokens = $state<ThemeTokenOverrides>({});
     let brandColors = $state<BrandColors>({ light: '#1e78e6', dark: '#1e78e6' });
     let surfaceShadows = $state(true);
     let controlShadows = $state(true);
@@ -508,6 +483,16 @@
     let travelingHighlight = $state(true);
     let primaryStroke = $state(false);
     let interactiveCursor = $state<InteractiveCursor>('default');
+    let publishOpen = $state(false);
+    let publishPending = $state(false);
+    let publishError = $state<string | null>(null);
+    let publishName = $state('');
+    let publishSlug = $state('');
+    let publishDescription = $state('');
+    let publisherName = $state('');
+    let publishSlugEdited = false;
+    let editTokens = $state<Record<string, string>>({});
+    let pendingRegistryTheme = $state<Theme | null>(null);
     let tokenQuery = $state('');
     let openTokenSection = $state('color');
     let pendingPreset = $state<string | null>(null);
@@ -609,53 +594,6 @@
     ];
     const collectionStep = $derived(autoReconcile ? 2 : 1);
 
-    const foundationColorChanges = $derived(
-        (['light', 'dark'] as const).reduce((count, colorMode) => {
-            const changedColors = Object.entries(foundationColors[colorMode]).filter(
-                ([key, value]) =>
-                    value !== DEFAULT_FOUNDATION_COLORS[colorMode][key as keyof FoundationPalette]
-            ).length;
-
-            return count + changedColors;
-        }, 0)
-    );
-    const advancedColorChanges = $derived(
-        countTokenOverrides(advancedTokens.colors.light) +
-            countTokenOverrides(advancedTokens.colors.dark)
-    );
-    const spacingTokenChanges = $derived(countTokenOverrides(advancedTokens.spacing));
-    const animationTokenChanges = $derived(countTokenOverrides(advancedTokens.animation));
-    const detailTokenChanges = $derived(
-        countTokenOverrides(advancedTokens.details.light) +
-            countTokenOverrides(advancedTokens.details.dark) +
-            countTokenOverrides(advancedTokens.details.shared)
-    );
-    const advancedTokenChanges = $derived(
-        advancedColorChanges + spacingTokenChanges + animationTokenChanges + detailTokenChanges
-    );
-    const roleWeightChanges = $derived(
-        Object.entries(roleWeights).filter(
-            ([key, value]) => value !== DEFAULT_ROLE_WEIGHTS[key as keyof RoleWeights]
-        ).length
-    );
-    const changedAxisCount = $derived(
-        themeAxes.filter((axis) => theme[axis] !== baseTheme[axis]).length +
-            (brandColors.light !== baseTheme.brand || brandColors.dark !== baseTheme.brand
-                ? 1
-                : 0) +
-            foundationColorChanges +
-            advancedTokenChanges +
-            (headerSize === 16 ? 0 : 1) +
-            (headerWeight === '600' ? 0 : 1) +
-            roleWeightChanges +
-            (surfaceShadows ? 0 : 1) +
-            (controlShadows ? 0 : 1) +
-            (dialogShadows ? 0 : 1) +
-            (travelingHighlight ? 0 : 1) +
-            (primaryStroke ? 1 : 0) +
-            (interactiveCursor === 'default' ? 0 : 1)
-    );
-    const dirty = $derived(changedAxisCount > 0);
     const filteredTokenSections = $derived.by(() => {
         const query = tokenQuery.trim().toLowerCase();
         if (!query) {
@@ -678,75 +616,31 @@
             })
             .filter((section) => section.groups.length > 0);
     });
-    const generatedCss = $derived(
-        `${themeToCss(theme)}\n:root,\n.dark {\n\t--font-size-header: ${headerSize}px;\n\t--font-weight-header: ${headerWeight};\n\t--font-weight-body: ${roleWeights.body};\n\t--font-weight-label: ${roleWeights.label};\n\t--font-weight-button: ${roleWeights.button};\n\t--font-weight-badge: ${roleWeights.badge};\n\t--font-weight-description: ${roleWeights.description};\n}\n${brandCssBlock(':root:not(.dark)', brandColors.light)}${brandCssBlock('.dark', brandColors.dark)}${foundationCssBlock(':root:not(.dark)', foundationColors.light)}${foundationCssBlock('.dark', foundationColors.dark)}${tokenOverridesCssBlock(':root:not(.dark)', advancedTokens.colors.light)}${tokenOverridesCssBlock('.dark', advancedTokens.colors.dark)}${tokenOverridesCssBlock(':root,\n.dark', advancedTokens.spacing)}${tokenOverridesCssBlock(':root,\n.dark', advancedTokens.animation)}${tokenOverridesCssBlock(':root:not(.dark)', advancedTokens.details.light)}${tokenOverridesCssBlock('.dark', advancedTokens.details.dark)}${tokenOverridesCssBlock(':root,\n.dark', advancedTokens.details.shared)}${chromeCssBlock()}`
-    );
-    const generatedJson = $derived(
-        JSON.stringify(
-            {
-                ...theme,
-                studio: {
-                    presetSlug: selectedPreset,
-                    headerSize,
-                    headerWeight,
-                    roleWeights,
-                    brandColors,
-                    foundationColors,
-                    advancedTokens,
-                    surfaceShadows,
-                    controlShadows,
-                    dialogShadows,
-                    travelingHighlight,
-                    primaryStroke,
-                    interactiveCursor
-                },
-                css: generatedCss
-            },
-            null,
-            2
-        )
-    );
-
-    function emptyAdvancedTokens(): AdvancedTokens {
-        return {
-            colors: { light: {}, dark: {} },
-            spacing: {},
-            animation: {},
-            details: { light: {}, dark: {}, shared: {} }
-        };
-    }
-
-    function countTokenOverrides<T extends string>(overrides: Partial<Record<T, string>>) {
-        return (Object.values(overrides) as (string | undefined)[]).filter((value) => value?.trim())
-            .length;
-    }
-
-    function foundationCssBlock(selector: string, colors: FoundationPalette) {
-        const declarations = [
-            `--color-card: ${colors.base};`,
-            `--color-panel: ${colors.base};`,
-            `--color-border: ${colors.border};`,
-            `--color-input: ${colors.border};`,
-            `--color-background: ${colors.background};`,
-            `--color-secondary: ${colors.secondary};`,
-            `--color-foreground: ${colors.foreground};`,
-            `--color-foreground-muted: ${colors.foregroundMuted};`,
-            `--color-on-primary: ${colors.onPrimary};`,
-            `--color-button-foreground: ${colors.buttonForeground};`
-        ];
-
-        return `${selector} {\n${declarations.map((declaration) => `\t${declaration}`).join('\n')}\n}\n`;
-    }
-
-    function brandCssBlock(selector: string, color: string) {
-        const declarations = [
-            `--color-primary: ${color};`,
-            `--color-primary-hover: color-mix(in srgb, ${color} 78%, black);`,
-            `--color-ring: color-mix(in srgb, ${color} 30%, transparent);`
-        ];
-
-        return `${selector} {\n${declarations.map((declaration) => `\t${declaration}`).join('\n')}\n}\n`;
-    }
+    const studioDraft = $derived<StudioDraft>({
+        theme,
+        brandColors,
+        foundationColors,
+        headerSize,
+        headerWeight,
+        roleWeights,
+        advancedTokens,
+        extraTokens,
+        chrome: {
+            surfaceShadows,
+            controlShadows,
+            dialogShadows,
+            travelingHighlight,
+            primaryStroke,
+            interactiveCursor
+        }
+    });
+    const portableTheme = $derived(draftToTheme(studioDraft));
+    const baseDesign = $derived(draftToTheme(themeToDraft(baseTheme)));
+    const dirty = $derived(!sameThemeDesign(portableTheme, baseDesign));
+    const generatedCss = $derived(themeToCss(portableTheme));
+    const generatedJson = $derived(JSON.stringify(portableTheme, null, 2));
+    const ownsPublishSlug = $derived(publishSlug in editTokens);
+    const publishedSlug = $derived(theme.slug in editTokens ? theme.slug : null);
 
     function chromeShadowValue(name: DetailTokenName): string | null {
         if (!surfaceShadows && (name === '--elevation-1' || name === '--elevation-float')) {
@@ -765,57 +659,6 @@
         }
 
         return null;
-    }
-
-    function chromeCssBlock() {
-        const shared = [`--ui-cursor-interactive: ${interactiveCursor};`];
-        if (!surfaceShadows) {
-            shared.push('--elevation-1: none;', '--elevation-float: none;');
-        }
-        if (!dialogShadows) {
-            shared.push('--elevation-modal: none;');
-        }
-        if (!controlShadows) {
-            shared.push(
-                `--elevation-control: ${FLAT_CONTROL_SHADOW};`,
-                `--elevation-button-outline: ${FLAT_CONTROL_SHADOW};`
-            );
-        }
-        if (!travelingHighlight) {
-            shared.push('--sivir-traveling-highlight: none;');
-        }
-        const light = [
-            `--color-primary-stroke: ${
-                primaryStroke ? 'color-mix(in srgb, black 14%, transparent)' : 'transparent'
-            };`,
-            ...shared
-        ];
-        const dark = [
-            `--color-primary-stroke: ${
-                primaryStroke ? 'color-mix(in srgb, white 24%, transparent)' : 'transparent'
-            };`,
-            ...shared
-        ];
-
-        return `:root:not(.dark) {\n${light.map((declaration) => `\t${declaration}`).join('\n')}\n}\n.dark {\n${dark.map((declaration) => `\t${declaration}`).join('\n')}\n}\n`;
-    }
-
-    function tokenOverridesCssBlock<T extends string>(
-        selector: string,
-        overrides: Partial<Record<T, string>>
-    ) {
-        const entries = Object.entries(overrides) as [string, string | undefined][];
-        const declarations = entries
-            .filter(
-                (entry): entry is [string, string] =>
-                    typeof entry[1] === 'string' && entry[1].trim().length > 0
-            )
-            .map(([name, value]) => `${name}: ${value.trim()};`);
-        if (declarations.length === 0) {
-            return '';
-        }
-
-        return `${selector} {\n${declarations.map((declaration) => `\t${declaration}`).join('\n')}\n}\n`;
     }
 
     function formatChoice(value: string) {
@@ -862,198 +705,452 @@
         previousMono = selectedMono;
     }
 
-    function loadStudioExtensions() {
-        const raw = localStorage.getItem(STUDIO_EXTENSIONS_KEY);
-        if (!raw) return;
+    function identityOf(source: Theme): ThemeIdentity {
+        return {
+            slug: source.slug,
+            name: source.name,
+            description: source.description,
+            ...(source.publisher
+                ? {
+                      publisher: source.publisher
+                  }
+                : {})
+        };
+    }
+
+    function withIdentity(draft: StudioDraft, identity: ThemeIdentity): StudioDraft {
+        return {
+            ...draft,
+            theme: {
+                ...themeAxes(draft.theme),
+                ...identity
+            }
+        };
+    }
+
+    function applyDraft(draft: StudioDraft) {
+        theme = { ...draft.theme };
+        brandColors = { ...draft.brandColors };
+        foundationColors = {
+            light: { ...draft.foundationColors.light },
+            dark: { ...draft.foundationColors.dark }
+        };
+        headerSize = draft.headerSize;
+        headerWeight = draft.headerWeight;
+        roleWeights = { ...draft.roleWeights };
+        advancedTokens = draft.advancedTokens;
+        extraTokens = draft.extraTokens;
+        surfaceShadows = draft.chrome.surfaceShadows;
+        controlShadows = draft.chrome.controlShadows;
+        dialogShadows = draft.chrome.dialogShadows;
+        travelingHighlight = draft.chrome.travelingHighlight;
+        primaryStroke = draft.chrome.primaryStroke;
+        interactiveCursor = draft.chrome.interactiveCursor;
+        previousRadius = theme.radius;
+        previousDensity = theme.density;
+        previousMotion = theme.motion;
+        syncFontSelections(theme);
+    }
+
+    function selectPresetSilently(slug: string) {
+        const preset = builtInThemePresets.find((candidate) => candidate.slug === slug);
+        if (!preset) {
+            return;
+        }
+
+        selectedPreset = preset.slug;
+        previousPreset = preset.slug;
+        baseTheme = { ...preset };
+    }
+
+    function readJson(key: string): unknown {
+        const raw = localStorage.getItem(key);
+        if (!raw) {
+            return null;
+        }
+
         try {
-            const value = JSON.parse(raw) as Partial<StudioExtensions>;
-            if (typeof value.presetSlug === 'string') {
-                const preset = builtInThemePresets.find(
-                    (candidate) => candidate.slug === value.presetSlug
-                );
-                if (preset) {
-                    selectedPreset = preset.slug;
-                    previousPreset = preset.slug;
-                    baseTheme = { ...preset };
-                }
-            }
-            if (typeof value.headerSize === 'number') headerSize = value.headerSize;
-            if (value.headerWeight) headerWeight = value.headerWeight;
-            if (value.roleWeights) {
-                roleWeights = { ...DEFAULT_ROLE_WEIGHTS, ...value.roleWeights };
-            }
-            if (value.foundationColors) {
-                const lightFoundationColors = value.foundationColors.light as FoundationPalette & {
-                    muted?: string;
-                };
-                const darkFoundationColors = value.foundationColors.dark as FoundationPalette & {
-                    muted?: string;
-                };
-                const { muted: _lightMuted, ...light } = lightFoundationColors;
-                const { muted: _darkMuted, ...dark } = darkFoundationColors;
-
-                foundationColors = {
-                    light: {
-                        ...DEFAULT_FOUNDATION_COLORS.light,
-                        ...light
-                    },
-                    dark: {
-                        ...DEFAULT_FOUNDATION_COLORS.dark,
-                        ...dark
-                    }
-                };
-            }
-            if (value.advancedTokens) {
-                const lightTokens = {
-                    ...value.advancedTokens.colors?.light
-                } as Record<string, string | undefined>;
-                const darkTokens = {
-                    ...value.advancedTokens.colors?.dark
-                } as Record<string, string | undefined>;
-                const { '--color-muted': _lightMuted, ...light } = lightTokens;
-                const { '--color-muted': _darkMuted, ...dark } = darkTokens;
-
-                advancedTokens = {
-                    colors: {
-                        light,
-                        dark
-                    },
-                    spacing: { ...value.advancedTokens.spacing },
-                    animation: { ...value.advancedTokens.animation },
-                    details: {
-                        light: { ...value.advancedTokens.details?.light },
-                        dark: { ...value.advancedTokens.details?.dark },
-                        shared: { ...value.advancedTokens.details?.shared }
-                    }
-                };
-            }
-            if (value.brandColors) {
-                brandColors = {
-                    light: value.brandColors.light ?? baseTheme.brand,
-                    dark: value.brandColors.dark ?? baseTheme.brand
-                };
-            }
-            const shadowsOff = (value as { shadows?: unknown }).shadows === false;
-            if (typeof value.surfaceShadows === 'boolean') {
-                surfaceShadows = value.surfaceShadows;
-            } else if (shadowsOff) {
-                surfaceShadows = false;
-            }
-            if (typeof value.controlShadows === 'boolean') {
-                controlShadows = value.controlShadows;
-            } else if (shadowsOff) {
-                controlShadows = false;
-            }
-            if (typeof value.dialogShadows === 'boolean') {
-                dialogShadows = value.dialogShadows;
-            } else if (shadowsOff) {
-                dialogShadows = false;
-            }
-            if (typeof value.travelingHighlight === 'boolean') {
-                travelingHighlight = value.travelingHighlight;
-            }
-            if (typeof value.primaryStroke === 'boolean') {
-                primaryStroke = value.primaryStroke;
-            }
-            if (value.interactiveCursor === 'default' || value.interactiveCursor === 'pointer') {
-                interactiveCursor = value.interactiveCursor;
-            }
+            return JSON.parse(raw);
         } catch {
-            localStorage.removeItem(STUDIO_EXTENSIONS_KEY);
+            localStorage.removeItem(key);
+
+            return null;
         }
     }
 
-    function saveStudioExtensions() {
-        const extensions: StudioExtensions = {
-            presetSlug: selectedPreset,
-            headerSize,
-            headerWeight,
-            roleWeights: { ...roleWeights },
-            brandColors: { ...brandColors },
+    function cleanLegacyTokens(map: LegacyTokenMap | undefined): Record<string, string> {
+        const clean: Record<string, string> = {};
+
+        for (const [name, value] of Object.entries(map ?? {})) {
+            if (name !== '--color-muted' && value?.trim()) {
+                clean[name] = value;
+            }
+        }
+
+        return clean;
+    }
+
+    function withoutMuted(palette: LegacyPalette | undefined): Partial<FoundationPalette> {
+        const { muted: _muted, ...rest } = palette ?? {};
+
+        return rest;
+    }
+
+    function mergeLegacyExtensions(draft: StudioDraft, value: LegacyStudioExtensions): StudioDraft {
+        const shadowsOff = value.shadows === false;
+        const legacyShadow = (flag: boolean | undefined, current: boolean) => {
+            if (typeof flag === 'boolean') {
+                return flag;
+            }
+
+            return shadowsOff ? false : current;
+        };
+
+        return {
+            ...draft,
+            brandColors: {
+                light: value.brandColors?.light ?? draft.brandColors.light,
+                dark: value.brandColors?.dark ?? draft.brandColors.dark
+            },
             foundationColors: {
-                light: { ...foundationColors.light },
-                dark: { ...foundationColors.dark }
+                light: {
+                    ...draft.foundationColors.light,
+                    ...withoutMuted(value.foundationColors?.light)
+                },
+                dark: {
+                    ...draft.foundationColors.dark,
+                    ...withoutMuted(value.foundationColors?.dark)
+                }
+            },
+            headerSize: clampHeaderSize(value.headerSize ?? draft.headerSize),
+            headerWeight: value.headerWeight ?? draft.headerWeight,
+            roleWeights: {
+                ...draft.roleWeights,
+                ...value.roleWeights
             },
             advancedTokens: {
                 colors: {
-                    light: { ...advancedTokens.colors.light },
-                    dark: { ...advancedTokens.colors.dark }
+                    light: {
+                        ...draft.advancedTokens.colors.light,
+                        ...cleanLegacyTokens(value.advancedTokens?.colors?.light)
+                    },
+                    dark: {
+                        ...draft.advancedTokens.colors.dark,
+                        ...cleanLegacyTokens(value.advancedTokens?.colors?.dark)
+                    }
                 },
-                spacing: { ...advancedTokens.spacing },
-                animation: { ...advancedTokens.animation },
+                spacing: {
+                    ...draft.advancedTokens.spacing,
+                    ...cleanLegacyTokens(value.advancedTokens?.spacing)
+                },
+                animation: {
+                    ...draft.advancedTokens.animation,
+                    ...cleanLegacyTokens(value.advancedTokens?.animation)
+                },
                 details: {
-                    light: { ...advancedTokens.details.light },
-                    dark: { ...advancedTokens.details.dark },
-                    shared: { ...advancedTokens.details.shared }
+                    light: {
+                        ...draft.advancedTokens.details.light,
+                        ...cleanLegacyTokens(value.advancedTokens?.details?.light)
+                    },
+                    dark: {
+                        ...draft.advancedTokens.details.dark,
+                        ...cleanLegacyTokens(value.advancedTokens?.details?.dark)
+                    },
+                    shared: {
+                        ...draft.advancedTokens.details.shared,
+                        ...cleanLegacyTokens(value.advancedTokens?.details?.shared)
+                    }
                 }
             },
-            surfaceShadows,
-            controlShadows,
-            dialogShadows,
-            travelingHighlight,
-            primaryStroke,
-            interactiveCursor
+            chrome: {
+                surfaceShadows: legacyShadow(value.surfaceShadows, draft.chrome.surfaceShadows),
+                controlShadows: legacyShadow(value.controlShadows, draft.chrome.controlShadows),
+                dialogShadows: legacyShadow(value.dialogShadows, draft.chrome.dialogShadows),
+                travelingHighlight: value.travelingHighlight ?? draft.chrome.travelingHighlight,
+                primaryStroke: value.primaryStroke ?? draft.chrome.primaryStroke,
+                interactiveCursor: value.interactiveCursor ?? draft.chrome.interactiveCursor
+            }
         };
-        localStorage.setItem(STUDIO_EXTENSIONS_KEY, JSON.stringify(extensions));
+    }
+
+    function readStoredDraft(): StudioDraft | null {
+        const stored = loadStudioTheme();
+        const legacy = readJson(LEGACY_EXTENSIONS_KEY) as LegacyStudioExtensions | null;
+        const meta = readJson(STUDIO_META_KEY) as { presetSlug?: unknown } | null;
+        const presetSlug =
+            typeof meta?.presetSlug === 'string' ? meta.presetSlug : legacy?.presetSlug;
+
+        if (typeof presetSlug === 'string') {
+            selectPresetSilently(presetSlug);
+        }
+
+        if (legacy) {
+            return mergeLegacyExtensions(themeToDraft(stored ?? baseTheme), legacy);
+        }
+
+        return stored ? themeToDraft(stored) : null;
+    }
+
+    function saveStudioDraft(nextTheme: Theme) {
+        saveStudioTheme(nextTheme);
+        localStorage.setItem(
+            STUDIO_META_KEY,
+            JSON.stringify({
+                presetSlug: selectedPreset
+            })
+        );
+        localStorage.removeItem(LEGACY_EXTENSIONS_KEY);
+    }
+
+    function readEditTokens(): Record<string, string> {
+        const value = readJson(EDIT_TOKENS_KEY);
+        if (typeof value !== 'object' || value === null) {
+            return {};
+        }
+
+        return Object.fromEntries(
+            Object.entries(value).filter(
+                (entry): entry is [string, string] => typeof entry[1] === 'string'
+            )
+        );
+    }
+
+    function storeEditTokens(next: Record<string, string>) {
+        editTokens = next;
+        localStorage.setItem(EDIT_TOKENS_KEY, JSON.stringify(next));
     }
 
     function applyPreset(slug: string) {
         const preset = builtInThemePresets.find((candidate) => candidate.slug === slug);
         if (!preset) return;
 
-        const draftIdentity = {
-            slug: theme.slug,
-            name: theme.name,
-            description: theme.description
-        };
         baseTheme = { ...preset };
-        theme = { ...preset, ...draftIdentity };
-        headerSize = 16;
-        headerWeight = '600';
-        roleWeights = { ...DEFAULT_ROLE_WEIGHTS };
-        foundationColors = {
-            light: { ...DEFAULT_FOUNDATION_COLORS.light },
-            dark: { ...DEFAULT_FOUNDATION_COLORS.dark }
-        };
-        advancedTokens = emptyAdvancedTokens();
-        brandColors = { light: preset.brand, dark: preset.brand };
-        surfaceShadows =
-            preset.chrome?.shadows !== false && preset.chrome?.surfaceShadows !== false;
-        controlShadows =
-            preset.chrome?.shadows !== false && preset.chrome?.controlShadows !== false;
-        dialogShadows = preset.chrome?.shadows !== false && preset.chrome?.dialogShadows !== false;
-        travelingHighlight = preset.chrome?.travelingHighlight !== false;
-        primaryStroke = false;
-        interactiveCursor = 'default';
-        syncFontSelections(theme);
+        applyDraft(withIdentity(themeToDraft(preset), identityOf(theme)));
     }
 
     function resetTheme() {
-        theme = {
-            ...baseTheme,
-            slug: theme.slug,
-            name: theme.name,
-            description: theme.description
+        applyDraft(withIdentity(themeToDraft(baseTheme), identityOf(theme)));
+    }
+
+    function applyRegistryTheme(loaded: Theme) {
+        selectedPreset = loaded.slug;
+        previousPreset = loaded.slug;
+        baseTheme = { ...loaded };
+        applyDraft(themeToDraft(loaded));
+        toast({
+            title: `${loaded.name} loaded`,
+            description: 'Customize it, then copy it or publish your own version.',
+            type: 'success',
+            duration: 2200
+        });
+    }
+
+    async function loadRegistryTheme(slug: string) {
+        let response: Response;
+        try {
+            response = await fetch(`/api/themes/${encodeURIComponent(slug)}`);
+        } catch {
+            response = new Response('The theme registry is unreachable.', {
+                status: 503
+            });
+        }
+
+        const url = new URL(page.url);
+        url.searchParams.delete('theme');
+        replaceState(url, {});
+
+        if (!response.ok) {
+            toast({
+                title: `Could not load ${slug}`,
+                description: (await response.text()) || 'The theme registry did not respond.',
+                type: 'error',
+                duration: 3200
+            });
+
+            return;
+        }
+
+        let loaded: Theme;
+        try {
+            loaded = parseTheme(await response.json());
+        } catch {
+            toast({
+                title: `Could not load ${slug}`,
+                description: 'The registry returned a theme this version cannot read.',
+                type: 'error',
+                duration: 3200
+            });
+
+            return;
+        }
+
+        if (dirty) {
+            pendingRegistryTheme = loaded;
+            presetDialogOpen = true;
+
+            return;
+        }
+
+        applyRegistryTheme(loaded);
+    }
+
+    function slugify(value: string): string {
+        return value
+            .toLowerCase()
+            .normalize('NFKD')
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-+|-+$/g, '')
+            .slice(0, 80);
+    }
+
+    function openPublish() {
+        publishName = theme.name;
+        publishSlug = theme.slug;
+        publishDescription = theme.description;
+        publisherName = theme.publisher ?? '';
+        publishSlugEdited = theme.slug !== slugify(theme.name);
+        publishError = null;
+        publishOpen = true;
+    }
+
+    function updatePublishName(value: string) {
+        publishName = value;
+        if (!publishSlugEdited) {
+            publishSlug = slugify(value);
+        }
+    }
+
+    function updatePublishSlug(value: string) {
+        publishSlug = value.toLowerCase();
+        publishSlugEdited = true;
+    }
+
+    function publishValidationError(): string | null {
+        if (!publishName.trim()) {
+            return 'Give the theme a name.';
+        }
+
+        if (!SLUG_PATTERN.test(publishSlug)) {
+            return 'Use lowercase letters, numbers, and single hyphens for the slug.';
+        }
+
+        return null;
+    }
+
+    async function responseError(response: Response): Promise<string> {
+        const message = (await response.text()).trim();
+
+        return message || `The registry responded with ${response.status}.`;
+    }
+
+    async function submitPublish() {
+        const validationError = publishValidationError();
+        if (validationError) {
+            publishError = validationError;
+
+            return;
+        }
+
+        const identity: ThemeIdentity = {
+            slug: publishSlug,
+            name: publishName.trim(),
+            description: publishDescription.trim(),
+            ...(publisherName.trim()
+                ? {
+                      publisher: publisherName.trim()
+                  }
+                : {})
         };
-        headerSize = 16;
-        headerWeight = '600';
-        roleWeights = { ...DEFAULT_ROLE_WEIGHTS };
-        foundationColors = {
-            light: { ...DEFAULT_FOUNDATION_COLORS.light },
-            dark: { ...DEFAULT_FOUNDATION_COLORS.dark }
+        const payload: Theme = {
+            ...portableTheme,
+            ...identity
         };
-        advancedTokens = emptyAdvancedTokens();
-        brandColors = { light: baseTheme.brand, dark: baseTheme.brand };
-        surfaceShadows =
-            baseTheme.chrome?.shadows !== false && baseTheme.chrome?.surfaceShadows !== false;
-        controlShadows =
-            baseTheme.chrome?.shadows !== false && baseTheme.chrome?.controlShadows !== false;
-        dialogShadows =
-            baseTheme.chrome?.shadows !== false && baseTheme.chrome?.dialogShadows !== false;
-        travelingHighlight = baseTheme.chrome?.travelingHighlight !== false;
-        primaryStroke = false;
-        interactiveCursor = 'default';
-        syncFontSelections(theme);
+        const editToken = editTokens[identity.slug];
+
+        publishPending = true;
+        publishError = null;
+        try {
+            const response = await fetch(`/api/themes${editToken ? `/${identity.slug}` : ''}`, {
+                method: editToken ? 'PUT' : 'POST',
+                headers: {
+                    'content-type': 'application/json',
+                    ...(editToken
+                        ? {
+                              authorization: `Bearer ${editToken}`
+                          }
+                        : {})
+                },
+                body: JSON.stringify(payload)
+            });
+            if (!response.ok) {
+                publishError = await responseError(response);
+
+                return;
+            }
+
+            if (!editToken) {
+                const published = (await response.json()) as {
+                    editToken: string;
+                };
+                storeEditTokens({
+                    ...editTokens,
+                    [identity.slug]: published.editToken
+                });
+            }
+
+            theme = {
+                ...theme,
+                ...identity
+            };
+            publishOpen = false;
+            toast({
+                title: editToken ? `${identity.name} updated` : `${identity.name} published`,
+                description: `Anyone can install it with the slug ${identity.slug}.`,
+                type: 'success',
+                duration: 2600
+            });
+        } catch {
+            publishError = 'The registry could not be reached. Try again in a moment.';
+        } finally {
+            publishPending = false;
+        }
+    }
+
+    async function unpublishTheme() {
+        const editToken = editTokens[publishSlug];
+        if (!editToken) {
+            return;
+        }
+
+        publishPending = true;
+        publishError = null;
+        try {
+            const response = await fetch(`/api/themes/${publishSlug}`, {
+                method: 'DELETE',
+                headers: {
+                    authorization: `Bearer ${editToken}`
+                }
+            });
+            if (!response.ok && response.status !== 404) {
+                publishError = await responseError(response);
+
+                return;
+            }
+
+            const { [publishSlug]: _removed, ...remaining } = editTokens;
+            storeEditTokens(remaining);
+            publishOpen = false;
+            toast({
+                title: `${publishName} unpublished`,
+                description: 'It no longer appears in the theme registry.',
+                type: 'success',
+                duration: 2200
+            });
+        } catch {
+            publishError = 'The registry could not be reached. Try again in a moment.';
+        } finally {
+            publishPending = false;
+        }
     }
 
     function updateBrand(value: string) {
@@ -1496,6 +1593,11 @@
     }
 
     function confirmPresetChange() {
+        if (pendingRegistryTheme) {
+            applyRegistryTheme(pendingRegistryTheme);
+            pendingRegistryTheme = null;
+            return;
+        }
         if (!pendingPreset) return;
         previousPreset = pendingPreset;
         selectedPreset = pendingPreset;
@@ -1597,16 +1699,16 @@
     });
 
     onMount(() => {
-        const storedTheme = loadStudioTheme();
-        if (storedTheme) {
-            theme = { ...storedTheme };
-            syncFontSelections(theme);
+        const storedDraft = readStoredDraft();
+        if (storedDraft) {
+            applyDraft(storedDraft);
         }
-        loadStudioExtensions();
-        previousRadius = theme.radius;
-        previousDensity = theme.density;
-        previousMotion = theme.motion;
+        editTokens = readEditTokens();
         hydrated = true;
+        const requestedTheme = page.url.searchParams.get('theme');
+        if (requestedTheme) {
+            void loadRegistryTheme(requestedTheme);
+        }
         const root = document.documentElement;
         appliedDark = root.classList.contains('dark');
         const observer = new MutationObserver(() => {
@@ -1703,8 +1805,7 @@
         untrack(() => {
             liveCssVersion += 1;
         });
-        saveStudioTheme({ ...theme });
-        saveStudioExtensions();
+        saveStudioDraft(portableTheme);
     });
 </script>
 
@@ -1950,7 +2051,7 @@
             <Select.Root bind:value={selectedPreset}>
                 <SelectFieldTrigger label="Preset">
                     {builtInThemePresets.find((preset) => preset.slug === selectedPreset)?.name ??
-                        'Default'}
+                        baseTheme.name}
                 </SelectFieldTrigger>
                 <Select.Content class="max-h-56 min-w-[max(16rem,var(--popover-trigger-width))]">
                     {#each builtInThemePresets as preset (preset.slug)}
@@ -2145,8 +2246,8 @@
                             {@render sectionHeading('Size')}
                             <Slider.Root
                                 bind:value={headerSize}
-                                min={16}
-                                max={48}
+                                min={HEADER_SIZE_RANGE.min}
+                                max={HEADER_SIZE_RANGE.max}
                                 step={1}
                                 label="Heading size"
                                 format={formatPixels}
@@ -2401,6 +2502,19 @@
             >
                 Copy JSON
             </CopyButton>
+            <Button variant="outline" size="md" class="col-span-2 w-full" onclick={openPublish}>
+                {publishedSlug ? 'Update published theme' : 'Publish to registry'}
+            </Button>
+            {#if publishedSlug}
+                <Button
+                    variant="ghost"
+                    size="sm"
+                    class="col-span-2 w-full text-foreground-muted"
+                    href={`${resolve('/themes')}?theme=${encodeURIComponent(publishedSlug)}`}
+                >
+                    View in themes
+                </Button>
+            {/if}
         </footer>
     </div>
 {/snippet}
@@ -3028,19 +3142,99 @@
         </Sheet.Content>
     </Sheet.Root>
 
+    <Modal.Root bind:open={publishOpen}>
+        <Modal.Content>
+            <Modal.Header>
+                <Modal.Title>
+                    {ownsPublishSlug ? 'Update published theme' : 'Publish to the theme registry'}
+                </Modal.Title>
+                <Modal.Description>
+                    Anyone can browse, preview, and install published themes. Only this browser can
+                    update or unpublish it.
+                </Modal.Description>
+            </Modal.Header>
+            <Modal.Body class="gap-4">
+                <Input
+                    value={publishName}
+                    oninput={(event) => updatePublishName(event.currentTarget.value)}
+                    label="Name"
+                    placeholder="Midnight Ledger"
+                    maxlength={80}
+                />
+                <Input
+                    value={publishSlug}
+                    oninput={(event) => updatePublishSlug(event.currentTarget.value)}
+                    label="Slug"
+                    placeholder="midnight-ledger"
+                    maxlength={80}
+                    class="font-mono"
+                />
+                <Textarea
+                    bind:value={publishDescription}
+                    label="Description"
+                    placeholder="What makes this theme distinct"
+                    maxlength={500}
+                    autoresize
+                />
+                <Input
+                    bind:value={publisherName}
+                    label="Publisher"
+                    placeholder="Your name or team"
+                    maxlength={80}
+                />
+                {#if publishError}
+                    <p class="m-0 text-sm text-[var(--color-error)]" role="alert">
+                        {publishError}
+                    </p>
+                {/if}
+            </Modal.Body>
+            <Modal.Footer>
+                {#if ownsPublishSlug}
+                    <Button
+                        variant="ghost"
+                        class="text-[var(--color-error)]"
+                        disabled={publishPending}
+                        onclick={unpublishTheme}
+                    >
+                        Unpublish
+                    </Button>
+                {/if}
+                <Modal.Close>
+                    Cancel
+                    <Shortcut shortcut="esc" />
+                </Modal.Close>
+                <Button
+                    class="ml-auto"
+                    loading={publishPending}
+                    loadingLabel="Publishing…"
+                    onclick={submitPublish}
+                >
+                    {ownsPublishSlug ? 'Publish update' : 'Publish'}
+                </Button>
+            </Modal.Footer>
+        </Modal.Content>
+    </Modal.Root>
+
     <AlertDialog.Root bind:open={presetDialogOpen} orientation="vertical">
         <AlertDialog.Content>
             <AlertDialog.Header>
                 <AlertDialog.Title>Replace your current draft?</AlertDialog.Title>
                 <AlertDialog.Description>
                     Switching to
-                    {builtInThemePresets.find((preset) => preset.slug === pendingPreset)
-                        ?.name ?? 'this preset'}
+                    {pendingRegistryTheme?.name ??
+                        builtInThemePresets.find((preset) => preset.slug === pendingPreset)
+                            ?.name ??
+                        'this preset'}
                     resets every changed color, type, shape, and motion value.
                 </AlertDialog.Description>
             </AlertDialog.Header>
             <AlertDialog.Footer>
-                <AlertDialog.Exit onclick={() => (pendingPreset = null)}>
+                <AlertDialog.Exit
+                    onclick={() => {
+                        pendingPreset = null;
+                        pendingRegistryTheme = null;
+                    }}
+                >
                     Keep draft
                     <Shortcut shortcut="esc" />
                 </AlertDialog.Exit>

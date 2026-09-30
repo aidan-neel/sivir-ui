@@ -67,6 +67,39 @@ describe('Theme Studio draft', () => {
         expect(themeToDraft(exported).advancedTokens.colors.dark).toEqual({});
     });
 
+    it('maps detail tokens onto the Studio detail controls and back', () => {
+        const theme: Theme = {
+            ...DEFAULT_THEME,
+            tokens: {
+                shared: {
+                    '--opacity-disabled': '0.4'
+                },
+                light: {
+                    '--elevation-1': 'none'
+                },
+                dark: {
+                    '--focus-ring': '0 0 0 2px #ffffff'
+                }
+            }
+        };
+        const draft = themeToDraft(theme);
+        const exported = draftToTheme(draft);
+
+        expect(draft.advancedTokens.details).toEqual({
+            shared: {
+                '--opacity-disabled': '0.4'
+            },
+            light: {
+                '--elevation-1': 'none'
+            },
+            dark: {
+                '--focus-ring': '0 0 0 2px #ffffff'
+            }
+        });
+        expect(draft.extraTokens).toEqual({});
+        expect(exported.tokens).toEqual(theme.tokens);
+    });
+
     it('preserves tokens the Studio has no control for', () => {
         const theme: Theme = {
             ...DEFAULT_THEME,

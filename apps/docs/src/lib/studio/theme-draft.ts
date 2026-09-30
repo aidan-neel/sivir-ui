@@ -10,6 +10,8 @@ import {
     animationTokenDefinitions,
     type ColorTokenName,
     colorTokenDefinitions,
+    type DetailTokenName,
+    detailTokenDefinitions,
     type SpacingTokenName,
     spacingTokenDefinitions
 } from '$lib/studio-advanced-tokens';
@@ -47,6 +49,7 @@ export type AdvancedTokens = {
     colors: Record<'light' | 'dark', Partial<Record<ColorTokenName, string>>>;
     spacing: Partial<Record<SpacingTokenName, string>>;
     animation: Partial<Record<AnimationTokenName, string>>;
+    details: Record<'light' | 'dark' | 'shared', Partial<Record<DetailTokenName, string>>>;
 };
 
 export type StudioChrome = {
@@ -119,6 +122,16 @@ const spacingTokenNames: ReadonlySet<string> = new Set(
 const animationTokenNames: ReadonlySet<string> = new Set(
     animationTokenDefinitions.map((definition) => definition.name)
 );
+const modeDetailTokenNames: ReadonlySet<string> = new Set(
+    detailTokenDefinitions
+        .filter((definition) => definition.scope === 'mode')
+        .map((definition) => definition.name)
+);
+const sharedDetailTokenNames: ReadonlySet<string> = new Set(
+    detailTokenDefinitions
+        .filter((definition) => definition.scope !== 'mode')
+        .map((definition) => definition.name)
+);
 
 const HEX_COLOR = /^#[0-9a-f]{6}$/i;
 
@@ -129,7 +142,12 @@ export function emptyAdvancedTokens(): AdvancedTokens {
             dark: {}
         },
         spacing: {},
-        animation: {}
+        animation: {},
+        details: {
+            light: {},
+            dark: {},
+            shared: {}
+        }
     };
 }
 
@@ -226,16 +244,19 @@ export function draftToTheme(draft: StudioDraft): Theme {
     const shared = nonEmpty({
         ...draft.extraTokens.shared,
         ...filledEntries(draft.advancedTokens.spacing),
-        ...filledEntries(draft.advancedTokens.animation)
+        ...filledEntries(draft.advancedTokens.animation),
+        ...filledEntries(draft.advancedTokens.details.shared)
     });
     const light = nonEmpty({
         ...draft.extraTokens.light,
-        ...filledEntries(draft.advancedTokens.colors.light)
+        ...filledEntries(draft.advancedTokens.colors.light),
+        ...filledEntries(draft.advancedTokens.details.light)
     });
     const dark = nonEmpty({
         ...draft.extraTokens.dark,
         ...darkBrand,
-        ...filledEntries(draft.advancedTokens.colors.dark)
+        ...filledEntries(draft.advancedTokens.colors.dark),
+        ...filledEntries(draft.advancedTokens.details.dark)
     });
     const tokens: ThemeTokenOverrides = {
         ...(shared
@@ -285,6 +306,7 @@ export function draftToTheme(draft: StudioDraft): Theme {
 function splitSharedTokens(shared: Record<string, string> | undefined) {
     const spacing: AdvancedTokens['spacing'] = {};
     const animation: AdvancedTokens['animation'] = {};
+    const details: Partial<Record<DetailTokenName, string>> = {};
     const extra: Record<string, string> = {};
 
     for (const [name, value] of Object.entries(shared ?? {})) {
@@ -292,6 +314,8 @@ function splitSharedTokens(shared: Record<string, string> | undefined) {
             spacing[name as SpacingTokenName] = value;
         } else if (animationTokenNames.has(name)) {
             animation[name as AnimationTokenName] = value;
+        } else if (sharedDetailTokenNames.has(name)) {
+            details[name as DetailTokenName] = value;
         } else {
             extra[name] = value;
         }
@@ -300,17 +324,21 @@ function splitSharedTokens(shared: Record<string, string> | undefined) {
     return {
         spacing,
         animation,
+        details,
         extra
     };
 }
 
-function splitColorTokens(map: Record<string, string> | undefined) {
+function splitModeTokens(map: Record<string, string> | undefined) {
     const colors: Partial<Record<ColorTokenName, string>> = {};
+    const details: Partial<Record<DetailTokenName, string>> = {};
     const extra: Record<string, string> = {};
 
     for (const [name, value] of Object.entries(map ?? {})) {
         if (colorTokenNames.has(name)) {
             colors[name as ColorTokenName] = value;
+        } else if (modeDetailTokenNames.has(name)) {
+            details[name as DetailTokenName] = value;
         } else {
             extra[name] = value;
         }
@@ -318,6 +346,7 @@ function splitColorTokens(map: Record<string, string> | undefined) {
 
     return {
         colors,
+        details,
         extra
     };
 }
@@ -344,8 +373,8 @@ function takeDarkBrand(dark: Record<string, string>, fallback: string): string {
 /** Projects a portable Theme onto Studio controls; tokens the Studio has no control for are kept. */
 export function themeToDraft(theme: Theme): StudioDraft {
     const sharedTokens = splitSharedTokens(theme.tokens?.shared);
-    const lightTokens = splitColorTokens(theme.tokens?.light);
-    const darkTokens = splitColorTokens(theme.tokens?.dark);
+    const lightTokens = splitModeTokens(theme.tokens?.light);
+    const darkTokens = splitModeTokens(theme.tokens?.dark);
     const darkColors: Record<string, string> = {
         ...darkTokens.colors
     };
@@ -379,7 +408,12 @@ export function themeToDraft(theme: Theme): StudioDraft {
                 dark: darkColors
             },
             spacing: sharedTokens.spacing,
-            animation: sharedTokens.animation
+            animation: sharedTokens.animation,
+            details: {
+                light: lightTokens.details,
+                dark: darkTokens.details,
+                shared: sharedTokens.details
+            }
         },
         extraTokens: {
             ...(nonEmpty(sharedTokens.extra)

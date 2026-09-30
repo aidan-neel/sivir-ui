@@ -10,3 +10,7 @@
 - Stop the Theme Studio inspector clipping a slider's right edge and value while it stretches past its limit.
 - Drop the CSS variable name under each Theme Studio token field. Reset now slides in below a field once it changes and slides away when the field is reset.
 - Fix the Command palette's hover highlight showing up smaller than the active row, and offset from it, when the palette first opens. Dropdown Menu, Context Menu, and Select panels that open with a scale animation get the same fix.
+- Reject font values in theme JSON that contain `{`, `}`, or `;`, so a theme cannot break out of its CSS declaration.
+- Stop the Theme Studio overriding a preset's foundation colors with the Sivir defaults, and let the radius control change presets that set their own radius tokens.
+- Copy JSON in the Theme Studio now exports a portable theme that `parseTheme`, the CLI, and the registry accept, and Copy CSS matches `themeToCss` for that theme.
+- Limit the Theme Studio heading size to the theme contract's range (12–32px); larger values produced theme JSON that failed validation.

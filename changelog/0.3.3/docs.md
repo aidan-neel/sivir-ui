@@ -2,7 +2,6 @@
 - Rework the Attachment documentation with a drop-zone hero, a composition section, and examples for per-file upload progress with retry, inline rejection reasons, and attachments inside a composer.
 - Rebuild the Theme Studio panel around Color, Type, Feel, and Tokens tabs. Tokens lists every theme variable in searchable sections, including the type scale, line heights, letter spacing, shadows, focus ring, overlay, disabled opacity, status tints, and code colors, with a changed marker and per-token reset. Copy CSS and Copy JSON stay pinned at the bottom.
 - Rework the homepage: a clearer headline, a top-aligned layout, and a live workspace settings demo with tabs, forms, and usage meters that you can switch between the built-in themes.
-- Remove the Themes page. Preview the built-in presets from the homepage demo instead.
 - Redesign the docs sidebar: section headings lead the hierarchy, the components index sits at the top of the Components list as Overview, the current page is marked with a dot, and the active link scrolls into view.
 - Rework the Tool documentation around a coding agent: a hero with expandable command output, a live example where calls arrive and settle, and a failed build.
 - Rework the Slider page around the scrub field: a stacked adjustments hero, its interactions, a composition example, and step and disabled examples.
