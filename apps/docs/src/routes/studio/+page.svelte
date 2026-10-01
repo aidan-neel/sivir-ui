@@ -372,6 +372,10 @@
         return { title: group.title, fields };
     });
 
+    const hoverSpeedRow = animationRowGroups
+        .flatMap((rowGroup) => rowGroup.rows)
+        .find((row) => row.definition.name === '--motion-duration-hover');
+
     const tokenSections: TokenSection[] = [
         {
             id: 'color',
@@ -2486,6 +2490,11 @@
                                     description="Slide the hover highlight between items. Off keeps the fill without the motion."
                                 />
                             </div>
+                            {#if hoverSpeedRow}
+                                <div class="flex flex-col gap-1.5 pb-2">
+                                    {@render tokenRow(hoverSpeedRow, 'Hover speed')}
+                                </div>
+                            {/if}
                             <Select.Root
                                 value={interactiveCursor}
                                 onValueChange={(value) => {

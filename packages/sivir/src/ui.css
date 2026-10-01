@@ -275,8 +275,8 @@
         background-color: transparent;
         transition-property: border-color, color, box-shadow, transform, scale;
         transition-duration:
-            var(--motion-duration-menu), var(--motion-duration-menu), var(--motion-duration-menu),
-            var(--motion-duration-press), var(--motion-duration-press);
+            var(--motion-duration-hover), var(--motion-duration-hover),
+            var(--motion-duration-hover), var(--motion-duration-press), var(--motion-duration-press);
         transition-timing-function: var(--ease-press);
     }
 
@@ -321,11 +321,7 @@
         background-color: color-mix(in oklab, var(--color-foreground) 6%, transparent);
         opacity: 0;
         transition-property: transform, width, height, opacity;
-        transition-duration:
-            var(--sivir-traveling-highlight, var(--motion-duration-item)),
-            var(--sivir-traveling-highlight, var(--motion-duration-item)),
-            var(--sivir-traveling-highlight, var(--motion-duration-item)),
-            var(--sivir-traveling-highlight, var(--motion-duration-hover));
+        transition-duration: var(--sivir-traveling-highlight, var(--motion-duration-hover));
         transition-timing-function: var(--ease-out);
         will-change: transform;
     }

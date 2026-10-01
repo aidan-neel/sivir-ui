@@ -21,3 +21,4 @@
 - Studio sliders show Reset beside the value, and other fields show it as a corner pill, instead of a row below, so changing a value no longer shifts the layout.
 - Studio shadow tokens that use variables for their size, such as Control and Outline button, now open in the layer editor with X, Y, Blur, Spread, and Color controls instead of a clipped CSS input.
 - Fix modal, card, and code block footers and headers hugging the edge when surface paneling is off. They now get their own padding.
+- Make the hover speed token drive menu items and the traveling highlight. Dropdown, context, select, combobox, and command items now use `--motion-duration-hover` for their hover feedback, and the highlight slide uses it instead of the separate item duration, so one value sets how fast hover feels everywhere.

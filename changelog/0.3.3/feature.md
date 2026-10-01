@@ -37,3 +37,4 @@
 - Add six theme presets modeled on well-known design systems: Figma, Apple, Claude, Google, shadcn, and Linear. Each sets its own control sizes, type scale, shadows, focus ring, overlay, code colors, and motion, not just colors and corners.
 - Rename the Open theme preset to OpenAI (slug `openai`) and update it to the Studio-tuned palette.
 - Turn off surface paneling with `chrome.surfacePaneling: false` in a theme, or the new Surface paneling switch in the Studio. Modals, sheets, popovers, and cards drop the inset frame and render as one continuous container.
+- Add a Hover speed control to the Studio Feel tab's Interaction section, so the hover duration no longer lives only under All tokens.
