@@ -148,6 +148,17 @@ src/lib/sivir/components/button/
                 unit <Typography.InlineCode>--sivir-space-unit</Typography.InlineCode>
             </li>
             <li>
+                Control height:
+                <Typography.InlineCode>--size-control-sm</Typography.InlineCode>,
+                <Typography.InlineCode>--size-control-md</Typography.InlineCode>,
+                <Typography.InlineCode>--size-control-lg</Typography.InlineCode>, and button-only
+                overrides
+                <Typography.InlineCode>--size-button-sm</Typography.InlineCode>,
+                <Typography.InlineCode>--size-button-md</Typography.InlineCode>,
+                <Typography.InlineCode>--size-button-lg</Typography.InlineCode>
+                that fall back to the matching control height
+            </li>
+            <li>
                 Motion:
                 <Typography.InlineCode>--motion-duration-hover</Typography.InlineCode>,
                 <Typography.InlineCode>--motion-duration-menu</Typography.InlineCode>,

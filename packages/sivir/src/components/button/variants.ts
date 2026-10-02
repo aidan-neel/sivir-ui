@@ -1,7 +1,7 @@
 import { tv } from 'tailwind-variants';
 
 export const button = tv({
-    base: 'sivir-press inline-flex h-[calc(var(--size-control-md)-var(--size-hairline))] hover:cursor-[var(--ui-cursor-interactive)] items-center justify-center gap-2 whitespace-nowrap select-none rounded-[var(--radius-lg)] px-[calc(var(--spacing)*3+var(--size-hairline))] [font-size:var(--font-size-button)] [font-weight:var(--font-weight-button)] [letter-spacing:var(--tracking-button)] leading-none antialiased transition-[background-color,border-color,color,box-shadow,transform,scale] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-press)] motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-0 focus-visible:shadow-[var(--focus-ring)] disabled:pointer-events-none disabled:opacity-[var(--opacity-disabled)] aria-disabled:cursor-default [&_svg]:pointer-events-none [&_svg:not([class*="size-"])]:size-4 [&_svg]:shrink-0',
+    base: 'sivir-press inline-flex h-[calc(var(--size-button-md,var(--size-control-md))-var(--size-hairline))] hover:cursor-[var(--ui-cursor-interactive)] items-center justify-center gap-2 whitespace-nowrap select-none rounded-[var(--radius-lg)] px-[calc(var(--spacing)*3+var(--size-hairline))] [font-size:var(--font-size-button)] [font-weight:var(--font-weight-button)] [letter-spacing:var(--tracking-button)] leading-none antialiased transition-[background-color,border-color,color,box-shadow,transform,scale] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-press)] motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-0 focus-visible:shadow-[var(--focus-ring)] disabled:pointer-events-none disabled:opacity-[var(--opacity-disabled)] aria-disabled:cursor-default [&_svg]:pointer-events-none [&_svg:not([class*="size-"])]:size-4 [&_svg]:shrink-0',
     variants: {
         variant: {
             /**
@@ -31,9 +31,9 @@ export const button = tv({
             panel: 'border-[length:var(--border-size)] border-border bg-card text-[var(--color-button-foreground)] shadow-[var(--elevation-1)] ring-1 ring-inset ring-[color-mix(in_oklab,var(--color-border)_50%,transparent)] hover:bg-secondary data-[state=open]:bg-secondary focus-visible:shadow-[var(--focus-ring),var(--elevation-1)]'
         },
         size: {
-            sm: 'h-[calc(var(--size-control-sm)-var(--size-hairline))] px-[calc(var(--spacing)*3+var(--size-hairline)/4)]',
-            md: 'h-[calc(var(--size-control-md)-var(--size-hairline))]',
-            lg: 'h-[calc(var(--size-control-lg)-var(--size-hairline))] px-4',
+            sm: 'h-[calc(var(--size-button-sm,var(--size-control-sm))-var(--size-hairline))] px-[calc(var(--spacing)*3+var(--size-hairline)/4)]',
+            md: 'h-[calc(var(--size-button-md,var(--size-control-md))-var(--size-hairline))]',
+            lg: 'h-[calc(var(--size-button-lg,var(--size-control-lg))-var(--size-hairline))] px-4',
             icon: 'h-[var(--size-icon-md)] w-[var(--size-icon-md)] min-w-[var(--size-icon-md)] justify-center px-0'
         }
     },

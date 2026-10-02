@@ -14,6 +14,7 @@
     import Settings from '@lucide/svelte/icons/settings';
     import SquareMousePointer from '@lucide/svelte/icons/square-mouse-pointer';
     import User from '@lucide/svelte/icons/user';
+    import X from '@lucide/svelte/icons/x';
     import * as Accordion from '@sivir-ui/svelte/components/accordion';
     import * as Alert from '@sivir-ui/svelte/components/alert';
     import * as AlertDialog from '@sivir-ui/svelte/components/alert-dialog';
@@ -1901,16 +1902,10 @@
     let tokenEditOpen = $state(false);
     let tokenEditTarget = $state<Element | null>(null);
     let tokenEditHover = $state<Element | null>(null);
-    let tokenEditAnchor = $state({ x: 0, y: 0 });
     let tokenEditHighlight = $state<Element[]>([]);
     let tokenIndex: TokenIndex | null = null;
     let tokenIndexKey = '';
 
-    const tokenEditReference = $derived({
-        getBoundingClientRect: () => {
-            return new DOMRect(tokenEditAnchor.x, tokenEditAnchor.y, 0, 0);
-        }
-    });
     const tokenEditTrail = $derived.by(() => {
         const trail: Element[] = [];
         let current = tokenEditTarget;
@@ -1947,6 +1942,13 @@
         return otherRows.length > 0
             ? [...sections, { id: 'other', label: 'Other', rows: otherRows }]
             : sections;
+    });
+    const tokenEditSummary = $derived.by(() => {
+        const count = tokenEditSections.reduce((total, section) => {
+            return total + section.rows.length;
+        }, 0);
+
+        return count === 1 ? '1 editable token' : `${count} editable tokens`;
     });
     const tokenEditOutline = $derived.by(() => {
         if (tokenEditHighlight.length > 0) {
@@ -2042,46 +2044,44 @@
 
         event.preventDefault();
         event.stopPropagation();
-        tokenEditAnchor = {
-            x: event.clientX,
-            y: event.clientY
-        };
         tokenEditTarget = event.target;
         tokenEditHighlight = [];
         tokenEditOpen = true;
     }
 
+    function closeTokenEditor() {
+        tokenEditOpen = false;
+        tokenEditHighlight = [];
+        tokenEditHover = null;
+    }
+
     function handleTokenEditKeydown(event: KeyboardEvent) {
-        if (event.key !== 'Escape' || !tokenEditMode || tokenEditOpen) {
+        if (event.key !== 'Escape' || !tokenEditMode) {
             return;
         }
 
-        if (event.target instanceof Element && event.target.closest('[role="dialog"]')) {
+        if (
+            event.target instanceof Element &&
+            event.target.closest('[role="dialog"], [role="listbox"], [role="menu"]')
+        ) {
+            return;
+        }
+
+        if (tokenEditOpen) {
+            closeTokenEditor();
             return;
         }
 
         setTokenEditMode(false);
     }
 
-    function suppressTokenEditContextMenu(event: MouseEvent) {
-        if (!tokenEditOpen) {
-            return;
-        }
-
-        if (event.target instanceof Element && event.target.closest('[role="dialog"]')) {
-            return;
-        }
-
-        event.preventDefault();
-    }
-
     async function openTokenEditSection(sectionId: string) {
-        tokenEditOpen = false;
+        closeTokenEditor();
         await openTokens(sectionId);
     }
 </script>
 
-<svelte:window oncontextmenu={suppressTokenEditContextMenu} onkeydown={handleTokenEditKeydown} />
+<svelte:window onkeydown={handleTokenEditKeydown} />
 
 <svelte:head>
     <title>Sivir · Studio</title>
@@ -3451,107 +3451,138 @@
             >
                 {@render dashboardPreview()}
             </div>
-            <Button
-                variant={tokenEditMode ? 'primary' : 'outline'}
-                size="sm"
-                class="absolute right-6 bottom-6 z-10 hidden shadow-[var(--elevation-float)] min-[1100px]:inline-flex"
-                aria-pressed={tokenEditMode}
-                onclick={() => {
+            {#if tokenEditOpen && tokenEditTarget}
+                <aside
+                    aria-label="Element tokens"
+                    class="sivir-modal-frame absolute top-3 right-6 bottom-6 z-50 flex w-[22rem] flex-col overflow-hidden text-foreground shadow-[var(--elevation-float)] [--sivir-modal-inset:calc(var(--spacing)*0.5)]"
+                >
+                    <div class="sivir-inset-surface flex min-h-0 flex-1 flex-col">
+                        <header class="flex flex-col gap-3 px-5 pt-5 pb-4">
+                            <div class="flex items-start justify-between gap-3">
+                                <div class="flex min-w-0 flex-col gap-1">
+                                    <h2
+                                        class="m-0 truncate font-mono text-[length:var(--font-size-header)] leading-tight font-medium"
+                                    >
+                                        {elementLabel(tokenEditTarget)}
+                                    </h2>
+                                    <Typography.Metadata class="tabular-nums">
+                                        {tokenEditSummary}
+                                    </Typography.Metadata>
+                                </div>
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    class="-mt-1 -mr-2 shrink-0"
+                                    aria-label="Close element tokens"
+                                    onclick={closeTokenEditor}
+                                >
+                                    <X size={16} />
+                                </Button>
+                            </div>
+                            <nav
+                                aria-label="Element path"
+                                class="flex min-w-0 flex-wrap items-center gap-x-1 gap-y-0.5"
+                            >
+                                {#each tokenEditTrail as element, index (index)}
+                                    {#if index > 0}
+                                        <span
+                                            class="text-xs text-foreground-muted"
+                                            aria-hidden="true"
+                                        >
+                                            /
+                                        </span>
+                                    {/if}
+                                    <button
+                                        type="button"
+                                        class="rounded-[var(--radius-sm)] px-1 py-0.5 font-mono text-xs text-foreground-muted transition-colors [transition-duration:var(--motion-duration-hover)] hover:cursor-[var(--ui-cursor-interactive)] hover:bg-foreground/[0.06] hover:text-foreground focus-visible:shadow-[var(--focus-ring)] focus-visible:outline-none aria-[current=true]:text-foreground"
+                                        aria-current={element === tokenEditTarget}
+                                        onclick={() => {
+                                            tokenEditTarget = element;
+                                        }}
+                                    >
+                                        {elementLabel(element)}
+                                    </button>
+                                {/each}
+                            </nav>
+                        </header>
+                        <div class="h-px shrink-0 bg-border" aria-hidden="true"></div>
+                        <ScrollArea class="min-h-0 flex-1" showCues={false}>
+                            <div class="flex flex-col gap-8 px-5 pt-5 pb-6">
+                                {#each tokenEditSections as section (section.id)}
+                                    <section class="flex flex-col gap-4">
+                                        <div class="flex items-baseline justify-between gap-3">
+                                            {@render sectionHeading(section.label)}
+                                            {#if section.id !== 'other'}
+                                                <button
+                                                    type="button"
+                                                    class="rounded-[var(--radius-sm)] text-xs text-foreground-muted transition-colors [transition-duration:var(--motion-duration-hover)] hover:cursor-[var(--ui-cursor-interactive)] hover:text-foreground focus-visible:shadow-[var(--focus-ring)] focus-visible:outline-none"
+                                                    onclick={() => {
+                                                        void openTokenEditSection(section.id);
+                                                    }}
+                                                >
+                                                    Open in Tokens
+                                                </button>
+                                            {/if}
+                                        </div>
+                                        <div class="flex flex-col gap-5">
+                                            {#each section.rows as row (row.definition.name)}
+                                                <div
+                                                    role="group"
+                                                    aria-label={row.definition.label}
+                                                    class="flex flex-col gap-1.5"
+                                                    onpointerenter={() => {
+                                                        highlightTokenUsage(row.definition.name);
+                                                    }}
+                                                    onpointerleave={() => {
+                                                        highlightTokenUsage(null);
+                                                    }}
+                                                    onfocusin={() => {
+                                                        highlightTokenUsage(row.definition.name);
+                                                    }}
+                                                    onfocusout={() => {
+                                                        highlightTokenUsage(null);
+                                                    }}
+                                                >
+                                                    {@render tokenRow(row)}
+                                                    <Typography.Metadata class="tabular-nums">
+                                                        {tokenUsageLabel(row)}
+                                                    </Typography.Metadata>
+                                                </div>
+                                            {/each}
+                                        </div>
+                                    </section>
+                                {:else}
+                                    <p
+                                        class="m-0 text-[length:var(--font-size-body)] text-foreground-muted"
+                                    >
+                                        No editable tokens on this element. Choose a parent in the
+                                        path above.
+                                    </p>
+                                {/each}
+                            </div>
+                        </ScrollArea>
+                    </div>
+                </aside>
+            {:else}
+                <Button
+                    variant={tokenEditMode ? 'primary' : 'outline'}
+                    size="sm"
+                    class="absolute right-6 bottom-6 z-10 hidden shadow-[var(--elevation-float)] min-[1100px]:inline-flex"
+                    aria-pressed={tokenEditMode}
+                    onclick={() => {
                     setTokenEditMode(!tokenEditMode);
                 }}
-            >
-                <SquareMousePointer size={14} />
-                Edit tokens
-            </Button>
+                >
+                    <SquareMousePointer size={14} />
+                    Edit tokens
+                </Button>
+            {/if}
         </div>
     </section>
 
     {#if previewFrame && tokenEditOutline.length > 0}
         <ElementOutline container={previewFrame} elements={tokenEditOutline} />
     {/if}
-
-    <Popover.Root
-        bind:open={tokenEditOpen}
-        onOpenChange={() => {
-            tokenEditHighlight = [];
-            tokenEditHover = null;
-        }}
-    >
-        <Popover.Content
-            refElement={tokenEditReference}
-            class="w-80"
-            surfaceClass="flex max-h-[min(36rem,80vh)] flex-col gap-3 p-3"
-            aria-label="Element tokens"
-        >
-            <nav aria-label="Element path" class="flex min-w-0 flex-wrap items-center gap-1">
-                {#each tokenEditTrail as element, index (index)}
-                    {#if index > 0}
-                        <span class="text-xs text-foreground-muted" aria-hidden="true">›</span>
-                    {/if}
-                    <button
-                        type="button"
-                        class="rounded-[var(--radius-sm)] px-1 font-mono text-xs text-foreground-muted transition-colors [transition-duration:var(--motion-duration-hover)] hover:cursor-[var(--ui-cursor-interactive)] hover:text-foreground focus-visible:shadow-[var(--focus-ring)] focus-visible:outline-none aria-[current=true]:text-foreground"
-                        aria-current={element === tokenEditTarget}
-                        onclick={() => {
-                            tokenEditTarget = element;
-                        }}
-                    >
-                        {elementLabel(element)}
-                    </button>
-                {/each}
-            </nav>
-            <ScrollArea class="-mx-3 min-h-0 flex-1" showCues={false}>
-                <div class="flex flex-col gap-5 px-3">
-                    {#each tokenEditSections as section (section.id)}
-                        <section class="flex flex-col gap-2">
-                            <div class="flex items-baseline justify-between gap-2">
-                                {@render sectionHeading(section.label)}
-                                {#if section.id !== 'other'}
-                                    <button
-                                        type="button"
-                                        class="rounded-[var(--radius-sm)] text-xs text-foreground-muted transition-colors [transition-duration:var(--motion-duration-hover)] hover:cursor-[var(--ui-cursor-interactive)] hover:text-foreground focus-visible:shadow-[var(--focus-ring)] focus-visible:outline-none"
-                                        onclick={() => {
-                                            void openTokenEditSection(section.id);
-                                        }}
-                                    >
-                                        Open in Tokens
-                                    </button>
-                                {/if}
-                            </div>
-                            {#each section.rows as row (row.definition.name)}
-                                <div
-                                    role="group"
-                                    aria-label={row.definition.label}
-                                    class="flex flex-col gap-1"
-                                    onpointerenter={() => {
-                                        highlightTokenUsage(row.definition.name);
-                                    }}
-                                    onpointerleave={() => {
-                                        highlightTokenUsage(null);
-                                    }}
-                                    onfocusin={() => {
-                                        highlightTokenUsage(row.definition.name);
-                                    }}
-                                    onfocusout={() => {
-                                        highlightTokenUsage(null);
-                                    }}
-                                >
-                                    {@render tokenRow(row)}
-                                    <p class="m-0 text-xs text-foreground-muted tabular-nums">
-                                        {tokenUsageLabel(row)}
-                                    </p>
-                                </div>
-                            {/each}
-                        </section>
-                    {:else}
-                        <p class="m-0 text-[13px] text-foreground-muted">
-                            No editable tokens on this element.
-                        </p>
-                    {/each}
-                </div>
-            </ScrollArea>
-        </Popover.Content>
-    </Popover.Root>
 
     <Sheet.Root>
         <Sheet.Trigger

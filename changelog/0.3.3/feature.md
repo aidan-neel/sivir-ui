@@ -37,4 +37,5 @@
 - Add six theme presets modeled on well-known design systems: Figma, Apple, Claude, Google, shadcn, and Linear. Each sets its own control sizes, type scale, shadows, focus ring, overlay, code colors, and motion, not just colors and corners.
 - Rename the Open theme preset to OpenAI (slug `openai`) and update it to the Studio-tuned palette.
 - Turn off surface paneling with `chrome.surfacePaneling: false` in a theme, or the new Surface paneling switch in the Studio. Modals, sheets, popovers, and cards drop the inset frame and render as one continuous container.
-- Turn on Edit tokens in the Studio preview, then right-click any element to edit the tokens it uses in place. Each token shows how many preview elements share it and outlines them on hover; edits change the theme-wide token.
+- Turn on Edit tokens in the Studio preview, then right-click any element to edit the tokens it uses in a floating side panel. Right-click another element to switch targets. Each token shows how many preview elements share it and outlines them on hover; edits change the theme-wide token.
+- Set button heights independently of inputs and other controls with `--size-button-sm`, `--size-button-md`, and `--size-button-lg`, or the new button sliders in the Studio Controls group. Each falls back to the matching `--size-control-*` height.

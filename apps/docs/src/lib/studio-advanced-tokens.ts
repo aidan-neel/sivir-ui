@@ -448,6 +448,33 @@ export const spacingTokenDefinitions = [
         step: 1
     },
     {
+        name: '--size-button-sm',
+        label: 'Small button',
+        group: 'Controls',
+        fallback: 'var(--size-control-sm)',
+        min: 16,
+        max: 64,
+        step: 1
+    },
+    {
+        name: '--size-button-md',
+        label: 'Medium button',
+        group: 'Controls',
+        fallback: 'var(--size-control-md)',
+        min: 16,
+        max: 72,
+        step: 1
+    },
+    {
+        name: '--size-button-lg',
+        label: 'Large button',
+        group: 'Controls',
+        fallback: 'var(--size-control-lg)',
+        min: 16,
+        max: 80,
+        step: 1
+    },
+    {
         name: '--size-icon-md',
         label: 'Icon',
         group: 'Controls',

@@ -10,7 +10,7 @@ Decisions made with the maintainer:
 - Scope is the Studio preview only. No `@sivir-ui/svelte` changes, no new
   package API, no Theme schema change.
 - Edits change the global token, the same edit the Tokens tab makes. The
-  popover makes the blast radius visible ("Used by N elements in this
+  panel makes the blast radius visible ("Used by N elements in this
   preview") instead of offering per-component overrides.
 - Token discovery reads the live CSSOM at right-click time (no hand-maintained
   per-component lists, no build-time index).
@@ -29,28 +29,33 @@ Decisions made with the maintainer:
     preview elements' styles).
   - A `contextmenu` listener on the preview root in the capture phase calls
     `preventDefault` and `stopPropagation`, so the browser menu and the
-    preview's own ContextMenu demo do not open. It opens the token popover at
-    the pointer. Right-button `pointerdown` and `mousedown` are swallowed in
-    the capture phase too, so a right-click never focuses an input or opens a
-    combobox, menu, or tab underneath.
-- The popover (Sivir `Popover.Root` controlled `open`, `Popover.Content` with a
-  `refElement` virtual element at the pointer, `role="dialog"`) contains:
-  - **Header:** a breadcrumb of the target and up to four ancestors inside the
-    preview, labelled by tag name (`button`, `div`, `span`). Choosing an
-    ancestor re-targets the popover.
+    preview's own ContextMenu demo do not open. It opens the token panel.
+    Right-button `pointerdown` and `mousedown` are swallowed in the capture
+    phase too, so a right-click never focuses an input or opens a combobox,
+    menu, or tab underneath.
+- The token panel is a non-modal floating sidebar docked inside the right edge
+  of the preview frame (`aside`, 22rem wide, full frame height). It reuses the
+  Popover frame and inset surface classes so surface paneling applies. Because
+  it is non-modal, right-clicking another preview element while it is open
+  re-targets it. It contains:
+  - **Header:** the target's tag name as the title, an "N editable tokens"
+    count, a close button, and a path of the target and up to four ancestors
+    inside the preview, labelled by tag name (`button`, `div`, `span`).
+    Choosing an ancestor re-targets the panel.
   - **Body:** editable tokens the target uses, grouped and ordered like the
     Tokens tab sections (Colors, Layout, Motion, then any remaining buckets),
     each rendered through the existing `tokenRow` snippet so controls, changed
-    dots and reset behaviour are identical and edits stay in sync.
+    dots and reset behaviour are identical and edits stay in sync. Sections are
+    separated by a larger interval than rows.
   - **Per row:** "<token group>, used by N elements". The group disambiguates
     rows that share a label, such as Body font size and Body tracking.
     Hovering or focusing the row outlines those elements with the same overlay
     mechanism.
-  - **Empty state:** "No editable tokens on this element." The breadcrumb stays
+  - **Empty state:** "No editable tokens on this element." The path stays
     available so the author can step up.
-- Closing: Escape, outside click (Popover defaults). Escape while no popover is
-  open turns edit mode off. Turning edit mode off closes the popover and
-  clears outlines.
+- Closing: the close button or Escape, unless focus is inside a nested
+  dialog, listbox, or menu. Escape while the panel is closed turns edit mode
+  off. Turning edit mode off closes the panel and clears outlines.
 
 ## Token discovery (`apps/docs/src/lib/studio/token-usage.ts`)
 
@@ -108,7 +113,7 @@ The editable set is every `name` in `colorTokenDefinitions`,
   element, recomputed on scroll, window resize, and element or container resize
   while visible).
 - `+page.svelte`: edit-mode state, the toggle, capture-phase listeners, and the
-  popover. The popover lives in the page because it renders the page-local
+  token panel. The panel lives in the page because it renders the page-local
   `tokenRow` snippet.
 
 ## Out of scope
