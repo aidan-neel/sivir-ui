@@ -12,6 +12,7 @@
     import { dev } from '$app/environment';
     import { afterNavigate } from '$app/navigation';
     import { page } from '$app/stores';
+    import { trackGitHubClick, trackPageView } from '$lib/analytics';
     import { DEFAULT_FONT, fonts, selectedFont } from '$lib/fonts.svelte';
 
     import type { LayoutData } from './$types';
@@ -45,10 +46,13 @@
     let docsScrollEl = $state<HTMLDivElement>();
 
     afterNavigate(() => {
+        trackPageView($page.url.pathname);
         docsScrollEl?.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
         window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
     });
 </script>
+
+<svelte:window onclick={trackGitHubClick} />
 
 <svelte:head>
     <title>{dev ? 'Sivir UI - Dev' : 'Sivir UI'}</title>
