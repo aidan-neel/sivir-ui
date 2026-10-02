@@ -15,7 +15,11 @@
             <Modal.Header>
                 <Modal.Title>Level {index + 1} of {MAX_LEVEL}</Modal.Title>
                 <Modal.Description>
-                    Escape closes this level and returns to level {index}.
+                    {#if index === 0}
+                        Escape closes this level and returns to the page.
+                    {:else}
+                        Escape closes this level and returns to level {index}.
+                    {/if}
                 </Modal.Description>
             </Modal.Header>
             {#if index + 1 < MAX_LEVEL}
