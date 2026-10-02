@@ -8,6 +8,7 @@
 - Give flat code blocks and file diffs a divided, tinted header when surface paneling is off. Code blocks without tabs float their actions in the top-right corner instead of reserving a header row.
 - Code Block tab switches swap the snippet instantly instead of sliding and crossfading blurred text. Code blocks composed from subparts now ease their height too, instead of snapping.
 - Menu, select, and combobox highlights now follow their item while the list scrolls and size correctly as a menu opens, instead of staying behind or appearing slightly off.
+- Menu and combobox highlights line up with their item in lists whose width is not a whole number of pixels, instead of sitting a fraction of a pixel off.
 - Buttons, toggles, tabs, and menu highlights now follow the Hover duration for their hover fade and traveling highlight slide, instead of ignoring it.
 - With traveling highlight off, menu, select, command, and combobox items now fade their hover background on the Hover duration instead of snapping between items.
 - Restore the hover background on list and nav items when the traveling highlight is turned off. Item buttons with a transparent background class were hiding it.

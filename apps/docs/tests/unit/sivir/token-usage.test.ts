@@ -119,7 +119,9 @@ describe('collectRuleInputs', () => {
         ].join('\n');
         document.head.append(style);
 
-        const inputs = collectRuleInputs(document.styleSheets);
+        const sheet = style.sheet;
+        expect(sheet).toBeTruthy();
+        const inputs = collectRuleInputs(sheet ? [sheet] : []);
         style.remove();
 
         const definitions = inputs

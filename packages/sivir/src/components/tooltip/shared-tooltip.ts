@@ -40,7 +40,8 @@ let stopTracking: (() => void) | undefined;
 const SHOW = 'scale(1)';
 const HIDE = 'scale(0.94)';
 const SHORTCUT_CLASS =
-    'ms-2 inline-block min-w-5 rounded-[var(--radius-sm)] bg-[color-mix(in_oklab,var(--color-tooltip-foreground)_14%,transparent)] px-1 text-center align-[0.0625rem] font-sans text-[length:var(--font-size-meta)] leading-[1.25rem] tracking-[0.12em] text-[color-mix(in_oklab,var(--color-tooltip-foreground)_72%,transparent)] empty:hidden';
+    // token-lint-disable-next-line no-literal-length: optical baseline and keycap tracking match the label text
+    'ms-2 inline-block min-w-5 rounded-[var(--radius-sm)] bg-[color-mix(in_oklab,var(--color-tooltip-foreground)_14%,transparent)] px-1 text-center align-[0.0625rem] font-sans text-[length:var(--font-size-meta)] leading-5 tracking-[0.12em] text-[color-mix(in_oklab,var(--color-tooltip-foreground)_72%,transparent)] empty:hidden';
 
 /**
  * Whether this platform can drive a Scritto roll. The unit-test DOM has no

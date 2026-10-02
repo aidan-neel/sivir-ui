@@ -820,7 +820,9 @@ export function travelingHighlight(node: HTMLElement, options: TravelingHighligh
 
         const container = node.getBoundingClientRect();
         const rect = target.getBoundingClientRect();
-        const scale = node.offsetWidth > 0 ? container.width / node.offsetWidth : 1;
+        const layoutWidth = node.offsetWidth;
+        const transformed = layoutWidth > 0 && Math.abs(container.width - layoutWidth) >= 1;
+        const scale = transformed ? container.width / layoutWidth : 1;
         const x = (rect.left - container.left) / scale - node.clientLeft + node.scrollLeft;
         const y = (rect.top - container.top) / scale - node.clientTop + node.scrollTop;
 

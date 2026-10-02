@@ -43,8 +43,9 @@
 
         const resultsBounds = resultsElement.getBoundingClientRect();
         const itemBounds = activeElement.getBoundingClientRect();
-        const scale =
-            resultsElement.offsetWidth > 0 ? resultsBounds.width / resultsElement.offsetWidth : 1;
+        const layoutWidth = resultsElement.offsetWidth;
+        const transformed = layoutWidth > 0 && Math.abs(resultsBounds.width - layoutWidth) >= 1;
+        const scale = transformed ? resultsBounds.width / layoutWidth : 1;
         const x = (itemBounds.left - resultsBounds.left) / scale - resultsElement.clientLeft;
         const y =
             (itemBounds.top - resultsBounds.top) / scale -

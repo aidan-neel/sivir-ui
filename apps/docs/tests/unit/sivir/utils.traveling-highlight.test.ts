@@ -181,9 +181,10 @@ describe('travelingHighlight', () => {
         await settle();
         const highlight = surface.querySelector<HTMLElement>('.sivir-item-highlight');
         expect(highlight).toBeTruthy();
-        expect(highlight?.style.opacity).toBe('1');
-        expect(highlight?.style.transform).toContain('40px');
+        expect(highlight?.style.opacity).not.toBe('1');
         expect(highlight?.getAttribute('data-ready')).toBeNull();
+        expect(active.getAttribute('data-item-highlighted')).toBe('true');
+        expect(selected.hasAttribute('data-item-highlighted')).toBe(false);
         action.destroy?.();
         document.documentElement.style.removeProperty('--sivir-traveling-highlight');
     });
