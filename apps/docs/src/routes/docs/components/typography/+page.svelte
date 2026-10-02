@@ -13,7 +13,7 @@
     import TextRoles from './examples/text-roles.svelte';
     import TextRolesSrc from './examples/text-roles.svelte?raw';
 
-    const installCommand = 'bunx @sivir-ui/svelte add typography';
+    const installCommand = 'bunx --package @sivir-ui/svelte sivir add typography';
     const usage = `import * as Typography from '@sivir-ui/svelte/components/typography';
 
 <Typography.H2>Account settings</Typography.H2>
@@ -71,7 +71,7 @@
     <title>Sivir · Typography</title>
     <meta
         name="description"
-        content="Semantic document headings, text, inline code, and interface typography primitives."
+        content="Heading, paragraph, inline code, and metadata components styled from the theme's type tokens."
     />
 </svelte:head>
 
@@ -80,7 +80,9 @@
         <div>
             <Typography.H1> Typography </Typography.H1>
             <Typography.Text variant="lead" class="mt-2 max-w-2xl">
-                Semantic text roles that keep visual hierarchy separate from document structure.
+                H1 through H6 render their matching heading element at the document scale. Title
+                takes a level prop, so a component heading can use any h1 to h6 tag at one fixed
+                size.
             </Typography.Text>
         </div>
         <DocsPager />
@@ -100,9 +102,11 @@
     <section id="usage" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading">Usage</Typography.H2>
         <Typography.Text variant="supporting" class="m-0 max-w-2xl">
-            Choose a role for meaning, then use
+            Text defaults to the supporting variant; set
+            <Typography.InlineCode>variant</Typography.InlineCode>
+            to lead or body. Classes you pass through
             <Typography.InlineCode>class</Typography.InlineCode>
-            for a local exception.
+            override the defaults.
         </Typography.Text>
         <CodeBlock code={usage} lang="svelte" copy="overlay" />
     </section>
@@ -111,7 +115,8 @@
         <div>
             <Typography.H2 class="docs-section-heading">Role reference</Typography.H2>
             <Typography.Text variant="supporting" class="mt-2 max-w-2xl">
-                Each primitive owns typography and color, but never margins or surrounding layout.
+                Each part sets type and color only. None of them add margins, so spacing comes from
+                the parent layout.
             </Typography.Text>
         </div>
 
@@ -137,17 +142,16 @@
     <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
         <div>
             <Typography.H2 class="docs-section-heading">Examples</Typography.H2>
-            <Typography.Text variant="supporting" class="mt-2 max-w-2xl">
-                Keep semantic levels explicit and add numeric treatment only where values are
-                compared.
-            </Typography.Text>
         </div>
 
         <div id="heading-levels" class="scroll-mt-20 flex flex-col gap-3">
             <Typography.H3 class="docs-subsection-heading">Heading levels</Typography.H3>
             <Typography.Text variant="supporting" class="m-0 max-w-2xl">
-                Use the heading that matches the document outline. Compact component titles remain
-                available through <Typography.InlineCode>Typography.Title</Typography.InlineCode>.
+                Pick the level from the document outline. For a heading inside a component, use
+                <Typography.InlineCode>Typography.Title</Typography.InlineCode>
+                with a
+                <Typography.InlineCode>level</Typography.InlineCode>
+                instead.
             </Typography.Text>
             <ComponentPreview code={HeadingLevelsSrc}>
                 <HeadingLevels />
@@ -157,8 +161,9 @@
         <div id="text-roles" class="scroll-mt-20 flex flex-col gap-3">
             <Typography.H3 class="docs-subsection-heading">Text roles</Typography.H3>
             <Typography.Text variant="supporting" class="m-0 max-w-2xl">
-                Choose a paragraph role from its relationship to the surrounding content, not from a
-                standalone size or color.
+                Text renders a <Typography.InlineCode>p</Typography.InlineCode>. Pick the variant
+                from the paragraph's job: lead opens a page or section, body is long-form prose, and
+                supporting is secondary context.
             </Typography.Text>
             <ComponentPreview code={TextRolesSrc}>
                 <TextRoles />

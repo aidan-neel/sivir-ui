@@ -8,7 +8,7 @@
 }`;
 </script>
 
-<!-- The eight --code-block-token-* variables inherit, so a wrapper can
+<!-- The nine --code-block-token-* variables inherit, so a wrapper can
      recolor the built-in palette per mode without a stylesheet. -->
 <div class="demo-brand-tokens">
     <CodeBlock {code} lang="typescript" copy="overlay" />

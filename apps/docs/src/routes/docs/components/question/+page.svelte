@@ -16,19 +16,24 @@
     const usageSnippet = `import * as Question from '@sivir-ui/svelte/components/question';
 import type { QuestionAnswer } from '@sivir-ui/svelte/components/question';
 
-let answer = $state<QuestionAnswer>();
+let answer: QuestionAnswer | undefined = $state();
 
-<Question.Root variant="inset" bind:value={answer} onSubmit={(value) => continueAgent(value)}>
+<Question.Root
+  variant="inset"
+  bind:value={answer}
+  onSubmit={(value) => continueAgent(value)}
+  onCancel={() => skipQuestion()}
+>
   <Question.Content>
-    <Question.Title>Which environment should I use?</Question.Title>
-    <Question.Description>Your prompt draft remains untouched.</Question.Description>
+    <Question.Title>Which environment should I deploy to?</Question.Title>
+    <Question.Description>Production deploys need a second reviewer.</Question.Description>
     <Question.Options>
       <Question.Option value="preview" label="Preview" />
       <Question.Option value="production" label="Production" />
     </Question.Options>
   </Question.Content>
   <Question.Actions>
-    <Question.Cancel onclick={() => skipQuestion()}>Skip question</Question.Cancel>
+    <Question.Cancel>Skip question</Question.Cancel>
     <Question.Submit />
   </Question.Actions>
 </Question.Root>`;
@@ -38,7 +43,7 @@ let answer = $state<QuestionAnswer>();
     <title>Sivir · Question</title>
     <meta
         name="description"
-        content="An inline agent question that temporarily replaces the prompt composer with choice or free-text answers."
+        content="A form an agent uses to ask the user a single-choice, multiple-choice, or free-text question."
     />
 </svelte:head>
 
@@ -47,8 +52,8 @@ let answer = $state<QuestionAnswer>();
         <div>
             <Typography.H1> Question </Typography.H1>
             <Typography.Text variant="lead" class="mt-2 max-w-2xl">
-                A focused question in an inset Card. Collect an answer or guide someone through a
-                few decisions, one at a time.
+                The question, its answer controls, and the cancel and submit buttons render inside a
+                Card. Ask one question, or step through several in the same card.
             </Typography.Text>
         </div>
         <DocsPager />
@@ -66,41 +71,62 @@ let answer = $state<QuestionAnswer>();
     <section id="usage" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading">Usage</Typography.H2>
         <Typography.Text variant="supporting">
-            Render <Typography.InlineCode>Question.Root</Typography.InlineCode> in the same layout
-            slot as <Typography.InlineCode>Composer.Root</Typography.InlineCode>. Keep the prompt
-            value in their shared parent so swapping the forms never clears an unsent draft.
+            <Typography.InlineCode>onSubmit</Typography.InlineCode>
+            is required and receives the answer.
+            <Typography.InlineCode>onCancel</Typography.InlineCode>
+            runs when
+            <Typography.InlineCode>Question.Cancel</Typography.InlineCode>
+            is pressed. To ask mid-conversation, render
+            <Typography.InlineCode>Question.Root</Typography.InlineCode>
+            in place of <Typography.InlineCode>Composer.Root</Typography.InlineCode> and keep the
+            composer's value in their shared parent, so the unsent draft survives the swap.
         </Typography.Text>
         <CodeBlock code={usageSnippet} lang="svelte" copy="overlay" />
         <Typography.Text variant="supporting">
-            Use <Typography.InlineCode>type="single"</Typography.InlineCode> for one option,
-            <Typography.InlineCode>type="multiple"</Typography.InlineCode>
-            for several, or
+            <Typography.InlineCode>type</Typography.InlineCode>
+            defaults to
+            <Typography.InlineCode>"single"</Typography.InlineCode>, which answers with a string.
+            Use <Typography.InlineCode>type="multiple"</Typography.InlineCode>
+            for a string array, or
             <Typography.InlineCode>type="text"</Typography.InlineCode>
             with
-            <Typography.InlineCode>Question.Input</Typography.InlineCode>. Async submit handlers are
-            awaited and cannot run twice while unresolved. Changing
+            <Typography.InlineCode>Question.Input</Typography.InlineCode>. An answer is required
+            unless you set <Typography.InlineCode>{'required={false}'}</Typography.InlineCode>;
+            submitting without one shows a validation message. Async submit handlers are awaited and
+            cannot run twice while unresolved. Changing
             <Typography.InlineCode>type</Typography.InlineCode>
-            resets the bound answer to the new mode's empty value.
+            resets the bound answer to the new type's empty value.
+        </Typography.Text>
+        <Typography.Text variant="supporting">
+            Each option shows its position as a key hint. While focus is inside the question and not
+            in a text field, pressing 1 through 9 selects that option, or toggles it with
+            <Typography.InlineCode>type="multiple"</Typography.InlineCode>.
         </Typography.Text>
     </section>
 
     <section id="composition" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading">Composition</Typography.H2>
         <Typography.Text variant="supporting">
-            Set <Typography.InlineCode>variant="inset"</Typography.InlineCode> on
+            <Typography.InlineCode>variant="inset"</Typography.InlineCode>
+            on
             <Typography.InlineCode>Question.Root</Typography.InlineCode>
-            for the shared Card frame and recessed content surface. The default variant uses a plain
-            Card. Place
+            places the content on a recessed surface inside the Card frame. The default variant is a
+            plain Card. Place
             <Typography.InlineCode>Question.Actions</Typography.InlineCode>
             after
             <Typography.InlineCode>Question.Content</Typography.InlineCode>
-            to keep controls in the footer. Both parts are optional; omit the description or restyle
-            the actions to suit the space.
+            to keep the buttons in the footer.
+            <Typography.InlineCode>Question.Description</Typography.InlineCode>
+            and
+            <Typography.InlineCode>Question.Actions</Typography.InlineCode>
+            are optional.
         </Typography.Text>
         <CodeBlock
             lang="svelte"
             copy="overlay"
-            code={`<Question.Root variant="inset" bind:value={answer} onSubmit={next}>
+            code={`import * as Question from '@sivir-ui/svelte/components/question';
+
+<Question.Root variant="inset" bind:value={answer} onSubmit={next}>
   <Question.Content step={index}>
     <Question.Title>{question.title}</Question.Title>
     <Question.Options>
@@ -136,21 +162,23 @@ let answer = $state<QuestionAnswer>();
             preset scales the durations, and reduced motion turns the animation off.
         </Typography.Text>
         <Typography.Text variant="supporting">
-            Keep the step index and each answer in the parent, as in the example above. Content
-            keeps changes without resetting answers or managing navigation. Keep a flow within one
-            answer type, or key the Root per question when mixing types: changing the type on an
-            existing Root clears its answer. When using Cancel as Back, prevent its default behavior
-            to avoid calling the Root’s cancellation handler.
+            Content animates step changes but does not store answers or handle navigation, so keep
+            the step index and each answer in the parent, as in the example above. Keep a flow to
+            one answer type, or key the Root per question when mixing types, because changing
+            <Typography.InlineCode>type</Typography.InlineCode>
+            on an existing Root clears its answer. When Cancel acts as Back, call
+            <Typography.InlineCode>event.preventDefault()</Typography.InlineCode>
+            in its
+            <Typography.InlineCode>onclick</Typography.InlineCode>
+            so the Root's
+            <Typography.InlineCode>onCancel</Typography.InlineCode>
+            does not run.
         </Typography.Text>
     </section>
 
     <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
         <div>
             <Typography.H2 class="docs-section-heading">Examples</Typography.H2>
-            <Typography.Text variant="supporting" class="mt-2">
-                Use the same inset composition for multiple selections, a written answer, or a
-                question beneath a live transcript.
-            </Typography.Text>
         </div>
 
         <div id="multiple-choice" class="scroll-mt-20 flex flex-col gap-3">

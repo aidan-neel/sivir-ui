@@ -213,8 +213,8 @@ export const colorTokenDefinitions = [
     },
     {
         name: '--color-input',
-        label: 'Input',
-        group: 'Borders',
+        label: 'Tag chip',
+        group: 'Controls',
         fallback: 'var(--sivir-neutral-300)',
         darkFallback: 'hsl(0 0% 24%)'
     },
@@ -557,6 +557,45 @@ export const spacingTokenDefinitions = [
     }
 ] as const;
 
+export const originOptions = [
+    {
+        label: 'Top left',
+        value: 'top left'
+    },
+    {
+        label: 'Top',
+        value: 'top'
+    },
+    {
+        label: 'Top right',
+        value: 'top right'
+    },
+    {
+        label: 'Left',
+        value: 'left'
+    },
+    {
+        label: 'Center',
+        value: 'center'
+    },
+    {
+        label: 'Right',
+        value: 'right'
+    },
+    {
+        label: 'Bottom left',
+        value: 'bottom left'
+    },
+    {
+        label: 'Bottom',
+        value: 'bottom'
+    },
+    {
+        label: 'Bottom right',
+        value: 'bottom right'
+    }
+] as const;
+
 export const easingOptions = [
     {
         label: 'Ease out',
@@ -746,6 +785,26 @@ export const animationTokenDefinitions = [
         step: 10
     },
     {
+        name: '--motion-duration-swap',
+        label: 'Swap duration',
+        group: 'Speed',
+        fallback: '180ms',
+        kind: 'duration',
+        min: 0,
+        max: 600,
+        step: 10
+    },
+    {
+        name: '--motion-duration-switch',
+        label: 'Switch duration',
+        group: 'Speed',
+        fallback: '280ms',
+        kind: 'duration',
+        min: 0,
+        max: 600,
+        step: 10
+    },
+    {
         name: '--motion-duration-press',
         label: 'Press duration',
         group: 'Speed',
@@ -836,6 +895,26 @@ export const animationTokenDefinitions = [
         step: 1
     },
     {
+        name: '--motion-switch-stretch',
+        label: 'Switch stretch',
+        group: 'Movement',
+        fallback: '1',
+        kind: 'scale',
+        min: 0,
+        max: 2,
+        step: 0.05
+    },
+    {
+        name: '--motion-slider-stretch',
+        label: 'Slider stretch',
+        group: 'Movement',
+        fallback: '1',
+        kind: 'scale',
+        min: 0,
+        max: 2,
+        step: 0.05
+    },
+    {
         name: '--motion-menu-scale-start',
         label: 'Menu scale',
         group: 'Movement',
@@ -854,6 +933,13 @@ export const animationTokenDefinitions = [
         min: 0,
         max: 12,
         step: 1
+    },
+    {
+        name: '--motion-menu-origin',
+        label: 'Menu anchor',
+        group: 'Movement',
+        fallback: 'top left',
+        kind: 'origin'
     },
     {
         name: '--motion-modal-x',

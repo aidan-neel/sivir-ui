@@ -2,4 +2,4 @@
     import { Toggle } from '@sivir-ui/svelte/components/toggle';
 </script>
 
-<Toggle>Option</Toggle>
+<Toggle>Word wrap</Toggle>

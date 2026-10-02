@@ -5,16 +5,16 @@
 
 <Card.Root class="w-full max-w-[28rem]">
     <Card.Header>
-        <Card.Title>Account settings</Card.Title>
-        <Card.Description>Manage your workspace settings.</Card.Description>
+        <Card.Title>Workspace seats</Card.Title>
+        <Card.Description>Billed monthly for each active member.</Card.Description>
     </Card.Header>
     <Card.Content>
         <p class="m-0 text-[0.86rem] leading-relaxed text-foreground-muted">
-            Currently on the Team plan. 12 of 25 seats used.
+            Team plan. 12 of 25 seats used.
         </p>
     </Card.Content>
     <Card.Footer>
-        <Button variant="outline" size="md">Cancel</Button>
-        <Button size="md">Save changes</Button>
+        <Button variant="outline" size="md">View invoices</Button>
+        <Button size="md">Add seats</Button>
     </Card.Footer>
 </Card.Root>

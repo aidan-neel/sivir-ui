@@ -35,7 +35,7 @@
 
     /**
      * Registers the raw code -- Copy reads the active one -- and records source
-     * order so the slide direction can be derived from tab position.
+     * order.
      */
     $effect(() => {
         if (!registry) {
@@ -59,14 +59,6 @@
 
     const activeValue = $derived(tabs ? tabs.value : (registry?.active ?? value));
     const isActive = $derived(activeValue === value);
-    const myIndex = $derived(registry ? registry.order.indexOf(value) : 0);
-    const activeIndex = $derived(registry ? registry.order.indexOf(activeValue) : 0);
-    /**
-     * Panels left of the active one rest off to the left, panels to its right rest
-     * off to the right. Switching tabs slides the incoming text in from its own
-     * side while the outgoing text slides out the opposite way.
-     */
-    const shift = $derived(isActive ? 0 : myIndex < activeIndex ? -1 : 1);
     const newline = '\n';
 
     const panelId = $derived(tabs ? `${tabs.id}-content-${toTabIdPart(value)}` : undefined);
@@ -86,16 +78,9 @@
         className,
         'w-full max-h-[var(--code-block-max-height,32rem)] overflow-auto font-mono font-medium text-foreground',
         !registry?.contained && 'sivir-inset-surface',
-        !isActive && !registry?.contained && 'hidden',
-        registry?.contained &&
-            'max-h-none overflow-visible rounded-none border-0 bg-transparent shadow-none ring-0 transition-[transform,opacity,filter] [transition-duration:var(--motion-duration-panel)] ease-[var(--ease-out)] motion-reduce:transition-none will-change-[transform,opacity,filter]',
-        // token-lint-disable-next-line no-literal-length: crossfade blur is part of the swap motion
-        registry?.contained && isActive && 'relative z-[1] blur-[0px]',
-        // token-lint-disable-next-line no-literal-length: crossfade blur is part of the swap motion
-        registry?.contained && !isActive && 'pointer-events-none absolute inset-0 block blur-[2px]'
+        !isActive && 'hidden',
+        registry?.contained && 'max-h-none overflow-visible rounded-none border-0 bg-transparent shadow-none ring-0'
     )}
-    style:transform={`translateX(calc(${shift} * var(--code-block-slide)))`}
-    style:opacity={isActive ? '1' : '0'}
     {...rest}
 >
     <div class="relative w-full overflow-x-auto">

@@ -1,35 +1,34 @@
 # Sivir Design Language
 
-Create a calm, intentional interface whose distinctiveness comes from composition, typography, alignment, and relationships specific to the user's work.
+Sivir interfaces get their character from composition, typography, and alignment, not decoration.
 
 ## Start With the Job
 
 Establish who uses the interface, what they must understand or do, the most important content or state, and which constraint or error could change the outcome.
 
-Order the experience by user need rather than data or source order. Give each section one purpose. Make the primary path understandable from the title, headings, key values, controls, and captions alone.
+Order the page by user need, not data or source order. Give each section one purpose. A reader should understand the primary path from the title, headings, key values, controls, and captions alone.
 
-Write direct, sentence-case interface copy. Name actions with the result they produce and keep that vocabulary stable through confirmation and error states.
+Write direct, sentence-case copy. Name actions by the result they produce, and use the same words in confirmation and error states.
 
 ## Compose Before Decorating
 
-Choose geometry before components. For substantial work, consider at least two materially different layouts and select the one that makes the user's task clearest with the least mediation.
+Choose the layout before components. For substantial work, sketch at least two materially different layouts and pick the one that makes the task clearest.
 
-- Make the first viewport communicate the purpose and dominant action, relationship, or evidence.
-- Establish one dominant object in each major section and quiet its supporting content.
-- Compose the page as a field with a shared grid, not a stack of interchangeable cards.
-- Map magnitude to length or position, change to sequence, composition to proportion, process to connection, and alternatives to aligned rows or columns.
-- Use prose for one conclusion, tables for exact lookup, and charts only when a relationship becomes faster to understand visually.
+- The first viewport shows the purpose and the dominant action, content, or evidence.
+- Each major section has one dominant object; its supporting content is quieter.
+- Lay the page out on a shared grid, not as a stack of interchangeable cards.
+- Use prose for one conclusion, tables for exact lookup, and charts only when they make a relationship faster to read.
 - Give true peers equal structure and visual weight.
 - Reflow underfilled splits, orphaned items, and accidental empty rectangles.
 
-If the layout feels safe or vague, strengthen one relationship through proportion, hierarchy, density, alignment, or placement before adding effects.
+If the layout feels vague, strengthen one relationship through proportion, hierarchy, density, alignment, or placement before adding effects.
 
 ## Use Type and Space as Structure
 
-Use the application's configured sans typeface for interface text and headings. Reserve mono for code, commands, paths, timestamps, and compact technical identifiers.
+Use the sans typeface (`--font-sans`, `font-sans`) for interface text and headings; headings follow `--font-header`, which defaults to the sans face. Reserve mono (`--font-mono`, `font-mono`) for code, commands, paths, timestamps, and short technical identifiers. Use the existing type and weight tokens instead of one-off sizes.
 
 - Create hierarchy with type before adding surfaces, borders, or color.
-- Use one page title, clear section headings, readable body text, compact labels, and subdued metadata.
+- Use one page title, clear section headings, readable body text, compact labels, and subdued metadata. Equivalent elements share size, weight, line height, and numeral style.
 - Keep long-form text near 60 to 68 characters per line; reflow before shrinking it.
 - Align related text to shared edges and baselines.
 - Use unmistakable gutters between adjacent text columns.
@@ -47,30 +46,31 @@ Give each visible gap one owner. Prefer a parent stack or grid over competing ch
 
 ## Apply Sivir Restraint
 
-Use Sivir semantic color tokens and preserve their meaning in every theme. Pair color-coded state with text, shape, or another non-color cue.
+Use Sivir's semantic color tokens and keep their meaning in every theme. Color communicates state, action, or data; it does not make up for weak hierarchy. Pair color-coded state with text, shape, or another non-color cue.
 
-Treat the interface as one continuous canvas. Add a surface, border, radius, or shadow only when it clarifies grouping, interaction, selection, or state better than spacing can. Default to stillness; add motion only to explain state change, preserve continuity, or confirm an action.
+Treat the interface as one continuous canvas. Add a surface, border, radius, or shadow only when it shows grouping, interaction, selection, or state more clearly than spacing can. Default to stillness; add motion only to explain a state change, preserve continuity, or confirm an action.
 
 Do not ship:
 
 - All-caps or widely tracked eyebrows, kickers, and overlines.
 - Decorative gradients, glows, blobs, textures, glass, or ornamental shadows.
-- A generic centered hero followed by a uniform card grid.
-- A rounded container around every section or metric.
-- Pills for ordinary metadata, labels, or status that does not need badge semantics.
+- A generic centered hero followed by a grid of cards.
+- A card, border, or rounded container around every section or metric.
+- Pills for ordinary metadata, labels, or status that does not need a badge.
 - Decorative icon tiles, oversized icons, or mixed icon styles.
-- Tiny muted copy, arbitrary type sizes, inconsistent peer values, or weak contrast.
-- Decorative charts, misleading scales, or color without meaning.
+- Tiny muted copy, arbitrary type sizes, inconsistent peer values, or weak contrast used to force content into a layout.
+- Decorative charts, redundant visualizations, misleading scales, or color without meaning.
+- Repeated section silhouettes when each section answers a different question.
 - Stock imagery, fake screenshots, or decoration added to fill space.
 - Scroll reveals, parallax, pulsing indicators, bounce, or motion that delays the task.
 
-Avoiding these defaults is not permission to make a blank template. Commit to a composition and make its hierarchy, alignment, and information density precise.
+Avoiding these defaults does not mean shipping a blank template. Commit to a composition and make its hierarchy, alignment, and density precise.
 
 ## Recompose Responsively
 
 Use semantic HTML, logical heading order, native control behavior, visible focus, accessible names, sufficient contrast, and source order that matches reading order.
 
-Treat responsive design as recomposition, not uniform shrinking. Reflow grids, stack comparisons, preserve readable type and target sizes, and let dense tables scroll locally only when simplification or reordering would hurt lookup. Never hide page overflow to conceal a layout defect.
+Recompose for small screens instead of shrinking everything. Reflow grids, stack comparisons, keep type and touch targets readable, and let dense tables scroll locally only when simplifying or reordering would hurt lookup. Never hide page overflow to conceal a layout defect.
 
 ## Review in Order
 

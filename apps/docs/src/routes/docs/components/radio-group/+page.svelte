@@ -12,12 +12,15 @@
 
     const _TITLE = 'Radio Group';
 
-    const installCommand = 'bunx @sivir-ui/svelte add radio-group';
+    const installCommand = 'bunx --package @sivir-ui/svelte sivir add radio-group';
 </script>
 
 <svelte:head>
     <title>Sivir · Radio Group</title>
-    <meta name="description" content="A group of mutually-exclusive options." />
+    <meta
+        name="description"
+        content="A set of radio options where selecting one clears the others, with a bindable value."
+    />
 </svelte:head>
 
 <div data-docs-page class="flex flex-col gap-10">
@@ -26,7 +29,8 @@
         <div>
             <Typography.H1> Radio Group </Typography.H1>
             <Typography.Text variant="lead" class="mt-2 max-w-2xl">
-                A group of radio buttons for selecting one option.
+                Each item renders a native radio input with an optional label and description. With
+                a shared name, arrow keys move the selection within the group.
             </Typography.Text>
         </div>
         <DocsPager />
@@ -49,10 +53,16 @@
     <section id="usage" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading">Usage</Typography.H2>
         <Typography.Text variant="supporting">
-            Import RadioGroup and compose it with Item sub-components:
+            Bind <Typography.InlineCode>value</Typography.InlineCode> on
+            <Typography.InlineCode>RadioGroup.Root</Typography.InlineCode>
+            and give it a <Typography.InlineCode>name</Typography.InlineCode>. Each item's input id
+            defaults to <Typography.InlineCode>radio-</Typography.InlineCode> plus its value, so
+            pass
+            <Typography.InlineCode>id</Typography.InlineCode>
+            when two groups on one page share values.
         </Typography.Text>
         <CodeBlock
-            code={`import * as RadioGroup from '$lib/sivir/components/radio-group';\n\n<RadioGroup.Root bind:value name="plan">\n  <RadioGroup.Item value="pro" label="Pro" />\n</RadioGroup.Root>`}
+            code={`import * as RadioGroup from '@sivir-ui/svelte/components/radio-group';\n\nlet plan = $state('free');\n\n<RadioGroup.Root bind:value={plan} name="plan">\n  <RadioGroup.Item value="free" label="Free" />\n  <RadioGroup.Item value="pro" label="Pro" />\n</RadioGroup.Root>`}
             lang="svelte"
             copy="overlay"
         />
@@ -62,9 +72,6 @@
     <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
         <div>
             <Typography.H2 class="docs-section-heading">Examples</Typography.H2>
-            <Typography.Text variant="supporting" class="mt-2">
-                RadioGroup in different configurations.
-            </Typography.Text>
         </div>
 
         <!-- With descriptions -->

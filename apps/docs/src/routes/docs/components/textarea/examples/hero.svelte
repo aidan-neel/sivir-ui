@@ -2,7 +2,7 @@
     import { Textarea } from '@sivir-ui/svelte/components/textarea';
 
     let value = $state(
-        "Sivir's textarea uses the same field tokens as Input. Labels, descriptions, and focus rings stay consistent."
+        'The export finished, but three rows were skipped because their dates were empty. Can you check the source file?'
     );
 </script>
 

@@ -693,7 +693,8 @@ const PRESS_FLOOR = 0.94;
 export function pressable(node: HTMLElement) {
     function measure() {
         const raw = getComputedStyle(node).getPropertyValue('--motion-press-px').trim();
-        const px = Number.parseFloat(raw) || 2;
+        const parsed = Number.parseFloat(raw);
+        const px = Number.isFinite(parsed) ? parsed : 2;
         const { width, height } = node.getBoundingClientRect();
         const sx = width > 0 ? Math.max((width - px) / width, PRESS_FLOOR) : 0.98;
         const sy = height > 0 ? Math.max((height - px) / height, PRESS_FLOOR) : 0.98;
@@ -753,6 +754,13 @@ export function travelingHighlight(node: HTMLElement, options: TravelingHighligh
     let readyFrame = 0;
     let ready = false;
     let observedTarget: HTMLElement | undefined;
+    let marked: HTMLElement | undefined;
+    let pointer:
+        | {
+              x: number;
+              y: number;
+          }
+        | undefined;
     const resizeObserver = new ResizeObserver(() => schedule(current ?? restingTarget()));
     resizeObserver.observe(node);
 
@@ -785,9 +793,22 @@ export function travelingHighlight(node: HTMLElement, options: TravelingHighligh
         return undefined;
     }
 
-    function measure(target: HTMLElement | undefined) {
+    function mark(target: HTMLElement | undefined) {
+        if (marked === target) {
+            return;
+        }
+        marked?.removeAttribute('data-item-highlighted');
+        marked = target;
+        marked?.setAttribute('data-item-highlighted', 'true');
+    }
+
+    function measure(target: HTMLElement | undefined, instant = false) {
         cancelAnimationFrame(frame);
         current = target;
+        if (!traveling) {
+            mark(target?.isConnected && !target.hidden ? target : undefined);
+            return;
+        }
         if (!target?.isConnected || target.hidden) {
             if (observedTarget) {
                 resizeObserver.unobserve(observedTarget);
@@ -799,12 +820,21 @@ export function travelingHighlight(node: HTMLElement, options: TravelingHighligh
 
         const container = node.getBoundingClientRect();
         const rect = target.getBoundingClientRect();
-        const x = rect.left - container.left - node.clientLeft + node.scrollLeft;
-        const y = rect.top - container.top - node.clientTop + node.scrollTop;
-        highlight.style.width = `${rect.width}px`;
-        highlight.style.height = `${rect.height}px`;
+        const scale = node.offsetWidth > 0 ? container.width / node.offsetWidth : 1;
+        const x = (rect.left - container.left) / scale - node.clientLeft + node.scrollLeft;
+        const y = (rect.top - container.top) / scale - node.clientTop + node.scrollTop;
+
+        if (instant) {
+            highlight.style.transition = 'none';
+        }
+        highlight.style.width = `${rect.width / scale}px`;
+        highlight.style.height = `${rect.height / scale}px`;
         highlight.style.transform = `translate3d(${x}px, ${y}px, 0)`;
         highlight.style.opacity = '1';
+        if (instant) {
+            void highlight.offsetWidth;
+            highlight.style.transition = '';
+        }
 
         if (observedTarget !== target) {
             if (observedTarget) {
@@ -822,15 +852,19 @@ export function travelingHighlight(node: HTMLElement, options: TravelingHighligh
         }
     }
 
-    function schedule(target: HTMLElement | undefined) {
+    function schedule(target: HTMLElement | undefined, instant = false) {
         cancelAnimationFrame(frame);
-        frame = requestAnimationFrame(() => measure(target));
+        frame = requestAnimationFrame(() => measure(target, instant));
     }
 
     function onPointerMove(event: PointerEvent) {
         if (event.pointerType === 'touch') {
             return;
         }
+        pointer = {
+            x: event.clientX,
+            y: event.clientY
+        };
         const item = usableItem(event.target);
         if (item && item !== current) {
             schedule(item);
@@ -841,6 +875,10 @@ export function travelingHighlight(node: HTMLElement, options: TravelingHighligh
         if (event.pointerType === 'touch') {
             return;
         }
+        pointer = {
+            x: event.clientX,
+            y: event.clientY
+        };
         const item = usableItem(event.target);
         if (item && item !== current) {
             schedule(item);
@@ -848,7 +886,19 @@ export function travelingHighlight(node: HTMLElement, options: TravelingHighligh
     }
 
     function onPointerLeave() {
+        pointer = undefined;
         schedule(restingTarget());
+    }
+
+    function onScroll() {
+        const hovered = pointer
+            ? usableItem(document.elementFromPoint(pointer.x, pointer.y))
+            : undefined;
+        if (hovered && hovered !== current) {
+            schedule(hovered);
+            return;
+        }
+        schedule(current ?? restingTarget(), true);
     }
 
     function onFocusIn(event: FocusEvent) {
@@ -886,6 +936,10 @@ export function travelingHighlight(node: HTMLElement, options: TravelingHighligh
     node.addEventListener('pointerleave', onPointerLeave);
     node.addEventListener('focusin', onFocusIn);
     node.addEventListener('focusout', onFocusOut);
+    node.addEventListener('scroll', onScroll, {
+        capture: true,
+        passive: true
+    });
     queueMicrotask(() => schedule(restingTarget()));
 
     return {
@@ -899,6 +953,10 @@ export function travelingHighlight(node: HTMLElement, options: TravelingHighligh
             node.removeEventListener('pointerleave', onPointerLeave);
             node.removeEventListener('focusin', onFocusIn);
             node.removeEventListener('focusout', onFocusOut);
+            node.removeEventListener('scroll', onScroll, {
+                capture: true
+            });
+            mark(undefined);
             highlight.remove();
             node.classList.remove('sivir-collection-surface');
         }

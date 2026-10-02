@@ -21,3 +21,23 @@
 - Studio sliders show Reset beside the value, and other fields show it as a corner pill, instead of a row below, so changing a value no longer shifts the layout.
 - Studio shadow tokens that use variables for their size, such as Control and Outline button, now open in the layer editor with X, Y, Blur, Spread, and Color controls instead of a clipped CSS input.
 - Fix modal, card, and code block footers and headers hugging the edge when surface paneling is off. They now get their own padding.
+- Give flat code blocks and file diffs a divided, tinted header when surface paneling is off. Code blocks without tabs float their actions in the top-right corner instead of reserving a header row.
+- Menu, select, and combobox highlights now follow their item while the list scrolls and size correctly as a menu opens, instead of staying behind or appearing slightly off.
+- Trim the built-in theme presets to Default, Magic, Profitable, Raven, and Clawd, and remove the Studio "Publish to registry" button for now.
+- Fade the Components index page in block by block with the same blur reveal as the other docs pages.
+- Tune the preset motion: Clawd is fast and dense (30ms in, 60ms out), Profitable uses plain fades with no blur (130ms in, 70ms out), and Raven pops in with a larger scale and a slide for steps. Raven's corners are also tighter.
+- Buttons, toggles, tabs, and menu highlights now follow the Hover duration for their hover fade and traveling highlight slide, instead of ignoring it.
+- All built-in presets now turn off menu and surface paneling.
+- With traveling highlight off, menu, select, command, and combobox items now fade their hover background on the Hover duration instead of snapping between items.
+- Fix the GitHub logo in the navbars sometimes rendering black in dark mode on first paint. Both logos now render and the theme class picks one, so it no longer waits for hydration.
+- Color Picker keeps its hue when you click or drag the color area to black, grey, or low saturation, instead of jumping to red or drifting.
+- Opening the Color Picker no longer focuses the hex field. Focus starts on the color area.
+- Code Block tab switches swap the snippet instantly instead of sliding and crossfading blurred text. Code blocks composed from subparts now ease their height too, instead of snapping.
+- Restore the hover background on list and nav items when the traveling highlight is turned off. Item buttons with a transparent background class were hiding it.
+- Studio's token search opens a token's editor inline under its row, expanding and collapsing smoothly. Pick the token again to close it. The palette is capped at a shorter height instead of filling the screen.
+- Stop descenders such as the g in "Billing" being cut off in Select triggers and in truncated text inside buttons.
+- Studio drafts now take the name of the preset they start from, instead of every theme exporting under the same placeholder name. Drafts saved with the old name pick up their preset's name when they load.
+- Shortcuts inside a Tooltip render as a muted keycap set apart from the label, instead of running into the text.
+- Fix choppy Attachment list motion. Removed cards fade out where they were instead of jumping to the top of the list, cards keep their height while the list resizes, neighboring cards slide straight into place instead of first jumping the wrong way, and the gap above the list opens and closes smoothly instead of snapping.
+- Attachment cards and status changes now follow the Feel In and Out durations, with the same blur, scale, and offset as menus. Adding a file uses In, removing one uses Out, and the list resizes in step with the card.
+- Tooltip text swaps, such as Copy Button flipping from "Copy" to "Copied", now follow the text replacement duration, so 0ms swaps instantly instead of rolling for 300ms.

@@ -14,7 +14,7 @@
     const TITLE = 'Breadcrumb';
     const SLUG = 'breadcrumb';
 
-    const installCommand = `bunx @sivir-ui/svelte add ${SLUG}`;
+    const installCommand = `bunx --package @sivir-ui/svelte sivir add ${SLUG}`;
 </script>
 
 <svelte:head>
@@ -33,7 +33,8 @@
                 {TITLE}
             </Typography.H1>
             <Typography.Text variant="lead" class="mt-2 max-w-2xl">
-                A trail of links showing the current position in a hierarchy.
+                Links back to the parent pages of the current page, separated by chevrons or your
+                own separator.
             </Typography.Text>
         </div>
         <DocsPager />
@@ -56,10 +57,14 @@
     <section id="usage" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading"> Usage </Typography.H2>
         <Typography.Text variant="supporting">
-            Import and use the Breadcrumb components:
+            Each Item renders a link. The Item whose
+            <Typography.InlineCode>href</Typography.InlineCode>
+            matches the current path, read from SvelteKit's
+            <Typography.InlineCode>$app/state</Typography.InlineCode>, gets the current-page style.
+            An empty Separator renders a chevron.
         </Typography.Text>
         <CodeBlock
-            code={`import * as Breadcrumb from '$lib/sivir/components/breadcrumb';\n\n<Breadcrumb.Root>\n  <Breadcrumb.Item href="/">Home</Breadcrumb.Item>\n  <Breadcrumb.Separator>/</Breadcrumb.Separator>\n  <Breadcrumb.Item>Current</Breadcrumb.Item>\n</Breadcrumb.Root>`}
+            code={`import * as Breadcrumb from '@sivir-ui/svelte/components/breadcrumb';\n\n<Breadcrumb.Root>\n  <Breadcrumb.Item href="/projects">Projects</Breadcrumb.Item>\n  <Breadcrumb.Separator />\n  <Breadcrumb.Item href="/projects/atlas">Atlas</Breadcrumb.Item>\n</Breadcrumb.Root>`}
             lang="svelte"
             copy="overlay"
         />

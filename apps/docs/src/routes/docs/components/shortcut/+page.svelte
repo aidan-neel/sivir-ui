@@ -14,12 +14,15 @@
 
     const TITLE = 'Shortcut';
 
-    const installCommand = 'bunx @sivir-ui/svelte add shortcut';
+    const installCommand = 'bunx --package @sivir-ui/svelte sivir add shortcut';
 </script>
 
 <svelte:head>
     <title>Sivir · {TITLE}</title>
-    <meta name="description" content="Inline keyboard-shortcut badge." />
+    <meta
+        name="description"
+        content="Shows a keyboard shortcut as a key chip and runs it when the keys are pressed."
+    />
 </svelte:head>
 
 <div data-docs-page class="flex flex-col gap-10">
@@ -28,7 +31,9 @@
         <div>
             <Typography.H1>{TITLE}</Typography.H1>
             <Typography.Text variant="lead" class="mt-2 max-w-2xl">
-                A key chip for keyboard shortcuts, including inside buttons.
+                Renders key glyphs such as ⌘K. While it is mounted, pressing those keys clicks the
+                button or link it sits in, or calls
+                <Typography.InlineCode>ontrigger</Typography.InlineCode>.
             </Typography.Text>
         </div>
         <DocsPager />
@@ -51,10 +56,21 @@
     <section id="usage" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading">Usage</Typography.H2>
         <Typography.Text variant="supporting">
-            Import Shortcut and pass a keyboard shortcut string:
+            Join keys with <Typography.InlineCode>+</Typography.InlineCode>, as in
+            <Typography.InlineCode>ctrl+shift+P</Typography.InlineCode>.
+            <Typography.InlineCode>cmd</Typography.InlineCode>
+            matches the Meta key only; use
+            <Typography.InlineCode>ctrl</Typography.InlineCode>
+            for Control. A Shortcut outside a button or link without
+            <Typography.InlineCode>ontrigger</Typography.InlineCode>
+            only displays. Keys typed into a field are ignored, except Enter and Escape in an input.
+            A Shortcut inside an overlay that another overlay covers does not fire. The chip is
+            hidden below the
+            <Typography.InlineCode>sm</Typography.InlineCode>
+            breakpoint, but the binding stays active.
         </Typography.Text>
         <CodeBlock
-            code={`import Shortcut from '$lib/sivir/components/shortcut';\n\n<Shortcut shortcut="cmd+K" />\n<Shortcut shortcut="shift+/" />`}
+            code={`import { Button } from '@sivir-ui/svelte/components/button';\nimport Shortcut from '@sivir-ui/svelte/components/shortcut';\n\n<Button onclick={save}>\n  Save\n  <Shortcut shortcut="cmd+S" />\n</Button>\n\n<Shortcut shortcut="ctrl+K" ontrigger={openSearch} />`}
             lang="svelte"
             copy="overlay"
         />
@@ -64,9 +80,6 @@
     <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
         <div>
             <Typography.H2 class="docs-section-heading">Examples</Typography.H2>
-            <Typography.Text variant="supporting" class="mt-2">
-                Shortcut in various compositions and contexts.
-            </Typography.Text>
         </div>
 
         <!-- Basic -->

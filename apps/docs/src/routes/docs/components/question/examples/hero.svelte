@@ -6,65 +6,65 @@
 
     const questions = [
         {
-            title: 'Where should we start?',
-            description: 'Choose a starting point for the next round of work.',
+            title: 'Which orders should the export include?',
+            description: 'The orders table has 184,000 rows.',
             options: [
                 {
-                    value: 'interface',
-                    label: 'The interface',
-                    description: 'Refine the screens people use every day.'
+                    value: 'last-30-days',
+                    label: 'Last 30 days',
+                    description: 'About 12,400 orders.'
                 },
                 {
-                    value: 'workflow',
-                    label: 'The workflow',
-                    description: 'Make the path from start to finish simpler.'
+                    value: 'quarter',
+                    label: 'This quarter',
+                    description: 'About 41,000 orders, including refunds.'
                 },
                 {
-                    value: 'foundation',
-                    label: 'The foundation',
-                    description: 'Improve the architecture behind the product.'
+                    value: 'all',
+                    label: 'All orders',
+                    description: 'Every row. The export runs in the background.'
                 }
             ]
         },
         {
-            title: 'How much should change?',
-            description: 'Set the scope so the work stays focused.',
+            title: 'How should amounts be formatted?',
+            description: 'Finance opens this file in a spreadsheet.',
             options: [
                 {
-                    value: 'polish',
-                    label: 'A little polish',
-                    description: 'Keep the structure and refine the details.'
+                    value: 'cents',
+                    label: 'Integer cents',
+                    description: 'Matches the database, such as 129900.'
                 },
                 {
-                    value: 'focused',
-                    label: 'A focused update',
-                    description: 'Rework one part of the experience.'
+                    value: 'decimal',
+                    label: 'Decimal dollars',
+                    description: 'Two decimal places, such as 1299.00.'
                 },
                 {
-                    value: 'rethink',
-                    label: 'A fresh direction',
-                    description: 'Explore a different approach from the ground up.'
+                    value: 'currency',
+                    label: 'Formatted currency',
+                    description: 'With symbol and separators, such as $1,299.00.'
                 }
             ]
         },
         {
-            title: 'What should I bring back?',
-            description: 'Choose what you want to review before we continue.',
+            title: 'Where should the file go?',
+            description: 'Download links expire after seven days.',
             options: [
                 {
-                    value: 'plan',
-                    label: 'A clear plan',
-                    description: 'Outline the changes and their trade-offs.'
+                    value: 'link',
+                    label: 'Download link',
+                    description: 'Post a link in this chat when the file is ready.'
                 },
                 {
-                    value: 'prototype',
-                    label: 'A working prototype',
-                    description: 'Make the idea tangible and easy to try.'
+                    value: 'bucket',
+                    label: 'Shared bucket',
+                    description: 'Upload to s3://finance-exports/orders/.'
                 },
                 {
-                    value: 'implementation',
-                    label: 'The implementation',
-                    description: 'Build the change and summarize the result.'
+                    value: 'email',
+                    label: 'Email to finance',
+                    description: 'Send the file to finance@example.com.'
                 }
             ]
         }
@@ -90,11 +90,11 @@
     <Question.Root variant="inset" bind:value={answers[step]} required={!complete} onSubmit={next}>
         <Question.Content {step}>
             {#if complete}
-                <Question.Title>Ready to get started</Question.Title>
+                <Question.Title>Ready to export</Question.Title>
                 <Question.Description>
-                    Here’s the direction you chose. You can go back to adjust it.
+                    Check your choices before the export starts. Go back to change one.
                 </Question.Description>
-                <dl class="grid gap-4 px-4 py-5">
+                <dl class="grid gap-3 px-3 pt-3 pb-3">
                     {#each questions as item, index (item.title)}
                         <div class="grid gap-1">
                             <dt class="text-xs text-foreground-muted">{item.title}</dt>

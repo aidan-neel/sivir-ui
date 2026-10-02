@@ -1,0 +1,6 @@
+- Switch thumbs stay visible when off in themes whose primary color is light in dark mode.
+- Info icons, badges, and toasts follow the theme's primary color for the current mode, so they no longer disappear in dark mode when a theme sets a dark brand and a light dark-mode primary.
+- Question uses a denser layout: titles, options, inputs, and actions share one tight inset, and the actions line up with the content when surface paneling is off.
+- Question options are filled tiles instead of bordered rows with radio circles, and single-line options are vertically centered.
+- Question submit and cancel buttons are compact. The submit button no longer shows a trailing arrow by default.
+- Question submit shows only a spinner while submitting and keeps its width, instead of swapping in a wider loading label.

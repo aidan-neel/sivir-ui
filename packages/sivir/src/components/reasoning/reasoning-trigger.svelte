@@ -65,19 +65,17 @@
                 >
             {:else}
                 <span
-                    class="inline-grid font-[var(--font-weight-label)] transition-[width] [transition-duration:var(--reasoning-settle)] ease-[var(--ease-out)]"
+                    class="inline-grid font-[var(--font-weight-label)] transition-[width] [transition-duration:var(--motion-duration-swap)] ease-[var(--ease-out)]"
                     style:width={labelWidth ? `${labelWidth}px` : undefined}
                 >
                     <span
                         bind:offsetWidth={thinkingWidth}
                         aria-hidden={!reasoning.streaming}
                         class={cn(
-                            'w-max transition-[opacity,filter] [grid-area:1/1] [transition-duration:var(--reasoning-settle)] ease-[var(--ease-out)]',
+                            'w-max transition-[opacity,filter] [grid-area:1/1] [transition-duration:var(--motion-duration-swap)] ease-[var(--ease-out)]',
                             reasoning.streaming
-                                // token-lint-disable-next-line no-literal-length: crossfade blur is part of the swap motion
-                                ? 'sivir-reasoning-shimmer opacity-100 blur-[0px]'
-                                // token-lint-disable-next-line no-literal-length: crossfade blur is part of the swap motion
-                                : 'opacity-0 blur-[2px]'
+                                ? 'sivir-reasoning-shimmer opacity-100 blur-[0]'
+                                : 'opacity-0 blur-[var(--motion-swap-blur)]'
                         )}
                         >Thinking</span
                     >
@@ -85,9 +83,10 @@
                         bind:offsetWidth={thoughtWidth}
                         aria-hidden={reasoning.streaming}
                         class={cn(
-                            'w-max transition-[opacity,filter] [grid-area:1/1] [transition-duration:var(--reasoning-settle)] ease-[var(--ease-out)]',
-                            // token-lint-disable-next-line no-literal-length: crossfade blur is part of the swap motion
-                            reasoning.streaming ? 'opacity-0 blur-[2px]' : 'opacity-100 blur-[0px]'
+                            'w-max transition-[opacity,filter] [grid-area:1/1] [transition-duration:var(--motion-duration-swap)] ease-[var(--ease-out)]',
+                            reasoning.streaming
+                                ? 'opacity-0 blur-[var(--motion-swap-blur)]'
+                                : 'opacity-100 blur-[0]'
                         )}
                         >{duration ? 'Thought for' : 'Thought'}</span
                     >

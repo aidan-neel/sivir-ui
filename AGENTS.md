@@ -33,6 +33,49 @@ bun run release-gate
 That is the full publish bar: format, lint, audit, typecheck, unit/SSR tests, docs
 browser tests, build, and packed artifact verification. Do not skip steps.
 
+# Visual Verification
+
+Format and lint passing does not mean a UI change looks right. Any change to
+components, styling, tokens, themes, layout, motion, or docs pages must be seen
+in a real browser before you report it done. This is required, not part of the
+manual-only test suite above.
+
+1. Use the running docs dev server, usually `http://localhost:5173`. If none is
+   running, start one with `bun run dev` from `apps/docs`.
+2. Open every page, docs example, and Studio view the change touches.
+   Screenshot each one in light and dark mode at 1440px wide, and at 390px wide
+   when the page is responsive.
+3. Exercise the states the change affects: hover, focus, press, open menus,
+   selects, modals and sheets, disabled, loading, and empty. Screenshot each.
+4. For motion (enter and exit, the traveling highlight, transitions, layout
+   shift), capture 8 to 10 frames across the transition. Do not judge motion
+   from code alone.
+5. Read every screenshot yourself. Look for clipping and cutoffs at edges,
+   layout shift, horizontal overflow, low contrast, and anything inconsistent
+   with neighboring components or `DESIGN.md`. Check the console for errors and
+   hydration warnings.
+6. Fix what you find and capture again. Repeat until the result is clean.
+7. In your final summary, list what you captured and what you fixed. If you
+   could not verify visually, say so plainly. Never claim a visual change
+   looks right without screenshots.
+
+A browser is always available on this machine. Never conclude otherwise:
+
+- Try the Playwright MCP (`browser_*` tools) first. If it fails with
+  "Chromium distribution 'chrome' is not found", use the fallbacks below
+  instead of stopping.
+- For a one-off screenshot:
+  `bunx playwright@1.60.0 screenshot --color-scheme=dark --viewport-size=1440,900 --wait-for-timeout=1000 <url> <out.png>`
+- For interaction or frame capture, write a script in your scratchpad, outside
+  the repo, that imports `chromium` from `'playwright@1.60.0'`, and run it with
+  `bun script.mjs`. Bun installs it automatically. Never add these scripts to
+  the repo.
+- Open the PNGs with the Read tool to view them.
+
+Other agent sessions often edit this checkout at the same time, and the dev
+server reloads when they save. If a page reloads or a selector disappears
+mid-capture, retry before concluding your change is broken.
+
 # Development Servers
 
 Never stop, terminate, or send signals (including `SIGABRT`) to a development

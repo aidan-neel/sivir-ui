@@ -6,41 +6,45 @@ Use this guide to narrow candidates, then read each candidate's current Markdown
 
 | User need | Start with | Notes |
 | --- | --- | --- |
-| Trigger an action or navigate | Button | Use a real link destination through the documented link behavior. Reserve icon-only actions for recognizable icons with accessible names. |
-| Toggle one setting | Switch or Toggle | Use Switch for an on/off setting; use Toggle for a pressed tool or display mode. |
-| Choose one visible option | Radio Group | Best when comparing a small set benefits from seeing every choice. |
+| Trigger an action or navigate | Button | Pass `href` to render an `<a>`; omit it for a `<button>`. Icon-only buttons (`size="icon"`) need an `aria-label`. |
+| Toggle one setting | Switch, Checkbox, or Toggle | Switch for an on/off setting that applies immediately, Checkbox for a form option, Toggle for a pressed tool or display mode. |
+| Choose one visible option | Radio Group | Use when the reader benefits from seeing every choice in a small set. |
 | Choose from a compact list | Select | Use for a bounded single-select list that does not need search. |
-| Search and choose an option | Combobox | Use for larger or fuzzy-searchable option sets. |
-| Run or discover commands | Command | Use for an application command palette, not ordinary form selection. |
-| Show contextual actions | Dropdown Menu or Context Menu | Dropdown Menu has an explicit trigger; Context Menu is secondary pointer context and needs another accessible path. |
-| Collect short or long text | Input or Textarea | Use the component's integrated label, description, and validation API when available. |
-| Confirm a consequential action | Alert Dialog | Use Modal for general tasks; reserve Alert Dialog for decisions that need explicit interruption and confirmation. |
-| Complete a focused task in place | Modal | Use Sheet when preserving more page context or a side-oriented workflow matters. |
-| Show anchored supplemental UI | Popover or Hover Card | Popover is interactive; Hover Card is preview information and must not hold essential actions. |
+| Search and choose an option | Combobox | Use for larger or searchable option sets. |
+| Run or discover commands | Command | Use for an application command palette, not form selection. |
+| Show contextual actions | Dropdown Menu or Context Menu | Dropdown Menu has an explicit trigger. Context Menu opens on right-click, long-press, or Shift+F10; most users never find it, so expose the same actions elsewhere. |
+| Collect short or long text | Input or Textarea | Use the `label` and `description` props instead of a separate Label. |
+| Enter several values | Tag Input | Turns typed or pasted values into removable tags. |
+| Pick a number in a range | Slider | Has a bindable `value` with `min`, `max`, and `step`. |
+| Confirm a consequential action | Alert Dialog | Use Modal for general tasks. Reserve Alert Dialog for decisions that must interrupt and need explicit confirmation. |
+| Complete a focused task in place | Modal | Use Sheet when keeping more of the page visible matters. |
+| Show anchored supplemental UI | Popover, Hover Card, or Tooltip | Popover is interactive. Hover Card previews information and must not hold essential actions. Tooltip labels a control in a short phrase. |
 | Communicate persistent inline state | Alert | Keep it next to the content or action it qualifies. |
 | Confirm a transient action | Toast | Do not use a toast for errors or decisions that require immediate action. |
-| Show determinate work | Progress, Gauge, or Task Steps | Progress shows completion, Gauge emphasizes a measured value, and Task Steps names ordered workflow stages. |
-| Show indeterminate work | Spinner or Skeleton | Spinner marks compact activity; Skeleton reserves the shape of incoming content. |
-| Organize related content | Card | Use only when a surface communicates a real grouping or interactive object better than spacing. |
+| Show determinate work | Progress or Task Steps | Progress shows how much is done. Task Steps names ordered stages and the current or failed one. |
+| Show a bounded quantity | Gauge | A compact meter for values such as context remaining, usage limits, or storage. |
+| Show indeterminate work | Spinner, Skeleton, or Progress | Spinner marks compact activity, Skeleton reserves the shape of incoming content, and Progress also has an indeterminate bar. |
+| Organize related content | Card | Use only when a surface communicates a real grouping or interactive object better than spacing. `Card.Root` `variant` is `default`, `panel`, or `inset`. |
 | Reveal optional detail | Collapsible, Accordion, or Show More | Collapsible controls one region, Accordion manages peer sections, and Show More clamps long prose. |
-| Navigate peers or hierarchy | Tabs, Breadcrumb, Pagination, or Fullscreen Nav | Match the information model; do not use Tabs as a generic layout switch when controls or links are more accurate. |
+| Navigate peers or hierarchy | Tabs, Breadcrumb, Pagination, or Fullscreen Nav | Match the information model. Do not use Tabs as a layout switch when links or other controls fit better. |
 
 ## Compose AI Interfaces
 
-Treat the AI surface as a system of independently meaningful states.
+Each part below owns its own state. Compose them; do not fold them into one message component.
 
 | Concern | Component | Role |
 | --- | --- | --- |
-| Scrollable transcript | Conversation | Manages following, empty content, transcript layout, and jump-to-latest behavior. |
-| Speaker and response state | Message | Marks user, assistant, or system content and exposes streaming or error state plus contextual actions. |
-| Rich answer content | Markdown or Code Block | Render structured model output and code rather than rebuilding prose styles per message. |
-| Generated text arrival | Response Stream | Use for a string or async chunks when its entrance modes add useful continuity. Prefer direct rendering for already-streamed content when extra animation would delay reading. |
-| Model trace | Reasoning | Exposes concise status and optional detail. Keep the collapsed title informative; do not dump an unstructured internal monologue. |
-| Agent operations | Tool | Groups running, completed, or failed commands, searches, reads, inputs, and outputs without making each operation a full message. |
-| User prompt | Prompt Composer | Owns the controlled prompt value, submission state, toolbar, actions, and send/stop behavior. |
-| Agent clarification | Question | Uses single-choice, multiple-choice, or free-text answers with explicit submit and cancel behavior. |
-| Ordered execution | Task Steps | Shows stable workflow stages and the current or failed step. |
-| Files and artifacts | Attachment | Presents attached inputs or outputs with the component's documented status and actions. |
+| Scrollable transcript | Conversation | `follow` keeps the view pinned to the latest message. `Conversation.Empty` covers the empty state and `Conversation.ScrollButton` jumps back to the latest message. |
+| Speaker and response state | Message | `from` is `user`, `assistant`, or `system`; `status` is `idle`, `streaming`, or `error`. `Message.Actions` holds response actions. |
+| Rich answer content | Markdown or Code Block | Render model output and code with these instead of styling prose per message. |
+| Generated text arrival | Response Stream | Reveals a string or an `AsyncIterable<string>` (`textStream`) at a set `speed`. Set `streaming` when the string is a growing snapshot. Render text directly when the reveal would only delay reading. |
+| Model trace | Reasoning | Collapsed by default. `Reasoning.Trigger` shows a live `duration` or a one-line `title` summary; keep that summary informative. |
+| Agent operations | Tool | Groups calls under one trigger with `state` `running`, `complete`, or `error`. Each `Tool.Call` takes an `action` and `target` and can hold `Tool.Input` and `Tool.Output`. |
+| Code changes | File Diff | Shows one file's unified diff with its path, addition and deletion counts, and line numbers. |
+| User prompt | Composer | `Composer.Root` takes a bindable `value` and a required `onSubmit`. While `generating` is true, `Composer.Submit` becomes stop when the input is empty and queue when it has text; `onStop` handles stop. |
+| Agent clarification | Question | `type` is `single`, `multiple`, or `text`. Requires `onSubmit`; `onCancel` adds a cancel path. |
+| Ordered execution | Task Steps | Takes `steps` and a `current` index; `failed` marks the current step as failed. |
+| Files and artifacts | Attachment | Lists files with status `ready`, `uploading`, `complete`, or `error`, plus remove actions. |
 
 A common coding-agent composition is:
 
@@ -48,28 +52,24 @@ A common coding-agent composition is:
 Conversation.Root
 ├── Conversation.Content
 │   ├── Message.Root from="user"
+│   │   └── Message.Content
 │   └── Message.Root from="assistant"
-│       └── Reasoning / Tool / Markdown / CodeBlock
+│       ├── Message.Content
+│       │   └── Reasoning / Tool / Markdown / CodeBlock / FileDiff
+│       └── Message.Actions
 └── Conversation.ScrollButton
 
 Question.Root or Composer.Root
 ```
 
-Render `Question` as a temporary takeover when the agent cannot continue without structured input; preserve an unsent composer draft. Keep `Tool` and `Reasoning` lower emphasis than the answer. Use `Message.Actions` for response-scoped actions such as copy, retry, or feedback.
+When the agent cannot continue without structured input, render `Question` in place of the composer and keep the unsent composer draft. Keep `Tool` and `Reasoning` lower emphasis than the answer. Put response actions such as copy, retry, or feedback in `Message.Actions`.
 
 ## Resolve Common Ambiguities
 
 | Choice | Decision |
 | --- | --- |
-| Modal vs Alert Dialog | Modal supports a task; Alert Dialog blocks on a consequential decision. |
-| Modal vs Sheet | Modal concentrates attention; Sheet preserves more spatial relationship to the page. |
-| Select vs Combobox | Select is compact lookup; Combobox adds search. |
 | Combobox vs Command | Combobox produces a field value; Command invokes application actions. |
-| Alert vs Toast | Alert persists in context; Toast is transient confirmation. |
-| Spinner vs Skeleton | Spinner indicates activity; Skeleton reserves content geometry. |
-| Progress vs Task Steps | Progress communicates amount; Task Steps communicates sequence and stage identity. |
-| Toggle vs Checkbox | Toggle changes a tool or view's pressed state; Checkbox selects a form option. |
 | Accordion vs Tabs | Accordion reveals sections in one reading flow; Tabs switch among peer views. |
-| Card vs plain layout | Use Card only when the boundary itself explains grouping, interaction, or state. |
+| Modal vs Sheet | Modal concentrates attention; Sheet keeps the page in view beside it. |
 
-Do not choose a component by visual resemblance alone. Match semantics, state ownership, keyboard behavior, and content structure first.
+Choose by semantics, state ownership, keyboard behavior, and content structure, not visual resemblance.

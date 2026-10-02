@@ -27,12 +27,15 @@
     import VariantWarning from './examples/variant-warning.svelte';
     import VariantWarningSrc from './examples/variant-warning.svelte?raw';
 
-    const installCommand = 'bunx @sivir-ui/svelte add badge';
+    const installCommand = 'bunx --package @sivir-ui/svelte sivir add badge';
 </script>
 
 <svelte:head>
     <title>Sivir · Badge</title>
-    <meta name="description" content="Small status tags and metadata pills for any UI surface." />
+    <meta
+        name="description"
+        content="A small label for status, counts, and tags that can also render as a link."
+    />
 </svelte:head>
 
 <div data-docs-page class="flex flex-col gap-10">
@@ -41,7 +44,8 @@
         <div>
             <Typography.H1> Badge </Typography.H1>
             <Typography.Text variant="lead" class="mt-2 max-w-2xl">
-                A compact label for status, counts, and tags.
+                Pick one of nine variants. Set href to render an anchor instead of a div, dot to add
+                a small marker before the text, or icon to add a leading icon.
             </Typography.Text>
         </div>
         <DocsPager />
@@ -64,10 +68,11 @@
     <section id="usage" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading"> Usage </Typography.H2>
         <Typography.Text variant="supporting">
-            Import the Badge and use it in your component:
+            variant defaults to secondary. icon takes a component such as a Lucide icon, sized by
+            iconSize (13 by default).
         </Typography.Text>
         <CodeBlock
-            code={`import { Badge } from '$lib/sivir/components/badge';\n\n<Badge>New</Badge>\n<Badge variant="outline" dot>Label</Badge>\n<Badge variant="success">Active</Badge>\n<Badge variant="error">Failed</Badge>`}
+            code={`import { Badge } from '@sivir-ui/svelte/components/badge';\n\n<Badge>New</Badge>\n<Badge variant="outline" dot>Draft</Badge>\n<Badge variant="success">Active</Badge>\n<Badge variant="error">Failed</Badge>`}
             lang="svelte"
             copy="overlay"
         />
@@ -77,15 +82,12 @@
     <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
         <div>
             <Typography.H2 class="docs-section-heading"> Examples </Typography.H2>
-            <Typography.Text variant="supporting" class="mt-2">
-                Explore Badge variants and shapes for different use cases.
-            </Typography.Text>
         </div>
 
         <div id="shapes" class="scroll-mt-20 flex flex-col gap-3">
             <Typography.H3 class="docs-subsection-heading"> Shapes </Typography.H3>
             <Typography.Text variant="supporting">
-                Pill, circular, square-ish, and a rounded square with a 1px border.
+                Badge has no shape prop. Change the radius and padding with class.
             </Typography.Text>
             <ComponentPreview code={ShapesSrc}>
                 <Shapes />

@@ -15,9 +15,11 @@
     const TITLE = 'Slider';
     const SLUG = 'slider';
 
-    const installCommand = `bunx @sivir-ui/svelte add ${SLUG}`;
+    const installCommand = `bunx --package @sivir-ui/svelte sivir add ${SLUG}`;
 
     const usage = `import { Slider } from '@sivir-ui/svelte/components/slider';
+
+let opacity = $state(72);
 
 <Slider
     bind:value={opacity}
@@ -26,6 +28,10 @@
 />`;
 
     const composition = `import * as Slider from '@sivir-ui/svelte/components/slider';
+
+let exposure = $state(0);
+
+const format = (value) => \`\${value.toFixed(1)} EV\`;
 
 <Slider.Root bind:value={exposure} min={-2} max={2} step={0.1} {format}>
     <Slider.Range />
@@ -39,7 +45,7 @@
     <title>Sivir · {TITLE}</title>
     <meta
         name="description"
-        content="A labeled slider field that scrubs a value, with its label and formatted value inside the control."
+        content="A numeric slider field with its label and formatted value inside the control."
     />
 </svelte:head>
 
@@ -70,7 +76,10 @@
         <Typography.H2 class="docs-section-heading">Usage</Typography.H2>
         <CodeBlock code={usage} lang="svelte" copy="overlay" />
         <Typography.Text variant="supporting">
-            Pass
+            The value runs from 0 to 100 in steps of 1 unless you set
+            <Typography.InlineCode>min</Typography.InlineCode>,
+            <Typography.InlineCode>max</Typography.InlineCode>, and
+            <Typography.InlineCode>step</Typography.InlineCode>. Pass
             <Typography.InlineCode>format</Typography.InlineCode>
             to display units; screen readers hear the same text. Use
             <Typography.InlineCode>onValueChange</Typography.InlineCode>

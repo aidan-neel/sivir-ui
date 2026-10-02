@@ -15,14 +15,14 @@
     import VariantSecondary from './examples/variant-secondary.svelte';
     import VariantSecondarySrc from './examples/variant-secondary.svelte?raw';
 
-    const installCommand = 'bunx @sivir-ui/svelte add input';
+    const installCommand = 'bunx --package @sivir-ui/svelte sivir add input';
 </script>
 
 <svelte:head>
     <title>Sivir · Input</title>
     <meta
         name="description"
-        content="Text input with labels, helper text, leading and trailing adornments, visual variants, and native validation."
+        content="A single-line text field with an optional label, description, and leading or trailing adornments."
     />
 </svelte:head>
 
@@ -32,8 +32,8 @@
         <div>
             <Typography.H1> Input </Typography.H1>
             <Typography.Text variant="lead" class="mt-2 max-w-2xl">
-                A text field with optional labels, helper text, and decorative adornments. Comes in
-                two variants.
+                Wraps a native input and forwards its attributes, so type, required, pattern, and
+                autocomplete work as usual. Choose the outline or secondary variant.
             </Typography.Text>
         </div>
         <DocsPager />
@@ -56,10 +56,14 @@
     <section id="usage" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading"> Usage </Typography.H2>
         <Typography.Text variant="supporting">
-            Import the Input and use it in your component:
+            Bind <Typography.InlineCode>value</Typography.InlineCode> to read the text. Setting
+            <Typography.InlineCode>label</Typography.InlineCode>
+            wraps the field in a
+            <Typography.InlineCode>&lt;label&gt;</Typography.InlineCode>, so you don't need a
+            separate one.
         </Typography.Text>
         <CodeBlock
-            code={`import { Input } from '$lib/sivir/components/input';\n\n<Input label="Email" placeholder="you@example.com" />`}
+            code={`import { Input } from '@sivir-ui/svelte/components/input';\n\nlet email = $state('');\n\n<Input bind:value={email} type="email" label="Email" placeholder="you@example.com" />`}
             lang="svelte"
             copy="overlay"
         />
@@ -69,16 +73,16 @@
     <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
         <div>
             <Typography.H2 class="docs-section-heading"> Examples </Typography.H2>
-            <Typography.Text variant="supporting" class="mt-2">
-                Add context with adornments, choose a visual variant, and use native validation.
-            </Typography.Text>
         </div>
 
         <div id="adornments" class="scroll-mt-20 flex flex-col gap-3">
             <Typography.H3 class="docs-subsection-heading"> Adornments </Typography.H3>
             <Typography.Text variant="supporting">
-                Use non-interactive leading and trailing snippets with text-entry inputs for icons,
-                units, or short context.
+                The <Typography.InlineCode>leading</Typography.InlineCode> and
+                <Typography.InlineCode>trailing</Typography.InlineCode>
+                snippets render inside the field border and ignore pointer events. Use them for
+                icons, units, or a fixed suffix. They are ignored for checkbox, file, range, and
+                other non-text types.
             </Typography.Text>
             <ComponentPreview code={AdornmentsSrc}>
                 <Adornments />
@@ -103,7 +107,9 @@
         <div id="validation" class="scroll-mt-20 flex flex-col gap-3">
             <Typography.H3 class="docs-subsection-heading"> Validation </Typography.H3>
             <Typography.Text variant="supporting">
-                Use native constraints with error messages that respond to blur and form submission.
+                Input has no error prop. This example sets native constraints, reads validity
+                through <Typography.InlineCode>bind:element</Typography.InlineCode>, and shows
+                messages after blur or submit.
             </Typography.Text>
             <ComponentPreview code={ValidationSrc}>
                 <Validation />

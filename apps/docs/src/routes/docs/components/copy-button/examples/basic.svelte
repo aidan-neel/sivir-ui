@@ -6,7 +6,7 @@
     class="flex w-full max-w-sm items-center gap-2 rounded-[var(--radius-md)] border border-border bg-card px-3 py-2"
 >
     <code class="min-w-0 flex-1 truncate font-mono text-sm text-foreground">
-        bunx @sivir-ui/svelte add copy-button
+        bunx sv create my-app
     </code>
-    <CopyButton text="bunx @sivir-ui/svelte add copy-button" />
+    <CopyButton text="bunx sv create my-app" />
 </div>

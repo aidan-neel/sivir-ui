@@ -17,12 +17,15 @@
     const TITLE = 'Toggle';
     const SLUG = 'toggle';
 
-    const installCommand = `bunx @sivir-ui/svelte add ${SLUG}`;
+    const installCommand = `bunx --package @sivir-ui/svelte sivir add ${SLUG}`;
 </script>
 
 <svelte:head>
     <title>Sivir · {TITLE}</title>
-    <meta name="description" content="A two-state button that is pressed or unpressed." />
+    <meta
+        name="description"
+        content="A button that holds a pressed or unpressed state and reports it with aria-pressed."
+    />
 </svelte:head>
 
 <div data-docs-page class="flex flex-col gap-10">
@@ -31,7 +34,9 @@
         <div>
             <Typography.H1>{TITLE}</Typography.H1>
             <Typography.Text variant="lead" class="mt-2 max-w-2xl">
-                A button with an on/off pressed state. Comes in several sizes.
+                Each click flips <Typography.InlineCode>pressed</Typography.InlineCode> and sets
+                aria-pressed on the button. Bind the state or listen with
+                <Typography.InlineCode>onPressedChange</Typography.InlineCode>.
             </Typography.Text>
         </div>
         <DocsPager />
@@ -54,10 +59,15 @@
     <section id="usage" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading">Usage</Typography.H2>
         <Typography.Text variant="supporting">
-            Import Toggle and bind its pressed state:
+            Bind <Typography.InlineCode>pressed</Typography.InlineCode> (defaults to false), or pass
+            <Typography.InlineCode>onPressedChange</Typography.InlineCode>. Icon-only toggles need
+            an
+            <Typography.InlineCode>aria-label</Typography.InlineCode>.
+            <Typography.InlineCode>variant="outline"</Typography.InlineCode>
+            adds a border.
         </Typography.Text>
         <CodeBlock
-            code={`import { Toggle } from '$lib/sivir/components/toggle';\n\n<Toggle bind:pressed={bold}>\n  <Bold size={14} />\n</Toggle>`}
+            code={`import { Toggle } from '@sivir-ui/svelte/components/toggle';\nimport Bold from '@lucide/svelte/icons/bold';\n\nlet bold = $state(false);\n\n<Toggle bind:pressed={bold} aria-label="Bold">\n  <Bold size={14} />\n</Toggle>`}
             lang="svelte"
             copy="overlay"
         />
@@ -67,9 +77,6 @@
     <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
         <div>
             <Typography.H2 class="docs-section-heading">Examples</Typography.H2>
-            <Typography.Text variant="supporting" class="mt-2">
-                Toggle in different sizes and variants.
-            </Typography.Text>
         </div>
 
         <!-- Icon toggle -->

@@ -69,7 +69,7 @@
     data-state={item.status}
     class={cn(
         className,
-        'relative col-start-1 row-span-2 row-start-1 me-2.5 grid size-10 shrink-0 place-items-center overflow-hidden rounded-[var(--radius-sm)] bg-secondary text-foreground-muted after:pointer-events-none after:absolute after:inset-0 after:rounded-[inherit] after:ring-1 after:ring-inset after:ring-[color-mix(in_srgb,var(--color-foreground)_8%,transparent)]'
+        'relative col-start-1 row-span-2 row-start-1 me-2.5 grid size-10 shrink-0 place-items-center overflow-hidden rounded-[var(--radius-sm)] bg-secondary text-foreground-muted after:pointer-events-none after:absolute after:inset-0 after:rounded-[inherit] after:ring-1 after:ring-inset after:ring-[color-mix(in_srgb,var(--color-foreground)_8%,transparent)] in-data-[ui=composer-form]:size-5 in-data-[ui=composer-form]:me-0 in-data-[ui=composer-form]:bg-card in-data-[ui=composer-form]:[&>svg]:size-3'
     )}
 >
     <Icon

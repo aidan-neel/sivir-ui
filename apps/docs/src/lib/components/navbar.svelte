@@ -132,11 +132,8 @@
                     rel="noreferrer"
                     aria-label="Star Sivir UI on GitHub"
                 >
-                    <img
-                        src={mode.current === 'dark' ? GitHubWhite : GitHubBlack}
-                        alt="GitHub"
-                        class="size-4 flex items-center justify-center"
-                    />
+                    <img src={GitHubBlack} alt="GitHub" class="size-4 dark:hidden" />
+                    <img src={GitHubWhite} alt="GitHub" class="hidden size-4 dark:block" />
                     <span>{formatStarCount(starCount)}</span>
                 </Button>
             </div>

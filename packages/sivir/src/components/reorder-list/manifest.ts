@@ -5,7 +5,7 @@ export const manifest: Manifest = {
     version: '1.0.0',
     visibility: 'public',
     description:
-        'Accessible sortable list with pointer dragging, keyboard grab and move, cancellation, and commit announcements.',
+        'List of rows reordered by dragging or with Space and the arrow keys, with position changes announced to screen readers.',
     files: [
         'components/reorder-list/reorder-list.svelte',
         'components/reorder-list/index.ts',

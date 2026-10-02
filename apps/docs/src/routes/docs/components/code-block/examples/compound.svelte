@@ -4,7 +4,7 @@
     import * as CodeBlock from '@sivir-ui/svelte/components/code-block';
 
     const sh = `npm install @sivir-ui/svelte
-npx sivir add code-block`;
+npx --package @sivir-ui/svelte sivir add code-block`;
 
     const yaml = `name: ci
 on: [push]

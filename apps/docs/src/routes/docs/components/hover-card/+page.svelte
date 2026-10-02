@@ -13,14 +13,14 @@
     const _TITLE = 'Hover Card';
     const SLUG = 'hover-card';
 
-    const installCommand = `bunx @sivir-ui/svelte add ${SLUG}`;
+    const installCommand = `bunx --package @sivir-ui/svelte sivir add ${SLUG}`;
 </script>
 
 <svelte:head>
     <title>Sivir · Hover Card</title>
     <meta
         name="description"
-        content="A preview card that opens on hover or keyboard focus. Use it for user mentions, link previews, or definitions."
+        content="A preview card that opens when you hover or focus a link, mention, or term."
     />
 </svelte:head>
 
@@ -30,7 +30,10 @@
         <div>
             <Typography.H1> Hover Card </Typography.H1>
             <Typography.Text variant="lead" class="mt-2 max-w-2xl">
-                A preview card that opens on hover or focus.
+                Opens 200 ms after the pointer or focus reaches the trigger and closes 150 ms after
+                it leaves. Give the trigger an
+                <Typography.InlineCode>href</Typography.InlineCode>
+                to render it as a link.
             </Typography.Text>
         </div>
         <DocsPager />
@@ -53,10 +56,19 @@
     <section id="usage" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading"> Usage </Typography.H2>
         <Typography.Text variant="supporting">
-            Import Hover Card and compose it with sub-components:
+            Position the card with <Typography.InlineCode>side</Typography.InlineCode> (default
+            <Typography.InlineCode>bottom</Typography.InlineCode>) and
+            <Typography.InlineCode>align</Typography.InlineCode>
+            (default
+            <Typography.InlineCode>center</Typography.InlineCode>) on
+            <Typography.InlineCode>HoverCard.Content</Typography.InlineCode>. Change the delays with
+            <Typography.InlineCode>openDelay</Typography.InlineCode>
+            and
+            <Typography.InlineCode>closeDelay</Typography.InlineCode>
+            on Root.
         </Typography.Text>
         <CodeBlock
-            code={`import * as HoverCard from '$lib/sivir/components/hover-card';\nimport * as Avatar from '$lib/sivir/components/avatar';\n\n<HoverCard.Root>\n  <HoverCard.Trigger>@username</HoverCard.Trigger>\n  <HoverCard.Content>\n    <HoverCard.Title>Full name</HoverCard.Title>\n    <HoverCard.Description>Bio or description</HoverCard.Description>\n  </HoverCard.Content>\n</HoverCard.Root>`}
+            code={`import * as HoverCard from '@sivir-ui/svelte/components/hover-card';\n\n<HoverCard.Root>\n  <HoverCard.Trigger href="/u/mara">@mara</HoverCard.Trigger>\n  <HoverCard.Content>\n    <HoverCard.Title>Mara Lindqvist</HoverCard.Title>\n    <HoverCard.Description>Design engineer on the payments team.</HoverCard.Description>\n  </HoverCard.Content>\n</HoverCard.Root>`}
             lang="svelte"
             copy="overlay"
         />
@@ -66,9 +78,6 @@
     <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
         <div>
             <Typography.H2 class="docs-section-heading"> Examples </Typography.H2>
-            <Typography.Text variant="supporting" class="mt-2">
-                Explore Hover Card in different compositions and use cases.
-            </Typography.Text>
         </div>
 
         <!-- User mention preview -->
@@ -89,7 +98,7 @@
 
         <!-- Simple definition -->
         <div id="definition" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading"> Definition or term </Typography.H3>
+            <Typography.H3 class="docs-subsection-heading"> Definition </Typography.H3>
             <ComponentPreview code={DefinitionSrc}>
                 <Definition />
             </ComponentPreview>

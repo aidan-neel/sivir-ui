@@ -12,9 +12,9 @@
     import WithoutLineNumbers from './examples/without-line-numbers.svelte';
     import WithoutLineNumbersSrc from './examples/without-line-numbers.svelte?raw';
 
-    const installCommand = 'bunx @sivir-ui/svelte add file-diff';
+    const installCommand = 'bunx --package @sivir-ui/svelte sivir add file-diff';
 
-    const usageSnippet = `import * as FileDiff from '$lib/sivir/components/file-diff';
+    const usageSnippet = `import * as FileDiff from '@sivir-ui/svelte/components/file-diff';
 
 <FileDiff.Root file="src/auth.ts" lang="ts" diff={[
   { type: 'context', oldLineNumber: 12, newLineNumber: 12, content: 'export function getToken() {' },
@@ -27,7 +27,7 @@
     <title>Sivir · File Diff</title>
     <meta
         name="description"
-        content="Unified file diff with a path top bar, addition and deletion counts, dual line-number gutters, and per-row syntax highlighting."
+        content="A unified diff for one file, with syntax-highlighted rows and addition and deletion counts."
     />
 </svelte:head>
 
@@ -37,7 +37,8 @@
         <div>
             <Typography.H1> File Diff </Typography.H1>
             <Typography.Text variant="lead" class="mt-2 max-w-2xl">
-                A unified diff viewer with a file top bar, change counts, and highlighted rows.
+                Rows are highlighted with highlight.js in a built-in GitHub palette. Set
+                theme="custom" to drop those colors and load your own highlight.js stylesheet.
             </Typography.Text>
         </div>
         <DocsPager />
@@ -55,9 +56,9 @@
         <Typography.H2 class="docs-section-heading"> Installation </Typography.H2>
         <InstallCommand command={installCommand} />
         <Typography.Text variant="supporting">
-            The component depends on
-            <Typography.InlineCode>highlight.js</Typography.InlineCode>. Install it if your project
-            doesn't have it yet:
+            The component needs
+            <Typography.InlineCode>highlight.js</Typography.InlineCode>. The add command offers to
+            install it when it's missing. To install it yourself, run:
         </Typography.Text>
         <InstallCommand command="bun add highlight.js" />
     </section>
@@ -66,17 +67,18 @@
     <section id="usage" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading"> Usage </Typography.H2>
         <Typography.Text variant="supporting">
-            Pass a <Typography.InlineCode>diff</Typography.InlineCode> array for the high-level
-            form, or compose
-            <Typography.InlineCode>TopBar</Typography.InlineCode>,
-            <Typography.InlineCode>Content</Typography.InlineCode>, and
-            <Typography.InlineCode>Row</Typography.InlineCode>
-            by hand. A bare
-            <Typography.InlineCode>TopBar</Typography.InlineCode>
-            renders filename and counts; pass children to take over the row with
-            <Typography.InlineCode>Filename</Typography.InlineCode>,
-            <Typography.InlineCode>PlusMinus</Typography.InlineCode>, and your own actions. Addition
-            and deletion counts are derived from the diff unless you pass them explicitly.
+            Pass a <Typography.InlineCode>diff</Typography.InlineCode> array and Root renders the
+            top bar and every row. The addition and deletion counts come from the
+            <Typography.InlineCode>add</Typography.InlineCode>
+            and
+            <Typography.InlineCode>remove</Typography.InlineCode>
+            lines unless you pass
+            <Typography.InlineCode>additions</Typography.InlineCode>
+            and
+            <Typography.InlineCode>deletions</Typography.InlineCode>.
+            <Typography.InlineCode>lang</Typography.InlineCode>
+            takes a highlight.js language name or a common alias such as
+            <Typography.InlineCode>ts</Typography.InlineCode>.
         </Typography.Text>
         <CodeBlock code={usageSnippet} lang="svelte" copy="overlay" />
     </section>
@@ -85,20 +87,24 @@
     <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
         <div>
             <Typography.H2 class="docs-section-heading"> Examples </Typography.H2>
-            <Typography.Text variant="supporting" class="mt-2">
-                From a single high-level diff to fully composed rows and stacked files.
-            </Typography.Text>
         </div>
 
         <div id="compound" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading"> Compound API </Typography.H3>
+            <Typography.H3 class="docs-subsection-heading"> Composed parts </Typography.H3>
             <Typography.Text variant="supporting">
-                Drop down to rows when you need a custom top-bar action or explicit counts.
-                Recompose the header from
+                Leave out <Typography.InlineCode>diff</Typography.InlineCode> and compose
+                <Typography.InlineCode>TopBar</Typography.InlineCode>,
+                <Typography.InlineCode>Content</Typography.InlineCode>, and
+                <Typography.InlineCode>Row</Typography.InlineCode>
+                yourself. Root can't count rows you compose, so pass
+                <Typography.InlineCode>additions</Typography.InlineCode>
+                and
+                <Typography.InlineCode>deletions</Typography.InlineCode>. Children replace the
+                TopBar's default filename and counts; add
                 <Typography.InlineCode>Filename</Typography.InlineCode>
                 and
                 <Typography.InlineCode>PlusMinus</Typography.InlineCode>
-                parts.
+                back next to your own actions.
             </Typography.Text>
             <ComponentPreview code={CompoundSrc}>
                 <Compound />
@@ -108,8 +114,8 @@
         <div id="without-line-numbers" class="scroll-mt-20 flex flex-col gap-3">
             <Typography.H3 class="docs-subsection-heading"> Without line numbers </Typography.H3>
             <Typography.Text variant="supporting">
-                Hide both gutters for compact embeds. The sign column stays so additions and
-                deletions remain distinguishable without color.
+                Set <Typography.InlineCode>showLineNumbers</Typography.InlineCode> to false to hide
+                both gutters. The + and − column stays, so changes are readable without color.
             </Typography.Text>
             <ComponentPreview code={WithoutLineNumbersSrc}>
                 <WithoutLineNumbers />
@@ -119,8 +125,8 @@
         <div id="stacked" class="scroll-mt-20 flex flex-col gap-3">
             <Typography.H3 class="docs-subsection-heading"> Stacked files </Typography.H3>
             <Typography.Text variant="supporting">
-                Render one Root per file for pull-request style views. Each diff keeps its own
-                language and counts.
+                Render one Root per file, as in a pull request. Each Root has its own language and
+                counts.
             </Typography.Text>
             <ComponentPreview code={StackedSrc}>
                 <Stacked />

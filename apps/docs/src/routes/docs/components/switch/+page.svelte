@@ -14,12 +14,15 @@
 
     const TITLE = 'Switch';
 
-    const installCommand = 'bunx @sivir-ui/svelte add switch';
+    const installCommand = 'bunx --package @sivir-ui/svelte sivir add switch';
 </script>
 
 <svelte:head>
     <title>Sivir · {TITLE}</title>
-    <meta name="description" content="On/off toggle for system-level settings." />
+    <meta
+        name="description"
+        content="An on/off switch with a bindable checked state and an optional label and description."
+    />
 </svelte:head>
 
 <div data-docs-page class="flex flex-col gap-10">
@@ -28,7 +31,8 @@
         <div>
             <Typography.H1>{TITLE}</Typography.H1>
             <Typography.Text variant="lead" class="mt-2 max-w-2xl">
-                A toggle for settings that apply immediately.
+                A button with the switch role, for settings that apply as soon as they change. Use a
+                Checkbox when the choice is saved with a form.
             </Typography.Text>
         </div>
         <DocsPager />
@@ -50,17 +54,32 @@
     <!-- ─── Usage ─────────────────────────────────────────────────── -->
     <section id="usage" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading">Usage</Typography.H2>
-        <Typography.Text variant="supporting">Import Switch and bind its state:</Typography.Text>
+        <Typography.Text variant="supporting">
+            Bind <Typography.InlineCode>checked</Typography.InlineCode> to read and set the state.
+            The older <Typography.InlineCode>switched</Typography.InlineCode> prop still works.
+        </Typography.Text>
         <CodeBlock
-            code={`import { Switch } from '$lib/sivir/components/switch';\n\n<Switch bind:switched={enabled} label="Notifications" />`}
+            code={`import { Switch } from '@sivir-ui/svelte/components/switch';\n\nlet enabled = $state(false);\n\n<Switch bind:checked={enabled} label="Email notifications" />`}
             lang="svelte"
             copy="overlay"
         />
         <Typography.Text variant="supporting">
-            Click, tap, or press Space to toggle, or drag the thumb across the track and release it
-            on either side. The thumb follows a spring, stretches while pressed or moving, and the
-            track fills with the primary color as the thumb travels. Clicking the label toggles the
-            switch too. With reduced motion, the thumb moves without animating.
+            Click, tap, or press Space or Enter to toggle, or drag the thumb across the track and
+            release it on either side. The thumb follows a spring, stretches while pressed or
+            moving, and the track fills with the primary color as the thumb travels. Clicking the
+            label toggles the switch too. With reduced motion, the thumb moves without animating.
+        </Typography.Text>
+        <Typography.Text variant="supporting">
+            Theme the motion with
+            <Typography.InlineCode>--motion-duration-switch</Typography.InlineCode>
+            (default <Typography.InlineCode>280ms</Typography.InlineCode>, lower is faster,
+            <Typography.InlineCode>0ms</Typography.InlineCode>
+            snaps) and
+            <Typography.InlineCode>--motion-switch-stretch</Typography.InlineCode>
+            (default
+            <Typography.InlineCode>1</Typography.InlineCode>,
+            <Typography.InlineCode>0</Typography.InlineCode>
+            turns the stretch off).
         </Typography.Text>
     </section>
 
@@ -68,9 +87,6 @@
     <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
         <div>
             <Typography.H2 class="docs-section-heading">Examples</Typography.H2>
-            <Typography.Text variant="supporting" class="mt-2">
-                Switch in different states and compositions.
-            </Typography.Text>
         </div>
 
         <!-- Basic -->

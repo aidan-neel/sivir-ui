@@ -39,7 +39,8 @@ bunx --package @sivir-ui/svelte sivir list`;
         <div>
             <Typography.H1 class="m-0">Installation</Typography.H1>
             <Typography.Text variant="lead" class="mt-2 max-w-2xl">
-                Install Sivir UI into your project.
+                Choose the package to get updates through upgrades, or the CLI to own and edit
+                component source. Both load the same stylesheet, ui.css.
             </Typography.Text>
         </div>
         <DocsPager />
@@ -50,7 +51,7 @@ bunx --package @sivir-ui/svelte sivir list`;
         <ul
             class="m-0 flex list-disc flex-col gap-1.5 pl-5 text-[1rem] text-foreground leading-relaxed"
         >
-            <li>Svelte 5 or SvelteKit</li>
+            <li>Svelte 5 (the CLI defaults assume SvelteKit)</li>
             <li>Tailwind CSS v4</li>
         </ul>
     </section>
@@ -63,8 +64,9 @@ bunx --package @sivir-ui/svelte sivir list`;
         </Typography.Text>
         <CodeBlock code={packageInstall} lang="shell" copy="overlay" />
         <Typography.Text variant="body" class="m-0 max-w-2xl">
-            Import the stylesheet once (for example in
-            <Typography.InlineCode>src/app.css</Typography.InlineCode>):
+            Import the stylesheet once in your root CSS file, in place of
+            <Typography.InlineCode>@import 'tailwindcss';</Typography.InlineCode>. It imports
+            Tailwind for you:
         </Typography.Text>
         <CodeBlock code={packageCss} lang="css" copy="overlay" />
         <Typography.Text variant="body" class="m-0 max-w-2xl">Use a component:</Typography.Text>
@@ -81,9 +83,13 @@ bunx --package @sivir-ui/svelte sivir list`;
     <section id="cli-source-copy" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading">Option B: CLI source copy</Typography.H2>
         <Typography.Text variant="body" class="m-0 max-w-2xl">
-            The CLI copies source into your project. The package name is
-            <Typography.InlineCode>@sivir-ui/svelte</Typography.InlineCode>; the binary is
-            <Typography.InlineCode>sivir</Typography.InlineCode>.
+            The
+            <Typography.InlineCode>sivir</Typography.InlineCode>
+            binary ships in
+            <Typography.InlineCode>@sivir-ui/svelte</Typography.InlineCode>, so these commands run
+            it with
+            <Typography.InlineCode>bunx --package</Typography.InlineCode>. It copies component
+            source into your project.
         </Typography.Text>
 
         <Typography.H3 class="m-0 docs-subsection-heading">
@@ -96,9 +102,13 @@ bunx --package @sivir-ui/svelte sivir list`;
 
         <Typography.H3 class="m-0 docs-subsection-heading">3. Initialize Sivir</Typography.H3>
         <Typography.Text variant="body" class="m-0 max-w-2xl">
-            Creates <Typography.InlineCode>src/lib/sivir/</Typography.InlineCode> (tokens +
-            utilities) and <Typography.InlineCode>sivir.json</Typography.InlineCode>, then installs
-            the shared dependencies.
+            Copies <Typography.InlineCode>ui.css</Typography.InlineCode> and shared utilities into
+            <Typography.InlineCode>src/lib/sivir/</Typography.InlineCode>, writes
+            <Typography.InlineCode>sivir.json</Typography.InlineCode>, and installs the shared
+            dependencies.
+            <Typography.InlineCode>-y</Typography.InlineCode>
+            accepts the default directory and import alias and skips the confirmations for
+            installing dependencies and editing your stylesheet.
         </Typography.Text>
         <CodeBlock
             code="bunx --package @sivir-ui/svelte sivir init -y"
@@ -145,15 +155,21 @@ bunx --package @sivir-ui/svelte sivir list`;
                 <Typography.InlineCode>color-mix</Typography.InlineCode>.
             </li>
             <li>
-                Dark mode uses a <Typography.InlineCode>.dark</Typography.InlineCode> class on
-                <Typography.InlineCode>&lt;html&gt;</Typography.InlineCode>.
+                Dark mode applies under a
+                <Typography.InlineCode>.dark</Typography.InlineCode>
+                class on
+                <Typography.InlineCode>&lt;html&gt;</Typography.InlineCode>. Sivir reads the class
+                but does not toggle it.
             </li>
             <li>
-                Built-in theme presets install with
+                In a CLI project, install a built-in theme preset with
                 <Typography.InlineCode
                     >bunx --package @sivir-ui/svelte sivir add theme &lt;slug&gt;</Typography.InlineCode
                 >
-                (for example <Typography.InlineCode>default</Typography.InlineCode>).
+                (for example <Typography.InlineCode>raven</Typography.InlineCode>). It writes
+                <Typography.InlineCode>theme.css</Typography.InlineCode>
+                next to <Typography.InlineCode>ui.css</Typography.InlineCode>; import it after
+                <Typography.InlineCode>ui.css</Typography.InlineCode>.
             </li>
         </ul>
     </section>

@@ -17,12 +17,15 @@
     const TITLE = 'Combobox';
     const SLUG = 'combobox';
 
-    const installCommand = `bunx @sivir-ui/svelte add ${SLUG}`;
+    const installCommand = `bunx --package @sivir-ui/svelte sivir add ${SLUG}`;
 </script>
 
 <svelte:head>
     <title>Sivir · {TITLE}</title>
-    <meta name="description" content="Searchable select dropdown with fuzzy matching." />
+    <meta
+        name="description"
+        content="A select with a text field that fuzzy-filters its options as you type."
+    />
 </svelte:head>
 
 <div data-docs-page class="flex flex-col gap-10">
@@ -33,7 +36,8 @@
                 {TITLE}
             </Typography.H1>
             <Typography.Text variant="lead" class="mt-2 max-w-2xl">
-                A searchable dropdown that filters options as you type.
+                Matching uses fuse.js against each item's value and label, so small typos still
+                match. Lower the trigger's threshold (default 0.28) to make matching stricter.
             </Typography.Text>
         </div>
         <DocsPager />
@@ -56,10 +60,17 @@
     <section id="usage" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading"> Usage </Typography.H2>
         <Typography.Text variant="supporting">
-            Import and use the Combobox components:
+            Bind <Typography.InlineCode>value</Typography.InlineCode> on
+            <Typography.InlineCode>Combobox.Root</Typography.InlineCode>. Every item needs a
+            <Typography.InlineCode>value</Typography.InlineCode>
+            and a
+            <Typography.InlineCode>label</Typography.InlineCode>. The trigger is a text field that
+            shows the selected label, so it takes a
+            <Typography.InlineCode>placeholder</Typography.InlineCode>
+            instead of children.
         </Typography.Text>
         <CodeBlock
-            code={`import * as Combobox from '$lib/sivir/components/combobox';\n\nlet selected = $state('next');\n\n<Combobox.Root>\n  <Combobox.Trigger>{selected}</Combobox.Trigger>\n  <Combobox.Content>\n    <Combobox.Results>\n      <Combobox.Item value="next" label="Next.js" callback={() => (selected = 'next')} />\n    </Combobox.Results>\n  </Combobox.Content>\n</Combobox.Root>`}
+            code={`import * as Combobox from '@sivir-ui/svelte/components/combobox';\n\nlet framework = $state('');\n\n<Combobox.Root bind:value={framework}>\n  <Combobox.Trigger placeholder="Choose a framework" />\n  <Combobox.Content>\n    <Combobox.Results>\n      <Combobox.Item value="sveltekit" label="SvelteKit" />\n      <Combobox.Item value="astro" label="Astro" />\n    </Combobox.Results>\n  </Combobox.Content>\n</Combobox.Root>`}
             lang="svelte"
             copy="overlay"
         />
@@ -82,11 +93,11 @@
         <div id="input-search" class="scroll-mt-20 flex flex-col gap-3">
             <Typography.H3 class="docs-subsection-heading"> Input search </Typography.H3>
             <Typography.Text variant="supporting">
-                Set <Typography.InlineCode>appearance="input"</Typography.InlineCode> for a
-                field-styled trigger that stays editable and opens on focus or typing instead of
-                click-toggle. Pass a
+                Set <Typography.InlineCode>appearance="input"</Typography.InlineCode> to style the
+                trigger as an input. It opens on focus or typing, and shows a clear button once it
+                has a query or selection. It has no chevron; pass a
                 <Typography.InlineCode>trailing</Typography.InlineCode>
-                snippet for an adornment; there is no chevron by default.
+                snippet to show an icon while the field is empty.
             </Typography.Text>
             <ComponentPreview code={InputSearchSrc}>
                 <InputSearch />
@@ -96,7 +107,8 @@
         <div id="menu-search" class="scroll-mt-20 flex flex-col gap-3">
             <Typography.H3 class="docs-subsection-heading"> Search in the menu </Typography.H3>
             <Typography.Text variant="supporting">
-                Keep the trigger select-like and place the search field in the menu.
+                Set <Typography.InlineCode>searchPlacement="menu"</Typography.InlineCode> on the
+                trigger to make it read-only and put the search field at the top of the menu.
             </Typography.Text>
             <ComponentPreview code={MenuSearchSrc}>
                 <MenuSearch />
@@ -106,7 +118,9 @@
         <div id="scrollable" class="scroll-mt-20 flex flex-col gap-3">
             <Typography.H3 class="docs-subsection-heading"> Scrollable </Typography.H3>
             <Typography.Text variant="supporting">
-                Long result lists stay in a height-capped menu and scroll inside it.
+                Add a <Typography.InlineCode>max-h-*</Typography.InlineCode> class to
+                <Typography.InlineCode>Combobox.Content</Typography.InlineCode>
+                to cap the menu height. Longer result lists scroll inside it.
             </Typography.Text>
             <ComponentPreview code={ScrollableSrc}>
                 <Scrollable />

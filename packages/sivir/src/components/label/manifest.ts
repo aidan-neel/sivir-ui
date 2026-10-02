@@ -4,7 +4,8 @@ export const manifest: Manifest = {
     name: 'label',
     version: '1.0.0',
     visibility: 'public',
-    description: 'Thin wrapper around native <label> with sivir styling defaults.',
+    description:
+        'Native <label> with label type styles. Dims when it follows a disabled control that has the peer class.',
     files: [
         'components/label/label.svelte',
         'components/label/index.ts',

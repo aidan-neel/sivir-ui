@@ -1,0 +1,5 @@
+- Add `Command.Footer`, an optional row below the results for key hints or status, pinned while the results scroll.
+- With surface paneling off, the command palette drops its inset frame look: the header and footer sit flush with hairline rules, item shortcuts render as plain muted text, and footer key hints use soft filled chips.
+- Add undo and redo to Studio (toolbar buttons, Cmd/Ctrl+Z, Shift+Cmd/Ctrl+Z), covering every edit, preset switch, and reset.
+- Studio now asks for confirmation before resetting your draft to the preset. Reset can be undone.
+- Question options show a number key hint, and pressing 1 through 9 inside a question selects or toggles that option.

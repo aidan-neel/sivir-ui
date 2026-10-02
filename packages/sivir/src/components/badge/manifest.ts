@@ -5,7 +5,7 @@ export const manifest: Manifest = {
     version: '1.0.0',
     visibility: 'public',
     description:
-        'Inline status pill with optional dot marker. 9 variants (5 intents + 4 statuses). Optionally renders as anchor when href is provided.',
+        'Status label with nine variants, an optional dot or leading icon, and an anchor form when href is set.',
     files: [
         'components/badge/badge.svelte',
         'components/badge/variants.ts',

@@ -21,11 +21,9 @@
             <ShieldCheck size={16} strokeWidth={1.8} aria-hidden="true" />
         </div>
         <div>
-            <p class="font-[var(--font-weight-label)] text-foreground">
-                Untrusted content stays inert
-            </p>
+            <p class="font-[var(--font-weight-label)] text-foreground">Raw HTML renders as text</p>
             <p class="mt-1 text-sm leading-6 text-foreground-muted">
-                HTML is shown as source text. Unsafe URL schemes are not turned into links.
+                The script and button below show as source. The javascript: link is plain text.
             </p>
         </div>
     </div>

@@ -2,6 +2,7 @@
     import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
     import * as Typography from '@sivir-ui/svelte/components/typography';
     import { resolve } from '$app/paths';
+    import { components } from '$lib/components';
     import DocsPager from '$lib/components/docs/docs-pager.svelte';
 
     const packageQuick = `bun add @sivir-ui/svelte
@@ -22,8 +23,10 @@ bunx --package @sivir-ui/svelte sivir add button`;
         <div>
             <Typography.H1 class="m-0">Introduction</Typography.H1>
             <Typography.Text variant="lead" class="mt-2 max-w-2xl">
-                Sivir UI is a component library for Svelte 5 and Tailwind v4. It ships 55
-                components, a CSS token sheet, and a small CLI.
+                Sivir UI has
+                {components.length}
+                Svelte 5 components that share one Tailwind CSS v4 token sheet. Import them from the
+                package, or copy their source into your project with the sivir CLI.
             </Typography.Text>
         </div>
         <DocsPager />
@@ -35,14 +38,16 @@ bunx --package @sivir-ui/svelte sivir add button`;
             <strong>Package import.</strong>
             Install
             <Typography.InlineCode>@sivir-ui/svelte</Typography.InlineCode>
-            and import components from the package. Fastest path when you want a dependency, not
-            source ownership.
+            and import components from the package. Updates arrive as package upgrades.
         </Typography.Text>
         <Typography.Text variant="body" class="m-0 max-w-2xl">
             <strong>CLI source copy.</strong>
             Run the
             <Typography.InlineCode>sivir</Typography.InlineCode>
-            CLI to copy component files into your repo. You own the markup and can edit it freely.
+            CLI to copy component files into your repo and edit them like your own code.
+            <Typography.InlineCode>sivir add</Typography.InlineCode>
+            does not overwrite existing files unless you pass
+            <Typography.InlineCode>--overwrite</Typography.InlineCode>.
         </Typography.Text>
     </section>
 
@@ -51,20 +56,20 @@ bunx --package @sivir-ui/svelte sivir add button`;
         <ul
             class="m-0 flex list-disc flex-col gap-1.5 pl-5 text-[1rem] text-foreground leading-relaxed"
         >
-            <li>Svelte 5 (SvelteKit is the usual host)</li>
+            <li>Svelte 5 (the CLI defaults assume SvelteKit)</li>
             <li>Tailwind CSS v4</li>
         </ul>
         <Typography.Text variant="body" class="m-0 max-w-2xl">
-            npm, pnpm, and bun all work for consumers. Bun is only required to develop this
-            monorepo.
+            Any package manager works. The docs show Bun commands; use the npm or pnpm equivalent if
+            you prefer.
         </Typography.Text>
     </section>
 
     <section id="quick-start" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading">Quick start</Typography.H2>
-        <Typography.Text variant="body" class="m-0 max-w-2xl">Package path:</Typography.Text>
+        <Typography.Text variant="body" class="m-0 max-w-2xl">Package import:</Typography.Text>
         <CodeBlock code={packageQuick} lang="shell" copy="overlay" />
-        <Typography.Text variant="body" class="m-0 max-w-2xl">CLI path:</Typography.Text>
+        <Typography.Text variant="body" class="m-0 max-w-2xl">CLI source copy:</Typography.Text>
         <CodeBlock code={cliQuick} lang="shell" copy="overlay" />
     </section>
 

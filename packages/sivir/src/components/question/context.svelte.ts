@@ -1,7 +1,8 @@
 import { createContext } from '@sivir-ui/svelte/utils';
-import type { QuestionAnswer, QuestionStatus, QuestionType } from '.';
+import type { QuestionAnswer, QuestionProps, QuestionStatus, QuestionType } from '.';
 
 export type QuestionContext = {
+    readonly variant: NonNullable<QuestionProps['variant']>;
     readonly type: QuestionType;
     readonly answer: QuestionAnswer;
     readonly status: QuestionStatus;

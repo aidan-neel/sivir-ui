@@ -13,7 +13,7 @@ export const manifest: Manifest = {
     version: '1.2.0',
     visibility: 'public',
     description:
-        'One-tap clipboard button with a Copy↔Check icon morph and tooltip feedback, reverting after a short hold.',
+        'Icon button that copies a string to the clipboard, swaps its copy icon for a check, and shows Copied in its tooltip until it reverts.',
     files: [
         'components/copy-button/copy-button.svelte',
         'components/copy-button/index.ts',

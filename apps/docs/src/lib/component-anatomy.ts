@@ -44,24 +44,37 @@ export const componentAnatomy = {
         { name: 'Attachment.Remove', description: 'Removes the file.' }
     ],
     avatar: [
-        { name: 'Avatar.Root', description: 'Provides the avatar container.' },
-        { name: 'Avatar.Image', description: 'Renders the avatar image.' },
-        { name: 'Avatar.Fallback', description: 'Renders fallback avatar content.' }
+        { name: 'Avatar.Root', description: 'Sets the size and shape.' },
+        { name: 'Avatar.Image', description: 'Renders the image and reports when it loads.' },
+        {
+            name: 'Avatar.Fallback',
+            description: 'Shows until the image loads, or stays if it fails.'
+        }
     ],
-    badge: [{ name: 'Badge', description: 'Displays a compact status label.' }],
+    badge: [{ name: 'Badge', description: 'Renders a short label, or a link when given href.' }],
     breadcrumb: [
-        { name: 'Breadcrumb.Root', description: 'Provides breadcrumb navigation.' },
-        { name: 'Breadcrumb.Item', description: 'Renders a breadcrumb link or item.' },
-        { name: 'Breadcrumb.Separator', description: 'Separates breadcrumb items.' }
+        { name: 'Breadcrumb.Root', description: 'Lays out items and separators in a row.' },
+        {
+            name: 'Breadcrumb.Item',
+            description: 'Renders a link, styled as current when it matches the path.'
+        },
+        {
+            name: 'Breadcrumb.Separator',
+            description: 'Renders a chevron, or your own separator content.'
+        }
     ],
     button: [{ name: 'Button', description: 'Triggers an action or navigation.' }],
     card: [
-        { name: 'Card.Root', description: 'Provides the card container.' },
+        { name: 'Card.Root', description: 'Renders the surface and sets its variant.' },
+        { name: 'Card.Header', description: 'Groups the title and description.' },
         { name: 'Card.Title', description: 'Renders the card heading.' },
-        { name: 'Card.Header', description: 'Groups card heading content.' },
-        { name: 'Card.Footer', description: 'Groups card actions or metadata.' },
-        { name: 'Card.Description', description: 'Renders the card description.' },
-        { name: 'Card.Content', description: 'Renders the card body.' }
+        { name: 'Card.Description', description: 'Renders muted text under the title.' },
+        { name: 'Card.Content', description: 'Renders the card body.' },
+        {
+            name: 'Card.Footer',
+            description:
+                'Aligns actions to the end; in the inset variant, renders below the surface.'
+        }
     ],
     checkbox: [{ name: 'Checkbox', description: 'Selects or clears a boolean value.' }],
     'code-block': [
@@ -85,12 +98,15 @@ export const componentAnatomy = {
         { name: 'ColorPicker.Content', description: 'Renders color selection controls.' }
     ],
     combobox: [
-        { name: 'Combobox.Root', description: 'Provides combobox state.' },
-        { name: 'Combobox.Content', description: 'Contains combobox controls.' },
-        { name: 'Combobox.Trigger', description: 'Opens the combobox.' },
+        { name: 'Combobox.Root', description: 'Holds the selected value and open state.' },
+        {
+            name: 'Combobox.Content',
+            description: 'Renders the menu and, optionally, its search field.'
+        },
+        { name: 'Combobox.Trigger', description: 'Shows the selection and takes the search text.' },
         { name: 'Combobox.Results', description: 'Lists matching items.' },
         { name: 'Combobox.Item', description: 'Defines a selectable item.' },
-        { name: 'Combobox.Label', description: 'Labels the combobox.' }
+        { name: 'Combobox.Label', description: 'Labels a group of items in the menu.' }
     ],
     command: [
         { name: 'Command.Root', description: 'Provides command menu state.' },
@@ -100,40 +116,62 @@ export const componentAnatomy = {
         { name: 'Command.Results', description: 'Lists matching commands.' },
         { name: 'Command.Search', description: 'Filters command items.' },
         { name: 'Command.Item', description: 'Defines a command action.' },
-        { name: 'Command.Group', description: 'Groups command items.' }
+        { name: 'Command.Group', description: 'Groups command items.' },
+        {
+            name: 'Command.Header',
+            description: 'Renders a row in the modal frame above the palette.'
+        },
+        {
+            name: 'Command.Footer',
+            description: 'Renders a row in the modal frame below the results.'
+        }
     ],
     'context-menu': [
         { name: 'ContextMenu.Root', description: 'Provides context menu state.' },
+        { name: 'ContextMenu.Trigger', description: 'Wraps the area that opens the menu.' },
         { name: 'ContextMenu.Content', description: 'Renders the menu surface.' },
-        { name: 'ContextMenu.CheckboxItem', description: 'Renders a checkable menu item.' },
         { name: 'ContextMenu.Item', description: 'Renders a menu action.' },
+        { name: 'ContextMenu.CheckboxItem', description: 'Renders a checkable menu item.' },
         { name: 'ContextMenu.Separator', description: 'Separates menu items.' },
-        { name: 'ContextMenu.SubContent', description: 'Renders a submenu surface.' },
-        { name: 'ContextMenu.SubTrigger', description: 'Opens a submenu.' },
         { name: 'ContextMenu.Sub', description: 'Provides submenu state.' },
-        { name: 'ContextMenu.Trigger', description: 'Defines the context menu target.' }
+        { name: 'ContextMenu.SubTrigger', description: 'Opens a submenu.' },
+        { name: 'ContextMenu.SubContent', description: 'Renders a submenu surface.' }
     ],
     conversation: [
-        { name: 'Conversation.Root', description: 'Manages transcript scrolling.' },
-        { name: 'Conversation.Content', description: 'Contains conversation messages.' },
-        { name: 'Conversation.Empty', description: 'Renders an empty conversation state.' },
+        { name: 'Conversation.Root', description: 'Follows new output until the user scrolls up.' },
+        { name: 'Conversation.Content', description: 'Scrolls the list of messages.' },
+        {
+            name: 'Conversation.Empty',
+            description: 'Shows a title and prompt before any messages.'
+        },
         { name: 'Conversation.ScrollButton', description: 'Scrolls to the latest message.' }
     ],
     'copy-button': [{ name: 'CopyButton', description: 'Copies text to the clipboard.' }],
     'dropdown-menu': [
         { name: 'DropdownMenu.Root', description: 'Provides dropdown menu state.' },
         { name: 'DropdownMenu.Trigger', description: 'Opens the dropdown menu.' },
+        { name: 'DropdownMenu.Content', description: 'Renders the menu surface.' },
         { name: 'DropdownMenu.Label', description: 'Labels a menu section.' },
         { name: 'DropdownMenu.Item', description: 'Renders a menu action.' },
-        { name: 'DropdownMenu.Content', description: 'Renders the menu surface.' },
+        { name: 'DropdownMenu.CheckboxItem', description: 'Renders a checkable menu item.' },
+        { name: 'DropdownMenu.RadioGroup', description: 'Manages a single-selection group.' },
+        { name: 'DropdownMenu.RadioItem', description: 'Renders a radio option.' },
         { name: 'DropdownMenu.Separator', description: 'Separates menu items.' },
         { name: 'DropdownMenu.Sub', description: 'Provides submenu state.' },
-        { name: 'DropdownMenu.SubContent', description: 'Renders a submenu surface.' },
-        { name: 'DropdownMenu.SubTrigger', description: 'Opens a submenu.' }
+        { name: 'DropdownMenu.SubTrigger', description: 'Opens a submenu.' },
+        { name: 'DropdownMenu.SubContent', description: 'Renders a submenu surface.' }
     ],
     'file-diff': [
-        { name: 'FileDiff.Root', description: 'Provides diff state and layout.' },
-        { name: 'FileDiff.TopBar', description: 'Renders the file path and change counts.' },
+        {
+            name: 'FileDiff.Root',
+            description: 'Holds the file, language, and counts; renders everything when given diff.'
+        },
+        {
+            name: 'FileDiff.TopBar',
+            description: 'Renders the file path and counts, or your own children.'
+        },
+        { name: 'FileDiff.Filename', description: 'Renders the file path.' },
+        { name: 'FileDiff.PlusMinus', description: 'Renders the addition and deletion counts.' },
         { name: 'FileDiff.Content', description: 'Contains the scrollable diff rows.' },
         { name: 'FileDiff.Row', description: 'Renders one highlighted diff row.' },
         { name: 'FileDiff.LineNumber', description: 'Renders one gutter line number.' }
@@ -158,20 +196,23 @@ export const componentAnatomy = {
     label: [{ name: 'Label', description: 'Labels a form control.' }],
     markdown: [{ name: 'Markdown', description: 'Renders GitHub-flavored Markdown.' }],
     message: [
-        { name: 'Message.Root', description: 'Provides a conversation message.' },
-        { name: 'Message.Content', description: 'Contains message content.' },
-        { name: 'Message.Actions', description: 'Groups message actions.' }
+        { name: 'Message.Root', description: 'Aligns and styles one message by sender.' },
+        {
+            name: 'Message.Content',
+            description: 'Holds the message text, as a bubble for the user.'
+        },
+        { name: 'Message.Actions', description: 'Holds buttons such as copy, shown on hover.' }
     ],
     modal: [
         { name: 'Modal.Root', description: 'Controls modal state.' },
         { name: 'Modal.Trigger', description: 'Opens the modal.' },
         { name: 'Modal.Content', description: 'Renders the modal surface.' },
+        { name: 'Modal.Header', description: 'Groups modal heading content.' },
         { name: 'Modal.Title', description: 'Renders the modal title.' },
         { name: 'Modal.Description', description: 'Renders the modal description.' },
-        { name: 'Modal.Header', description: 'Groups modal heading content.' },
         { name: 'Modal.Body', description: 'Renders the modal body.' },
-        { name: 'Modal.Close', description: 'Closes the modal.' },
         { name: 'Modal.Footer', description: 'Groups modal actions.' },
+        { name: 'Modal.Close', description: 'Closes the modal.' },
         { name: 'Modal.Confirm', description: 'Confirms and closes the modal.' }
     ],
     pagination: [{ name: 'Pagination', description: 'Navigates paginated content.' }],
@@ -181,39 +222,49 @@ export const componentAnatomy = {
         { name: 'Popover.Content', description: 'Renders the popover surface.' },
         { name: 'Popover.Title', description: 'Renders the popover title.' }
     ],
-    progress: [{ name: 'Progress', description: 'Displays progress toward a value.' }],
+    progress: [{ name: 'Progress', description: 'Fills to value out of max, or loops.' }],
     composer: [
-        { name: 'Composer.Root', description: 'Manages prompt submission.' },
-        { name: 'Composer.Input', description: 'Accepts the prompt text.' },
-        { name: 'Composer.Toolbar', description: 'Groups composer controls.' },
-        { name: 'Composer.Actions', description: 'Groups composer actions.' },
-        { name: 'Composer.Submit', description: 'Submits or stops the prompt.' }
+        { name: 'Composer.Root', description: 'Submits the prompt and tracks its status.' },
+        { name: 'Composer.Input', description: 'Grows with the prompt text.' },
+        { name: 'Composer.Toolbar', description: 'Holds the actions and submit button.' },
+        {
+            name: 'Composer.Actions',
+            description: 'Holds controls such as attach or model pickers.'
+        },
+        { name: 'Composer.Submit', description: 'Sends, queues, or stops the prompt.' }
     ],
     question: [
-        { name: 'Question.Root', description: 'Renders a full question form.' },
-        { name: 'Question.Title', description: 'Shows the question heading.' },
-        { name: 'Question.Description', description: 'Explains the question context.' },
-        { name: 'Question.Options', description: 'Wraps answer option items.' },
-        { name: 'Question.Option', description: 'Represents a question option.' },
-        { name: 'Question.Input', description: 'Collects a free-form response.' },
-        { name: 'Question.Actions', description: 'Groups cancellation and submit actions.' },
-        { name: 'Question.Cancel', description: 'Cancels question submission.' },
-        { name: 'Question.Submit', description: 'Submits the selected answer.' }
+        { name: 'Question.Root', description: 'Holds the answer and validates it on submit.' },
+        {
+            name: 'Question.Content',
+            description: 'Groups the question and animates between steps.'
+        },
+        { name: 'Question.Title', description: 'Shows the question.' },
+        { name: 'Question.Description', description: 'Adds context below the question.' },
+        { name: 'Question.Options', description: 'Lists the answer choices.' },
+        { name: 'Question.Option', description: 'One choice, with an optional description.' },
+        { name: 'Question.Input', description: 'Collects a written answer.' },
+        { name: 'Question.Actions', description: 'Holds the cancel and submit buttons.' },
+        { name: 'Question.Cancel', description: 'Calls onCancel.' },
+        { name: 'Question.Submit', description: 'Submits the answer.' }
     ],
     'radio-group': [
         { name: 'RadioGroup.Root', description: 'Manages a single selection.' },
         { name: 'RadioGroup.Item', description: 'Defines a radio option.' }
     ],
     reasoning: [
-        { name: 'Reasoning.Root', description: 'Controls reasoning visibility.' },
-        { name: 'Reasoning.Trigger', description: 'Toggles reasoning content.' },
-        { name: 'Reasoning.Content', description: 'Contains reasoning content.' }
+        { name: 'Reasoning.Root', description: 'Holds the open and streaming state.' },
+        {
+            name: 'Reasoning.Trigger',
+            description: 'Shows Thinking or the duration and toggles the trace.'
+        },
+        { name: 'Reasoning.Content', description: 'Holds the reasoning trace.' }
     ],
     'response-stream': [
         {
             name: 'ResponseStream',
             description:
-                'Renders a streamed text response and a caret while waiting for the first chunk.'
+                'Reveals response text at a steady pace, with a dot indicator before the first chunk.'
         }
     ],
     'reorder-list': [
@@ -237,17 +288,28 @@ export const componentAnatomy = {
     sheet: [
         { name: 'Sheet.Root', description: 'Controls sheet state.' },
         { name: 'Sheet.Trigger', description: 'Opens the sheet.' },
-        { name: 'Sheet.Title', description: 'Renders the sheet title.' },
-        { name: 'Sheet.Header', description: 'Groups sheet heading content.' },
-        { name: 'Sheet.Footer', description: 'Groups sheet actions.' },
-        { name: 'Sheet.Description', description: 'Renders the sheet description.' },
         { name: 'Sheet.Content', description: 'Renders the sheet surface.' },
+        {
+            name: 'Sheet.Header',
+            description: 'Groups the title and description, and renders a close button.'
+        },
+        { name: 'Sheet.Title', description: 'Renders the sheet title.' },
+        { name: 'Sheet.Description', description: 'Renders the sheet description.' },
+        { name: 'Sheet.Footer', description: 'Groups sheet actions.' },
         { name: 'Sheet.Close', description: 'Closes the sheet.' }
     ],
-    shortcut: [{ name: 'Shortcut', description: 'Displays a keyboard shortcut.' }],
+    shortcut: [
+        {
+            name: 'Shortcut',
+            description: 'Displays a keyboard shortcut and clicks its owner when pressed.'
+        }
+    ],
     skeleton: [
         { name: 'Skeleton', description: 'Displays a static loading placeholder.' },
-        { name: 'SkeletonSwap', description: 'Swaps a delayed placeholder into reserved content.' }
+        {
+            name: 'SkeletonSwap',
+            description: 'Shows a delayed placeholder in a fixed-height box until ready.'
+        }
     ],
     slider: [
         { name: 'Slider.Root', description: 'Scrubs a labeled value by dragging the field.' },
@@ -256,9 +318,11 @@ export const componentAnatomy = {
         { name: 'Slider.Label', description: 'Names the value inside the field.' },
         { name: 'Slider.Value', description: 'Shows the formatted value.' }
     ],
-    spinner: [{ name: 'Spinner', description: 'Indicates loading activity.' }],
+    spinner: [{ name: 'Spinner', description: 'Spins while loading and resolves to a checkmark.' }],
     switch: [{ name: 'Switch', description: 'Toggles a boolean value.' }],
-    'task-steps': [{ name: 'TaskSteps', description: 'Narrates ordered asynchronous work.' }],
+    'task-steps': [
+        { name: 'TaskSteps', description: 'Lists steps as pending, running, done, or failed.' }
+    ],
     tabs: [
         { name: 'Tabs.Root', description: 'Manages active tab state.' },
         { name: 'Tabs.List', description: 'Groups tab triggers.' },
@@ -273,8 +337,11 @@ export const componentAnatomy = {
     ],
     textarea: [{ name: 'Textarea', description: 'Accepts a multi-line value.' }],
     toast: [
-        { name: 'Toast', description: 'Renders a notification.' },
-        { name: 'Toaster', description: 'Renders the notification region.' }
+        { name: 'Toast', description: 'Renders a single notification.' },
+        {
+            name: 'Toaster',
+            description: 'Hosts the toast stack. Mount it once; toast() needs it.'
+        }
     ],
     toggle: [{ name: 'Toggle', description: 'Toggles a pressed state.' }],
     'toggle-group': [
@@ -286,17 +353,20 @@ export const componentAnatomy = {
         { name: 'Tool.Trigger', description: 'Summarizes the group and toggles it.' },
         { name: 'Tool.Content', description: 'Aligns tool call rows behind a rail.' },
         { name: 'Tool.Call', description: 'Displays one tool call.' },
-        { name: 'Tool.Input', description: 'Displays tool input.' },
-        { name: 'Tool.Output', description: 'Displays tool output.' }
+        { name: 'Tool.Input', description: 'Shows the arguments a call was made with.' },
+        { name: 'Tool.Output', description: 'Shows what a call returned.' }
     ],
     toolbar: [{ name: 'Toolbar', description: 'Groups related controls.' }],
     tooltip: [
-        { name: 'Tooltip.Root', description: 'Controls tooltip state.' },
-        { name: 'Tooltip.Content', description: 'Renders tooltip content.' },
-        { name: 'Tooltip.Trigger', description: 'Opens the tooltip.' }
+        { name: 'Tooltip.Root', description: 'Sets placement and open and close delays.' },
+        { name: 'Tooltip.Trigger', description: 'Opens the tooltip on hover or focus.' },
+        { name: 'Tooltip.Content', description: 'Supplies the tooltip text.' }
     ],
     typography: [
-        { name: 'Typography.Title', description: 'Renders an explicit heading level.' },
+        {
+            name: 'Typography.Title',
+            description: 'Renders a component heading at the h1 to h6 level you pass.'
+        },
         { name: 'Typography.H1', description: 'Renders the primary document heading.' },
         { name: 'Typography.H2', description: 'Renders a document section heading.' },
         { name: 'Typography.H3', description: 'Renders a document subsection heading.' },
@@ -305,7 +375,7 @@ export const componentAnatomy = {
         { name: 'Typography.H6', description: 'Renders a subdued sixth-level heading.' },
         { name: 'Typography.Text', description: 'Renders lead, body, or supporting prose.' },
         { name: 'Typography.InlineCode', description: 'Renders code within prose.' },
-        { name: 'Typography.Description', description: 'Renders supporting text.' },
-        { name: 'Typography.Metadata', description: 'Renders compact secondary information.' }
+        { name: 'Typography.Description', description: 'Renders muted text under a Title.' },
+        { name: 'Typography.Metadata', description: 'Renders small muted text in a span.' }
     ]
 } satisfies Record<ComponentSlug, ComponentPart[]>;

@@ -1,20 +1,29 @@
 <script lang="ts">
     import Bell from '@lucide/svelte/icons/bell';
+    import Blend from '@lucide/svelte/icons/blend';
     import ChevronDown from '@lucide/svelte/icons/chevron-down';
+    import Code from '@lucide/svelte/icons/code';
     import CreditCard from '@lucide/svelte/icons/credit-card';
     import FileText from '@lucide/svelte/icons/file-text';
+    import Layers from '@lucide/svelte/icons/layers';
     import LayoutDashboard from '@lucide/svelte/icons/layout-dashboard';
     import LifeBuoy from '@lucide/svelte/icons/life-buoy';
     import LogOut from '@lucide/svelte/icons/log-out';
     import MoreHorizontal from '@lucide/svelte/icons/more-horizontal';
     import Palette from '@lucide/svelte/icons/palette';
     import Plus from '@lucide/svelte/icons/plus';
+    import Redo2 from '@lucide/svelte/icons/redo-2';
     import RotateCcw from '@lucide/svelte/icons/rotate-ccw';
+    import Ruler from '@lucide/svelte/icons/ruler';
     import Search from '@lucide/svelte/icons/search';
     import Settings from '@lucide/svelte/icons/settings';
+    import Spline from '@lucide/svelte/icons/spline';
+    import SquareDashed from '@lucide/svelte/icons/square-dashed';
     import SquareMousePointer from '@lucide/svelte/icons/square-mouse-pointer';
+    import Timer from '@lucide/svelte/icons/timer';
+    import TypeIcon from '@lucide/svelte/icons/type';
+    import Undo2 from '@lucide/svelte/icons/undo-2';
     import User from '@lucide/svelte/icons/user';
-    import X from '@lucide/svelte/icons/x';
     import * as Accordion from '@sivir-ui/svelte/components/accordion';
     import * as Alert from '@sivir-ui/svelte/components/alert';
     import * as AlertDialog from '@sivir-ui/svelte/components/alert-dialog';
@@ -45,6 +54,7 @@
     import { TaskSteps } from '@sivir-ui/svelte/components/task-steps';
     import { Textarea } from '@sivir-ui/svelte/components/textarea';
     import { toast } from '@sivir-ui/svelte/components/toast';
+    import * as ToggleGroup from '@sivir-ui/svelte/components/toggle-group';
     import { Toolbar } from '@sivir-ui/svelte/components/toolbar';
     import * as Tooltip from '@sivir-ui/svelte/components/tooltip';
     import * as Typography from '@sivir-ui/svelte/components/typography';
@@ -56,11 +66,9 @@
     } from '@sivir-ui/svelte/themes/live';
     import {
         DEFAULT_THEME,
-        densities,
         type InteractiveCursor,
         motionFeels,
         parseTheme,
-        radiusScales,
         type Theme,
         type ThemeFontWeight,
         type ThemeTokenOverrides,
@@ -68,17 +76,34 @@
     } from '@sivir-ui/svelte/themes/theme';
     import { mode } from 'mode-watcher';
     import { onMount, tick, untrack } from 'svelte';
-    import { fade } from 'svelte/transition';
+    import { quintOut } from 'svelte/easing';
+    import { prefersReducedMotion } from 'svelte/motion';
+    import { fade, slide } from 'svelte/transition';
+    import { dev } from '$app/environment';
     import { replaceState } from '$app/navigation';
-    import { resolve } from '$app/paths';
     import { page } from '$app/state';
     import ChangedDot from '$lib/components/studio/changed-dot.svelte';
     import ColorAlphaField from '$lib/components/studio/color-alpha-field.svelte';
     import ColorField from '$lib/components/studio/color-field.svelte';
     import ElementOutline from '$lib/components/studio/element-outline.svelte';
+    import ElementTokenPopover from '$lib/components/studio/element-token-popover.svelte';
+    import ExportDialog from '$lib/components/studio/export-dialog.svelte';
+    import PresetGallery from '$lib/components/studio/preset-gallery.svelte';
+    import PreviewAgent from '$lib/components/studio/preview-agent.svelte';
+    import PreviewCards from '$lib/components/studio/preview-cards.svelte';
     import SelectFieldTrigger from '$lib/components/studio/select-field-trigger.svelte';
     import ShadowField from '$lib/components/studio/shadow-field.svelte';
+    import SwitchField from '$lib/components/studio/switch-field.svelte';
     import { fonts } from '$lib/fonts.svelte';
+    import {
+        commitSnapshot,
+        createHistory,
+        type DraftHistory,
+        type DraftSnapshot,
+        redoHistory,
+        undoHistory
+    } from '$lib/studio/draft-history';
+    import { cssChanges, presetSwatch, surfaceTransition } from '$lib/studio/studio-chrome';
     import {
         type AdvancedTokens,
         type BrandColors,
@@ -124,6 +149,7 @@
         formatScale,
         matchingEase,
         normalizeEase,
+        originOptions,
         parseCssColor,
         parseDurationMs,
         parsePxLength,
@@ -133,7 +159,6 @@
         spacingTokenDefinitions,
         spacingTokenGroups
     } from '$lib/studio-advanced-tokens';
-    import { THEME_SLUG_PATTERN } from '$lib/theme-registry';
 
     type FontWeight = ThemeFontWeight;
 
@@ -263,6 +288,7 @@
     type TokenSection = {
         id: string;
         label: string;
+        shortLabel: string;
         groups: TokenRowGroup[];
     };
 
@@ -283,7 +309,7 @@
         ...sansFonts
     ];
     const radiusTokenNames = ['--radius-sm', '--radius-md', '--radius-lg', '--radius-xl'] as const;
-    const movementPresets = ['subtle', 'default', 'expressive'] as const;
+    const movementPresets = ['none', 'subtle', 'default', 'expressive'] as const;
 
     function pickGroups(groups: TokenRowGroup[], labels: string[]) {
         return labels.flatMap((label) => {
@@ -354,6 +380,7 @@
                 ['--motion-duration-panel-out', 'Out duration'],
                 ['--motion-menu-blur', 'Blur'],
                 ['--motion-menu-scale-start', 'Scale'],
+                ['--motion-menu-origin', 'Scale from'],
                 ['--motion-menu-opacity-start', 'Opacity'],
                 ['--motion-menu-x', 'X offset'],
                 ['--motion-menu-y', 'Y offset']
@@ -370,6 +397,17 @@
                 ['--motion-modal-x', 'X offset'],
                 ['--motion-modal-y', 'Y offset']
             ]
+        },
+        {
+            title: 'Text replacement',
+            fields: [['--motion-duration-swap', 'Duration']]
+        },
+        {
+            title: 'Switch motion',
+            fields: [
+                ['--motion-duration-switch', 'Duration'],
+                ['--motion-switch-stretch', 'Stretch']
+            ]
         }
     ].map((group) => {
         const rows = animationRowGroups.flatMap((rowGroup) => rowGroup.rows);
@@ -381,31 +419,57 @@
 
         return { title: group.title, fields };
     });
+    const hoverSpeedRow = animationRowGroups
+        .flatMap((rowGroup) => rowGroup.rows)
+        .find((row) => {
+            return row.definition.name === '--motion-duration-hover';
+        });
+    const buttonPressRow = animationRowGroups
+        .flatMap((rowGroup) => rowGroup.rows)
+        .find((row) => {
+            return row.definition.name === '--motion-press-px';
+        });
+    const densityRow = spacingRowGroups
+        .flatMap((rowGroup) => rowGroup.rows)
+        .find((row) => {
+            return row.definition.name === '--sivir-space-unit';
+        });
+    const radiusRatios = {
+        '--radius-sm': 0.6,
+        '--radius-md': 0.8,
+        '--radius-lg': 1,
+        '--radius-xl': 1.4
+    } as const;
 
     const tokenSections: TokenSection[] = [
         {
             id: 'color',
             label: 'Color',
+            shortLabel: 'Color',
             groups: colorRowGroups
         },
         {
             id: 'type',
             label: 'Typography',
+            shortLabel: 'Type',
             groups: pickGroups(detailRowGroups, ['Type scale', 'Line height', 'Letter spacing'])
         },
         {
             id: 'space',
             label: 'Space & shape',
+            shortLabel: 'Shape',
             groups: pickGroups(spacingRowGroups, ['Spacing', 'Controls', 'Corners', 'Stroke'])
         },
         {
             id: 'depth',
             label: 'Depth & overlay',
+            shortLabel: 'Depth',
             groups: pickGroups(layoutRowGroups, ['Shadows', 'Overlay'])
         },
         {
             id: 'motion',
             label: 'Motion',
+            shortLabel: 'Motion',
             groups: animationRowGroups
         }
     ];
@@ -495,11 +559,7 @@
             status: 'Due soon'
         }
     ];
-    let theme = $state<Theme>({
-        ...DEFAULT_THEME,
-        slug: 'midnight-ledger',
-        name: 'Midnight Ledger'
-    });
+    let theme = $state<Theme>({ ...DEFAULT_THEME });
     let baseTheme = $state<Theme>({ ...DEFAULT_THEME });
     let selectedPreset = $state(DEFAULT_THEME.slug);
     let previousPreset = $state(DEFAULT_THEME.slug);
@@ -526,26 +586,29 @@
     let controlShadows = $state(true);
     let dialogShadows = $state(true);
     let travelingHighlight = $state(true);
+    let fancySwap = $state(true);
     let menuPaneling = $state(true);
     let surfacePaneling = $state(true);
     let primaryStroke = $state(false);
     let interactiveCursor = $state<InteractiveCursor>('default');
-    let publishOpen = $state(false);
-    let publishPending = $state(false);
-    let publishError = $state<string | null>(null);
-    let publishName = $state('');
-    let publishSlug = $state('');
-    let publishDescription = $state('');
-    let publisherName = $state('');
-    let publishSlugEdited = false;
     let editTokens = $state<Record<string, string>>({});
     let pendingRegistryTheme = $state<Theme | null>(null);
     let tokenQuery = $state('');
     let openTokenSection = $state('color');
     let pendingPreset = $state<string | null>(null);
     let presetDialogOpen = $state(false);
+    let resetDialogOpen = $state(false);
     let studioView = $state('invoices');
     let inspectorTab = $state('color');
+    let previewView = $state('cards');
+    let presetsOpen = $state(false);
+    let previewPresetSlug = $state<string | null>(null);
+    let exportOpen = $state(false);
+    let tokenPaletteOpen = $state(false);
+    let paletteRowName = $state<string | null>(null);
+    let paletteInput = $state<HTMLInputElement | null>(null);
+    let paletteQuery = $state('');
+    let paletteActiveName = $state<string | null>(null);
     let dashboardRange = $state('30d');
     let invoices = $state<Invoice[]>(initialInvoices.map((invoice) => ({ ...invoice })));
     let invoiceQuery = $state('');
@@ -584,8 +647,20 @@
     let commandOpen = $state(false);
     let settingsSections = $state<string[]>(['workspace', 'reminders']);
     let hydrated = $state(false);
+    let history = $state.raw<DraftHistory>(
+        createHistory({
+            draft: structuredClone(themeToDraft(DEFAULT_THEME)),
+            base: { ...DEFAULT_THEME }
+        })
+    );
+    let historyTimer: ReturnType<typeof setTimeout> | undefined;
+    const canUndo = $derived(history.past.length > 0);
+    const canRedo = $derived(history.future.length > 0);
     let appliedDark = $state(false);
     let liveCssVersion = $state(0);
+    let themeSwapPending = false;
+    let themeSwapTimer: ReturnType<typeof setTimeout> | undefined;
+    let themeSwapFrame = 0;
     const appMode = $derived(mode.current === 'dark' ? 'dark' : 'light');
     const visibleInvoices = $derived(
         invoices.filter((invoice) => {
@@ -677,6 +752,7 @@
             controlShadows,
             dialogShadows,
             travelingHighlight,
+            fancySwap,
             menuPaneling,
             surfacePaneling,
             primaryStroke,
@@ -688,8 +764,18 @@
     const dirty = $derived(!sameThemeDesign(portableTheme, baseDesign));
     const generatedCss = $derived(themeToCss(portableTheme));
     const generatedJson = $derived(JSON.stringify(portableTheme, null, 2));
-    const ownsPublishSlug = $derived(publishSlug in editTokens);
-    const publishedSlug = $derived(theme.slug in editTokens ? theme.slug : null);
+    const baseCss = $derived(themeToCss(baseDesign));
+    const changeCount = $derived(cssChanges(generatedCss, baseCss).count);
+    const previewedPreset = $derived(
+        builtInThemePresets.find((preset) => {
+            return preset.slug === previewPresetSlug;
+        }) ?? null
+    );
+    const activePresetName = $derived(
+        builtInThemePresets.find((preset) => {
+            return preset.slug === selectedPreset;
+        })?.name ?? baseTheme.name
+    );
 
     function chromeShadowValue(name: DetailTokenName): string | null {
         if (!surfaceShadows && (name === '--elevation-1' || name === '--elevation-float')) {
@@ -715,14 +801,6 @@
         if (value === 'expressive') return 'Bold';
         if (value === 'true') return 'True';
         return value.charAt(0).toUpperCase() + value.slice(1);
-    }
-
-    function isRadiusScale(value: string): value is Theme['radius'] {
-        return (radiusScales as readonly string[]).includes(value);
-    }
-
-    function isDensity(value: string): value is Theme['density'] {
-        return (densities as readonly string[]).includes(value);
     }
 
     function isMotionFeel(value: string): value is Theme['motion'] {
@@ -793,6 +871,7 @@
         controlShadows = draft.chrome.controlShadows;
         dialogShadows = draft.chrome.dialogShadows;
         travelingHighlight = draft.chrome.travelingHighlight;
+        fancySwap = draft.chrome.fancySwap;
         menuPaneling = draft.chrome.menuPaneling;
         surfacePaneling = draft.chrome.surfacePaneling;
         primaryStroke = draft.chrome.primaryStroke;
@@ -918,6 +997,7 @@
                 controlShadows: legacyShadow(value.controlShadows, draft.chrome.controlShadows),
                 dialogShadows: legacyShadow(value.dialogShadows, draft.chrome.dialogShadows),
                 travelingHighlight: value.travelingHighlight ?? draft.chrome.travelingHighlight,
+                fancySwap: draft.chrome.fancySwap,
                 menuPaneling: draft.chrome.menuPaneling,
                 surfacePaneling: draft.chrome.surfacePaneling,
                 primaryStroke: value.primaryStroke ?? draft.chrome.primaryStroke,
@@ -938,10 +1018,20 @@
         }
 
         if (legacy) {
-            return mergeLegacyExtensions(themeToDraft(stored ?? baseTheme), legacy);
+            return withPresetIdentity(
+                mergeLegacyExtensions(themeToDraft(stored ?? baseTheme), legacy)
+            );
         }
 
-        return stored ? themeToDraft(stored) : null;
+        return stored ? withPresetIdentity(themeToDraft(stored)) : null;
+    }
+
+    function withPresetIdentity(draft: StudioDraft): StudioDraft {
+        if (draft.theme.slug in readEditTokens()) {
+            return draft;
+        }
+
+        return withIdentity(draft, identityOf(baseTheme));
     }
 
     function saveStudioDraft(nextTheme: Theme) {
@@ -973,36 +1063,110 @@
         return tokens;
     }
 
-    function storeEditToken(slug: string, token: string) {
-        localStorage.setItem(`${EDIT_TOKEN_KEY_PREFIX}${slug}`, token);
-        editTokens = {
-            ...editTokens,
-            [slug]: token
-        };
-    }
-
-    function forgetEditToken(slug: string) {
-        localStorage.removeItem(`${EDIT_TOKEN_KEY_PREFIX}${slug}`);
-        const { [slug]: _removed, ...remaining } = editTokens;
-        editTokens = remaining;
-    }
-
     function syncEditTokens(event: StorageEvent) {
         if (event.key === null || event.key.startsWith(EDIT_TOKEN_KEY_PREFIX)) {
             editTokens = readEditTokens();
         }
     }
 
+    function crossfadeTheme(update: () => void, animate: boolean) {
+        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const root = document.documentElement;
+
+        if (!animate || reduced) {
+            update();
+            return;
+        }
+
+        clearTimeout(themeSwapTimer);
+        cancelAnimationFrame(themeSwapFrame);
+        root.setAttribute('data-theme-swap', '');
+        update();
+        themeSwapFrame = requestAnimationFrame(() => {
+            themeSwapFrame = requestAnimationFrame(() => {
+                themeSwapTimer = setTimeout(() => {
+                    root.removeAttribute('data-theme-swap');
+                }, 320);
+            });
+        });
+    }
+
+    function setPreviewPreset(slug: string | null) {
+        if (slug === previewPresetSlug) {
+            return;
+        }
+
+        themeSwapPending = true;
+        previewPresetSlug = slug;
+    }
+
     function applyPreset(slug: string) {
         const preset = builtInThemePresets.find((candidate) => candidate.slug === slug);
         if (!preset) return;
 
+        themeSwapPending = true;
+
         baseTheme = { ...preset };
-        applyDraft(withIdentity(themeToDraft(preset), identityOf(theme)));
+        applyDraft(themeToDraft(preset));
     }
 
     function resetTheme() {
-        applyDraft(withIdentity(themeToDraft(baseTheme), identityOf(theme)));
+        applyDraft(themeToDraft(baseTheme));
+    }
+
+    function requestReset() {
+        if (!dirty) {
+            return;
+        }
+
+        resetDialogOpen = true;
+    }
+
+    function confirmReset() {
+        resetTheme();
+        resetDialogOpen = false;
+    }
+
+    function currentSnapshot(): DraftSnapshot {
+        return {
+            draft: $state.snapshot(studioDraft),
+            base: $state.snapshot(baseTheme)
+        };
+    }
+
+    function flushHistory() {
+        clearTimeout(historyTimer);
+        history = commitSnapshot(history, currentSnapshot());
+    }
+
+    function restoreSnapshot(snapshot: DraftSnapshot) {
+        themeSwapPending = true;
+        baseTheme = { ...snapshot.base };
+        selectedPreset = snapshot.base.slug;
+        previousPreset = snapshot.base.slug;
+        applyDraft(structuredClone(snapshot.draft));
+    }
+
+    function undo() {
+        flushHistory();
+        const next = undoHistory(history);
+        if (next === history) {
+            return;
+        }
+
+        history = next;
+        restoreSnapshot(next.present);
+    }
+
+    function redo() {
+        flushHistory();
+        const next = redoHistory(history);
+        if (next === history) {
+            return;
+        }
+
+        history = next;
+        restoreSnapshot(next.present);
     }
 
     function applyRegistryTheme(loaded: Theme) {
@@ -1066,161 +1230,6 @@
         }
 
         applyRegistryTheme(loaded);
-    }
-
-    function slugify(value: string): string {
-        return value
-            .toLowerCase()
-            .normalize('NFKD')
-            .replace(/[^a-z0-9]+/g, '-')
-            .replace(/^-+|-+$/g, '')
-            .slice(0, 80);
-    }
-
-    function openPublish() {
-        publishName = theme.name;
-        publishSlug = theme.slug;
-        publishDescription = theme.description;
-        publisherName = theme.slug in editTokens ? (theme.publisher ?? '') : '';
-        publishSlugEdited = theme.slug !== slugify(theme.name);
-        publishError = null;
-        publishOpen = true;
-    }
-
-    function updatePublishName(value: string) {
-        publishName = value;
-        if (!publishSlugEdited) {
-            publishSlug = slugify(value);
-        }
-    }
-
-    function updatePublishSlug(value: string) {
-        publishSlug = value.toLowerCase();
-        publishSlugEdited = true;
-    }
-
-    function publishValidationError(): string | null {
-        if (!publishName.trim()) {
-            return 'Give the theme a name.';
-        }
-
-        if (!THEME_SLUG_PATTERN.test(publishSlug)) {
-            return 'Use lowercase letters, numbers, and single hyphens for the slug.';
-        }
-
-        return null;
-    }
-
-    async function responseError(response: Response): Promise<string> {
-        const message = (await response.text()).trim();
-
-        return message || `The registry responded with ${response.status}.`;
-    }
-
-    async function submitPublish() {
-        const validationError = publishValidationError();
-        if (validationError) {
-            publishError = validationError;
-
-            return;
-        }
-
-        const identity: ThemeIdentity = {
-            slug: publishSlug,
-            name: publishName.trim(),
-            description: publishDescription.trim(),
-            ...(publisherName.trim()
-                ? {
-                      publisher: publisherName.trim()
-                  }
-                : {})
-        };
-        const payload: Theme = {
-            ...portableTheme,
-            ...identity
-        };
-        const editToken = editTokens[identity.slug];
-
-        publishPending = true;
-        publishError = null;
-        try {
-            const response = await fetch(`/api/themes${editToken ? `/${identity.slug}` : ''}`, {
-                method: editToken ? 'PUT' : 'POST',
-                headers: {
-                    'content-type': 'application/json',
-                    ...(editToken
-                        ? {
-                              authorization: `Bearer ${editToken}`
-                          }
-                        : {})
-                },
-                body: JSON.stringify(payload)
-            });
-            if (!response.ok) {
-                publishError = await responseError(response);
-
-                return;
-            }
-
-            if (!editToken) {
-                const published = (await response.json()) as {
-                    editToken: string;
-                };
-                storeEditToken(identity.slug, published.editToken);
-            }
-
-            theme = {
-                ...theme,
-                ...identity
-            };
-            publishOpen = false;
-            toast({
-                title: editToken ? `${identity.name} updated` : `${identity.name} published`,
-                description: `Anyone can install it with the slug ${identity.slug}.`,
-                type: 'success',
-                duration: 2600
-            });
-        } catch {
-            publishError = 'The registry could not be reached. Try again in a moment.';
-        } finally {
-            publishPending = false;
-        }
-    }
-
-    async function unpublishTheme() {
-        const editToken = editTokens[publishSlug];
-        if (!editToken) {
-            return;
-        }
-
-        publishPending = true;
-        publishError = null;
-        try {
-            const response = await fetch(`/api/themes/${publishSlug}`, {
-                method: 'DELETE',
-                headers: {
-                    authorization: `Bearer ${editToken}`
-                }
-            });
-            if (!response.ok && response.status !== 404) {
-                publishError = await responseError(response);
-
-                return;
-            }
-
-            forgetEditToken(publishSlug);
-            publishOpen = false;
-            toast({
-                title: `${publishName} unpublished`,
-                description: 'It no longer appears in the theme registry.',
-                type: 'success',
-                duration: 2200
-            });
-        } catch {
-            publishError = 'The registry could not be reached. Try again in a moment.';
-        } finally {
-            publishPending = false;
-        }
     }
 
     function updateBrand(value: string) {
@@ -1290,6 +1299,64 @@
                     [definition.name]: value
                 }
             }
+        };
+    }
+
+    function sliderStretchEnabled() {
+        const raw = advancedTokens.animation['--motion-slider-stretch']?.trim() ?? '';
+
+        return raw === '' || Number.parseFloat(raw) !== 0;
+    }
+
+    function setSliderStretch(enabled: boolean) {
+        if (enabled) {
+            advancedTokens = {
+                ...advancedTokens,
+                animation: withoutToken(advancedTokens.animation, '--motion-slider-stretch')
+            };
+            return;
+        }
+
+        updateAdvancedAnimationToken('--motion-slider-stretch', '0');
+    }
+
+    function cornerRadius() {
+        const definition = spacingTokenDefinitions.find((item) => {
+            return item.name === '--radius-lg';
+        });
+
+        return definition ? resolveSpacingToken(definition) : 10;
+    }
+
+    function cornerRadiusChanged() {
+        return radiusTokenNames.some((name) => {
+            return Boolean(advancedTokens.spacing[name]?.trim());
+        });
+    }
+
+    function setCornerRadius(value: number) {
+        const next = { ...advancedTokens.spacing };
+
+        for (const name of radiusTokenNames) {
+            next[name] = formatPx(Math.round(value * radiusRatios[name]));
+        }
+
+        advancedTokens = {
+            ...advancedTokens,
+            spacing: next
+        };
+    }
+
+    function resetCornerRadius() {
+        const next = { ...advancedTokens.spacing };
+
+        for (const name of radiusTokenNames) {
+            delete next[name];
+        }
+
+        advancedTokens = {
+            ...advancedTokens,
+            spacing: next
         };
     }
 
@@ -1436,7 +1503,11 @@
             };
         }
 
-        if (row.bucket === 'animation' && row.definition.kind !== 'ease') {
+        if (
+            row.bucket === 'animation' &&
+            row.definition.kind !== 'ease' &&
+            row.definition.kind !== 'origin'
+        ) {
             const definition = row.definition;
             const value = animationSliderValue(definition);
 
@@ -1675,6 +1746,54 @@
         pendingPreset = null;
     }
 
+    const savablePreset = $derived(
+        dev && selectedPreset !== DEFAULT_THEME.slug
+            ? (builtInThemePresets.find((preset) => {
+                  return preset.slug === selectedPreset;
+              }) ?? null)
+            : null
+    );
+
+    async function saveToPreset() {
+        if (!savablePreset) {
+            return;
+        }
+
+        const saved: Theme = {
+            ...portableTheme,
+            slug: savablePreset.slug,
+            name: savablePreset.name,
+            description: savablePreset.description,
+            publisher: savablePreset.publisher
+        };
+        const response = await fetch(`/api/dev/presets/${encodeURIComponent(saved.slug)}`, {
+            method: 'PUT',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(saved)
+        });
+
+        if (!response.ok) {
+            toast({
+                title: `Could not save ${saved.name}`,
+                description: (await response.text()) || 'The dev server rejected the preset.',
+                type: 'error',
+                duration: 3200
+            });
+
+            return;
+        }
+
+        baseTheme = { ...saved };
+        toast({
+            title: `${saved.name} saved`,
+            description: 'Wrote the preset to builtin-presets.ts.',
+            type: 'success',
+            duration: 2200
+        });
+    }
+
     function runDashboardAction(
         title: string,
         description: string,
@@ -1774,6 +1893,7 @@
             applyDraft(storedDraft);
         }
         editTokens = readEditTokens();
+        history = createHistory(currentSnapshot());
         hydrated = true;
         const requestedTheme = page.url.searchParams.get('theme');
         if (requestedTheme) {
@@ -1790,6 +1910,9 @@
         return () => {
             observer.disconnect();
             window.removeEventListener('storage', syncEditTokens);
+            clearTimeout(themeSwapTimer);
+            cancelAnimationFrame(themeSwapFrame);
+            document.documentElement.removeAttribute('data-theme-swap');
         };
     });
 
@@ -1873,13 +1996,39 @@
 
     $effect(() => {
         if (!hydrated) return;
-        const css = generatedCss;
+        const css = previewedPreset ? themeToCss(previewedPreset) : generatedCss;
+        const animate = untrack(() => {
+            const pending = themeSwapPending;
+            themeSwapPending = false;
+
+            return pending;
+        });
+
         document.documentElement.style.removeProperty('--font-sans');
-        applyLiveThemeCss(css);
+        crossfadeTheme(() => {
+            applyLiveThemeCss(css);
+        }, animate);
         untrack(() => {
             liveCssVersion += 1;
         });
         saveStudioDraft(portableTheme);
+    });
+
+    $effect(() => {
+        if (!hydrated) {
+            return;
+        }
+
+        studioDraft;
+        baseTheme;
+        untrack(() => {
+            clearTimeout(historyTimer);
+            historyTimer = setTimeout(flushHistory, 400);
+        });
+
+        return () => {
+            clearTimeout(historyTimer);
+        };
     });
 
     type TokenEditSection = {
@@ -1895,7 +2044,6 @@
         ...detailRowGroups
     ].flatMap((group) => group.rows);
     const editableTokenNames = new Set(allTokenRows.map((row) => row.definition.name));
-    const tokenEditTrailLimit = 5;
 
     let previewFrame = $state<HTMLElement>();
     let tokenEditMode = $state(false);
@@ -1906,16 +2054,14 @@
     let tokenIndex: TokenIndex | null = null;
     let tokenIndexKey = '';
 
-    const tokenEditTrail = $derived.by(() => {
-        const trail: Element[] = [];
-        let current = tokenEditTarget;
+    const tokenEditParent = $derived.by(() => {
+        const parent = tokenEditTarget?.parentElement;
 
-        while (current && current !== previewFrame && trail.length < tokenEditTrailLimit) {
-            trail.unshift(current);
-            current = current.parentElement;
+        if (!parent || !previewFrame || parent === previewFrame) {
+            return null;
         }
 
-        return trail;
+        return componentRoot(parent);
     });
     const tokenEditSections = $derived.by((): TokenEditSection[] => {
         if (!tokenEditOpen || !tokenEditTarget) {
@@ -1933,7 +2079,7 @@
                 placed.add(row.definition.name);
             }
 
-            return rows.length > 0 ? [{ id: section.id, label: section.label, rows }] : [];
+            return rows.length > 0 ? [{ id: section.id, label: section.shortLabel, rows }] : [];
         });
         const otherRows = allTokenRows.filter((row) => {
             return used.has(row.definition.name) && !placed.has(row.definition.name);
@@ -1943,23 +2089,22 @@
             ? [...sections, { id: 'other', label: 'Other', rows: otherRows }]
             : sections;
     });
-    const tokenEditSummary = $derived.by(() => {
-        const count = tokenEditSections.reduce((total, section) => {
-            return total + section.rows.length;
-        }, 0);
+    const tokenEditOverrides = $derived.by(() => {
+        void liveCssVersion;
 
-        return count === 1 ? '1 editable token' : `${count} editable tokens`;
+        return tokenEditSections
+            .flatMap((section) => section.rows)
+            .filter((row) => {
+                return tokenOverride(row) !== '';
+            });
     });
-    const tokenEditOutline = $derived.by(() => {
-        if (tokenEditHighlight.length > 0) {
-            return tokenEditHighlight;
-        }
-
+    const tokenEditOutline = $derived(tokenEditHighlight);
+    const tokenEditFocus = $derived.by(() => {
         if (tokenEditOpen && tokenEditTarget) {
-            return [tokenEditTarget];
+            return tokenEditTarget;
         }
 
-        return tokenEditMode && tokenEditHover ? [tokenEditHover] : [];
+        return tokenEditMode ? tokenEditHover : null;
     });
 
     function currentTokenIndex() {
@@ -1991,9 +2136,8 @@
 
     function tokenUsageLabel(row: TokenRow) {
         const count = tokenUsageCount(row.definition.name);
-        const noun = count === 1 ? 'element' : 'elements';
 
-        return `${row.definition.group}, used by ${count} ${noun}`;
+        return count === 1 ? 'Used once' : `Used ${count} times`;
     }
 
     function highlightTokenUsage(name: string | null) {
@@ -2005,8 +2149,64 @@
         tokenEditHighlight = elementsUsingToken(currentTokenIndex(), name, previewFrame);
     }
 
-    function elementLabel(element: Element) {
-        return element.tagName.toLowerCase();
+    function componentRoot(element: Element) {
+        const root = element.closest('[data-ui]');
+
+        return root && previewFrame?.contains(root) ? root : element;
+    }
+
+    function elementName(element: Element) {
+        const ui = element.getAttribute('data-ui');
+
+        if (!ui) {
+            return element.tagName.toLowerCase();
+        }
+
+        const words = ui.replaceAll('-', ' ');
+
+        return words.charAt(0).toUpperCase() + words.slice(1);
+    }
+
+    function elementPeers(element: Element) {
+        const ui = element.getAttribute('data-ui');
+
+        if (!ui || !previewFrame) {
+            return 1;
+        }
+
+        const variant = element.getAttribute('data-variant');
+        const selector = variant
+            ? `[data-ui="${CSS.escape(ui)}"][data-variant="${CSS.escape(variant)}"]`
+            : `[data-ui="${CSS.escape(ui)}"]`;
+
+        return previewFrame.querySelectorAll(selector).length;
+    }
+
+    function elementDetail(element: Element) {
+        const variant = element.getAttribute('data-variant');
+        const count = `${elementPeers(element)} on screen`;
+
+        return variant ? `${variant} · ${count}` : count;
+    }
+
+    function elementChip(element: Element) {
+        const variant = element.getAttribute('data-variant');
+        const name = elementName(element);
+
+        return variant ? `${name} · ${variant}` : name;
+    }
+
+    function selectTokenEditParent() {
+        if (tokenEditParent) {
+            tokenEditTarget = tokenEditParent;
+            tokenEditHighlight = [];
+        }
+    }
+
+    function resetTokenEditOverrides() {
+        for (const row of tokenEditOverrides) {
+            resetTokenRow(row);
+        }
     }
 
     function setTokenEditMode(next: boolean) {
@@ -2025,11 +2225,11 @@
             return;
         }
 
-        tokenEditHover = event.target instanceof Element ? event.target : null;
+        tokenEditHover = event.target instanceof Element ? componentRoot(event.target) : null;
     }
 
     function suppressTokenEditPointer(event: MouseEvent) {
-        if (!tokenEditMode || event.button !== 2) {
+        if (!tokenEditMode || event.button !== 0) {
             return;
         }
 
@@ -2044,7 +2244,7 @@
 
         event.preventDefault();
         event.stopPropagation();
-        tokenEditTarget = event.target;
+        tokenEditTarget = componentRoot(event.target);
         tokenEditHighlight = [];
         tokenEditOpen = true;
     }
@@ -2055,7 +2255,294 @@
         tokenEditHover = null;
     }
 
+    function paletteValue(name: string) {
+        void liveCssVersion;
+
+        return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    }
+
+    type PaletteGroup = {
+        heading: string;
+        sectionId: string;
+        sectionLabel: string;
+        groupLabel: string;
+        rows: TokenRow[];
+    };
+
+    let paletteComponents = $state<Map<string, string[]>>(new Map());
+
+    function tokenComponentNames(name: string) {
+        if (!previewFrame) {
+            return [];
+        }
+
+        const names = new Set<string>();
+
+        for (const element of elementsUsingToken(currentTokenIndex(), name, previewFrame)) {
+            const root = componentRoot(element);
+
+            if (root.hasAttribute('data-ui')) {
+                names.add(elementName(root));
+            }
+        }
+
+        return [...names];
+    }
+
+    function pluralize(name: string) {
+        if (/(s|x|ch|sh)$/i.test(name)) {
+            return `${name}es`;
+        }
+
+        return `${name}s`;
+    }
+
+    function paletteUsageLabel(row: TokenRow) {
+        const names = paletteComponents.get(row.definition.name) ?? [];
+
+        if (names.length === 0) {
+            return tokenUsageLabel(row);
+        }
+
+        const shown = names.slice(0, 4).map((name, index) => {
+            const plural = pluralize(name);
+
+            return index === 0 ? plural : plural.toLowerCase();
+        });
+        const extra = names.length - shown.length;
+
+        return extra > 0 ? `${shown.join(', ')} +${extra}` : shown.join(', ');
+    }
+
+    function paletteRowMatches(row: TokenRow, query: string) {
+        if (tokenRowMatches(row, query)) {
+            return true;
+        }
+
+        const names = paletteComponents.get(row.definition.name) ?? [];
+
+        return names.some((name) => {
+            return name.toLowerCase().includes(query);
+        });
+    }
+
+    const paletteGroups = $derived.by<PaletteGroup[]>(() => {
+        const query = paletteQuery.trim().toLowerCase();
+
+        return tokenSections.flatMap((section) => {
+            return section.groups
+                .map((group) => {
+                    const rows = group.rows.filter((row) => {
+                        return (
+                            query === '' ||
+                            section.label.toLowerCase().includes(query) ||
+                            paletteRowMatches(row, query)
+                        );
+                    });
+
+                    return {
+                        heading: `${section.shortLabel} · ${group.label}`,
+                        sectionId: section.id,
+                        sectionLabel: section.shortLabel,
+                        groupLabel: group.label,
+                        rows
+                    };
+                })
+                .filter((group) => {
+                    return group.rows.length > 0;
+                });
+        });
+    });
+    const paletteRows = $derived(
+        paletteGroups.flatMap((group) => {
+            return group.rows;
+        })
+    );
+    const paletteActiveRow = $derived(
+        paletteRows.find((row) => {
+            return row.definition.name === paletteActiveName;
+        }) ?? null
+    );
+    const paletteActiveGroup = $derived(
+        paletteGroups.find((group) => {
+            return group.rows.some((row) => {
+                return row.definition.name === paletteActiveName;
+            });
+        }) ?? null
+    );
+
+    async function openTokenPalette() {
+        paletteQuery = '';
+        paletteRowName = null;
+        paletteActiveName = allTokenRows[0]?.definition.name ?? null;
+        tokenPaletteOpen = true;
+
+        await tick();
+
+        const components = new Map<string, string[]>();
+
+        for (const row of allTokenRows) {
+            components.set(row.definition.name, tokenComponentNames(row.definition.name));
+        }
+
+        paletteComponents = components;
+    }
+
+    function movePaletteActive(offset: number) {
+        if (paletteRows.length === 0) {
+            return;
+        }
+        const index = paletteRows.findIndex((row) => {
+            return row.definition.name === paletteActiveName;
+        });
+        const next = paletteRows[(index + offset + paletteRows.length) % paletteRows.length];
+        paletteActiveName = next.definition.name;
+        document.getElementById(`palette-${next.definition.name}`)?.scrollIntoView({
+            block: 'nearest'
+        });
+    }
+
+    async function togglePaletteRow(name: string) {
+        paletteActiveName = name;
+
+        if (paletteRowName === name) {
+            paletteRowName = null;
+            paletteInput?.focus();
+            return;
+        }
+
+        paletteRowName = name;
+
+        await tick();
+
+        document
+            .querySelector<HTMLElement>(
+                '[data-palette-editor] :is(input, button, [role="slider"], [tabindex="0"])'
+            )
+            ?.focus({
+                preventScroll: true
+            });
+    }
+
+    function paletteEditorMotion(duration: number) {
+        return {
+            duration: prefersReducedMotion.current ? 0 : duration,
+            easing: quintOut
+        };
+    }
+
+    function openPaletteRowInSection(group: PaletteGroup) {
+        tokenPaletteOpen = false;
+        void openTokens(group.sectionId, group.groupLabel);
+    }
+
+    function handlePaletteKeydown(event: KeyboardEvent) {
+        if (event.key === 'ArrowDown') {
+            event.preventDefault();
+            movePaletteActive(1);
+            return;
+        }
+        if (event.key === 'ArrowUp') {
+            event.preventDefault();
+            movePaletteActive(-1);
+            return;
+        }
+        if (event.key === 'Enter' && event.shiftKey && paletteActiveGroup) {
+            event.preventDefault();
+            openPaletteRowInSection(paletteActiveGroup);
+            return;
+        }
+        if (event.key === 'Enter' && paletteActiveName) {
+            event.preventDefault();
+            void togglePaletteRow(paletteActiveName);
+            return;
+        }
+        if (
+            event.key === 'Backspace' &&
+            (event.metaKey || event.ctrlKey) &&
+            paletteActiveRow &&
+            tokenOverride(paletteActiveRow) !== ''
+        ) {
+            event.preventDefault();
+            resetTokenRow(paletteActiveRow);
+        }
+    }
+
+    function paletteGlyph(row: TokenRow) {
+        const group = row.definition.group;
+
+        if (['Type scale', 'Line height', 'Letter spacing'].includes(group)) {
+            return TypeIcon;
+        }
+        if (['Speed', 'Movement'].includes(group)) {
+            return Timer;
+        }
+        if (group === 'Easing') {
+            return Spline;
+        }
+        if (['Spacing', 'Controls'].includes(group)) {
+            return Ruler;
+        }
+        if (group === 'Overlay') {
+            return Layers;
+        }
+        if (group === 'Code') {
+            return Code;
+        }
+
+        return SquareDashed;
+    }
+
+    function applyGalleryPreset(slug: string) {
+        previewPresetSlug = null;
+        presetsOpen = false;
+        selectedPreset = slug;
+    }
+
+    function handleHistoryShortcut(event: KeyboardEvent) {
+        if (!(event.metaKey || event.ctrlKey) || event.altKey) {
+            return;
+        }
+
+        const key = event.key.toLowerCase();
+        const isUndo = key === 'z' && !event.shiftKey;
+        const isRedo = (key === 'z' && event.shiftKey) || (key === 'y' && !event.shiftKey);
+        if (!isUndo && !isRedo) {
+            return;
+        }
+
+        const target = event.target;
+        if (
+            target instanceof Element &&
+            target.closest('input, textarea, select, [contenteditable="true"], [role="dialog"]')
+        ) {
+            return;
+        }
+
+        event.preventDefault();
+        if (isUndo) {
+            undo();
+            return;
+        }
+
+        redo();
+    }
+
+    function handleStudioShortcut(event: KeyboardEvent) {
+        handleHistoryShortcut(event);
+        if (
+            event.key.toLowerCase() !== 'k' ||
+            !(event.metaKey || event.ctrlKey) ||
+            !event.shiftKey
+        ) {
+            return;
+        }
+        event.preventDefault();
+        void openTokenPalette();
+    }
+
     function handleTokenEditKeydown(event: KeyboardEvent) {
+        handleStudioShortcut(event);
         if (event.key !== 'Escape' || !tokenEditMode) {
             return;
         }
@@ -2074,11 +2561,6 @@
 
         setTokenEditMode(false);
     }
-
-    async function openTokenEditSection(sectionId: string) {
-        closeTokenEditor();
-        await openTokens(sectionId);
-    }
 </script>
 
 <svelte:window onkeydown={handleTokenEditKeydown} />
@@ -2088,6 +2570,24 @@
     <meta name="description" content="Build, preview, and export a Sivir theme." />
 </svelte:head>
 
+{#snippet presetDots(preset: Theme)}
+    {@const swatch = presetSwatch(preset, appMode)}
+    <span class="flex shrink-0 -space-x-1" aria-hidden="true">
+        <span
+            class="size-3 rounded-full border border-foreground/15"
+            style:background-color={swatch.background}
+        ></span>
+        <span
+            class="size-3 rounded-full border border-foreground/15"
+            style:background-color={swatch.foreground}
+        ></span>
+        <span
+            class="size-3 rounded-full border border-foreground/15"
+            style:background-color={swatch.brand}
+        ></span>
+    </span>
+{/snippet}
+
 {#snippet sectionHeading(title: string)}
     <h2 class="m-0 text-[13px] font-medium text-foreground">{title}</h2>
 {/snippet}
@@ -2096,17 +2596,11 @@
     label: string,
     value: string,
     options: readonly string[],
-    openAdvanced: () => void,
     onChange: (value: string) => void
 )}
     <Select.Root
         {value}
         onValueChange={(next) => {
-            if (next === 'advanced') {
-                openAdvanced();
-                return;
-            }
-
             onChange(next);
         }}
     >
@@ -2122,7 +2616,6 @@
                     {formatChoice(value)}
                 </Select.Item>
             {/if}
-            <Select.Item value="advanced" label="Advanced…">Advanced…</Select.Item>
         </Select.Content>
     </Select.Root>
 {/snippet}
@@ -2148,6 +2641,48 @@
         <Slider.Thumb />
         <Slider.Label>{label}</Slider.Label>
         <Slider.Value class="text-xs" />
+    </Slider.Root>
+{/snippet}
+
+{#snippet radiusSlider()}
+    {@const changed = cornerRadiusChanged()}
+    <Slider.Root
+        editable
+        value={cornerRadius()}
+        min={0}
+        max={24}
+        step={1}
+        label="Radius"
+        format={formatPx}
+        onValueChange={setCornerRadius}
+        class="min-h-[34px] text-[13px]"
+    >
+        <Slider.Range />
+        <Slider.Thumb />
+        <Slider.Label class="flex items-center gap-1.5">
+            <span class="truncate">Radius</span>
+            <ChangedDot {changed} />
+        </Slider.Label>
+        <span class="relative z-[1] flex shrink-0 items-center gap-2">
+            {#if changed}
+                <button
+                    type="button"
+                    class="rounded-[var(--radius-sm)] text-xs text-foreground-muted transition-colors [transition-duration:var(--motion-duration-hover)] hover:cursor-[var(--ui-cursor-interactive)] hover:text-foreground focus-visible:shadow-[var(--focus-ring)] focus-visible:outline-none"
+                    aria-label="Reset Radius"
+                    transition:fade={{ duration: 120 }}
+                    onpointerdown={(event) => {
+                        event.stopPropagation();
+                    }}
+                    onclick={(event) => {
+                        event.preventDefault();
+                        resetCornerRadius();
+                    }}
+                >
+                    Reset
+                </button>
+            {/if}
+            <Slider.Value class="text-xs" />
+        </span>
     </Slider.Root>
 {/snippet}
 
@@ -2209,6 +2744,29 @@
                     }}
                 />
             {/if}
+        {:else if row.bucket === 'animation' && row.definition.kind === 'origin'}
+            {@const definition = row.definition}
+            {@const origin = resolveAnimationRaw(definition).replace(/\s+/g, ' ')}
+            <Select.Root
+                value={origin}
+                onValueChange={(value) => {
+                    updateAdvancedAnimationToken(definition.name, value);
+                }}
+            >
+                <SelectFieldTrigger label={label ?? definition.label} {changed}>
+                    {originOptions.find((option) => option.value === origin)?.label ?? 'Custom'}
+                </SelectFieldTrigger>
+                <Select.Content class="min-w-[max(12rem,var(--popover-trigger-width))]">
+                    {#each originOptions as option (option.value)}
+                        <Select.Item value={option.value} label={option.label}>
+                            {option.label}
+                        </Select.Item>
+                    {/each}
+                    {#if !originOptions.some((option) => option.value === origin)}
+                        <Select.Item value={origin} label="Custom">Custom</Select.Item>
+                    {/if}
+                </Select.Content>
+            </Select.Root>
         {:else if row.bucket === 'animation' && row.definition.kind === 'ease'}
             {@const definition = row.definition}
             {@const ease = animationEaseValue(definition)}
@@ -2303,6 +2861,10 @@
     </div>
 {/snippet}
 
+{#snippet tokenEditRow(row: TokenRow)}
+    {@render tokenRow(row)}
+{/snippet}
+
 {#snippet colorSection(
     title: string,
     fields: {
@@ -2329,40 +2891,6 @@
 
 {#snippet inspector()}
     <div class="flex h-full min-h-0 flex-col">
-        <div class="flex shrink-0 flex-col gap-3 pb-3">
-            <div class="flex h-8 items-center justify-between gap-2">
-                <Typography.Title level={1}>Studio</Typography.Title>
-                <Tooltip.Root>
-                    <Tooltip.Trigger>
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            class="size-8 shrink-0 text-foreground-muted"
-                            disabled={!dirty}
-                            onclick={resetTheme}
-                            aria-label="Reset theme to selected preset"
-                        >
-                            <RotateCcw size={15} />
-                        </Button>
-                    </Tooltip.Trigger>
-                    <Tooltip.Content>Reset to preset</Tooltip.Content>
-                </Tooltip.Root>
-            </div>
-            <Select.Root bind:value={selectedPreset}>
-                <SelectFieldTrigger label="Preset">
-                    {builtInThemePresets.find((preset) => preset.slug === selectedPreset)?.name ??
-                        baseTheme.name}
-                </SelectFieldTrigger>
-                <Select.Content class="max-h-56 min-w-[max(16rem,var(--popover-trigger-width))]">
-                    {#each builtInThemePresets as preset (preset.slug)}
-                        <Select.Item value={preset.slug} label={preset.name}>
-                            {preset.name}
-                        </Select.Item>
-                    {/each}
-                </Select.Content>
-            </Select.Root>
-        </div>
-
         <Tabs.Root bind:value={inspectorTab} variant="default" class="flex min-h-0 flex-1 flex-col">
             <Tabs.List class="w-full shrink-0">
                 <Tabs.Trigger value="color" class="flex-1">Color</Tabs.Trigger>
@@ -2598,39 +3126,14 @@
                         <section class="flex flex-col gap-2">
                             {@render sectionHeading('Scale')}
                             <div class="flex flex-col gap-1.5">
-                                {@render feelSelect(
-                                    'Radius',
-                                    theme.radius,
-                                    radiusScales,
-                                    () => {
-                                        openTokens('space', 'Corners');
-                                    },
-                                    (value) => {
-                                        if (isRadiusScale(value)) {
-                                            theme = { ...theme, radius: value };
-                                        }
-                                    }
-                                )}
-                                {@render feelSelect(
-                                    'Density',
-                                    theme.density,
-                                    densities,
-                                    () => {
-                                        openTokens('space', 'Spacing');
-                                    },
-                                    (value) => {
-                                        if (isDensity(value)) {
-                                            theme = { ...theme, density: value };
-                                        }
-                                    }
-                                )}
+                                {@render radiusSlider()}
+                                {#if densityRow}
+                                    {@render tokenRow(densityRow, 'Density')}
+                                {/if}
                                 {@render feelSelect(
                                     'Movement',
                                     theme.motion,
                                     movementPresets,
-                                    () => {
-                                        openTokens('motion', 'Speed');
-                                    },
                                     (value) => {
                                         if (isMotionFeel(value)) {
                                             theme = { ...theme, motion: value };
@@ -2653,33 +3156,33 @@
 
                         <section class="flex flex-col gap-2">
                             {@render sectionHeading('Depth')}
-                            <div class="flex flex-col gap-4 px-0.5 pt-1">
-                                <Switch
+                            <div class="flex flex-col gap-1.5">
+                                <SwitchField
                                     bind:checked={surfaceShadows}
                                     label="Card & menu shadows"
                                     description="Lift on cards, selects, dropdowns, and popovers."
                                 />
-                                <Switch
+                                <SwitchField
                                     bind:checked={controlShadows}
                                     label="Control shadows"
                                     description="Depth on inputs, buttons, and alerts."
                                 />
-                                <Switch
+                                <SwitchField
                                     bind:checked={dialogShadows}
                                     label="Dialog shadows"
                                     description="Lift on modals and sheets."
                                 />
-                                <Switch
+                                <SwitchField
                                     bind:checked={menuPaneling}
                                     label="Menu paneling"
                                     description="Inset frame around menus. Off leaves a plain 1px border with the shadow."
                                 />
-                                <Switch
+                                <SwitchField
                                     bind:checked={surfacePaneling}
                                     label="Surface paneling"
                                     description="Inset frame around modals, sheets, popovers, and cards. Off makes each one a single container."
                                 />
-                                <Switch
+                                <SwitchField
                                     bind:checked={primaryStroke}
                                     label="Primary stroke"
                                     description="A light inset edge on primary buttons."
@@ -2689,34 +3192,53 @@
 
                         <section class="flex flex-col gap-2">
                             {@render sectionHeading('Interaction')}
-                            <div class="flex flex-col gap-4 px-0.5 pt-1 pb-2">
-                                <Switch
+                            <div class="flex flex-col gap-1.5">
+                                {#if hoverSpeedRow}
+                                    {@render tokenRow(hoverSpeedRow, 'Hover speed')}
+                                {/if}
+                                {#if buttonPressRow}
+                                    {@render tokenRow(buttonPressRow, 'Button press')}
+                                {/if}
+                                <SwitchField
                                     bind:checked={travelingHighlight}
                                     label="Traveling highlight"
                                     description="Slide the hover highlight between items. Off keeps the fill without the motion."
                                 />
-                            </div>
-                            <Select.Root
-                                value={interactiveCursor}
-                                onValueChange={(value) => {
-                                    if (value === 'default' || value === 'pointer') {
-                                        interactiveCursor = value;
-                                    }
-                                }}
-                            >
-                                <SelectFieldTrigger label="Hover cursor">
-                                    {formatChoice(interactiveCursor)}
-                                </SelectFieldTrigger>
-                                <Select.Content
-                                    class="min-w-[max(16rem,var(--popover-trigger-width))]"
+                                <SwitchField
+                                    bind:checked={fancySwap}
+                                    label="Fancy text replacement"
+                                    description="Blur, scale, and turn icons and labels as they swap. Off uses a plain crossfade."
+                                />
+                                <SwitchField
+                                    bind:checked={sliderStretchEnabled, setSliderStretch}
+                                    label="Slider stretch"
+                                    description="Stretch sliders when dragged past either end."
+                                />
+                                <Select.Root
+                                    value={interactiveCursor}
+                                    onValueChange={(value) => {
+                                        if (value === 'default' || value === 'pointer') {
+                                            interactiveCursor = value;
+                                        }
+                                    }}
                                 >
-                                    {#each cursorChoices as choice (choice)}
-                                        <Select.Item value={choice} label={formatChoice(choice)}>
-                                            {formatChoice(choice)}
-                                        </Select.Item>
-                                    {/each}
-                                </Select.Content>
-                            </Select.Root>
+                                    <SelectFieldTrigger label="Hover cursor">
+                                        {formatChoice(interactiveCursor)}
+                                    </SelectFieldTrigger>
+                                    <Select.Content
+                                        class="min-w-[max(16rem,var(--popover-trigger-width))]"
+                                    >
+                                        {#each cursorChoices as choice (choice)}
+                                            <Select.Item
+                                                value={choice}
+                                                label={formatChoice(choice)}
+                                            >
+                                                {formatChoice(choice)}
+                                            </Select.Item>
+                                        {/each}
+                                    </Select.Content>
+                                </Select.Root>
+                            </div>
                         </section>
                     </div>
                 </ScrollArea>
@@ -2802,632 +3324,792 @@
                 </ScrollArea>
             </Tabs.Content>
         </Tabs.Root>
-
-        <footer class="grid shrink-0 grid-cols-2 gap-2 border-t border-border pt-3">
-            <CopyButton
-                text={generatedCss}
-                label="Copy CSS"
-                copiedLabel="Copied"
-                variant="primary"
-                size="md"
-                class="w-full [&_svg]:!text-[var(--color-on-primary)]"
-            >
-                Copy CSS
-            </CopyButton>
-            <CopyButton
-                text={generatedJson}
-                label="Copy JSON"
-                copiedLabel="Copied"
-                variant="outline"
-                size="md"
-                class="w-full"
-            >
-                Copy JSON
-            </CopyButton>
-            <Button variant="outline" size="md" class="col-span-2 w-full" onclick={openPublish}>
-                {publishedSlug ? 'Update published theme' : 'Publish to registry'}
-            </Button>
-            {#if publishedSlug}
-                <Button
-                    variant="ghost"
-                    size="sm"
-                    class="col-span-2 w-full text-foreground-muted"
-                    href={`${resolve('/themes')}?theme=${encodeURIComponent(publishedSlug)}`}
-                >
-                    View in themes
-                </Button>
-            {/if}
-        </footer>
     </div>
 {/snippet}
 
 {#snippet dashboardPreview()}
-    <ScrollArea class="h-full min-h-0" showCues={false}>
-        <div class="mx-auto flex w-full max-w-4xl flex-col gap-8 px-6 pt-2 pb-8">
-            <Toolbar class="gap-2 p-0">
-                <DropdownMenu.Root>
-                    <DropdownMenu.Trigger variant="quiet" class="min-w-0 justify-start px-0">
-                        <Avatar.Root size="sm" shape="square">
-                            <Avatar.Fallback>NL</Avatar.Fallback>
-                        </Avatar.Root>
-                        <Typography.Text variant="supporting" class="truncate text-foreground">
-                            {companyName}
-                        </Typography.Text>
-                        <ChevronDown size={14} class="text-foreground-muted" />
-                    </DropdownMenu.Trigger>
-                    <DropdownMenu.Content>
-                        <DropdownMenu.Label>Workspace</DropdownMenu.Label>
-                        <DropdownMenu.Item>Northstar Ledger</DropdownMenu.Item>
-                        <DropdownMenu.Item>Personal books</DropdownMenu.Item>
-                        <DropdownMenu.Separator />
-                        <DropdownMenu.Item
-                            callback={() =>
+    {#if previewView === 'agent'}
+        <div class="mx-auto flex h-full w-full max-w-3xl flex-col px-4 pt-4 pb-4 sm:px-6">
+            <PreviewAgent />
+        </div>
+    {:else}
+        <ScrollArea class="h-full min-h-0" showCues={false}>
+            {#if previewView === 'cards'}
+                <div class="mx-auto w-full max-w-6xl px-4 pt-4 pb-8 sm:px-6">
+                    <PreviewCards />
+                </div>
+            {:else}
+                <div class="mx-auto flex w-full max-w-4xl flex-col gap-8 px-6 pt-2 pb-8">
+                    <Toolbar class="gap-2 p-0">
+                        <DropdownMenu.Root>
+                            <DropdownMenu.Trigger
+                                variant="quiet"
+                                class="min-w-0 justify-start px-0"
+                            >
+                                <Avatar.Root size="sm" shape="square">
+                                    <Avatar.Fallback>NL</Avatar.Fallback>
+                                </Avatar.Root>
+                                <Typography.Text
+                                    variant="supporting"
+                                    class="truncate text-foreground"
+                                >
+                                    {companyName}
+                                </Typography.Text>
+                                <ChevronDown size={14} class="text-foreground-muted" />
+                            </DropdownMenu.Trigger>
+                            <DropdownMenu.Content>
+                                <DropdownMenu.Label>Workspace</DropdownMenu.Label>
+                                <DropdownMenu.Item>Northstar Ledger</DropdownMenu.Item>
+                                <DropdownMenu.Item>Personal books</DropdownMenu.Item>
+                                <DropdownMenu.Separator />
+                                <DropdownMenu.Item
+                                    callback={() =>
                                 runDashboardAction(
                                     'Workspace created',
                                     'A blank ledger is ready.'
                                 )}
-                        >
-                            Create workspace
-                        </DropdownMenu.Item>
-                    </DropdownMenu.Content>
-                </DropdownMenu.Root>
-                <div class="ml-auto flex items-center gap-1">
-                    <Popover.Root placement="bottom-end" inert={false}>
-                        <Popover.Trigger
-                            variant="ghost"
-                            size="icon"
-                            class="relative"
-                            aria-label="Notifications"
-                        >
-                            <Bell size={16} />
-                            {#if unreadNotificationCount > 0}
-                                <Badge
-                                    variant="error"
-                                    class="pointer-events-none absolute top-0.5 right-0.5 size-3.5 min-w-3.5 bg-[var(--color-error)] p-0 text-[length:var(--font-size-meta)] text-[var(--color-on-primary)] leading-none"
                                 >
-                                    {unreadNotificationCount}
-                                </Badge>
-                            {/if}
-                        </Popover.Trigger>
-                        <Popover.Content class="w-80" surfaceClass="p-2" lockScroll={false}>
-                            <div class="flex items-center justify-between px-2 pt-1 pb-1.5">
-                                <Popover.Title
-                                    class="text-[length:var(--font-size-body)] leading-snug"
+                                    Create workspace
+                                </DropdownMenu.Item>
+                            </DropdownMenu.Content>
+                        </DropdownMenu.Root>
+                        <div class="ml-auto flex items-center gap-1">
+                            <Popover.Root placement="bottom-end" inert={false}>
+                                <Popover.Trigger
+                                    variant="ghost"
+                                    size="icon"
+                                    class="relative"
+                                    aria-label="Notifications"
                                 >
-                                    Notifications
-                                </Popover.Title>
-                                {#if unreadNotificationCount > 0}
-                                    <Typography.Metadata class="tabular-nums">
-                                        {unreadNotificationCount}
-                                        new
-                                    </Typography.Metadata>
-                                {/if}
-                            </div>
-                            <div class="flex flex-col gap-0.5">
-                                {#each notifications as notification (notification.id)}
-                                    <Button
-                                        unstyled
-                                        class="flex w-full items-start justify-start gap-3 rounded-[var(--radius-md)] px-2 py-2 text-left select-none transition-[background-color,border-color,color] [transition-duration:var(--motion-duration-hover)] hover:cursor-[var(--ui-cursor-interactive)] hover:bg-foreground/[0.08] focus-visible:outline-none focus-visible:shadow-[var(--focus-ring)]"
-                                        onclick={() => markNotificationRead(notification.id)}
-                                    >
-                                        <span
-                                            class="flex min-w-0 flex-1 flex-col items-start gap-0.5"
+                                    <Bell size={16} />
+                                    {#if unreadNotificationCount > 0}
+                                        <Badge
+                                            variant="error"
+                                            class="pointer-events-none absolute top-0.5 right-0.5 size-3.5 min-w-3.5 bg-[var(--color-error)] p-0 text-[length:var(--font-size-meta)] text-[var(--color-on-primary)] leading-none"
                                         >
-                                            <span
-                                                class="w-full text-left text-[length:var(--font-size-body)] leading-snug text-pretty text-foreground {notification.read
+                                            {unreadNotificationCount}
+                                        </Badge>
+                                    {/if}
+                                </Popover.Trigger>
+                                <Popover.Content class="w-80" surfaceClass="p-2" lockScroll={false}>
+                                    <div class="flex items-center justify-between px-2 pt-1 pb-1.5">
+                                        <Popover.Title
+                                            class="text-[length:var(--font-size-body)] leading-snug"
+                                        >
+                                            Notifications
+                                        </Popover.Title>
+                                        {#if unreadNotificationCount > 0}
+                                            <Typography.Metadata class="tabular-nums">
+                                                {unreadNotificationCount}
+                                                new
+                                            </Typography.Metadata>
+                                        {/if}
+                                    </div>
+                                    <div class="flex flex-col gap-0.5">
+                                        {#each notifications as notification (notification.id)}
+                                            <Button
+                                                unstyled
+                                                class="flex w-full items-start justify-start gap-3 rounded-[var(--radius-md)] px-2 py-2 text-left select-none transition-[background-color,border-color,color] [transition-duration:var(--motion-duration-hover)] hover:cursor-[var(--ui-cursor-interactive)] hover:bg-foreground/[0.08] focus-visible:outline-none focus-visible:shadow-[var(--focus-ring)]"
+                                                onclick={() => markNotificationRead(notification.id)}
+                                            >
+                                                <span
+                                                    class="flex min-w-0 flex-1 flex-col items-start gap-0.5"
+                                                >
+                                                    <span
+                                                        class="w-full text-left text-[length:var(--font-size-body)] leading-snug text-pretty text-foreground {notification.read
                                                     ? 'font-normal'
                                                     : 'font-medium'}"
-                                            >
-                                                {notification.title}
-                                            </span>
-                                            <Typography.Metadata class="tabular-nums">
-                                                {notification.detail}
-                                            </Typography.Metadata>
+                                                    >
+                                                        {notification.title}
+                                                    </span>
+                                                    <Typography.Metadata class="tabular-nums">
+                                                        {notification.detail}
+                                                    </Typography.Metadata>
+                                                </span>
+                                                {#if !notification.read}
+                                                    <Badge
+                                                        variant="secondary"
+                                                        class="mt-0.5 shrink-0 self-start"
+                                                    >
+                                                        New
+                                                    </Badge>
+                                                {/if}
+                                            </Button>
+                                        {/each}
+                                    </div>
+                                </Popover.Content>
+                            </Popover.Root>
+                            <DropdownMenu.Root>
+                                <DropdownMenu.Trigger
+                                    variant="quiet"
+                                    size="icon"
+                                    aria-label="Open profile menu"
+                                >
+                                    <Avatar.Root size="sm">
+                                        <Avatar.Fallback>AN</Avatar.Fallback>
+                                    </Avatar.Root>
+                                </DropdownMenu.Trigger>
+                                <DropdownMenu.Content class="min-w-[16rem]">
+                                    <DropdownMenu.Label>
+                                        <span class="text-[0.7rem] text-foreground-muted">
+                                            avery@northstar.dev
                                         </span>
-                                        {#if !notification.read}
-                                            <Badge
-                                                variant="secondary"
-                                                class="mt-0.5 shrink-0 self-start"
-                                            >
-                                                New
-                                            </Badge>
-                                        {/if}
-                                    </Button>
-                                {/each}
-                            </div>
-                        </Popover.Content>
-                    </Popover.Root>
-                    <DropdownMenu.Root>
-                        <DropdownMenu.Trigger
-                            variant="quiet"
-                            size="icon"
-                            aria-label="Open profile menu"
-                        >
-                            <Avatar.Root size="sm">
-                                <Avatar.Fallback>AN</Avatar.Fallback>
-                            </Avatar.Root>
-                        </DropdownMenu.Trigger>
-                        <DropdownMenu.Content class="min-w-[16rem]">
-                            <DropdownMenu.Label>
-                                <span class="text-[0.7rem] text-foreground-muted">
-                                    avery@northstar.dev
-                                </span>
-                            </DropdownMenu.Label>
-                            <DropdownMenu.Item callback={() => (studioView = 'settings')}>
-                                <span class="flex items-center gap-2">
-                                    <User size={13} />
-                                    Profile
-                                </span>
-                                <Shortcut shortcut="shift+cmd+P" />
-                            </DropdownMenu.Item>
-                            <DropdownMenu.Item callback={() => (studioView = 'settings')}>
-                                <span class="flex items-center gap-2">
-                                    <Settings size={13} />
-                                    Preferences
-                                </span>
-                                <Shortcut shortcut="cmd+," />
-                            </DropdownMenu.Item>
-                            <DropdownMenu.Item
-                                callback={() =>
+                                    </DropdownMenu.Label>
+                                    <DropdownMenu.Item callback={() => (studioView = 'settings')}>
+                                        <span class="flex items-center gap-2">
+                                            <User size={13} />
+                                            Profile
+                                        </span>
+                                        <Shortcut shortcut="shift+cmd+P" />
+                                    </DropdownMenu.Item>
+                                    <DropdownMenu.Item callback={() => (studioView = 'settings')}>
+                                        <span class="flex items-center gap-2">
+                                            <Settings size={13} />
+                                            Preferences
+                                        </span>
+                                        <Shortcut shortcut="cmd+," />
+                                    </DropdownMenu.Item>
+                                    <DropdownMenu.Item
+                                        callback={() =>
                                     runDashboardAction(
                                         'Billing opened',
                                         'The billing portal is on its way.'
                                     )}
-                            >
-                                <span class="flex items-center gap-2">
-                                    <CreditCard size={13} />
-                                    Billing
-                                </span>
-                                <Shortcut shortcut="cmd+B" />
-                            </DropdownMenu.Item>
-                            <DropdownMenu.Separator />
-                            <DropdownMenu.Item
-                                callback={() =>
+                                    >
+                                        <span class="flex items-center gap-2">
+                                            <CreditCard size={13} />
+                                            Billing
+                                        </span>
+                                        <Shortcut shortcut="cmd+B" />
+                                    </DropdownMenu.Item>
+                                    <DropdownMenu.Separator />
+                                    <DropdownMenu.Item
+                                        callback={() =>
                                     runDashboardAction(
                                         'Support pinged',
                                         'We will follow up shortly.'
                                     )}
-                            >
-                                <span class="flex items-center gap-2">
-                                    <LifeBuoy size={13} />
-                                    Help & feedback
-                                </span>
-                            </DropdownMenu.Item>
-                            <DropdownMenu.Item
-                                callback={() =>
+                                    >
+                                        <span class="flex items-center gap-2">
+                                            <LifeBuoy size={13} />
+                                            Help & feedback
+                                        </span>
+                                    </DropdownMenu.Item>
+                                    <DropdownMenu.Item
+                                        callback={() =>
                                     runDashboardAction('Signed out', 'The session ended.')}
-                            >
-                                <span class="flex items-center gap-2 text-[var(--color-error)]">
-                                    <LogOut size={13} />
-                                    Sign out
-                                </span>
-                                <Shortcut shortcut="shift+cmd+Q" />
-                            </DropdownMenu.Item>
-                        </DropdownMenu.Content>
-                    </DropdownMenu.Root>
-                </div>
-            </Toolbar>
+                                    >
+                                        <span
+                                            class="flex items-center gap-2 text-[var(--color-error)]"
+                                        >
+                                            <LogOut size={13} />
+                                            Sign out
+                                        </span>
+                                        <Shortcut shortcut="shift+cmd+Q" />
+                                    </DropdownMenu.Item>
+                                </DropdownMenu.Content>
+                            </DropdownMenu.Root>
+                        </div>
+                    </Toolbar>
 
-            <Tabs.Root bind:value={studioView} variant="segmented">
-                <div class="flex flex-wrap items-center gap-2">
-                    <Tabs.List>
-                        <Tabs.Trigger value="overview">Overview</Tabs.Trigger>
-                        <Tabs.Trigger value="invoices">Invoices</Tabs.Trigger>
-                        <Tabs.Trigger value="settings">Settings</Tabs.Trigger>
-                    </Tabs.List>
-                    <Command.Root bind:open={commandOpen}>
-                        <Command.Trigger
-                            variant="outline"
-                            class="ml-auto min-w-0 w-52 shrink-0 justify-between gap-2"
-                        >
-                            <span class="flex min-w-0 items-center gap-2">
-                                <Search size={14} />
-                                <span class="truncate">Search</span>
-                            </span>
-                            <Shortcut
-                                shortcut="cmd+k"
-                                class="shrink-0"
-                                ontrigger={() => {
+                    <Tabs.Root bind:value={studioView} variant="segmented">
+                        <div class="flex flex-wrap items-center gap-2">
+                            <Tabs.List>
+                                <Tabs.Trigger value="overview">Overview</Tabs.Trigger>
+                                <Tabs.Trigger value="invoices">Invoices</Tabs.Trigger>
+                                <Tabs.Trigger value="settings">Settings</Tabs.Trigger>
+                            </Tabs.List>
+                            <Command.Root bind:open={commandOpen}>
+                                <Command.Trigger
+                                    variant="outline"
+                                    class="ml-auto min-w-0 w-52 shrink-0 justify-between gap-2"
+                                >
+                                    <span class="flex min-w-0 items-center gap-2">
+                                        <Search size={14} />
+                                        <span class="truncate">Search</span>
+                                    </span>
+                                    <Shortcut
+                                        shortcut="cmd+k"
+                                        class="shrink-0"
+                                        ontrigger={() => {
                                     commandOpen = true;
                                 }}
-                            />
-                        </Command.Trigger>
-                        <Command.Content>
-                            <Command.Search placeholder="Search ledger…" />
-                            <Command.Results>
-                                <Command.Group heading="Go to">
-                                    <Command.Item
-                                        name="Overview"
-                                        callback={() => {
+                                    />
+                                </Command.Trigger>
+                                <Command.Content>
+                                    <Command.Search placeholder="Search ledger…" />
+                                    <Command.Results>
+                                        <Command.Group heading="Go to">
+                                            <Command.Item
+                                                name="Overview"
+                                                callback={() => {
                                             studioView = 'overview';
                                         }}
-                                    >
-                                        <LayoutDashboard size={14} />
-                                        Overview
-                                    </Command.Item>
-                                    <Command.Item
-                                        name="Invoices"
-                                        callback={() => {
+                                            >
+                                                <LayoutDashboard size={14} />
+                                                Overview
+                                            </Command.Item>
+                                            <Command.Item
+                                                name="Invoices"
+                                                callback={() => {
                                             studioView = 'invoices';
                                         }}
-                                    >
-                                        <FileText size={14} />
-                                        Invoices
-                                    </Command.Item>
-                                    <Command.Item
-                                        name="Settings"
-                                        callback={() => {
+                                            >
+                                                <FileText size={14} />
+                                                Invoices
+                                            </Command.Item>
+                                            <Command.Item
+                                                name="Settings"
+                                                callback={() => {
                                             studioView = 'settings';
                                         }}
-                                    >
-                                        <Settings size={14} />
-                                        Settings
-                                    </Command.Item>
-                                </Command.Group>
-                                <Command.Separator />
-                                <Command.Group heading="Actions">
-                                    <Command.Item
-                                        name="New invoice"
-                                        callback={() => {
+                                            >
+                                                <Settings size={14} />
+                                                Settings
+                                            </Command.Item>
+                                        </Command.Group>
+                                        <Command.Separator />
+                                        <Command.Group heading="Actions">
+                                            <Command.Item
+                                                name="New invoice"
+                                                callback={() => {
                                             studioView = 'invoices';
                                             invoiceModalOpen = true;
                                         }}
-                                    >
-                                        <Plus size={14} />
-                                        New invoice
-                                    </Command.Item>
-                                </Command.Group>
-                                <Command.Group heading="Invoices">
-                                    {#each invoices as invoice (invoice.reference)}
-                                        <Command.Item
-                                            name={`${invoice.client} ${invoice.reference}`}
-                                            callback={() => {
+                                            >
+                                                <Plus size={14} />
+                                                New invoice
+                                            </Command.Item>
+                                        </Command.Group>
+                                        <Command.Group heading="Invoices">
+                                            {#each invoices as invoice (invoice.reference)}
+                                                <Command.Item
+                                                    name={`${invoice.client} ${invoice.reference}`}
+                                                    callback={() => {
                                                 studioView = 'invoices';
                                                 invoiceQuery = invoice.reference;
                                             }}
-                                        >
-                                            {invoice.client}
-                                            <Typography.Metadata>
-                                                {invoice.reference}
-                                            </Typography.Metadata>
-                                        </Command.Item>
-                                    {/each}
-                                </Command.Group>
-                            </Command.Results>
-                        </Command.Content>
-                    </Command.Root>
-                </div>
-
-                <Tabs.Content value="overview" class="flex flex-col gap-6 pt-6">
-                    <div>
-                        <Typography.Title level={1}>Overview</Typography.Title>
-                        <Typography.Description>
-                            Cash on hand and collection risk for {companyName}.
-                        </Typography.Description>
-                    </div>
-                    <Tabs.Root bind:value={dashboardRange} variant="ghost">
-                        <Tabs.List class="w-fit">
-                            <Tabs.Trigger value="7d">7 days</Tabs.Trigger>
-                            <Tabs.Trigger value="30d">30 days</Tabs.Trigger>
-                            <Tabs.Trigger value="Quarter">Quarter</Tabs.Trigger>
-                        </Tabs.List>
-                    </Tabs.Root>
-                    {#if overdueCount > 0}
-                        <Alert.Root variant="warning">
-                            <Alert.Title>
-                                {overdueCount}
-                                {overdueCount === 1 ? 'invoice is' : 'invoices are'}
-                                overdue
-                            </Alert.Title>
-                            <Alert.Description>
-                                ${outstandingTotal.toLocaleString('en-US')}
-                                is still open. The next collection run starts tomorrow at 9:00 AM.
-                            </Alert.Description>
-                        </Alert.Root>
-                    {/if}
-                    <Card.Root>
-                        <Card.Header>
-                            <Typography.Title level={2}>Cash coverage</Typography.Title>
-                            <Typography.Description>
-                                Funds available for the selected range.
-                            </Typography.Description>
-                        </Card.Header>
-                        <Card.Content class="flex flex-col gap-4">
-                            <Gauge
-                                value={coverageValue}
-                                label="Cash coverage"
-                                tone="success"
-                                size={72}
-                            >
-                                {coverageValue}%
-                            </Gauge>
-                            <Progress {...progressProps(coverageValue)} />
-                            <Switch
-                                bind:checked={autoReconcile}
-                                label="Auto-reconcile"
-                                description="Match confirmed bank payments as they arrive."
-                            />
-                            <TaskSteps
-                                label="Collection run"
-                                steps={collectionSteps}
-                                current={collectionStep}
-                            />
-                        </Card.Content>
-                    </Card.Root>
-                </Tabs.Content>
-
-                <Tabs.Content value="invoices" class="flex flex-col gap-6 pt-6">
-                    <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-                        <div>
-                            <Typography.Title level={1}>Invoices</Typography.Title>
-                            <Typography.Description>
-                                Review, remind, and record payment.
-                            </Typography.Description>
+                                                >
+                                                    {invoice.client}
+                                                    <Typography.Metadata>
+                                                        {invoice.reference}
+                                                    </Typography.Metadata>
+                                                </Command.Item>
+                                            {/each}
+                                        </Command.Group>
+                                    </Command.Results>
+                                </Command.Content>
+                            </Command.Root>
                         </div>
-                        <Modal.Root bind:open={invoiceModalOpen}>
-                            <Modal.Trigger>
-                                <Plus size={15} />
-                                New invoice
-                            </Modal.Trigger>
-                            <Modal.Content>
-                                <Modal.Header>
-                                    <Modal.Title>New invoice</Modal.Title>
-                                    <Modal.Description>
-                                        Draft a customer invoice. You can add line items later.
-                                    </Modal.Description>
-                                </Modal.Header>
-                                <Modal.Body class="gap-4">
-                                    <Input
-                                        bind:value={newInvoiceCustomer}
-                                        label="Customer"
-                                        placeholder="Studio name"
-                                    />
-                                    <Textarea
-                                        bind:value={newInvoiceNotes}
-                                        label="Notes"
-                                        placeholder="Optional context for the draft"
-                                        autoresize
-                                    />
-                                </Modal.Body>
-                                <Modal.Footer>
-                                    <Modal.Close>
-                                        Cancel
-                                        <Shortcut shortcut="esc" />
-                                    </Modal.Close>
-                                    <Modal.Confirm onclick={createInvoice}>
-                                        Create draft
-                                        <Shortcut shortcut="enter" />
-                                    </Modal.Confirm>
-                                </Modal.Footer>
-                            </Modal.Content>
-                        </Modal.Root>
-                    </div>
-                    <Toolbar class="gap-2 p-0">
-                        <Combobox.Root bind:value={invoiceQuery}>
-                            <Combobox.Trigger
-                                appearance="input"
-                                placeholder="Search customer"
-                                class="min-w-0 flex-1"
-                            >
-                                {#snippet trailing()}
-                                    <Search size={16} />
-                                {/snippet}
-                            </Combobox.Trigger>
-                            <Combobox.Content>
-                                <Combobox.Results>
-                                    {#each customers as customer (customer)}
-                                        <Combobox.Item value={customer} label={customer} />
-                                    {/each}
-                                </Combobox.Results>
-                            </Combobox.Content>
-                        </Combobox.Root>
-                        <Select.Root bind:value={invoiceStatus}>
-                            <Select.Trigger variant="outline" aria-label="Invoice status">
-                                {invoiceStatus === 'all'
-                                    ? 'All statuses'
-                                    : invoiceStatus === 'open'
-                                      ? 'Open'
-                                      : formatChoice(invoiceStatus)}
-                            </Select.Trigger>
-                            <Select.Content>
-                                <Select.Item value="all" label="All statuses">
-                                    All statuses
-                                </Select.Item>
-                                <Select.Item value="open" label="Open">Open</Select.Item>
-                                <Select.Item value="paid" label="Paid">Paid</Select.Item>
-                                <Select.Item value="overdue" label="Overdue">Overdue</Select.Item>
-                            </Select.Content>
-                        </Select.Root>
-                    </Toolbar>
-                    {#if pagedInvoices.length > 0}
-                        <Checkbox
-                            checked={allVisibleSelected}
-                            label="Select visible invoices"
-                            onCheckedChange={toggleSelectAll}
-                        />
-                    {/if}
-                    {#each pagedInvoices as invoice (invoice.reference)}
-                        <ContextMenu.Root>
-                            <ContextMenu.Trigger class="block">
-                                <div
-                                    class="flex items-center gap-3 border-b border-border py-3 last:border-b-0"
-                                >
-                                    <Checkbox
-                                        bind:checked={selectedInvoices[invoice.reference]}
-                                        label={invoice.client}
-                                        description={`${invoice.reference} · due ${invoice.due}`}
-                                        class="min-w-0 flex-1"
-                                    />
-                                    <Tooltip.Root>
-                                        <Tooltip.Trigger class="ml-auto shrink-0">
-                                            <Badge variant={invoiceBadgeVariant(invoice.status)}>
-                                                {invoice.status}
-                                            </Badge>
-                                        </Tooltip.Trigger>
-                                        <Tooltip.Content>Due {invoice.due}</Tooltip.Content>
-                                    </Tooltip.Root>
-                                    <Typography.Metadata
-                                        class="w-16 shrink-0 text-right tabular-nums"
-                                    >
-                                        {invoice.amount}
-                                    </Typography.Metadata>
-                                    <CopyButton
-                                        text={invoice.reference}
-                                        label="Copy invoice number"
-                                    />
-                                    <DropdownMenu.Root>
-                                        <DropdownMenu.Trigger
-                                            variant="ghost"
-                                            size="icon"
-                                            aria-label={`Actions for ${invoice.reference}`}
-                                        >
-                                            <MoreHorizontal size={16} />
-                                        </DropdownMenu.Trigger>
-                                        <DropdownMenu.Content>
-                                            <DropdownMenu.Item
-                                                callback={() =>
-                                                    runDashboardAction(
-                                                        'Reminder sent',
-                                                        `${invoice.client} will be notified.`
-                                                    )}
-                                            >
-                                                Send reminder
-                                            </DropdownMenu.Item>
-                                            <DropdownMenu.Item
-                                                callback={() => markInvoicePaid(invoice.reference)}
-                                            >
-                                                Record payment
-                                            </DropdownMenu.Item>
-                                            <DropdownMenu.Separator />
-                                            <DropdownMenu.Item
-                                                callback={() =>
-                                                    runDashboardAction(
-                                                        'Invoice duplicated',
-                                                        `${invoice.reference} copied as a draft.`
-                                                    )}
-                                            >
-                                                Duplicate
-                                            </DropdownMenu.Item>
-                                        </DropdownMenu.Content>
-                                    </DropdownMenu.Root>
-                                </div>
-                            </ContextMenu.Trigger>
-                            <ContextMenu.Content>
-                                <ContextMenu.Item
-                                    callback={() =>
-                                        runDashboardAction(
-                                            'Reminder sent',
-                                            `${invoice.client} will be notified.`
-                                        )}
-                                >
-                                    Send reminder
-                                </ContextMenu.Item>
-                                <ContextMenu.Item
-                                    callback={() => markInvoicePaid(invoice.reference)}
-                                >
-                                    Record payment
-                                </ContextMenu.Item>
-                                <ContextMenu.Separator />
-                                <ContextMenu.Item
-                                    callback={() =>
-                                        runDashboardAction(
-                                            'Invoice duplicated',
-                                            `${invoice.reference} copied as a draft.`
-                                        )}
-                                >
-                                    Duplicate
-                                </ContextMenu.Item>
-                            </ContextMenu.Content>
-                        </ContextMenu.Root>
-                    {:else}
-                        <Alert.Root variant="info">
-                            <Alert.Title>No invoices found</Alert.Title>
-                            <Alert.Description>
-                                Change the search or status filter to see more invoices.
-                            </Alert.Description>
-                        </Alert.Root>
-                    {/each}
-                    <Toolbar class="p-0">
-                        <Typography.Metadata>
-                            Showing {pagedInvoices.length} of {visibleInvoices.length}
-                        </Typography.Metadata>
-                        <Pagination bind:page={invoicePage} total={invoicePageCount} />
-                    </Toolbar>
-                </Tabs.Content>
 
-                <Tabs.Content value="settings" class="flex flex-col gap-6 pt-6">
-                    <div>
-                        <Typography.Title level={1}>Settings</Typography.Title>
-                        <Typography.Description>
-                            Collection defaults for this workspace.
-                        </Typography.Description>
-                    </div>
-                    <Accordion.Root type="multiple" bind:value={settingsSections}>
-                        <Accordion.Item value="workspace">
-                            <Accordion.Trigger>Workspace</Accordion.Trigger>
-                            <Accordion.Content>
-                                <div class="flex flex-col gap-4">
-                                    <Input bind:value={companyName} label="Workspace name" />
+                        <Tabs.Content value="overview" class="flex flex-col gap-6 pt-6">
+                            <div>
+                                <Typography.Title level={1}>Overview</Typography.Title>
+                                <Typography.Description>
+                                    Cash on hand and collection risk for {companyName}.
+                                </Typography.Description>
+                            </div>
+                            <Tabs.Root bind:value={dashboardRange} variant="ghost">
+                                <Tabs.List class="w-fit">
+                                    <Tabs.Trigger value="7d">7 days</Tabs.Trigger>
+                                    <Tabs.Trigger value="30d">30 days</Tabs.Trigger>
+                                    <Tabs.Trigger value="Quarter">Quarter</Tabs.Trigger>
+                                </Tabs.List>
+                            </Tabs.Root>
+                            {#if overdueCount > 0}
+                                <Alert.Root variant="warning">
+                                    <Alert.Title>
+                                        {overdueCount}
+                                        {overdueCount === 1 ? 'invoice is' : 'invoices are'}
+                                        overdue
+                                    </Alert.Title>
+                                    <Alert.Description>
+                                        ${outstandingTotal.toLocaleString('en-US')}
+                                        is still open. The next collection run starts tomorrow at
+                                        9:00 AM.
+                                    </Alert.Description>
+                                </Alert.Root>
+                            {/if}
+                            <Card.Root>
+                                <Card.Header>
+                                    <Typography.Title level={2}>Cash coverage</Typography.Title>
+                                    <Typography.Description>
+                                        Funds available for the selected range.
+                                    </Typography.Description>
+                                </Card.Header>
+                                <Card.Content class="flex flex-col gap-4">
+                                    <Gauge
+                                        value={coverageValue}
+                                        label="Cash coverage"
+                                        tone="success"
+                                        size={72}
+                                    >
+                                        {coverageValue}%
+                                    </Gauge>
+                                    <Progress {...progressProps(coverageValue)} />
                                     <Switch
                                         bind:checked={autoReconcile}
                                         label="Auto-reconcile"
                                         description="Match confirmed bank payments as they arrive."
                                     />
+                                    <TaskSteps
+                                        label="Collection run"
+                                        steps={collectionSteps}
+                                        current={collectionStep}
+                                    />
+                                </Card.Content>
+                            </Card.Root>
+                        </Tabs.Content>
+
+                        <Tabs.Content value="invoices" class="flex flex-col gap-6 pt-6">
+                            <div
+                                class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between"
+                            >
+                                <div>
+                                    <Typography.Title level={1}>Invoices</Typography.Title>
+                                    <Typography.Description>
+                                        Review, remind, and record payment.
+                                    </Typography.Description>
                                 </div>
-                            </Accordion.Content>
-                        </Accordion.Item>
-                        <Accordion.Item value="reminders">
-                            <Accordion.Trigger>Reminders</Accordion.Trigger>
-                            <Accordion.Content>
-                                <div class="flex flex-col gap-4">
-                                    <RadioGroup.Root
-                                        bind:value={reminderCadence}
-                                        name="reminder-cadence"
+                                <Modal.Root bind:open={invoiceModalOpen}>
+                                    <Modal.Trigger>
+                                        <Plus size={15} />
+                                        New invoice
+                                    </Modal.Trigger>
+                                    <Modal.Content>
+                                        <Modal.Header>
+                                            <Modal.Title>New invoice</Modal.Title>
+                                            <Modal.Description>
+                                                Draft a customer invoice. You can add line items
+                                                later.
+                                            </Modal.Description>
+                                        </Modal.Header>
+                                        <Modal.Body class="gap-4">
+                                            <Input
+                                                bind:value={newInvoiceCustomer}
+                                                label="Customer"
+                                                placeholder="Studio name"
+                                            />
+                                            <Textarea
+                                                bind:value={newInvoiceNotes}
+                                                label="Notes"
+                                                placeholder="Optional context for the draft"
+                                                autoresize
+                                            />
+                                        </Modal.Body>
+                                        <Modal.Footer>
+                                            <Modal.Close>
+                                                Cancel
+                                                <Shortcut shortcut="esc" />
+                                            </Modal.Close>
+                                            <Modal.Confirm onclick={createInvoice}>
+                                                Create draft
+                                                <Shortcut shortcut="enter" />
+                                            </Modal.Confirm>
+                                        </Modal.Footer>
+                                    </Modal.Content>
+                                </Modal.Root>
+                            </div>
+                            <Toolbar class="gap-2 p-0">
+                                <Combobox.Root bind:value={invoiceQuery}>
+                                    <Combobox.Trigger
+                                        appearance="input"
+                                        placeholder="Search customer"
+                                        class="min-w-0 flex-1"
                                     >
-                                        <RadioGroup.Item
-                                            value="off"
-                                            label="Off"
-                                            description="Send reminders yourself."
-                                        />
-                                        <RadioGroup.Item
-                                            value="weekly"
-                                            label="Weekly"
-                                            description="Every Monday for open invoices."
-                                        />
-                                        <RadioGroup.Item
-                                            value="due"
-                                            label="Before due"
-                                            description="Once, a few days before the due date."
-                                        />
-                                    </RadioGroup.Root>
-                                    {#if reminderCadence === 'due'}
-                                        <Slider.Root
-                                            value={reminderDays}
-                                            min={1}
-                                            max={14}
-                                            step={1}
-                                            label="Reminder"
-                                            format={(value) => {
+                                        {#snippet trailing()}
+                                            <Search size={16} />
+                                        {/snippet}
+                                    </Combobox.Trigger>
+                                    <Combobox.Content>
+                                        <Combobox.Results>
+                                            {#each customers as customer (customer)}
+                                                <Combobox.Item value={customer} label={customer} />
+                                            {/each}
+                                        </Combobox.Results>
+                                    </Combobox.Content>
+                                </Combobox.Root>
+                                <Select.Root bind:value={invoiceStatus}>
+                                    <Select.Trigger variant="outline" aria-label="Invoice status">
+                                        {invoiceStatus === 'all'
+                                    ? 'All statuses'
+                                    : invoiceStatus === 'open'
+                                      ? 'Open'
+                                      : formatChoice(invoiceStatus)}
+                                    </Select.Trigger>
+                                    <Select.Content>
+                                        <Select.Item value="all" label="All statuses">
+                                            All statuses
+                                        </Select.Item>
+                                        <Select.Item value="open" label="Open">Open</Select.Item>
+                                        <Select.Item value="paid" label="Paid">Paid</Select.Item>
+                                        <Select.Item value="overdue" label="Overdue"
+                                            >Overdue</Select.Item
+                                        >
+                                    </Select.Content>
+                                </Select.Root>
+                            </Toolbar>
+                            {#if pagedInvoices.length > 0}
+                                <Checkbox
+                                    checked={allVisibleSelected}
+                                    label="Select visible invoices"
+                                    onCheckedChange={toggleSelectAll}
+                                />
+                            {/if}
+                            {#each pagedInvoices as invoice (invoice.reference)}
+                                <ContextMenu.Root>
+                                    <ContextMenu.Trigger class="block">
+                                        <div
+                                            class="flex items-center gap-3 border-b border-border py-3 last:border-b-0"
+                                        >
+                                            <Checkbox
+                                                bind:checked={selectedInvoices[invoice.reference]}
+                                                label={invoice.client}
+                                                description={`${invoice.reference} · due ${invoice.due}`}
+                                                class="min-w-0 flex-1"
+                                            />
+                                            <Tooltip.Root>
+                                                <Tooltip.Trigger class="ml-auto shrink-0">
+                                                    <Badge
+                                                        variant={invoiceBadgeVariant(invoice.status)}
+                                                    >
+                                                        {invoice.status}
+                                                    </Badge>
+                                                </Tooltip.Trigger>
+                                                <Tooltip.Content>Due {invoice.due}</Tooltip.Content>
+                                            </Tooltip.Root>
+                                            <Typography.Metadata
+                                                class="w-16 shrink-0 text-right tabular-nums"
+                                            >
+                                                {invoice.amount}
+                                            </Typography.Metadata>
+                                            <CopyButton
+                                                text={invoice.reference}
+                                                label="Copy invoice number"
+                                            />
+                                            <DropdownMenu.Root>
+                                                <DropdownMenu.Trigger
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    aria-label={`Actions for ${invoice.reference}`}
+                                                >
+                                                    <MoreHorizontal size={16} />
+                                                </DropdownMenu.Trigger>
+                                                <DropdownMenu.Content>
+                                                    <DropdownMenu.Item
+                                                        callback={() =>
+                                                    runDashboardAction(
+                                                        'Reminder sent',
+                                                        `${invoice.client} will be notified.`
+                                                    )}
+                                                    >
+                                                        Send reminder
+                                                    </DropdownMenu.Item>
+                                                    <DropdownMenu.Item
+                                                        callback={() => markInvoicePaid(invoice.reference)}
+                                                    >
+                                                        Record payment
+                                                    </DropdownMenu.Item>
+                                                    <DropdownMenu.Separator />
+                                                    <DropdownMenu.Item
+                                                        callback={() =>
+                                                    runDashboardAction(
+                                                        'Invoice duplicated',
+                                                        `${invoice.reference} copied as a draft.`
+                                                    )}
+                                                    >
+                                                        Duplicate
+                                                    </DropdownMenu.Item>
+                                                </DropdownMenu.Content>
+                                            </DropdownMenu.Root>
+                                        </div>
+                                    </ContextMenu.Trigger>
+                                    <ContextMenu.Content>
+                                        <ContextMenu.Item
+                                            callback={() =>
+                                        runDashboardAction(
+                                            'Reminder sent',
+                                            `${invoice.client} will be notified.`
+                                        )}
+                                        >
+                                            Send reminder
+                                        </ContextMenu.Item>
+                                        <ContextMenu.Item
+                                            callback={() => markInvoicePaid(invoice.reference)}
+                                        >
+                                            Record payment
+                                        </ContextMenu.Item>
+                                        <ContextMenu.Separator />
+                                        <ContextMenu.Item
+                                            callback={() =>
+                                        runDashboardAction(
+                                            'Invoice duplicated',
+                                            `${invoice.reference} copied as a draft.`
+                                        )}
+                                        >
+                                            Duplicate
+                                        </ContextMenu.Item>
+                                    </ContextMenu.Content>
+                                </ContextMenu.Root>
+                            {:else}
+                                <Alert.Root variant="info">
+                                    <Alert.Title>No invoices found</Alert.Title>
+                                    <Alert.Description>
+                                        Change the search or status filter to see more invoices.
+                                    </Alert.Description>
+                                </Alert.Root>
+                            {/each}
+                            <Toolbar class="p-0">
+                                <Typography.Metadata>
+                                    Showing {pagedInvoices.length} of {visibleInvoices.length}
+                                </Typography.Metadata>
+                                <Pagination bind:page={invoicePage} total={invoicePageCount} />
+                            </Toolbar>
+                        </Tabs.Content>
+
+                        <Tabs.Content value="settings" class="flex flex-col gap-6 pt-6">
+                            <div>
+                                <Typography.Title level={1}>Settings</Typography.Title>
+                                <Typography.Description>
+                                    Collection defaults for this workspace.
+                                </Typography.Description>
+                            </div>
+                            <Accordion.Root type="multiple" bind:value={settingsSections}>
+                                <Accordion.Item value="workspace">
+                                    <Accordion.Trigger>Workspace</Accordion.Trigger>
+                                    <Accordion.Content>
+                                        <div class="flex flex-col gap-4">
+                                            <Input
+                                                bind:value={companyName}
+                                                label="Workspace name"
+                                            />
+                                            <Switch
+                                                bind:checked={autoReconcile}
+                                                label="Auto-reconcile"
+                                                description="Match confirmed bank payments as they arrive."
+                                            />
+                                        </div>
+                                    </Accordion.Content>
+                                </Accordion.Item>
+                                <Accordion.Item value="reminders">
+                                    <Accordion.Trigger>Reminders</Accordion.Trigger>
+                                    <Accordion.Content>
+                                        <div class="flex flex-col gap-4">
+                                            <RadioGroup.Root
+                                                bind:value={reminderCadence}
+                                                name="reminder-cadence"
+                                            >
+                                                <RadioGroup.Item
+                                                    value="off"
+                                                    label="Off"
+                                                    description="Send reminders yourself."
+                                                />
+                                                <RadioGroup.Item
+                                                    value="weekly"
+                                                    label="Weekly"
+                                                    description="Every Monday for open invoices."
+                                                />
+                                                <RadioGroup.Item
+                                                    value="due"
+                                                    label="Before due"
+                                                    description="Once, a few days before the due date."
+                                                />
+                                            </RadioGroup.Root>
+                                            {#if reminderCadence === 'due'}
+                                                <Slider.Root
+                                                    value={reminderDays}
+                                                    min={1}
+                                                    max={14}
+                                                    step={1}
+                                                    label="Reminder"
+                                                    format={(value) => {
                                                 return value === 1
                                                     ? '1 day before due'
                                                     : `${value} days before due`;
                                             }}
-                                            onValueChange={(value) => {
+                                                    onValueChange={(value) => {
                                                 reminderDays = value;
                                             }}
-                                        />
-                                    {/if}
-                                </div>
-                            </Accordion.Content>
-                        </Accordion.Item>
-                    </Accordion.Root>
-                </Tabs.Content>
-            </Tabs.Root>
-        </div>
-    </ScrollArea>
+                                                />
+                                            {/if}
+                                        </div>
+                                    </Accordion.Content>
+                                </Accordion.Item>
+                            </Accordion.Root>
+                        </Tabs.Content>
+                    </Tabs.Root>
+                </div>
+            {/if}
+        </ScrollArea>
+    {/if}
 {/snippet}
 
 <div data-docs-page class="flex min-h-0 min-w-0 flex-1 flex-col bg-background text-foreground">
+    <div class="relative z-20 shrink-0">
+        <header
+            aria-label="Studio"
+            class="flex min-w-0 items-center gap-1 px-3 pt-1 pb-3 min-[1100px]:px-4"
+        >
+            <Select.Root bind:value={selectedPreset}>
+                <Select.Trigger
+                    variant="ghost"
+                    class="h-8 w-auto max-w-56 min-w-0 gap-2 px-2 font-medium"
+                    aria-label="Preset"
+                >
+                    {@render presetDots(baseTheme)}
+                    <span class="truncate">{activePresetName}</span>
+                    {#if dirty}
+                        <span class="text-xs font-normal text-foreground-muted max-sm:hidden">
+                            Edited
+                        </span>
+                    {/if}
+                </Select.Trigger>
+                <Select.Content class="max-h-72 min-w-56">
+                    <Select.Label>Built-in presets</Select.Label>
+                    {#each builtInThemePresets as preset (preset.slug)}
+                        <Select.Item value={preset.slug} label={preset.name}>
+                            <span class="flex min-w-0 items-center gap-2">
+                                {@render presetDots(preset)}
+                                <span class="truncate">{preset.name}</span>
+                            </span>
+                        </Select.Item>
+                    {/each}
+                </Select.Content>
+            </Select.Root>
+            <Button
+                variant={presetsOpen ? 'secondary' : 'ghost'}
+                size="sm"
+                aria-expanded={presetsOpen}
+                aria-controls="studio-preset-gallery"
+                onclick={() => {
+                    previewPresetSlug = null;
+                    presetsOpen = !presetsOpen;
+                }}
+            >
+                <Blend size={14} />
+                <span class="max-sm:sr-only">Presets</span>
+            </Button>
+
+            <div class="ml-auto flex shrink-0 items-center gap-1">
+                <Tooltip.Root>
+                    <Tooltip.Trigger>
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            disabled={!canUndo}
+                            onclick={undo}
+                            aria-label="Undo"
+                        >
+                            <Undo2 size={15} />
+                        </Button>
+                    </Tooltip.Trigger>
+                    <Tooltip.Content>
+                        Undo
+                        <Shortcut shortcut="cmd+Z" />
+                    </Tooltip.Content>
+                </Tooltip.Root>
+                <Tooltip.Root>
+                    <Tooltip.Trigger>
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            disabled={!canRedo}
+                            onclick={redo}
+                            aria-label="Redo"
+                        >
+                            <Redo2 size={15} />
+                        </Button>
+                    </Tooltip.Trigger>
+                    <Tooltip.Content>
+                        Redo
+                        <Shortcut shortcut="shift+cmd+Z" />
+                    </Tooltip.Content>
+                </Tooltip.Root>
+                <Tooltip.Root>
+                    <Tooltip.Trigger>
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            disabled={!dirty}
+                            onclick={requestReset}
+                            aria-label="Reset to preset"
+                        >
+                            <RotateCcw size={15} />
+                        </Button>
+                    </Tooltip.Trigger>
+                    <Tooltip.Content>Reset</Tooltip.Content>
+                </Tooltip.Root>
+                <Tooltip.Root>
+                    <Tooltip.Trigger>
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            onclick={openTokenPalette}
+                            aria-label="Search tokens"
+                        >
+                            <Search size={15} />
+                        </Button>
+                    </Tooltip.Trigger>
+                    <Tooltip.Content>
+                        Search tokens
+                        <Shortcut shortcut="shift+cmd+K" />
+                    </Tooltip.Content>
+                </Tooltip.Root>
+                <Tooltip.Root>
+                    <Tooltip.Trigger class="max-[1099px]:hidden">
+                        <Button
+                            variant={tokenEditMode ? 'secondary' : 'ghost'}
+                            size="icon"
+                            aria-pressed={tokenEditMode}
+                            aria-label="Edit tokens"
+                            onclick={() => {
+                                setTokenEditMode(!tokenEditMode);
+                            }}
+                        >
+                            <SquareMousePointer size={15} />
+                        </Button>
+                    </Tooltip.Trigger>
+                    <Tooltip.Content>
+                        {tokenEditMode ? 'Stop editing' : 'Edit tokens'}
+                    </Tooltip.Content>
+                </Tooltip.Root>
+                <Button
+                    size="sm"
+                    class="ml-1"
+                    onclick={() => {
+                        exportOpen = true;
+                    }}
+                >
+                    Export
+                    {#if changeCount > 0}
+                        <span class="tabular-nums opacity-70">{changeCount}</span>
+                    {/if}
+                </Button>
+            </div>
+        </header>
+
+        {#if presetsOpen}
+            <div
+                id="studio-preset-gallery"
+                class="absolute inset-x-3 top-full z-40 origin-top min-[1100px]:inset-x-4"
+                in:surfaceTransition
+                out:surfaceTransition={{ direction: 'out' }}
+            >
+                <PresetGallery
+                    presets={builtInThemePresets}
+                    mode={appMode}
+                    activeSlug={selectedPreset}
+                    previewSlug={previewPresetSlug}
+                    onPreview={setPreviewPreset}
+                    onApply={applyGalleryPreset}
+                    onClose={() => {
+                        presetsOpen = false;
+                    }}
+                />
+            </div>
+        {/if}
+    </div>
+
     <section aria-label="Theme workspace" class="flex min-h-0 flex-1 bg-background">
         <aside
             aria-label="Theme configuration"
@@ -3436,152 +4118,90 @@
             {@render inspector()}
         </aside>
 
-        <div class="relative min-w-0 flex-1 pr-3 pb-3 pl-0">
+        <div class="relative flex min-w-0 flex-1 flex-col pr-3 pb-3 pl-3 min-[1100px]:pl-0">
             <div
-                bind:this={previewFrame}
-                class={`h-full min-h-0 overflow-hidden rounded-[var(--radius-xl)] border border-border bg-background font-[var(--font-sans)] text-foreground ${tokenEditMode ? 'cursor-crosshair! [&_*]:cursor-crosshair!' : ''}`}
-                id="theme-preview"
-                oncontextmenucapture={openTokenEditor}
-                onpointerdowncapture={suppressTokenEditPointer}
-                onmousedowncapture={suppressTokenEditPointer}
-                onpointerovercapture={trackTokenEditHover}
-                onpointerleave={() => {
-                    tokenEditHover = null;
-                }}
+                class={`flex min-h-0 flex-1 flex-col overflow-hidden rounded-[var(--radius-xl)] border bg-background font-[var(--font-sans)] text-foreground transition-[border-color,box-shadow] [transition-duration:var(--motion-duration-hover)] ${tokenEditMode ? 'border-primary ring-3 ring-primary/20' : 'border-border'}`}
             >
-                {@render dashboardPreview()}
-            </div>
-            {#if tokenEditOpen && tokenEditTarget}
-                <aside
-                    aria-label="Element tokens"
-                    class="sivir-modal-frame absolute top-3 right-6 bottom-6 z-50 flex w-[22rem] flex-col overflow-hidden text-foreground shadow-[var(--elevation-float)] [--sivir-modal-inset:calc(var(--spacing)*0.5)]"
-                >
-                    <div class="sivir-inset-surface flex min-h-0 flex-1 flex-col">
-                        <header class="flex flex-col gap-3 px-5 pt-5 pb-4">
-                            <div class="flex items-start justify-between gap-3">
-                                <div class="flex min-w-0 flex-col gap-1">
-                                    <h2
-                                        class="m-0 truncate font-mono text-[length:var(--font-size-header)] leading-tight font-medium"
-                                    >
-                                        {elementLabel(tokenEditTarget)}
-                                    </h2>
-                                    <Typography.Metadata class="tabular-nums">
-                                        {tokenEditSummary}
-                                    </Typography.Metadata>
-                                </div>
-                                <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    class="-mt-1 -mr-2 shrink-0"
-                                    aria-label="Close element tokens"
-                                    onclick={closeTokenEditor}
-                                >
-                                    <X size={16} />
-                                </Button>
-                            </div>
-                            <nav
-                                aria-label="Element path"
-                                class="flex min-w-0 flex-wrap items-center gap-x-1 gap-y-0.5"
+                <div class="flex shrink-0 items-center gap-3 px-3 pt-3">
+                    <ToggleGroup.Root
+                        type="single"
+                        value={previewView}
+                        onValueChange={(value) => {
+                            if (typeof value === 'string' && value) {
+                                previewView = value;
+                            }
+                        }}
+                    >
+                        <ToggleGroup.Item value="cards">Cards</ToggleGroup.Item>
+                        <ToggleGroup.Item value="app">Ledger app</ToggleGroup.Item>
+                        <ToggleGroup.Item value="agent">Agent</ToggleGroup.Item>
+                    </ToggleGroup.Root>
+                    {#if tokenEditMode}
+                        <div
+                            class="ml-auto flex min-w-0 items-center gap-2"
+                            transition:fade={{ duration: 120 }}
+                        >
+                            <span
+                                class="size-1.5 shrink-0 rounded-full bg-primary"
+                                aria-hidden="true"
+                            ></span>
+                            <Typography.Metadata class="truncate">
+                                Click any element to edit its tokens
+                            </Typography.Metadata>
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                class="shrink-0"
+                                onclick={() => {
+                                    setTokenEditMode(false);
+                                }}
                             >
-                                {#each tokenEditTrail as element, index (index)}
-                                    {#if index > 0}
-                                        <span
-                                            class="text-xs text-foreground-muted"
-                                            aria-hidden="true"
-                                        >
-                                            /
-                                        </span>
-                                    {/if}
-                                    <button
-                                        type="button"
-                                        class="rounded-[var(--radius-sm)] px-1 py-0.5 font-mono text-xs text-foreground-muted transition-colors [transition-duration:var(--motion-duration-hover)] hover:cursor-[var(--ui-cursor-interactive)] hover:bg-foreground/[0.06] hover:text-foreground focus-visible:shadow-[var(--focus-ring)] focus-visible:outline-none aria-[current=true]:text-foreground"
-                                        aria-current={element === tokenEditTarget}
-                                        onclick={() => {
-                                            tokenEditTarget = element;
-                                        }}
-                                    >
-                                        {elementLabel(element)}
-                                    </button>
-                                {/each}
-                            </nav>
-                        </header>
-                        <div class="h-px shrink-0 bg-border" aria-hidden="true"></div>
-                        <ScrollArea class="min-h-0 flex-1" showCues={false}>
-                            <div class="flex flex-col gap-8 px-5 pt-5 pb-6">
-                                {#each tokenEditSections as section (section.id)}
-                                    <section class="flex flex-col gap-4">
-                                        <div class="flex items-baseline justify-between gap-3">
-                                            {@render sectionHeading(section.label)}
-                                            {#if section.id !== 'other'}
-                                                <button
-                                                    type="button"
-                                                    class="rounded-[var(--radius-sm)] text-xs text-foreground-muted transition-colors [transition-duration:var(--motion-duration-hover)] hover:cursor-[var(--ui-cursor-interactive)] hover:text-foreground focus-visible:shadow-[var(--focus-ring)] focus-visible:outline-none"
-                                                    onclick={() => {
-                                                        void openTokenEditSection(section.id);
-                                                    }}
-                                                >
-                                                    Open in Tokens
-                                                </button>
-                                            {/if}
-                                        </div>
-                                        <div class="flex flex-col gap-5">
-                                            {#each section.rows as row (row.definition.name)}
-                                                <div
-                                                    role="group"
-                                                    aria-label={row.definition.label}
-                                                    class="flex flex-col gap-1.5"
-                                                    onpointerenter={() => {
-                                                        highlightTokenUsage(row.definition.name);
-                                                    }}
-                                                    onpointerleave={() => {
-                                                        highlightTokenUsage(null);
-                                                    }}
-                                                    onfocusin={() => {
-                                                        highlightTokenUsage(row.definition.name);
-                                                    }}
-                                                    onfocusout={() => {
-                                                        highlightTokenUsage(null);
-                                                    }}
-                                                >
-                                                    {@render tokenRow(row)}
-                                                    <Typography.Metadata class="tabular-nums">
-                                                        {tokenUsageLabel(row)}
-                                                    </Typography.Metadata>
-                                                </div>
-                                            {/each}
-                                        </div>
-                                    </section>
-                                {:else}
-                                    <p
-                                        class="m-0 text-[length:var(--font-size-body)] text-foreground-muted"
-                                    >
-                                        No editable tokens on this element. Choose a parent in the
-                                        path above.
-                                    </p>
-                                {/each}
-                            </div>
-                        </ScrollArea>
-                    </div>
-                </aside>
-            {:else}
-                <Button
-                    variant={tokenEditMode ? 'primary' : 'outline'}
-                    size="sm"
-                    class="absolute right-6 bottom-6 z-10 hidden shadow-[var(--elevation-float)] min-[1100px]:inline-flex"
-                    aria-pressed={tokenEditMode}
-                    onclick={() => {
-                    setTokenEditMode(!tokenEditMode);
-                }}
+                                Done
+                            </Button>
+                        </div>
+                    {/if}
+                </div>
+                <div
+                    bind:this={previewFrame}
+                    class={`min-h-0 flex-1 ${tokenEditMode ? 'cursor-crosshair! [&_*]:cursor-crosshair!' : ''}`}
+                    id="theme-preview"
+                    onclickcapture={openTokenEditor}
+                    onpointerdowncapture={suppressTokenEditPointer}
+                    onmousedowncapture={suppressTokenEditPointer}
+                    onpointerovercapture={trackTokenEditHover}
+                    onpointerleave={() => {
+                        tokenEditHover = null;
+                    }}
                 >
-                    <SquareMousePointer size={14} />
-                    Edit tokens
-                </Button>
-            {/if}
+                    {@render dashboardPreview()}
+                </div>
+            </div>
         </div>
     </section>
 
-    {#if previewFrame && tokenEditOutline.length > 0}
-        <ElementOutline container={previewFrame} elements={tokenEditOutline} />
+    {#if tokenEditOpen && tokenEditTarget}
+        <ElementTokenPopover
+            target={tokenEditTarget}
+            name={elementName(tokenEditTarget)}
+            detail={elementDetail(tokenEditTarget)}
+            sections={tokenEditSections}
+            overrides={tokenEditOverrides.length}
+            row={tokenEditRow}
+            onReset={resetTokenEditOverrides}
+            onClose={closeTokenEditor}
+            onParent={tokenEditParent ? selectTokenEditParent : undefined}
+            onHighlight={highlightTokenUsage}
+        />
+    {/if}
+
+    {#if previewFrame && (tokenEditOutline.length > 0 || tokenEditFocus)}
+        <ElementOutline
+            container={previewFrame}
+            elements={tokenEditOutline}
+            focus={tokenEditFocus}
+            focusLabel={tokenEditFocus ? elementChip(tokenEditFocus) : ''}
+            selected={tokenEditOpen}
+        />
     {/if}
 
     <Sheet.Root>
@@ -3602,78 +4222,242 @@
         </Sheet.Content>
     </Sheet.Root>
 
-    <Modal.Root bind:open={publishOpen}>
-        <Modal.Content>
-            <Modal.Header>
-                <Modal.Title>
-                    {ownsPublishSlug ? 'Update published theme' : 'Publish to the theme registry'}
-                </Modal.Title>
-                <Modal.Description>
-                    Anyone can browse, preview, and install published themes. Only this browser can
-                    update or unpublish it.
-                </Modal.Description>
-            </Modal.Header>
-            <Modal.Body class="gap-4">
-                <Input
-                    value={publishName}
-                    oninput={(event) => updatePublishName(event.currentTarget.value)}
-                    label="Name"
-                    placeholder="Midnight Ledger"
-                    maxlength={80}
-                />
-                <Input
-                    value={publishSlug}
-                    oninput={(event) => updatePublishSlug(event.currentTarget.value)}
-                    label="Slug"
-                    placeholder="midnight-ledger"
-                    maxlength={80}
-                    class="font-mono"
-                />
-                <Textarea
-                    bind:value={publishDescription}
-                    label="Description"
-                    placeholder="What makes this theme distinct"
-                    maxlength={500}
-                    autoresize
-                />
-                <Input
-                    bind:value={publisherName}
-                    label="Publisher"
-                    placeholder="Your name or team"
-                    maxlength={80}
-                />
-                {#if publishError}
-                    <p class="m-0 text-sm text-[var(--color-error)]" role="alert">
-                        {publishError}
-                    </p>
-                {/if}
-            </Modal.Body>
-            <Modal.Footer>
-                {#if ownsPublishSlug}
-                    <Button
-                        variant="ghost"
-                        class="text-[var(--color-error)]"
-                        disabled={publishPending}
-                        onclick={unpublishTheme}
+    <ExportDialog
+        bind:open={exportOpen}
+        name={theme.name}
+        baseName={activePresetName}
+        baseSlug={selectedPreset}
+        css={generatedCss}
+        {baseCss}
+        json={generatedJson}
+        savePresetName={savablePreset?.name ?? null}
+        onSavePreset={saveToPreset}
+    />
+
+    <Modal.Root bind:open={tokenPaletteOpen}>
+        <Modal.Content
+            size="xl"
+            showClose={false}
+            aria-label="Search tokens"
+            aria-labelledby={undefined}
+            aria-describedby={undefined}
+            class="fixed top-[calc(var(--sivir-viewport-top)+min(7.5rem,14vh))] flex max-h-[calc(var(--sivir-viewport-height)-min(7.5rem,14vh)-var(--overlay-gutter))] w-[calc(100%-var(--overlay-gutter))] max-w-[41.25rem] translate-y-0 flex-col gap-2.5 overflow-visible rounded-none border-0 bg-transparent! p-0 shadow-none md:top-[calc(var(--sivir-viewport-top)+min(7.5rem,14vh))]"
+            surfaceClass="min-h-0 flex-1 gap-2.5 overflow-visible rounded-none bg-transparent p-0"
+        >
+            <div
+                class="sivir-modal-frame flex max-h-[30rem] min-h-0 shrink flex-col overflow-hidden shadow-[var(--elevation-modal)]"
+            >
+                <div class="sivir-inset-surface flex min-h-0 flex-1 flex-col overflow-hidden">
+                    <div
+                        class="flex h-13.5 shrink-0 items-center gap-3 border-b border-border px-4.5"
                     >
-                        Unpublish
-                    </Button>
-                {/if}
-                <Modal.Close>
-                    Cancel
-                    <Shortcut shortcut="esc" />
-                </Modal.Close>
-                <Button
-                    class="ml-auto"
-                    loading={publishPending}
-                    loadingLabel="Publishing…"
-                    onclick={submitPublish}
-                >
-                    {ownsPublishSlug ? 'Publish update' : 'Publish'}
-                </Button>
-            </Modal.Footer>
+                        <Search
+                            size={16}
+                            strokeWidth={1.75}
+                            class="shrink-0 text-foreground-muted"
+                        />
+                        <input
+                            bind:this={paletteInput}
+                            bind:value={paletteQuery}
+                            class="min-w-0 flex-1 bg-transparent text-[length:calc(var(--font-size-body)*1.1)] text-foreground placeholder:text-foreground-muted/70 focus-visible:outline-none"
+                            placeholder="Search tokens"
+                            aria-label="Search tokens"
+                            role="combobox"
+                            aria-expanded="true"
+                            aria-controls="studio-token-palette-list"
+                            aria-activedescendant={paletteActiveName
+                                ? `palette-${paletteActiveName}`
+                                : undefined}
+                            oninput={() => {
+                                paletteActiveName = paletteRows[0]?.definition.name ?? null;
+                            }}
+                            onkeydown={handlePaletteKeydown}
+                        />
+                        <span
+                            class="font-mono text-[length:var(--font-size-meta)] tabular-nums text-foreground-muted/70"
+                            aria-hidden="true"
+                        >
+                            {paletteRows.length}
+                        </span>
+                    </div>
+                    <div
+                        id="studio-token-palette-list"
+                        role="listbox"
+                        aria-label="Tokens"
+                        class="min-h-0 flex-1 overflow-y-auto overscroll-contain px-2 pt-2 pb-1.5"
+                    >
+                        {#each paletteGroups as group (group.heading)}
+                            <div
+                                role="group"
+                                aria-label={group.heading}
+                                class="flex flex-col pt-0.5"
+                            >
+                                <span class="sivir-menu-label px-2.5 pt-2 pb-1.5">
+                                    {group.heading}
+                                </span>
+                                {#each group.rows as row (row.definition.name)}
+                                    {@const Glyph = paletteGlyph(row)}
+                                    {@const expanded = row.definition.name === paletteRowName}
+                                    <div
+                                        class={[
+                                            'flex flex-col rounded-[var(--radius-lg)] transition-colors [transition-duration:var(--motion-duration-panel)] ease-[var(--ease-out)]',
+                                            expanded && 'bg-foreground/[0.035] dark:bg-foreground/[0.05]'
+                                        ]}
+                                    >
+                                        <button
+                                            id={`palette-${row.definition.name}`}
+                                            type="button"
+                                            role="option"
+                                            tabindex="-1"
+                                            aria-selected={row.definition.name === paletteActiveName}
+                                            aria-expanded={expanded}
+                                            aria-controls={expanded
+                                            ? `palette-editor-${row.definition.name}`
+                                            : undefined}
+                                            class="flex min-h-9.5 w-full items-center gap-3 rounded-[var(--radius-lg)] px-2.5 text-left text-[length:var(--font-size-body)] text-foreground hover:cursor-[var(--ui-cursor-interactive)] aria-selected:bg-foreground/[0.06] dark:aria-selected:bg-foreground/[0.08]"
+                                            onpointermove={() => {
+                                            paletteActiveName = row.definition.name;
+                                        }}
+                                            onclick={() => {
+                                            void togglePaletteRow(row.definition.name);
+                                        }}
+                                        >
+                                            <span
+                                                class="flex size-4 shrink-0 items-center justify-center text-foreground-muted"
+                                                aria-hidden="true"
+                                            >
+                                                {#if row.bucket === 'color'}
+                                                    <span
+                                                        class="size-3.5 rounded-full shadow-[inset_0_0_0_1px_color-mix(in_oklab,var(--color-foreground)_16%,transparent)]"
+                                                        style:background={`var(${row.definition.name})`}
+                                                    ></span>
+                                                {:else if row.definition.group === 'Corners'}
+                                                    <span
+                                                        class="size-4 translate-x-0.5 translate-y-0.5 border-t-[1.5px] border-l-[1.5px] border-current"
+                                                        style:border-top-left-radius={`min(var(${row.definition.name}), 1rem)`}
+                                                    ></span>
+                                                {:else if row.definition.group === 'Shadows'}
+                                                    <span
+                                                        class="size-3 rounded-[var(--radius-sm)] bg-card"
+                                                        style:box-shadow={`var(${row.definition.name})`}
+                                                    ></span>
+                                                {:else}
+                                                    <Glyph size={16} strokeWidth={1.75} />
+                                                {/if}
+                                            </span>
+                                            <span
+                                                class="flex min-w-0 flex-1 items-baseline gap-2.5"
+                                            >
+                                                <span class="shrink-0 font-medium">
+                                                    {row.definition.label}
+                                                </span>
+                                                <span
+                                                    class="truncate font-mono text-[length:var(--font-size-meta)] text-foreground-muted"
+                                                >
+                                                    {row.definition.name}
+                                                </span>
+                                            </span>
+                                            {#if tokenOverride(row) !== ''}
+                                                <span
+                                                    class="size-1.5 shrink-0 rounded-full bg-primary"
+                                                    aria-label="Changed"
+                                                ></span>
+                                            {/if}
+                                            <span
+                                                class="max-w-32 shrink-0 truncate font-mono text-[length:var(--font-size-meta)] tabular-nums text-foreground-muted"
+                                            >
+                                                {row.bucket === 'color'
+                                                ? resolveColorToken(row.definition).hex
+                                                : paletteValue(row.definition.name)}
+                                            </span>
+                                        </button>
+                                        {#if expanded}
+                                            <div
+                                                id={`palette-editor-${row.definition.name}`}
+                                                data-palette-editor
+                                                in:slide={paletteEditorMotion(240)}
+                                                out:slide={paletteEditorMotion(180)}
+                                                onintroend={(event) => {
+                                                event.currentTarget.scrollIntoView({
+                                                    block: 'nearest',
+                                                    behavior: 'smooth'
+                                                });
+                                            }}
+                                            >
+                                                <div
+                                                    class="flex flex-col gap-2 px-2.5 pt-1 pb-2.5"
+                                                    in:fade={paletteEditorMotion(180)}
+                                                    out:fade={paletteEditorMotion(100)}
+                                                >
+                                                    {@render tokenRow(row)}
+                                                    <span
+                                                        class="truncate px-0.5 text-[length:var(--font-size-meta)] text-foreground-muted"
+                                                    >
+                                                        {paletteUsageLabel(row)}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        {/if}
+                                    </div>
+                                {/each}
+                            </div>
+                        {:else}
+                            <p class="m-0 py-8 text-center text-sm text-foreground-muted">
+                                No tokens match “{paletteQuery.trim()}”.
+                            </p>
+                        {/each}
+                    </div>
+                    <div
+                        class="flex h-9 shrink-0 items-center gap-4 border-t border-border px-4.5 text-[length:var(--font-size-meta)] text-foreground-muted"
+                    >
+                        <span class="inline-flex shrink-0 items-center gap-1.5">
+                            <Shortcut shortcut="enter" />
+                            {paletteActiveName !== null && paletteActiveName === paletteRowName
+                                ? 'Close'
+                                : 'Edit'}
+                        </span>
+                        {#if paletteActiveGroup}
+                            <span class="inline-flex shrink-0 items-center gap-1.5">
+                                <Shortcut shortcut="shift+enter" />
+                                Open in {paletteActiveGroup.sectionLabel}
+                            </span>
+                        {/if}
+                        {#if paletteActiveRow && tokenOverride(paletteActiveRow) !== ''}
+                            <span class="inline-flex shrink-0 items-center gap-1.5">
+                                <Shortcut shortcut="cmd+backspace" />
+                                Reset
+                            </span>
+                        {/if}
+                        <span class="ml-auto truncate text-foreground-muted/70 max-md:hidden">
+                            Searches labels, variables, and components
+                        </span>
+                    </div>
+                </div>
+            </div>
         </Modal.Content>
     </Modal.Root>
+
+    <AlertDialog.Root bind:open={resetDialogOpen} orientation="vertical">
+        <AlertDialog.Content>
+            <AlertDialog.Header>
+                <AlertDialog.Title>Reset to {baseTheme.name}?</AlertDialog.Title>
+                <AlertDialog.Description>
+                    Every changed color, type, shape, and motion value returns to the preset. You
+                    can undo this afterwards.
+                </AlertDialog.Description>
+            </AlertDialog.Header>
+            <AlertDialog.Footer>
+                <AlertDialog.Exit>
+                    Keep changes
+                    <Shortcut shortcut="esc" />
+                </AlertDialog.Exit>
+                <AlertDialog.Confirm onclick={confirmReset}>
+                    Reset
+                    <Shortcut shortcut="enter" />
+                </AlertDialog.Confirm>
+            </AlertDialog.Footer>
+        </AlertDialog.Content>
+    </AlertDialog.Root>
 
     <AlertDialog.Root bind:open={presetDialogOpen} orientation="vertical">
         <AlertDialog.Content>

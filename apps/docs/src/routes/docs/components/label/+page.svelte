@@ -10,14 +10,14 @@
     import WithRequired from './examples/with-required.svelte';
     import WithRequiredSrc from './examples/with-required.svelte?raw';
 
-    const installCommand = 'bunx @sivir-ui/svelte add label';
+    const installCommand = 'bunx --package @sivir-ui/svelte sivir add label';
 </script>
 
 <svelte:head>
     <title>Sivir · Label</title>
     <meta
         name="description"
-        content="A theme-aware form label that pairs with any input, fades correctly when the field is disabled."
+        content="A native label element with the label type styles, for naming a form control."
     />
 </svelte:head>
 
@@ -27,7 +27,9 @@
         <div>
             <Typography.H1> Label </Typography.H1>
             <Typography.Text variant="lead" class="mt-2 max-w-2xl">
-                A form label that pairs with any input and dims when the field is disabled.
+                Renders a native label and passes through its attributes. When it follows a disabled
+                control that has the <Typography.InlineCode>peer</Typography.InlineCode> class, it
+                dims to match.
             </Typography.Text>
         </div>
         <DocsPager />
@@ -50,10 +52,13 @@
     <section id="usage" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading"> Usage </Typography.H2>
         <Typography.Text variant="supporting">
-            Import Label and pair it with an input:
+            Set <Typography.InlineCode>for</Typography.InlineCode> to the control's
+            <Typography.InlineCode>id</Typography.InlineCode>. Input and Textarea render their own
+            label when you pass <Typography.InlineCode>label</Typography.InlineCode>, so use Label
+            for custom layouts.
         </Typography.Text>
         <CodeBlock
-            code={`import { Label } from '$lib/sivir/components/label';\nimport { Input } from '$lib/sivir/components/input';\n\n<Label for="email">Email</Label>\n<Input id="email" type="email" />`}
+            code={`import { Label } from '@sivir-ui/svelte/components/label';\nimport { Input } from '@sivir-ui/svelte/components/input';\n\n<Label for="email">Email</Label>\n<Input id="email" type="email" />`}
             lang="svelte"
             copy="overlay"
         />
@@ -63,9 +68,6 @@
     <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
         <div>
             <Typography.H2 class="docs-section-heading"> Examples </Typography.H2>
-            <Typography.Text variant="supporting" class="mt-2">
-                Common usage patterns for Label with form fields.
-            </Typography.Text>
         </div>
 
         <!-- Basic -->

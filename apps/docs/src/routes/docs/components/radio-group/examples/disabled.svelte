@@ -2,7 +2,7 @@
     import * as RadioGroup from '@sivir-ui/svelte/components/radio-group';
 </script>
 
-<RadioGroup.Root disabled name="option">
-    <RadioGroup.Item value="a" label="Option A" />
-    <RadioGroup.Item value="b" label="Option B" />
+<RadioGroup.Root disabled name="billing">
+    <RadioGroup.Item value="monthly" label="Monthly billing" />
+    <RadioGroup.Item value="annual" label="Annual billing" />
 </RadioGroup.Root>

@@ -15,12 +15,15 @@
     const TITLE = 'Color Picker';
     const SLUG = 'color-picker';
 
-    const installCommand = `bunx @sivir-ui/svelte add ${SLUG}`;
+    const installCommand = `bunx --package @sivir-ui/svelte sivir add ${SLUG}`;
 </script>
 
 <svelte:head>
     <title>Sivir · {TITLE}</title>
-    <meta name="description" content="Inline hex color picker with optional presets." />
+    <meta
+        name="description"
+        content="A popover color picker that edits a hex value, with optional preset swatches."
+    />
 </svelte:head>
 
 <div data-docs-page class="flex flex-col gap-10">
@@ -31,8 +34,8 @@
                 {TITLE}
             </Typography.H1>
             <Typography.Text variant="lead" class="mt-2 max-w-2xl">
-                A hex color picker with HSL, RGB, or HSV channel controls and optional preset
-                swatches.
+                The trigger opens a popover with a color area, hue strip, hex field, and channel
+                sliders. Edits come back as a lowercase hex string.
             </Typography.Text>
         </div>
         <DocsPager />
@@ -55,16 +58,28 @@
     <section id="usage" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading"> Usage </Typography.H2>
         <Typography.Text variant="supporting">
-            Compose the Color Picker from its <Typography.InlineCode>Root</Typography.InlineCode>,
-            <Typography.InlineCode>Trigger</Typography.InlineCode>, and
-            <Typography.InlineCode>Content</Typography.InlineCode>
-            parts:
+            Bind <Typography.InlineCode>value</Typography.InlineCode> on Root, or pass
+            <Typography.InlineCode>value</Typography.InlineCode>
+            with
+            <Typography.InlineCode>onValueChange</Typography.InlineCode>.
+            <Typography.InlineCode>format</Typography.InlineCode>
+            picks the slider set:
+            <Typography.InlineCode>hsl</Typography.InlineCode>
+            (default),
+            <Typography.InlineCode>rgb</Typography.InlineCode>, or
+            <Typography.InlineCode>hsv</Typography.InlineCode>.
         </Typography.Text>
         <CodeBlock
-            code={`import * as ColorPicker from '$lib/sivir/components/color-picker';\n\nlet value = $state('#5e6ad2');\n\n<ColorPicker.Root value={value} onValueChange={(v) => (value = v)} format="hsl">\n\t<ColorPicker.Trigger />\n\t<ColorPicker.Content />\n</ColorPicker.Root>`}
+            code={`import * as ColorPicker from '@sivir-ui/svelte/components/color-picker';\n\nlet value = $state('#5e6ad2');\n\n<ColorPicker.Root bind:value format="hsl">\n\t<ColorPicker.Trigger />\n\t<ColorPicker.Content />\n</ColorPicker.Root>`}
             lang="svelte"
             copy="overlay"
         />
+        <Typography.Text variant="supporting">
+            Opening the picker focuses the color area, not the hex field. Arrow keys move the color
+            area and hue strip, and Shift moves them in steps of 10. In browsers that support the
+            EyeDropper API, the pipette button in the hex field picks a color from anywhere on
+            screen.
+        </Typography.Text>
     </section>
 
     <!-- ─── Examples ──────────────────────────────────────────────── -->

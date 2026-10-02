@@ -11,7 +11,7 @@
     import Streaming from './examples/streaming.svelte';
     import StreamingSrc from './examples/streaming.svelte?raw';
 
-    const installCommand = 'bunx @sivir-ui/svelte add markdown';
+    const installCommand = 'bunx --package @sivir-ui/svelte sivir add markdown';
     const usageSnippet = `import { Markdown } from '@sivir-ui/svelte/components/markdown';
 
 const content = [
@@ -31,7 +31,7 @@ const content = [
     <title>Sivir · Markdown</title>
     <meta
         name="description"
-        content="A safe GFM renderer for polished agent prose, tables, task lists, links, and code."
+        content="Renders GitHub-flavored Markdown from model output and shows raw HTML as text."
     />
 </svelte:head>
 
@@ -40,8 +40,9 @@ const content = [
         <div>
             <Typography.H1> Markdown </Typography.H1>
             <Typography.Text variant="lead" class="mt-2 max-w-2xl">
-                Render structured agent output with safe links, useful typography, and first-class
-                code blocks.
+                Fenced code renders in a Sivir code block with syntax highlighting. External links
+                open in a new tab. Links with schemes other than http, https, and mailto render as
+                plain text.
             </Typography.Text>
         </div>
         <DocsPager />
@@ -59,9 +60,11 @@ const content = [
     <section id="usage" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading"> Usage </Typography.H2>
         <Typography.Text variant="supporting">
-            The GFM lexer supports tables, task lists, and strikethrough. Fenced code is rendered
-            with Sivir <Typography.InlineCode>CodeBlock</Typography.InlineCode>, and raw HTML is
-            always displayed as text instead of being injected into the page.
+            Pass the Markdown string as <Typography.InlineCode>content</Typography.InlineCode>.
+            Tables, task lists, and strikethrough are supported. Raw HTML is displayed as text, and
+            images load only from relative URLs; other images show their alt text. Set
+            <Typography.InlineCode>streaming</Typography.InlineCode>
+            while chunks are arriving to show a caret and mark the output busy.
         </Typography.Text>
         <CodeBlock code={usageSnippet} lang="svelte" copy="overlay" />
     </section>
@@ -69,9 +72,6 @@ const content = [
     <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
         <div>
             <Typography.H2 class="docs-section-heading"> Examples </Typography.H2>
-            <Typography.Text variant="supporting" class="mt-2">
-                Show incomplete output honestly and keep untrusted model content inert.
-            </Typography.Text>
         </div>
 
         <div id="streaming" class="scroll-mt-20 flex flex-col gap-3">

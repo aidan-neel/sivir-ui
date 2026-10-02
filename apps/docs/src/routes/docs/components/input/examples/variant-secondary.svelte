@@ -3,5 +3,5 @@
 </script>
 
 <div class="w-full max-w-xs">
-    <Input variant="secondary" label="Secondary" placeholder="Placeholder text" />
+    <Input variant="secondary" label="Display name" placeholder="Ada Lovelace" />
 </div>

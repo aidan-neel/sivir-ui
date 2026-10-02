@@ -24,9 +24,9 @@
     import Single from './examples/single.svelte';
     import SingleSrc from './examples/single.svelte?raw';
 
-    const installCommand = 'bunx @sivir-ui/svelte add code-block';
+    const installCommand = 'bunx --package @sivir-ui/svelte sivir add code-block';
 
-    const usageSnippet = `import { CodeBlock } from '$lib/sivir/components/code-block';
+    const usageSnippet = `import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
 
 <CodeBlock
   value="javascript"
@@ -37,7 +37,7 @@
 />`;
 
     const customThemeSnippet = `import 'highlight.js/styles/github-dark.css';
-import { CodeBlock } from '$lib/sivir/components/code-block';
+import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
 
 <CodeBlock code={code} lang="typescript" theme="custom" />`;
 </script>
@@ -46,7 +46,7 @@ import { CodeBlock } from '$lib/sivir/components/code-block';
     <title>Sivir · Code Block</title>
     <meta
         name="description"
-        content="Code block with syntax-highlighted snippets, a multi-language tab switcher, copy button, and an actions slot. Highlighting via highlight.js."
+        content="A syntax-highlighted code viewer with language tabs and a copy button, built on highlight.js."
     />
 </svelte:head>
 
@@ -56,7 +56,9 @@ import { CodeBlock } from '$lib/sivir/components/code-block';
         <div>
             <Typography.H1> Code Block </Typography.H1>
             <Typography.Text variant="lead" class="mt-2 max-w-2xl">
-                A code viewer with syntax highlighting, a language switcher, and a copy button.
+                Use the shorthand with <Typography.InlineCode>code</Typography.InlineCode> or
+                <Typography.InlineCode>tabs</Typography.InlineCode>, or compose Header, List,
+                Actions, and Content yourself. Copy copies the raw source of the active tab.
             </Typography.Text>
         </div>
         <DocsPager />
@@ -85,20 +87,23 @@ import { CodeBlock } from '$lib/sivir/components/code-block';
     <section id="usage" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading"> Usage </Typography.H2>
         <Typography.Text variant="supporting">
-            Pass a <Typography.InlineCode>tabs</Typography.InlineCode> array for the multi-language
-            form, or <Typography.InlineCode>code</Typography.InlineCode>
-            +
+            Pass <Typography.InlineCode>code</Typography.InlineCode> and
             <Typography.InlineCode>lang</Typography.InlineCode>
-            for a single snippet:
+            for one snippet, or a
+            <Typography.InlineCode>tabs</Typography.InlineCode>
+            array for several. Root's <Typography.InlineCode>value</Typography.InlineCode> picks the
+            open tab by matching each tab's <Typography.InlineCode>value</Typography.InlineCode>,
+            which defaults to its <Typography.InlineCode>lang</Typography.InlineCode>. It is
+            bindable and starts on the first tab.
         </Typography.Text>
         <CodeBlock code={usageSnippet} lang="svelte" copy="overlay" />
         <Typography.Text variant="supporting">
-            The built-in palette is GitHub light in light mode and GitHub dark in dark mode. For any
-            other
+            The default theme colors tokens with GitHub light and GitHub dark, and theme presets set
+            their own palette. To use a
             <Typography.InlineCode>highlight.js</Typography.InlineCode>
-            theme, set
+            theme instead, set
             <Typography.InlineCode>theme="custom"</Typography.InlineCode>
-            and load its stylesheet — the component skips its own token colors:
+            and load its stylesheet. The component then skips its own token colors.
         </Typography.Text>
         <CodeBlock code={customThemeSnippet} lang="svelte" copy="overlay" />
     </section>
@@ -107,9 +112,6 @@ import { CodeBlock } from '$lib/sivir/components/code-block';
     <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
         <div>
             <Typography.H2 class="docs-section-heading"> Examples </Typography.H2>
-            <Typography.Text variant="supporting" class="mt-2">
-                From a single highlighted snippet to fully composed, multi-language blocks.
-            </Typography.Text>
         </div>
 
         <div id="single" class="scroll-mt-20 flex flex-col gap-3">
@@ -170,9 +172,9 @@ import { CodeBlock } from '$lib/sivir/components/code-block';
                 <Typography.InlineCode>theme="custom"</Typography.InlineCode>
                 the block paints no token colors itself, so a stock
                 <Typography.InlineCode>highlight.js</Typography.InlineCode>
-                stylesheet — or your own
+                stylesheet or your own
                 <Typography.InlineCode>hljs-*</Typography.InlineCode>
-                rules, like the One Dark / One Light ones below — takes over.
+                rules take over. This example uses One Dark and One Light rules.
             </Typography.Text>
             <ComponentPreview code={CustomThemeStylesheetSrc}>
                 <CustomThemeStylesheet />
@@ -182,9 +184,11 @@ import { CodeBlock } from '$lib/sivir/components/code-block';
         <div id="custom-theme-variables" class="scroll-mt-20 flex flex-col gap-3">
             <Typography.H3 class="docs-subsection-heading"> Custom theme: variables </Typography.H3>
             <Typography.Text variant="supporting">
-                To keep the built-in palette and only shift its hues, override the
+                To recolor tokens without a stylesheet, set the nine
                 <Typography.InlineCode>--code-block-token-*</Typography.InlineCode>
-                variables on a wrapper. They inherit into the block per mode.
+                variables on a wrapper, then set them again under
+                <Typography.InlineCode>.dark</Typography.InlineCode>
+                for dark mode.
             </Typography.Text>
             <ComponentPreview code={CustomThemeVariablesSrc}>
                 <CustomThemeVariables />

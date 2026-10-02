@@ -3,7 +3,7 @@
     import { untrack } from 'svelte';
     import type { HTMLButtonAttributes } from 'svelte/elements';
     import type { SwitchProps } from '.';
-    import { SwitchSpring } from './switch-spring.svelte';
+    import { SwitchSpring, type SwitchSpringConfig } from './switch-spring.svelte';
 
     let {
         switched = $bindable<boolean | undefined>(undefined),
@@ -46,6 +46,12 @@
         stiffness: 900,
         damping: 42
     };
+    const BASE_DURATION = 280;
+
+    type SwitchMotion = {
+        speed: number;
+        stretch: number;
+    };
 
     const isOn = $derived(checked ?? switched ?? false);
 
@@ -59,9 +65,13 @@
 
     let session: DragSession | null = null;
     let suppressClick = false;
+    let stretchScale = $state(1);
 
     const motionStretch = $derived(
-        Math.min(MOTION_STRETCH_LIMIT, Math.abs(position.velocity) * MOTION_STRETCH)
+        Math.min(
+            MOTION_STRETCH_LIMIT * stretchScale,
+            Math.abs(position.velocity) * MOTION_STRETCH * stretchScale
+        )
     );
     const thumbStretch = $derived(Math.min(TRAVEL, stretch.current + motionStretch));
     const thumbWidth = $derived(THUMB + thumbStretch);
@@ -73,7 +83,7 @@
 
         untrack(() => {
             if (!session) {
-                position.set(target, TOGGLE);
+                animate(position, target, TOGGLE);
             }
         });
     });
@@ -95,16 +105,60 @@
             }
         }
 
-        position.set(next ? 1 : 0, TOGGLE);
+        animate(position, next ? 1 : 0, TOGGLE);
         userOnclick?.(event as MouseEvent);
     }
 
+    function parseDuration(value: string) {
+        const amount = Number.parseFloat(value);
+
+        if (!Number.isFinite(amount)) {
+            return BASE_DURATION;
+        }
+
+        return value.trim().endsWith('ms') ? amount : amount * 1000;
+    }
+
+    function readMotion(): SwitchMotion {
+        if (!element || typeof getComputedStyle !== 'function') {
+            return {
+                speed: 1,
+                stretch: 1
+            };
+        }
+
+        const style = getComputedStyle(element);
+        const duration = parseDuration(style.getPropertyValue('--motion-duration-switch'));
+        const stretchValue = Number.parseFloat(style.getPropertyValue('--motion-switch-stretch'));
+
+        return {
+            speed: duration > 0 ? BASE_DURATION / duration : 0,
+            stretch: Number.isFinite(stretchValue) ? Math.max(0, stretchValue) : 1
+        };
+    }
+
+    function animate(spring: SwitchSpring, target: number, config: SwitchSpringConfig) {
+        const motion = readMotion();
+
+        stretchScale = motion.stretch;
+
+        if (motion.speed === 0) {
+            spring.jump(target);
+            return;
+        }
+
+        spring.set(target, {
+            stiffness: config.stiffness * motion.speed * motion.speed,
+            damping: config.damping * motion.speed
+        });
+    }
+
     function press() {
-        stretch.set(PRESS_STRETCH, PRESS);
+        animate(stretch, PRESS_STRETCH * readMotion().stretch, PRESS);
     }
 
     function release() {
-        stretch.set(0, PRESS);
+        animate(stretch, 0, PRESS);
     }
 
     function rubberBand(raw: number) {
@@ -175,7 +229,7 @@
 
         session = null;
         release();
-        position.set(isOn ? 1 : 0, TOGGLE);
+        animate(position, isOn ? 1 : 0, TOGGLE);
     }
 
     function handleClick(event: MouseEvent) {
@@ -205,7 +259,7 @@
     }
     const thumbClass =
         // token-lint-disable-next-line no-literal-length: switch track and thumb geometry
-        'pointer-events-none absolute top-[3px] left-0 h-[14px] rounded-full bg-[var(--color-on-primary)] shadow-[0_1px_2px_rgb(0_0_0/0.18),0_2px_6px_rgb(0_0_0/0.08),0_0_0_0.5px_rgb(0_0_0/0.06)]';
+        'pointer-events-none absolute top-[3px] left-0 h-[14px] rounded-full bg-[var(--color-on-primary)] transition-[background-color] [transition-duration:var(--motion-duration-hover)] ease-[var(--ease-out)] data-[state=unchecked]:bg-card dark:data-[state=unchecked]:bg-foreground motion-reduce:transition-none shadow-[0_1px_2px_rgb(0_0_0/0.18),0_2px_6px_rgb(0_0_0/0.08),0_0_0_0.5px_rgb(0_0_0/0.06)]';
     const labelClass =
         // token-lint-disable-next-line no-literal-length: label line height matches the track
         'leading-[20px] [font-size:var(--font-size-label)] [font-weight:var(--font-weight-label)] [letter-spacing:var(--tracking-label)] text-foreground';

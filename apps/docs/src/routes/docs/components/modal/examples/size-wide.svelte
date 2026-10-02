@@ -11,8 +11,7 @@
         <Modal.Header>
             <Modal.Title>Import project data</Modal.Title>
             <Modal.Description>
-                Wide modals work well for previews, tables, and other content that benefits from
-                horizontal space.
+                Pick the repositories to copy and the environment to deploy them to.
             </Modal.Description>
         </Modal.Header>
         <Modal.Body>

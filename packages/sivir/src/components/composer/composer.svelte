@@ -115,7 +115,7 @@
         onsubmit={handleSubmit}
         class={cn(
             className,
-            'flex w-full flex-col rounded-[calc(var(--radius-xl)+var(--spacing)*2)] border-[length:var(--border-size)] border-border bg-card text-foreground shadow-[var(--elevation-1)] transition-[border-color,box-shadow] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-out)] motion-reduce:transition-none focus-within:border-border-strong focus-within:shadow-[var(--elevation-float)] data-[state=error]:border-[color-mix(in_srgb,var(--color-error)_70%,transparent)] data-[state=error]:shadow-[0_0_0_calc(var(--border-size)*2)_color-mix(in_srgb,var(--color-error)_25%,transparent),var(--elevation-1)]'
+            'flex w-full flex-col rounded-[calc(var(--radius-xl)+var(--spacing)*2)] border-[length:var(--border-size)] border-border bg-card text-foreground shadow-[var(--elevation-1)] transition-[border-color,box-shadow] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-out)] motion-reduce:transition-none focus-within:border-border-strong focus-within:shadow-[var(--elevation-float)] has-[>[data-ui=attachment-list]:not([hidden])]:flex-row has-[>[data-ui=attachment-list]:not([hidden])]:flex-wrap data-[state=error]:border-[color-mix(in_srgb,var(--color-error)_70%,transparent)] data-[state=error]:shadow-[0_0_0_calc(var(--border-size)*2)_color-mix(in_srgb,var(--color-error)_25%,transparent),var(--elevation-1)]'
         )}
     >
         {@render children?.()}

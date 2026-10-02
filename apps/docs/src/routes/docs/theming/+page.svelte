@@ -9,7 +9,7 @@
   --color-background: #fcfcfd;
   --color-foreground: #101828;
   --radius-lg: 0.55rem;
-    --font-sans: 'DM Sans', sans-serif;
+  --font-sans: 'DM Sans', sans-serif;
 }
 
 .dark {
@@ -18,8 +18,9 @@
   --color-primary: #7aa2ff;
 }`;
 
-    const themeImport = `@import './lib/sivir/ui.css';
-@import './lib/sivir/theme.css';`;
+    const themeImport = `/* src/routes/layout.css */
+@import '../lib/sivir/ui.css';
+@import '../lib/sivir/theme.css';`;
 
     const classExample = '<Button class="w-full rounded-2xl">Continue</Button>';
 
@@ -34,7 +35,8 @@
     const sourceExample = `# after: bunx --package @sivir-ui/svelte sivir add button
 src/lib/sivir/components/button/
 ├── button.svelte
-└── index.ts`;
+├── index.ts
+└── variants.ts`;
 </script>
 
 <svelte:head>
@@ -50,8 +52,9 @@ src/lib/sivir/components/button/
         <div>
             <Typography.H1 class="m-0">Theming</Typography.H1>
             <Typography.Text variant="lead" class="mt-2 max-w-2xl">
-                Components read CSS variables. Change tokens for system-wide look, or override a
-                single component with classes and selectors.
+                Components read color, type, radius, density, motion, and elevation from CSS
+                variables. Change a token to restyle every component, or style one instance with
+                classes and data-ui selectors.
             </Typography.Text>
         </div>
         <DocsPager />
@@ -63,7 +66,7 @@ src/lib/sivir/components/button/
             Package installs use
             <Typography.InlineCode>@sivir-ui/svelte/ui.css</Typography.InlineCode>. CLI installs use
             <Typography.InlineCode>src/lib/sivir/ui.css</Typography.InlineCode>. Both define the
-            same public axes: color, type, radius, and motion.
+            same tokens.
         </Typography.Text>
     </section>
 
@@ -74,18 +77,15 @@ src/lib/sivir/components/button/
             <a class="text-foreground underline underline-offset-2" href={resolve('/studio')}
                 >Studio</a
             >
-            is the visual way to build a theme. Start from a built-in preset and adjust the shared
-            axes — brand, neutral temperature, radius, density, motion, and fonts — plus typography
-            (header size and per-role weights for body, label, button, badge, and description),
-            per-mode foundation colors, and chrome flags (surface, control, and dialog shadows, the
-            traveling highlight, menu and surface paneling, primary stroke, and the interactive
-            cursor). The Tokens tab overrides individual theme variables, per light and dark mode
-            where they differ.
+            builds a theme visually. Start from a built-in preset, then adjust brand color, neutral
+            temperature, radius, density, motion, fonts, header size, per-role font weights,
+            per-mode foundation colors, and chrome flags. The Tokens tab overrides individual theme
+            variables, separately for light and dark mode where they differ.
         </Typography.Text>
         <Typography.Text variant="body" class="m-0 max-w-2xl">
-            Copy the generated <Typography.InlineCode>theme.css</Typography.InlineCode> to use the
-            theme in your app, or copy the theme JSON to share it. The Studio keeps your draft in
-            local storage between visits.
+            Export the theme as <Typography.InlineCode>theme.css</Typography.InlineCode> for your
+            app, or as JSON to load it again later. The Studio keeps your draft in local storage
+            between visits.
         </Typography.Text>
         <Typography.Text variant="body" class="m-0 max-w-2xl">
             Publish a draft to share it on the
@@ -178,12 +178,13 @@ src/lib/sivir/components/button/
     <section id="built-in-presets" class="scroll-mt-20 flex flex-col gap-5">
         <Typography.H2 class="docs-section-heading">Built-in presets</Typography.H2>
         <Typography.Text variant="body" class="m-0 max-w-2xl">
-            Five presets ship with Sivir: <Typography.InlineCode>default</Typography.InlineCode>,
+            Six presets ship with Sivir: <Typography.InlineCode>default</Typography.InlineCode>,
             <Typography.InlineCode>magic</Typography.InlineCode>,
-            <Typography.InlineCode>bitsy</Typography.InlineCode>,
-            <Typography.InlineCode>open</Typography.InlineCode>, and
-            <Typography.InlineCode>functional</Typography.InlineCode>. Preview them live on the
-            <a class="text-foreground underline underline-offset-2" href={resolve('/themes')}
+            <Typography.InlineCode>profitable</Typography.InlineCode>,
+            <Typography.InlineCode>raven</Typography.InlineCode>,
+            <Typography.InlineCode>clawd</Typography.InlineCode>, and
+            <Typography.InlineCode>inspiration</Typography.InlineCode>. Preview them live on the
+            <a class="text-foreground underline underline-offset-2" href={resolve("/themes")}
                 >themes page</a
             >, where you can copy each preset’s CSS or JSON.
         </Typography.Text>
@@ -192,7 +193,7 @@ src/lib/sivir/components/button/
             <Typography.InlineCode>theme.css</Typography.InlineCode>:
         </Typography.Text>
         <CodeBlock
-            code="bunx --package @sivir-ui/svelte sivir add theme open"
+            code="bunx --package @sivir-ui/svelte sivir add theme raven"
             lang="shell"
             copy="overlay"
         />
@@ -202,8 +203,10 @@ src/lib/sivir/components/button/
         <CodeBlock code={themeImport} lang="css" copy="overlay" />
         <Typography.Text variant="body" class="m-0 max-w-2xl">
             <Typography.InlineCode>sivir list</Typography.InlineCode>
-            shows available built-in theme slugs. The same command installs community themes
-            published from the Studio; pass the slug shown on the themes page.
+            prints the built-in theme slugs.
+            <Typography.InlineCode>sivir add theme</Typography.InlineCode>
+            also installs community themes published from the Studio; pass the slug shown on the
+            themes page.
         </Typography.Text>
     </section>
 
@@ -211,50 +214,59 @@ src/lib/sivir/components/button/
         <Typography.H2 class="docs-section-heading">Dark mode</Typography.H2>
         <Typography.Text variant="body" class="m-0 max-w-2xl">
             Toggle a <Typography.InlineCode>.dark</Typography.InlineCode> class on
-            <Typography.InlineCode>&lt;html&gt;</Typography.InlineCode>. Components do not manage
-            the class for you.
+            <Typography.InlineCode>&lt;html&gt;</Typography.InlineCode>. Sivir reads the class but
+            does not set it.
         </Typography.Text>
     </section>
 
     <section id="theme-json" class="scroll-mt-20 flex flex-col gap-5">
         <Typography.H2 class="docs-section-heading">Theme JSON</Typography.H2>
         <Typography.Text variant="body" class="m-0 max-w-2xl">
-            Theme JSON (version 4) captures a theme as data, so the Studio, the CLI, and the theme
-            registry all speak the same format. Beyond the shared axes, theme JSON accepts per-mode
-            surfaces in <Typography.InlineCode>foundation.light</Typography.InlineCode>
-            /
-            <Typography.InlineCode>foundation.dark</Typography.InlineCode>
-            (<Typography.InlineCode>base</Typography.InlineCode>,
+            Theme JSON (version 4) stores a theme as data. The Studio, the CLI, and the theme
+            registry all read this format. Per-mode surface colors go in
+            <Typography.InlineCode>foundation.light</Typography.InlineCode>
+            and
+            <Typography.InlineCode>foundation.dark</Typography.InlineCode>:
+            <Typography.InlineCode>base</Typography.InlineCode>,
             <Typography.InlineCode>border</Typography.InlineCode>,
             <Typography.InlineCode>background</Typography.InlineCode>,
             <Typography.InlineCode>secondary</Typography.InlineCode>,
             <Typography.InlineCode>foreground</Typography.InlineCode>,
             <Typography.InlineCode>foregroundMuted</Typography.InlineCode>,
-            <Typography.InlineCode>onPrimary</Typography.InlineCode>), typography under
+            <Typography.InlineCode>onPrimary</Typography.InlineCode>, and
+            <Typography.InlineCode>buttonForeground</Typography.InlineCode>.
             <Typography.InlineCode>typography</Typography.InlineCode>
-            (<Typography.InlineCode>headerSize</Typography.InlineCode>,
+            sets
+            <Typography.InlineCode>headerSize</Typography.InlineCode>,
             <Typography.InlineCode>headerWeight</Typography.InlineCode>, and
             <Typography.InlineCode>roleWeights</Typography.InlineCode>
-            for body, label, button, badge, and description), raw token overrides under
-            <Typography.InlineCode>tokens.shared</Typography.InlineCode>
-            /
-            <Typography.InlineCode>tokens.light</Typography.InlineCode>
-            /
+            for body, label, button, badge, and description.
+            <Typography.InlineCode>tokens.shared</Typography.InlineCode>,
+            <Typography.InlineCode>tokens.light</Typography.InlineCode>, and
             <Typography.InlineCode>tokens.dark</Typography.InlineCode>
-            (for example per-mode primary colors overriding
-            <Typography.InlineCode>--color-primary</Typography.InlineCode>), and chrome flags under
-            <Typography.InlineCode>chrome</Typography.InlineCode>:
+            override raw variables, such as a per-mode
+            <Typography.InlineCode>--color-primary</Typography.InlineCode>.
+            <Typography.InlineCode>chrome</Typography.InlineCode>
+            holds the flags.
+            <Typography.InlineCode>shadows: false</Typography.InlineCode>
+            removes every shadow;
             <Typography.InlineCode>surfaceShadows</Typography.InlineCode>,
-            <Typography.InlineCode>controlShadows</Typography.InlineCode>,
-            <Typography.InlineCode>dialogShadows</Typography.InlineCode>,
+            <Typography.InlineCode>controlShadows</Typography.InlineCode>, and
+            <Typography.InlineCode>dialogShadows</Typography.InlineCode>
+            turn off one group.
             <Typography.InlineCode>travelingHighlight: false</Typography.InlineCode>
-            (item fill stays, the slide does not),
+            keeps the item fill and drops the slide.
+            <Typography.InlineCode>fancySwap: false</Typography.InlineCode>
+            makes icon and label swaps a plain crossfade.
             <Typography.InlineCode>menuPaneling: false</Typography.InlineCode>
-            (menus become a plain 1px border with the shadow, no inset frame),
+            gives menus a plain 1px border with no inset frame.
             <Typography.InlineCode>surfacePaneling: false</Typography.InlineCode>
-            (modals, sheets, popovers, and cards become one continuous container),
-            <Typography.InlineCode>primaryStroke</Typography.InlineCode>, and
-            <Typography.InlineCode>interactiveCursor</Typography.InlineCode>. Setting
+            makes modals, sheets, popovers, cards, and code blocks one continuous container.
+            <Typography.InlineCode>primaryStroke</Typography.InlineCode>
+            adds an inset stroke to primary buttons, and
+            <Typography.InlineCode>interactiveCursor</Typography.InlineCode>
+            is <Typography.InlineCode>'default'</Typography.InlineCode> or
+            <Typography.InlineCode>'pointer'</Typography.InlineCode>. Setting
             <Typography.InlineCode>motion: "none"</Typography.InlineCode>
             disables every animation, including dialogs, menus, and the traveling highlight.
         </Typography.Text>
@@ -275,8 +287,8 @@ src/lib/sivir/components/button/
             Components render <Typography.InlineCode>data-ui</Typography.InlineCode> (and often
             <Typography.InlineCode>data-variant</Typography.InlineCode>
             /
-            <Typography.InlineCode>data-size</Typography.InlineCode>). Scope CSS to a family without
-            forking files.
+            <Typography.InlineCode>data-size</Typography.InlineCode>). Use them to style every
+            instance of a component without editing its source.
         </Typography.Text>
         <CodeBlock code={dataUiExample} lang="css" copy="overlay" />
     </section>
@@ -286,7 +298,7 @@ src/lib/sivir/components/button/
         <Typography.Text variant="body" class="m-0 max-w-2xl">
             With the CLI path, files live under
             <Typography.InlineCode>src/lib/sivir/components/&lt;name&gt;/</Typography.InlineCode>.
-            Edit them when you need behavior changes, not just style.
+            Edit them to change behavior or markup that tokens and classes cannot reach.
         </Typography.Text>
         <CodeBlock code={sourceExample} lang="shell" copy="overlay" />
     </section>

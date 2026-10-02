@@ -11,7 +11,7 @@
 
 <DropdownMenu.Root>
     <DropdownMenu.Trigger variant="outline" size="md">
-        My Account
+        My account
         <ChevronDown size={16} class="text-foreground-muted" />
     </DropdownMenu.Trigger>
     <DropdownMenu.Content class="min-w-[16rem]">

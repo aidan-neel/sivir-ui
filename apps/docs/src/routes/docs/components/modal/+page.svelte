@@ -18,14 +18,14 @@
     import WithSelect from './examples/with-select.svelte';
     import WithSelectSrc from './examples/with-select.svelte?raw';
 
-    const installCommand = 'bunx @sivir-ui/svelte add modal';
+    const installCommand = 'bunx --package @sivir-ui/svelte sivir add modal';
 </script>
 
 <svelte:head>
     <title>Sivir · Modal</title>
     <meta
         name="description"
-        content="The primitive overlay shared by Dialog, AlertDialog, and Sheet."
+        content="A centered dialog with a title, body, and footer actions. Alert Dialog is built on it."
     />
 </svelte:head>
 
@@ -35,7 +35,8 @@
         <div>
             <Typography.H1> Modal </Typography.H1>
             <Typography.Text variant="lead" class="mt-2 max-w-2xl">
-                A low-level overlay primitive for building custom dialog surfaces.
+                Opens over the page, traps focus, and closes on Escape or an outside click. Modals
+                can nest, and Escape closes only the top one.
             </Typography.Text>
         </div>
         <DocsPager />
@@ -58,10 +59,16 @@
     <section id="usage" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading"> Usage </Typography.H2>
         <Typography.Text variant="supporting">
-            Import Modal and use it in your component:
+            Bind <Typography.InlineCode>open</Typography.InlineCode> to control the modal from code.
+            <Typography.InlineCode>Modal.Close</Typography.InlineCode>
+            and
+            <Typography.InlineCode>Modal.Confirm</Typography.InlineCode>
+            both close it, and a
+            <Typography.InlineCode>Shortcut</Typography.InlineCode>
+            inside either one clicks that button when its key is pressed.
         </Typography.Text>
         <CodeBlock
-            code={`import * as Modal from '$lib/sivir/components/modal';\nimport Shortcut from '$lib/sivir/components/shortcut';\n\n<Modal.Root open={isOpen} orientation="horizontal">\n  <Modal.Trigger>Open</Modal.Trigger>\n  <Modal.Content>\n    <Modal.Header>\n      <Modal.Title>Title</Modal.Title>\n    </Modal.Header>\n    <Modal.Footer>\n      <Modal.Close>Cancel <Shortcut shortcut="esc" /></Modal.Close>\n      <Modal.Confirm>Save <Shortcut shortcut="enter" /></Modal.Confirm>\n    </Modal.Footer>\n  </Modal.Content>\n</Modal.Root>`}
+            code={`import * as Modal from '@sivir-ui/svelte/components/modal';\nimport Shortcut from '@sivir-ui/svelte/components/shortcut';\n\nlet open = $state(false);\n\n<Modal.Root bind:open>\n  <Modal.Trigger>Rename project</Modal.Trigger>\n  <Modal.Content>\n    <Modal.Header>\n      <Modal.Title>Rename project</Modal.Title>\n      <Modal.Description>The new name appears in URLs and the sidebar.</Modal.Description>\n    </Modal.Header>\n    <Modal.Footer>\n      <Modal.Close>Cancel <Shortcut shortcut="esc" /></Modal.Close>\n      <Modal.Confirm>Save <Shortcut shortcut="enter" /></Modal.Confirm>\n    </Modal.Footer>\n  </Modal.Content>\n</Modal.Root>`}
             lang="svelte"
             copy="overlay"
         />
@@ -71,9 +78,6 @@
     <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
         <div>
             <Typography.H2 class="docs-section-heading"> Examples </Typography.H2>
-            <Typography.Text variant="supporting" class="mt-2">
-                Modal with various structures.
-            </Typography.Text>
         </div>
 
         <div id="basic" class="scroll-mt-20 flex flex-col gap-3">
@@ -93,8 +97,7 @@
         <div id="with-select" class="scroll-mt-20 flex flex-col gap-3">
             <Typography.H3 class="docs-subsection-heading"> With select </Typography.H3>
             <Typography.Text variant="supporting">
-                A Select inside a dialog keeps its own layer: Escape closes the menu first and only
-                then the dialog.
+                Escape closes an open Select first. Press it again to close the modal.
             </Typography.Text>
             <ComponentPreview code={WithSelectSrc}>
                 <WithSelect />

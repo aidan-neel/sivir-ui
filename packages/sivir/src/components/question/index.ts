@@ -110,6 +110,7 @@ export type QuestionActionProps = {
 
 export type QuestionSubmitProps = {
     label?: string;
+    /** Accessible name while submitting. The button shows only a spinner. */
     loadingLabel?: string;
     children?: Snippet;
     element?: HTMLButtonElement | HTMLAnchorElement;

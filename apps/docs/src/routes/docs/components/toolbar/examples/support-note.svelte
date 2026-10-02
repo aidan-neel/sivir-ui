@@ -11,7 +11,7 @@
     <div class="border-b border-border px-3 py-2 text-sm text-foreground-muted">
         Replying to Nora about her billing question
     </div>
-    <Textarea aria-label="Support reply" placeholder="Write a helpful response..." autoresize>
+    <Textarea aria-label="Support reply" placeholder="Reply to Nora..." autoresize>
         <Toolbar aria-label="Support reply actions">
             <div class="flex items-center gap-1">
                 <Button

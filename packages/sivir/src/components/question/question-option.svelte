@@ -34,10 +34,10 @@
         class={cn(
             className,
             isDisabled && 'cursor-not-allowed opacity-[var(--opacity-disabled)]',
-            'group relative flex min-h-12 cursor-[var(--ui-cursor-interactive)] items-start gap-3 rounded-[var(--radius-md)] border-[length:var(--border-size)] px-3 py-2.5 text-start transition-[background-color,border-color,box-shadow] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-press)] motion-reduce:transition-none has-[:focus-visible]:shadow-[var(--focus-ring)]',
+            'group relative flex cursor-[var(--ui-cursor-interactive)] items-center gap-3 rounded-[var(--radius-md)] px-3 py-2 text-start transition-[background-color,box-shadow] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-press)] [counter-increment:question-option] motion-reduce:transition-none has-[:focus-visible]:shadow-[var(--focus-ring)]',
             selected
-                ? 'border-primary/60 bg-[color-mix(in_srgb,var(--color-primary)_8%,var(--color-card))]'
-                : 'border-transparent bg-transparent [&:not([data-disabled]):hover]:border-border [&:not([data-disabled]):hover]:bg-secondary'
+                ? 'bg-[color-mix(in_srgb,var(--color-primary)_10%,transparent)] shadow-[inset_0_0_0_var(--border-size)_color-mix(in_srgb,var(--color-primary)_45%,transparent)]'
+                : 'bg-[color-mix(in_srgb,var(--color-foreground)_4%,transparent)] [&:not([data-disabled]):hover]:bg-[color-mix(in_srgb,var(--color-foreground)_7%,transparent)]'
         )}
     >
         <input
@@ -55,34 +55,32 @@
             onchange={handleChange}
             class="peer sr-only"
         />
-        <span
-            class={cn(
-                'mt-0.5 grid size-4 shrink-0 place-items-center border-[length:var(--border-size)] transition-[background-color,border-color] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-press)] motion-reduce:transition-none',
-                context.type === 'multiple' ? 'rounded-[var(--radius-sm)]' : 'rounded-full',
-                selected ? 'border-primary bg-primary' : 'border-border bg-background'
-            )}
-            aria-hidden="true"
-        >
-            {#if context.type === 'multiple'}
-                <Check
-                    size={11}
-                    strokeWidth={2.5}
-                    class={cn(
-                        'text-[var(--color-on-primary)] transition-[opacity,scale,filter] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-press)] motion-reduce:transition-none',
-                        // token-lint-disable-next-line no-literal-length: crossfade blur is part of the swap motion
-                        selected ? 'scale-100 opacity-100 blur-[0px]' : 'scale-[0.25] opacity-0 blur-[2px]'
-                    )}
-                />
-            {:else}
+        {#if context.type === 'multiple'}
+            <span
+                class="flex h-[1lh] items-center self-start [font-size:var(--font-size-label)] leading-snug"
+                aria-hidden="true"
+            >
                 <span
                     class={cn(
-                        'size-1.5 rounded-full bg-[var(--color-on-primary)] transition-[opacity,scale,filter] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-press)] motion-reduce:transition-none',
-                        // token-lint-disable-next-line no-literal-length: crossfade blur is part of the swap motion
-                        selected ? 'scale-100 opacity-100 blur-[0px]' : 'scale-[0.25] opacity-0 blur-[2px]'
+                        'grid size-4 shrink-0 place-items-center rounded-[var(--radius-sm)] border-[length:var(--border-size)] transition-[background-color,border-color] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-press)] motion-reduce:transition-none',
+                        selected
+                            ? 'border-primary bg-primary'
+                            : 'border-border-strong bg-[var(--color-field)]'
                     )}
-                ></span>
-            {/if}
-        </span>
+                >
+                    <Check
+                        size={11}
+                        strokeWidth={2.5}
+                        class={cn(
+                            'text-[var(--color-on-primary)] transition-[opacity,scale,filter] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-press)] motion-reduce:transition-none',
+                            selected
+                                ? 'scale-100 opacity-100 blur-[0]'
+                                : 'scale-[0.25] opacity-0 blur-[var(--motion-swap-blur)]'
+                        )}
+                    />
+                </span>
+            </span>
+        {/if}
         <span class="min-w-0 flex-1">
             <span
                 class="block [font-size:var(--font-size-label)] [font-weight:var(--font-weight-label)] [letter-spacing:var(--tracking-label)] leading-snug text-foreground"
@@ -91,11 +89,18 @@
             </span>
             {#if description}
                 <span
-                    class="mt-0.5 block [font-size:var(--font-size-body)] [font-weight:var(--font-weight-body)] [letter-spacing:var(--tracking-body)] leading-snug text-foreground-muted"
+                    class="mt-0.5 block [font-size:var(--font-size-label)] [font-weight:var(--font-weight-body)] [letter-spacing:var(--tracking-body)] leading-snug text-foreground-muted"
                 >
                     {description}
                 </span>
             {/if}
         </span>
+        <kbd
+            aria-hidden="true"
+            class={cn(
+                'hidden min-h-4 min-w-4 shrink-0 select-none items-center justify-center rounded-[var(--radius-sm)] border-[length:var(--border-size)] px-1 py-0.5 font-sans text-[length:var(--font-size-meta)] font-medium leading-none tabular-nums transition-[border-color,color] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-press)] before:content-[counter(question-option)] motion-reduce:transition-none sm:inline-flex',
+                selected ? 'border-primary/50 text-primary' : 'border-border bg-card text-foreground-muted'
+            )}
+        ></kbd>
     </label>
 {/if}

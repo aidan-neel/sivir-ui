@@ -21,7 +21,7 @@
         <Progress value={val} />
     </div>
     <div class="flex flex-col gap-2">
-        <span class="text-[0.78rem] text-foreground-muted">Indeterminate</span>
+        <span class="text-[0.78rem] text-foreground-muted">Processing…</span>
         <Progress indeterminate />
     </div>
 </div>

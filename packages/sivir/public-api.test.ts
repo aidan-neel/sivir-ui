@@ -67,7 +67,18 @@ const NAMESPACED = {
     collapsible: ['Root', 'Trigger', 'Content'],
     'color-picker': ['Root', 'Trigger', 'Content'],
     combobox: ['Root', 'Content', 'Trigger', 'Results', 'Item', 'Label'],
-    command: ['Root', 'Content', 'Trigger', 'Separator', 'Results', 'Search', 'Item', 'Group'],
+    command: [
+        'Root',
+        'Content',
+        'Trigger',
+        'Separator',
+        'Results',
+        'Search',
+        'Item',
+        'Group',
+        'Header',
+        'Footer'
+    ],
     conversation: ['Root', 'Content', 'Empty', 'ScrollButton'],
     'context-menu': [
         'Root',

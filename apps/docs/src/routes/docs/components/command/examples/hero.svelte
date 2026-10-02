@@ -24,13 +24,6 @@
             <Shortcut shortcut="cmd+K" class="shrink-0" />
         </Command.Trigger>
         <Command.Content>
-            <Command.Header>
-                <span>Command</span>
-                <span class="ml-auto flex items-center gap-1.5">
-                    <Shortcut shortcut="esc" />
-                    close
-                </span>
-            </Command.Header>
             <Command.Search placeholder="Type a command or search…" />
             <Command.Results>
                 <Command.Group heading="Jump to">
@@ -71,6 +64,20 @@
                     </Command.Item>
                 </Command.Group>
             </Command.Results>
+            <Command.Footer class="max-sm:hidden">
+                <span class="flex items-center gap-1.5">
+                    <Shortcut>↑↓</Shortcut>
+                    navigate
+                </span>
+                <span class="flex items-center gap-1.5">
+                    <Shortcut shortcut="enter" />
+                    open
+                </span>
+                <span class="ml-auto flex items-center gap-1.5">
+                    <Shortcut shortcut="esc" />
+                    close
+                </span>
+            </Command.Footer>
         </Command.Content>
     </Command.Root>
 </div>

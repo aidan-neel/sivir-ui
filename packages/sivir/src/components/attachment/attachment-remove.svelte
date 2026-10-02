@@ -59,7 +59,7 @@
         onclick={handleClick}
         class={cn(
             className,
-            "relative row-span-2 row-start-1 size-7 min-w-7 shrink-0 rounded-full text-foreground-muted after:absolute after:-inset-1 after:content-[''] hover:text-foreground"
+            "relative row-span-2 row-start-1 size-7 min-w-7 shrink-0 rounded-full text-foreground-muted after:absolute after:-inset-1 after:content-[''] hover:text-foreground in-data-[ui=composer-form]:size-5 in-data-[ui=composer-form]:min-w-5 in-data-[ui=composer-form]:[&_svg]:size-3"
         )}
     >
         <X size={14} strokeWidth={2} aria-hidden="true" />

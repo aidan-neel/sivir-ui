@@ -4,7 +4,9 @@
 
 <div class="w-full max-w-md">
     <Alert.Root variant="info">
-        <Alert.Title>Info</Alert.Title>
-        <Alert.Description>This is a info alert with a title and description.</Alert.Description>
+        <Alert.Title>Read-only access</Alert.Title>
+        <Alert.Description
+            >You can view this project but not change its settings.</Alert.Description
+        >
     </Alert.Root>
 </div>

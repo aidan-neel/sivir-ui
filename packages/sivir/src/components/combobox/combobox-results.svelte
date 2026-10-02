@@ -14,12 +14,28 @@
     let highlightStyle = $state('opacity: 0');
     let highlightReady = $state(false);
     let frame = 0;
+    let traveling = true;
+    let markedElement: HTMLElement | undefined;
+
+    function markItem(element: HTMLElement | undefined) {
+        if (markedElement === element) {
+            return;
+        }
+        markedElement?.removeAttribute('data-item-highlighted');
+        markedElement = element;
+        markedElement?.setAttribute('data-item-highlighted', 'true');
+    }
 
     function measureHighlight() {
         frame = 0;
         const activeElement = resultsElement?.querySelector<HTMLElement>(
             '[data-collection-item][data-collection-active="true"]'
         );
+        if (!traveling) {
+            highlightStyle = 'opacity: 0';
+            markItem(activeElement && !activeElement.hidden ? activeElement : undefined);
+            return;
+        }
         if (!resultsElement || !activeElement || activeElement.hidden) {
             highlightStyle = 'opacity: 0';
             return;
@@ -27,16 +43,17 @@
 
         const resultsBounds = resultsElement.getBoundingClientRect();
         const itemBounds = activeElement.getBoundingClientRect();
-        const x = itemBounds.left - resultsBounds.left - resultsElement.clientLeft;
+        const scale =
+            resultsElement.offsetWidth > 0 ? resultsBounds.width / resultsElement.offsetWidth : 1;
+        const x = (itemBounds.left - resultsBounds.left) / scale - resultsElement.clientLeft;
         const y =
-            itemBounds.top -
-            resultsBounds.top -
+            (itemBounds.top - resultsBounds.top) / scale -
             resultsElement.clientTop +
             resultsElement.scrollTop;
 
         highlightStyle = [
-            `width: ${itemBounds.width}px`,
-            `height: ${itemBounds.height}px`,
+            `width: ${itemBounds.width / scale}px`,
+            `height: ${itemBounds.height / scale}px`,
             `transform: translate3d(${x}px, ${y}px, 0)`,
             'opacity: 1'
         ].join('; ');
@@ -83,6 +100,11 @@
             return;
         }
 
+        traveling =
+            getComputedStyle(element).getPropertyValue('--sivir-traveling-highlight').trim() !==
+            'none';
+        scheduleMeasure();
+
         const observer = new ResizeObserver(scheduleMeasure);
         observer.observe(element);
         window.addEventListener('resize', scheduleMeasure);
@@ -96,6 +118,7 @@
             cancelAnimationFrame(readyFrame);
             observer.disconnect();
             window.removeEventListener('resize', scheduleMeasure);
+            markItem(undefined);
         };
     });
 </script>

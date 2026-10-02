@@ -1,9 +1,9 @@
 <script lang="ts">
-    import { getCssDuration } from '@sivir-ui/svelte/transition';
+    import { getCssDuration, panelIn, panelOut } from '@sivir-ui/svelte/transition';
     import { cn } from '@sivir-ui/svelte/utils';
     import { tick, untrack } from 'svelte';
-    import { flip } from 'svelte/animate';
-    import { cubicIn, cubicOut } from 'svelte/easing';
+    import type { AnimationConfig } from 'svelte/animate';
+    import { cubicOut } from 'svelte/easing';
     import type { TransitionConfig } from 'svelte/transition';
     import type { AttachmentListProps } from '.';
     import Item from './attachment-item.svelte';
@@ -13,6 +13,20 @@
         height: number;
         paddingTop: string;
         paddingBottom: string;
+        marginTop: string;
+        marginBottom: string;
+    };
+
+    type Rects = {
+        from: DOMRect;
+        to: DOMRect;
+    };
+
+    type Placement = {
+        left: number;
+        top: number;
+        width: number;
+        height: number;
     };
 
     let {
@@ -24,23 +38,65 @@
     }: AttachmentListProps = $props();
 
     const context = getAttachmentContext();
-    const collapsedBox: Box = {
-        height: 0,
-        paddingTop: '0px',
-        paddingBottom: '0px'
-    };
+    const layoutEasing = 'cubic-bezier(0.33, 1, 0.68, 1)';
 
     let list = $state<HTMLUListElement>();
     let resize: Animation | undefined;
     let empty = $state(untrack(() => context.files.length === 0));
+    let previous = untrack(() => context.files);
+    let origin: DOMRect | undefined;
+    let layoutDuration = 0;
+    let placements = new WeakMap<Element, Placement>();
 
-    function duration(node: Element) {
-        return getCssDuration(node, '--motion-duration-panel', 180) * 1.25;
+    function rendered(element: Element) {
+        if (element.getClientRects().length === 0) {
+            return false;
+        }
+
+        const { position } = getComputedStyle(element);
+
+        return position !== 'absolute' && position !== 'fixed';
+    }
+
+    function siblingGap(node: HTMLElement) {
+        const parent = node.parentElement;
+
+        if (!parent) {
+            return 0;
+        }
+
+        const style = getComputedStyle(parent);
+        const column = style.display.includes('flex') && style.flexDirection.startsWith('column');
+        const stacked = style.display.includes('grid') && !style.gridTemplateColumns.includes(' ');
+
+        if (!column && !stacked) {
+            return 0;
+        }
+
+        return Number.parseFloat(style.rowGap) || 0;
+    }
+
+    function collapsedBox(node: HTMLElement): Box {
+        const siblings = Array.from(node.parentElement?.children ?? []).filter((child) => {
+            return child !== node && rendered(child);
+        });
+        const leading = siblings.some((sibling) => {
+            return node.compareDocumentPosition(sibling) & Node.DOCUMENT_POSITION_PRECEDING;
+        });
+        const gap = siblings.length > 0 ? siblingGap(node) : 0;
+
+        return {
+            height: 0,
+            paddingTop: '0px',
+            paddingBottom: '0px',
+            marginTop: leading ? `${-gap}px` : '0px',
+            marginBottom: leading ? '0px' : `${-gap}px`
+        };
     }
 
     function measure(node: HTMLElement): Box {
         if (node.hidden) {
-            return collapsedBox;
+            return collapsedBox(node);
         }
 
         const style = getComputedStyle(node);
@@ -48,8 +104,31 @@
         return {
             height: node.getBoundingClientRect().height,
             paddingTop: style.paddingTop,
-            paddingBottom: style.paddingBottom
+            paddingBottom: style.paddingBottom,
+            marginTop: style.marginTop,
+            marginBottom: style.marginBottom
         };
+    }
+
+    function place(node: HTMLElement, box: DOMRect) {
+        const next = new WeakMap<Element, Placement>();
+
+        for (const child of Array.from(node.children)) {
+            if (!(child instanceof HTMLElement)) {
+                continue;
+            }
+
+            const rect = child.getBoundingClientRect();
+
+            next.set(child, {
+                left: rect.left - box.left - node.clientLeft,
+                top: rect.top - box.top - node.clientTop,
+                width: child.offsetWidth,
+                height: child.offsetHeight
+            });
+        }
+
+        return next;
     }
 
     function settle(node: HTMLElement) {
@@ -62,13 +141,53 @@
         }
     }
 
+    function flowsInline(node: HTMLElement) {
+        const parent = node.parentElement;
+
+        if (!parent?.matches('[data-ui="composer-form"]')) {
+            return false;
+        }
+
+        const style = getComputedStyle(parent);
+
+        return style.display.includes('flex') && style.flexDirection.startsWith('row');
+    }
+
+    function holdUntilEmpty(node: HTMLElement) {
+        const hold = node.animate([], {
+            duration: layoutDuration
+        });
+
+        resize = hold;
+        hold.finished
+            .then(() => {
+                if (resize === hold) {
+                    settle(node);
+                }
+            })
+            .catch(() => undefined);
+    }
+
     function animateHeight(node: HTMLElement, from: Box, collapsing: boolean) {
         resize?.cancel();
 
-        const to = collapsing ? collapsedBox : measure(node);
-        const length = duration(node);
+        if (layoutDuration === 0 || typeof node.animate !== 'function') {
+            settle(node);
+            return;
+        }
 
-        if (from.height === to.height || length === 0 || typeof node.animate !== 'function') {
+        if (flowsInline(node)) {
+            if (collapsing) {
+                holdUntilEmpty(node);
+            } else {
+                settle(node);
+            }
+            return;
+        }
+
+        const to = collapsing ? collapsedBox(node) : measure(node);
+
+        if (from.height === to.height) {
             settle(node);
             return;
         }
@@ -81,17 +200,21 @@
                 {
                     height: `${from.height}px`,
                     paddingTop: from.paddingTop,
-                    paddingBottom: from.paddingBottom
+                    paddingBottom: from.paddingBottom,
+                    marginTop: from.marginTop,
+                    marginBottom: from.marginBottom
                 },
                 {
                     height: `${to.height}px`,
                     paddingTop: to.paddingTop,
-                    paddingBottom: to.paddingBottom
+                    paddingBottom: to.paddingBottom,
+                    marginTop: to.marginTop,
+                    marginBottom: to.marginBottom
                 }
             ],
             {
-                duration: length,
-                easing: 'cubic-bezier(0.23, 1, 0.32, 1)',
+                duration: layoutDuration,
+                easing: layoutEasing,
                 fill: collapsing ? 'forwards' : 'none'
             }
         );
@@ -108,12 +231,24 @@
     }
 
     $effect.pre(() => {
-        const collapsing = context.files.length === 0;
+        const files = context.files;
+        const collapsing = files.length === 0;
         const node = untrack(() => list);
+        const added = files.some((file) => {
+            return !previous.includes(file);
+        });
+
+        previous = files;
 
         if (!node) {
             return;
         }
+
+        layoutDuration = added
+            ? getCssDuration(node, '--motion-duration-panel-in', 110)
+            : getCssDuration(node, '--motion-duration-panel-out', 150);
+        origin = node.getBoundingClientRect();
+        placements = place(node, origin);
 
         const from = measure(node);
 
@@ -126,40 +261,43 @@
         });
     });
 
-    function frame(t: number) {
-        return `opacity:${t};transform:scale(${0.94 + 0.06 * t});filter:blur(${(1 - t) * 4}px)`;
-    }
+    function reflow(node: Element, { from, to }: Rects): AnimationConfig {
+        const current = node.parentElement?.getBoundingClientRect();
+        const shiftX = origin && current ? origin.left - current.left : 0;
+        const shiftY = origin && current ? origin.top - current.top : 0;
+        const dx = from.left - to.left - shiftX;
+        const dy = from.top - to.top - shiftY;
 
-    function reflow(node: Element, rects: { from: DOMRect; to: DOMRect }) {
-        return flip(node, rects, {
-            duration: duration(node),
-            easing: cubicOut
-        });
-    }
-
-    function enter(node: HTMLElement): TransitionConfig {
         return {
-            duration: duration(node),
+            duration: dx === 0 && dy === 0 ? 0 : layoutDuration,
             easing: cubicOut,
-            css: frame
+            css: (_t, u) => {
+                return `transform:translate(${u * dx}px,${u * dy}px)`;
+            }
         };
     }
 
     function leave(node: HTMLElement): TransitionConfig {
-        const { offsetLeft, offsetTop, offsetWidth, offsetHeight } = node;
+        const placement = placements.get(node);
+        const list = node.parentElement;
+        const holdsPlace = context.files.length === 0 && list !== null && flowsInline(list);
+
+        if (holdsPlace) {
+            node.dataset.holding = '';
+        }
+
+        if (placement && !holdsPlace) {
+            node.style.position = 'absolute';
+            node.style.transform = '';
+            node.style.left = `${placement.left}px`;
+            node.style.top = `${placement.top}px`;
+            node.style.width = `${placement.width}px`;
+            node.style.height = `${placement.height}px`;
+        }
 
         node.inert = true;
-        node.style.position = 'absolute';
-        node.style.left = `${offsetLeft}px`;
-        node.style.top = `${offsetTop}px`;
-        node.style.width = `${offsetWidth}px`;
-        node.style.height = `${offsetHeight}px`;
 
-        return {
-            duration: getCssDuration(node, '--motion-duration-panel-out', 150),
-            easing: cubicIn,
-            css: frame
-        };
+        return panelOut(node);
     }
 </script>
 
@@ -173,11 +311,11 @@
     class={cn(
         className,
         // token-lint-disable-next-line no-literal-length: minimum attachment card width
-        'relative grid min-w-0 grid-cols-[repeat(auto-fill,minmax(min(100%,14rem),1fr))] gap-2 [&>li]:min-w-0'
+        'relative grid min-w-0 grid-cols-[repeat(auto-fill,minmax(min(100%,14rem),1fr))] content-start gap-2 [&>li]:min-w-0 in-data-[ui=composer-form]:flex in-data-[ui=composer-form]:flex-none in-data-[ui=composer-form]:flex-wrap in-data-[ui=composer-form]:max-w-full in-data-[ui=composer-form]:gap-1.5 in-data-[ui=composer-form]:ps-3.5 in-data-[ui=composer-form]:pt-3 [&>li[data-holding]]:static!'
     )}
 >
     {#each context.files as file (file)}
-        <li animate:reflow in:enter out:leave>
+        <li animate:reflow in:panelIn out:leave>
             {#if children}
                 {@render children(file)}
             {:else}

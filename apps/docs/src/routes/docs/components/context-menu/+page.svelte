@@ -14,14 +14,14 @@
 
     const _TITLE = 'Context Menu';
 
-    const installCommand = 'bunx @sivir-ui/svelte add context-menu';
+    const installCommand = 'bunx --package @sivir-ui/svelte sivir add context-menu';
 </script>
 
 <svelte:head>
     <title>Sivir · Context Menu</title>
     <meta
         name="description"
-        content="A right-click menu for actions that apply to whatever the user clicked on. It uses the same item grammar as DropdownMenu and opens on right-click."
+        content="A menu that opens at the pointer when you right-click an element, with items, checkboxes, and submenus."
     />
 </svelte:head>
 
@@ -31,7 +31,8 @@
         <div>
             <Typography.H1> Context Menu </Typography.H1>
             <Typography.Text variant="lead" class="mt-2 max-w-2xl">
-                A right-click menu of actions, sharing the dropdown menu's item set.
+                Opens at the pointer on right-click or a tap on touch screens. From the keyboard,
+                focus the trigger and press the Menu key or Shift+F10.
             </Typography.Text>
         </div>
         <DocsPager />
@@ -54,10 +55,16 @@
     <section id="usage" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading"> Usage </Typography.H2>
         <Typography.Text variant="supporting">
-            Import and compose with Root, Trigger, Content, and Item:
+            Pass the action as <Typography.InlineCode>callback</Typography.InlineCode>;
+            <Typography.InlineCode>ContextMenu.Item</Typography.InlineCode>
+            ignores
+            <Typography.InlineCode>onclick</Typography.InlineCode>.
+            <Typography.InlineCode>CheckboxItem</Typography.InlineCode>
+            requires a unique
+            <Typography.InlineCode>value</Typography.InlineCode>.
         </Typography.Text>
         <CodeBlock
-            code={`import * as ContextMenu from '$lib/sivir/components/context-menu';\n\n<ContextMenu.Root>\n  <ContextMenu.Trigger>\n    <div>Right-click me</div>\n  </ContextMenu.Trigger>\n  <ContextMenu.Content>\n    <ContextMenu.Item callback={handleAction}>Action</ContextMenu.Item>\n  </ContextMenu.Content>\n</ContextMenu.Root>`}
+            code={`import * as ContextMenu from '@sivir-ui/svelte/components/context-menu';\n\nlet zoom = $state(1);\nlet showGrid = $state(true);\n\n<ContextMenu.Root>\n  <ContextMenu.Trigger>\n    <div>Canvas</div>\n  </ContextMenu.Trigger>\n  <ContextMenu.Content>\n    <ContextMenu.Item callback={() => (zoom = 1)}>Reset zoom</ContextMenu.Item>\n    <ContextMenu.CheckboxItem value="grid" bind:checked={showGrid}>Show grid</ContextMenu.CheckboxItem>\n  </ContextMenu.Content>\n</ContextMenu.Root>`}
             lang="svelte"
             copy="overlay"
         />
@@ -67,9 +74,6 @@
     <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
         <div>
             <Typography.H2 class="docs-section-heading"> Examples </Typography.H2>
-            <Typography.Text variant="supporting" class="mt-2">
-                Right-click each target. Menus remain simple, with different action sets.
-            </Typography.Text>
         </div>
 
         <div id="file-row" class="scroll-mt-20 flex flex-col gap-3">

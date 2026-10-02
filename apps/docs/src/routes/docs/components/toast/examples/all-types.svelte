@@ -6,12 +6,12 @@
 <div class="flex flex-wrap gap-2">
     <Button
         onclick={() =>
-            toast({ title: 'Heads up', description: 'A neutral toast.', type: 'default' })}
+            toast({ title: 'Link copied', description: 'Anyone with the link can view.', type: 'default' })}
         >Default</Button
     >
     <Button
         onclick={() =>
-            toast.success('Profile updated', { description: 'Your changes have been saved.' })}
+            toast.success('Profile updated', { description: 'Your new photo is visible to your team.' })}
         >Success</Button
     >
     <Button
@@ -24,7 +24,8 @@
             toast.warning('Storage almost full', { description: 'You have 200 MB remaining.' })}
         >Warning</Button
     >
-    <Button onclick={() => toast.info('New version', { description: 'Refresh to update.' })}
+    <Button
+        onclick={() => toast.info('Update available', { description: 'Reload to get version 2.4.' })}
         >Info</Button
     >
 </div>

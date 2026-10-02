@@ -4,7 +4,8 @@ export const manifest: Manifest = {
     name: 'scroll-area',
     version: '1.0.0',
     visibility: 'public',
-    description: 'Themed scroll container with vertical or horizontal overflow.',
+    description:
+        'Scroll container with a thin themed scrollbar that scrolls vertically, horizontally, or both.',
     files: [
         'components/scroll-area/scroll-area.svelte',
         'components/scroll-area/index.ts',

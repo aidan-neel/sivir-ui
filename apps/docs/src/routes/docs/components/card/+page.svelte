@@ -16,12 +16,15 @@
     import Panel from './examples/panel.svelte';
     import PanelSrc from './examples/panel.svelte?raw';
 
-    const installCommand = 'bunx @sivir-ui/svelte add card';
+    const installCommand = 'bunx --package @sivir-ui/svelte sivir add card';
 </script>
 
 <svelte:head>
     <title>Sivir · Card</title>
-    <meta name="description" content="Surface container for grouping related content." />
+    <meta
+        name="description"
+        content="A container that groups a title, body content, and actions on one surface."
+    />
 </svelte:head>
 
 <div data-docs-page class="flex flex-col gap-10">
@@ -30,7 +33,9 @@
         <div>
             <Typography.H1> Card </Typography.H1>
             <Typography.Text variant="lead" class="mt-2 max-w-2xl">
-                A surface for grouping related content, composed of header, content, and footer.
+                A bordered surface built from Header, Title, Description, Content, and Footer. The
+                panel and inset variants add a frame around it; inset also moves the footer into a
+                bar below it.
             </Typography.Text>
         </div>
         <DocsPager />
@@ -53,10 +58,11 @@
     <section id="usage" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading"> Usage </Typography.H2>
         <Typography.Text variant="supporting">
-            Import Card and compose it with sub-components:
+            Card.Root takes a variant of default (a bordered surface), panel, or inset. Every other
+            part is optional.
         </Typography.Text>
         <CodeBlock
-            code={`import * as Card from '$lib/sivir/components/card';\n\n<Card.Root>\n  <Card.Header>\n    <Card.Title>Title</Card.Title>\n  </Card.Header>\n  <Card.Content>Content here</Card.Content>\n  <Card.Footer>\n    <Button>Action</Button>\n  </Card.Footer>\n</Card.Root>`}
+            code={`import { Button } from '@sivir-ui/svelte/components/button';\nimport * as Card from '@sivir-ui/svelte/components/card';\n\n<Card.Root>\n  <Card.Header>\n    <Card.Title>Delete project?</Card.Title>\n    <Card.Description>This removes all deployments and logs.</Card.Description>\n  </Card.Header>\n  <Card.Footer>\n    <Button variant="outline">Cancel</Button>\n    <Button variant="destructive">Delete</Button>\n  </Card.Footer>\n</Card.Root>`}
             lang="svelte"
             copy="overlay"
         />
@@ -66,9 +72,6 @@
     <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
         <div>
             <Typography.H2 class="docs-section-heading"> Examples </Typography.H2>
-            <Typography.Text variant="supporting" class="mt-2">
-                Card with different structures and compositions.
-            </Typography.Text>
         </div>
 
         <div id="full" class="scroll-mt-20 flex flex-col gap-3">

@@ -10,7 +10,7 @@
     data-ui="question-description"
     class={cn(
         className,
-        'm-0 px-4 pt-1.5 [font-size:var(--font-size-body)] [font-weight:var(--font-weight-body)] [letter-spacing:var(--tracking-body)] leading-relaxed text-foreground-muted'
+        'm-0 px-3 pt-0.5 [font-size:var(--font-size-body)] [font-weight:var(--font-weight-body)] [letter-spacing:var(--tracking-body)] leading-relaxed text-foreground-muted'
     )}
 >
     {@render children?.()}

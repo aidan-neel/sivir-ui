@@ -198,7 +198,7 @@
     {#if variant === 'default' && hover}
         <div
             aria-hidden="true"
-            class="pointer-events-none absolute rounded-[var(--radius-md)] bg-foreground/[0.06] transition-[left,top,width,height,opacity] [transition-duration:var(--motion-duration-panel)] ease-[var(--ease-out)] motion-reduce:transition-none"
+            class="pointer-events-none absolute rounded-[var(--radius-md)] bg-foreground/[0.06] transition-[left,top,width,height,opacity] [transition-duration:var(--motion-duration-hover)] ease-[var(--ease-out)] motion-reduce:transition-none"
             style:left={`${hover.left}px`}
             style:top={`${hover.top}px`}
             style:width={`${hover.width}px`}
@@ -212,7 +212,7 @@
     {#if variant === 'ghost' && ghostRect}
         <div
             aria-hidden="true"
-            class="pointer-events-none absolute rounded-[var(--radius-md)] bg-secondary/70 transition-[left,top,width,height] [transition-duration:var(--motion-duration-panel)] ease-[var(--ease-out)] motion-reduce:transition-none"
+            class="pointer-events-none absolute rounded-[var(--radius-md)] bg-secondary/70 transition-[left,top,width,height] [transition-duration:var(--motion-duration-hover)] ease-[var(--ease-out)] motion-reduce:transition-none"
             style:left={`${ghostRect.left}px`}
             style:top={`${ghostRect.top}px`}
             style:width={`${ghostRect.width}px`}

@@ -12,9 +12,9 @@
     import Validation from './examples/validation.svelte';
     import ValidationSrc from './examples/validation.svelte?raw';
 
-    const installCommand = 'bunx @sivir-ui/svelte add tag-input';
+    const installCommand = 'bunx --package @sivir-ui/svelte sivir add tag-input';
 
-    const usageSnippet = `import * as TagInput from '$lib/sivir/components/tag-input';
+    const usageSnippet = `import * as TagInput from '@sivir-ui/svelte/components/tag-input';
 
 let tags = $state(['svelte']);
 
@@ -28,7 +28,7 @@ let tags = $state(['svelte']);
     <title>Sivir · Tag Input</title>
     <meta
         name="description"
-        content="Tokenized tag entry with keyboard commits, paste splitting, duplicates and max-tag guards, validation, and full form support."
+        content="A field that turns typed or pasted text into a list of removable tags."
     />
 </svelte:head>
 
@@ -38,8 +38,9 @@ let tags = $state(['svelte']);
         <div>
             <Typography.H1> Tag Input </Typography.H1>
             <Typography.Text variant="lead" class="mt-2 max-w-2xl">
-                A field that turns typed text into removable tags. Type a value, press Enter, and
-                keep going.
+                Enter or a comma adds the draft as a tag, and Backspace in an empty field removes
+                the last one. Pasting text separated by commas, semicolons, or new lines adds each
+                part.
             </Typography.Text>
         </div>
         <DocsPager />
@@ -62,12 +63,14 @@ let tags = $state(['svelte']);
     <section id="usage" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading"> Usage </Typography.H2>
         <Typography.Text variant="supporting">
-            Bind <Typography.InlineCode>tags</Typography.InlineCode> for the tag list. Compose
+            Bind <Typography.InlineCode>tags</Typography.InlineCode> on
+            <Typography.InlineCode>Root</Typography.InlineCode>, and place
             <Typography.InlineCode>List</Typography.InlineCode>
-            for the tokens and
-            <Typography.InlineCode>Input</Typography.InlineCode>
-            for entry inside
-            <Typography.InlineCode>Root</Typography.InlineCode>.
+            and <Typography.InlineCode>Input</Typography.InlineCode> inside it. Duplicates are
+            rejected unless you set
+            <Typography.InlineCode>allowDuplicates</Typography.InlineCode>. Set
+            <Typography.InlineCode>name</Typography.InlineCode>
+            to submit each tag with a form.
         </Typography.Text>
         <CodeBlock code={usageSnippet} lang="svelte" copy="overlay" />
     </section>
@@ -76,10 +79,6 @@ let tags = $state(['svelte']);
     <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
         <div>
             <Typography.H2 class="docs-section-heading"> Examples </Typography.H2>
-            <Typography.Text variant="supporting" class="mt-2">
-                Read changes through callbacks, guard the list with validation, and cap it with a
-                maximum.
-            </Typography.Text>
         </div>
 
         <div id="controlled" class="scroll-mt-20 flex flex-col gap-3">
@@ -102,9 +101,11 @@ let tags = $state(['svelte']);
             <Typography.Text variant="supporting">
                 Return <Typography.InlineCode>false</Typography.InlineCode> or an error message from
                 <Typography.InlineCode>validate</Typography.InlineCode>
-                to reject a tag. Rejections arrive through
+                to reject a tag.
                 <Typography.InlineCode>onReject</Typography.InlineCode>
-                with a human-readable reason.
+                receives the reason; pass it to
+                <Typography.InlineCode>error</Typography.InlineCode>
+                to show it under the field.
             </Typography.Text>
             <ComponentPreview code={ValidationSrc}>
                 <Validation />
@@ -115,9 +116,8 @@ let tags = $state(['svelte']);
             <Typography.H3 class="docs-subsection-heading"> Limiting tags </Typography.H3>
             <Typography.Text variant="supporting">
                 <Typography.InlineCode>max</Typography.InlineCode>
-                caps the list. Extra tags are rejected with a
-                <Typography.InlineCode>max-tags</Typography.InlineCode>
-                reason.
+                caps the list. Extra tags are rejected with the code
+                <Typography.InlineCode>max-tags</Typography.InlineCode>.
             </Typography.Text>
             <ComponentPreview code={MaxTagsSrc}>
                 <MaxTags />

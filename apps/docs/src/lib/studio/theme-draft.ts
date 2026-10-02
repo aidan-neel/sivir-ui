@@ -57,6 +57,7 @@ export type StudioChrome = {
     controlShadows: boolean;
     dialogShadows: boolean;
     travelingHighlight: boolean;
+    fancySwap: boolean;
     menuPaneling: boolean;
     surfacePaneling: boolean;
     primaryStroke: boolean;
@@ -196,6 +197,11 @@ function toChrome(chrome: StudioChrome): ThemeChrome {
             : {
                   travelingHighlight: false as const
               }),
+        ...(chrome.fancySwap
+            ? {}
+            : {
+                  fancySwap: false as const
+              }),
         ...(chrome.menuPaneling
             ? {}
             : {
@@ -219,6 +225,7 @@ function fromChrome(chrome: ThemeChrome | undefined): StudioChrome {
         controlShadows: shadows && chrome?.controlShadows !== false,
         dialogShadows: shadows && chrome?.dialogShadows !== false,
         travelingHighlight: chrome?.travelingHighlight !== false,
+        fancySwap: chrome?.fancySwap !== false,
         menuPaneling: chrome?.menuPaneling !== false,
         surfacePaneling: chrome?.surfacePaneling !== false,
         primaryStroke: chrome?.primaryStroke === true,

@@ -12,14 +12,14 @@
     import WithLabel from './examples/with-label.svelte';
     import WithLabelSrc from './examples/with-label.svelte?raw';
 
-    const installCommand = 'bunx @sivir-ui/svelte add progress';
+    const installCommand = 'bunx --package @sivir-ui/svelte sivir add progress';
 </script>
 
 <svelte:head>
     <title>Sivir · Progress</title>
     <meta
         name="description"
-        content="Show how far along a task is. Determinate with value or indeterminate for unknown duration."
+        content="A bar that fills to show how far along a task is, or loops when progress can't be measured."
     />
 </svelte:head>
 
@@ -29,7 +29,8 @@
         <div>
             <Typography.H1> Progress </Typography.H1>
             <Typography.Text variant="lead" class="mt-2 max-w-2xl">
-                A progress bar. Omit the value for an indeterminate, looping state.
+                The bar fills to value out of max. Pass indeterminate when you can't measure
+                progress; the bar then loops and ignores value.
             </Typography.Text>
         </div>
         <DocsPager />
@@ -52,10 +53,11 @@
     <section id="usage" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading">Usage</Typography.H2>
         <Typography.Text variant="supporting">
-            Import the Progress component and use it:
+            value defaults to 0 and max to 100. Values outside that range are clamped. Progress
+            renders no label, so place one next to it.
         </Typography.Text>
         <CodeBlock
-            code={`import { Progress } from '$lib/sivir/components/progress';\n\n<Progress value={28} />\n<Progress indeterminate />`}
+            code={`import { Progress } from '@sivir-ui/svelte/components/progress';\n\n<Progress value={28} />\n<Progress indeterminate />`}
             lang="svelte"
             copy="overlay"
         />
@@ -65,9 +67,6 @@
     <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
         <div>
             <Typography.H2 class="docs-section-heading">Examples</Typography.H2>
-            <Typography.Text variant="supporting" class="mt-2">
-                Explore Progress in different states and configurations.
-            </Typography.Text>
         </div>
 
         <!-- Determinate -->

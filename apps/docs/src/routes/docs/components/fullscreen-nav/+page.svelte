@@ -12,12 +12,15 @@
 
     const TITLE = 'Fullscreen Nav';
     const SLUG = 'fullscreen-nav';
-    const installCommand = `bunx @sivir-ui/svelte add ${SLUG}`;
+    const installCommand = `bunx --package @sivir-ui/svelte sivir add ${SLUG}`;
 </script>
 
 <svelte:head>
     <title>Sivir · {TITLE}</title>
-    <meta name="description" content="A mobile-focused navigation menu that fills the viewport." />
+    <meta
+        name="description"
+        content="A mobile navigation menu that covers the whole screen when opened."
+    />
 </svelte:head>
 
 <div data-docs-page class="flex flex-col gap-10">
@@ -27,7 +30,8 @@
                 {TITLE}
             </Typography.H1>
             <Typography.Text variant="lead" class="mt-2 max-w-2xl">
-                A mobile navigation menu that opens as a focused, full-viewport layer.
+                Opens a full-screen layer of grouped links from a menu button. Choosing a link
+                closes the menu.
             </Typography.Text>
         </div>
         <DocsPager />
@@ -47,11 +51,15 @@
     <section id="usage" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading"> Usage </Typography.H2>
         <Typography.Text variant="supporting">
-            Compose the menu from a trigger, full-screen content, grouped links, and an optional
-            close control.
+            Each <Typography.InlineCode>Group</Typography.InlineCode> requires a
+            <Typography.InlineCode>heading</Typography.InlineCode>.
+            <Typography.InlineCode>Trigger</Typography.InlineCode>
+            and
+            <Typography.InlineCode>Close</Typography.InlineCode>
+            render a menu and an X icon unless you pass children.
         </Typography.Text>
         <CodeBlock
-            code={`import * as FullscreenNav from '$lib/sivir/components/fullscreen-nav';
+            code={`import * as FullscreenNav from '@sivir-ui/svelte/components/fullscreen-nav';
 
 <FullscreenNav.Root>
   <FullscreenNav.Trigger />
@@ -75,11 +83,13 @@
             <li>Page scrolling is locked while the navigation is open.</li>
             <li>Press Escape, use Close, or activate a Link to dismiss the menu.</li>
             <li>
-                Links are sized for touch, scale on press, and give a short haptic pulse on tap.
+                Links are sized for touch, scale on press, and vibrate briefly on tap on devices
+                that support it.
             </li>
             <li>
-                Pass a descriptive label to Content when the default navigation label is not
-                specific enough.
+                Content is labeled "Navigation menu" by default. Pass
+                <Typography.InlineCode>label</Typography.InlineCode>
+                to name it more specifically.
             </li>
         </ul>
     </section>
@@ -87,16 +97,13 @@
     <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
         <div>
             <Typography.H2 class="docs-section-heading"> Examples </Typography.H2>
-            <Typography.Text variant="supporting" class="mt-2">
-                Keep the menu structure close to the information architecture it represents.
-            </Typography.Text>
         </div>
 
         <div id="grouped-navigation" class="scroll-mt-20 flex flex-col gap-3">
             <Typography.H3 class="docs-subsection-heading"> Grouped navigation </Typography.H3>
             <Typography.Text variant="supporting">
-                Separate product destinations from documentation and community links with named
-                groups.
+                Use one <Typography.InlineCode>Group</Typography.InlineCode> per section. Its
+                heading labels the links below it.
             </Typography.Text>
             <ComponentPreview code={GroupedSrc}>
                 <Grouped />
@@ -106,8 +113,8 @@
         <div id="custom-trigger" class="scroll-mt-20 flex flex-col gap-3">
             <Typography.H3 class="docs-subsection-heading"> Custom trigger </Typography.H3>
             <Typography.Text variant="supporting">
-                Pass content to Trigger to pair the menu icon with a visible label without changing
-                its behavior.
+                Children passed to <Typography.InlineCode>Trigger</Typography.InlineCode> replace
+                the default icon, so you can add a visible label.
             </Typography.Text>
             <ComponentPreview code={CustomTriggerSrc}>
                 <CustomTrigger />

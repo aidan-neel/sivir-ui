@@ -11,14 +11,14 @@
 
     const TITLE = 'Reasoning';
     const SLUG = 'reasoning';
-    const installCommand = `bunx @sivir-ui/svelte add ${SLUG}`;
+    const installCommand = `bunx --package @sivir-ui/svelte sivir add ${SLUG}`;
 </script>
 
 <svelte:head>
     <title>Sivir · {TITLE}</title>
     <meta
         name="description"
-        content="A concise, expandable reasoning trace for AI assistant responses."
+        content="A collapsible trigger and panel for a model's reasoning trace, with a live thinking timer."
     />
 </svelte:head>
 
@@ -27,8 +27,8 @@
         <div>
             <Typography.H1>{TITLE}</Typography.H1>
             <Typography.Text variant="lead" class="mt-2 max-w-2xl">
-                Give users useful visibility into an assistant’s work without placing its trace
-                ahead of the answer. Reasoning stays compact until someone chooses to inspect it.
+                The trigger reads Thinking while the model reasons and Thought for 4.8s when it
+                finishes. The trace stays collapsed above the answer until the user opens it.
             </Typography.Text>
         </div>
         <DocsPager />
@@ -46,17 +46,19 @@
     <section id="usage" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading">Usage</Typography.H2>
         <Typography.Text variant="supporting">
-            Reasoning starts collapsed. Set <Typography.InlineCode>streaming</Typography.InlineCode>
-            while the model is thinking and pass an updating
+            Set <Typography.InlineCode>streaming</Typography.InlineCode> on
+            <Typography.InlineCode>Root</Typography.InlineCode>
+            while the model is thinking, and update
             <Typography.InlineCode>duration</Typography.InlineCode>
-            for a live timer; the label settles from Thinking to Thought for when streaming ends.
-            Content mounts on its first open and stays mounted, so a streamed trace keeps growing in
-            place. Use
-            <Typography.InlineCode>open</Typography.InlineCode>
-            to control visibility. A
+            on
+            <Typography.InlineCode>Trigger</Typography.InlineCode>
+            for a live timer. A
             <Typography.InlineCode>title</Typography.InlineCode>
-            replaces the Thinking and Thought for label with a one-line summary; the dot indicator
-            still shows while streaming.
+            replaces the Thinking and Thought for label with a one-line summary and hides the
+            duration. Content mounts on its first open and stays mounted, so a streamed trace keeps
+            growing in place. Bind
+            <Typography.InlineCode>open</Typography.InlineCode>
+            to control visibility.
         </Typography.Text>
         <CodeBlock
             code={`import * as Reasoning from '@sivir-ui/svelte/components/reasoning';

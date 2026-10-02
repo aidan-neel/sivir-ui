@@ -3,7 +3,7 @@
 </script>
 
 <Composer.Root
-    value="Checking the deployment plan..."
+    value="Check the deployment plan for missing rollbacks."
     status="submitting"
     onSubmit={() => {}}
     onStop={() => {}}

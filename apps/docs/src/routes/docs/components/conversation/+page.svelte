@@ -10,7 +10,7 @@
     import Hero from './examples/hero.svelte';
     import HeroSrc from './examples/hero.svelte?raw';
 
-    const installCommand = 'bunx @sivir-ui/svelte add conversation';
+    const installCommand = 'bunx --package @sivir-ui/svelte sivir add conversation';
     const usageSnippet = `import * as Conversation from '@sivir-ui/svelte/components/conversation';
 import * as Message from '@sivir-ui/svelte/components/message';
 
@@ -30,7 +30,7 @@ let follow = $state(true);
     <title>Sivir · Conversation</title>
     <meta
         name="description"
-        content="An auto-following, accessible conversation viewport with empty and jump-to-latest states."
+        content="A scrolling chat transcript that follows new messages until the user scrolls up."
     />
 </svelte:head>
 
@@ -39,8 +39,8 @@ let follow = $state(true);
         <div>
             <Typography.H1> Conversation </Typography.H1>
             <Typography.Text variant="lead" class="mt-2 max-w-2xl">
-                Keep live agent transcripts readable while respecting where someone has chosen to
-                scroll.
+                The transcript stays pinned to the latest message as output arrives. Scrolling up
+                pauses following, and the scroll button jumps back to the bottom.
             </Typography.Text>
         </div>
         <DocsPager />
@@ -58,11 +58,14 @@ let follow = $state(true);
     <section id="usage" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading"> Usage </Typography.H2>
         <Typography.Text variant="supporting">
-            Give <Typography.InlineCode>Root</Typography.InlineCode> a bounded height so
+            Give <Typography.InlineCode>Root</Typography.InlineCode> a fixed height so
             <Typography.InlineCode>Content</Typography.InlineCode>
-            can scroll. Bind
+            can scroll.
             <Typography.InlineCode>follow</Typography.InlineCode>
-            when the surrounding interface needs to reflect whether new output is being followed.
+            is bindable and starts as <Typography.InlineCode>true</Typography.InlineCode>. It turns
+            off when the user scrolls up and back on within
+            <Typography.InlineCode>threshold</Typography.InlineCode>
+            pixels of the bottom (80 by default).
         </Typography.Text>
         <CodeBlock code={usageSnippet} lang="svelte" copy="overlay" />
     </section>
@@ -70,9 +73,6 @@ let follow = $state(true);
     <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
         <div>
             <Typography.H2 class="docs-section-heading"> Examples </Typography.H2>
-            <Typography.Text variant="supporting" class="mt-2">
-                Compose the viewport around an empty start or continuously arriving output.
-            </Typography.Text>
         </div>
 
         <div id="empty-state" class="scroll-mt-20 flex flex-col gap-3">

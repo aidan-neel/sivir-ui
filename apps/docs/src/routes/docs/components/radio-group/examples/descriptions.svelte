@@ -1,15 +1,19 @@
 <script lang="ts">
     import * as RadioGroup from '@sivir-ui/svelte/components/radio-group';
 
-    let value = $state<string | undefined>('pro');
+    let value = $state<string | undefined>('internal');
 </script>
 
-<RadioGroup.Root bind:value name="plan">
-    <RadioGroup.Item value="free" label="Free" description="For solo hobby projects." />
-    <RadioGroup.Item value="pro" label="Pro" description="For small teams and side projects." />
+<RadioGroup.Root bind:value name="visibility">
+    <RadioGroup.Item value="private" label="Private" description="Only you can open it." />
     <RadioGroup.Item
-        value="team"
-        label="Team"
-        description="Audit log, SSO, and priority support."
+        value="internal"
+        label="Internal"
+        description="Anyone in your workspace can view it."
+    />
+    <RadioGroup.Item
+        value="public"
+        label="Public"
+        description="Anyone with the link can view it."
     />
 </RadioGroup.Root>

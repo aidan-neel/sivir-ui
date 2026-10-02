@@ -15,21 +15,21 @@ const removedComponents = [
     {
         name: 'Approval Request',
         guidance:
-            'Compose `AlertDialog` directly with the review details and confirmation actions required by your workflow.'
+            'Compose `AlertDialog` directly: put the review details in `AlertDialog.Description` and the decision in `AlertDialog.Exit` and `AlertDialog.Confirm`.'
     },
     {
         name: 'Marquee',
         guidance:
-            'Use a restrained Tailwind animation around the content only when continuous motion is essential.'
+            'No replacement. If continuous scrolling is essential, wrap the content in your own Tailwind animation.'
     },
     {
         name: 'Panel',
-        guidance: 'Use `Card.Root variant="panel"` for the former framed panel treatment.'
+        guidance: 'Use `Card.Root variant="panel"` for the framed panel surface.'
     },
     {
         name: 'Separator',
         guidance:
-            'Use a semantic `<hr>` or a Tailwind border utility. Compound component separator parts remain available where documented.'
+            'Use a semantic `<hr>` or a Tailwind border utility. Part-level separators such as `Breadcrumb.Separator` and `DropdownMenu.Separator` still exist.'
     }
 ] as const;
 
@@ -87,7 +87,7 @@ export function componentMarkdown(component: string): string | undefined {
         manifest.visibility === 'public'
             ? fence('sh', `bunx --package @sivir-ui/svelte sivir add ${component}`)
             : [
-                  'This component is available from the package API but is not a standalone CLI registry target.',
+                  'This component is available from the package API but is not a standalone CLI registry target. The CLI copies it only as a dependency of other components.',
                   '',
                   fence('sh', 'bun add @sivir-ui/svelte')
               ].join('\n');
@@ -108,7 +108,7 @@ export function componentMarkdown(component: string): string | undefined {
         '',
         '## API',
         '',
-        'This reference is generated at build time from the component manifest, public `index.ts`, and documentation examples below. Changes to those source files are reflected here in the published Markdown. Standard Svelte and HTML attributes accepted by the exported prop types are supported.',
+        'Generated at build time from the component manifest, the public `index.ts` below, and the documentation examples. Changes to those source files are reflected here. Prop types that extend HTML attributes also accept those attributes.',
         '',
         fence('ts', sourceFor(indexes, component, 'index.ts')),
         ...(componentExamples.length
@@ -133,7 +133,7 @@ export function brandMarkMarkdown(): string {
     return [
         '# Brand Mark',
         '',
-        'The Sivir brand mark is a package-only visual asset. It is exported from the package root and the dedicated `brand-mark` path, but it is not a CLI registry component.',
+        'The Sivir logo as a Svelte component. It ships only in the package, from the root and from `@sivir-ui/svelte/brand-mark`; the CLI cannot install it.',
         '',
         '## Install',
         '',
@@ -149,10 +149,10 @@ export function brandMarkMarkdown(): string {
         '',
         fence(
             'svelte',
-            `import { BrandMark } from '@sivir-ui/svelte';\n\n<BrandMark size={36} label="Sivir" />`
+            `<script>\n    import { BrandMark } from '@sivir-ui/svelte';\n</script>\n\n<BrandMark size={36} label="Sivir" />`
         ),
         '',
-        'For a narrower import, use `@sivir-ui/svelte/brand-mark`.',
+        "For a narrower import, use the default export: `import BrandMark from '@sivir-ui/svelte/brand-mark';`",
         ''
     ].join('\n');
 }
@@ -160,11 +160,11 @@ export function brandMarkMarkdown(): string {
 const coreDocs = {
     introduction: `# Introduction
 
-Sivir UI is a Svelte 5 and Tailwind CSS v4 component library. Install it as a package or use the CLI to copy component source into your project.
+Sivir UI is a Svelte 5 and Tailwind CSS v4 component library. Install it as a package, or use the \`sivir\` CLI to copy component source into your project.
 
 ## Requirements
 
-- Svelte 5
+- Svelte 5 (the CLI defaults assume SvelteKit)
 - Tailwind CSS v4
 
 ## Quick start
@@ -182,7 +182,7 @@ bunx --package @sivir-ui/svelte sivir add button
 `,
     installation: `# Installation
 
-Install Sivir as a package when you want dependency-managed components, or initialize it with the CLI when you want to own the copied source.
+Install Sivir as a package to get components as a dependency, or use the CLI to copy their source into your project.
 
 ## Package
 
@@ -190,7 +190,7 @@ Install Sivir as a package when you want dependency-managed components, or initi
 bun add @sivir-ui/svelte
 ~~~~
 
-Add the token sheet to your CSS:
+Import the token sheet once in your root stylesheet. It includes Tailwind, so do not also import \`tailwindcss\`:
 
 ~~~~css
 @import '@sivir-ui/svelte/ui.css';
@@ -203,13 +203,31 @@ bunx --package @sivir-ui/svelte sivir init -y
 bunx --package @sivir-ui/svelte sivir add button
 ~~~~
 
-\`init\` installs the shared dependencies and replaces \`@import 'tailwindcss';\` in the root stylesheet \`sv add tailwindcss\` creates (\`src/routes/layout.css\` or \`src/app.css\`) with an import of \`src/lib/sivir/ui.css\`, which includes Tailwind. For any other stylesheet, make that replacement yourself. Quote \`'*'\` to add every component.
+\`init\` writes \`sivir.json\`, copies \`ui.css\` and shared utilities into \`src/lib/sivir\`, installs the shared dependencies, and replaces \`@import 'tailwindcss';\` in the root stylesheet \`sv add tailwindcss\` creates (\`src/routes/layout.css\` or \`src/app.css\`) with an import of \`src/lib/sivir/ui.css\`, which includes Tailwind. For any other stylesheet, make that replacement yourself. Without \`-y\`, \`init\` asks for the directory and import alias (default \`$lib/sivir\`) and confirms the dependency install and stylesheet edit.
+
+\`add\` copies each component and the Sivir components it depends on. Quote \`'*'\` to add every component. \`sivir list\` prints component and built-in theme slugs.
 `,
     theming: `# Theming
 
-Sivir components use CSS custom properties from \`@sivir-ui/svelte/ui.css\`. Import that stylesheet, then override the tokens in your application CSS to adapt colors, radii, typography, and spacing to your product.
+Sivir components read CSS custom properties from \`ui.css\` (\`@sivir-ui/svelte/ui.css\`, or \`src/lib/sivir/ui.css\` after \`sivir init\`). Override them in your own CSS after that import: light values in \`@theme\`, dark values under \`.dark\`.
 
-See the rendered guide at [/docs/theming](/docs/theming) for token examples and theme presets.
+~~~~css
+@theme {
+  --color-primary: #155eef;
+  --radius-lg: 0.55rem;
+  --font-sans: 'DM Sans', sans-serif;
+}
+
+.dark {
+  --color-primary: #7aa2ff;
+}
+~~~~
+
+Dark mode applies when \`<html>\` has the \`.dark\` class; some components also read the class there. Sivir does not toggle it.
+
+Built-in presets: \`default\`, \`magic\`, \`profitable\`, \`raven\`, \`clawd\`, and \`inspiration\`. In a CLI project, \`sivir add theme <slug>\` writes \`theme.css\` next to \`ui.css\`; import it after \`ui.css\`.
+
+See the rendered guide at [/docs/theming](/docs/theming) for the token list and theme JSON.
 `
 } as const;
 
@@ -243,13 +261,13 @@ export function llmsTxt(origin: string): string {
     return [
         '# Sivir UI',
         '',
-        'Svelte 5 and Tailwind CSS v4 component library. Use these Markdown resources for implementation details, public APIs, runnable examples, and version-specific upgrade notes.',
+        "Svelte 5 and Tailwind CSS v4 component library. The Markdown pages below hold each component's public API, runnable examples, and per-version upgrade notes.",
         '',
-        `The current catalog contains ${components.length} components. Brand Mark is a package-only asset. Approval Request, Marquee, Panel, and Separator were removed as standalone components; migration guidance is in the components index.`,
+        `The current catalog contains ${components.length} components. Brand Mark and Toolbar are package-only; the CLI copies Toolbar only as a dependency. Approval Request, Marquee, Panel, and Separator were removed as standalone components; the components index lists their replacements.`,
         '',
         '## Agent skill',
         '',
-        'Install the Sivir skill to give supported coding agents live, version-aware component guidance, AI interface composition patterns, and Sivir design language:',
+        'Install the Sivir skill so coding agents that support skills load this index, the component selection guide, and the design language:',
         '',
         fence('sh', 'npx skills add aidan-neel/sivir-ui --skill sivir'),
         '',
@@ -270,7 +288,7 @@ export function componentsMarkdown(): string {
     return [
         '# Sivir UI components',
         '',
-        'Each component reference is generated at build time from its package manifest, public API source, and Svelte examples. Published Markdown reflects changes to those canonical sources.',
+        'Each component reference is generated at build time from its package manifest, public `index.ts`, and documentation examples.',
         '',
         ...components.map(
             (component) => `- [${sanitizeComponent(component)}](/docs/components/${component}.md)`

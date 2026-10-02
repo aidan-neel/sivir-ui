@@ -107,7 +107,7 @@
     <div class="space-y-1.5">
         <Input
             label="Workspace slug"
-            placeholder="acme-design"
+            placeholder="design-team"
             required
             pattern="[a-z0-9]+(?:-[a-z0-9]+)*"
             bind:value={workspaceSlug}

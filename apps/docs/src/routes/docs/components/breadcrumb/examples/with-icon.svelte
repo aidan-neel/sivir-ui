@@ -8,10 +8,11 @@
     <Breadcrumb.Root>
         <Breadcrumb.Item href="/">
             <Home size={13} />
+            <span class="sr-only">Home</span>
         </Breadcrumb.Item>
         <Breadcrumb.Separator><ChevronRight size={12} /></Breadcrumb.Separator>
         <Breadcrumb.Item href="/docs">Docs</Breadcrumb.Item>
         <Breadcrumb.Separator><ChevronRight size={12} /></Breadcrumb.Separator>
-        <Breadcrumb.Item>Components</Breadcrumb.Item>
+        <Breadcrumb.Item href="/docs/components">Components</Breadcrumb.Item>
     </Breadcrumb.Root>
 </div>

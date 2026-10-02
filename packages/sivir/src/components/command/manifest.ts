@@ -2,7 +2,7 @@ import type { Manifest } from '@sivir-ui/svelte/_manifest/types';
 
 export const manifest: Manifest = {
     name: 'command',
-    version: '1.1.0',
+    version: '1.2.0',
     visibility: 'public',
     description: 'Modal command palette with search, grouped items, and separators.',
     files: [
@@ -15,6 +15,7 @@ export const manifest: Manifest = {
         'components/command/command-item.svelte',
         'components/command/command-group.svelte',
         'components/command/command-header.svelte',
+        'components/command/command-footer.svelte',
         'components/command/command-separator.svelte',
         'components/command/context.svelte.ts',
         'components/command/index.ts',

@@ -1,0 +1,4 @@
+- The home page fills the window instead of sitting inside a bordered card, and its side navigation uses the theme's interactive cursor without scaling its icons on hover.
+- Studio's Depth and Interaction toggles sit in the same compact field rows as its sliders and selects, with the whole row clickable.
+- The Studio Agent preview now shows its file diff without a header.
+- The home page demo is now a full coding-agent workspace, with a thread sidebar, a live conversation you can reply to, and a review panel with changed files, checks, and merge controls. The theme switcher sits above it.

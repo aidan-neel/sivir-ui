@@ -5,7 +5,7 @@
 </script>
 
 <div class="flex items-center justify-center">
-    <ColorPicker.Root {value} onValueChange={(v) => (value = v)} label="Pick a color">
+    <ColorPicker.Root {value} onValueChange={(v) => (value = v)} label="Accent color">
         <ColorPicker.Trigger />
         <ColorPicker.Content />
     </ColorPicker.Root>

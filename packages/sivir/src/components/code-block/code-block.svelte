@@ -55,8 +55,8 @@
     value ??= initialValue;
 
     /**
-     * Raw code per tab -- Copy reads the active one -- plus the active/order
-     * tracking that drives the directional slide between tabs.
+     * Raw code per tab -- Copy reads the active one -- plus active and source
+     * order tracking.
      */
     const registry = $state({
         codes: {},
@@ -74,13 +74,15 @@
         registry.theme = theme;
     });
 
+    let root = $state<HTMLDivElement>();
     let surface = $state<HTMLDivElement>();
+    const resizeTarget = $derived(isHighLevel ? surface : root);
     let previousValue = untrack(() => value);
     let renderedHeight = 0;
     let resize: Animation | undefined;
 
     $effect(() => {
-        const node = surface;
+        const node = resizeTarget;
 
         if (!node) {
             return;
@@ -111,7 +113,7 @@
         }
         previousValue = next;
 
-        const node = untrack(() => surface);
+        const node = untrack(() => resizeTarget);
 
         if (!node || renderedHeight === 0) {
             return;
@@ -134,17 +136,18 @@
             return;
         }
         const easing = getComputedStyle(node).getPropertyValue('--ease-out').trim() || 'ease-out';
+        const size = node === surface ? 'flexBasis' : 'height';
 
         resize = node.animate(
             [
                 {
                     flexGrow: 0,
-                    flexBasis: `${from}px`,
+                    [size]: `${from}px`,
                     overflow: 'hidden'
                 },
                 {
                     flexGrow: 0,
-                    flexBasis: `${to}px`,
+                    [size]: `${to}px`,
                     overflow: 'hidden'
                 }
             ],
@@ -157,12 +160,13 @@
 </script>
 
 <div
+    bind:this={root}
     data-ui="code-block"
     class={cn(
         className,
         'sivir-inset-frame flex max-h-[var(--code-block-max-height)] w-full flex-col overflow-hidden text-foreground',
         // token-lint-disable-next-line no-literal-length: code-block geometry contract
-        '[--code-block-gutter:var(--color-foreground-muted)] [--code-block-padding-x:1.1rem] [--code-block-padding-y:0.9rem] [--code-block-line-height:1.7] [--code-block-max-height:min(32rem,70vh)] [--code-block-slide:1.25rem]'
+        '[--code-block-gutter:var(--color-foreground-muted)] [--code-block-padding-x:1.1rem] [--code-block-padding-y:0.9rem] [--code-block-line-height:1.7] [--code-block-max-height:min(32rem,70vh)]'
     )}
     {...rest}
 >
@@ -181,8 +185,6 @@
                 </Header>
             {/if}
             {#if hasTabRow || code != null}
-                <!-- The static card: holds the background/ring while only the text
-				     panels slide inside it (and clips the slide). -->
                 <div
                     bind:this={surface}
                     data-ui="code-block-surface"

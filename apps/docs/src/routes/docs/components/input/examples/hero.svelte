@@ -8,18 +8,18 @@
 
 <div class="w-full max-w-sm space-y-6">
     <h2 class="text-sm [font-weight:var(--font-weight-label,600)] text-foreground">
-        Configure Project
+        Configure project
     </h2>
 
     <div class="space-y-4">
         <Input
-            label="Project Name"
+            label="Project name"
             bind:value={projectName}
-            description="This is your project's visible name on Vercel."
+            description="Shown in the dashboard and in deployment URLs."
         />
 
         <Input
-            label="Root Directory"
+            label="Root directory"
             placeholder="./"
             bind:value={rootDirectory}
             description="The directory where your source code lives."

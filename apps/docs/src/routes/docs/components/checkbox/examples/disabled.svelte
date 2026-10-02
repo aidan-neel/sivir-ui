@@ -3,5 +3,5 @@
 </script>
 
 <div class="flex items-center justify-center">
-    <Checkbox label="Disabled option" disabled checked={false} />
+    <Checkbox label="Single sign-on" disabled checked={false} />
 </div>

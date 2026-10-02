@@ -3,6 +3,6 @@
     import { Toggle } from '@sivir-ui/svelte/components/toggle';
 </script>
 
-<Toggle disabled>
+<Toggle disabled aria-label="Bold">
     <Bold size={14} />
 </Toggle>

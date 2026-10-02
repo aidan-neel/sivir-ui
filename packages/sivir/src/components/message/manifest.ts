@@ -4,7 +4,7 @@ export const manifest: Manifest = {
     name: 'message',
     version: '1.0.1',
     visibility: 'public',
-    description: 'Role-aware conversation messages with readable content and contextual actions.',
+    description: 'Role-aware conversation messages with content and an optional actions row.',
     files: [
         'components/message/message.svelte',
         'components/message/message-content.svelte',

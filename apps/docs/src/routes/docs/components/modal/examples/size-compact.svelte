@@ -9,10 +9,8 @@
     <Modal.Trigger variant="outline">Open compact modal</Modal.Trigger>
     <Modal.Content size="sm">
         <Modal.Header>
-            <Modal.Title>Quick action</Modal.Title>
-            <Modal.Description
-                >Keep short confirmations focused with the compact size.</Modal.Description
-            >
+            <Modal.Title>Leave without saving?</Modal.Title>
+            <Modal.Description>Your edits to this draft will be lost.</Modal.Description>
         </Modal.Header>
         <Modal.Footer>
             <Modal.Close>
@@ -20,7 +18,7 @@
                 <Shortcut shortcut="esc" />
             </Modal.Close>
             <Modal.Confirm>
-                Continue
+                Leave
                 <Shortcut shortcut="enter" />
             </Modal.Confirm>
         </Modal.Footer>

@@ -41,7 +41,7 @@
     const controlClass = $derived(
         variant === 'secondary'
             ? 'border-transparent bg-secondary has-[:focus-visible]:border-[color-mix(in_srgb,var(--color-secondary)_45%,var(--color-primary))]'
-            : 'border-[var(--color-input)] bg-[var(--color-field)] has-[:focus-visible]:border-primary'
+            : 'border-border bg-[var(--color-field)] has-[:focus-visible]:border-primary'
     );
 </script>
 

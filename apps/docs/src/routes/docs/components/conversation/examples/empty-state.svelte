@@ -27,15 +27,15 @@
             </Message.Root>
             <Message.Root from="assistant">
                 <Message.Content>
-                    I’ll start with the rollout stages, owners, health checks, and rollback
-                    threshold.
+                    Stage 1 ships the fix to 5% of traffic for 30 minutes. Roll back if checkout
+                    errors pass 0.5%.
                 </Message.Content>
             </Message.Root>
         {:else}
             <Conversation.Empty
                 icon={emptyIcon}
                 title="Plan the next release"
-                description="Turn an issue or change set into a staged rollout with clear checks."
+                description="Turn an issue or change set into a staged rollout with health checks."
                 action={startAction}
             />
         {/if}

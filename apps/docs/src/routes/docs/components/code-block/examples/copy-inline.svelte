@@ -6,7 +6,7 @@
 <CodeBlock.Root value="sh">
     <CodeBlock.Content
         value="sh"
-        code="bunx @sivir-ui/svelte add code-block"
+        code="bunx --package @sivir-ui/svelte sivir add code-block"
         lang="bash"
         copyPlacement="inline"
     />

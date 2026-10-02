@@ -11,7 +11,7 @@ export const manifest: Manifest = {
     version: '2.1.0',
     visibility: 'public',
     description:
-        'Code block with syntax-highlighted snippets, a multi-language tab switcher, built-in copy button, and an actions slot. Highlighting via highlight.js with a built-in GitHub palette; theme="custom" skips the token colors for any highlight.js theme stylesheet.',
+        'Syntax-highlighted code block with language tabs, a copy button, and an actions slot, built on highlight.js. theme="custom" leaves token colors to a highlight.js stylesheet.',
     role: 'tablist',
     files: [
         'components/code-block/code-block.svelte',

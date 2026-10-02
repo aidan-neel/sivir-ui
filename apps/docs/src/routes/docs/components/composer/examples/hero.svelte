@@ -1,10 +1,7 @@
 <script lang="ts">
     import Check from '@lucide/svelte/icons/check';
     import ChevronDown from '@lucide/svelte/icons/chevron-down';
-    import Plus from '@lucide/svelte/icons/plus';
-    import ShieldCheck from '@lucide/svelte/icons/shield-check';
-    import Workflow from '@lucide/svelte/icons/workflow';
-    import { Button } from '@sivir-ui/svelte/components/button';
+    import * as Attachment from '@sivir-ui/svelte/components/attachment';
     import * as Composer from '@sivir-ui/svelte/components/composer';
     import * as DropdownMenu from '@sivir-ui/svelte/components/dropdown-menu';
     import * as Select from '@sivir-ui/svelte/components/select';
@@ -15,6 +12,7 @@
     const permissions = ['Ask first', 'Auto approve'];
     const efforts = ['Low', 'Medium', 'High'];
 
+    let files = $state<File[]>([]);
     let value = $state('Review the release notes and call out any migration risks.');
     let model = $state(models[0]);
     let mode = $state(modes[0]);
@@ -35,6 +33,7 @@
             setTimeout(resolve, 600);
         });
         value = '';
+        files = [];
         generating = true;
         clearTimer();
         timer = setTimeout(() => {
@@ -51,28 +50,21 @@
     onDestroy(clearTimer);
 </script>
 
-<div class="@container flex w-full max-w-2xl flex-col">
+<Attachment.Root bind:files class="@container flex w-full max-w-2xl flex-col">
     <Composer.Root bind:value {generating} onSubmit={submitPrompt} onStop={stopResponse}>
+        <Attachment.List />
         <Composer.Input aria-label="Prompt" placeholder="Ask the agent..." />
 
         <Composer.Toolbar>
             <Composer.Actions>
-                <Button
-                    variant="ghost"
-                    size="icon"
-                    aria-label="Add files"
-                    class="rounded-full text-foreground-muted hover:text-foreground"
-                >
-                    <Plus size={16} aria-hidden="true" />
-                </Button>
+                <Attachment.Trigger class="rounded-full" />
 
                 <Select.Root bind:value={mode}>
                     <Select.Trigger
                         variant="ghost"
-                        class="h-8 w-auto max-w-32 gap-1 rounded-full px-2.5 text-foreground-muted hover:text-foreground"
+                        class="h-8 w-auto max-w-32 gap-1 rounded-full px-2.5 text-foreground-muted hover:text-foreground @max-md:px-2 @max-md:[&>svg]:hidden"
                     >
-                        <Workflow size={14} aria-hidden="true" />
-                        <span class="truncate @max-md:hidden">{mode}</span>
+                        <span class="truncate">{mode}</span>
                     </Select.Trigger>
                     <Select.Content dynamic>
                         <Select.Label>Mode</Select.Label>
@@ -85,10 +77,9 @@
                 <Select.Root bind:value={permission}>
                     <Select.Trigger
                         variant="ghost"
-                        class="h-8 w-auto max-w-44 gap-1 rounded-full px-2.5 text-foreground-muted hover:text-foreground"
+                        class="h-8 w-auto max-w-44 gap-1 rounded-full px-2.5 text-foreground-muted hover:text-foreground @max-md:px-2 @max-md:[&>svg]:hidden"
                     >
-                        <ShieldCheck size={14} aria-hidden="true" />
-                        <span class="truncate @max-md:hidden">{permission}</span>
+                        <span class="truncate">{permission}</span>
                     </Select.Trigger>
                     <Select.Content dynamic>
                         <Select.Label>Permission</Select.Label>
@@ -150,4 +141,4 @@
             </div>
         </Composer.Toolbar>
     </Composer.Root>
-</div>
+</Attachment.Root>

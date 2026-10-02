@@ -49,7 +49,7 @@
         className,
         radiusClass,
         vertical && 'w-full justify-start text-left',
-        'sivir-press relative z-10 select-none hover:cursor-[var(--ui-cursor-interactive)] px-3 py-2 text-sm [font-weight:var(--font-weight-button)] [letter-spacing:var(--tracking-button)] leading-tight transition-[color,box-shadow,transform,scale] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-press)] motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-0 focus-visible:shadow-[var(--focus-ring)] disabled:cursor-not-allowed disabled:opacity-[var(--opacity-disabled)]',
+        'sivir-press relative z-10 select-none hover:cursor-[var(--ui-cursor-interactive)] px-3 py-2 text-sm [font-weight:var(--font-weight-button)] [letter-spacing:var(--tracking-button)] leading-tight transition-[color,box-shadow,transform,scale] [transition-duration:var(--motion-duration-hover),var(--motion-duration-press),var(--motion-duration-press),var(--motion-duration-press)] ease-[var(--ease-press)] motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-0 focus-visible:shadow-[var(--focus-ring)] disabled:cursor-not-allowed disabled:opacity-[var(--opacity-disabled)]',
         active ? 'text-foreground' : 'text-foreground-muted hover:text-foreground',
         ghostActive && '[font-weight:var(--font-weight-header)]',
         segmented && 'inline-flex min-h-8 items-center justify-center'

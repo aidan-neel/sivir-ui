@@ -4,4 +4,4 @@
     let enabled = $state(true);
 </script>
 
-<Switch bind:switched={enabled} label="Push notifications" />
+<Switch bind:checked={enabled} label="Push notifications" />
