@@ -1,0 +1,1 @@
+- Redesigned the theme studio as a dark, multi-screen workspace with a persistent preview canvas, screen navigation, and studio actions.

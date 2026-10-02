@@ -3217,18 +3217,65 @@
     </ScrollArea>
 {/snippet}
 
-<div data-docs-page class="flex min-h-0 min-w-0 flex-1 flex-col bg-background text-foreground">
-    <section aria-label="Theme workspace" class="flex min-h-0 flex-1 bg-background">
+<div data-docs-page class="flex min-h-0 min-w-0 flex-1 flex-col bg-[#080808] text-foreground">
+    <header
+        class="flex h-12 shrink-0 items-center border-b border-white/10 bg-[#080808] px-3 text-xs"
+    >
+        <div class="flex items-center gap-1.5 text-[11px] text-white/70">
+            <span class="size-2.5 rounded-full bg-white/20"></span>
+            <span class="size-2.5 rounded-full bg-white/15"></span>
+            <span class="size-2.5 rounded-full bg-white/10"></span>
+            <span class="ml-2 font-medium text-white">{baseTheme.name}</span>
+        </div>
+        <div class="ml-16 hidden items-center gap-1 text-white/55 md:flex">
+            {#each [
+                { label: 'Custom', value: 'overview' },
+                { label: 'Cards', value: 'overview' },
+                { label: 'Dashboard', value: 'overview' },
+                { label: 'Application', value: 'settings' },
+                { label: 'Marketing', value: 'invoices' }
+            ] as screen, index (screen.label)}
+                <button
+                    type="button"
+                    class={`rounded-md px-3 py-1.5 transition-colors hover:text-white ${index === 1 ? 'bg-white/10 text-white' : ''}`}
+                    onclick={() => (studioView = screen.value as typeof studioView)}
+                >
+                    {screen.label}
+                </button>
+            {/each}
+        </div>
+        <div class="ml-auto flex items-center gap-1 border-l border-white/10 pl-3 text-white/60">
+            <button
+                type="button"
+                class="rounded-md px-2 py-1.5 hover:bg-white/10 hover:text-white"
+                onclick={resetTheme}
+            >
+                Reset
+            </button>
+            <Button
+                variant="ghost"
+                size="sm"
+                class="text-white/75 hover:bg-white/10 hover:text-white"
+                onclick={openPublish}
+                >Share</Button
+            >
+            <Button variant="primary" size="sm" class="ml-1" onclick={openPublish}
+                >Save theme</Button
+            >
+        </div>
+    </header>
+
+    <section aria-label="Theme workspace" class="flex min-h-0 flex-1 bg-[#080808]">
         <aside
             aria-label="Theme configuration"
-            class="hidden min-h-0 w-[344px] shrink-0 px-4 pt-1 pb-3 min-[1100px]:flex min-[1100px]:flex-col"
+            class="hidden min-h-0 w-[344px] shrink-0 border-r border-white/10 bg-[#0b0b0b] px-4 pt-4 pb-3 min-[1100px]:flex min-[1100px]:flex-col"
         >
             {@render inspector()}
         </aside>
 
-        <div class="min-w-0 flex-1 pr-3 pb-3 pl-0">
+        <div class="min-w-0 flex-1 p-3 pl-3">
             <div
-                class="h-full min-h-0 overflow-hidden rounded-[var(--radius-xl)] border border-border bg-background font-[var(--font-sans)] text-foreground"
+                class="h-full min-h-0 overflow-hidden rounded-lg border border-white/10 bg-[#151515] font-[var(--font-sans)] text-foreground shadow-2xl"
                 id="theme-preview"
             >
                 {@render dashboardPreview()}
