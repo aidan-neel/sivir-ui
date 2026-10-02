@@ -4,6 +4,7 @@ import pkg from '../package.json';
 import { add } from './commands/add';
 import { init } from './commands/init';
 import { list } from './commands/list';
+import { status } from './commands/status';
 import { addTheme } from './commands/theme';
 import { banner } from './utils/ui';
 
@@ -45,6 +46,13 @@ program
             return;
         }
         await add(names, { cwd, yes: options.yes, overwrite: options.overwrite });
+    });
+
+program
+    .command('status')
+    .description('compare installed component versions against the registry')
+    .action(async () => {
+        await status({ cwd: program.opts().cwd });
     });
 
 program
