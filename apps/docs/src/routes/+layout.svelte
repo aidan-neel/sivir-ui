@@ -8,6 +8,7 @@
     import '@sivir-ui/svelte/ui.css';
     import '../app.css';
     import { injectAnalytics } from '@vercel/analytics/sveltekit';
+    import { injectSpeedInsights } from '@vercel/speed-insights/sveltekit';
     import { onMount, type Snippet } from 'svelte';
     import { dev } from '$app/environment';
     import { afterNavigate } from '$app/navigation';
@@ -18,6 +19,7 @@
     import type { LayoutData } from './$types';
 
     injectAnalytics({ mode: dev ? 'development' : 'production' });
+    injectSpeedInsights();
 
     const { children, data }: { children: Snippet; data: LayoutData } = $props();
 
