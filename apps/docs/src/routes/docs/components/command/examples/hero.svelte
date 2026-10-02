@@ -66,7 +66,8 @@
             </Command.Results>
             <Command.Footer class="max-sm:hidden">
                 <span class="flex items-center gap-1.5">
-                    <Shortcut>↑↓</Shortcut>
+                    <Shortcut shortcut="up" />
+                    <Shortcut shortcut="down" />
                     navigate
                 </span>
                 <span class="flex items-center gap-1.5">
