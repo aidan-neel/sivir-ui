@@ -3,5 +3,5 @@
 </script>
 
 <div class="w-full max-w-sm">
-    <Textarea disabled value="Cannot edit this text" label="Disabled" />
+    <Textarea disabled value="Locked after the release was published." label="Release notes" />
 </div>

@@ -2,7 +2,7 @@
     import { ResponseStream } from '@sivir-ui/svelte/components/response-stream';
 
     const text =
-        'This text streams in at a steady pace. Use response streaming to make an AI answer feel immediate while preserving the layout of the surrounding message. Arrivals queue behind the reveal, which speeds up when it falls behind, and the newest characters fade in as they land.';
+        'The build failed because Vite could not resolve the @/lib/env import. The alias is defined in tsconfig.json but not in vite.config.ts. Add the same alias under resolve.alias and run the build again. The other 41 modules compiled without errors.';
 
     function wait(ms: number) {
         return new Promise<void>((resolve) => {

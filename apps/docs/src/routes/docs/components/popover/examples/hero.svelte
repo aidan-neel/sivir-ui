@@ -23,19 +23,19 @@
 
     const roles = Object.keys(roleLabels) as Role[];
 
-    const docLink = 'https://sivir.dev/d/q3-launch-plan';
+    const docLink = 'https://sivir.dev/d/q3-roadmap';
 
     let invite = $state('');
 
     let collaborators = $state<Collaborator[]>([
         {
-            name: 'Maya Chen',
-            email: 'maya@sivir.dev',
+            name: 'Evan',
+            email: 'evan@sivir.dev',
             role: 'edit'
         },
         {
-            name: 'Jonah Park',
-            email: 'jonah@sivir.dev',
+            name: 'Priya',
+            email: 'priya@sivir.dev',
             role: 'comment'
         }
     ]);
@@ -69,20 +69,11 @@
     }
 </script>
 
-<div class="flex w-full max-w-md items-center justify-between gap-4">
-    <div class="flex min-w-0 flex-col">
-        <p class="m-0 truncate text-sm [font-weight:var(--font-weight-label,500)]">
-            Q3 launch plan
-        </p>
-        <p class="m-0 text-xs text-foreground-muted">Edited 4 minutes ago</p>
-    </div>
-
-    <Popover.Root placement="bottom-end">
+<div class="flex w-full max-w-md justify-center">
+    <Popover.Root placement="bottom">
         <Popover.Trigger variant="outline" size="md">Share</Popover.Trigger>
-        <Popover.Content class="w-[24rem] max-w-[calc(100vw-2rem)]">
+        <Popover.Content aria-label="Share" class="w-[24rem] max-w-[calc(100vw-2rem)]">
             <div class="flex flex-col gap-4">
-                <Popover.Title>Share “Q3 launch plan”</Popover.Title>
-
                 <form class="flex items-center gap-2" onsubmit={addCollaborator}>
                     <div class="min-w-0 flex-1">
                         <Input
@@ -98,13 +89,11 @@
                 <ul class="m-0 flex list-none flex-col gap-3 p-0">
                     <li class="flex items-center gap-3">
                         <Avatar.Root size="sm">
-                            <Avatar.Fallback>AN</Avatar.Fallback>
+                            <Avatar.Fallback>S</Avatar.Fallback>
                         </Avatar.Root>
                         <div class="flex min-w-0 flex-1 flex-col">
-                            <p class="m-0 truncate text-sm">Aidan Neel (you)</p>
-                            <p class="m-0 truncate text-xs text-foreground-muted">
-                                aidan@sivir.dev
-                            </p>
+                            <p class="m-0 truncate text-sm">Seth (you)</p>
+                            <p class="m-0 truncate text-xs text-foreground-muted">seth@sivir.dev</p>
                         </div>
                         <p class="m-0 text-sm text-foreground-muted">Owner</p>
                     </li>

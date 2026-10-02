@@ -5,7 +5,7 @@ export const manifest: Manifest = {
     version: '1.1.0',
     visibility: 'public',
     description:
-        'Safe GFM markdown renderer for dense agent output, with token-based rendering and Sivir code blocks.',
+        'Safe GFM Markdown renderer for agent output, with token-based rendering and Sivir code blocks.',
     files: [
         'components/markdown/markdown.svelte',
         'components/markdown/markdown-token.svelte',

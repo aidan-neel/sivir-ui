@@ -1,6 +1,5 @@
 <script lang="ts">
     import { Button, type ButtonVariant } from '@sivir-ui/svelte/components/button';
-    import { mode } from 'mode-watcher';
 
     import GitHubBlack from '$lib/assets/GitHub_Invertocat_Black.svg';
     import GitHubWhite from '$lib/assets/GitHub_Invertocat_White.svg';
@@ -42,6 +41,7 @@
     rel="noreferrer"
     aria-label={starCount === null ? 'Star Sivir UI on GitHub' : `${label} GitHub stars`}
 >
-    <img src={mode.current === 'dark' ? GitHubWhite : GitHubBlack} alt="" class={iconClass} />
+    <img src={GitHubBlack} alt="" class={`${iconClass} dark:hidden`} />
+    <img src={GitHubWhite} alt="" class={`${iconClass} hidden dark:block`} />
     <span>{label}</span>
 </Button>

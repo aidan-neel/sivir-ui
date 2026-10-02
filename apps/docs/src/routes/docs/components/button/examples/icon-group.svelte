@@ -6,7 +6,7 @@
 </script>
 
 <div class="flex items-center gap-2">
-    <Button variant="ghost"><Download size={14} /></Button>
-    <Button variant="ghost"><Send size={14} /></Button>
-    <Button variant="ghost"><Trash size={14} /></Button>
+    <Button variant="ghost" aria-label="Download"><Download size={14} /></Button>
+    <Button variant="ghost" aria-label="Send"><Send size={14} /></Button>
+    <Button variant="ghost" aria-label="Delete"><Trash size={14} /></Button>
 </div>

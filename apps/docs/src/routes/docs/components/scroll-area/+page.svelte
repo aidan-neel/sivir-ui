@@ -10,14 +10,14 @@
 
     const TITLE = 'Scroll Area';
 
-    const installCommand = 'bunx @sivir-ui/svelte add scroll-area';
+    const installCommand = 'bunx --package @sivir-ui/svelte sivir add scroll-area';
 </script>
 
 <svelte:head>
     <title>Sivir · Scroll Area</title>
     <meta
         name="description"
-        content="A scroll container that styles its scrollbar to match the theme. Pure CSS, no shadow DOM, no measurement loops."
+        content="A scroll container with a thin theme-colored scrollbar and fade cues at edges with more content."
     />
 </svelte:head>
 
@@ -27,8 +27,9 @@
         <div>
             <Typography.H1>{TITLE}</Typography.H1>
             <Typography.Text variant="lead" class="mt-2 max-w-2xl">
-                A scroll container with a theme-styled scrollbar. Supports vertical and horizontal
-                orientation.
+                Wraps content in a scroll viewport with a theme-colored scrollbar. Set
+                <Typography.InlineCode>orientation</Typography.InlineCode>
+                to vertical (the default), horizontal, or both.
             </Typography.Text>
         </div>
         <DocsPager />
@@ -51,21 +52,24 @@
     <section id="usage" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading">Usage</Typography.H2>
         <Typography.Text variant="supporting">
-            Import the Scroll Area and use it to wrap content:
+            Give ScrollArea a height or max height.
+            <Typography.InlineCode>class</Typography.InlineCode>
+            styles the outer frame. Other attributes, such as
+            <Typography.InlineCode>aria-label</Typography.InlineCode>, go on the scrolling viewport,
+            which you can bind with <Typography.InlineCode>bind:element</Typography.InlineCode>.
         </Typography.Text>
         <CodeBlock
-            code={`import { ScrollArea } from '$lib/sivir/components/scroll-area';\n\n<ScrollArea class="h-48 w-64 rounded-lg border">\n  <div>Your content here</div>\n</ScrollArea>`}
+            code={`import { ScrollArea } from '@sivir-ui/svelte/components/scroll-area';\n\nconst files = ['README.md', 'package.json', 'src/app.css', 'src/routes/+page.svelte'];\n\n<ScrollArea class="h-48 w-64 rounded-lg border" aria-label="Changed files">\n  {#each files as file (file)}\n    <p class="px-3 py-2 text-sm">{file}</p>\n  {/each}\n</ScrollArea>`}
             lang="svelte"
             copy="overlay"
         />
 
         <Typography.Text variant="supporting">
-            A vertical Scroll Area fades its overflowing edges with a cue. Pass
+            In vertical orientation, a fade with a chevron appears at each edge that has more
+            content to scroll. Pass
             <Typography.InlineCode>{'showCues={false}'}</Typography.InlineCode>
-            to drop the cues entirely. The cue has no blur by default; pass
-            <Typography.InlineCode>blur</Typography.InlineCode>
-            to add a <Typography.InlineCode>backdrop-filter</Typography.InlineCode> over the content
-            passing under it.
+            to hide the cues, or <Typography.InlineCode>blur</Typography.InlineCode> to blur the
+            content that scrolls under them.
         </Typography.Text>
     </section>
 
@@ -73,9 +77,6 @@
     <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
         <div>
             <Typography.H2 class="docs-section-heading">Examples</Typography.H2>
-            <Typography.Text variant="supporting" class="mt-2">
-                Explore the Scroll Area in each orientation.
-            </Typography.Text>
         </div>
 
         <div id="horizontal" class="scroll-mt-20 flex flex-col gap-3">

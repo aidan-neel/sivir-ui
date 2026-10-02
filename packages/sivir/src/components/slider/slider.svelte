@@ -60,6 +60,7 @@
     let tracking = $state(false);
     let focusVisible = $state(false);
     let editing = $state(false);
+    let stretchFactor = $state(1);
     let session: PointerSession | null = null;
 
     const percent = $derived(toPercent(value));
@@ -67,7 +68,7 @@
     const fill = new SliderSpring(untrack(() => percent));
     const stretch = new SliderSpring(0);
     const stretchScale = $derived.by(() => {
-        const amount = Math.abs(stretch.current);
+        const amount = Math.abs(stretch.current) * stretchFactor;
 
         if (amount === 0 || !root) {
             return undefined;
@@ -244,6 +245,18 @@
         focusInput();
     }
 
+    function readStretchFactor() {
+        if (!root) {
+            return;
+        }
+
+        const parsed = Number.parseFloat(
+            getComputedStyle(root).getPropertyValue('--motion-slider-stretch')
+        );
+
+        stretchFactor = Number.isFinite(parsed) ? Math.max(0, parsed) : 1;
+    }
+
     function startTracking() {
         if (!session) {
             return;
@@ -279,6 +292,7 @@
 
         const rect = root.getBoundingClientRect();
 
+        readStretchFactor();
         session = {
             id: event.pointerId,
             startX: event.clientX,
@@ -354,6 +368,7 @@
         const direction = keyDirection(event.key);
 
         focusVisible = true;
+        readStretchFactor();
 
         if (editable && event.key === 'Enter') {
             event.preventDefault();
@@ -388,7 +403,7 @@
     class={cn(
         className,
         'group/slider relative isolate flex min-h-[var(--size-control-lg)] w-full cursor-ew-resize touch-pan-y select-none items-center justify-between gap-3 overflow-hidden rounded-[var(--radius-lg)] border-[length:var(--border-size)] bg-[var(--color-field)] px-3 text-sm text-[var(--color-field-foreground)] transition-[border-color,box-shadow,background-color] hover:bg-[color-mix(in_oklab,var(--color-field),var(--color-foreground)_4%)] data-[disabled]:hover:bg-[var(--color-field)] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-out)] motion-reduce:transition-none',
-        focusVisible ? 'border-primary shadow-[var(--focus-ring)]' : 'border-input',
+        focusVisible ? 'border-primary shadow-[var(--focus-ring)]' : 'border-border',
         disabled && 'cursor-not-allowed opacity-[var(--opacity-disabled)]'
     )}
     style:scale={stretchScale}

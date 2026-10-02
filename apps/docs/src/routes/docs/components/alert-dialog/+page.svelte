@@ -10,7 +10,7 @@
     import SignOut from './examples/sign-out.svelte';
     import SignOutSrc from './examples/sign-out.svelte?raw';
 
-    const installCommand = 'bunx @sivir-ui/svelte add alert-dialog';
+    const installCommand = 'bunx --package @sivir-ui/svelte sivir add alert-dialog';
 </script>
 
 <svelte:head>
@@ -27,8 +27,8 @@
         <div>
             <Typography.H1> Alert Dialog </Typography.H1>
             <Typography.Text variant="lead" class="mt-2 max-w-2xl">
-                A modal dialog that interrupts to confirm an action. Use it for destructive or
-                irreversible choices.
+                Asks the user to confirm or cancel before a destructive or irreversible action.
+                Clicking outside does not close it.
             </Typography.Text>
         </div>
         <DocsPager />
@@ -51,10 +51,14 @@
     <section id="usage" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading"> Usage </Typography.H2>
         <Typography.Text variant="supporting">
-            Import the AlertDialog components and use them:
+            Set <Typography.InlineCode>error</Typography.InlineCode> on
+            <Typography.InlineCode>AlertDialog.Root</Typography.InlineCode>
+            to give
+            <Typography.InlineCode>AlertDialog.Confirm</Typography.InlineCode>
+            the destructive style and turn supported browser chrome red while the dialog is open.
         </Typography.Text>
         <CodeBlock
-            code={`import * as AlertDialog from '$lib/sivir/components/alert-dialog';\nimport Shortcut from '$lib/sivir/components/shortcut';\n\n<AlertDialog.Root orientation="vertical">\n  <AlertDialog.Trigger>Delete</AlertDialog.Trigger>\n  <AlertDialog.Content size="lg">\n    <AlertDialog.Header>\n      <AlertDialog.Title>Delete?</AlertDialog.Title>\n      <AlertDialog.Description>This cannot be undone.</AlertDialog.Description>\n    </AlertDialog.Header>\n    <AlertDialog.Footer>\n      <AlertDialog.Exit>Cancel <Shortcut shortcut="esc" /></AlertDialog.Exit>\n      <AlertDialog.Confirm>Delete <Shortcut shortcut="enter" /></AlertDialog.Confirm>\n    </AlertDialog.Footer>\n  </AlertDialog.Content>\n</AlertDialog.Root>`}
+            code={`import * as AlertDialog from '@sivir-ui/svelte/components/alert-dialog';\nimport Shortcut from '@sivir-ui/svelte/components/shortcut';\n\n<AlertDialog.Root error>\n  <AlertDialog.Trigger>Delete project</AlertDialog.Trigger>\n  <AlertDialog.Content>\n    <AlertDialog.Header>\n      <AlertDialog.Title>Delete project?</AlertDialog.Title>\n      <AlertDialog.Description>Its deployments and history will be removed. This cannot be undone.</AlertDialog.Description>\n    </AlertDialog.Header>\n    <AlertDialog.Footer>\n      <AlertDialog.Exit>Cancel <Shortcut shortcut="esc" /></AlertDialog.Exit>\n      <AlertDialog.Confirm>Delete <Shortcut shortcut="enter" /></AlertDialog.Confirm>\n    </AlertDialog.Footer>\n  </AlertDialog.Content>\n</AlertDialog.Root>`}
             lang="svelte"
             copy="overlay"
         />
@@ -64,9 +68,6 @@
     <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
         <div>
             <Typography.H2 class="docs-section-heading"> Examples </Typography.H2>
-            <Typography.Text variant="supporting" class="mt-2">
-                Common patterns for destructive actions and sign-out flows.
-            </Typography.Text>
         </div>
 
         <!-- Destructive confirmation -->

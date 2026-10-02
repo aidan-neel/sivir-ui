@@ -11,7 +11,7 @@
     {...rest}
     type="button"
     variant="quiet"
-    size="md"
+    size="sm"
     data-ui="question-cancel"
     disabled={context.disabled || context.busy || disabled}
     onclick={(event: MouseEvent) => {

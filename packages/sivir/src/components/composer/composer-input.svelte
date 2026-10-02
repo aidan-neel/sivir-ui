@@ -21,12 +21,39 @@
 
     const context = getComposerContext();
     let composing = false;
+    let stacked = $state(false);
+
+    function wrapsBesideAttachments(target: HTMLTextAreaElement) {
+        const beside = target.previousElementSibling?.matches(
+            '[data-ui="attachment-list"]:not([hidden])'
+        );
+
+        if (!beside) {
+            return false;
+        }
+
+        const style = getComputedStyle(target);
+        const lineHeight = Number.parseFloat(style.lineHeight);
+        const padding =
+            Number.parseFloat(style.paddingTop) + Number.parseFloat(style.paddingBottom);
+
+        target.style.minHeight = '0px';
+        const contentHeight = target.scrollHeight - padding;
+        target.style.minHeight = '';
+
+        return contentHeight > lineHeight * 1.5;
+    }
 
     function resize(target = element) {
         if (!target) {
             return;
         }
         target.style.height = 'auto';
+        if (context.value === '') {
+            stacked = false;
+        } else if (!stacked && wrapsBesideAttachments(target)) {
+            stacked = true;
+        }
         const maxHeight = Number.parseFloat(getComputedStyle(target).maxHeight);
         const height = Number.isFinite(maxHeight)
             ? Math.min(target.scrollHeight, maxHeight)
@@ -61,6 +88,7 @@
     {...rest}
     data-ui="composer-input"
     data-state={context.status}
+    data-stacked={stacked || undefined}
     value={context.value}
     {placeholder}
     aria-label={ariaLabel}
@@ -99,6 +127,6 @@
     }}
     class={cn(
         className,
-        'min-h-16 max-h-60 w-full resize-none overflow-y-hidden bg-transparent px-4 pt-3.5 pb-1 [font-size:var(--font-size-body)] leading-body text-foreground outline-none placeholder:text-foreground-muted disabled:cursor-not-allowed disabled:opacity-[var(--opacity-disabled)] read-only:cursor-default'
+        'min-h-16 max-h-60 w-full resize-none overflow-y-hidden bg-transparent px-4 pt-3.5 pb-1 [font-size:var(--font-size-body)] leading-body text-foreground outline-none placeholder:text-foreground-muted disabled:cursor-not-allowed disabled:opacity-[var(--opacity-disabled)] read-only:cursor-default [[data-ui=attachment-list]:not([hidden])+&:not([data-stacked])]:w-auto [[data-ui=attachment-list]:not([hidden])+&:not([data-stacked])]:min-w-48 [[data-ui=attachment-list]:not([hidden])+&:not([data-stacked])]:flex-1 [[data-ui=attachment-list]:not([hidden])+&:not([data-stacked])]:ps-2'
     )}
 ></textarea>

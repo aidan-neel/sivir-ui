@@ -5,7 +5,7 @@ export const manifest: Manifest = {
     version: '1.1.0',
     visibility: 'public',
     description:
-        'Document headings, role-based text, inline code, and compact interface typography primitives.',
+        'Document headings H1 to H6, Text with lead, body, and supporting variants, inline code, and Title, Description, and Metadata for component text.',
     files: [
         'components/typography/typography-title.svelte',
         'components/typography/typography-h1.svelte',

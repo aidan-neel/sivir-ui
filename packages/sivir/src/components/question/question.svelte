@@ -18,6 +18,7 @@
         errorMessage = 'Answer could not be submitted.',
         onSubmit,
         onCancel,
+        onkeydown,
         class: className,
         children,
         ...rest
@@ -56,6 +57,9 @@
     const errorNoticeClass = 'sivir-error-notice';
 
     const context = setQuestionContext({
+        get variant() {
+            return variant;
+        },
         get type() {
             return type;
         },
@@ -202,6 +206,42 @@
         }
     }
 
+    function handleKeydown(
+        event: KeyboardEvent & { currentTarget: EventTarget & HTMLFormElement }
+    ) {
+        onkeydown?.(event);
+
+        const index = Number(event.key);
+        const typing =
+            event.target instanceof HTMLTextAreaElement ||
+            (event.target instanceof HTMLInputElement &&
+                event.target.dataset.ui !== 'question-option-input');
+
+        if (
+            event.defaultPrevented ||
+            event.altKey ||
+            event.ctrlKey ||
+            event.metaKey ||
+            typing ||
+            !Number.isInteger(index) ||
+            index < 1
+        ) {
+            return;
+        }
+
+        const control = event.currentTarget.querySelectorAll<HTMLInputElement>(
+            '[data-ui="question-option-input"]'
+        )[index - 1];
+
+        if (!control || control.disabled) {
+            return;
+        }
+
+        event.preventDefault();
+        control.focus();
+        control.click();
+    }
+
     function normalizeAnswer(
         questionType: QuestionType,
         currentValue: QuestionAnswer | undefined
@@ -257,6 +297,7 @@
         aria-busy={effectiveStatus === 'submitting'}
         novalidate
         onsubmit={handleSubmit}
+        onkeydown={handleKeydown}
         class={cn(className, 'relative w-full min-w-0 text-foreground')}
     >
         <p

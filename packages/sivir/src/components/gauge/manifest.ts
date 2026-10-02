@@ -5,7 +5,7 @@ export const manifest: Manifest = {
     version: '1.0.0',
     visibility: 'public',
     description:
-        'Compact circular meter for bounded quantities such as context remaining, usage limits, storage, and seats.',
+        'Circular meter for a value out of a maximum, with five tones and an optional center label.',
     role: 'meter',
     files: [
         'components/gauge/gauge.svelte',

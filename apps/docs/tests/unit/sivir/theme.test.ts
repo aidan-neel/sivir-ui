@@ -47,7 +47,7 @@ describe('themeToCss', () => {
         const custom = themeToCss({ ...DEFAULT_THEME, brand: '#22cc88' });
         expect(custom).toContain('--color-primary: #22cc88');
         expect(custom).toContain('--color-ring: color-mix(in srgb, #22cc88 30%, transparent)');
-        expect(custom).toContain('--sivir-blue-500: #22cc88');
+        expect(custom).toContain('--sivir-blue-500: var(--color-primary)');
     });
 
     it('maps the foundation muted-text color to the muted foreground token', () => {

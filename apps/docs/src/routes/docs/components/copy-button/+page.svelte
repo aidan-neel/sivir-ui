@@ -12,14 +12,14 @@
 
     const _TITLE = 'Copy Button';
 
-    const installCommand = 'bunx @sivir-ui/svelte add copy-button';
+    const installCommand = 'bunx --package @sivir-ui/svelte sivir add copy-button';
 </script>
 
 <svelte:head>
     <title>Sivir · Copy Button</title>
     <meta
         name="description"
-        content="A one-tap clipboard button with a Copy↔Check icon morph and an animated tooltip label."
+        content="A button that copies a string to the clipboard and confirms with a check icon and tooltip."
     />
 </svelte:head>
 
@@ -29,7 +29,8 @@
         <div>
             <Typography.H1> Copy Button </Typography.H1>
             <Typography.Text variant="lead" class="mt-2 max-w-2xl">
-                A button that copies text to the clipboard, with copy and copied states.
+                Copies its text on click. The icon turns into a check and the tooltip reads Copied
+                for two seconds, then both revert.
             </Typography.Text>
         </div>
         <DocsPager />
@@ -52,18 +53,30 @@
     <section id="usage" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading"> Usage </Typography.H2>
         <Typography.Text variant="supporting">
-            Import Copy Button and pass the text to copy:
+            <Typography.InlineCode>text</Typography.InlineCode>
+            is required. The button is icon-only by default, so
+            <Typography.InlineCode>label</Typography.InlineCode>
+            sets both the tooltip and the accessible name. To show a visible label, pass children
+            and a text
+            <Typography.InlineCode>size</Typography.InlineCode>
+            such as
+            <Typography.InlineCode>sm</Typography.InlineCode>; the default
+            <Typography.InlineCode>icon</Typography.InlineCode>
+            size clips text.
         </Typography.Text>
         <CodeBlock
-            code={`import { CopyButton } from '$lib/sivir/components/copy-button';\n\n<CopyButton text="bun add @sivir-ui/svelte" />\n<CopyButton text={apiKey} label="Copy key" variant="outline" />`}
+            code={`import { CopyButton } from '@sivir-ui/svelte/components/copy-button';\n\n<CopyButton text="bun add @sivir-ui/svelte" />\n<CopyButton text={apiKey} label="Copy key" variant="outline" />\n<CopyButton text={inviteUrl} size="sm">Copy link</CopyButton>`}
             lang="svelte"
             copy="overlay"
         />
         <Typography.Text variant="supporting">
-            The tooltip opens after 125ms. Pass
+            The tooltip opens after 125ms. Raise
             <Typography.InlineCode>tooltipDelay</Typography.InlineCode>
-            to wait longer, such as in a row of quiet message actions where tooltips should only
-            appear when someone lingers.
+            in a row of message actions so tooltips appear only when the pointer rests.
+            <Typography.InlineCode>duration</Typography.InlineCode>
+            sets how long the copied state holds (2000ms by default), and
+            <Typography.InlineCode>oncopy</Typography.InlineCode>
+            fires after a successful write.
         </Typography.Text>
     </section>
 
@@ -71,9 +84,6 @@
     <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
         <div>
             <Typography.H2 class="docs-section-heading"> Examples </Typography.H2>
-            <Typography.Text variant="supporting" class="mt-2">
-                Copy Button in common compositions and contexts.
-            </Typography.Text>
         </div>
 
         <div id="in-a-field" class="scroll-mt-20 flex flex-col gap-3">

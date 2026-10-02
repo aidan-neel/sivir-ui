@@ -26,9 +26,13 @@
     const spinDuration = $derived(`${850 / (speed > 0 ? speed : 1)}ms`);
     const showCheckmark = $derived(phase === 'success' || phase === 'exiting');
     const collapsed = $derived(!entered || phase === 'exiting');
-    const loaderBlur = $derived(showCheckmark || !entered ? 'blur(2px)' : 'blur(0px)');
+    const loaderBlur = $derived(
+        showCheckmark || !entered ? 'blur(var(--motion-swap-blur))' : 'blur(0px)'
+    );
     const checkBlur = $derived(
-        phase === 'exiting' || !entered || !showCheckmark ? 'blur(2px)' : 'blur(0px)'
+        phase === 'exiting' || !entered || !showCheckmark
+            ? 'blur(var(--motion-swap-blur))'
+            : 'blur(0px)'
     );
 
     $effect(() => {
@@ -90,9 +94,9 @@
         <LoaderCircle
             {size}
             aria-hidden="true"
-            class={`absolute inset-0 m-auto ${curved ? 'animate-[sivir-spinner-spin_linear_infinite]' : 'animate-spin'} transition-[filter,opacity,transform] duration-[var(--motion-duration-panel)] ease-[var(--ease-out)] motion-reduce:animate-none motion-reduce:transition-none ${
+            class={`absolute inset-0 m-auto ${curved ? 'animate-[sivir-spinner-spin_linear_infinite]' : 'animate-spin'} transition-[filter,opacity,scale,rotate] duration-[var(--motion-duration-swap)] ease-[var(--ease-out)] motion-reduce:animate-none motion-reduce:transition-none ${
                 showCheckmark || !entered
-                    ? '-rotate-90 scale-75 opacity-0'
+                    ? '-rotate-[var(--motion-swap-rotate)] scale-[var(--motion-swap-scale)] opacity-0'
                     : 'rotate-0 scale-100 opacity-100'
             }`}
             style={`filter: ${loaderBlur}; animation-duration: ${spinDuration};`}
@@ -100,12 +104,12 @@
         <Check
             {size}
             aria-hidden="true"
-            class={`absolute inset-0 m-auto transition-[filter,opacity,transform] duration-[var(--motion-duration-panel)] ease-[var(--ease-out)] motion-reduce:transition-none ${
+            class={`absolute inset-0 m-auto transition-[filter,opacity,scale,rotate] duration-[var(--motion-duration-swap)] ease-[var(--ease-out)] motion-reduce:transition-none ${
                 phase === 'exiting' || !entered
-                    ? 'scale-75 opacity-0'
+                    ? 'scale-[var(--motion-swap-scale)] opacity-0'
                     : showCheckmark
                       ? 'rotate-0 scale-100 opacity-100'
-                      : 'rotate-90 scale-75 opacity-0'
+                      : 'rotate-[var(--motion-swap-rotate)] scale-[var(--motion-swap-scale)] opacity-0'
             }`}
             style={`filter: ${checkBlur};`}
         />

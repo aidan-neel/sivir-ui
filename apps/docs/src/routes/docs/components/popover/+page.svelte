@@ -12,7 +12,7 @@
 
     const _TITLE = 'Popover';
 
-    const installCommand = 'bunx @sivir-ui/svelte add popover';
+    const installCommand = 'bunx --package @sivir-ui/svelte sivir add popover';
 </script>
 
 <svelte:head>
@@ -26,7 +26,10 @@
         <div>
             <Typography.H1> Popover </Typography.H1>
             <Typography.Text variant="lead" class="mt-2 max-w-2xl">
-                A floating surface anchored to a trigger. Supports four placements.
+                Opens a panel next to its trigger. Set
+                <Typography.InlineCode>placement</Typography.InlineCode>
+                to any side and alignment; the panel flips to the opposite side when it would
+                overflow the viewport.
             </Typography.Text>
         </div>
         <DocsPager />
@@ -49,20 +52,23 @@
     <section id="usage" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading">Usage</Typography.H2>
         <Typography.Text variant="supporting">
-            Import Popover and compose it with sub-components. Content with
+            <Typography.InlineCode>Popover.Content</Typography.InlineCode>
+            has
             <Typography.InlineCode>role="dialog"</Typography.InlineCode>
-            takes its accessible name from
+            and takes its accessible name from
             <Typography.InlineCode>Popover.Title</Typography.InlineCode>, so include one or pass
             <Typography.InlineCode>aria-label</Typography.InlineCode>.
         </Typography.Text>
         <Typography.Text variant="supporting">
-            Open non-hover popovers make outside document content inert by default. Set
+            While a popover is open, the rest of the page is inert unless
+            <Typography.InlineCode>hoverable</Typography.InlineCode>
+            is set. Set
             <Typography.InlineCode>{'inert={false}'}</Typography.InlineCode>
             on <Typography.InlineCode>Popover.Root</Typography.InlineCode> only when the surrounding
             page must remain interactive.
         </Typography.Text>
         <CodeBlock
-            code={`import * as Popover from '$lib/sivir/components/popover';\nimport { Textarea } from '$lib/sivir/components/textarea';\n\n<Popover.Root>\n  <Popover.Trigger>Feedback</Popover.Trigger>\n  <Popover.Content class="w-80">\n    <Popover.Title>Send feedback</Popover.Title>\n    <Textarea placeholder="What’s working, and what isn’t?" />\n  </Popover.Content>\n</Popover.Root>`}
+            code={`import * as Popover from '@sivir-ui/svelte/components/popover';\nimport { Textarea } from '@sivir-ui/svelte/components/textarea';\n\n<Popover.Root>\n  <Popover.Trigger>Feedback</Popover.Trigger>\n  <Popover.Content class="w-80">\n    <Popover.Title>Send feedback</Popover.Title>\n    <Textarea placeholder="What’s working, and what isn’t?" />\n  </Popover.Content>\n</Popover.Root>`}
             lang="svelte"
             copy="overlay"
         />
@@ -72,9 +78,6 @@
     <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
         <div>
             <Typography.H2 class="docs-section-heading">Examples</Typography.H2>
-            <Typography.Text variant="supporting" class="mt-2">
-                Explore the Popover in different placements and compositions.
-            </Typography.Text>
         </div>
 
         <!-- Basic popover -->

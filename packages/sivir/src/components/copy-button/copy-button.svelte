@@ -21,6 +21,12 @@
         ...rest
     }: CopyButtonProps = $props();
 
+    const iconClass =
+        'col-start-1 row-start-1 transition-[opacity,filter,scale,rotate,translate] [transition-duration:var(--motion-duration-swap)] ease-[var(--ease-out)]';
+    const shownIconClass = 'rotate-0 scale-100 opacity-100 blur-[0]';
+    const hiddenIconClass =
+        'scale-[var(--motion-swap-scale)] opacity-0 blur-[var(--motion-swap-blur)]';
+
     let copied = $state(false);
     let timer: ReturnType<typeof setTimeout> | undefined;
 
@@ -78,22 +84,25 @@
             aria-label={copied ? copiedLabel : label}
             onclick={copy}
         >
-            <!-- Copy ↔ Check morph: the two icons share one grid cell and cross-fade
-			     with a scale + quarter-turn so one twists out as the other twists in.
-			     Tailwind v4 animates rotate/scale as their own properties, so they
-			     must be named in the transition alongside transform and opacity. -->
             <span class="relative grid size-4 place-items-center">
                 <Copy
                     size={15}
-                    class={`col-start-1 row-start-1 transition-[transform,translate,scale,rotate,opacity] [transition-duration:var(--motion-duration-panel)] ease-[var(--ease-out)] ${
-                        copied ? '-rotate-90 scale-50 opacity-0' : 'rotate-0 scale-100 opacity-100'
-                    }`}
+                    class={cn(
+                        iconClass,
+                        copied
+                            ? [hiddenIconClass, '-rotate-[var(--motion-swap-rotate)]']
+                            : shownIconClass
+                    )}
                 />
                 <Check
                     size={15}
-                    class={`col-start-1 row-start-1 text-[var(--color-success)] transition-[transform,translate,scale,rotate,opacity] [transition-duration:var(--motion-duration-panel)] ease-[var(--ease-out)] ${
-                        copied ? 'rotate-0 scale-100 opacity-100' : 'rotate-90 scale-50 opacity-0'
-                    }`}
+                    class={cn(
+                        iconClass,
+                        'text-[var(--color-success)]',
+                        copied
+                            ? shownIconClass
+                            : [hiddenIconClass, 'rotate-[var(--motion-swap-rotate)]']
+                    )}
                 />
             </span>
             {#if children}

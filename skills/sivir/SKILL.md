@@ -5,7 +5,7 @@ description: Builds and refines Svelte 5 interfaces with Sivir UI using its live
 
 # Sivir
 
-Build production Svelte interfaces from Sivir's current APIs and design system instead of guessing from generic component-library patterns.
+Build Svelte interfaces from Sivir's current APIs and design system. Do not guess from generic component-library patterns.
 
 ## Step 1: Establish the Project State
 
@@ -15,7 +15,7 @@ Inspect the project before changing code:
 2. Read the package manifest, lockfile, global CSS entry, and nearby Svelte components.
 3. Detect the integration mode:
    - Package mode: `@sivir-ui/svelte` is a dependency and components import from it.
-   - Source-copy mode: `sivir.json` and a local Sivir directory exist.
+   - Source-copy mode: `sivir.json` exists and components import from its `alias` (default `$lib/sivir`).
    - Not installed: neither mode is present.
 4. Identify the installed Sivir package version or the component versions recorded in `sivir.json`.
 5. Preserve the project's package manager, import style, aliases, theme, and local component conventions.
@@ -48,28 +48,26 @@ Use this authority order when sources disagree:
 
 If the project is behind the live release, adapt to the installed API or ask before upgrading. Do not paste latest-only syntax into an older installation.
 
-If web access is unavailable, inspect local Sivir source or installed declarations. State that the live reference could not be checked rather than guessing.
+If web access is unavailable, inspect local Sivir source or installed declarations, and say that the live reference could not be checked.
 
 ## Step 3: Model the Interface
 
-State the user's job, the dominant content or action, and the important empty, loading, success, and error states. For substantial pages, compare at least two materially different compositions and choose the one that makes the task clearest.
+Name the user's job, the dominant content or action, and the empty, loading, error, and success states before choosing components.
 
-Read `references/design-language.md` relative to this skill before creating or substantially reshaping an interface. Follow the host application's established visual system when it is more specific than Sivir's defaults.
-
-Choose geometry before components. Sivir is a set of purposeful primitives, not a requirement to wrap every region in a component.
+Read `references/design-language.md` relative to this skill before creating or substantially reshaping an interface. Where the host application has its own visual system, follow it over Sivir's defaults.
 
 ## Step 4: Select and Verify Components
 
 Read `references/component-selection.md` relative to this skill when selecting new primitives or composing an AI interface.
 
-Prefer the highest-level Sivir component that matches the interaction semantics. Use native Svelte and semantic HTML for layout and content where Sivir adds no behavior. Avoid recreating focus management, keyboard navigation, overlays, live regions, loading behavior, or controlled state already supplied by a component.
+Prefer the highest-level Sivir component that matches the interaction semantics. Use plain Svelte and semantic HTML for layout and content where Sivir adds no behavior; do not wrap every region in a component. Do not recreate focus management, keyboard navigation, overlays, live regions, loading behavior, or controlled state that a component already provides.
 
 Before implementation:
 
 1. List the selected component slugs.
 2. Fetch each selected component page from the links in `llms.txt`.
 3. Confirm exports, required props, bindable state, event signatures, dependencies, and examples.
-4. Reject removed components listed in the current components index and follow its migration guidance.
+4. Do not use removed components. The components index lists them with replacements, for example Panel became `Card.Root variant="panel"` and Separator became a semantic `<hr>`.
 5. Keep compound components in their documented namespace shape, such as `Modal.Root` and `Modal.Content`.
 
 Examples are API evidence, not page templates. Adapt their state model and composition to the user's real content.
@@ -97,7 +95,7 @@ Import the token sheet once in the application's global CSS:
 @import '@sivir-ui/svelte/ui.css';
 ```
 
-Ignore the `sivir add` command in a component page when using package mode. That command is only for source-copy projects; package components are already available through the installed dependency.
+Do not add `@import 'tailwindcss';` as well; `ui.css` imports Tailwind and registers Sivir's components as a Tailwind source. In package mode, skip the `sivir add` command shown on component pages. It copies source and only applies to source-copy projects.
 
 For source-copy mode:
 
@@ -106,39 +104,33 @@ bunx --package @sivir-ui/svelte sivir init -y
 bunx --package @sivir-ui/svelte sivir add <component-slug>
 ```
 
-`init` points the root stylesheet from `sv add tailwindcss` at the generated token sheet, which includes Tailwind. For any other stylesheet, import it once in place of `@import 'tailwindcss';`. Use the aliases recorded in `sivir.json`; do not assume the default path if configuration already exists. Let the CLI resolve transitive Sivir dependencies. Add only components required by the design.
+`init -y` copies `ui.css` and shared utilities into `src/lib/sivir`, writes `sivir.json`, installs missing base dependencies, and replaces `@import 'tailwindcss';` with an import of `ui.css` in the stylesheet `sv add tailwindcss` created (`src/routes/layout.css` or `src/app.css`). For any other stylesheet, make that replacement yourself. Without `-y`, `init` prompts for the directory and alias and confirms the dependency install and stylesheet edit. If `sivir.json` already exists, use its `dir` and `alias` instead of the defaults. Let the CLI resolve transitive Sivir dependencies, and add only the components the design needs.
 
-Treat `sivir add` as an operation for missing source, not a safe update command. It skips existing files that differ from the registry unless `--overwrite` is passed but can still advance recorded versions in `sivir.json`. Before updating copied components, inspect local modifications and the upstream change, then ask before using `--overwrite` because it replaces owned source.
+`sivir list` prints installable component slugs and built-in theme slugs. `sivir add theme <slug>` writes `theme.css` into the Sivir directory; import it after `ui.css`.
+
+`sivir add` installs missing source; it is not a safe update command. It leaves existing files that differ from the registry untouched unless `--overwrite` is passed, but it still records the new component version in `sivir.json`. Before updating copied components, inspect local modifications and the upstream change, then ask before using `--overwrite`, because it replaces owned source.
 
 ## Step 6: Implement in Sivir's Language
 
-Use Svelte 5 state and binding patterns that match the project's code. Preserve native semantics and use the component's typed callbacks and bindable props as documented.
+Use Svelte 5 state and binding patterns that match the project's code. Use each component's typed callbacks and bindable props as documented.
 
-Use Sivir semantic tokens and Tailwind utilities before custom values. Let typography, alignment, spacing, and content hierarchy do most of the visual work. Add surfaces, borders, radii, color, and motion only when they communicate grouping, interaction, state, or continuity.
+Use Sivir's semantic color utilities (`bg-background`, `bg-card`, `bg-secondary`, `text-foreground`, `text-foreground-muted`, `border-border`, `text-primary`) and existing Tailwind utilities before custom values. Dark mode applies under a `.dark` class on `<html>`, where some components also read it; Sivir does not toggle it.
 
-For AI interfaces, compose transcript behavior, message roles, response content, reasoning, tools, questions, progress, attachments, and the composer as separate stateful concerns. Do not make every assistant event look like a chat bubble, and do not animate already-live network chunks merely for decoration.
+For AI interfaces, treat the transcript, message roles, response content, reasoning, tools, questions, progress, attachments, and the composer as separate stateful parts. Do not render every assistant event as a chat bubble, and do not animate text that is already arriving live.
 
-Implement real states, not only the ideal screenshot:
-
-- Empty content gives a useful next action.
-- Loading preserves layout and communicates what is pending.
-- Errors explain what failed and how to recover.
-- Success confirms the user's action without unnecessary ceremony.
-- Long content wraps or scrolls in the correct local region.
+Build the empty, loading, error, and success states, and make long content wrap or scroll in its own region.
 
 ## Step 7: Verify the Result
 
-Run the project's normal lightweight formatting and lint checks. Run broader checks only when requested or required by the host repository.
+Run the project's normal format and lint checks. Run broader checks only when the user or host repository requires them.
 
-Inspect the rendered interface at desktop and narrow widths, in every supported theme. Exercise keyboard focus, overlays, escape and outside-click behavior, form submission, disabled and pending states, transcript following, and long content where applicable. Check the browser console for runtime and accessibility errors.
+Inspect the rendered interface at desktop and narrow widths, in light and dark mode. Exercise keyboard focus, overlays (Escape and outside click), form submission, disabled and pending states, transcript following, and long content where they apply. Check the browser console for errors.
 
 Before finishing, confirm:
 
 - Every Sivir API used matches the installed version.
-- The stylesheet or local token sheet is imported exactly once.
-- The first viewport makes the task and dominant action or content clear.
-- Responsive behavior recomposes rather than merely shrinking.
-- No decorative container, label, icon, color, or motion can be removed without losing meaning.
-- The implementation uses real product content and covers relevant non-happy states.
+- `ui.css` (package or local copy) is imported exactly once, with no separate Tailwind import.
+- The result passes the review steps in `references/design-language.md` from this skill.
+- The interface uses real product content, not placeholder copy.
 
-Report the Sivir components added, integration mode, verification performed, and any version or documentation limitation.
+Report the Sivir components added, the integration mode, the verification performed, and any version or documentation limitation.

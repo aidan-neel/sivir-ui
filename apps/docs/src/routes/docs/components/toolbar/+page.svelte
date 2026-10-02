@@ -16,7 +16,7 @@
     <title>Sivir · Toolbar</title>
     <meta
         name="description"
-        content="A semantic action row for message composers, replies, and other text entry surfaces."
+        content="A row of actions with role=toolbar for message composers and reply fields."
     />
 </svelte:head>
 
@@ -25,8 +25,8 @@
         <div>
             <Typography.H1> Toolbar </Typography.H1>
             <Typography.Text variant="lead" class="mt-2 max-w-2xl">
-                A semantic action row for the controls beneath a message composer, reply field, or
-                note editor.
+                Renders a div with role="toolbar" and pushes its children to opposite ends. Group
+                secondary actions on the left and put the send button last.
             </Typography.Text>
         </div>
         <DocsPager />
@@ -41,11 +41,12 @@
     <section id="usage" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading">Usage</Typography.H2>
         <Typography.Text variant="supporting">
-            Place Toolbar inside Textarea to create one composer surface. Give the Toolbar an
-            accessible label that describes its actions.
+            Pass Toolbar as Textarea's children to render it inside the field's border, below the
+            text. Give it an <Typography.InlineCode>aria-label</Typography.InlineCode> that names
+            the actions.
         </Typography.Text>
         <CodeBlock
-            code={`import { Textarea } from '@sivir-ui/svelte/components/textarea';\nimport { Toolbar } from '@sivir-ui/svelte/components/toolbar';\n\n<Textarea autoresize aria-label="New message">\n\t<Toolbar aria-label="Message actions">\n\t\t<!-- Icon actions and send control -->\n\t</Toolbar>\n</Textarea>`}
+            code={`import ArrowUp from '@lucide/svelte/icons/arrow-up';\nimport Paperclip from '@lucide/svelte/icons/paperclip';\nimport { Button } from '@sivir-ui/svelte/components/button';\nimport { Textarea } from '@sivir-ui/svelte/components/textarea';\nimport { Toolbar } from '@sivir-ui/svelte/components/toolbar';\n\n<Textarea autoresize aria-label="New message">\n\t<Toolbar aria-label="Message actions">\n\t\t<Button variant="ghost" size="icon" aria-label="Attach a file">\n\t\t\t<Paperclip size={14} />\n\t\t</Button>\n\t\t<Button type="submit" size="icon" aria-label="Send message">\n\t\t\t<ArrowUp size={14} />\n\t\t</Button>\n\t</Toolbar>\n</Textarea>`}
             lang="svelte"
             copy="overlay"
         />
@@ -54,9 +55,6 @@
     <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
         <div>
             <Typography.H2 class="docs-section-heading">Examples</Typography.H2>
-            <Typography.Text variant="supporting" class="mt-2">
-                Compose the action row with the controls your workflow needs.
-            </Typography.Text>
         </div>
 
         <div id="issue-reply" class="scroll-mt-20 flex flex-col gap-3">

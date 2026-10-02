@@ -22,14 +22,14 @@
 
     const _TITLE = 'Dropdown Menu';
 
-    const installCommand = 'bunx @sivir-ui/svelte add dropdown-menu';
+    const installCommand = 'bunx --package @sivir-ui/svelte sivir add dropdown-menu';
 </script>
 
 <svelte:head>
     <title>Sivir · Dropdown Menu</title>
     <meta
         name="description"
-        content="A list of actions anchored to a button. Use it for user menus, row-level actions, and anywhere a `…` button needs to do more than one thing."
+        content="A menu of actions, checkboxes, and radio options that opens from a button."
     />
 </svelte:head>
 
@@ -39,7 +39,8 @@
         <div>
             <Typography.H1> Dropdown Menu </Typography.H1>
             <Typography.Text variant="lead" class="mt-2 max-w-2xl">
-                A menu of actions anchored to a button.
+                Opens below the trigger, aligned to its start edge, and closes when you pick an
+                item. Escape closes the deepest open submenu first.
             </Typography.Text>
         </div>
         <DocsPager />
@@ -62,10 +63,21 @@
     <section id="usage" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading"> Usage </Typography.H2>
         <Typography.Text variant="supporting">
-            Import Dropdown Menu and compose it with sub-components:
+            Run an action with <Typography.InlineCode>callback</Typography.InlineCode> or
+            <Typography.InlineCode>onclick</Typography.InlineCode>
+            on
+            <Typography.InlineCode>DropdownMenu.Item</Typography.InlineCode>. Bind
+            <Typography.InlineCode>checked</Typography.InlineCode>
+            on
+            <Typography.InlineCode>CheckboxItem</Typography.InlineCode>
+            and
+            <Typography.InlineCode>value</Typography.InlineCode>
+            on
+            <Typography.InlineCode>RadioGroup</Typography.InlineCode>
+            to read the selection.
         </Typography.Text>
         <CodeBlock
-            code={`import * as DropdownMenu from '$lib/sivir/components/dropdown-menu';\nimport Shortcut from '$lib/sivir/components/shortcut';\n\n<DropdownMenu.Root>\n  <DropdownMenu.Trigger>Menu</DropdownMenu.Trigger>\n  <DropdownMenu.Content>\n    <DropdownMenu.Item callback={handleClick}>\n      Action\n      <Shortcut shortcut="cmd+K" />\n    </DropdownMenu.Item>\n  </DropdownMenu.Content>\n</DropdownMenu.Root>`}
+            code={`import * as DropdownMenu from '@sivir-ui/svelte/components/dropdown-menu';\nimport Shortcut from '@sivir-ui/svelte/components/shortcut';\n\nlet showArchived = $state(false);\n\n<DropdownMenu.Root>\n  <DropdownMenu.Trigger>View</DropdownMenu.Trigger>\n  <DropdownMenu.Content>\n    <DropdownMenu.Item callback={() => navigator.clipboard.writeText(location.href)}>\n      Copy link\n      <Shortcut shortcut="shift+cmd+C" />\n    </DropdownMenu.Item>\n    <DropdownMenu.CheckboxItem bind:checked={showArchived}>\n      Show archived\n    </DropdownMenu.CheckboxItem>\n  </DropdownMenu.Content>\n</DropdownMenu.Root>`}
             lang="svelte"
             copy="overlay"
         />
@@ -75,9 +87,6 @@
     <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
         <div>
             <Typography.H2 class="docs-section-heading"> Examples </Typography.H2>
-            <Typography.Text variant="supporting" class="mt-2">
-                Dropdown menus in common patterns and real-world use cases.
-            </Typography.Text>
         </div>
 
         <!-- Basic menu -->
@@ -123,7 +132,9 @@
         <div id="configuration-menu" class="scroll-mt-20 flex flex-col gap-3">
             <Typography.H3 class="docs-subsection-heading"> Configuration submenu </Typography.H3>
             <Typography.Text variant="supporting">
-                Nested choices for configuring a model, effort level, and response speed.
+                Each <Typography.InlineCode>SubTrigger</Typography.InlineCode> opens its
+                <Typography.InlineCode>SubContent</Typography.InlineCode>
+                on hover.
             </Typography.Text>
             <ComponentPreview code={ConfigurationSrc}>
                 <Configuration />
@@ -133,8 +144,11 @@
         <div id="dynamic-width" class="scroll-mt-20 flex flex-col gap-3">
             <Typography.H3 class="docs-subsection-heading"> Dynamic width </Typography.H3>
             <Typography.Text variant="supporting">
-                Menus and submenus size to their longest item plus a buffer instead of hugging the
-                trigger.
+                Set <Typography.InlineCode>dynamic</Typography.InlineCode> on
+                <Typography.InlineCode>Content</Typography.InlineCode>
+                or
+                <Typography.InlineCode>SubContent</Typography.InlineCode>
+                to size the panel to its widest item plus 16px.
             </Typography.Text>
             <ComponentPreview code={DynamicWidthSrc}>
                 <DynamicWidth />

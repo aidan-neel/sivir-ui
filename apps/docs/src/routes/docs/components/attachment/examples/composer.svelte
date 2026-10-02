@@ -16,7 +16,7 @@
 
 <Attachment.Root bind:files class="w-full max-w-2xl">
     <Composer.Root bind:value onSubmit={send}>
-        <Attachment.List class="px-3 pt-3" />
+        <Attachment.List />
         <Composer.Input aria-label="Prompt" placeholder="Paste a screenshot or drop files..." />
         <Composer.Toolbar>
             <Composer.Actions>

@@ -9,7 +9,7 @@
     import HeroSrc from './examples/hero.svelte?raw';
 
     const TITLE = 'Show More';
-    const installCommand = 'bunx @sivir-ui/svelte add show-more';
+    const installCommand = 'bunx --package @sivir-ui/svelte sivir add show-more';
 </script>
 
 <svelte:head>
@@ -22,7 +22,8 @@
         <div>
             <Typography.H1>{TITLE}</Typography.H1>
             <Typography.Text variant="lead" class="mt-2 max-w-2xl">
-                Keeps long content scannable, then reveals the complete detail in place.
+                Clamps content to a set number of lines and expands it in place. The toggle renders
+                only when the content is taller than the clamp.
             </Typography.Text>
         </div>
         <DocsPager />
@@ -42,18 +43,22 @@
     <section id="usage" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading">Usage</Typography.H2>
         <Typography.Text variant="supporting">
-            The disclosure is shown only when content exceeds
-            <Typography.InlineCode>lines</Typography.InlineCode>. Bind
+            <Typography.InlineCode>lines</Typography.InlineCode>
+            sets the collapsed height and defaults to 3. Expanded content taller than
+            <Typography.InlineCode>maxHeight</Typography.InlineCode>
+            (320px by default) scrolls, and
+            <Typography.InlineCode>label</Typography.InlineCode>
+            names that scroll region. Bind
             <Typography.InlineCode>expanded</Typography.InlineCode>
             when another control needs to coordinate the state.
         </Typography.Text>
         <CodeBlock
-            code={`import { ShowMore } from '$lib/sivir/components/show-more';
+            code={`import { ShowMore } from '@sivir-ui/svelte/components/show-more';
 
 let expanded = $state(false);
 
-<ShowMore bind:expanded lines={3} maxHeight={320} label="Release notes">
-  <p>{releaseNotes}</p>
+<ShowMore bind:expanded lines={3} label="Release notes">
+  <p>Version 2.4 adds offline drafts, faster search across archived threads, and a fix for attachments failing to upload on slow connections.</p>
 </ShowMore>`}
             lang="svelte"
             copy="overlay"

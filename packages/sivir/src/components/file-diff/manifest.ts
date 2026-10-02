@@ -5,7 +5,7 @@ export const manifest: Manifest = {
     version: '1.3.0',
     visibility: 'public',
     description:
-        'Unified file diff with a path top bar, addition/deletion counts, dual line-number gutters, and per-row syntax highlighting via highlight.js with a built-in GitHub palette; theme="custom" skips the token colors for any highlight.js theme stylesheet.',
+        'Unified diff for one file: path and change counts in a top bar, old and new line-number gutters, and rows highlighted with highlight.js. theme="custom" drops the built-in token colors so a highlight.js stylesheet can apply.',
     role: 'table',
     files: [
         'components/file-diff/file-diff.svelte',

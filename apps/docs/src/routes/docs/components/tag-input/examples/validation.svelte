@@ -23,7 +23,7 @@
         {validate}
         {error}
         label="Slugs"
-        description="Lowercase slugs, no spaces — try “Release Notes”."
+        description="Lowercase, with hyphens. Try adding “Release Notes”."
         onAdd={() => {
             error = '';
         }}

@@ -14,7 +14,7 @@
     const TITLE = 'Accordion';
     const SLUG = 'accordion';
 
-    const installCommand = `bunx @sivir-ui/svelte add ${SLUG}`;
+    const installCommand = `bunx --package @sivir-ui/svelte sivir add ${SLUG}`;
 </script>
 
 <svelte:head>
@@ -33,8 +33,11 @@
                 {TITLE}
             </Typography.H1>
             <Typography.Text variant="lead" class="mt-2 max-w-2xl">
-                A vertical stack of collapsible sections. Single mode opens one at a time; multiple
-                allows any combination.
+                A vertical stack of collapsible sections. With
+                <Typography.InlineCode>type="single"</Typography.InlineCode>, the default, opening a
+                section closes the open one. With
+                <Typography.InlineCode>type="multiple"</Typography.InlineCode>, any number can stay
+                open.
             </Typography.Text>
         </div>
         <DocsPager />
@@ -57,10 +60,14 @@
     <section id="usage" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading"> Usage </Typography.H2>
         <Typography.Text variant="supporting">
-            Import the Accordion components and use them:
+            Give each Item a unique <Typography.InlineCode>value</Typography.InlineCode>. Root's
+            bindable <Typography.InlineCode>value</Typography.InlineCode> holds the open items: a
+            string in single mode, an array of strings in multiple mode. In single mode, clicking
+            the open item closes it unless you set
+            <Typography.InlineCode>{'collapsible={false}'}</Typography.InlineCode>.
         </Typography.Text>
         <CodeBlock
-            code={`import * as Accordion from '$lib/sivir/components/accordion';\n\n<Accordion.Root type="single">\n  <Accordion.Item value="a">\n    <Accordion.Trigger>Trigger</Accordion.Trigger>\n    <Accordion.Content>Content</Accordion.Content>\n  </Accordion.Item>\n</Accordion.Root>`}
+            code={`import * as Accordion from '@sivir-ui/svelte/components/accordion';\n\n<Accordion.Root type="single" value="shipping">\n  <Accordion.Item value="shipping">\n    <Accordion.Trigger>Shipping</Accordion.Trigger>\n    <Accordion.Content>Orders ship within two business days.</Accordion.Content>\n  </Accordion.Item>\n  <Accordion.Item value="returns">\n    <Accordion.Trigger>Returns</Accordion.Trigger>\n    <Accordion.Content>Return unworn items within 30 days.</Accordion.Content>\n  </Accordion.Item>\n</Accordion.Root>`}
             lang="svelte"
             copy="overlay"
         />

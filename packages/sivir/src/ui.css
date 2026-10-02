@@ -98,9 +98,7 @@
         inset 0 -2px 3px -2px rgb(15 15 16 / 0.08), inset 0 1px 0 0 rgb(255 255 255 / 0.4);
     --elevation-button-outline:
         inset 0 0 0 var(--border-size) var(--color-border),
-        inset 0 -2px 3px -2px rgb(15 15 16 / 0.08),
-        inset 0 1px 0 0 rgb(255 255 255 / 0.45), 0 1px 1px rgb(28 25 23 / 0.06),
-        0 2px 4px -4px rgb(28 25 23 / 0.22);
+        inset 0 -2px 3px -2px rgb(15 15 16 / 0.08), inset 0 1px 0 0 rgb(255 255 255 / 0.45);
     --focus-ring: 0 0 0 3px var(--color-ring);
 
     --motion-duration-hover: 120ms;
@@ -116,6 +114,7 @@
     --motion-menu-y: 2px;
     --motion-menu-scale-start: 0.97;
     --motion-menu-blur: 2px;
+    --motion-menu-origin: top left;
     --motion-modal-y: 4px;
     --motion-modal-scale-start: 0.93;
     --motion-modal-blur: 2px;
@@ -133,6 +132,14 @@
     --motion-press-px: var(--size-hairline);
     --motion-duration-press: 160ms;
     --motion-duration-item: 160ms;
+    --motion-duration-switch: 280ms;
+    --motion-switch-stretch: 1;
+    --motion-slider-stretch: 1;
+    --motion-duration-swap: var(--motion-duration-panel);
+    --motion-swap-blur: var(--motion-menu-blur);
+    --motion-swap-scale: 0.5;
+    --motion-swap-rotate: 90deg;
+    --motion-swap-y: 3px;
     --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
     --ease-press: cubic-bezier(0.22, 1, 0.36, 1);
     --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
@@ -235,9 +242,8 @@
         inset 0 0 0 var(--border-size) var(--color-border), inset 0 -2px 3px -2px rgb(0 0 0 / 0.32),
         inset 0 1px 0 0 rgb(255 255 255 / 0.05);
     --elevation-button-outline:
-        inset 0 0 0 var(--border-size) var(--color-border),
-        inset 0 -2px 3px -2px rgb(0 0 0 / 0.32),
-        inset 0 1px 0 0 rgb(255 255 255 / 0.05), 0 1px 2px rgb(0 0 0 / 0.3);
+        inset 0 0 0 var(--border-size) var(--color-border), inset 0 -2px 3px -2px rgb(0 0 0 / 0.32),
+        inset 0 1px 0 0 rgb(255 255 255 / 0.05);
 }
 
 /*
@@ -273,10 +279,10 @@
         position: relative;
         z-index: 1;
         background-color: transparent;
-        transition-property: border-color, color, box-shadow, transform, scale;
+        transition-property: background-color, border-color, color, box-shadow, transform, scale;
         transition-duration:
-            var(--motion-duration-menu), var(--motion-duration-menu), var(--motion-duration-menu),
-            var(--motion-duration-press), var(--motion-duration-press);
+            var(--motion-duration-hover), var(--motion-duration-menu), var(--motion-duration-menu),
+            var(--motion-duration-menu), var(--motion-duration-press), var(--motion-duration-press);
         transition-timing-function: var(--ease-press);
     }
 
@@ -322,9 +328,9 @@
         opacity: 0;
         transition-property: transform, width, height, opacity;
         transition-duration:
-            var(--sivir-traveling-highlight, var(--motion-duration-item)),
-            var(--sivir-traveling-highlight, var(--motion-duration-item)),
-            var(--sivir-traveling-highlight, var(--motion-duration-item)),
+            var(--sivir-traveling-highlight, var(--motion-duration-hover)),
+            var(--sivir-traveling-highlight, var(--motion-duration-hover)),
+            var(--sivir-traveling-highlight, var(--motion-duration-hover)),
             var(--sivir-traveling-highlight, var(--motion-duration-hover));
         transition-timing-function: var(--ease-out);
         will-change: transform;
@@ -507,6 +513,16 @@
     }
 }
 
+@layer utilities {
+    .sivir-collection-surface [data-item-highlighted='true'] {
+        background-color: color-mix(in oklab, var(--color-foreground) 6%, transparent);
+    }
+
+    .sivir-collection-surface:where(.dark, .dark *) [data-item-highlighted='true'] {
+        background-color: color-mix(in oklab, var(--color-foreground) 8%, transparent);
+    }
+}
+
 /* Constant-pixel press: --sivir-press-sx/sy set by pressable() from --motion-press-px. */
 .sivir-press:active:not(:disabled):not([aria-disabled='true']),
 .sivir-menu-item:active:not(:disabled):not([aria-disabled='true']) {
@@ -544,6 +560,7 @@
         --motion-duration-toast-out: 0ms;
         --motion-duration-press: 0ms;
         --motion-duration-item: 0ms;
+        --motion-duration-switch: 0ms;
     }
 
     .sivir-press:active,

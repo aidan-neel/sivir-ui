@@ -7,12 +7,12 @@
     <Button
         onclick={() =>
             toast.success('Deployment ready', {
-                description: 'sivir-ui.vercel.app is now live.',
+                description: 'sivir.dev is now live.',
                 actions: [
                     {
                         label: 'Visit',
                         callback: () => {
-                            window.open('https://vercel.com', '_blank');
+                            window.open('https://sivir.dev', '_blank');
                         }
                     }
                 ]

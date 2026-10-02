@@ -13,7 +13,7 @@
     <TagInput.Root
         bind:tags
         label="Channels"
-        description="Every change reports through callbacks."
+        description="Release alerts post to these channels."
         onAdd={(tag) => {
             log(`Added ${tag}`);
         }}

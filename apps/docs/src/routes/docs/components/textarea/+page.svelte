@@ -14,12 +14,15 @@
 
     const TITLE = 'Textarea';
 
-    const installCommand = 'bunx @sivir-ui/svelte add textarea';
+    const installCommand = 'bunx --package @sivir-ui/svelte sivir add textarea';
 </script>
 
 <svelte:head>
     <title>Sivir · {TITLE}</title>
-    <meta name="description" content="Multi-line text input that shares Input's grammar." />
+    <meta
+        name="description"
+        content="A multi-line text field with the same label, description, and variant props as Input."
+    />
 </svelte:head>
 
 <div data-docs-page class="flex flex-col gap-10">
@@ -28,7 +31,8 @@
         <div>
             <Typography.H1>{TITLE}</Typography.H1>
             <Typography.Text variant="lead" class="mt-2 max-w-2xl">
-                A multi-line text input that shares the Input styling.
+                Wraps a native textarea. It can grow with its content, and it can hold a toolbar
+                inside its border for message composers.
             </Typography.Text>
         </div>
         <DocsPager />
@@ -51,12 +55,13 @@
     <section id="usage" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading">Usage</Typography.H2>
         <Typography.Text variant="supporting">
-            Import Textarea and bind its value. Add
+            Bind <Typography.InlineCode>value</Typography.InlineCode> to read the text. Add
             <Typography.InlineCode>autoresize</Typography.InlineCode>
-            for message composers that grow with their content.
+            to grow the field with its content instead of showing a resize handle. Children render
+            below the text inside the same border, which fits a send button or toolbar.
         </Typography.Text>
         <CodeBlock
-            code={`import { Textarea } from '$lib/sivir/components/textarea';\n\n<Textarea bind:value autoresize label="Message" />`}
+            code={`import { Textarea } from '@sivir-ui/svelte/components/textarea';\n\nlet message = $state('');\n\n<Textarea bind:value={message} autoresize label="Message" />`}
             lang="svelte"
             copy="overlay"
         />
@@ -66,9 +71,6 @@
     <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
         <div>
             <Typography.H2 class="docs-section-heading">Examples</Typography.H2>
-            <Typography.Text variant="supporting" class="mt-2">
-                Textarea in different configurations.
-            </Typography.Text>
         </div>
 
         <!-- Basic -->

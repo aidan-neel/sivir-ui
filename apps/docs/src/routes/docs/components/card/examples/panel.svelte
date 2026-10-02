@@ -4,13 +4,12 @@
 
 <Card.Root variant="panel" class="w-full max-w-[22rem]">
     <Card.Header>
-        <Card.Title>Inset surface</Card.Title>
-        <Card.Description>Concentric double-line frame for denser UI chrome.</Card.Description>
+        <Card.Title>Build minutes</Card.Title>
+        <Card.Description>Resets on the first of each month.</Card.Description>
     </Card.Header>
     <Card.Content>
         <p class="m-0 text-sm text-foreground-muted">
-            Use <code class="font-mono text-foreground">variant="panel"</code> when a card should
-            sit inside a framed surface instead of a flat border.
+            1,284 of 5,000 minutes used. Builds queue when you reach the limit.
         </p>
     </Card.Content>
 </Card.Root>

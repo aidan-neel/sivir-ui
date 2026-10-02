@@ -6,7 +6,7 @@ export const input = tv({
     variants: {
         variant: {
             outline:
-                'border-[var(--color-input)] bg-[var(--color-field)] focus-visible:shadow-[var(--focus-ring)]',
+                'border-border bg-[var(--color-field)] focus-visible:shadow-[var(--focus-ring)]',
             secondary:
                 'border-transparent bg-secondary focus-visible:border-[color-mix(in_srgb,var(--color-secondary)_45%,var(--color-primary))] focus-visible:shadow-[var(--focus-ring)]'
         }

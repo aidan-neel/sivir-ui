@@ -6,11 +6,13 @@
 </script>
 
 <Modal.Root bind:open>
-    <Modal.Trigger>Open modal</Modal.Trigger>
+    <Modal.Trigger>Archive project</Modal.Trigger>
     <Modal.Content>
         <Modal.Header>
-            <Modal.Title>Modal title</Modal.Title>
-            <Modal.Description>Describe what happens here.</Modal.Description>
+            <Modal.Title>Archive project?</Modal.Title>
+            <Modal.Description
+                >Archived projects are read-only until you restore them.</Modal.Description
+            >
         </Modal.Header>
         <Modal.Footer>
             <Modal.Close>
@@ -18,7 +20,7 @@
                 <Shortcut shortcut="esc" />
             </Modal.Close>
             <Modal.Confirm>
-                Confirm
+                Archive
                 <Shortcut shortcut="enter" />
             </Modal.Confirm>
         </Modal.Footer>

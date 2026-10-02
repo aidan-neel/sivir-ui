@@ -41,7 +41,7 @@
 	-->
     <div
         class={cn(
-            'flex min-w-0 flex-1 items-center gap-2 overflow-hidden pr-2 text-left [&_svg]:shrink-0',
+            'flex min-w-0 flex-1 items-center gap-2 overflow-hidden pr-2 text-left leading-normal [&_svg]:shrink-0',
             state.value !== '' ? 'text-foreground' : 'text-foreground-muted'
         )}
     >

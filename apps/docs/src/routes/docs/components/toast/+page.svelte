@@ -8,12 +8,15 @@
     import Hero from './examples/hero.svelte';
     import HeroSrc from './examples/hero.svelte?raw';
 
-    const installCommand = 'bunx @sivir-ui/svelte add toast';
+    const installCommand = 'bunx --package @sivir-ui/svelte sivir add toast';
 </script>
 
 <svelte:head>
     <title>Sivir · Toast</title>
-    <meta name="description" content="Transient notifications fired from anywhere in your app." />
+    <meta
+        name="description"
+        content="Short notifications that you trigger from code and that close on a timer."
+    />
 </svelte:head>
 
 <div data-docs-page class="flex flex-col gap-10">
@@ -22,7 +25,9 @@
         <div>
             <Typography.H1> Toast </Typography.H1>
             <Typography.Text variant="lead" class="mt-2 max-w-2xl">
-                A notification that stacks, auto-dismisses, and can carry an action.
+                Call <Typography.InlineCode>toast()</Typography.InlineCode> from any component.
+                Toasts stack at the bottom of the screen, pause while hovered, and can carry action
+                buttons.
             </Typography.Text>
         </div>
         <DocsPager />
@@ -45,10 +50,13 @@
     <section id="usage" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading">Usage</Typography.H2>
         <Typography.Text variant="supporting">
-            Import and fire toasts from your component:
+            Mount <Typography.InlineCode>{'<Toaster />'}</Typography.InlineCode> once in your root
+            layout; <Typography.InlineCode>toast()</Typography.InlineCode> does nothing until one is
+            mounted. Toasts close after 5.6 seconds unless you pass
+            <Typography.InlineCode>duration</Typography.InlineCode>.
         </Typography.Text>
         <CodeBlock
-            code={`import { toast } from '$lib/sivir/components/toast';\n\ntoast.success('Profile updated', {\n  description: 'Your changes have been saved.'\n});\ntoast.error('Request failed', {\n  description: 'Could not connect.'\n});`}
+            code={`import { Button } from '@sivir-ui/svelte/components/button';\nimport { toast, Toaster } from '@sivir-ui/svelte/components/toast';\n\n<!-- Mount once, usually in your root layout -->\n<Toaster />\n\n<Button\n  onclick={() =>\n    toast.success('Saved to drafts', {\n      description: 'Publish it from the Drafts tab.'\n    })}\n>\n  Save\n</Button>`}
             lang="svelte"
             copy="overlay"
         />
@@ -58,9 +66,6 @@
     <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
         <div>
             <Typography.H2 class="docs-section-heading">Examples</Typography.H2>
-            <Typography.Text variant="supporting" class="mt-2">
-                Toast variants for different notification types.
-            </Typography.Text>
         </div>
 
         <div id="types" class="scroll-mt-20 flex flex-col gap-3">

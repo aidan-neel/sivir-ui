@@ -2,7 +2,7 @@
     import { Pagination } from '@sivir-ui/svelte/components/pagination';
 
     const pageSize = 5;
-    const items = Array.from({ length: 48 }, (_, i) => `Result ${i + 1}`);
+    const items = Array.from({ length: 48 }, (_, i) => `Invoice #${1001 + i}`);
     let page = $state(1);
     const totalPages = Math.ceil(items.length / pageSize);
     const pageItems = $derived(items.slice((page - 1) * pageSize, page * pageSize));

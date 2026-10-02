@@ -1,0 +1,23 @@
+- Switch thumbs stay visible when off in themes whose primary color is light in dark mode.
+- Info icons, badges, and toasts follow the theme's primary color for the current mode, so they no longer disappear in dark mode when a theme sets a dark brand and a light dark-mode primary.
+- Classes passed to `Command.Header` through `class` now override its default padding and text color.
+- Question uses a denser layout: titles, options, inputs, and actions share one tight inset, and the actions line up with the content when surface paneling is off.
+- Question options are filled tiles instead of bordered rows with radio circles, and single-line options are vertically centered.
+- Question submit and cancel buttons are compact. The submit button no longer shows a trailing arrow by default.
+- Question submit shows only a spinner while submitting and keeps its width, instead of swapping in a wider loading label.
+- Give flat code blocks and file diffs a divided, tinted header when surface paneling is off. Code blocks without tabs float their actions in the top-right corner instead of reserving a header row.
+- Code Block tab switches swap the snippet instantly instead of sliding and crossfading blurred text. Code blocks composed from subparts now ease their height too, instead of snapping.
+- Menu, select, and combobox highlights now follow their item while the list scrolls and size correctly as a menu opens, instead of staying behind or appearing slightly off.
+- Menu and combobox highlights line up with their item in lists whose width is not a whole number of pixels, instead of sitting a fraction of a pixel off.
+- Buttons, toggles, tabs, and menu highlights now follow the Hover duration for their hover fade and traveling highlight slide, instead of ignoring it.
+- With traveling highlight off, menu, select, command, and combobox items now fade their hover background on the Hover duration instead of snapping between items.
+- Restore the hover background on list and nav items when the traveling highlight is turned off. Item buttons with a transparent background class were hiding it.
+- The Magic preset turns off menu and surface paneling.
+- Color Picker keeps its hue when you click or drag the color area to black, grey, or low saturation, instead of jumping to red or drifting.
+- Opening the Color Picker no longer focuses the hex field. Focus starts on the color area.
+- Stop descenders such as the g in "Billing" being cut off in Select triggers and in truncated text inside buttons.
+- Shortcuts inside a Tooltip render as a muted keycap set apart from the label, instead of running into the text.
+- Tooltip text swaps, such as Copy Button flipping from "Copy" to "Copied", now follow the text replacement duration, so 0ms swaps instantly instead of rolling for 300ms.
+- Fix choppy Attachment list motion. Removed cards fade out where they were instead of jumping to the top of the list, cards keep their height while the list resizes, neighboring cards slide straight into place instead of first jumping the wrong way, and the gap above the list opens and closes smoothly instead of snapping.
+- Attachment cards and status changes now follow the Feel In and Out durations, with the same blur, scale, and offset as menus. Adding a file uses In, removing one uses Out, and the list resizes in step with the card.
+- Studio drafts now take the name of the preset they start from, instead of every theme exporting under the same placeholder name. Drafts saved with the old name pick up their preset's name when they load.

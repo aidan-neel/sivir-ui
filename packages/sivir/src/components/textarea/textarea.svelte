@@ -35,7 +35,7 @@
     const composerClass = $derived(
         variant === 'secondary'
             ? 'border-transparent bg-secondary focus-within:border-[color-mix(in_srgb,var(--color-secondary)_45%,var(--color-primary))]'
-            : 'border-[var(--color-input)] bg-[var(--color-field)] focus-within:border-primary'
+            : 'border-border bg-[var(--color-field)] focus-within:border-primary'
     );
 </script>
 

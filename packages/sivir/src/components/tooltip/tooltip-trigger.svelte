@@ -1,25 +1,26 @@
 <script lang="ts">
     import { cn } from '@sivir-ui/svelte/utils';
     import { getContext, onDestroy } from 'svelte';
-    import type { TooltipState, TooltipTriggerProps } from '.';
+    import type { TooltipTriggerProps } from '.';
     import {
         flashTooltip,
         hideTooltip,
         isActiveTooltip,
         showTooltip,
+        type TooltipRuntimeState,
         updateTooltipClass,
         updateTooltipText
     } from './shared-tooltip';
 
     let { children, class: className, showOnClick = false }: TooltipTriggerProps = $props();
 
-    const tip = getContext('sivir-tooltip') as TooltipState;
+    const tip = getContext('sivir-tooltip') as TooltipRuntimeState;
 
     let el = $state<HTMLElement>();
 
     function open() {
         if (el) {
-            showTooltip(el, tip.text, tip.placement, tip.delay, tip.className);
+            showTooltip(el, tip.text, tip.placement, tip.delay, tip.className, tip.shortcut);
         }
     }
     function close() {
@@ -27,14 +28,15 @@
     }
     function clickOpen() {
         if (showOnClick && el) {
-            flashTooltip(el, tip.text, tip.placement, 1500, tip.className);
+            flashTooltip(el, tip.text, tip.placement, 1500, tip.className, tip.shortcut);
         }
     }
 
     $effect(() => {
         const text = tip.text;
+        const shortcut = tip.shortcut;
         if (el && isActiveTooltip(el)) {
-            updateTooltipText(el, text);
+            updateTooltipText(el, text, shortcut);
         }
     });
 

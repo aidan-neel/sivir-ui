@@ -2,6 +2,7 @@ import type { DefaultProps } from '@sivir-ui/svelte/utils';
 import type { Snippet } from 'svelte';
 import Root from './command.svelte';
 import Content from './command-content.svelte';
+import Footer from './command-footer.svelte';
 import Group from './command-group.svelte';
 import Header from './command-header.svelte';
 import Item from './command-item.svelte';
@@ -35,6 +36,8 @@ export type CommandItemProps = {
 
 export type CommandHeaderProps = DefaultProps;
 
+export type CommandFooterProps = DefaultProps;
+
 export type CommandState = {
     id: string;
     items: CommandItem[];
@@ -44,4 +47,4 @@ export type CommandState = {
     itemsVersion: number;
 };
 
-export { Content, Group, Header, Item, Results, Root, Search, Separator, Trigger };
+export { Content, Footer, Group, Header, Item, Results, Root, Search, Separator, Trigger };

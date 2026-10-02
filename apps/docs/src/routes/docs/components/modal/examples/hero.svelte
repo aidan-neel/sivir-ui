@@ -9,7 +9,7 @@
 </script>
 
 <Modal.Root bind:open orientation="vertical">
-    <Modal.Trigger>Add Domain</Modal.Trigger>
+    <Modal.Trigger>Add domain</Modal.Trigger>
     <Modal.Content>
         <Modal.Header>
             <div class="flex items-center gap-2.5">

@@ -15,8 +15,8 @@
     <SkeletonSwap {ready} lines={3} lineHeight={21} label="Profile">
         {#if ready}
             <p class="text-sm leading-[21px] text-foreground-muted">
-                Design systems work best when their loading states reserve the same space as the
-                content that replaces them.
+                Product designer in Lisbon. Works on onboarding and billing. Previously led the
+                design system at a travel startup.
             </p>
         {/if}
     </SkeletonSwap>

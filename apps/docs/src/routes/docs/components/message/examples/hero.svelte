@@ -33,10 +33,7 @@
     <Message.Root from="assistant">
         <Message.Content class="space-y-3">
             <Reasoning.Root>
-                <Reasoning.Trigger
-                    title="Reviewed the v2 changelog and migration guide"
-                    duration="2.6s"
-                />
+                <Reasoning.Trigger title="Reviewed the v2 changelog and migration guide" />
                 <Reasoning.Content>
                     <p>Compared the event model, identifier changes, and compatibility window.</p>
                 </Reasoning.Content>

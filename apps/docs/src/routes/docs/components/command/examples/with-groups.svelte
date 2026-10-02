@@ -13,7 +13,7 @@
             Open palette
         </Command.Trigger>
         <Command.Content>
-            <Command.Search placeholder="Search..." />
+            <Command.Search placeholder="Search actions and people..." />
             <Command.Results>
                 <Command.Group heading="Actions">
                     <Command.Item name="New project">
@@ -25,10 +25,10 @@
                         Settings
                     </Command.Item>
                 </Command.Group>
-                <Command.Group heading="Users">
-                    <Command.Item name="Team">
+                <Command.Group heading="Team">
+                    <Command.Item name="Invite people">
                         <Users size={14} />
-                        Team
+                        Invite people
                     </Command.Item>
                 </Command.Group>
             </Command.Results>

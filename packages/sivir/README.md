@@ -1,17 +1,17 @@
 # @sivir-ui/svelte
 
-SvelteKit component library inspired by shadcn/ui. **Svelte 5 + Tailwind v4.**
+Svelte 5 and Tailwind CSS v4 component library, inspired by shadcn/ui.
 
-This package is the importable library: `bun add @sivir-ui/svelte` and import components
-directly. (If you'd rather own the source in your own repo, shadcn-style, use the
-`sivir` CLI's `add` command instead. This package is the "install it" path.)
+Install the package and import components from it. To own the source instead, use the
+`sivir` CLI that ships in this package: run `sivir init`, then `sivir add <component>`.
+See https://sivir.dev/docs/installation.
 
 ## Requirements
 
-- **Svelte 5** and **Tailwind v4** (peer dependencies). The easiest base is a
-  SvelteKit app with Tailwind already set up:
+- **Svelte 5** and **Tailwind CSS v4** (peer dependencies). To start from a new
+  SvelteKit app with Tailwind:
     ```sh
-    bunx sv create my-app          # pick Skeleton + TypeScript
+    bunx sv create my-app          # pick the minimal template
     cd my-app && bunx sv add tailwindcss
     ```
 
@@ -27,34 +27,30 @@ Runtime dependencies (`@floating-ui/dom`, `@lucide/svelte`, `cnfast`,
 
 ## Wire up the styles
 
-Sivir ships its Tailwind theme and design tokens in one stylesheet. In your app's
-CSS (e.g. `src/app.css`), import it as the single entry point:
+Import Sivir's stylesheet once in your root CSS file, such as `src/routes/layout.css`
+or `src/app.css`:
 
 ```css
 @import '@sivir-ui/svelte/ui.css';
 ```
 
-`ui.css` already pulls in Tailwind itself and registers Sivir's own components as a
-Tailwind source. Do not add a separate `@import 'tailwindcss';`. This one line
-covers Tailwind, the Sivir theme variables, and class scanning for every Sivir
-component. Tailwind v4 auto-detects your own files, so your app classes keep
-working too.
+`ui.css` imports Tailwind, the Sivir theme variables, and the fonts, and registers
+Sivir's components as a Tailwind source. Replace `@import 'tailwindcss';` with it
+instead of importing both. Tailwind v4 still detects classes in your own files.
 
-Make sure that CSS file is imported once at the root (a fresh
-`sv add tailwindcss` already imports `app.css` in `src/routes/+layout.svelte`).
+A fresh `sv add tailwindcss` already imports that CSS file from
+`src/routes/+layout.svelte`.
 
 ## Fonts
 
 Sivir's default theme sets `--font-sans` to Inter and `--font-mono` to
-JetBrains Mono. Both faces ship with the package through `@fontsource/inter`
-and `@fontsource/jetbrains-mono`, which `ui.css` imports as self-hosted
-`latin-400/500/600/700` stylesheets. Your bundler serves the `woff2` files
-locally, so screens render the intended typefaces with no Google Fonts request
-and no network access at runtime — including containerized deployments.
+JetBrains Mono. Both come from `@fontsource/inter` and `@fontsource/jetbrains-mono`,
+which `ui.css` imports as Latin subsets at weights 400 to 700. Your bundler serves
+the `woff2` files from your app, so there is no request to Google Fonts at runtime.
 
-Do not add a remote font link to match older screenshots. To use a different
-face, override `--font-sans`, `--font-mono`, or `--font-header` in your own CSS
-and bring that font yourself; non-default Studio presets already work
+You do not need a remote font link. To use a different face, override
+`--font-sans`, `--font-mono`, or `--font-header` in your own CSS and load that
+font yourself. The `profitable` preset, which uses Geist and Roboto Mono, works
 this way.
 
 ## Use it
@@ -100,24 +96,25 @@ Compound components are namespace exports; their parts hang off the namespace:
 </Tabs.Root>
 ```
 
-Every component is also reachable directly if you prefer narrower imports:
+Each component also has its own entry point for narrower imports:
 
-```svelte
-import {Button} from '@sivir-ui/svelte/components/button'; import * as AlertDialog from '@sivir-ui/svelte/components/alert-dialog';
+```ts
+import { Button } from '@sivir-ui/svelte/components/button';
+import * as AlertDialog from '@sivir-ui/svelte/components/alert-dialog';
 ```
 
 ## What's exported
 
-- **Named:** `Badge`, `Button`, `Checkbox`, `CodeBlock`,
-  `CopyButton`, `Input`, `Label`, `Markdown`, `Pagination`, `Progress`, `Reasoning`,
-  `ReorderList`, `ResponseStream`, `ScrollArea`, `Shortcut`, `Skeleton`, `SkeletonSwap`,
+- **Named:** `Badge`, `BrandMark`, `Button`, `Checkbox`, `CodeBlock`,
+  `CopyButton`, `Gauge`, `Input`, `Label`, `Markdown`, `Pagination`, `Progress`,
+  `ReorderList`, `ResponseStream`, `ScrollArea`, `Shortcut`, `ShowMore`, `Skeleton`, `SkeletonSwap`,
   `Slider`, `Spinner`, `Switch`, `TaskSteps`, `Textarea`, `Toggle`, `Toolbar`, and the toast API (`Toast`, `Toaster`,
   `toast`, `getToastUIState`).
 - **Namespaced:** `Accordion`, `Alert`, `AlertDialog`, `Attachment`, `Avatar`,
   `Breadcrumb`, `Card` (includes `variant="panel"`), `Collapsible`, `ColorPicker`,
-  `Combobox`, `Command`, `ContextMenu`, `Conversation`, `DropdownMenu`,
-  `FullscreenNav`, `HoverCard`, `Message`, `Modal`, `Popover`, `Composer`,
-  `RadioGroup`, `Select`, `Sheet`, `Tabs`, `ToggleGroup`, `Tool`, `Tooltip`.
+  `Combobox`, `Command`, `Composer`, `ContextMenu`, `Conversation`, `DropdownMenu`,
+  `FileDiff`, `FullscreenNav`, `HoverCard`, `Message`, `Modal`, `Popover`,
+  `Question`, `RadioGroup`, `Reasoning`, `Select`, `Sheet`, `Tabs`, `TagInput`, `ToggleGroup`, `Tool`, `Tooltip`, `Typography`.
 
 ## License
 

@@ -6,9 +6,9 @@
 
 <div class="w-full max-w-md">
     <Collapsible.Root bind:open>
-        <Collapsible.Trigger>Open panel</Collapsible.Trigger>
+        <Collapsible.Trigger>Advanced settings</Collapsible.Trigger>
         <Collapsible.Content
-            >This content is revealed when the trigger is clicked.</Collapsible.Content
+            >Request timeout is 30 seconds. Failed requests retry up to 3 times.</Collapsible.Content
         >
     </Collapsible.Root>
 </div>

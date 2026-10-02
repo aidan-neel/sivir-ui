@@ -66,7 +66,7 @@
     onclick={close}
     class={cn(
         className,
-        'sivir-menu-item flex-row gap-3 overflow-hidden text-sm opacity-100 transition-[height,opacity,border-width] [transition-duration:var(--motion-duration-hover)] ease-[var(--ease-out)] motion-reduce:transition-none data-[visible=false]:h-0 data-[visible=false]:border-y-0 data-[visible=false]:opacity-0'
+        'sivir-menu-item flex-row gap-3 overflow-hidden text-sm opacity-100 transition-[background-color,height,opacity,border-width] [transition-duration:var(--motion-duration-hover)] ease-[var(--ease-out)] motion-reduce:transition-none data-[visible=false]:h-0 data-[visible=false]:border-y-0 data-[visible=false]:opacity-0'
     )}
     unstyled
 >

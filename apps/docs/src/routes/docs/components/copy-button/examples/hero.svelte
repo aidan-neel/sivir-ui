@@ -2,4 +2,4 @@
     import { CopyButton } from '@sivir-ui/svelte/components/copy-button';
 </script>
 
-<CopyButton text="Hello from Sivir" />
+<CopyButton text="bun add @sivir-ui/svelte" />

@@ -4,9 +4,9 @@
 
 <div class="w-full max-w-md">
     <Alert.Root variant="info">
-        <Alert.Title>Heads up</Alert.Title>
+        <Alert.Title>Scheduled maintenance</Alert.Title>
         <Alert.Description>
-            You can add components to your app using the command line.
+            Deploys are paused on Saturday from 02:00 to 04:00 UTC.
         </Alert.Description>
     </Alert.Root>
 </div>

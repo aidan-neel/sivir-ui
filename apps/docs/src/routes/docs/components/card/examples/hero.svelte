@@ -43,6 +43,6 @@
     </Card.Content>
     <Card.Footer class="flex-col sm:flex-row">
         <Button variant="outline" class="w-full sm:w-auto">Visit</Button>
-        <Button class="w-full sm:w-auto">View Deployment</Button>
+        <Button class="w-full sm:w-auto">View deployment</Button>
     </Card.Footer>
 </Card.Root>

@@ -27,7 +27,7 @@
     use:pressable
     class={cn(
         className,
-        'sivir-press -mx-2 flex min-h-[var(--size-control-lg)] items-center rounded-[var(--radius-lg)] px-3 [font-size:var(--font-size-header)] [font-weight:var(--font-weight-button)] [letter-spacing:var(--tracking-button)] text-foreground no-underline transition-[background-color,color,transform,scale] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-press)] touch-manipulation hover:bg-secondary focus-visible:outline-none focus-visible:shadow-[var(--focus-ring)] motion-reduce:transition-none'
+        'sivir-press -mx-2 flex min-h-[var(--size-control-lg)] items-center rounded-[var(--radius-lg)] px-3 [font-size:var(--font-size-header)] [font-weight:var(--font-weight-button)] [letter-spacing:var(--tracking-button)] text-foreground no-underline transition-[background-color,color,transform,scale] [transition-duration:var(--motion-duration-hover),var(--motion-duration-hover),var(--motion-duration-press),var(--motion-duration-press)] ease-[var(--ease-press)] touch-manipulation hover:bg-secondary focus-visible:outline-none focus-visible:shadow-[var(--focus-ring)] motion-reduce:transition-none'
     )}
     style={`--fullscreen-nav-link-delay:${animationDelay}ms;${styleName ?? ''}`}
     onpointerdown={pulse}

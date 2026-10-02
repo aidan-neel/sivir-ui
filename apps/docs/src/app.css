@@ -94,28 +94,28 @@ pre {
 }
 
 @media (prefers-reduced-motion: no-preference) {
-    [data-docs-page] > :where(header, section) {
+    [data-docs-page] > :where(header, section, search) {
         animation: docs-block-in 280ms var(--ease-out) both;
         transform-origin: top center;
     }
 
-    [data-docs-page] > :where(header, section):nth-child(2) {
+    [data-docs-page] > :where(header, section, search):nth-child(2) {
         animation-delay: 45ms;
     }
 
-    [data-docs-page] > :where(header, section):nth-child(3) {
+    [data-docs-page] > :where(header, section, search):nth-child(3) {
         animation-delay: 80ms;
     }
 
-    [data-docs-page] > :where(header, section):nth-child(4) {
+    [data-docs-page] > :where(header, section, search):nth-child(4) {
         animation-delay: 115ms;
     }
 
-    [data-docs-page] > :where(header, section):nth-child(5) {
+    [data-docs-page] > :where(header, section, search):nth-child(5) {
         animation-delay: 150ms;
     }
 
-    [data-docs-page] > :where(header, section):nth-child(n + 6) {
+    [data-docs-page] > :where(header, section, search):nth-child(n + 6) {
         animation-delay: 180ms;
     }
 }
@@ -175,4 +175,16 @@ pre {
 
 ::-webkit-scrollbar-thumb:hover {
     background: var(--color-border-strong);
+}
+
+/* Studio preset swaps: crossfade theme colors without View Transitions,
+   which would make <html> the hit target and break hover previews. */
+:root[data-theme-swap],
+:root[data-theme-swap] *,
+:root[data-theme-swap] *::before,
+:root[data-theme-swap] *::after {
+    transition-property:
+        color, background-color, border-color, outline-color, fill, stroke, box-shadow;
+    transition-duration: 280ms;
+    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }

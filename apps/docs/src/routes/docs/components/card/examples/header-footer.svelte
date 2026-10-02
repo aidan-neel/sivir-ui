@@ -5,10 +5,10 @@
 
 <Card.Root class="w-full max-w-[28rem]">
     <Card.Header>
-        <Card.Title>Settings</Card.Title>
+        <Card.Title>Discard unsaved changes?</Card.Title>
     </Card.Header>
     <Card.Footer>
         <Button variant="outline" size="md">Cancel</Button>
-        <Button size="md">Apply</Button>
+        <Button size="md">Discard</Button>
     </Card.Footer>
 </Card.Root>

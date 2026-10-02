@@ -18,14 +18,14 @@
     const TITLE = 'Alert';
     const SLUG = 'alert';
 
-    const installCommand = `bunx @sivir-ui/svelte add ${SLUG}`;
+    const installCommand = `bunx --package @sivir-ui/svelte sivir add ${SLUG}`;
 </script>
 
 <svelte:head>
     <title>Sivir · {TITLE}</title>
     <meta
         name="description"
-        content="Tinted callouts for inline status, confirmation, and warnings."
+        content="An inline callout with a title, description, and an info, success, warning, or error icon."
     />
 </svelte:head>
 
@@ -37,7 +37,8 @@
                 {TITLE}
             </Typography.H1>
             <Typography.Text variant="lead" class="mt-2 max-w-2xl">
-                An inline callout for contextual messages. Comes in four variants.
+                The surface stays neutral in every variant; only the icon and its color change.
+                Alert.Root has role="alert", so screen readers announce it when it appears.
             </Typography.Text>
         </div>
         <DocsPager />
@@ -59,9 +60,12 @@
     <!-- ─── Usage ─────────────────────────────────────────────────── -->
     <section id="usage" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading"> Usage </Typography.H2>
-        <Typography.Text variant="supporting">Import and use the Alert components:</Typography.Text>
+        <Typography.Text variant="supporting">
+            variant defaults to info. Alert.Root draws the icon; you supply the title and
+            description.
+        </Typography.Text>
         <CodeBlock
-            code={`import * as Alert from '$lib/sivir/components/alert';\n\n<Alert.Root>\n  <Alert.Title>Title</Alert.Title>\n  <Alert.Description>Description</Alert.Description>\n</Alert.Root>`}
+            code={`import * as Alert from '@sivir-ui/svelte/components/alert';\n\n<Alert.Root variant="warning">\n  <Alert.Title>Card expires soon</Alert.Title>\n  <Alert.Description>Update your payment method before May 1.</Alert.Description>\n</Alert.Root>`}
             lang="svelte"
             copy="overlay"
         />

@@ -5,7 +5,7 @@ export const manifest: Manifest = {
     version: '1.1.0',
     visibility: 'public',
     description:
-        'Validated local-file picker with drag and drop, paste, previews, composable item parts, status, and progress display.',
+        'Local file picker that accepts drops and pastes, validates each file, and lists files with upload status.',
     files: [
         'components/attachment/attachment.svelte',
         'components/attachment/attachment-trigger.svelte',

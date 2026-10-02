@@ -15,6 +15,7 @@
 <div
     id={`${command.id}-listbox`}
     role="listbox"
+    data-ui="command-results"
     aria-label="Command results"
     use:travelingHighlight
     class="max-h-full overflow-y-auto overscroll-contain p-1 [scrollbar-gutter:stable]"

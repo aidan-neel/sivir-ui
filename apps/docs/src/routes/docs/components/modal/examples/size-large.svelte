@@ -9,15 +9,14 @@
     <Modal.Trigger variant="outline">Open large modal</Modal.Trigger>
     <Modal.Content size="lg">
         <Modal.Header>
-            <Modal.Title>Review your workspace</Modal.Title>
+            <Modal.Title>Workspace settings</Modal.Title>
             <Modal.Description>
-                Use a larger surface when the modal needs room for supporting details or multiple
-                controls.
+                Changes apply to every project in the Design team workspace.
             </Modal.Description>
         </Modal.Header>
         <Modal.Body>
             <p class="text-sm text-foreground-muted">
-                Invite teammates, configure permissions, and review workspace settings in one place.
+                New members join as viewers. Admins can change roles from the Members page.
             </p>
         </Modal.Body>
         <Modal.Footer>

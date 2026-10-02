@@ -6,8 +6,6 @@
     <HoverCard.Trigger href="https://sivir.dev">Sivir UI</HoverCard.Trigger>
     <HoverCard.Content>
         <HoverCard.Title>Sivir UI</HoverCard.Title>
-        <HoverCard.Description
-            >An unstyled, accessible Svelte component library.</HoverCard.Description
-        >
+        <HoverCard.Description>Svelte 5 components styled with Tailwind CSS.</HoverCard.Description>
     </HoverCard.Content>
 </HoverCard.Root>

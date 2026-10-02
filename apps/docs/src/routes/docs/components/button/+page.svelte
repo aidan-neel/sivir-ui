@@ -34,7 +34,7 @@
     import VariantSecondary from './examples/variant-secondary.svelte';
     import VariantSecondarySrc from './examples/variant-secondary.svelte?raw';
 
-    const installCommand = 'bunx @sivir-ui/svelte add button';
+    const installCommand = 'bunx --package @sivir-ui/svelte sivir add button';
 </script>
 
 <svelte:head>
@@ -51,8 +51,8 @@
         <div>
             <Typography.H1> Button </Typography.H1>
             <Typography.Text variant="lead" class="mt-2 max-w-2xl">
-                A clickable action in several variants and sizes. Pick a variant for what the action
-                means.
+                Renders a button element, or a link when you pass href. Defaults to the primary
+                variant at medium size.
             </Typography.Text>
         </div>
         <DocsPager />
@@ -75,14 +75,19 @@
     <section id="usage" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading"> Usage </Typography.H2>
         <Typography.Text variant="supporting">
-            Use <Typography.InlineCode>status</Typography.InlineCode> for async feedback. Every
-            label occupies the same grid cell, so state changes never resize the button; success and
-            error switch to a matching semantic surface.
+            Set <Typography.InlineCode>status</Typography.InlineCode> to
+            <Typography.InlineCode>loading</Typography.InlineCode>,
+            <Typography.InlineCode>success</Typography.InlineCode>, or
+            <Typography.InlineCode>error</Typography.InlineCode>
+            for async feedback, then back to
+            <Typography.InlineCode>idle</Typography.InlineCode>. All labels share one grid cell, so
+            the button keeps its width. Clicks are ignored while loading. The default labels are
+            Loading…, Done, and Try again.
         </Typography.Text>
         <CodeBlock
-            code={`import { Button } from '$lib/sivir/components/button';
+            code={`import { Button } from '@sivir-ui/svelte/components/button';
 
-let status = $state<'idle' | 'loading' | 'success' | 'error'>('idle');
+let status: 'idle' | 'loading' | 'success' | 'error' = $state('idle');
 
 <Button {status} loadingLabel="Publishing…" successLabel="Published">
   Publish
@@ -96,9 +101,6 @@ let status = $state<'idle' | 'loading' | 'success' | 'error'>('idle');
     <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
         <div>
             <Typography.H2 class="docs-section-heading"> Examples </Typography.H2>
-            <Typography.Text variant="supporting" class="mt-2">
-                Explore the Button in different variants, sizes, and compositions.
-            </Typography.Text>
         </div>
 
         <!-- Variants — each its own example piece -->
@@ -186,7 +188,7 @@ let status = $state<'idle' | 'loading' | 'success' | 'error'>('idle');
 
         <!-- Loading -->
         <div id="comp-loading" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading"> Loading </Typography.H3>
+            <Typography.H3 class="docs-subsection-heading"> Status </Typography.H3>
             <ComponentPreview code={LoadingSrc}>
                 <Loading />
             </ComponentPreview>

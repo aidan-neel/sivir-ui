@@ -18,7 +18,7 @@
         value={valueWithOptions}
         onValueChange={(v) => (valueWithOptions = v)}
         options={presetSwatches}
-        label="Choose"
+        label="Label color"
     >
         <ColorPicker.Trigger />
         <ColorPicker.Content />

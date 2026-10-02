@@ -30,13 +30,13 @@
         <Conversation.Content aria-label="Migration planning conversation">
             <Message.Root from="user">
                 <Message.Content>
-                    Add the account migration and keep the rollout safe. I started a follow-up in
-                    the composer.
+                    Write the migration that renames account_id to customer_id. Don't run it in
+                    production yet.
                 </Message.Content>
             </Message.Root>
             <Message.Root from="assistant">
                 <Message.Content>
-                    I can continue after I know which environment should receive the first run.
+                    The migration and its rollback are ready. Which environment should run it first?
                 </Message.Content>
             </Message.Root>
             {#if answer}
@@ -66,18 +66,18 @@
                 <Question.Content>
                     <Question.Title>Where should I run the migration first?</Question.Title>
                     <Question.Description>
-                        Your unsent composer draft will stay in place while you answer.
+                        I'll stop after the first run and report the row counts.
                     </Question.Description>
                     <Question.Options>
                         <Question.Option
                             value="preview"
                             label="Preview environment"
-                            description="Validate against a disposable copy first."
+                            description="A disposable database copy that resets nightly."
                         />
                         <Question.Option
                             value="staging"
                             label="Staging environment"
-                            description="Run against the shared pre-production data."
+                            description="Shared with QA and seeded weekly from production."
                         />
                     </Question.Options>
                 </Question.Content>

@@ -2,7 +2,7 @@ import type { ComponentSlug } from './component-anatomy';
 
 export const componentSummaries = {
     accordion: 'Stacked sections that open one or many at a time.',
-    alert: 'Inline callouts for status, success, and warnings.',
+    alert: 'Inline callouts for info, success, warnings, and errors.',
     'alert-dialog': 'Confirms a consequential action before it runs.',
     attachment: 'Picks, drops, and pastes files with upload states.',
     avatar: 'A profile image that falls back to initials.',
@@ -26,10 +26,10 @@ export const componentSummaries = {
     gauge: 'A circular meter for usage and limits.',
     'hover-card': 'A preview that opens on hover or focus.',
     input: 'Single-line text entry with labels and adornments.',
-    label: 'A form label that tracks its field’s state.',
-    markdown: 'Safe rendering for model prose, tables, and code.',
+    label: 'A styled native label for a form control.',
+    markdown: 'Renders model Markdown with raw HTML shown as text.',
     message: 'One chat turn, aligned by role, with actions.',
-    modal: 'The overlay behind dialogs and sheets.',
+    modal: 'A centered dialog for forms and confirmations.',
     pagination: 'Moves between pages of a long list.',
     popover: 'A floating panel anchored to a trigger.',
     progress: 'How far along a task is, or that it is running.',
@@ -40,8 +40,8 @@ export const componentSummaries = {
     'response-stream': 'Reveals streamed text at a steady pace.',
     'scroll-area': 'A scroll container with a themed scrollbar.',
     select: 'Picks one option from a known list.',
-    sheet: 'A drawer that slides in from an edge.',
-    shortcut: 'Shows a keyboard shortcut inline.',
+    sheet: 'A panel that slides in from the left or right edge.',
+    shortcut: 'Shows a keyboard shortcut and runs it on keypress.',
     'show-more': 'Clamps long content until it is expanded.',
     skeleton: 'Placeholders that hold layout while loading.',
     slider: 'Scrubs a number with its label inside the field.',
@@ -49,7 +49,7 @@ export const componentSummaries = {
     switch: 'Turns a setting on or off immediately.',
     tabs: 'Switches between views with a sliding indicator.',
     'tag-input': 'Enters a list of tags with keyboard and paste.',
-    'task-steps': 'Narrates ordered steps of async work.',
+    'task-steps': 'Shows progress through an ordered list of steps.',
     textarea: 'Multi-line text entry.',
     toast: 'Brief notifications fired from anywhere.',
     toggle: 'A button that stays pressed or unpressed.',
@@ -57,5 +57,5 @@ export const componentSummaries = {
     tool: 'Collapsible groups of an assistant’s tool calls.',
     toolbar: 'A row of actions for composers and replies.',
     tooltip: 'Brief help text on hover or focus.',
-    typography: 'Headings, body text, and inline code.'
+    typography: 'Headings, body text, inline code, and metadata.'
 } satisfies Record<ComponentSlug, string>;

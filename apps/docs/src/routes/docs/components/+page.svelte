@@ -166,7 +166,7 @@
     <title>Sivir · Components</title>
     <meta
         name="description"
-        content={`Browse all ${components.length} accessible, themeable Svelte 5 components in Sivir UI.`}
+        content={`All ${components.length} Sivir UI components for Svelte 5, grouped by purpose.`}
     />
 </svelte:head>
 
@@ -175,8 +175,8 @@
         <div>
             <Typography.H1 class="m-0">Components</Typography.H1>
             <Typography.Text variant="lead" class="mt-2 max-w-2xl">
-                Accessible Svelte 5 components that follow your theme, from buttons and menus to the
-                parts of an AI chat.
+                Filter by name or purpose. Press Enter to open the first match, or Escape to clear
+                the filter.
             </Typography.Text>
         </div>
         <DocsPager />
@@ -224,7 +224,7 @@
             </Button>
         </section>
     {:else}
-        <div class="flex flex-col">
+        <section aria-label="Component list" class="flex flex-col">
             {#each visibleGroups as group (group.id)}
                 <section
                     aria-labelledby={`group-${group.id}`}
@@ -257,6 +257,6 @@
                     </ul>
                 </section>
             {/each}
-        </div>
+        </section>
     {/if}
 </div>

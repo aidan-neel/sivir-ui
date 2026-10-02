@@ -16,12 +16,15 @@
     const TITLE = 'Avatar';
     const SLUG = 'avatar';
 
-    const installCommand = `bunx @sivir-ui/svelte add ${SLUG}`;
+    const installCommand = `bunx --package @sivir-ui/svelte sivir add ${SLUG}`;
 </script>
 
 <svelte:head>
     <title>Sivir · {TITLE}</title>
-    <meta name="description" content="An image with graceful fallback to initials." />
+    <meta
+        name="description"
+        content="A profile image that shows fallback content, such as initials, until it loads or if it fails."
+    />
 </svelte:head>
 
 <div data-docs-page class="flex flex-col gap-10">
@@ -32,7 +35,8 @@
                 {TITLE}
             </Typography.H1>
             <Typography.Text variant="lead" class="mt-2 max-w-2xl">
-                An image with initials as a fallback. Comes in two shapes and several sizes.
+                Avatar.Fallback renders until Avatar.Image finishes loading and stays if the image
+                fails. Set size to sm, md, lg, or xl and shape to circle or square.
             </Typography.Text>
         </div>
         <DocsPager />
@@ -54,9 +58,12 @@
     <!-- ─── Usage ─────────────────────────────────────────────────── -->
     <section id="usage" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading"> Usage </Typography.H2>
-        <Typography.Text variant="supporting">Import and use the Avatar component:</Typography.Text>
+        <Typography.Text variant="supporting">
+            size defaults to md and shape to circle. alt defaults to an empty string; set it to the
+            person's name unless the name already appears next to the avatar.
+        </Typography.Text>
         <CodeBlock
-            code={`import * as Avatar from '$lib/sivir/components/avatar';\n\n<Avatar.Root>\n  <Avatar.Image src="/avatar.jpg" alt="User" />\n  <Avatar.Fallback>AB</Avatar.Fallback>\n</Avatar.Root>`}
+            code={`import * as Avatar from '@sivir-ui/svelte/components/avatar';\n\n<Avatar.Root>\n  <Avatar.Image src="/avatars/maya-chen.jpg" alt="Maya Chen" />\n  <Avatar.Fallback>MC</Avatar.Fallback>\n</Avatar.Root>`}
             lang="svelte"
             copy="overlay"
         />

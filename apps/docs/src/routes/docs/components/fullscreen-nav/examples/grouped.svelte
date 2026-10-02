@@ -10,7 +10,9 @@
     </FullscreenNav.Trigger>
     <FullscreenNav.Content label="Product navigation">
         <header class="flex items-center justify-between">
-            <span class="font-[var(--font-header)] text-lg font-semibold tracking-tight">Acme</span>
+            <span class="font-[var(--font-header)] text-lg font-semibold tracking-tight"
+                >Northwind</span
+            >
             <FullscreenNav.Close />
         </header>
 

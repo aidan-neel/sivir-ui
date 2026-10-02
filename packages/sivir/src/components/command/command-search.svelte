@@ -121,6 +121,7 @@
 </script>
 
 <div
+    data-ui="command-search"
     class="flex h-[var(--size-touch)] w-full items-center gap-2.5 border-b-[length:var(--border-size)] border-border px-3"
 >
     <Search size={15} strokeWidth={1.75} class="shrink-0 text-foreground-muted" />

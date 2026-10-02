@@ -13,7 +13,7 @@ export const manifest: Manifest = {
     version: '2.2.0',
     visibility: 'public',
     description:
-        'Click-triggered menu popover with items, labels, separators, and nested submenus.',
+        'Click-triggered menu popover with items, checkbox and radio items, labels, separators, and nested submenus.',
     role: 'menu',
     files: [
         'components/dropdown-menu/dropdown-menu.svelte',

@@ -1,0 +1,22 @@
+- Add `Command.Footer`, an optional row below the results for key hints or status, pinned while the results scroll.
+- With surface paneling off, Command opens as a wider palette anchored near the top of the screen, with a taller search row, roomier items, and group headings that stay visible while searching. With paneling on it keeps its inset frame.
+- With surface paneling off, the command palette drops its inset frame look: the header and footer sit flush with hairline rules, item shortcuts render as plain muted text, and footer key hints use soft filled chips.
+- Add the Profitable (graphite, Geist, flat), Raven (true-black with a blue accent), Clawd (compact warm-dark with a clay accent), and Inspiration (violet, sharp corners, heavier type) theme presets.
+- Icon and label swaps (Copy Button, Spinner, Tool and Reasoning triggers, Question Submit and Option) share new `--motion-duration-swap`, `--motion-swap-blur`, `--motion-swap-scale`, `--motion-swap-rotate`, and `--motion-swap-y` tokens, so theme motion presets, the Panel speed, and the menu blur now change them too.
+- Turn the swap blur, scale, turn, and slide off with `chrome.fancySwap: false` in a theme, or the new Fancy text replacement switch in the Studio Feel tab. Swaps become a plain crossfade.
+- Switch has `--motion-duration-switch` and `--motion-switch-stretch` tokens. Lower the duration to speed up the toggle, set it to `0ms` to snap, or set the stretch to `0` to turn off the press stretch. Reduced motion and the None movement preset snap the switch.
+- Themes accept a `none` radius scale for square corners, and the Studio Feel tab adds None to Radius and Movement. The Advanced options in the Feel tab are gone; Switch motion has its own Duration and Stretch controls.
+- Set button heights independently of inputs and other controls with `--size-button-sm`, `--size-button-md`, and `--size-button-lg`, or the new button sliders in the Studio Controls group. Each falls back to the matching `--size-control-*` height.
+- Color Picker has a pipette button that picks a color from anywhere on screen, in browsers that support the EyeDropper API.
+- Color Picker's color area and hue strip are keyboard sliders. Arrow keys adjust them, and Shift steps by 10.
+- Attachments inside a Composer show as slim chips on the prompt's first line, with the text beside them. Once the prompt wraps, the text moves below the chips; it returns beside them when the prompt is cleared.
+- Question options show a number key hint, and pressing 1 through 9 inside a question selects or toggles that option.
+- The Studio has a top bar for picking a preset, resetting, searching tokens, and exporting. The left inspector now holds only customization controls.
+- Open Presets in the Studio top bar to see every built-in preset as a mini preview. Hover or arrow through one to preview it on the page, press Enter to apply it, or press Esc to return to your draft. Switching presets crossfades the theme colors.
+- The Studio preview has Cards and Agent views alongside the Ledger app, showing forms, charts, settings, team, chat, and agent conversation components in your theme. Cards is the default view, and the view switcher sits inside the preview frame.
+- Turn on Edit tokens in the Studio preview, then click any element to edit the tokens it uses in a popover anchored to it. A ring and a label such as "Button · primary" mark the element, tokens are grouped into Color, Type, Shape, Depth, and Motion tabs, and the footer counts overrides with a Reset. Hovering a token outlines every element that uses it; edits change the theme-wide token.
+- Search every Studio token by name, variable, group, or the components that use it with Ctrl/Cmd+Shift+K or the search button. Rows show a preview, the variable, the current value, and a dot when changed. Press Enter to edit a token inline under its row, Shift+Enter to open it in the inspector, or Cmd/Ctrl+Backspace to reset it.
+- Export from the Studio opens a side panel with tabs for the changed tokens only, the full CSS, the JSON, and the CLI command, plus copy buttons for the CSS and JSON. The Export button shows how many tokens you changed.
+- Add undo and redo to Studio (toolbar buttons, Cmd/Ctrl+Z, Shift+Cmd/Ctrl+Z), covering every edit, preset switch, and reset.
+- Studio now asks for confirmation before resetting your draft to the preset. Reset can be undone.
+- Set the Hover speed and how far buttons sink when pressed from the Studio Feel tab, under Interaction.

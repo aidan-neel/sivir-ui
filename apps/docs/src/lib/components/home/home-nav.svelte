@@ -56,9 +56,7 @@
     ];
 
     const itemClass =
-        'group relative z-[1] inline-flex h-[var(--size-control-sm)] shrink-0 items-center gap-2.5 whitespace-nowrap rounded-[var(--radius-lg)] ps-2.5 pe-3 [font-size:var(--font-size-body)] leading-none text-foreground-muted no-underline outline-none transition-[color,scale] [transition-duration:var(--motion-duration-hover)] ease-[var(--ease-out)] hover:text-foreground active:scale-[0.97] focus-visible:shadow-[var(--focus-ring)] motion-reduce:transition-none motion-safe:[animation:home-rise_calc(var(--motion-duration-sheet)*1.8)_var(--ease-out)_both]';
-    const iconClass =
-        'transition-[translate,scale] [transition-duration:var(--motion-duration-panel)] ease-[var(--ease-out)] group-hover:-translate-y-px group-hover:scale-110 motion-reduce:transition-none';
+        'group relative z-[1] inline-flex h-[var(--size-control-sm)] shrink-0 items-center gap-2.5 whitespace-nowrap rounded-[var(--radius-lg)] ps-2.5 pe-3 [font-size:var(--font-size-body)] leading-none text-foreground-muted no-underline outline-none transition-colors [transition-duration:var(--motion-duration-hover)] ease-[var(--ease-out)] hover:cursor-[var(--ui-cursor-interactive)] hover:text-foreground focus-visible:shadow-[var(--focus-ring)] motion-reduce:transition-none motion-safe:[animation:home-rise_calc(var(--motion-duration-sheet)*1.8)_var(--ease-out)_both]';
     const iconMorphClass =
         'absolute inset-0 transition-[opacity,filter,scale,rotate] [transition-duration:var(--motion-duration-panel)] ease-[var(--ease-out)] motion-reduce:transition-none';
 
@@ -129,7 +127,7 @@
 
 <nav
     aria-label="Site"
-    class="flex w-full shrink-0 px-2.5 pt-2.5 min-[900px]:sticky min-[900px]:top-2 min-[900px]:h-[calc(100svh-1rem)] min-[900px]:w-44 min-[900px]:items-center min-[900px]:ps-3 min-[900px]:pe-2 min-[900px]:pt-0"
+    class="flex w-full shrink-0 px-2.5 pt-2.5 min-[900px]:sticky min-[900px]:top-0 min-[900px]:h-[100svh] min-[900px]:w-44 min-[900px]:items-center min-[900px]:ps-3 min-[900px]:pe-2 min-[900px]:pt-0"
 >
     <div
         bind:this={list}
@@ -165,7 +163,7 @@
                 class={cn(itemClass, isCurrent(link.href) && 'bg-secondary text-foreground')}
                 style={entranceDelay(index)}
             >
-                <Icon size={16} strokeWidth={1.7} aria-hidden="true" class={iconClass} />
+                <Icon size={16} strokeWidth={1.7} aria-hidden="true" />
                 {link.title}
             </Button>
         {/each}
@@ -178,11 +176,8 @@
             class={itemClass}
             style={entranceDelay(links.length)}
         >
-            <img
-                src={dark ? GitHubWhite : GitHubBlack}
-                alt=""
-                class={cn('size-4 opacity-80', iconClass)}
-            />
+            <img src={GitHubBlack} alt="" class="size-4 opacity-80 dark:hidden" />
+            <img src={GitHubWhite} alt="" class="hidden size-4 opacity-80 dark:block" />
             GitHub
             {#if stars}
                 <span
@@ -200,7 +195,7 @@
             aria-label={dark ? 'Switch to light mode' : 'Switch to dark mode'}
             onclick={switchTheme}
         >
-            <span class={cn('relative size-4', iconClass)} aria-hidden="true">
+            <span class="relative size-4" aria-hidden="true">
                 <Sun
                     size={16}
                     strokeWidth={1.7}

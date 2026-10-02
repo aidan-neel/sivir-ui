@@ -11,12 +11,15 @@
     const TITLE = 'Collapsible';
     const SLUG = 'collapsible';
 
-    const installCommand = `bunx @sivir-ui/svelte add ${SLUG}`;
+    const installCommand = `bunx --package @sivir-ui/svelte sivir add ${SLUG}`;
 </script>
 
 <svelte:head>
     <title>Sivir · {TITLE}</title>
-    <meta name="description" content="A single collapsible panel with open/close toggle." />
+    <meta
+        name="description"
+        content="A trigger button that shows and hides a single panel of content."
+    />
 </svelte:head>
 
 <div data-docs-page class="flex flex-col gap-10">
@@ -27,7 +30,8 @@
                 {TITLE}
             </Typography.H1>
             <Typography.Text variant="lead" class="mt-2 max-w-2xl">
-                A single panel that expands and collapses on demand.
+                A single panel that expands and collapses. Root renders no element of its own, so
+                you place and style Trigger and Content yourself.
             </Typography.Text>
         </div>
         <DocsPager />
@@ -50,10 +54,13 @@
     <section id="usage" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading"> Usage </Typography.H2>
         <Typography.Text variant="supporting">
-            Import the Collapsible components and use them:
+            Bind <Typography.InlineCode>open</Typography.InlineCode> to read or set the state. It
+            starts as <Typography.InlineCode>false</Typography.InlineCode>. Set
+            <Typography.InlineCode>disabled</Typography.InlineCode>
+            on Root to disable the trigger.
         </Typography.Text>
         <CodeBlock
-            code={`import * as Collapsible from '$lib/sivir/components/collapsible';\n\nlet open = $state();\n\n<Collapsible.Root bind:open>\n  <Collapsible.Trigger>Trigger</Collapsible.Trigger>\n  <Collapsible.Content>Content</Collapsible.Content>\n</Collapsible.Root>`}
+            code={`import * as Collapsible from '@sivir-ui/svelte/components/collapsible';\n\nlet open = $state(false);\n\n<Collapsible.Root bind:open>\n  <Collapsible.Trigger>Order details</Collapsible.Trigger>\n  <Collapsible.Content>3 items, shipped March 4.</Collapsible.Content>\n</Collapsible.Root>`}
             lang="svelte"
             copy="overlay"
         />

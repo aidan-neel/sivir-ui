@@ -6,7 +6,7 @@ export const SUPPORTED_THEME_VERSIONS = [2, 3, 4] as const;
 export type SupportedThemeVersion = (typeof SUPPORTED_THEME_VERSIONS)[number];
 
 export const neutralTemperatures = ['cool', 'true', 'warm'] as const;
-export const radiusScales = ['sharp', 'default', 'rounded'] as const;
+export const radiusScales = ['none', 'sharp', 'default', 'rounded'] as const;
 export const densities = ['compact', 'default', 'comfortable'] as const;
 export const motionFeels = ['none', 'subtle', 'default', 'expressive'] as const;
 export const themeFontWeights = ['400', '500', '600', '700'] as const;
@@ -65,6 +65,8 @@ export type ThemeChrome = {
     dialogShadows?: boolean;
     /** Keeps the item highlight but disables the slide between items. */
     travelingHighlight?: false;
+    /** Set `false` to swap icons and labels with a plain crossfade, dropping the blur, scale, rotation, and slide. */
+    fancySwap?: false;
     /** Set `false` for plain 1px-border menus: drops the inset frame around dropdown, context, select, and combobox menus. */
     menuPaneling?: boolean;
     /** Set `false` to make modals, sheets, popovers, cards, and code blocks a single continuous container instead of an inset surface inside a frame. */
@@ -124,6 +126,7 @@ export const DEFAULT_THEME: Theme = {
 };
 
 const RADII: Record<RadiusScale, readonly [string, string, string, string]> = {
+    none: ['0px', '0px', '0px', '0px'],
     sharp: ['2px', '4px', '6px', '8px'],
     default: ['6px', '8px', '10px', '14px'],
     rounded: ['10px', '14px', '18px', '24px']
@@ -145,6 +148,9 @@ type MotionSet = {
     toastOut: string;
     stepIn: string;
     stepOut: string;
+    swapScale: string;
+    swapRotate: string;
+    swapY: string;
 };
 
 const MOTION: Record<MotionFeel, MotionSet> = {
@@ -157,7 +163,10 @@ const MOTION: Record<MotionFeel, MotionSet> = {
         toastIn: '0ms',
         toastOut: '0ms',
         stepIn: '0ms',
-        stepOut: '0ms'
+        stepOut: '0ms',
+        swapScale: '1',
+        swapRotate: '0deg',
+        swapY: '0px'
     },
     subtle: {
         hover: '90ms',
@@ -168,7 +177,10 @@ const MOTION: Record<MotionFeel, MotionSet> = {
         toastIn: '240ms',
         toastOut: '180ms',
         stepIn: '260ms',
-        stepOut: '100ms'
+        stepOut: '100ms',
+        swapScale: '0.75',
+        swapRotate: '45deg',
+        swapY: '2px'
     },
     default: {
         hover: '120ms',
@@ -179,7 +191,10 @@ const MOTION: Record<MotionFeel, MotionSet> = {
         toastIn: '320ms',
         toastOut: '240ms',
         stepIn: '360ms',
-        stepOut: '130ms'
+        stepOut: '130ms',
+        swapScale: '0.5',
+        swapRotate: '90deg',
+        swapY: '3px'
     },
     expressive: {
         hover: '180ms',
@@ -190,7 +205,10 @@ const MOTION: Record<MotionFeel, MotionSet> = {
         toastIn: '400ms',
         toastOut: '300ms',
         stepIn: '460ms',
-        stepOut: '170ms'
+        stepOut: '170ms',
+        swapScale: '0.25',
+        swapRotate: '120deg',
+        swapY: '5px'
     }
 };
 
@@ -287,14 +305,14 @@ function brandDeclarations(brand: string, mode: 'light' | 'dark') {
                 ? mode === 'light'
                     ? 'hsl(212.2 100% 64.5%)'
                     : 'hsl(216.6 100% 67.8%)'
-                : brand
+                : 'var(--color-primary)'
         };`,
         `--sivir-blue-50: ${
             isDefault
                 ? mode === 'light'
                     ? 'hsl(218.8 100% 96.7%)'
                     : 'hsl(217.1 52.5% 15.7%)'
-                : `color-mix(in srgb, ${brand} 12%, ${mode === 'light' ? 'white' : 'black'})`
+                : `color-mix(in srgb, var(--color-primary) 12%, ${mode === 'light' ? 'white' : 'black'})`
         };`
     ];
 }
@@ -398,11 +416,120 @@ export function surfacePanelingOffCss(): string {
             ".sivir-modal-frame > [data-ui='modal-surface']:has(+ [data-ui='modal-footer']),\n.sivir-modal-frame > [data-ui='card-surface']:has(+ [data-ui='card-footer'])",
             ['padding-bottom: calc(var(--spacing) * 4);']
         ) +
-        block(".sivir-inset-frame > [data-ui='code-block-header']", [
-            'padding: calc(var(--spacing) * 2) calc(var(--spacing) * 3);'
+        block(
+            ".sivir-modal-frame > [data-ui='card-surface']:has(+ [data-ui='card-footer'] > [data-ui='question-actions'])",
+            ['padding-bottom: 0;']
+        ) +
+        block(".sivir-modal-frame > [data-ui='card-footer']:has(> [data-ui='question-actions'])", [
+            'padding: 0 calc(var(--spacing) * 3) calc(var(--spacing) * 3);'
         ]) +
+        block(".sivir-modal-frame > [data-ui='card-footer'] > [data-ui='question-actions']", [
+            'padding: 0;'
+        ]) +
+        block(".sivir-inset-frame [data-ui='code-block-header']", [
+            'padding: calc(var(--spacing) * 1.5) calc(var(--spacing) * 2);'
+        ]) +
+        block(
+            ".sivir-inset-frame [data-ui='code-block-header'],\n.sivir-inset-frame > [data-ui='file-diff-top-bar']",
+            [
+                'border-bottom: var(--border-size) solid var(--color-border);',
+                'background-color: color-mix(in oklab, var(--color-foreground) 3%, var(--color-card));'
+            ]
+        ) +
+        block(".sivir-inset-frame:where([data-ui='code-block'])", ['position: relative;']) +
+        block(".sivir-inset-frame [data-ui='code-block-header']:not(:has([role='tablist']))", [
+            'position: absolute;',
+            'top: calc(var(--spacing) * 1.5);',
+            'right: calc(var(--spacing) * 1.5);',
+            'z-index: 1;',
+            'width: auto;',
+            'padding: 0;',
+            'border-bottom: 0;',
+            'background-color: transparent;'
+        ]) +
+        block('.sivir-inset-frame .sivir-inset-surface', ['border-radius: 0;']) +
         block('.sivir-card-frame', ['padding: 0;', 'background-color: var(--color-card);']) +
-        block('.sivir-card-surface', ['box-shadow: var(--elevation-1);'])
+        block('.sivir-card-surface', ['box-shadow: var(--elevation-1);']) +
+        commandPanelingOffCss()
+    );
+}
+
+/** Flat command palette: top-anchored, wider, with a roomier search row and taller items. */
+function commandPanelingOffCss(): string {
+    const top = 'min(7.5rem, 14vh)';
+
+    return (
+        block(".sivir-modal-frame[data-ui='command-content']", [
+            `top: calc(var(--sivir-viewport-top) + ${top});`,
+            'translate: -50% 0;',
+            'max-width: 41.25rem;',
+            `max-height: min(32rem, calc(var(--sivir-viewport-height) - ${top} - var(--overlay-gutter)));`
+        ]) +
+        block("[data-ui='command-search']", [
+            'height: calc(var(--spacing) * 13.5);',
+            'gap: calc(var(--spacing) * 3);',
+            'padding-inline: calc(var(--spacing) * 4.5);'
+        ]) +
+        block("[data-ui='command-search'] > svg", [
+            'width: calc(var(--spacing) * 4);',
+            'height: calc(var(--spacing) * 4);'
+        ]) +
+        block("[data-ui='command-search'] > input", [
+            'font-size: calc(var(--font-size-body) * 1.1);'
+        ]) +
+        block("[data-ui='command-search'] > input::placeholder", [
+            'color: color-mix(in oklab, var(--color-foreground-muted) 70%, transparent);'
+        ]) +
+        block("[data-ui='command-results']", [
+            'padding: calc(var(--spacing) * 2) calc(var(--spacing) * 2) calc(var(--spacing) * 1.5);',
+            'scrollbar-gutter: auto;'
+        ]) +
+        block("[data-ui='command-group']", ['gap: 0;']) +
+        block("[data-ui='command-group']:not(:has([role='option']:not([hidden])))", [
+            'display: none;'
+        ]) +
+        block("[data-ui='command-group'] > .sivir-menu-label", [
+            'display: block;',
+            'padding: calc(var(--spacing) * 2) calc(var(--spacing) * 2.5) calc(var(--spacing) * 1.5);'
+        ]) +
+        block("[data-ui='command-content'] .sivir-menu-item", [
+            'height: auto;',
+            'min-height: calc(var(--spacing) * 9.5);',
+            'padding-inline: calc(var(--spacing) * 2.5);',
+            'font-size: var(--font-size-body);',
+            'font-weight: var(--font-weight-label);'
+        ]) +
+        block("[data-ui='command-content'] .sivir-menu-item > div", [
+            'gap: calc(var(--spacing) * 3);'
+        ]) +
+        block("[data-ui='command-content'] .sivir-menu-item svg", [
+            'color: var(--color-foreground-muted);'
+        ]) +
+        block("[data-ui='command-content'] .sivir-menu-separator", [
+            'margin-inline: calc(var(--spacing) * 2.5);'
+        ]) +
+        block("[data-ui='command-content'] .sivir-menu-item kbd", [
+            'border-color: transparent;',
+            'background-color: transparent;',
+            'font-size: var(--font-size-body);',
+            'font-weight: var(--font-weight-body);'
+        ]) +
+        block(".sivir-modal-frame[data-ui='command-content'] > [data-ui='modal-surface']", [
+            'padding-bottom: 0;'
+        ]) +
+        block(".sivir-modal-frame[data-ui='command-content'] > [data-ui='modal-frame-header']", [
+            'padding: calc(var(--spacing) * 3) calc(var(--spacing) * 4.5);',
+            'border-bottom: var(--border-size) solid var(--color-border);'
+        ]) +
+        block(".sivir-modal-frame[data-ui='command-content'] > [data-ui='modal-footer']", [
+            'gap: calc(var(--spacing) * 4);',
+            'padding: calc(var(--spacing) * 2.5) calc(var(--spacing) * 4.5);',
+            'border-top: var(--border-size) solid var(--color-border);'
+        ]) +
+        block("[data-ui='command-content'] > [data-ui='modal-footer'] kbd", [
+            'border-color: transparent;',
+            'background-color: color-mix(in oklab, var(--color-foreground) 7%, transparent);'
+        ])
     );
 }
 
@@ -431,6 +558,14 @@ function chromeBlocks(chrome: ThemeChrome | undefined): string {
     if (chrome.travelingHighlight === false) {
         shared.push('--sivir-traveling-highlight: none;');
     }
+    if (chrome.fancySwap === false) {
+        shared.push(
+            '--motion-swap-blur: 0px;',
+            '--motion-swap-scale: 1;',
+            '--motion-swap-rotate: 0deg;',
+            '--motion-swap-y: 0px;'
+        );
+    }
     const withElevations = (declarations: string[]) =>
         elevationOff.length > 0 ? [...declarations, ...elevationOff] : declarations;
     const light = withElevations([
@@ -450,6 +585,7 @@ function chromeBlocks(chrome: ThemeChrome | undefined): string {
         !controlShadows ||
         !dialogShadows ||
         chrome.travelingHighlight === false ||
+        chrome.fancySwap === false ||
         chrome.menuPaneling === false ||
         chrome.surfacePaneling === false ||
         chrome.primaryStroke === true ||
@@ -485,7 +621,10 @@ export function themeToCss(themeInput: Theme): string {
         `--motion-duration-toast-in: ${motion.toastIn};`,
         `--motion-duration-toast-out: ${motion.toastOut};`,
         `--motion-duration-step-in: ${motion.stepIn};`,
-        `--motion-duration-step-out: ${motion.stepOut};`
+        `--motion-duration-step-out: ${motion.stepOut};`,
+        `--motion-swap-scale: ${motion.swapScale};`,
+        `--motion-swap-rotate: ${motion.swapRotate};`,
+        `--motion-swap-y: ${motion.swapY};`
     ];
     if (theme.motion === 'none') {
         shared.push(
@@ -494,7 +633,8 @@ export function themeToCss(themeInput: Theme): string {
             '--motion-duration-modal-in: 0ms;',
             '--motion-duration-modal-out: 0ms;',
             '--motion-duration-press: 0ms;',
-            '--motion-duration-item: 0ms;'
+            '--motion-duration-item: 0ms;',
+            '--motion-duration-switch: 0ms;'
         );
     }
 
@@ -727,6 +867,14 @@ function optionalChrome(value: unknown): ThemeChrome | undefined {
             );
         }
         chrome.travelingHighlight = false;
+    }
+    if (value.fancySwap !== undefined) {
+        if (value.fancySwap !== false) {
+            throw new TypeError(
+                'Invalid theme: chrome.fancySwap only accepts false (the fancy swap is on by default).'
+            );
+        }
+        chrome.fancySwap = false;
     }
     if (value.menuPaneling !== undefined) {
         if (typeof value.menuPaneling !== 'boolean') {

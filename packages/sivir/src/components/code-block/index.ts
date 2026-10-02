@@ -39,7 +39,7 @@ export type CodeBlockRegistry = {
     langs: Record<string, string>;
     /** The currently-active tab value. */
     active: string;
-    /** Tab values in source order — drives the directional slide on swap. */
+    /** Tab values in source order. */
     order: string[];
     /** Whether the high-level root owns the shared panel surface. */
     contained: boolean;

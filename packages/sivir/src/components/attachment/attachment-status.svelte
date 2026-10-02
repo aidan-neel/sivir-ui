@@ -4,7 +4,7 @@
     import { Spinner } from '@sivir-ui/svelte/components/spinner';
     import { getCssDuration } from '@sivir-ui/svelte/transition';
     import { cn } from '@sivir-ui/svelte/utils';
-    import { cubicIn, cubicOut } from 'svelte/easing';
+    import { cubicOut } from 'svelte/easing';
     import type { TransitionConfig } from 'svelte/transition';
     import type { AttachmentStatusProps } from '.';
     import { getAttachmentItemContext } from './context.svelte';
@@ -22,7 +22,7 @@
 
     function enter(node: Element): TransitionConfig {
         return {
-            duration: getCssDuration(node, '--motion-duration-panel', 180),
+            duration: getCssDuration(node, '--motion-duration-panel-in', 110),
             easing: cubicOut,
             css: frame
         };
@@ -30,8 +30,8 @@
 
     function leave(node: Element): TransitionConfig {
         return {
-            duration: getCssDuration(node, '--motion-duration-panel-in', 110),
-            easing: cubicIn,
+            duration: getCssDuration(node, '--motion-duration-panel-out', 150),
+            easing: cubicOut,
             css: frame
         };
     }
@@ -43,7 +43,7 @@
     data-state={item.status}
     class={cn(
         className,
-        'col-start-2 row-start-2 me-2 mt-0.5 grid h-4 min-w-0 items-center text-xs tabular-nums text-foreground-muted'
+        'col-start-2 row-start-2 me-2 mt-0.5 grid h-4 min-w-0 items-center text-xs tabular-nums text-foreground-muted in-data-[ui=composer-form]:mt-0 in-data-[ui=composer-form]:me-1 in-data-[ui=composer-form]:data-[state=ready]:hidden in-data-[ui=composer-form]:data-[state=uploading]:w-20'
     )}
 >
     {#key item.status}

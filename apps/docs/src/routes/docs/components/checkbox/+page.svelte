@@ -17,12 +17,15 @@
     const TITLE = 'Checkbox';
     const SLUG = 'checkbox';
 
-    const installCommand = `bunx @sivir-ui/svelte add ${SLUG}`;
+    const installCommand = `bunx --package @sivir-ui/svelte sivir add ${SLUG}`;
 </script>
 
 <svelte:head>
     <title>Sivir · {TITLE}</title>
-    <meta name="description" content="A binary option presented as a labeled box." />
+    <meta
+        name="description"
+        content="A checkbox with a bindable checked state, an optional label, and an optional description."
+    />
 </svelte:head>
 
 <div data-docs-page class="flex flex-col gap-10">
@@ -33,7 +36,8 @@
                 {TITLE}
             </Typography.H1>
             <Typography.Text variant="lead" class="mt-2 max-w-2xl">
-                A checkbox with an optional label and description. Bindable and disableable.
+                The native checkbox sits inside a label, so clicking the text toggles it. The
+                primary variant draws a bordered row that tints when checked.
             </Typography.Text>
         </div>
         <DocsPager />
@@ -56,10 +60,14 @@
     <section id="usage" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading"> Usage </Typography.H2>
         <Typography.Text variant="supporting">
-            Import and use the Checkbox component:
+            Bind <Typography.InlineCode>checked</Typography.InlineCode>, or pass
+            <Typography.InlineCode>onCheckedChange</Typography.InlineCode>
+            to react to changes.
+            <Typography.InlineCode>description</Typography.InlineCode>
+            renders only when <Typography.InlineCode>label</Typography.InlineCode> is set.
         </Typography.Text>
         <CodeBlock
-            code={`import { Checkbox } from '$lib/sivir/components/checkbox';\n\nlet checked = $state();\n\n<Checkbox bind:checked label="Accept" />`}
+            code={`import { Checkbox } from '@sivir-ui/svelte/components/checkbox';\n\nlet accepted = $state(false);\n\n<Checkbox bind:checked={accepted} label="I agree to the terms of service" />`}
             lang="svelte"
             copy="overlay"
         />

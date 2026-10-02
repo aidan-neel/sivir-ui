@@ -4,7 +4,9 @@
 
 <div class="w-full max-w-md">
     <Alert.Root variant="error">
-        <Alert.Title>Error</Alert.Title>
-        <Alert.Description>This is a error alert with a title and description.</Alert.Description>
+        <Alert.Title>Build failed</Alert.Title>
+        <Alert.Description
+            >The build exited with code 1. Check the logs for details.</Alert.Description
+        >
     </Alert.Root>
 </div>

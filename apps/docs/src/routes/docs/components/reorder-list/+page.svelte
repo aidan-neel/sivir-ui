@@ -6,12 +6,15 @@
     import Hero from './examples/hero.svelte';
     import HeroSrc from './examples/hero.svelte?raw';
 
-    const installCommand = 'bunx @sivir-ui/svelte add reorder-list';
+    const installCommand = 'bunx --package @sivir-ui/svelte sivir add reorder-list';
 </script>
 
 <svelte:head>
     <title>Sivir · Reorder List</title>
-    <meta name="description" content="Reorder controlled items with pointer or keyboard input." />
+    <meta
+        name="description"
+        content="A list of rows you reorder by dragging or with Space and the arrow keys."
+    />
 </svelte:head>
 
 <div data-docs-page class="flex flex-col gap-10">
@@ -19,7 +22,9 @@
         <div>
             <Typography.H1> Reorder List </Typography.H1>
             <Typography.Text variant="lead" class="mt-2 max-w-2xl">
-                The gap the neighboring rows open is the drop target.
+                Rows trade places as you drag, so the list shows the new order before you drop. With
+                the keyboard, Space or Enter grabs a row, Up and Down move it, and Escape restores
+                the original order.
             </Typography.Text>
         </div>
         <DocsPager />
@@ -37,16 +42,27 @@
     <section id="usage" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading">Usage</Typography.H2>
         <Typography.Text variant="supporting">
-            Bind the controlled array for live movement. Use
-            <Typography.InlineCode>onCommit</Typography.InlineCode>
-            for persistence so a drag writes once rather than on every crossing. Drag anywhere on a
-            row with a mouse, pen, or touch. Hover highlights the row; a grabbed row keeps its
-            raised surface and primary border until dropped.
+            Bind <Typography.InlineCode>items</Typography.InlineCode>. It updates, and
+            <Typography.InlineCode>onReorder</Typography.InlineCode>
+            fires, each time a row passes a neighbor. Save from
+            <Typography.InlineCode>onCommit</Typography.InlineCode>, which fires once on drop. Row
+            content is hidden from screen readers, so
+            <Typography.InlineCode>getLabel</Typography.InlineCode>
+            supplies the text announced for each row. Rows can be dragged from anywhere with a
+            mouse, pen, or touch.
         </Typography.Text>
         <CodeBlock
             lang="svelte"
             copy="overlay"
-            code={`<ReorderList bind:items getId={(item) => item.id} getLabel={(item) => item.name} label="Pipeline steps">
+            code={`import { ReorderList } from '@sivir-ui/svelte/components/reorder-list';
+
+let steps = $state([
+  { id: 'build', name: 'Build' },
+  { id: 'test', name: 'Test' },
+  { id: 'deploy', name: 'Deploy' }
+]);
+
+<ReorderList bind:items={steps} getId={(item) => item.id} getLabel={(item) => item.name} label="Pipeline steps" onCommit={saveOrder}>
   {#snippet children(item)}
     <span>{item.name}</span>
   {/snippet}

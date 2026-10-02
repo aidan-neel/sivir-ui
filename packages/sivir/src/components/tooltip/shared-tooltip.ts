@@ -14,15 +14,23 @@
 import { autoUpdate, computePosition, flip, offset, type Placement, shift } from '@floating-ui/dom';
 import '@scritto/core';
 import type { Scritto as ScrittoElement } from '@scritto/core';
+import type { TooltipState } from '.';
+
+export type TooltipRuntimeState = TooltipState & {
+    shortcut: string;
+};
 
 let bubble: HTMLDivElement | null = null;
 let measurer: HTMLSpanElement | null = null;
 let label: HTMLSpanElement | null = null;
+let keys: HTMLElement | null = null;
+let measuredKeys: HTMLElement | null = null;
 let roller: ScrittoElement | null = null;
 let currentClass = '';
 
 let visible = false;
 let currentText = '';
+let currentShortcut = '';
 let activeRef: HTMLElement | null = null;
 let lastCenter = 'translateX(-50%)';
 let openTimer: ReturnType<typeof setTimeout> | undefined;
@@ -31,6 +39,9 @@ let stopTracking: (() => void) | undefined;
 
 const SHOW = 'scale(1)';
 const HIDE = 'scale(0.94)';
+const SHORTCUT_CLASS =
+    // token-lint-disable-next-line no-literal-length: optical baseline and keycap tracking match the label text
+    'ms-2 inline-block min-w-5 rounded-[var(--radius-sm)] bg-[color-mix(in_oklab,var(--color-tooltip-foreground)_14%,transparent)] px-1 text-center align-[0.0625rem] font-sans text-[length:var(--font-size-meta)] leading-5 tracking-[0.12em] text-[color-mix(in_oklab,var(--color-tooltip-foreground)_72%,transparent)] empty:hidden';
 
 /**
  * Whether this platform can drive a Scritto roll. The unit-test DOM has no
@@ -44,6 +55,21 @@ function supportsRoll(): boolean {
         typeof Element !== 'undefined' &&
         typeof Element.prototype.getAnimations === 'function'
     );
+}
+
+function swapDuration() {
+    if (!bubble) {
+        return 0;
+    }
+
+    const raw = getComputedStyle(bubble).getPropertyValue('--motion-duration-swap').trim();
+    const parsed = Number.parseFloat(raw);
+
+    if (!Number.isFinite(parsed)) {
+        return 300;
+    }
+
+    return raw.endsWith('ms') ? parsed : parsed * 1000;
 }
 
 /**
@@ -60,7 +86,10 @@ function setLabel(text: string, animate: boolean) {
         if (roller.parentNode !== label) {
             label.replaceChildren(roller);
         }
-        if (animate) {
+        const duration = animate ? swapDuration() : 0;
+
+        if (duration > 0) {
+            roller.setOptions({ transition: { duration } });
             roller.update(text);
         } else {
             roller.value = text;
@@ -94,6 +123,10 @@ function ensure() {
     const span = document.createElement('span');
     span.className = 'sivir-tooltip-label';
     el.appendChild(span);
+
+    const kbd = document.createElement('kbd');
+    kbd.className = SHORTCUT_CLASS;
+    el.appendChild(kbd);
     document.body.appendChild(el);
 
     const m = document.createElement('span');
@@ -104,6 +137,8 @@ function ensure() {
     bubble = el;
     measurer = m;
     label = span;
+    keys = kbd;
+    measuredKeys = kbd.cloneNode() as HTMLElement;
 
     if (supportsRoll()) {
         const host = document.createElement('scritto-text') as ScrittoElement;
@@ -126,12 +161,20 @@ function applyBubbleClass(className = '') {
     }
 }
 
-/** Sizes the bubble to the measured width of `text` so the change can transition. */
-function applyWidth(text: string) {
-    if (!bubble || !measurer) {
+function setShortcut(shortcut: string) {
+    if (keys) {
+        keys.textContent = shortcut;
+    }
+    currentShortcut = shortcut;
+}
+
+/** Sizes the bubble to the measured width of `text` and `shortcut` so the change can transition. */
+function applyWidth(text: string, shortcut: string) {
+    if (!bubble || !measurer || !measuredKeys) {
         return;
     }
-    measurer.textContent = text;
+    measuredKeys.textContent = shortcut;
+    measurer.replaceChildren(document.createTextNode(text), measuredKeys);
     bubble.style.width = `${measurer.offsetWidth}px`;
 }
 
@@ -205,7 +248,13 @@ function trackPosition(ref: HTMLElement, placement: Placement) {
 }
 
 /** Shows the bubble for `ref`; when one is already up it morphs to this label. */
-function present(ref: HTMLElement, text: string, placement: Placement, className = '') {
+function present(
+    ref: HTMLElement,
+    text: string,
+    placement: Placement,
+    className = '',
+    shortcut = ''
+) {
     if (!bubble || !label) {
         return;
     }
@@ -214,8 +263,9 @@ function present(ref: HTMLElement, text: string, placement: Placement, className
     activeRef = ref;
     setLabel(text, false);
     currentText = text;
+    setShortcut(shortcut);
     applyBubbleClass(className);
-    applyWidth(text);
+    applyWidth(text, shortcut);
     reposition(ref, placement, morph);
     trackPosition(ref, placement);
     visible = true;
@@ -227,7 +277,8 @@ export function showTooltip(
     text: string,
     placement: Placement = 'top',
     delay = 125,
-    className = ''
+    className = '',
+    shortcut = ''
 ) {
     if (typeof document === 'undefined' || !text) {
         return;
@@ -236,20 +287,26 @@ export function showTooltip(
     clearTimeout(openTimer);
     clearTimeout(closeTimer);
     if (visible || delay <= 0) {
-        present(ref, text, placement, className);
+        present(ref, text, placement, className, shortcut);
     } else {
-        openTimer = setTimeout(() => present(ref, text, placement, className), delay);
+        openTimer = setTimeout(() => present(ref, text, placement, className, shortcut), delay);
     }
 }
 
 /** Re-label the active bubble in place (for example, a Copy→Copied flip). */
-export function updateTooltipText(ref: HTMLElement, text: string) {
-    if (!visible || activeRef !== ref || !label || !text || text === currentText) {
+export function updateTooltipText(ref: HTMLElement, text: string, shortcut = '') {
+    if (!visible || activeRef !== ref || !label || !text) {
         return;
     }
-    setLabel(text, true);
-    currentText = text;
-    applyWidth(text);
+    if (text === currentText && shortcut === currentShortcut) {
+        return;
+    }
+    if (text !== currentText) {
+        setLabel(text, true);
+        currentText = text;
+    }
+    setShortcut(shortcut);
+    applyWidth(text, shortcut);
 }
 
 export function updateTooltipClass(ref: HTMLElement, className: string) {
@@ -257,7 +314,7 @@ export function updateTooltipClass(ref: HTMLElement, className: string) {
         return;
     }
     applyBubbleClass(className);
-    applyWidth(currentText);
+    applyWidth(currentText, currentShortcut);
 }
 
 /** Force the bubble up now and, unless the pointer is over the trigger, auto-hide after `holdMs`. */
@@ -266,14 +323,15 @@ export function flashTooltip(
     text: string,
     placement: Placement = 'top',
     holdMs = 1500,
-    className = ''
+    className = '',
+    shortcut = ''
 ) {
     if (typeof document === 'undefined' || !text) {
         return;
     }
     ensure();
     clearTimeout(openTimer);
-    present(ref, text, placement, className);
+    present(ref, text, placement, className, shortcut);
     const hovered = typeof ref.matches === 'function' && ref.matches(':hover');
     if (!hovered) {
         clearTimeout(closeTimer);
@@ -318,6 +376,7 @@ export function resetSharedTooltipForTests() {
     visible = false;
     activeRef = null;
     currentText = '';
+    currentShortcut = '';
     currentClass = '';
     lastCenter = 'translateX(-50%)';
     bubble?.remove();
@@ -325,6 +384,8 @@ export function resetSharedTooltipForTests() {
     bubble = null;
     measurer = null;
     label = null;
+    keys = null;
+    measuredKeys = null;
     roller = null;
 }
 

@@ -4,16 +4,16 @@
 
 <div class="flex w-full max-w-xl flex-col gap-5">
     <Typography.Text variant="lead">
-        Lead text introduces a page or a significant section.
+        Preview deployments build every pull request and post a link in the review.
     </Typography.Text>
     <Typography.Text variant="body">
-        Body text carries longer explanations at a comfortable reading size and rhythm.
+        Each preview runs against a copy of the staging database. Data you create there is deleted
+        when the pull request closes.
     </Typography.Text>
     <Typography.Text variant="supporting">
-        Supporting text adds quieter instructions, context, or qualifications.
+        Previews older than 30 days are removed automatically.
     </Typography.Text>
     <Typography.Text variant="body">
-        Use <Typography.InlineCode>InlineCode</Typography.InlineCode> for commands, paths, and short
-        identifiers within prose.
+        Change the base branch in <Typography.InlineCode>preview.config.ts</Typography.InlineCode>.
     </Typography.Text>
 </div>

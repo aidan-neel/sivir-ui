@@ -16,14 +16,14 @@
     import ToolbarInset from './examples/toolbar-inset.svelte';
     import ToolbarInsetSrc from './examples/toolbar-inset.svelte?raw';
 
-    const installCommand = 'bunx @sivir-ui/svelte add composer';
+    const installCommand = 'bunx --package @sivir-ui/svelte sivir add composer';
 </script>
 
 <svelte:head>
     <title>Sivir · Composer</title>
     <meta
         name="description"
-        content="A composable prompt input with actions, submission state, and keyboard behavior built in."
+        content="A prompt form with an auto-resizing input, a toolbar for controls, and a send button that switches to stop."
     />
 </svelte:head>
 
@@ -33,8 +33,8 @@
             <Typography.H1> Composer </Typography.H1>
 
             <Typography.Text variant="lead" class="mt-2 max-w-2xl">
-                A focused prompt surface with growing input, composable actions, and submission
-                state.
+                The input grows with its text. While a response generates, the submit button becomes
+                a stop button, or a queue button once the user starts typing again.
             </Typography.Text>
         </div>
         <DocsPager />
@@ -52,8 +52,15 @@
     <section id="usage" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading">Usage</Typography.H2>
         <Typography.Text variant="supporting">
-            Bind the prompt value and handle submission on the root. The component awaits async
-            handlers and shows its submitting state automatically.
+            <Typography.InlineCode>onSubmit</Typography.InlineCode>
+            is required. Empty prompts are not submitted unless you set
+            <Typography.InlineCode>allowEmpty</Typography.InlineCode>. While an async
+            <Typography.InlineCode>onSubmit</Typography.InlineCode>
+            runs, the input is read-only and the submit button shows a pending state. Pass
+            <Typography.InlineCode>generating</Typography.InlineCode>
+            and
+            <Typography.InlineCode>onStop</Typography.InlineCode>
+            to show the stop button while a response streams.
         </Typography.Text>
         <CodeBlock
             code={`import * as Composer from '@sivir-ui/svelte/components/composer';
@@ -61,15 +68,15 @@
 let value = $state('');
 
 async function sendPrompt(prompt: string) {
-  await saveMessage(prompt);
+  await chat.send(prompt);
   value = '';
 }
 
 <Composer.Root bind:value onSubmit={sendPrompt}>
-  <Composer.Input placeholder="Ask anything..." />
+  <Composer.Input placeholder="Ask about this repository..." />
   <Composer.Toolbar>
     <Composer.Actions>
-      <!-- Add attachment, model, or permission controls here. -->
+      <!-- Attachment, model, or permission controls -->
     </Composer.Actions>
     <Composer.Submit />
   </Composer.Toolbar>
@@ -77,6 +84,15 @@ async function sendPrompt(prompt: string) {
             lang="svelte"
             copy="overlay"
         />
+        <Typography.Text variant="supporting">
+            To accept files, wrap Root in
+            <Typography.InlineCode>Attachment.Root</Typography.InlineCode>
+            and place
+            <Typography.InlineCode>Attachment.List</Typography.InlineCode>
+            directly before
+            <Typography.InlineCode>Input</Typography.InlineCode>. Dropped and pasted files show as
+            chips beside the prompt.
+        </Typography.Text>
         <Typography.Text variant="supporting">
             By default, <Shortcut shortcut="enter" /> submits and
             <Shortcut shortcut="shift+enter" />
@@ -92,7 +108,9 @@ async function sendPrompt(prompt: string) {
         <div>
             <Typography.H2 class="docs-section-heading">Examples</Typography.H2>
             <Typography.Text variant="supporting" class="mt-2">
-                Use explicit states when submission is managed outside the component.
+                Set <Typography.InlineCode>status</Typography.InlineCode> when your app tracks
+                submission itself. <Typography.InlineCode>"error"</Typography.InlineCode> shows
+                “Message could not be sent.” above the form.
             </Typography.Text>
         </div>
 
@@ -114,9 +132,10 @@ async function sendPrompt(prompt: string) {
         <div id="toolbar-inset" class="scroll-mt-20 flex flex-col gap-3">
             <Typography.H3 class="docs-subsection-heading">Toolbar inset</Typography.H3>
             <Typography.Text variant="supporting">
-                The toolbar defaults to sitting on the same surface as the input. Set
+                By default the toolbar shares the input's surface. Set
                 <Typography.InlineCode>variant="inset"</Typography.InlineCode>
-                to seat it in a recessed tray along the bottom edge.
+                on <Typography.InlineCode>Toolbar</Typography.InlineCode> to place it in a recessed
+                tray along the bottom edge.
             </Typography.Text>
             <ComponentPreview code={ToolbarInsetSrc}><ToolbarInset /></ComponentPreview>
         </div>

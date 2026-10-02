@@ -14,17 +14,22 @@
     let { children, class: className, heading, ...rest }: Props = $props();
 </script>
 
-<div {...rest} role="group" aria-label={heading} class="flex flex-col gap-0.5 pt-0.5">
-    {#if command.searchContent === ''}
-        <p
-            class={cn(
-                className,
-                'sivir-menu-label'
-            )}
-        >
-            {heading}
-        </p>
-    {/if}
+<div
+    {...rest}
+    data-ui="command-group"
+    role="group"
+    aria-label={heading}
+    data-searching={command.searchContent !== '' || undefined}
+    class="flex flex-col gap-0.5 pt-0.5"
+>
+    <p
+        class={cn(
+            className,
+            'sivir-menu-label [[data-searching]>&]:hidden'
+        )}
+    >
+        {heading}
+    </p>
 
     {@render children?.()}
 </div>

@@ -9,6 +9,6 @@
         <Breadcrumb.Separator><ChevronRight size={14} /></Breadcrumb.Separator>
         <Breadcrumb.Item href="/docs">Docs</Breadcrumb.Item>
         <Breadcrumb.Separator><ChevronRight size={14} /></Breadcrumb.Separator>
-        <Breadcrumb.Item>Current</Breadcrumb.Item>
+        <Breadcrumb.Item href="/docs/components/breadcrumb">Breadcrumb</Breadcrumb.Item>
     </Breadcrumb.Root>
 </div>

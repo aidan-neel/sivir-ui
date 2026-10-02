@@ -40,6 +40,6 @@
     </Card.Content>
     <Card.Footer>
         <Button variant="outline" size="md">Visit</Button>
-        <Button size="md">View Deployment</Button>
+        <Button size="md">View deployment</Button>
     </Card.Footer>
 </Card.Root>

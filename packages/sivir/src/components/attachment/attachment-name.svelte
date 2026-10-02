@@ -16,7 +16,7 @@
     title={item.file.name}
     class={cn(
         className,
-        'col-start-2 row-start-1 me-2 flex min-w-0 text-sm leading-5 font-label text-foreground'
+        'col-start-2 row-start-1 me-2 flex min-w-0 text-sm leading-5 font-label text-foreground in-data-[ui=composer-form]:me-0 in-data-[ui=composer-form]:max-w-48'
     )}
 >
     <span class="truncate">{parts.base}</span><span class="shrink-0">{parts.extension}</span>

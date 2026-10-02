@@ -9,14 +9,14 @@
     import Siblings from './examples/siblings.svelte';
     import SiblingsSrc from './examples/siblings.svelte?raw';
 
-    const installCommand = 'bunx @sivir-ui/svelte add pagination';
+    const installCommand = 'bunx --package @sivir-ui/svelte sivir add pagination';
 </script>
 
 <svelte:head>
     <title>Sivir · Pagination</title>
     <meta
         name="description"
-        content="A compact pager that truncates with an ellipsis. Always shows the first and last page so users know how big the data set is."
+        content="Numbered page buttons with previous and next controls that collapse long ranges into an ellipsis."
     />
 </svelte:head>
 
@@ -26,7 +26,9 @@
         <div>
             <Typography.H1> Pagination </Typography.H1>
             <Typography.Text variant="lead" class="mt-2 max-w-2xl">
-                A compact pager that truncates long ranges with an ellipsis.
+                The first and last page always stay visible. Pages more than
+                <Typography.InlineCode>siblings</Typography.InlineCode>
+                (default 1) away from the current page collapse into an ellipsis.
             </Typography.Text>
         </div>
         <DocsPager />
@@ -49,10 +51,12 @@
     <section id="usage" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading">Usage</Typography.H2>
         <Typography.Text variant="supporting">
-            Import the Pagination component and use it:
+            Pass the number of pages as <Typography.InlineCode>total</Typography.InlineCode>, not
+            the number of items. Bind <Typography.InlineCode>page</Typography.InlineCode>, which
+            starts at 1, or listen with <Typography.InlineCode>onPageChange</Typography.InlineCode>.
         </Typography.Text>
         <CodeBlock
-            code={`import { Pagination } from '$lib/sivir/components/pagination';\n\nlet page = $state(1);\n\n<Pagination bind:page total={20} />`}
+            code={`import { Pagination } from '@sivir-ui/svelte/components/pagination';\n\nlet page = $state(1);\n\n<Pagination bind:page total={20} />`}
             lang="svelte"
             copy="overlay"
         />
@@ -62,9 +66,6 @@
     <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
         <div>
             <Typography.H2 class="docs-section-heading">Examples</Typography.H2>
-            <Typography.Text variant="supporting" class="mt-2">
-                Tune how many pages surround the current one.
-            </Typography.Text>
         </div>
 
         <div id="siblings" class="scroll-mt-20 flex flex-col gap-3">

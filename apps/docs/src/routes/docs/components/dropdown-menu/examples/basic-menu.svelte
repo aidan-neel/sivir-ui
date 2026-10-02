@@ -3,9 +3,9 @@
 </script>
 
 <DropdownMenu.Root>
-    <DropdownMenu.Trigger size="md">Open menu</DropdownMenu.Trigger>
+    <DropdownMenu.Trigger size="md">Edit</DropdownMenu.Trigger>
     <DropdownMenu.Content>
-        <DropdownMenu.Item>Action 1</DropdownMenu.Item>
-        <DropdownMenu.Item>Action 2</DropdownMenu.Item>
+        <DropdownMenu.Item>Rename</DropdownMenu.Item>
+        <DropdownMenu.Item>Duplicate</DropdownMenu.Item>
     </DropdownMenu.Content>
 </DropdownMenu.Root>

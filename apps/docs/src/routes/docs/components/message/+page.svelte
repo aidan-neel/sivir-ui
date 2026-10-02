@@ -11,7 +11,7 @@
     import States from './examples/states.svelte';
     import StatesSrc from './examples/states.svelte?raw';
 
-    const installCommand = 'bunx @sivir-ui/svelte add message';
+    const installCommand = 'bunx --package @sivir-ui/svelte sivir add message';
     const usageSnippet = `import * as Message from '@sivir-ui/svelte/components/message';
 
 <Message.Root from="assistant" status="idle">
@@ -28,7 +28,7 @@
     <title>Sivir · Message</title>
     <meta
         name="description"
-        content="Content-first conversation messages with readable role-aware alignment and contextual actions."
+        content="One chat message, aligned and styled by who sent it, with an optional row of actions."
     />
 </svelte:head>
 
@@ -37,8 +37,8 @@
         <div>
             <Typography.H1> Message </Typography.H1>
             <Typography.Text variant="lead" class="mt-2 max-w-2xl">
-                Present user, assistant, and system output without adding identity chrome to every
-                turn.
+                User messages sit right-aligned in a tinted bubble, assistant text runs full width,
+                and system notes are centered and muted. Name, timestamp, and avatar are optional.
             </Typography.Text>
         </div>
         <DocsPager />
@@ -56,10 +56,16 @@
     <section id="usage" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading"> Usage </Typography.H2>
         <Typography.Text variant="supporting">
-            <Typography.InlineCode>Content</Typography.InlineCode>
-            adapts its layout to <Typography.InlineCode>from</Typography.InlineCode>. Use
-            <Typography.InlineCode>status</Typography.InlineCode>
-            for streaming or failed output, and give every icon-only action an accessible label.
+            <Typography.InlineCode>from</Typography.InlineCode>
+            defaults to
+            <Typography.InlineCode>"assistant"</Typography.InlineCode>.
+            <Typography.InlineCode>status="streaming"</Typography.InlineCode>
+            marks the message busy, and
+            <Typography.InlineCode>status="error"</Typography.InlineCode>
+            adds a Failed label above the content. On devices with a mouse,
+            <Typography.InlineCode>Actions</Typography.InlineCode>
+            stays hidden until the message is hovered or focused. Give icon-only actions an
+            <Typography.InlineCode>aria-label</Typography.InlineCode>.
         </Typography.Text>
         <CodeBlock code={usageSnippet} lang="svelte" copy="overlay" />
     </section>
@@ -67,9 +73,6 @@
     <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
         <div>
             <Typography.H2 class="docs-section-heading"> Examples </Typography.H2>
-            <Typography.Text variant="supporting" class="mt-2">
-                Use role and status to communicate structure before adding custom presentation.
-            </Typography.Text>
         </div>
 
         <div id="role-variants" class="scroll-mt-20 flex flex-col gap-3">

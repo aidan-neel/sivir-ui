@@ -13,14 +13,14 @@
 
     const TITLE = 'Sheet';
 
-    const installCommand = 'bunx @sivir-ui/svelte add sheet';
+    const installCommand = 'bunx --package @sivir-ui/svelte sivir add sheet';
 </script>
 
 <svelte:head>
     <title>Sivir · Sheet</title>
     <meta
         name="description"
-        content="An edge-anchored drawer for mobile menus, filters, and side panels."
+        content="A drawer anchored to the left or right edge of the screen, for menus, filters, and forms."
     />
 </svelte:head>
 
@@ -30,7 +30,8 @@
         <div>
             <Typography.H1>{TITLE}</Typography.H1>
             <Typography.Text variant="lead" class="mt-2 max-w-2xl">
-                A drawer that slides in from any side of the screen.
+                A drawer that slides in from the left or right edge. It traps focus and closes on
+                Escape, an outside click, or the close button in its header.
             </Typography.Text>
         </div>
         <DocsPager />
@@ -53,10 +54,22 @@
     <section id="usage" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading">Usage</Typography.H2>
         <Typography.Text variant="supporting">
-            Import Sheet and compose it with sub-components:
+            Set <Typography.InlineCode>side</Typography.InlineCode> on
+            <Typography.InlineCode>Sheet.Content</Typography.InlineCode>
+            to
+            <Typography.InlineCode>left</Typography.InlineCode>
+            or
+            <Typography.InlineCode>right</Typography.InlineCode>
+            (the default). A custom
+            <Typography.InlineCode>onclick</Typography.InlineCode>
+            on
+            <Typography.InlineCode>Sheet.Close</Typography.InlineCode>
+            replaces its close behavior, so set
+            <Typography.InlineCode>open</Typography.InlineCode>
+            to false yourself.
         </Typography.Text>
         <CodeBlock
-            code={`import * as Sheet from '$lib/sivir/components/sheet';\nimport Shortcut from '$lib/sivir/components/shortcut';\n\n<Sheet.Root bind:open>\n  <Sheet.Trigger>Open</Sheet.Trigger>\n  <Sheet.Content side="right">\n    <Sheet.Header>\n      <Sheet.Title>Title</Sheet.Title>\n      <Sheet.Description>Describe what lives here.</Sheet.Description>\n    </Sheet.Header>\n    {/* content */}\n    <Sheet.Footer>\n      <Sheet.Close>Cancel <Shortcut shortcut="esc" /></Sheet.Close>\n      <Button>Save <Shortcut shortcut="enter" /></Button>\n    </Sheet.Footer>\n  </Sheet.Content>\n</Sheet.Root>`}
+            code={`import { Button } from '@sivir-ui/svelte/components/button';\nimport * as Sheet from '@sivir-ui/svelte/components/sheet';\nimport Shortcut from '@sivir-ui/svelte/components/shortcut';\n\nlet open = $state(false);\n\n<Sheet.Root bind:open>\n  <Sheet.Trigger>Edit profile</Sheet.Trigger>\n  <Sheet.Content side="right">\n    <Sheet.Header>\n      <Sheet.Title>Edit profile</Sheet.Title>\n      <Sheet.Description>Your name and photo are visible to your team.</Sheet.Description>\n    </Sheet.Header>\n    <!-- form fields -->\n    <Sheet.Footer>\n      <Sheet.Close>Cancel <Shortcut shortcut="esc" /></Sheet.Close>\n      <Button onclick={() => (open = false)}>Save <Shortcut shortcut="enter" /></Button>\n    </Sheet.Footer>\n  </Sheet.Content>\n</Sheet.Root>`}
             lang="svelte"
             copy="overlay"
         />
@@ -66,9 +79,6 @@
     <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
         <div>
             <Typography.H2 class="docs-section-heading">Examples</Typography.H2>
-            <Typography.Text variant="supporting" class="mt-2">
-                Sheet with different sides and compositions.
-            </Typography.Text>
         </div>
 
         <!-- Left side -->

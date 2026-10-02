@@ -1,6 +1,7 @@
 <!-- token-lint-disable-file -->
 <script lang="ts">
     import Check from '@lucide/svelte/icons/check';
+    import Pipette from '@lucide/svelte/icons/pipette';
     import * as Popover from '@sivir-ui/svelte/components/popover';
     import { cn } from '@sivir-ui/svelte/utils';
     import { getColorPickerContext } from './context';
@@ -14,35 +15,114 @@
         rgbToHex
     } from './conversions';
 
+    type EyeDropperResult = {
+        sRGBHex: string;
+    };
+
+    type EyeDropperInstance = {
+        open: () => Promise<EyeDropperResult>;
+    };
+
+    type EyeDropperConstructor = new () => EyeDropperInstance;
+
+    type SyncSource = 'hsv' | 'hsl' | 'rgb' | 'hex' | 'external';
+
     const ctx = getColorPickerContext();
 
     /** Picker state: the HSV working values plus the raw hex field. */
     let hue = $state(0);
     let sat = $state(0);
     let val = $state(100);
-    let hexInput = $state(isValidHex(ctx.value) ? ctx.value.toLowerCase() : '#000000');
+    let hexInput = $state('#000000');
     let sbEl = $state<HTMLElement | undefined>(undefined);
     let hueEl = $state<HTMLElement | undefined>(undefined);
+    let eyeDropper = $state<EyeDropperConstructor | undefined>(undefined);
 
     /**
-     * HSL slider state, owned by the sliders themselves so user intent survives
-     * the hex round-trip. Low-saturation hexes lose hue precision and pure-grey
-     * hexes have no hue at all, so deriving HSL straight from the hex would snap
-     * the H slider back to 0 mid-drag.
+     * HSL and RGB slider state, owned by the sliders themselves so user intent
+     * survives the hex round-trip.
      */
-    let hslH = $state(isValidHex(ctx.value) ? hexToHsl(ctx.value)[0] : 0);
-    let hslS = $state(isValidHex(ctx.value) ? hexToHsl(ctx.value)[1] : 0);
-    let hslL = $state(isValidHex(ctx.value) ? hexToHsl(ctx.value)[2] : 100);
-    let rgbR = $state(isValidHex(ctx.value) ? hexToRgb(ctx.value)[0] : 255);
-    let rgbG = $state(isValidHex(ctx.value) ? hexToRgb(ctx.value)[1] : 255);
-    let rgbB = $state(isValidHex(ctx.value) ? hexToRgb(ctx.value)[2] : 255);
-    let skipNextSync = false;
+    let hslH = $state(0);
+    let hslS = $state(0);
+    let hslL = $state(100);
+    let rgbR = $state(255);
+    let rgbG = $state(255);
+    let rgbB = $state(255);
+    let lastSynced = '';
 
     const hasOptions = $derived(ctx.options.length > 0);
     const hueColor = $derived(`hsl(${hue}, 100%, 50%)`);
     const previewHex = $derived(
         isValidHex(hexInput) ? hexInput : isValidHex(ctx.value) ? ctx.value : '#000000'
     );
+
+    /**
+     * Mirrors a hex into every representation except the one that produced it.
+     *
+     * Hex is lossy: greys carry no hue, black carries no saturation, and
+     * low-saturation colors round to a different hue. Re-deriving the source
+     * representation from its own output would make the handles jump, so the
+     * source keeps its exact values and the others keep their last hue or
+     * saturation wherever the hex cannot express one.
+     */
+    function syncFrom(hex: string, source: SyncSource) {
+        if (source !== 'hsv') {
+            const [h, s, v] = hexToHsv(hex);
+            if (v > 0) {
+                if (s > 0) {
+                    hue = h;
+                }
+                sat = s;
+            }
+            val = v;
+        }
+        if (source !== 'hsl') {
+            const [h, s, l] = hexToHsl(hex);
+            if (s > 0) {
+                hslH = h;
+            }
+            hslS = s;
+            hslL = l;
+        }
+        if (source !== 'rgb') {
+            [rgbR, rgbG, rgbB] = hexToRgb(hex);
+        }
+        if (source !== 'hex') {
+            hexInput = hex;
+        }
+    }
+
+    function commit(hex: string, source: SyncSource) {
+        if (!isValidHex(hex)) {
+            return;
+        }
+        const lower = hex.toLowerCase();
+        syncFrom(lower, source);
+        lastSynced = lower;
+        ctx.apply(lower);
+    }
+
+    if (isValidHex(ctx.value)) {
+        lastSynced = ctx.value.toLowerCase();
+        syncFrom(lastSynced, 'external');
+    }
+
+    $effect(() => {
+        if (!isValidHex(ctx.value)) {
+            return;
+        }
+        const lower = ctx.value.toLowerCase();
+        if (lower === lastSynced) {
+            return;
+        }
+        lastSynced = lower;
+        syncFrom(lower, 'external');
+    });
+
+    $effect(() => {
+        const candidate = (window as Window & { EyeDropper?: EyeDropperConstructor }).EyeDropper;
+        eyeDropper = candidate;
+    });
 
     /**
      * Writes one HSL channel and re-derives the hex.
@@ -65,9 +145,7 @@
         } else {
             hslL = next;
         }
-        const newHex = hslToHex(hslH, hslS, hslL);
-        skipNextSync = true;
-        applyHex(newHex);
+        commit(hslToHex(hslH, hslS, hslL), 'hsl');
     }
 
     function setRgbChannel(channel: 'r' | 'g' | 'b', rawValue: string) {
@@ -82,56 +160,11 @@
         } else {
             rgbB = next;
         }
-        applyHex(rgbToHex(rgbR, rgbG, rgbB));
-    }
-
-    /**
-     * Syncs the external value into HSV, the hex field, and the HSL sliders.
-     *
-     * When the incoming hex is achromatic the user's last hue choice is
-     * preserved, since the round-trip would otherwise snap H back to 0.
-     */
-    $effect(() => {
-        if (!isValidHex(ctx.value)) {
-            return;
-        }
-        const lower = ctx.value.toLowerCase();
-        if (skipNextSync) {
-            skipNextSync = false;
-            hexInput = lower;
-            const [hh, ss, vv] = hexToHsv(ctx.value);
-            hue = hh;
-            sat = ss;
-            val = vv;
-            [rgbR, rgbG, rgbB] = hexToRgb(ctx.value);
-            return;
-        }
-        const [h, s, v2] = hexToHsv(ctx.value);
-        hue = h;
-        sat = s;
-        val = v2;
-        hexInput = lower;
-        const [hh, hs, hl] = hexToHsl(ctx.value);
-        if (hs > 0) {
-            hslH = hh;
-        }
-        hslS = hs;
-        hslL = hl;
-        [rgbR, rgbG, rgbB] = hexToRgb(ctx.value);
-    });
-
-    /** Commits a hex value to the picker context. */
-    function applyHex(hex: string) {
-        if (!isValidHex(hex)) {
-            return;
-        }
-        ctx.apply(hex);
+        commit(rgbToHex(rgbR, rgbG, rgbB), 'rgb');
     }
 
     function applyHsv() {
-        const hex = hsvToHex(hue, sat, val);
-        hexInput = hex;
-        ctx.apply(hex);
+        commit(hsvToHex(hue, sat, val), 'hsv');
     }
 
     /**
@@ -145,13 +178,57 @@
         const digits = raw.replace(/[^0-9a-fA-F]/g, '').slice(0, 6);
         const cleaned = `#${digits}`;
         hexInput = cleaned;
-        if (isValidHex(cleaned)) {
-            const [h, s, v2] = hexToHsv(cleaned);
-            hue = h;
-            sat = s;
-            val = v2;
-            ctx.apply(cleaned);
+        commit(cleaned, 'hex');
+    }
+
+    async function pickFromScreen() {
+        if (!eyeDropper) {
+            return;
         }
+        try {
+            const result = await new eyeDropper().open();
+            commit(result.sRGBHex, 'external');
+        } catch {
+            return;
+        }
+    }
+
+    function clamp(value: number, max: number) {
+        return Math.max(0, Math.min(max, value));
+    }
+
+    function onSbKeydown(e: KeyboardEvent) {
+        const step = e.shiftKey ? 10 : 1;
+        if (e.key === 'ArrowLeft') {
+            sat = clamp(sat - step, 100);
+        } else if (e.key === 'ArrowRight') {
+            sat = clamp(sat + step, 100);
+        } else if (e.key === 'ArrowDown') {
+            val = clamp(val - step, 100);
+        } else if (e.key === 'ArrowUp') {
+            val = clamp(val + step, 100);
+        } else {
+            return;
+        }
+        e.preventDefault();
+        applyHsv();
+    }
+
+    function onHueKeydown(e: KeyboardEvent) {
+        const step = e.shiftKey ? 10 : 1;
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
+            hue = clamp(hue - step, 360);
+        } else if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
+            hue = clamp(hue + step, 360);
+        } else if (e.key === 'Home') {
+            hue = 0;
+        } else if (e.key === 'End') {
+            hue = 360;
+        } else {
+            return;
+        }
+        e.preventDefault();
+        applyHsv();
     }
 
     /** Saturation/brightness square drag handling. */
@@ -241,11 +318,18 @@
     <!-- SB picker (large) -->
     <div
         bind:this={sbEl}
-        class="relative h-[148px] w-full cursor-crosshair overflow-hidden rounded-b-[var(--radius-md)] bg-[linear-gradient(to_bottom,transparent,#000),linear-gradient(to_right,#fff,var(--picker-hue))]"
+        class="relative h-[148px] w-full cursor-crosshair overflow-hidden rounded-b-[var(--radius-md)] bg-[linear-gradient(to_bottom,transparent,#000),linear-gradient(to_right,#fff,var(--picker-hue))] outline-none focus-visible:shadow-[inset_0_0_0_2px_var(--color-ring)]"
         style:--picker-hue={hueColor}
         onpointerdown={onSbDown}
         onpointermove={onSbMove}
-        role="presentation"
+        onkeydown={onSbKeydown}
+        role="slider"
+        tabindex="0"
+        aria-label="Saturation and brightness"
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={sat}
+        aria-valuetext={`Saturation ${sat}%, brightness ${val}%`}
     >
         <div
             class="pointer-events-none absolute size-[14px] -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white shadow-[0_1px_4px_rgb(0_0_0_/_0.5)]"
@@ -267,10 +351,16 @@
         <div class="min-w-0 flex-1 space-y-1.5">
             <div
                 bind:this={hueEl}
-                class="relative h-2.5 w-full cursor-ew-resize overflow-hidden rounded-full bg-[linear-gradient(to_right,#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00)]"
+                class="relative h-2.5 w-full cursor-ew-resize overflow-hidden rounded-full bg-[linear-gradient(to_right,#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00)] outline-none focus-visible:shadow-[0_0_0_2px_var(--color-ring)]"
                 onpointerdown={onHueDown}
                 onpointermove={onHueMove}
-                role="presentation"
+                onkeydown={onHueKeydown}
+                role="slider"
+                tabindex="0"
+                aria-label="Hue"
+                aria-valuemin={0}
+                aria-valuemax={360}
+                aria-valuenow={hue}
             >
                 <div
                     class="pointer-events-none absolute top-1/2 size-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white shadow-[0_1px_4px_rgb(0_0_0_/_0.5)]"
@@ -291,10 +381,21 @@
                     oninput={(e) => handleHexInput((e.currentTarget as HTMLInputElement).value)}
                     onkeydown={(e) => {
                         if (e.key === 'Enter') {
-                            applyHex(hexInput);
+                            commit(hexInput, 'hex');
                         }
                     }}
                 />
+                {#if eyeDropper}
+                    <button
+                        type="button"
+                        aria-label="Pick a color from the screen"
+                        title="Pick a color from the screen"
+                        class="-mr-1 grid size-5 shrink-0 place-items-center rounded-[var(--radius-sm)] text-foreground-muted outline-none transition-colors hover:bg-secondary hover:text-foreground focus-visible:shadow-[0_0_0_2px_var(--color-ring)]"
+                        onclick={pickFromScreen}
+                    >
+                        <Pipette size={12} />
+                    </button>
+                {/if}
             </div>
         </div>
     </div>
@@ -419,7 +520,7 @@
                 {@const isActive = opt.value.toLowerCase() === (ctx.value ?? '').toLowerCase()}
                 <button
                     type="button"
-                    onclick={() => applyHex(opt.value)}
+                    onclick={() => commit(opt.value, 'external')}
                     title={opt.label}
                     aria-label={opt.label}
                     class="group relative grid size-6 place-items-center rounded-md ring-1 ring-inset ring-[color-mix(in_srgb,var(--color-foreground)_10%,transparent)] transition-[transform,box-shadow] hover:scale-110 focus:outline-none focus:ring-2 focus:ring-primary"

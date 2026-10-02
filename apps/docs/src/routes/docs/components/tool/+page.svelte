@@ -13,14 +13,14 @@
 
     const TITLE = 'Tool';
     const SLUG = 'tool';
-    const installCommand = `bunx @sivir-ui/svelte add ${SLUG}`;
+    const installCommand = `bunx --package @sivir-ui/svelte sivir add ${SLUG}`;
 </script>
 
 <svelte:head>
     <title>Sivir · {TITLE}</title>
     <meta
         name="description"
-        content="Collapsible groups of AI tool calls designed for inline chat transcripts."
+        content="A collapsible group of an assistant's tool calls, summarized on one line in a chat transcript."
     />
 </svelte:head>
 
@@ -48,14 +48,20 @@
     <section id="usage" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading">Usage</Typography.H2>
         <Typography.Text variant="supporting">
-            Tool starts collapsed. <Typography.InlineCode>Trigger</Typography.InlineCode> shows a
-            status glyph, a one-sentence
+            Tool starts collapsed. <Typography.InlineCode>state</Typography.InlineCode> on
+            <Typography.InlineCode>Root</Typography.InlineCode>
+            defaults to
+            <Typography.InlineCode>"running"</Typography.InlineCode>, so set it to
+            <Typography.InlineCode>"complete"</Typography.InlineCode>
+            or
+            <Typography.InlineCode>"error"</Typography.InlineCode>
+            when the group finishes.
+            <Typography.InlineCode>Trigger</Typography.InlineCode>
+            shows a status glyph, a one-sentence
             <Typography.InlineCode>title</Typography.InlineCode>, and an optional
-            <Typography.InlineCode>duration</Typography.InlineCode>; the title shimmers while
-            <Typography.InlineCode>state</Typography.InlineCode>
-            is
-            <Typography.InlineCode>running</Typography.InlineCode>. Content mounts on its first open
-            and stays mounted, so calls can keep arriving while it is closed.
+            <Typography.InlineCode>duration</Typography.InlineCode>. The title shimmers while the
+            group is running. Content mounts on its first open and stays mounted, so calls can keep
+            arriving while it is closed.
         </Typography.Text>
         <CodeBlock
             code={`import * as Tool from '@sivir-ui/svelte/components/tool';
@@ -84,11 +90,13 @@
             to show a spinner while it runs or mark it failed.
         </Typography.Text>
         <CodeBlock
-            code={`<Tool.Call action="Run" target="bun test" state="error" duration="1.7s">
+            code={`import * as Tool from '@sivir-ui/svelte/components/tool';
+
+<Tool.Call action="Run" target="bun test" state="error" duration="1.7s">
   <Tool.Output label="Error">
     <pre>2 tests failed</pre>
   </Tool.Output>
-  <Tool.Input>{JSON.stringify(input, null, 2)}</Tool.Input>
+  <Tool.Input>{JSON.stringify({ command: 'bun test' }, null, 2)}</Tool.Input>
 </Tool.Call>`}
             lang="svelte"
             copy="overlay"
@@ -104,7 +112,9 @@
             <Typography.InlineCode>state</Typography.InlineCode>.
         </Typography.Text>
         <CodeBlock
-            code={`<Tool.Trigger>
+            code={`import * as Tool from '@sivir-ui/svelte/components/tool';
+
+<Tool.Trigger>
   {#snippet children({ open, state })}
     {state === 'running' ? 'Checking refunds' : 'Checked refunds'} {open ? '−' : '+'}
   {/snippet}
@@ -125,9 +135,13 @@
         <div id="live-calls" class="scroll-mt-20 flex flex-col gap-3">
             <Typography.H3 class="docs-subsection-heading">Live calls</Typography.H3>
             <Typography.Text variant="supporting">
-                Tick <Typography.InlineCode>duration</Typography.InlineCode> from your own timer and
-                switch each Call's action from Reading file to Read file as it finishes. Update the
-                title to say what is still going, then sum the group once it completes.
+                Tool does not time calls. Update
+                <Typography.InlineCode>duration</Typography.InlineCode>
+                from your own timer. Give a running call a present-tense
+                <Typography.InlineCode>action</Typography.InlineCode>, such as “Reading file”, and
+                change it to “Read file” when the call finishes. Set the trigger
+                <Typography.InlineCode>title</Typography.InlineCode>
+                to the current step, then to a summary of the group when it completes.
             </Typography.Text>
             <ComponentPreview code={LiveSrc}><Live /></ComponentPreview>
         </div>

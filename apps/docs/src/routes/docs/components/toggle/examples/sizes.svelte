@@ -4,13 +4,13 @@
 </script>
 
 <div class="flex gap-2">
-    <Toggle size="sm">
+    <Toggle size="sm" aria-label="Bold">
         <Bold size={12} />
     </Toggle>
-    <Toggle>
+    <Toggle aria-label="Bold">
         <Bold size={14} />
     </Toggle>
-    <Toggle size="lg">
+    <Toggle size="lg" aria-label="Bold">
         <Bold size={16} />
     </Toggle>
 </div>

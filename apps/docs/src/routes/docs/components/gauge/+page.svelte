@@ -17,7 +17,7 @@
     <title>Sivir · Gauge</title>
     <meta
         name="description"
-        content="A compact circular meter for context, usage limits, storage, seats, and other bounded quantities."
+        content="A small circular meter for a value out of a maximum, such as context remaining or API usage."
     />
 </svelte:head>
 
@@ -26,8 +26,8 @@
         <div>
             <Typography.H1> Gauge </Typography.H1>
             <Typography.Text variant="lead" class="mt-2 max-w-2xl">
-                A compact circular meter for bounded quantities such as context remaining, API
-                usage, storage, and seats.
+                A ring that fills to value out of max and shows the number in its center. tone sets
+                the arc color: primary, muted, success, warning, or error.
             </Typography.Text>
         </div>
         <DocsPager />
@@ -45,12 +45,13 @@
     <section id="usage" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading"> Usage </Typography.H2>
         <Typography.Text variant="supporting">
-            Use <Typography.InlineCode>value</Typography.InlineCode> and
+            <Typography.InlineCode>value</Typography.InlineCode>
+            is required;
             <Typography.InlineCode>max</Typography.InlineCode>
-            for the filled portion. Provide
-            <Typography.InlineCode>label</Typography.InlineCode>
-            to name the meter for screen-reader users; children can replace the default numeric
-            center text.
+            defaults to 100 and <Typography.InlineCode>size</Typography.InlineCode> to 28px. Without
+            <Typography.InlineCode>label</Typography.InlineCode>, screen readers announce the meter
+            as "85 of 100", so pass a label that says what it measures. Children replace the number
+            in the center.
         </Typography.Text>
         <CodeBlock
             code={`import { Gauge } from '@sivir-ui/svelte/components/gauge';
@@ -65,9 +66,6 @@
     <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
         <div>
             <Typography.H2 class="docs-section-heading"> Examples </Typography.H2>
-            <Typography.Text variant="supporting" class="mt-2">
-                Use Gauge for agent context and product limits.
-            </Typography.Text>
         </div>
 
         <div id="context-window" class="scroll-mt-20 flex flex-col gap-3">

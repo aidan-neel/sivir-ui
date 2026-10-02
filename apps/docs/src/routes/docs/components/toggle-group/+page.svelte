@@ -14,7 +14,7 @@
     const TITLE = 'Toggle Group';
     const SLUG = 'toggle-group';
 
-    const installCommand = `bunx @sivir-ui/svelte add ${SLUG}`;
+    const installCommand = `bunx --package @sivir-ui/svelte sivir add ${SLUG}`;
 </script>
 
 <svelte:head>
@@ -28,7 +28,8 @@
         <div>
             <Typography.H1>{TITLE}</Typography.H1>
             <Typography.Text variant="lead" class="mt-2 max-w-2xl">
-                A row of toggles with shared selection, for single or multiple choice.
+                In single mode, pressing an item releases the others, and pressing the active item
+                clears the value. In multiple mode, each item toggles in and out of an array.
             </Typography.Text>
         </div>
         <DocsPager />
@@ -51,10 +52,16 @@
     <section id="usage" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading">Usage</Typography.H2>
         <Typography.Text variant="supporting">
-            Import Toggle Group and compose it with Item components:
+            Every Item needs a unique <Typography.InlineCode>value</Typography.InlineCode>. Bind
+            <Typography.InlineCode>value</Typography.InlineCode>
+            on Root: a string for
+            <Typography.InlineCode>single</Typography.InlineCode>
+            (the default), a string array for
+            <Typography.InlineCode>multiple</Typography.InlineCode>. Icon-only items need an
+            <Typography.InlineCode>aria-label</Typography.InlineCode>.
         </Typography.Text>
         <CodeBlock
-            code={`import * as ToggleGroup from '$lib/sivir/components/toggle-group';\n\n<ToggleGroup.Root type="single" bind:value={alignment}>\n  <ToggleGroup.Item value="left">Left</ToggleGroup.Item>\n  <ToggleGroup.Item value="center">Center</ToggleGroup.Item>\n  <ToggleGroup.Item value="right">Right</ToggleGroup.Item>\n</ToggleGroup.Root>`}
+            code={`import * as ToggleGroup from '@sivir-ui/svelte/components/toggle-group';\n\nlet alignment = $state('center');\n\n<ToggleGroup.Root type="single" bind:value={alignment}>\n  <ToggleGroup.Item value="left">Left</ToggleGroup.Item>\n  <ToggleGroup.Item value="center">Center</ToggleGroup.Item>\n  <ToggleGroup.Item value="right">Right</ToggleGroup.Item>\n</ToggleGroup.Root>`}
             lang="svelte"
             copy="overlay"
         />
@@ -64,9 +71,6 @@
     <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
         <div>
             <Typography.H2 class="docs-section-heading">Examples</Typography.H2>
-            <Typography.Text variant="supporting" class="mt-2">
-                Toggle Group in single and multiple modes.
-            </Typography.Text>
         </div>
 
         <!-- Single select -->

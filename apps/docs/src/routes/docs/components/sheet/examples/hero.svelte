@@ -184,7 +184,12 @@
             </div>
 
             <Sheet.Footer>
-                <Sheet.Close onclick={reset}>
+                <Sheet.Close
+                    onclick={() => {
+                        reset();
+                        open = false;
+                    }}
+                >
                     Cancel
                     <Shortcut shortcut="esc" />
                 </Sheet.Close>

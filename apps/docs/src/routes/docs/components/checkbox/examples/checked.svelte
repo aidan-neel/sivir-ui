@@ -3,5 +3,5 @@
 </script>
 
 <div class="flex items-center justify-center">
-    <Checkbox label="Checked by default" checked />
+    <Checkbox label="Remember this device" checked />
 </div>

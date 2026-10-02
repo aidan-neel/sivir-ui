@@ -7,5 +7,5 @@
     <Button size="sm">Small</Button>
     <Button>Medium</Button>
     <Button size="lg">Large</Button>
-    <Button size="icon"><Heart size={14} /></Button>
+    <Button size="icon" aria-label="Favorite"><Heart size={14} /></Button>
 </div>
