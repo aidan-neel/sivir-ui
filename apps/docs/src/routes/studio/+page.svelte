@@ -12,6 +12,7 @@
     import RotateCcw from '@lucide/svelte/icons/rotate-ccw';
     import Search from '@lucide/svelte/icons/search';
     import Settings from '@lucide/svelte/icons/settings';
+    import SquareMousePointer from '@lucide/svelte/icons/square-mouse-pointer';
     import User from '@lucide/svelte/icons/user';
     import * as Accordion from '@sivir-ui/svelte/components/accordion';
     import * as Alert from '@sivir-ui/svelte/components/alert';
@@ -73,6 +74,7 @@
     import ChangedDot from '$lib/components/studio/changed-dot.svelte';
     import ColorAlphaField from '$lib/components/studio/color-alpha-field.svelte';
     import ColorField from '$lib/components/studio/color-field.svelte';
+    import ElementOutline from '$lib/components/studio/element-outline.svelte';
     import SelectFieldTrigger from '$lib/components/studio/select-field-trigger.svelte';
     import ShadowField from '$lib/components/studio/shadow-field.svelte';
     import { fonts } from '$lib/fonts.svelte';
@@ -93,6 +95,13 @@
         themeAxes,
         themeToDraft
     } from '$lib/studio/theme-draft';
+    import {
+        buildTokenIndex,
+        collectRuleInputs,
+        elementsUsingToken,
+        type TokenIndex,
+        tokensForElement
+    } from '$lib/studio/token-usage';
     import {
         type AnimationTokenDefinition,
         type AnimationTokenName,
@@ -1871,7 +1880,208 @@
         });
         saveStudioDraft(portableTheme);
     });
+
+    type TokenEditSection = {
+        id: string;
+        label: string;
+        rows: TokenRow[];
+    };
+
+    const allTokenRows: TokenRow[] = [
+        ...colorRowGroups,
+        ...spacingRowGroups,
+        ...animationRowGroups,
+        ...detailRowGroups
+    ].flatMap((group) => group.rows);
+    const editableTokenNames = new Set(allTokenRows.map((row) => row.definition.name));
+    const tokenEditTrailLimit = 5;
+
+    let previewFrame = $state<HTMLElement>();
+    let tokenEditMode = $state(false);
+    let tokenEditOpen = $state(false);
+    let tokenEditTarget = $state<Element | null>(null);
+    let tokenEditHover = $state<Element | null>(null);
+    let tokenEditAnchor = $state({ x: 0, y: 0 });
+    let tokenEditHighlight = $state<Element[]>([]);
+    let tokenIndex: TokenIndex | null = null;
+    let tokenIndexKey = '';
+
+    const tokenEditReference = $derived({
+        getBoundingClientRect: () => {
+            return new DOMRect(tokenEditAnchor.x, tokenEditAnchor.y, 0, 0);
+        }
+    });
+    const tokenEditTrail = $derived.by(() => {
+        const trail: Element[] = [];
+        let current = tokenEditTarget;
+
+        while (current && current !== previewFrame && trail.length < tokenEditTrailLimit) {
+            trail.unshift(current);
+            current = current.parentElement;
+        }
+
+        return trail;
+    });
+    const tokenEditSections = $derived.by((): TokenEditSection[] => {
+        if (!tokenEditOpen || !tokenEditTarget) {
+            return [];
+        }
+
+        const used = tokensForElement(currentTokenIndex(), tokenEditTarget);
+        const placed = new Set<string>();
+        const sections = tokenSections.flatMap((section) => {
+            const rows = section.groups
+                .flatMap((group) => group.rows)
+                .filter((row) => used.has(row.definition.name));
+
+            for (const row of rows) {
+                placed.add(row.definition.name);
+            }
+
+            return rows.length > 0 ? [{ id: section.id, label: section.label, rows }] : [];
+        });
+        const otherRows = allTokenRows.filter((row) => {
+            return used.has(row.definition.name) && !placed.has(row.definition.name);
+        });
+
+        return otherRows.length > 0
+            ? [...sections, { id: 'other', label: 'Other', rows: otherRows }]
+            : sections;
+    });
+    const tokenEditOutline = $derived.by(() => {
+        if (tokenEditHighlight.length > 0) {
+            return tokenEditHighlight;
+        }
+
+        if (tokenEditOpen && tokenEditTarget) {
+            return [tokenEditTarget];
+        }
+
+        return tokenEditMode && tokenEditHover ? [tokenEditHover] : [];
+    });
+
+    function currentTokenIndex() {
+        const liveSheet = document.getElementById(
+            'sivir-live-theme-style'
+        ) as HTMLStyleElement | null;
+        const liveRuleCount = liveSheet?.sheet?.cssRules.length ?? 0;
+        const liveAliasCount = liveSheet?.textContent?.split('var(').length ?? 0;
+        const key = `${document.styleSheets.length}:${liveRuleCount}:${liveAliasCount}`;
+
+        if (!tokenIndex || key !== tokenIndexKey) {
+            tokenIndex = buildTokenIndex(
+                collectRuleInputs(document.styleSheets),
+                editableTokenNames
+            );
+            tokenIndexKey = key;
+        }
+
+        return tokenIndex;
+    }
+
+    function tokenUsageCount(name: string) {
+        if (!previewFrame) {
+            return 0;
+        }
+
+        return elementsUsingToken(currentTokenIndex(), name, previewFrame).length;
+    }
+
+    function tokenUsageLabel(row: TokenRow) {
+        const count = tokenUsageCount(row.definition.name);
+        const noun = count === 1 ? 'element' : 'elements';
+
+        return `${row.definition.group}, used by ${count} ${noun}`;
+    }
+
+    function highlightTokenUsage(name: string | null) {
+        if (!name || !previewFrame) {
+            tokenEditHighlight = [];
+            return;
+        }
+
+        tokenEditHighlight = elementsUsingToken(currentTokenIndex(), name, previewFrame);
+    }
+
+    function elementLabel(element: Element) {
+        return element.tagName.toLowerCase();
+    }
+
+    function setTokenEditMode(next: boolean) {
+        tokenEditMode = next;
+        tokenEditHover = null;
+        tokenEditHighlight = [];
+
+        if (!next) {
+            tokenEditOpen = false;
+            tokenEditTarget = null;
+        }
+    }
+
+    function trackTokenEditHover(event: PointerEvent) {
+        if (!tokenEditMode || tokenEditOpen) {
+            return;
+        }
+
+        tokenEditHover = event.target instanceof Element ? event.target : null;
+    }
+
+    function suppressTokenEditPointer(event: MouseEvent) {
+        if (!tokenEditMode || event.button !== 2) {
+            return;
+        }
+
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+    function openTokenEditor(event: MouseEvent) {
+        if (!tokenEditMode || !(event.target instanceof Element)) {
+            return;
+        }
+
+        event.preventDefault();
+        event.stopPropagation();
+        tokenEditAnchor = {
+            x: event.clientX,
+            y: event.clientY
+        };
+        tokenEditTarget = event.target;
+        tokenEditHighlight = [];
+        tokenEditOpen = true;
+    }
+
+    function handleTokenEditKeydown(event: KeyboardEvent) {
+        if (event.key !== 'Escape' || !tokenEditMode || tokenEditOpen) {
+            return;
+        }
+
+        if (event.target instanceof Element && event.target.closest('[role="dialog"]')) {
+            return;
+        }
+
+        setTokenEditMode(false);
+    }
+
+    function suppressTokenEditContextMenu(event: MouseEvent) {
+        if (!tokenEditOpen) {
+            return;
+        }
+
+        if (event.target instanceof Element && event.target.closest('[role="dialog"]')) {
+            return;
+        }
+
+        event.preventDefault();
+    }
+
+    async function openTokenEditSection(sectionId: string) {
+        tokenEditOpen = false;
+        await openTokens(sectionId);
+    }
 </script>
+
+<svelte:window oncontextmenu={suppressTokenEditContextMenu} onkeydown={handleTokenEditKeydown} />
 
 <svelte:head>
     <title>Sivir · Studio</title>
@@ -3226,15 +3436,122 @@
             {@render inspector()}
         </aside>
 
-        <div class="min-w-0 flex-1 pr-3 pb-3 pl-0">
+        <div class="relative min-w-0 flex-1 pr-3 pb-3 pl-0">
             <div
-                class="h-full min-h-0 overflow-hidden rounded-[var(--radius-xl)] border border-border bg-background font-[var(--font-sans)] text-foreground"
+                bind:this={previewFrame}
+                class={`h-full min-h-0 overflow-hidden rounded-[var(--radius-xl)] border border-border bg-background font-[var(--font-sans)] text-foreground ${tokenEditMode ? 'cursor-crosshair! [&_*]:cursor-crosshair!' : ''}`}
                 id="theme-preview"
+                oncontextmenucapture={openTokenEditor}
+                onpointerdowncapture={suppressTokenEditPointer}
+                onmousedowncapture={suppressTokenEditPointer}
+                onpointerovercapture={trackTokenEditHover}
+                onpointerleave={() => {
+                    tokenEditHover = null;
+                }}
             >
                 {@render dashboardPreview()}
             </div>
+            <Button
+                variant={tokenEditMode ? 'primary' : 'outline'}
+                size="sm"
+                class="absolute right-6 bottom-6 z-10 hidden shadow-[var(--elevation-float)] min-[1100px]:inline-flex"
+                aria-pressed={tokenEditMode}
+                onclick={() => {
+                    setTokenEditMode(!tokenEditMode);
+                }}
+            >
+                <SquareMousePointer size={14} />
+                Edit tokens
+            </Button>
         </div>
     </section>
+
+    {#if previewFrame && tokenEditOutline.length > 0}
+        <ElementOutline container={previewFrame} elements={tokenEditOutline} />
+    {/if}
+
+    <Popover.Root
+        bind:open={tokenEditOpen}
+        onOpenChange={() => {
+            tokenEditHighlight = [];
+            tokenEditHover = null;
+        }}
+    >
+        <Popover.Content
+            refElement={tokenEditReference}
+            class="w-80"
+            surfaceClass="flex max-h-[min(36rem,80vh)] flex-col gap-3 p-3"
+            aria-label="Element tokens"
+        >
+            <nav aria-label="Element path" class="flex min-w-0 flex-wrap items-center gap-1">
+                {#each tokenEditTrail as element, index (index)}
+                    {#if index > 0}
+                        <span class="text-xs text-foreground-muted" aria-hidden="true">›</span>
+                    {/if}
+                    <button
+                        type="button"
+                        class="rounded-[var(--radius-sm)] px-1 font-mono text-xs text-foreground-muted transition-colors [transition-duration:var(--motion-duration-hover)] hover:cursor-[var(--ui-cursor-interactive)] hover:text-foreground focus-visible:shadow-[var(--focus-ring)] focus-visible:outline-none aria-[current=true]:text-foreground"
+                        aria-current={element === tokenEditTarget}
+                        onclick={() => {
+                            tokenEditTarget = element;
+                        }}
+                    >
+                        {elementLabel(element)}
+                    </button>
+                {/each}
+            </nav>
+            <ScrollArea class="-mx-3 min-h-0 flex-1" showCues={false}>
+                <div class="flex flex-col gap-5 px-3">
+                    {#each tokenEditSections as section (section.id)}
+                        <section class="flex flex-col gap-2">
+                            <div class="flex items-baseline justify-between gap-2">
+                                {@render sectionHeading(section.label)}
+                                {#if section.id !== 'other'}
+                                    <button
+                                        type="button"
+                                        class="rounded-[var(--radius-sm)] text-xs text-foreground-muted transition-colors [transition-duration:var(--motion-duration-hover)] hover:cursor-[var(--ui-cursor-interactive)] hover:text-foreground focus-visible:shadow-[var(--focus-ring)] focus-visible:outline-none"
+                                        onclick={() => {
+                                            void openTokenEditSection(section.id);
+                                        }}
+                                    >
+                                        Open in Tokens
+                                    </button>
+                                {/if}
+                            </div>
+                            {#each section.rows as row (row.definition.name)}
+                                <div
+                                    role="group"
+                                    aria-label={row.definition.label}
+                                    class="flex flex-col gap-1"
+                                    onpointerenter={() => {
+                                        highlightTokenUsage(row.definition.name);
+                                    }}
+                                    onpointerleave={() => {
+                                        highlightTokenUsage(null);
+                                    }}
+                                    onfocusin={() => {
+                                        highlightTokenUsage(row.definition.name);
+                                    }}
+                                    onfocusout={() => {
+                                        highlightTokenUsage(null);
+                                    }}
+                                >
+                                    {@render tokenRow(row)}
+                                    <p class="m-0 text-xs text-foreground-muted tabular-nums">
+                                        {tokenUsageLabel(row)}
+                                    </p>
+                                </div>
+                            {/each}
+                        </section>
+                    {:else}
+                        <p class="m-0 text-[13px] text-foreground-muted">
+                            No editable tokens on this element.
+                        </p>
+                    {/each}
+                </div>
+            </ScrollArea>
+        </Popover.Content>
+    </Popover.Root>
 
     <Sheet.Root>
         <Sheet.Trigger
