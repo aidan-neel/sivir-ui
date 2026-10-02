@@ -1,0 +1,2 @@
+- Add an "In a modal" example to the Command page showing a searchable project picker inside a Modal.
+- Add a "Deeply nested" example to the Modal page that stacks five modals, closing one level per Escape.

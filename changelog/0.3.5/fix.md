@@ -1,0 +1,2 @@
+- Command can now open from inside a Modal. Pressing Enter on a palette item no longer also fires an Enter shortcut on the modal behind it, such as a Confirm button.
+- Modals can nest five levels deep. Escape closes one level at a time, and the page unlocks when the last one closes.
