@@ -4,6 +4,7 @@
     import { Button } from '@sivir-ui/svelte/components/button';
     import { CopyButton } from '@sivir-ui/svelte/components/copy-button';
     import { resolve } from '$app/paths';
+    import { trackEvent } from '$lib/analytics';
     import { components } from '$lib/components';
     import HomeDemo from '$lib/components/home/home-demo.svelte';
     import HomeNav from '$lib/components/home/home-nav.svelte';
@@ -124,6 +125,7 @@
                     label="Copy command"
                     copiedLabel="Copied"
                     tooltipDelay={500}
+                    oncopy={() => trackEvent('install_command_copied', { source: 'home' })}
                 />
             </div>
         </section>

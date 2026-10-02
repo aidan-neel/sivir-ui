@@ -1,4 +1,12 @@
 - The home page fills the window instead of sitting inside a bordered card, and its side navigation uses the theme's interactive cursor without scaling its icons on hover.
-- Studio's Depth and Interaction toggles sit in the same compact field rows as its sliders and selects, with the whole row clickable.
-- The Studio Agent preview now shows its file diff without a header.
 - The home page demo is now a full coding-agent workspace, with a thread sidebar, a live conversation you can reply to, and a review panel with changed files, checks, and merge controls. The theme switcher sits above it.
+- Studio's Depth and Interaction toggles sit in the same compact field rows as its sliders and selects, with the whole row clickable.
+- Remove the Studio "Publish to registry" button for now.
+- Fade the Components index page in block by block with the same blur reveal as the other docs pages.
+- Fix the GitHub logo in the navbars sometimes rendering black in dark mode on first paint.
+- Replace the Collapsible example with an order summary that starts collapsed.
+- Simplify the Popover example to a lone Share button with no title, and drop the icons from the Composer example's mode and permission selects.
+- Tighten the wording across the docs, component pages, READMEs, and the Sivir agent skill, and correct props, part names, and behavior that no longer matched the components. Component pages now show the same `bunx --package @sivir-ui/svelte sivir add` install command and `@sivir-ui/svelte/components/...` imports as the installation guide.
+- The Composer docs hero now accepts dropped, pasted, and picked files. Its add-files button previously did nothing, and dropping a file opened it in the browser.
+- Track custom Vercel Analytics events on the docs site for copied install commands, theme CSS and JSON exports, component page views, Studio visits, and GitHub link clicks.
+- Collect Core Web Vitals on the docs site with Vercel Speed Insights.

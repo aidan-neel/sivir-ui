@@ -4,6 +4,7 @@
     import { CopyButton } from '@sivir-ui/svelte/components/copy-button';
     import * as Sheet from '@sivir-ui/svelte/components/sheet';
     import * as Typography from '@sivir-ui/svelte/components/typography';
+    import { trackEvent } from '$lib/analytics';
     import { cssChanges } from '$lib/studio/studio-chrome';
 
     type Props = {
@@ -126,10 +127,22 @@
                     Save to {savePresetName}
                 </Button>
             {/if}
-            <CopyButton text={json} label="Copy theme JSON" variant="outline" size="md">
+            <CopyButton
+                text={json}
+                label="Copy theme JSON"
+                variant="outline"
+                size="md"
+                oncopy={() => trackEvent('theme_exported', { format: 'json', source: 'studio' })}
+            >
                 Copy JSON
             </CopyButton>
-            <CopyButton text={css} label="Copy theme CSS" variant="primary" size="md">
+            <CopyButton
+                text={css}
+                label="Copy theme CSS"
+                variant="primary"
+                size="md"
+                oncopy={() => trackEvent('theme_exported', { format: 'css', source: 'studio' })}
+            >
                 Copy CSS
             </CopyButton>
         </Sheet.Footer>

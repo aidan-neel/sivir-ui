@@ -18,7 +18,3 @@
 - Update the CLI installation steps for the `src/routes/layout.css` stylesheet that current `sv add tailwindcss` creates, and explain that `init` wires it.
 - Call the theme builder Studio everywhere on the site, in navigation, page titles, and docs, instead of mixing Studio and Theme Studio.
 - The docs sidebar uses muted section labels, larger rows, and a soft filled pill for the current page instead of a dot.
-- Replace the Collapsible example with an order summary that starts collapsed.
-- Simplify the Popover example to a lone Share button with no title, and drop the icons from the Composer example's mode and permission selects.
-- Tighten the wording across the docs, component pages, READMEs, and the Sivir agent skill, and correct props, part names, and behavior that no longer matched the components. Component pages now show the same `bunx --package @sivir-ui/svelte sivir add` install command and `@sivir-ui/svelte/components/...` imports as the installation guide.
-- The Composer docs hero now accepts dropped, pasted, and picked files. Its add-files button previously did nothing, and dropping a file opened it in the browser.

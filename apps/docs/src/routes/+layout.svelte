@@ -8,15 +8,18 @@
     import '@sivir-ui/svelte/ui.css';
     import '../app.css';
     import { injectAnalytics } from '@vercel/analytics/sveltekit';
+    import { injectSpeedInsights } from '@vercel/speed-insights/sveltekit';
     import { onMount, type Snippet } from 'svelte';
     import { dev } from '$app/environment';
     import { afterNavigate } from '$app/navigation';
     import { page } from '$app/stores';
+    import { trackGitHubClick, trackPageView } from '$lib/analytics';
     import { DEFAULT_FONT, fonts, selectedFont } from '$lib/fonts.svelte';
 
     import type { LayoutData } from './$types';
 
     injectAnalytics({ mode: dev ? 'development' : 'production' });
+    injectSpeedInsights();
 
     const { children, data }: { children: Snippet; data: LayoutData } = $props();
 
@@ -45,10 +48,13 @@
     let docsScrollEl = $state<HTMLDivElement>();
 
     afterNavigate(() => {
+        trackPageView($page.url.pathname);
         docsScrollEl?.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
         window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
     });
 </script>
+
+<svelte:window onclick={trackGitHubClick} />
 
 <svelte:head>
     <title>{dev ? 'Sivir UI - Dev' : 'Sivir UI'}</title>
