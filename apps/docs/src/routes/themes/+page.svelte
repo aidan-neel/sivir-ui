@@ -14,6 +14,7 @@
     import { onMount } from 'svelte';
     import { afterNavigate, goto, replaceState } from '$app/navigation';
     import { resolve } from '$app/paths';
+    import { trackEvent } from '$lib/analytics';
     import HomeDemo from '$lib/components/home/home-demo.svelte';
     import HomeNav from '$lib/components/home/home-nav.svelte';
     import { themeToDraft } from '$lib/studio/theme-draft';
@@ -485,6 +486,10 @@
                                         text={themeInstallCommand(selected.slug)}
                                         label="Copy command"
                                         copiedLabel="Copied"
+                                        oncopy={() =>
+                                            trackEvent('install_command_copied', {
+                                                source: 'themes'
+                                            })}
                                     />
                                 </div>
                                 <div class="flex flex-wrap items-center gap-2">
@@ -493,7 +498,13 @@
                                         label="Copy CSS"
                                         variant="outline"
                                         size="sm"
-                                        oncopy={() => copied('CSS')}
+                                        oncopy={() => {
+                                            copied('CSS');
+                                            trackEvent('theme_exported', {
+                                                format: 'css',
+                                                source: 'themes'
+                                            });
+                                        }}
                                     >
                                         Copy CSS
                                     </CopyButton>
@@ -502,7 +513,13 @@
                                         label="Copy JSON"
                                         variant="outline"
                                         size="sm"
-                                        oncopy={() => copied('JSON')}
+                                        oncopy={() => {
+                                            copied('JSON');
+                                            trackEvent('theme_exported', {
+                                                format: 'json',
+                                                source: 'themes'
+                                            });
+                                        }}
                                     >
                                         Copy JSON
                                     </CopyButton>

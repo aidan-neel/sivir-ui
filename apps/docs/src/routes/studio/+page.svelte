@@ -70,6 +70,7 @@
     import { replaceState } from '$app/navigation';
     import { resolve } from '$app/paths';
     import { page } from '$app/state';
+    import { trackEvent } from '$lib/analytics';
     import ChangedDot from '$lib/components/studio/changed-dot.svelte';
     import ColorAlphaField from '$lib/components/studio/color-alpha-field.svelte';
     import ColorField from '$lib/components/studio/color-field.svelte';
@@ -2601,6 +2602,7 @@
                 variant="primary"
                 size="md"
                 class="w-full [&_svg]:!text-[var(--color-on-primary)]"
+                oncopy={() => trackEvent('theme_exported', { format: 'css', source: 'studio' })}
             >
                 Copy CSS
             </CopyButton>
@@ -2611,6 +2613,7 @@
                 variant="outline"
                 size="md"
                 class="w-full"
+                oncopy={() => trackEvent('theme_exported', { format: 'json', source: 'studio' })}
             >
                 Copy JSON
             </CopyButton>

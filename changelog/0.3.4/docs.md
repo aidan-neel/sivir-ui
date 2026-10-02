@@ -1,0 +1,1 @@
+- Track custom Vercel Analytics events on the docs site for copied install commands and for theme CSS and JSON exports from Studio and Themes.
