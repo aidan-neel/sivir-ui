@@ -33,7 +33,7 @@ export const button = tv({
         size: {
             sm: 'h-[calc(var(--size-button-sm,var(--size-control-sm))-var(--size-hairline))] px-[calc(var(--padding-button-x,calc(var(--spacing)*3+var(--size-hairline)))-var(--size-hairline)*3/4)]',
             md: 'h-[calc(var(--size-button-md,var(--size-control-md))-var(--size-hairline))]',
-            lg: 'h-[calc(var(--size-button-lg,var(--size-control-lg))-var(--size-hairline))] px-[calc(var(--padding-button-x,calc(var(--spacing)*3+var(--size-hairline)))+2px)]',
+            lg: 'h-[calc(var(--size-button-lg,var(--size-control-lg))-var(--size-hairline))] px-[calc(var(--padding-button-x,calc(var(--spacing)*3+var(--size-hairline)))+var(--spacing)/2)]',
             icon: 'h-[var(--size-icon-md)] w-[var(--size-icon-md)] min-w-[var(--size-icon-md)] justify-center px-0'
         }
     },

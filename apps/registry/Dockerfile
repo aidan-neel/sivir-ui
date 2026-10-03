@@ -1,4 +1,4 @@
-FROM oven/bun:1.3.11 AS build
+FROM oven/bun:1.3.14 AS build
 WORKDIR /repo
 
 COPY package.json bun.lock ./
@@ -18,7 +18,7 @@ RUN DATABASE_URL="postgresql://placeholder:placeholder@localhost:5432/placeholde
 	DIRECT_URL="postgresql://placeholder:placeholder@localhost:5432/placeholder" \
 	bun --bun run prisma generate
 
-FROM oven/bun:1.3.11 AS runtime
+FROM oven/bun:1.3.14 AS runtime
 WORKDIR /repo
 
 COPY package.json bun.lock ./

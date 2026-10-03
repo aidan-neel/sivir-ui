@@ -78,7 +78,7 @@
         onclick={handleRemove}
         class={cn(
             className,
-            'group h-auto min-h-[calc(var(--size-control-md)-var(--border-size)*2-0.5rem)] max-w-full gap-1.5 rounded-[var(--radius-md)] bg-[color-mix(in_srgb,var(--color-input)_45%,transparent)] px-0 py-0 pr-1.5 pl-2.5 [font-size:var(--font-size-body)] leading-tight [font-weight:var(--font-weight-badge)] [letter-spacing:var(--tracking-body)] hover:bg-[color-mix(in_srgb,var(--color-input)_70%,transparent)] data-[state=open]:bg-[color-mix(in_srgb,var(--color-input)_70%,transparent)]'
+            'group h-auto min-h-[calc(var(--size-control-md)-var(--border-size)*2-var(--spacing)*2)] max-w-full gap-1.5 rounded-[var(--radius-md)] bg-[color-mix(in_srgb,var(--color-input)_45%,transparent)] px-0 py-0 pr-1.5 pl-2.5 [font-size:var(--font-size-body)] leading-tight [font-weight:var(--font-weight-badge)] [letter-spacing:var(--tracking-body)] hover:bg-[color-mix(in_srgb,var(--color-input)_70%,transparent)] data-[state=open]:bg-[color-mix(in_srgb,var(--color-input)_70%,transparent)]'
         )}
     >
         {@render label()}
@@ -90,7 +90,7 @@
         data-disabled={context.disabled || undefined}
         class={cn(
             className,
-            'inline-flex min-h-[calc(var(--size-control-md)-var(--border-size)*2-0.5rem)] max-w-full items-center gap-1.5 rounded-[var(--radius-md)] bg-[color-mix(in_srgb,var(--color-input)_45%,transparent)] py-0 pr-2.5 pl-2.5 [font-size:var(--font-size-body)] leading-tight [font-weight:var(--font-weight-badge)] [letter-spacing:var(--tracking-body)] text-foreground'
+            'inline-flex min-h-[calc(var(--size-control-md)-var(--border-size)*2-var(--spacing)*2)] max-w-full items-center gap-1.5 rounded-[var(--radius-md)] bg-[color-mix(in_srgb,var(--color-input)_45%,transparent)] py-0 pr-2.5 pl-2.5 [font-size:var(--font-size-body)] leading-tight [font-weight:var(--font-weight-badge)] [letter-spacing:var(--tracking-body)] text-foreground'
         )}
     >
         {@render label()}

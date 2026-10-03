@@ -89,7 +89,9 @@ bunx @sivir-ui/svelte list`;
             <Typography.InlineCode>@sivir-ui/svelte</Typography.InlineCode>, so these commands run
             it with
             <Typography.InlineCode>bunx @sivir-ui/svelte</Typography.InlineCode>. It copies
-            component source into your project.
+            component source into your project. These commands need Bun 1.3.14 or later. With npm,
+            use
+            <Typography.InlineCode>npx @sivir-ui/svelte</Typography.InlineCode>.
         </Typography.Text>
 
         <Typography.H3 class="m-0 docs-subsection-heading">

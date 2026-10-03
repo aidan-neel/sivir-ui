@@ -13,3 +13,4 @@
 - The Task Steps hero example shows the plain step list without a card.
 - Add an "In a modal" example to the Command page showing a searchable project picker inside a Modal.
 - Add a "Deeply nested" example to the Modal page that stacks five modals, closing one level per Escape.
+- The short `bunx @sivir-ui/svelte` command needs Bun 1.3.14 or later. The Installation page and the Sivir skill say so.
