@@ -11,3 +11,5 @@
 - The Agent skill page's install command is copyable with one click.
 - CLI commands in the docs use the shorter `bunx @sivir-ui/svelte` form instead of `bunx --package @sivir-ui/svelte sivir`.
 - The Task Steps hero example shows the plain step list without a card.
+- Add an "In a modal" example to the Command page showing a searchable project picker inside a Modal.
+- Add a "Deeply nested" example to the Modal page that stacks five modals, closing one level per Escape.

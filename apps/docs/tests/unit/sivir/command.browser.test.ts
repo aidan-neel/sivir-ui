@@ -3,6 +3,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-svelte';
 import CommandFixture from '../../fixtures/CommandFixture.svelte';
+import CommandInModalFixture from '../../fixtures/CommandInModalFixture.svelte';
 import { required } from '../../test-utils';
 
 async function flush() {
@@ -263,5 +264,43 @@ describe('Command -- search input', () => {
                 (el) => !(el as HTMLElement).hidden
             )
         ).toHaveLength(0);
+    });
+});
+
+describe('Command -- nested in a Modal', () => {
+    it('keeps the parent modal open when Enter picks an item, even if that enables its own Enter shortcut', async () => {
+        render(CommandInModalFixture, {});
+        await flush();
+
+        await page.getByTestId('modal-trigger').click();
+        await flush();
+        await page.getByTestId('command-trigger').click();
+        await flush();
+
+        await userEvent.keyboard('{Enter}');
+        await flush();
+
+        await expect.element(page.getByTestId('selected')).toHaveTextContent('profile');
+        await expect.element(page.getByTestId('modal-open-state')).toHaveTextContent('true');
+        await expect.element(page.getByTestId('command-trigger')).toBeVisible();
+    });
+
+    it('closes the palette on the first Escape and the modal on the second', async () => {
+        render(CommandInModalFixture, {});
+        await flush();
+
+        await page.getByTestId('modal-trigger').click();
+        await flush();
+        await page.getByTestId('command-trigger').click();
+        await flush();
+
+        await userEvent.keyboard('{Escape}');
+        await flush();
+        await expect.element(page.getByTestId('cmd-profile')).not.toBeInTheDocument();
+        await expect.element(page.getByTestId('modal-open-state')).toHaveTextContent('true');
+
+        await userEvent.keyboard('{Escape}');
+        await flush();
+        await expect.element(page.getByTestId('modal-open-state')).toHaveTextContent('false');
     });
 });

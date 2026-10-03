@@ -3,3 +3,5 @@
 - Theme Studio panel and palette-editor transitions are shorter, and preset cards no longer stagger in.
 - Theme Studio sidebar controls take their height and text size from the control and font-size tokens.
 - Opening a Select or Combobox on the home page no longer scrolls the page or detaches the menu from its trigger.
+- Command can now open from inside a Modal. Pressing Enter on a palette item no longer also fires an Enter shortcut on the modal behind it, such as a Confirm button.
+- Modals can nest five levels deep. Escape closes one level at a time, and the page unlocks when the last one closes.
