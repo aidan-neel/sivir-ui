@@ -4,7 +4,7 @@
     import { ModeWatcher } from 'mode-watcher';
     import DocsToolbar from '$lib/components/docs/docs-toolbar.svelte';
     import SideNavbar from '$lib/components/docs/side-navbar.svelte';
-    import Navbar from '$lib/components/navbar.svelte';
+    import HomeNav from '$lib/components/home/home-nav.svelte';
     import '@sivir-ui/svelte/ui.css';
     import '../app.css';
     import { injectAnalytics } from '@vercel/analytics/sveltekit';
@@ -103,7 +103,7 @@
     {:else if isThemeStudio}
         <div class="flex h-[100svh] w-full flex-col overflow-hidden bg-background">
             <div class="shrink-0">
-                <Navbar starCount={data?.starCount ?? null} />
+                <HomeNav starCount={data?.starCount ?? null} />
             </div>
             <div class="flex min-h-0 flex-1">
                 {@render children?.()}

@@ -18,7 +18,7 @@
     import WithSelect from './examples/with-select.svelte';
     import WithSelectSrc from './examples/with-select.svelte?raw';
 
-    const installCommand = 'bunx --package @sivir-ui/svelte sivir add modal';
+    const installCommand = 'bunx @sivir-ui/svelte add modal';
 </script>
 
 <svelte:head>

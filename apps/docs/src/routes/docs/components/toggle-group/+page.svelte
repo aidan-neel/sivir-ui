@@ -14,7 +14,7 @@
     const TITLE = 'Toggle Group';
     const SLUG = 'toggle-group';
 
-    const installCommand = `bunx --package @sivir-ui/svelte sivir add ${SLUG}`;
+    const installCommand = `bunx @sivir-ui/svelte add ${SLUG}`;
 </script>
 
 <svelte:head>

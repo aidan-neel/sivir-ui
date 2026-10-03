@@ -34,7 +34,7 @@
     import VariantSecondary from './examples/variant-secondary.svelte';
     import VariantSecondarySrc from './examples/variant-secondary.svelte?raw';
 
-    const installCommand = 'bunx --package @sivir-ui/svelte sivir add button';
+    const installCommand = 'bunx @sivir-ui/svelte add button';
 </script>
 
 <svelte:head>

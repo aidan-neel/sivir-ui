@@ -22,7 +22,7 @@
 
     const _TITLE = 'Dropdown Menu';
 
-    const installCommand = 'bunx --package @sivir-ui/svelte sivir add dropdown-menu';
+    const installCommand = 'bunx @sivir-ui/svelte add dropdown-menu';
 </script>
 
 <svelte:head>

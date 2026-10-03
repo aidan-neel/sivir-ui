@@ -108,7 +108,7 @@ import * as AlertDialog from '@sivir-ui/svelte/components/alert-dialog';
 - **Named:** `Badge`, `BrandMark`, `Button`, `Checkbox`, `CodeBlock`,
   `CopyButton`, `Gauge`, `Input`, `Label`, `Markdown`, `Pagination`, `Progress`,
   `ReorderList`, `ResponseStream`, `ScrollArea`, `Shortcut`, `ShowMore`, `Skeleton`, `SkeletonSwap`,
-  `Slider`, `Spinner`, `Switch`, `TaskSteps`, `Textarea`, `Toggle`, `Toolbar`, and the toast API (`Toast`, `Toaster`,
+  `Slider`, `Spinner`, `Switch`, `TaskSteps`, `Textarea`, `Toggle`, and the toast API (`Toast`, `Toaster`,
   `toast`, `getToastUIState`).
 - **Namespaced:** `Accordion`, `Alert`, `AlertDialog`, `Attachment`, `Avatar`,
   `Breadcrumb`, `Card` (includes `variant="panel"`), `Collapsible`, `ColorPicker`,

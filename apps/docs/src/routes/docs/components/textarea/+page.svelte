@@ -14,7 +14,7 @@
 
     const TITLE = 'Textarea';
 
-    const installCommand = 'bunx --package @sivir-ui/svelte sivir add textarea';
+    const installCommand = 'bunx @sivir-ui/svelte add textarea';
 </script>
 
 <svelte:head>

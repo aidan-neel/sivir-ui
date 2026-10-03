@@ -17,7 +17,7 @@ import { GET as getRobots } from '../../../src/routes/robots.txt/+server';
 import { GET as getSitemap } from '../../../src/routes/sitemap.xml/+server';
 
 const root = resolve(process.cwd(), '../..');
-const removedComponents = ['approval-request', 'marquee', 'panel', 'separator'];
+const removedComponents = ['approval-request', 'marquee', 'panel', 'separator', 'toolbar'];
 
 function directoryNames(path: string): string[] {
     return readdirSync(path, { withFileTypes: true })
@@ -139,14 +139,10 @@ describe('docs release contracts', () => {
 
     it('documents package-only and removed component contracts accurately', () => {
         const brandMark = brandMarkMarkdown();
-        const toolbar = componentMarkdown('toolbar');
         const componentIndex = componentsMarkdown();
 
         expect(brandMark).toContain("import { BrandMark } from '@sivir-ui/svelte'");
         expect(brandMark).toContain('`label?: string`');
-        expect(toolbar).toContain('not a standalone CLI registry target');
-        expect(toolbar).toContain('bun add @sivir-ui/svelte');
-        expect(toolbar).not.toContain('sivir add toolbar');
         expect(componentIndex).toContain('**Approval Request:**');
         expect(componentIndex).toContain('Compose `AlertDialog` directly');
         expect(componentIndex).toContain('Card.Root variant="panel"');
@@ -162,10 +158,6 @@ describe('docs release contracts', () => {
     it('uses CLI installation only for registry-public components', () => {
         for (const component of components) {
             const reference = componentMarkdown(component);
-            if (component === 'toolbar') {
-                expect(reference).not.toContain(`sivir add ${component}`);
-                continue;
-            }
             expect(reference).toContain(`sivir add ${component}`);
         }
     });
@@ -229,7 +221,7 @@ describe('docs release contracts', () => {
             resolve(root, 'apps/docs/src/routes/docs/installation/+page.svelte'),
             'utf8'
         );
-        expect(install).toContain('bunx --package @sivir-ui/svelte sivir init');
+        expect(install).toContain('bunx @sivir-ui/svelte init');
         expect(install).toContain('bun add @sivir-ui/svelte');
         const stylingRedirect = readFileSync(
             resolve(root, 'apps/docs/src/routes/docs/styling/+page.ts'),

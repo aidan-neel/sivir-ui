@@ -1,52 +1,27 @@
 <script lang="ts">
     import ArrowRight from '@lucide/svelte/icons/arrow-right';
-    import ArrowUpRight from '@lucide/svelte/icons/arrow-up-right';
     import { Button } from '@sivir-ui/svelte/components/button';
-    import { CopyButton } from '@sivir-ui/svelte/components/copy-button';
     import { resolve } from '$app/paths';
-    import { trackEvent } from '$lib/analytics';
+    import { changelogVersions } from '$lib/changelog';
     import { components } from '$lib/components';
-    import HomeDemo from '$lib/components/home/home-demo.svelte';
     import HomeNav from '$lib/components/home/home-nav.svelte';
+    import HomeShowcase from '$lib/components/home/home-showcase.svelte';
+    import InstallCommand from '$lib/components/install-command.svelte';
 
     import type { PageData } from './$types';
 
     const { data }: { data: PageData } = $props();
 
-    const install = 'bunx --package @sivir-ui/svelte sivir init -y';
-    const headline = [
-        'Sivir is a set of themed Svelte components.',
-        `Set your colors, fonts, and radius once, and all ${components.length} components follow.`
-    ];
-    const description = headline.join(' ');
-    const wordCount = description.split(' ').length;
+    const latestVersion = changelogVersions[0];
+    const install = 'bunx @sivir-ui/svelte init -y';
+    const description = `${components.length} Svelte components for apps and AI interfaces. Set colors, fonts, radius, and motion in one theme. Install with the CLI, or point your coding agent at the docs.`;
     const riseClass =
         'motion-safe:[animation:home-rise_calc(var(--motion-duration-sheet)*2.2)_var(--ease-out)_both]';
     const nudgeClass =
         'transition-[translate] [transition-duration:var(--motion-duration-panel)] ease-[var(--ease-out)] motion-reduce:transition-none';
 
-    function firstWordIndex(sentence: number) {
-        return headline
-            .slice(0, sentence)
-            .reduce((count, text) => count + text.split(' ').length, 0);
-    }
-
-    function wordDelay(index: number) {
-        return `animation-delay: calc(var(--motion-duration-sheet) * ${0.2 + index * 0.1})`;
-    }
-
     function riseDelay(step: number) {
-        return `animation-delay: calc(var(--motion-duration-sheet) * ${0.4 + wordCount * 0.1 + step * 0.35})`;
-    }
-
-    function copyCommand(event: MouseEvent & { currentTarget: HTMLElement }) {
-        const target = event.target as HTMLElement;
-
-        if (target.closest('button')) {
-            return;
-        }
-
-        event.currentTarget.querySelector<HTMLButtonElement>('button')?.click();
+        return `animation-delay: calc(var(--motion-duration-sheet) * ${0.15 + step * 0.4})`;
     }
 </script>
 
@@ -55,33 +30,50 @@
     <meta name="description" content={description} />
 </svelte:head>
 
-<div class="flex min-h-[100svh] min-w-0 flex-col bg-card min-[900px]:flex-row">
+<div class="flex min-h-[100svh] min-w-0 flex-col bg-background">
     <HomeNav starCount={data.starCount ?? null} />
 
-    <main
-        class="mx-auto flex w-full max-w-[80rem] min-w-0 flex-1 flex-col gap-14 px-4 pt-8 pb-6 sm:px-10 sm:pt-14 sm:pb-12 min-[900px]:justify-center min-[900px]:py-12"
-    >
-        <section aria-labelledby="home-title" class="flex max-w-[54rem] flex-col">
+    <main class="flex min-w-0 flex-col gap-16 pb-16 sm:gap-24 sm:pb-24">
+        <section
+            aria-labelledby="home-title"
+            class="flex flex-col items-center px-5 pt-16 text-center sm:px-10 sm:pt-24"
+        >
+            <a
+                href={resolve('/docs/changelog')}
+                class={`group inline-flex items-center gap-1.5 rounded-[var(--radius-sm)] [font-size:var(--font-size-label)] text-foreground-muted no-underline outline-none transition-colors [transition-duration:var(--motion-duration-hover)] hover:text-foreground focus-visible:shadow-[var(--focus-ring)] ${riseClass}`}
+                style={riseDelay(0)}
+            >
+                <span class="font-mono tabular-nums">v{latestVersion}</span>
+                <span aria-hidden="true">·</span>
+                What’s new
+                <ArrowRight
+                    size={12}
+                    aria-hidden="true"
+                    class={`${nudgeClass} group-hover:translate-x-0.5`}
+                />
+            </a>
+
             <h1
                 id="home-title"
-                aria-label={description}
-                class="m-0 font-[family-name:var(--font-header)] [font-size:var(--font-size-title)] [font-weight:var(--font-weight-body)] leading-[var(--leading-snug)] tracking-[var(--tracking-header)] text-pretty text-foreground-muted sm:[font-size:var(--font-size-display)]"
+                class={`m-0 mt-6 font-[family-name:var(--font-header)] [font-size:clamp(2.5rem,7vw,4.75rem)] [font-weight:var(--font-weight-body)] leading-[1.04] tracking-[-0.045em] text-balance text-foreground ${riseClass}`}
+                style={riseDelay(1)}
             >
-                {#each headline as sentence, s (s)}
-                    <span class={s === 0 ? 'text-foreground' : undefined} aria-hidden="true">
-                        {#each sentence.split(' ') as word, w (w)}
-                            <span
-                                class="inline-block motion-safe:[animation:home-word_calc(var(--motion-duration-sheet)*2.4)_var(--ease-out)_both]"
-                                style={wordDelay(firstWordIndex(s) + w)}
-                                >{word}</span
-                            >{' '}
-                        {/each}
-                    </span>
-                {/each}
+                <span class="block">Theme it once.</span>
+                <span class="block">Every component follows.</span>
             </h1>
 
-            <div class={`mt-6 flex flex-wrap items-center gap-2 ${riseClass}`} style={riseDelay(0)}>
-                <Button href={resolve('/docs/components')} class="group">
+            <p
+                class={`m-0 mt-6 max-w-[34rem] [font-size:var(--font-size-header)] leading-relaxed text-foreground-muted text-pretty ${riseClass}`}
+                style={riseDelay(2)}
+            >
+                {description}
+            </p>
+
+            <div
+                class={`mt-8 flex flex-wrap items-center justify-center gap-2 ${riseClass}`}
+                style={riseDelay(3)}
+            >
+                <Button href={resolve('/docs/components')} size="lg" class="group">
                     Browse components
                     <ArrowRight
                         size={14}
@@ -89,49 +81,26 @@
                         class={`${nudgeClass} group-hover:translate-x-0.5`}
                     />
                 </Button>
-                <Button
-                    href="https://github.com/aidan-neel/sivir-ui"
-                    target="_blank"
-                    rel="noreferrer"
-                    variant="outline"
-                    class="group"
-                >
-                    View on GitHub
-                    <ArrowUpRight
+                <Button href={resolve('/docs/skill')} size="lg" variant="outline" class="group">
+                    Give Sivir to your AI
+                    <ArrowRight
                         size={14}
                         aria-hidden="true"
-                        class={`${nudgeClass} group-hover:translate-x-px group-hover:-translate-y-px`}
+                        class={`${nudgeClass} group-hover:translate-x-0.5`}
                     />
                 </Button>
             </div>
 
-            <div
-                role="presentation"
-                onclick={copyCommand}
-                class={`group mt-10 flex h-[var(--size-control-lg)] w-full cursor-pointer select-none items-center gap-2.5 rounded-[var(--radius-lg)] bg-background ps-3.5 pe-1 font-mono [font-size:var(--font-size-label)] shadow-[inset_0_0_0_var(--border-size)_var(--color-border)] transition-[background-color,box-shadow] [transition-duration:var(--motion-duration-hover)] ease-[var(--ease-out)] hover:bg-secondary hover:shadow-[inset_0_0_0_var(--border-size)_var(--color-border-strong)] motion-reduce:transition-none ${riseClass}`}
-                style={riseDelay(1)}
-            >
-                <span
-                    aria-hidden="true"
-                    class="select-none text-foreground-muted/60 transition-colors [transition-duration:var(--motion-duration-hover)] group-hover:text-primary"
-                    >$</span
-                >
-                <code
-                    class="min-w-0 flex-1 overflow-x-auto whitespace-nowrap text-foreground-muted transition-colors [transition-duration:var(--motion-duration-hover)] [scrollbar-width:none] group-hover:text-foreground"
-                    >{install}</code
-                >
-                <CopyButton
-                    text={install}
-                    label="Copy command"
-                    copiedLabel="Copied"
-                    tooltipDelay={500}
-                    oncopy={() => trackEvent('install_command_copied', { source: 'home' })}
-                />
-            </div>
+            <InstallCommand
+                command={install}
+                source="home"
+                class={`mt-10 max-w-[30rem] ${riseClass}`}
+                style={riseDelay(4)}
+            />
         </section>
 
-        <div class={riseClass} style={riseDelay(2)}>
-            <HomeDemo />
+        <div class="mx-auto w-full max-w-[80rem] min-w-0 px-4 sm:px-10">
+            <HomeShowcase />
         </div>
     </main>
 </div>

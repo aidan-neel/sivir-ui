@@ -14,19 +14,17 @@
     class="mx-auto flex min-h-[calc(100vh-4rem)] max-w-xl flex-col items-center justify-start gap-6 px-6 pt-[clamp(7rem,18vh,12rem)] text-center"
 >
     <div class="flex max-w-[38rem] flex-col items-center">
-        <p
-            class="m-0 font-mono text-sm tabular-nums text-foreground-muted motion-safe:[animation:docs-block-in_280ms_var(--ease-out)_both]"
-        >
+        <p class="m-0 font-mono text-sm tabular-nums text-foreground-muted">
             {page.status}
         </p>
         <h1
-            class="m-0 mt-2 text-balance tracking-tight text-foreground motion-safe:[animation:docs-block-in_280ms_var(--ease-out)_both] motion-safe:[animation-delay:80ms]"
+            class="m-0 mt-2 text-balance tracking-tight text-foreground"
             style="font-size: 18px; font-weight: var(--font-weight-label);"
         >
             {page.status === 404 ? 'Page not found' : 'Something went wrong'}
         </h1>
         <p
-            class="m-0 mt-1 max-w-[38rem] text-pretty leading-relaxed text-foreground-muted motion-safe:[animation:docs-block-in_280ms_var(--ease-out)_both] motion-safe:[animation-delay:115ms]"
+            class="m-0 mt-1 max-w-[38rem] text-pretty leading-relaxed text-foreground-muted"
             style="font-size: 18px; font-weight: var(--font-weight-label);"
         >
             {page.status === 404
@@ -34,9 +32,7 @@
                 : 'The request could not be completed. Try again, or return to the documentation.'}
         </p>
     </div>
-    <div
-        class="flex flex-wrap justify-center gap-3 motion-safe:[animation:docs-block-in_280ms_var(--ease-out)_both] motion-safe:[animation-delay:145ms]"
-    >
+    <div class="flex flex-wrap justify-center gap-3">
         <Button
             href={resolve('/docs/introduction')}
             size="lg"

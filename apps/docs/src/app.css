@@ -15,8 +15,15 @@ html,
 body {
     margin: 0;
     padding: 0;
-    height: 100%;
     width: 100%;
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    min-height: 100%;
 }
 
 /* Reserve scrollbar space so opening an overlay (which locks body scroll)
@@ -93,68 +100,13 @@ pre {
     background-color: transparent;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-    [data-docs-page] > :where(header, section, search) {
-        animation: docs-block-in 280ms var(--ease-out) both;
-        transform-origin: top center;
-    }
-
-    [data-docs-page] > :where(header, section, search):nth-child(2) {
-        animation-delay: 45ms;
-    }
-
-    [data-docs-page] > :where(header, section, search):nth-child(3) {
-        animation-delay: 80ms;
-    }
-
-    [data-docs-page] > :where(header, section, search):nth-child(4) {
-        animation-delay: 115ms;
-    }
-
-    [data-docs-page] > :where(header, section, search):nth-child(5) {
-        animation-delay: 150ms;
-    }
-
-    [data-docs-page] > :where(header, section, search):nth-child(n + 6) {
-        animation-delay: 180ms;
-    }
-}
-
-@keyframes docs-block-in {
-    from {
-        opacity: 0;
-        transform: translateY(8px) scale(0.992);
-        filter: blur(5px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-        filter: blur(0);
-    }
-}
-
-@keyframes home-word {
-    from {
-        opacity: 0;
-        filter: blur(8px);
-        transform: translateY(0.3em);
-    }
-    to {
-        opacity: 1;
-        filter: none;
-        transform: none;
-    }
-}
-
 @keyframes home-rise {
     from {
         opacity: 0;
-        filter: blur(4px);
-        transform: translateY(10px);
+        transform: translateY(8px);
     }
     to {
         opacity: 1;
-        filter: none;
         transform: none;
     }
 }

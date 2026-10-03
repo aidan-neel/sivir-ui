@@ -356,7 +356,6 @@ export const componentAnatomy = {
         { name: 'Tool.Input', description: 'Shows the arguments a call was made with.' },
         { name: 'Tool.Output', description: 'Shows what a call returned.' }
     ],
-    toolbar: [{ name: 'Toolbar', description: 'Groups related controls.' }],
     tooltip: [
         { name: 'Tooltip.Root', description: 'Sets placement and open and close delays.' },
         { name: 'Tooltip.Trigger', description: 'Opens the tooltip on hover or focus.' },

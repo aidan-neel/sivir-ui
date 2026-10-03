@@ -53,7 +53,6 @@ export const components = [
     'toggle',
     'toggle-group',
     'tool',
-    'toolbar',
     'tooltip',
     'typography'
 ] as const;

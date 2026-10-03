@@ -100,8 +100,8 @@ Do not add `@import 'tailwindcss';` as well; `ui.css` imports Tailwind and regis
 For source-copy mode:
 
 ```sh
-bunx --package @sivir-ui/svelte sivir init -y
-bunx --package @sivir-ui/svelte sivir add <component-slug>
+bunx @sivir-ui/svelte init -y
+bunx @sivir-ui/svelte add <component-slug>
 ```
 
 `init -y` copies `ui.css` and shared utilities into `src/lib/sivir`, writes `sivir.json`, installs missing base dependencies, and replaces `@import 'tailwindcss';` with an import of `ui.css` in the stylesheet `sv add tailwindcss` created (`src/routes/layout.css` or `src/app.css`). For any other stylesheet, make that replacement yourself. Without `-y`, `init` prompts for the directory and alias and confirms the dependency install and stylesheet edit. If `sivir.json` already exists, use its `dir` and `alias` instead of the defaults. Let the CLI resolve transitive Sivir dependencies, and add only the components the design needs.

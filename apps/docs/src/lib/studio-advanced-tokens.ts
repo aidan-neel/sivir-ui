@@ -475,6 +475,15 @@ export const spacingTokenDefinitions = [
         step: 1
     },
     {
+        name: '--padding-button-x',
+        label: 'Button padding',
+        group: 'Controls',
+        fallback: 'calc(var(--sivir-space-3) + var(--size-hairline))',
+        min: 0,
+        max: 40,
+        step: 1
+    },
+    {
         name: '--size-icon-md',
         label: 'Icon',
         group: 'Controls',

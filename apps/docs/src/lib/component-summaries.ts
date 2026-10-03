@@ -55,7 +55,6 @@ export const componentSummaries = {
     toggle: 'A button that stays pressed or unpressed.',
     'toggle-group': 'A row of toggles with shared selection.',
     tool: 'Collapsible groups of an assistant’s tool calls.',
-    toolbar: 'A row of actions for composers and replies.',
     tooltip: 'Brief help text on hover or focus.',
     typography: 'Headings, body text, inline code, and metadata.'
 } satisfies Record<ComponentSlug, string>;

@@ -10,7 +10,7 @@
     import Scrollable from './examples/scrollable.svelte';
     import ScrollableSrc from './examples/scrollable.svelte?raw';
 
-    const installCommand = 'bunx --package @sivir-ui/svelte sivir add select';
+    const installCommand = 'bunx @sivir-ui/svelte add select';
 </script>
 
 <svelte:head>

@@ -127,7 +127,7 @@
         ontransitionend={releaseHeight}
         style:height={frameHeight === undefined ? undefined : `${frameHeight}px`}
         class={[
-            'relative transition-[height] [transition-duration:calc(var(--motion-duration-panel)*1.5)] ease-[var(--ease-out)] motion-reduce:transition-none',
+            'relative transition-[height] [transition-duration:var(--motion-duration-panel)] ease-[var(--ease-out)] motion-reduce:transition-none',
             frameHeight !== undefined && 'overflow-hidden'
         ]}
     >

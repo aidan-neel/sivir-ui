@@ -16,7 +16,7 @@
     import ToolbarInset from './examples/toolbar-inset.svelte';
     import ToolbarInsetSrc from './examples/toolbar-inset.svelte?raw';
 
-    const installCommand = 'bunx --package @sivir-ui/svelte sivir add composer';
+    const installCommand = 'bunx @sivir-ui/svelte add composer';
 </script>
 
 <svelte:head>

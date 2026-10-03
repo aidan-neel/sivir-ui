@@ -41,8 +41,7 @@ const NAMED = {
     textarea: ['Textarea'],
     'response-stream': ['ResponseStream'],
     toast: ['Toast', 'Toaster', 'toast', 'getToastUIState'],
-    toggle: ['Toggle'],
-    toolbar: ['Toolbar']
+    toggle: ['Toggle']
 } as const;
 
 /** Compound components: `import { Modal } from '@sivir-ui/svelte'` then `<Modal.Root>`. */
@@ -165,10 +164,9 @@ const DIRECT_PARTS = {
 const FROZEN = [...Object.keys(NAMED), ...Object.keys(NAMESPACED)].sort((a, b) =>
     a.localeCompare(b)
 );
-const NON_INSTALLABLE = ['toolbar'];
-const INSTALLABLE = FROZEN.filter((name) => !NON_INSTALLABLE.includes(name));
+const INSTALLABLE = FROZEN;
 
-const REMOVED = ['approval-request', 'marquee', 'panel', 'separator'] as const;
+const REMOVED = ['approval-request', 'marquee', 'panel', 'separator', 'toolbar'] as const;
 
 function toPascalCase(slug: string) {
     return slug

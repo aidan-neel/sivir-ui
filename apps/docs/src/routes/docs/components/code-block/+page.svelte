@@ -24,7 +24,7 @@
     import Single from './examples/single.svelte';
     import SingleSrc from './examples/single.svelte?raw';
 
-    const installCommand = 'bunx --package @sivir-ui/svelte sivir add code-block';
+    const installCommand = 'bunx @sivir-ui/svelte add code-block';
 
     const usageSnippet = `import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
 

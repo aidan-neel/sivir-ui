@@ -27,6 +27,11 @@ const removedComponents = [
         guidance: 'Use `Card.Root variant="panel"` for the framed panel surface.'
     },
     {
+        name: 'Toolbar',
+        guidance:
+            'Use a `<div role="toolbar">` with Tailwind flex utilities. `Composer.Toolbar` still exists for composer actions.'
+    },
+    {
         name: 'Separator',
         guidance:
             'Use a semantic `<hr>` or a Tailwind border utility. Part-level separators such as `Breadcrumb.Separator` and `DropdownMenu.Separator` still exist.'
@@ -85,7 +90,7 @@ export function componentMarkdown(component: string): string | undefined {
     const shared = manifest.shared.length ? manifest.shared.join(', ') : 'None';
     const install =
         manifest.visibility === 'public'
-            ? fence('sh', `bunx --package @sivir-ui/svelte sivir add ${component}`)
+            ? fence('sh', `bunx @sivir-ui/svelte add ${component}`)
             : [
                   'This component is available from the package API but is not a standalone CLI registry target. The CLI copies it only as a dependency of other components.',
                   '',
@@ -176,8 +181,8 @@ bun add @sivir-ui/svelte
 ~~~~
 
 ~~~~sh
-bunx --package @sivir-ui/svelte sivir init -y
-bunx --package @sivir-ui/svelte sivir add button
+bunx @sivir-ui/svelte init -y
+bunx @sivir-ui/svelte add button
 ~~~~
 `,
     installation: `# Installation
@@ -199,8 +204,8 @@ Import the token sheet once in your root stylesheet. It includes Tailwind, so do
 ## CLI
 
 ~~~~sh
-bunx --package @sivir-ui/svelte sivir init -y
-bunx --package @sivir-ui/svelte sivir add button
+bunx @sivir-ui/svelte init -y
+bunx @sivir-ui/svelte add button
 ~~~~
 
 \`init\` writes \`sivir.json\`, copies \`ui.css\` and shared utilities into \`src/lib/sivir\`, installs the shared dependencies, and replaces \`@import 'tailwindcss';\` in the root stylesheet \`sv add tailwindcss\` creates (\`src/routes/layout.css\` or \`src/app.css\`) with an import of \`src/lib/sivir/ui.css\`, which includes Tailwind. For any other stylesheet, make that replacement yourself. Without \`-y\`, \`init\` asks for the directory and import alias (default \`$lib/sivir\`) and confirms the dependency install and stylesheet edit.
@@ -263,7 +268,7 @@ export function llmsTxt(origin: string): string {
         '',
         "Svelte 5 and Tailwind CSS v4 component library. The Markdown pages below hold each component's public API, runnable examples, and per-version upgrade notes.",
         '',
-        `The current catalog contains ${components.length} components. Brand Mark and Toolbar are package-only; the CLI copies Toolbar only as a dependency. Approval Request, Marquee, Panel, and Separator were removed as standalone components; the components index lists their replacements.`,
+        `The current catalog contains ${components.length} components. Brand Mark is package-only. Approval Request, Marquee, Panel, Separator, and Toolbar were removed as standalone components; the components index lists their replacements.`,
         '',
         '## Agent skill',
         '',

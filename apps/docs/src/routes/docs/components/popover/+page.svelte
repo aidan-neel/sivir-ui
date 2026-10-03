@@ -12,7 +12,7 @@
 
     const _TITLE = 'Popover';
 
-    const installCommand = 'bunx --package @sivir-ui/svelte sivir add popover';
+    const installCommand = 'bunx @sivir-ui/svelte add popover';
 </script>
 
 <svelte:head>

@@ -11,7 +11,7 @@
     import States from './examples/states.svelte';
     import StatesSrc from './examples/states.svelte?raw';
 
-    const installCommand = 'bunx --package @sivir-ui/svelte sivir add message';
+    const installCommand = 'bunx @sivir-ui/svelte add message';
     const usageSnippet = `import * as Message from '@sivir-ui/svelte/components/message';
 
 <Message.Root from="assistant" status="idle">

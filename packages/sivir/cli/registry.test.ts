@@ -174,7 +174,6 @@ describe('registry snapshot', () => {
         expect(plan.components.map((component) => component.name)).toEqual(
             expect.arrayContaining(publicNames)
         );
-        expect(plan.components.some((component) => component.name === 'toolbar')).toBe(false);
     });
 
     test('every isolated install declares its external imports', async () => {

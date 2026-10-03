@@ -1,31 +1,28 @@
 <script lang="ts">
     import * as TagInput from '@sivir-ui/svelte/components/tag-input';
 
-    let tags = $state(['svelte', 'sivir']);
-    let notice = $state('');
+    let tags = $state(['svelte', 'sivir', 'ui', 'forms']);
+    let error = $state('');
 </script>
 
-<div class="w-full max-w-md space-y-2">
+<div class="w-full max-w-md">
     <TagInput.Root
         bind:tags
+        {error}
         max={5}
         label="Labels"
         description="Up to 5 labels."
         onAdd={() => {
-            notice = '';
+            error = '';
         }}
         onRemove={() => {
-            notice = '';
+            error = '';
         }}
         onReject={(rejection) => {
-            notice = rejection.reason;
+            error = rejection.reason;
         }}
     >
         <TagInput.List />
         <TagInput.Input placeholder="Add a label…" />
     </TagInput.Root>
-
-    {#if notice}
-        <p class="text-sm text-foreground-muted">{notice}</p>
-    {/if}
 </div>

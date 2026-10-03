@@ -15,7 +15,7 @@
     import VariantSecondary from './examples/variant-secondary.svelte';
     import VariantSecondarySrc from './examples/variant-secondary.svelte?raw';
 
-    const installCommand = 'bunx --package @sivir-ui/svelte sivir add input';
+    const installCommand = 'bunx @sivir-ui/svelte add input';
 </script>
 
 <svelte:head>

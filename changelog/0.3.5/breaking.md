@@ -1,0 +1,1 @@
+- Remove the Toolbar component. Use a `<div role="toolbar">` with flex utilities. `Composer.Toolbar` is unchanged.

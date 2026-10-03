@@ -12,7 +12,7 @@
 
     const _TITLE = 'Radio Group';
 
-    const installCommand = 'bunx --package @sivir-ui/svelte sivir add radio-group';
+    const installCommand = 'bunx @sivir-ui/svelte add radio-group';
 </script>
 
 <svelte:head>

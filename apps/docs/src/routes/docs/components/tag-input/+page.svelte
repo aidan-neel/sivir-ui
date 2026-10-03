@@ -12,7 +12,7 @@
     import Validation from './examples/validation.svelte';
     import ValidationSrc from './examples/validation.svelte?raw';
 
-    const installCommand = 'bunx --package @sivir-ui/svelte sivir add tag-input';
+    const installCommand = 'bunx @sivir-ui/svelte add tag-input';
 
     const usageSnippet = `import * as TagInput from '@sivir-ui/svelte/components/tag-input';
 

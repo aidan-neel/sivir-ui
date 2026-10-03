@@ -11,7 +11,7 @@
     import Streaming from './examples/streaming.svelte';
     import StreamingSrc from './examples/streaming.svelte?raw';
 
-    const installCommand = 'bunx --package @sivir-ui/svelte sivir add markdown';
+    const installCommand = 'bunx @sivir-ui/svelte add markdown';
     const usageSnippet = `import { Markdown } from '@sivir-ui/svelte/components/markdown';
 
 const content = [

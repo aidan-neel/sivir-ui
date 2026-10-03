@@ -15,7 +15,7 @@
     import UploadProgress from './examples/upload-progress.svelte';
     import UploadProgressSrc from './examples/upload-progress.svelte?raw';
 
-    const installCommand = 'bunx --package @sivir-ui/svelte sivir add attachment';
+    const installCommand = 'bunx @sivir-ui/svelte add attachment';
     const usageSnippet = `import * as Attachment from '@sivir-ui/svelte/components/attachment';
 import type { AttachmentRejection } from '@sivir-ui/svelte/components/attachment';
 

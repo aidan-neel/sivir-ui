@@ -127,7 +127,7 @@
                 onclick={() => {
                     onApply(preset.slug);
                 }}
-                in:surfaceTransition|global={{ y: -4, delay: 40 + index * 24 }}
+                in:surfaceTransition|global={{ y: -4 }}
             >
                 <span
                     class="flex flex-col gap-2.5 border-b px-3 pt-3 pb-3.5"

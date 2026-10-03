@@ -10,7 +10,7 @@
     import Hero from './examples/hero.svelte';
     import HeroSrc from './examples/hero.svelte?raw';
 
-    const installCommand = 'bunx --package @sivir-ui/svelte sivir add conversation';
+    const installCommand = 'bunx @sivir-ui/svelte add conversation';
     const usageSnippet = `import * as Conversation from '@sivir-ui/svelte/components/conversation';
 import * as Message from '@sivir-ui/svelte/components/message';
 

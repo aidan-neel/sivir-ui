@@ -1,0 +1,6 @@
+- Theme Studio can use sans serif and serif families for the Code font, not only monospace ones.
+- Theme Studio adds Body, Label, Button, and Badge text size sliders to the Type tab.
+- Theme Studio adds Button height and X padding controls to the Feel tab. Buttons read the new `--padding-button-x` token.
+- Theme Studio drops the Button text color and Movement preset options. Per-token motion controls remain.
+- Theme Studio's canvas now starts at the top. Undo, redo, reset, search, edit tokens, and Export sit in the canvas header beside the preview tabs, and the preset picker moves to the top of the sidebar.
+- Adds the Government built-in theme preset: square corners, flat hairline surfaces, no shadows, near-zero motion, and a single amber accent.

@@ -1,0 +1,13 @@
+- Redesign the home page with a top bar, a centered hero, and live examples of a coding agent, a chat, an issue panel, and a command palette, with a theme selector that restyles the whole page.
+- The themes page and Theme Studio use the new top bar.
+- Add an Agent skill page that explains how to install the Sivir skill, what it does, and how to use Sivir with agents that do not support skills.
+- The home page's "Give Sivir to your AI" button opens the Agent skill page instead of `llms.txt`.
+- The home page release link shows the newest changelog version.
+- Rewrite the Tag Input and Sheet examples with cleaner spacing and realistic content.
+- The top bar no longer lists Themes.
+- The top bar links to the Agent skill page.
+- Redesign the home page chat example as a full assistant panel with a header and a longer conversation.
+- Lists on the Introduction, Installation, and Theming pages use the body text size.
+- The Agent skill page's install command is copyable with one click.
+- CLI commands in the docs use the shorter `bunx @sivir-ui/svelte` form instead of `bunx --package @sivir-ui/svelte sivir`.
+- The Task Steps hero example shows the plain step list without a card.

@@ -12,7 +12,7 @@
     import MultipleChoice from './examples/multiple-choice.svelte';
     import MultipleChoiceSrc from './examples/multiple-choice.svelte?raw';
 
-    const installCommand = 'bunx --package @sivir-ui/svelte sivir add question';
+    const installCommand = 'bunx @sivir-ui/svelte add question';
     const usageSnippet = `import * as Question from '@sivir-ui/svelte/components/question';
 import type { QuestionAnswer } from '@sivir-ui/svelte/components/question';
 
