@@ -16,10 +16,11 @@ export function useIsDark() {
         const update = () => {
             dark = root.classList.contains('dark');
         };
-        update();
         const mo = new MutationObserver(update);
         mo.observe(root, { attributes: true, attributeFilter: ['class'] });
-        return () => mo.disconnect();
+        return () => {
+            mo.takeRecords();
+        };
     });
 
     return {

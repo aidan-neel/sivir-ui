@@ -27,7 +27,7 @@
     const clamped = $derived(Math.min(Math.max(value, 0), safeMax));
     const radius = $derived((safeSize - safeStrokeWidth) / 2);
     const circumference = $derived(2 * Math.PI * radius);
-    const offset = $derived(circumference * (1 - clamped / safeMax));
+    const offset = $derived(circumference * (clamped / safeMax));
     const accessibleLabel = $derived(label ?? `${clamped} of ${safeMax}`);
 </script>
 

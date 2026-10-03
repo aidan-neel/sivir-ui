@@ -12,7 +12,7 @@
 
     const safeMax = $derived(Math.max(max, 1));
     const clamped = $derived(Math.min(Math.max(value, 0), safeMax));
-    const pct = $derived((clamped / safeMax) * 100);
+    const pct = $derived((clamped / max) * 100);
 </script>
 
 <div

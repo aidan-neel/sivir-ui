@@ -7,6 +7,7 @@ const toastTimeouts = new Map<
     { timeout: ReturnType<typeof setTimeout>; state: ToastState }
 >();
 const TOAST_EXIT_DURATION = 340;
+const MAX_VISIBLE_TOASTS = 5;
 let nextToastId = 0;
 
 /**
@@ -218,7 +219,7 @@ function createToast(toastData: ToastInput, state = activeState): Toast {
         }
     }
 
-    state.data.toasts = [...state.data.toasts, nextToast];
+    state.data.toasts = [...state.data.toasts, nextToast].slice(0, MAX_VISIBLE_TOASTS);
 
     if (!nextToast.persistent) {
         scheduleToastRemoval(toastId, duration, state);

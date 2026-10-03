@@ -64,11 +64,14 @@
 
         copied = true;
         oncopy?.(text);
-        clearTimeout(timer);
-        timer = setTimeout(() => (copied = false), duration);
+        timer = setTimeout(() => {
+            copied = false;
+        }, duration);
     }
 
-    onDestroy(() => clearTimeout(timer));
+    onDestroy(() => {
+        clearTimeout(timer);
+    });
 </script>
 
 <Tooltip.Root placement="top" delay={tooltipDelay} closeDelay={80}>

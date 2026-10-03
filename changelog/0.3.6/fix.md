@@ -1,0 +1,3 @@
+- Pagination no longer renders the last page twice when the current page is near the end.
+- Progress and Gauge fill amounts follow the configured `max`.
+- Toasts stop stacking past five visible at once.
