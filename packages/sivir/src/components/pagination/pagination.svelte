@@ -26,7 +26,7 @@
     const pages = $derived.by(() => {
         const result: (number | 'ellipsis')[] = [];
         const start = Math.max(2, page - siblings);
-        const end = Math.min(total - 1, page + siblings);
+        const end = Math.min(total, page + siblings);
 
         result.push(1);
         if (start > 2) {
@@ -35,7 +35,7 @@
         for (let i = start; i <= end; i++) {
             result.push(i);
         }
-        if (end < total - 1) {
+        if (end < total) {
             result.push('ellipsis');
         }
         if (total > 1) {

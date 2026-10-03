@@ -27,7 +27,7 @@ export type Intent = 'primary' | 'secondary' | 'ghost' | 'outline' | 'destructiv
  * overrides ahead of library defaults.
  */
 export function cn(...inputs: ClassValue[]) {
-    return twMerge(clsx(inputs.reverse()));
+    return twMerge(clsx(inputs));
 }
 
 /** Keeps fixed overlays within the browser's visual viewport, including above an on-screen keyboard. */
@@ -81,6 +81,8 @@ export function createContext<T>(name: string) {
     };
 }
 
+const MENU_CLOSE_STAGGER_MS = 16;
+
 /**
  * Closes a menu layer and every ancestor above it (full submenu-cone collapse).
  *
@@ -97,12 +99,12 @@ export function closeMenuLayers(current: { open: boolean }, ancestors: { open: b
             continue;
         }
 
-        setTimeout(
-            () => {
-                ancestor.open = false;
-            },
-            (ancestors.length - 1 - index) * 16 + 16
-        );
+        const delay =
+            (ancestors.length - 1 - index) * MENU_CLOSE_STAGGER_MS + MENU_CLOSE_STAGGER_MS;
+
+        setTimeout(() => {
+            ancestor.open = false;
+        }, delay);
     }
 }
 
@@ -132,6 +134,8 @@ function pointInRect(point: { x: number; y: number }, rect: DOMRect) {
     );
 }
 
+const SUBMENU_CONTACT_MARGIN = 8;
+
 /** Whether a pointer is in the contact triangle between a floating trigger and panel. */
 export function isPointInSubmenuTriangle(
     point: { x: number; y: number },
@@ -143,7 +147,7 @@ export function isPointInSubmenuTriangle(
         return true;
     }
 
-    const contactMargin = 8;
+    const contactMargin = SUBMENU_CONTACT_MARGIN;
     const triggerCenter = {
         x: (trigger.left + trigger.right) / 2,
         y: (trigger.top + trigger.bottom) / 2
@@ -160,7 +164,7 @@ export function isPointInSubmenuTriangle(
         case 'top':
             return pointInTriangle(
                 point,
-                { x: triggerCenter.x, y: trigger.top - contactMargin },
+                { x: triggerCenter.x, y: trigger.bottom + contactMargin },
                 { x: panel.left, y: panel.bottom + contactMargin },
                 { x: panel.right, y: panel.bottom + contactMargin }
             );
@@ -260,7 +264,7 @@ function releaseOverflowLock(element: HTMLElement) {
         return;
     }
     record.count -= 1;
-    if (record.count > 0) {
+    if (record.count >= 0) {
         return;
     }
 
