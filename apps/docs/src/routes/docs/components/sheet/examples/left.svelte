@@ -10,17 +10,25 @@
     import * as Sheet from '@sivir-ui/svelte/components/sheet';
     import Shortcut from '@sivir-ui/svelte/components/shortcut';
     import * as Typography from '@sivir-ui/svelte/components/typography';
+    import type { Component } from 'svelte';
+
+    type NavLink = {
+        value: string;
+        label: string;
+        icon: Component;
+        count?: number;
+    };
 
     let open = $state(false);
     let current = $state('home');
 
-    const workspace = [
+    const workspace: NavLink[] = [
         { value: 'home', label: 'Home', icon: Home },
         { value: 'inbox', label: 'Inbox', icon: Inbox, count: 3 },
         { value: 'projects', label: 'Projects', icon: FolderKanban }
     ];
 
-    const account = [
+    const account: NavLink[] = [
         { value: 'team', label: 'Team', icon: Users },
         { value: 'settings', label: 'Settings', icon: Settings }
     ];

@@ -78,10 +78,13 @@
 </script>
 
 <section aria-label="Live examples" class="flex flex-col gap-8">
-    <div class="-mx-4 flex min-w-0 overflow-x-auto px-4 [scrollbar-width:none] sm:-mx-10 sm:px-10">
+    <div
+        role="group"
+        aria-label="Theme"
+        class="-mx-4 flex min-w-0 overflow-x-auto px-4 [scrollbar-width:none] sm:-mx-10 sm:px-10"
+    >
         <ToggleGroup.Root
             type="single"
-            aria-label="Theme"
             bind:value={selection}
             onValueChange={selectTheme}
             class="mx-auto w-max"
