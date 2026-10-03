@@ -102,6 +102,7 @@
                     return;
                 }
                 event.preventDefault();
+                event.stopPropagation();
                 active.ref?.click();
                 break;
             }

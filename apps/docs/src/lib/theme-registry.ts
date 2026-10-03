@@ -37,7 +37,7 @@ export const THEMES_PAGE_SIZE = 24;
 export const THEME_SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 export function themeInstallCommand(slug: string): string {
-    return `bunx --package @sivir-ui/svelte sivir add theme ${slug}`;
+    return `bunx @sivir-ui/svelte add theme ${slug}`;
 }
 
 export function themeStylesheetPath(slug: string): string {

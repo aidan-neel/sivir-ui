@@ -27,7 +27,7 @@
     import VariantWarning from './examples/variant-warning.svelte';
     import VariantWarningSrc from './examples/variant-warning.svelte?raw';
 
-    const installCommand = 'bunx --package @sivir-ui/svelte sivir add badge';
+    const installCommand = 'bunx @sivir-ui/svelte add badge';
 </script>
 
 <svelte:head>

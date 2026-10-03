@@ -10,7 +10,7 @@
     import UsageLimit from './examples/usage-limit.svelte';
     import UsageLimitSrc from './examples/usage-limit.svelte?raw';
 
-    const installCommand = 'bunx --package @sivir-ui/svelte sivir add gauge';
+    const installCommand = 'bunx @sivir-ui/svelte add gauge';
 </script>
 
 <svelte:head>

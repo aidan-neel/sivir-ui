@@ -6,6 +6,7 @@ export const htmlDocPaths = [
     '/docs/introduction',
     '/docs/installation',
     '/docs/theming',
+    '/docs/skill',
     '/docs/changelog',
     '/docs/components',
     '/studio',

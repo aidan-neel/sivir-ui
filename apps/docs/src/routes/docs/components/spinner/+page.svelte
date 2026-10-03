@@ -11,7 +11,7 @@
     import ReadyState from './examples/ready-state.svelte';
     import ReadyStateSrc from './examples/ready-state.svelte?raw';
 
-    const installCommand = 'bunx --package @sivir-ui/svelte sivir add spinner';
+    const installCommand = 'bunx @sivir-ui/svelte add spinner';
 </script>
 
 <svelte:head>

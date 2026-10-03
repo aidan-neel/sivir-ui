@@ -12,7 +12,7 @@
 
     const _TITLE = 'Copy Button';
 
-    const installCommand = 'bunx --package @sivir-ui/svelte sivir add copy-button';
+    const installCommand = 'bunx @sivir-ui/svelte add copy-button';
 </script>
 
 <svelte:head>

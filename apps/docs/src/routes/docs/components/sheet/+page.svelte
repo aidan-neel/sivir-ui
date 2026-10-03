@@ -13,7 +13,7 @@
 
     const TITLE = 'Sheet';
 
-    const installCommand = 'bunx --package @sivir-ui/svelte sivir add sheet';
+    const installCommand = 'bunx @sivir-ui/svelte add sheet';
 </script>
 
 <svelte:head>

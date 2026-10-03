@@ -294,7 +294,6 @@ export const clawdTheme: Theme = {
     slug: 'clawd',
     name: 'Clawd',
     description: 'Compact warm-dark workspace with a clay accent, flat chrome, and tight radii.',
-    publisher: 'Sivir UI',
     brand: '#292929',
     neutral: 'warm',
     radius: 'default',
@@ -303,6 +302,7 @@ export const clawdTheme: Theme = {
     fontSans: "'DM Sans', sans-serif",
     fontMono: "'JetBrains Mono', monospace",
     fontHeader: 'var(--font-sans)',
+    publisher: 'Sivir UI',
     foundation: {
         light: {
             base: '#fffefb',
@@ -326,31 +326,6 @@ export const clawdTheme: Theme = {
         }
     },
     tokens: {
-        shared: {
-            '--motion-duration-step-in': '30ms',
-            '--motion-duration-step-out': '60ms',
-            '--motion-duration-panel-in': '30ms',
-            '--motion-duration-panel-out': '60ms',
-            '--motion-duration-modal-in': '30ms',
-            '--motion-duration-modal-out': '60ms',
-            '--motion-duration-press': '40ms',
-            '--motion-duration-item': '0ms',
-            '--motion-menu-x': '2px',
-            '--motion-menu-y': '2px',
-            '--motion-menu-scale-start': '1',
-            '--motion-menu-blur': '0px',
-            '--motion-modal-x': '2px',
-            '--motion-modal-y': '2px',
-            '--motion-modal-scale-start': '1',
-            '--motion-modal-blur': '0px',
-            '--motion-panel-y': '2px',
-            '--motion-panel-scale-start': '0.98',
-            '--motion-step-x': '0px',
-            '--motion-step-blur': '0px',
-            '--motion-press-px': '0px',
-            '--motion-duration-switch': '0ms',
-            '--motion-switch-stretch': '0'
-        },
         light: {
             '--color-input': '#dcd9cc',
             ...codeTokens({
@@ -381,6 +356,31 @@ export const clawdTheme: Theme = {
                 entity: '#a6c47f',
                 meta: '#8c8779'
             })
+        },
+        shared: {
+            '--motion-duration-step-in': '30ms',
+            '--motion-duration-step-out': '60ms',
+            '--motion-duration-panel-in': '30ms',
+            '--motion-duration-panel-out': '60ms',
+            '--motion-duration-modal-in': '30ms',
+            '--motion-duration-modal-out': '60ms',
+            '--motion-duration-press': '40ms',
+            '--motion-duration-item': '0ms',
+            '--motion-menu-x': '2px',
+            '--motion-menu-y': '2px',
+            '--motion-menu-scale-start': '1',
+            '--motion-menu-blur': '0px',
+            '--motion-modal-x': '2px',
+            '--motion-modal-y': '2px',
+            '--motion-modal-scale-start': '1',
+            '--motion-modal-blur': '0px',
+            '--motion-panel-y': '2px',
+            '--motion-panel-scale-start': '0.98',
+            '--motion-step-x': '0px',
+            '--motion-step-blur': '0px',
+            '--motion-press-px': '0px',
+            '--motion-duration-switch': '0ms',
+            '--motion-switch-stretch': '0'
         }
     },
     typography: {
@@ -401,6 +401,7 @@ export const clawdTheme: Theme = {
         travelingHighlight: false,
         fancySwap: false,
         menuPaneling: false,
+        surfacePaneling: false,
         primaryStroke: false,
         interactiveCursor: 'default'
     }
@@ -490,13 +491,105 @@ export const inspirationTheme: Theme = {
     }
 };
 
+export const governmentTheme: Theme = {
+    version: THEME_VERSION,
+    slug: 'government',
+    name: 'Government',
+    description:
+        'Square corners, flat hairline surfaces, near-zero motion, and a single amber accent.',
+    brand: '#fbb724',
+    neutral: 'cool',
+    radius: 'none',
+    density: 'compact',
+    motion: 'none',
+    fontSans: "'Inter', sans-serif",
+    fontMono: "'JetBrains Mono', monospace",
+    fontHeader: 'var(--font-sans)',
+    publisher: 'Sivir UI',
+    foundation: {
+        light: {
+            base: '#ffffff',
+            border: '#d5d9de',
+            background: '#f1f3f5',
+            secondary: '#e6e9ed',
+            foreground: '#14171a',
+            foregroundMuted: '#5b6570',
+            onPrimary: '#14171a',
+            buttonForeground: '#14171a'
+        },
+        dark: {
+            base: '#14171a',
+            border: '#2b3036',
+            background: '#0b0d0f',
+            secondary: '#1d2125',
+            foreground: '#e3e6e9',
+            foregroundMuted: '#8b949e',
+            onPrimary: '#14171a',
+            buttonForeground: '#e3e6e9'
+        }
+    },
+    tokens: {
+        shared: {
+            '--motion-duration-hover': '0ms',
+            '--motion-duration-menu': '0ms',
+            '--motion-duration-panel': '0ms',
+            '--motion-duration-sheet': '0ms',
+            '--motion-duration-overlay': '0ms',
+            '--motion-duration-panel-in': '0ms',
+            '--motion-duration-panel-out': '0ms',
+            '--motion-duration-modal-in': '0ms',
+            '--motion-duration-modal-out': '0ms',
+            '--motion-duration-step-in': '0ms',
+            '--motion-duration-step-out': '0ms',
+            '--motion-duration-toast-in': '60ms',
+            '--motion-duration-toast-out': '0ms',
+            '--motion-duration-sheet-out': '0ms',
+            '--motion-menu-x': '0px',
+            '--motion-menu-y': '0px',
+            '--motion-menu-scale-start': '1',
+            '--motion-menu-blur': '0px',
+            '--motion-modal-x': '0px',
+            '--motion-modal-y': '0px',
+            '--motion-modal-scale-start': '1',
+            '--motion-modal-blur': '0px',
+            '--motion-panel-y': '0px',
+            '--motion-panel-scale-start': '1',
+            '--motion-step-x': '0px',
+            '--motion-step-blur': '0px',
+            '--motion-press-px': '0px'
+        }
+    },
+    typography: {
+        headerSize: 15,
+        headerWeight: '600',
+        roleWeights: {
+            body: '400',
+            label: '500',
+            button: '500',
+            badge: '500',
+            description: '400'
+        }
+    },
+    chrome: {
+        surfaceShadows: false,
+        controlShadows: false,
+        dialogShadows: false,
+        travelingHighlight: false,
+        menuPaneling: false,
+        surfacePaneling: false,
+        primaryStroke: false,
+        interactiveCursor: 'default'
+    }
+};
+
 export const builtInThemePresets: readonly Theme[] = [
     DEFAULT_THEME,
     magicTheme,
     profitableTheme,
     ravenTheme,
     clawdTheme,
-    inspirationTheme
+    inspirationTheme,
+    governmentTheme
 ];
 
 export const defaultTheme = DEFAULT_THEME;

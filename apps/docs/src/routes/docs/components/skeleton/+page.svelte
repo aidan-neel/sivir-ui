@@ -14,7 +14,7 @@
 
     const TITLE = 'Skeleton';
 
-    const installCommand = 'bunx --package @sivir-ui/svelte sivir add skeleton';
+    const installCommand = 'bunx @sivir-ui/svelte add skeleton';
 </script>
 
 <svelte:head>

@@ -10,7 +10,7 @@
     import SignOut from './examples/sign-out.svelte';
     import SignOutSrc from './examples/sign-out.svelte?raw';
 
-    const installCommand = 'bunx --package @sivir-ui/svelte sivir add alert-dialog';
+    const installCommand = 'bunx @sivir-ui/svelte add alert-dialog';
 </script>
 
 <svelte:head>

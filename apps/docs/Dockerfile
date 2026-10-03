@@ -1,4 +1,4 @@
-FROM oven/bun:1.3.11 AS build
+FROM oven/bun:1.3.14 AS build
 WORKDIR /repo
 
 COPY package.json bun.lock ./

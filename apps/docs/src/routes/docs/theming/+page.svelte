@@ -32,7 +32,7 @@
   text-transform: uppercase;
 }`;
 
-    const sourceExample = `# after: bunx --package @sivir-ui/svelte sivir add button
+    const sourceExample = `# after: bunx @sivir-ui/svelte add button
 src/lib/sivir/components/button/
 ├── button.svelte
 ├── index.ts
@@ -112,7 +112,7 @@ src/lib/sivir/components/button/
     <section id="useful-tokens" class="scroll-mt-20 flex flex-col gap-5">
         <Typography.H2 class="docs-section-heading">Useful public tokens</Typography.H2>
         <ul
-            class="m-0 flex list-disc flex-col gap-2 pl-5 text-[1rem] text-foreground leading-relaxed"
+            class="m-0 flex list-disc flex-col gap-2 pl-5 [font-size:var(--font-size-body)] text-foreground leading-relaxed"
         >
             <li>
                 Color:
@@ -192,11 +192,7 @@ src/lib/sivir/components/button/
             With the CLI, install a preset into
             <Typography.InlineCode>theme.css</Typography.InlineCode>:
         </Typography.Text>
-        <CodeBlock
-            code="bunx --package @sivir-ui/svelte sivir add theme raven"
-            lang="shell"
-            copy="overlay"
-        />
+        <CodeBlock code="bunx @sivir-ui/svelte add theme raven" lang="shell" copy="overlay" />
         <Typography.Text variant="body" class="m-0 max-w-2xl">
             Import it after <Typography.InlineCode>ui.css</Typography.InlineCode> so it wins:
         </Typography.Text>

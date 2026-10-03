@@ -1,7 +1,7 @@
 /**
  * Phase 2 §1 — lock the public API.
  *
- * Frozen catalog: 57 components. Named exports hang off the package root as
+ * Frozen catalog: 56 components. Named exports hang off the package root as
  * identifiers; namespace exports hang off a PascalCase object (AlertDialog.Root).
  * Every public component is also reachable at @sivir-ui/svelte/components/<slug>.
  */
@@ -41,8 +41,7 @@ const NAMED = {
     textarea: ['Textarea'],
     'response-stream': ['ResponseStream'],
     toast: ['Toast', 'Toaster', 'toast', 'getToastUIState'],
-    toggle: ['Toggle'],
-    toolbar: ['Toolbar']
+    toggle: ['Toggle']
 } as const;
 
 /** Compound components: `import { Modal } from '@sivir-ui/svelte'` then `<Modal.Root>`. */
@@ -165,10 +164,9 @@ const DIRECT_PARTS = {
 const FROZEN = [...Object.keys(NAMED), ...Object.keys(NAMESPACED)].sort((a, b) =>
     a.localeCompare(b)
 );
-const NON_INSTALLABLE = ['toolbar'];
-const INSTALLABLE = FROZEN.filter((name) => !NON_INSTALLABLE.includes(name));
+const INSTALLABLE = FROZEN;
 
-const REMOVED = ['approval-request', 'marquee', 'panel', 'separator'] as const;
+const REMOVED = ['approval-request', 'marquee', 'panel', 'separator', 'toolbar'] as const;
 
 function toPascalCase(slug: string) {
     return slug
@@ -206,9 +204,9 @@ function parseExportedNames(source: string): string[] {
 }
 
 describe('public API contract (v1 freeze)', () => {
-    test('frozen catalog is exactly 57 components with no overlap', () => {
-        expect(FROZEN).toHaveLength(57);
-        expect(new Set(FROZEN).size).toBe(57);
+    test('frozen catalog is exactly 56 components with no overlap', () => {
+        expect(FROZEN).toHaveLength(56);
+        expect(new Set(FROZEN).size).toBe(56);
         for (const slug of Object.keys(NAMED)) {
             expect(NAMESPACED).not.toHaveProperty(slug);
         }

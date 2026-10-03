@@ -10,7 +10,7 @@
 
     const TITLE = 'Scroll Area';
 
-    const installCommand = 'bunx --package @sivir-ui/svelte sivir add scroll-area';
+    const installCommand = 'bunx @sivir-ui/svelte add scroll-area';
 </script>
 
 <svelte:head>

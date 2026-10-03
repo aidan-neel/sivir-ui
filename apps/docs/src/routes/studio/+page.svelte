@@ -55,7 +55,6 @@
     import { Textarea } from '@sivir-ui/svelte/components/textarea';
     import { toast } from '@sivir-ui/svelte/components/toast';
     import * as ToggleGroup from '@sivir-ui/svelte/components/toggle-group';
-    import { Toolbar } from '@sivir-ui/svelte/components/toolbar';
     import * as Tooltip from '@sivir-ui/svelte/components/tooltip';
     import * as Typography from '@sivir-ui/svelte/components/typography';
     import { builtInThemePresets } from '@sivir-ui/svelte/themes/builtin-presets';
@@ -67,7 +66,6 @@
     import {
         DEFAULT_THEME,
         type InteractiveCursor,
-        motionFeels,
         parseTheme,
         type Theme,
         type ThemeFontWeight,
@@ -303,13 +301,13 @@
     const sansFonts = fonts.filter((font) => font.category === 'Sans serif').map(toFontOption);
     const serifFonts = fonts.filter((font) => font.category === 'Serif').map(toFontOption);
     const monoFonts = fonts.filter((font) => font.category === 'Monospace').map(toFontOption);
+    const codeFonts = [...monoFonts, ...sansFonts, ...serifFonts];
     const headerFonts = [
         { key: 'same-as-sans', label: 'Same as sans', value: 'var(--font-sans)' },
         ...serifFonts,
         ...sansFonts
     ];
     const radiusTokenNames = ['--radius-sm', '--radius-md', '--radius-lg', '--radius-xl'] as const;
-    const movementPresets = ['none', 'subtle', 'default', 'expressive'] as const;
 
     function pickGroups(groups: TokenRowGroup[], labels: string[]) {
         return labels.flatMap((label) => {
@@ -434,6 +432,28 @@
         .find((row) => {
             return row.definition.name === '--sivir-space-unit';
         });
+    const textSizeRows = [
+        ['--font-size-body', 'Body'],
+        ['--font-size-label', 'Label'],
+        ['--font-size-button', 'Button'],
+        ['--font-size-badge', 'Badge']
+    ].flatMap(([name, label]) => {
+        const row = detailRowGroups
+            .flatMap((rowGroup) => rowGroup.rows)
+            .find((candidate) => candidate.definition.name === name);
+
+        return row ? [{ row, label }] : [];
+    });
+    const buttonShapeRows = [
+        ['--size-button-md', 'Height'],
+        ['--padding-button-x', 'X padding']
+    ].flatMap(([name, label]) => {
+        const row = spacingRowGroups
+            .flatMap((rowGroup) => rowGroup.rows)
+            .find((candidate) => candidate.definition.name === name);
+
+        return row ? [{ row, label }] : [];
+    });
     const radiusRatios = {
         '--radius-sm': 0.6,
         '--radius-md': 0.8,
@@ -803,10 +823,6 @@
         return value.charAt(0).toUpperCase() + value.slice(1);
     }
 
-    function isMotionFeel(value: string): value is Theme['motion'] {
-        return (motionFeels as readonly string[]).includes(value);
-    }
-
     function isFontWeight(value: string): value is FontWeight {
         return (fontWeights as readonly string[]).includes(value);
     }
@@ -816,7 +832,7 @@
     }
 
     function findMonoKey(value: string) {
-        return monoFonts.find((font) => font.value === value)?.key ?? 'jetbrains-mono';
+        return codeFonts.find((font) => font.value === value)?.key ?? 'jetbrains-mono';
     }
 
     function findHeaderKey(value: string) {
@@ -1990,7 +2006,7 @@
     $effect(() => {
         if (selectedMono === previousMono) return;
         previousMono = selectedMono;
-        const selected = monoFonts.find((font) => font.key === selectedMono);
+        const selected = codeFonts.find((font) => font.key === selectedMono);
         if (selected) theme = { ...theme, fontMono: selected.value };
     });
 
@@ -2589,35 +2605,7 @@
 {/snippet}
 
 {#snippet sectionHeading(title: string)}
-    <h2 class="m-0 text-[13px] font-medium text-foreground">{title}</h2>
-{/snippet}
-
-{#snippet feelSelect(
-    label: string,
-    value: string,
-    options: readonly string[],
-    onChange: (value: string) => void
-)}
-    <Select.Root
-        {value}
-        onValueChange={(next) => {
-            onChange(next);
-        }}
-    >
-        <SelectFieldTrigger {label}>{formatChoice(value)}</SelectFieldTrigger>
-        <Select.Content class="min-w-[max(16rem,var(--popover-trigger-width))]">
-            {#each options as option (option)}
-                <Select.Item value={option} label={formatChoice(option)}>
-                    {formatChoice(option)}
-                </Select.Item>
-            {/each}
-            {#if !options.includes(value)}
-                <Select.Item {value} label={formatChoice(value)}>
-                    {formatChoice(value)}
-                </Select.Item>
-            {/if}
-        </Select.Content>
-    </Select.Root>
+    <h2 class="m-0 text-[length:var(--font-size-label)] font-medium text-foreground">{title}</h2>
 {/snippet}
 
 {#snippet weightField(label: string, value: FontWeight, onChange: (value: FontWeight) => void)}
@@ -2635,7 +2623,7 @@
                 onChange(weight);
             }
         }}
-        class="min-h-[34px] text-[13px]"
+        class="min-h-[var(--size-control-md)] text-[length:var(--font-size-label)]"
     >
         <Slider.Range />
         <Slider.Thumb />
@@ -2655,7 +2643,7 @@
         label="Radius"
         format={formatPx}
         onValueChange={setCornerRadius}
-        class="min-h-[34px] text-[13px]"
+        class="min-h-[var(--size-control-md)] text-[length:var(--font-size-label)]"
     >
         <Slider.Range />
         <Slider.Thumb />
@@ -2689,7 +2677,7 @@
 {#snippet tokenMeta(row: TokenRow)}
     <button
         type="button"
-        class="absolute -top-2 right-2 z-10 rounded-full border-[length:var(--border-size)] border-[var(--color-border)] bg-[var(--color-card)] px-2 text-[11px] leading-4 text-foreground-muted transition-colors [transition-duration:var(--motion-duration-hover)] hover:cursor-[var(--ui-cursor-interactive)] hover:text-foreground focus-visible:shadow-[var(--focus-ring)] focus-visible:outline-none"
+        class="absolute -top-2 right-2 z-10 rounded-full border-[length:var(--border-size)] border-[var(--color-border)] bg-[var(--color-card)] px-2 text-[length:var(--font-size-meta)] leading-4 text-foreground-muted transition-colors [transition-duration:var(--motion-duration-hover)] hover:cursor-[var(--ui-cursor-interactive)] hover:text-foreground focus-visible:shadow-[var(--focus-ring)] focus-visible:outline-none"
         aria-label={`Reset ${row.definition.label}`}
         transition:fade={{ duration: 120 }}
         onclick={() => {
@@ -2794,7 +2782,9 @@
             {@const definition = row.definition}
             {@const disabledByChrome = chromeShadowValue(definition.name) !== null}
             <div class="flex min-h-7 min-w-0 items-center gap-2">
-                <span class="flex shrink-0 items-center gap-1.5 text-[13px] text-foreground">
+                <span
+                    class="flex shrink-0 items-center gap-1.5 text-[length:var(--font-size-label)] text-foreground"
+                >
                     {definition.label}
                     <ChangedDot {changed} />
                 </span>
@@ -2825,7 +2815,7 @@
                 label={label ?? row.definition.label}
                 format={slider.format}
                 onValueChange={slider.commit}
-                class="min-h-[34px] text-[13px]"
+                class="min-h-[var(--size-control-md)] text-[length:var(--font-size-label)]"
             >
                 <Slider.Range />
                 <Slider.Thumb />
@@ -2968,20 +2958,12 @@
                                 onChange: (value) => {
                                     updateFoundationColor('foregroundMuted', value);
                                 }
-                            },
-                            {
-                                label: 'Button text',
-                                value: foundationColors[appMode].buttonForeground,
-                                options: foregroundSwatches,
-                                onChange: (value) => {
-                                    updateFoundationColor('buttonForeground', value);
-                                }
                             }
                         ])}
                         <Button
                             variant="ghost"
                             size="sm"
-                            class="self-start px-3 text-[13px] text-foreground-muted"
+                            class="self-start px-3 text-[length:var(--font-size-label)] text-foreground-muted"
                             onclick={() => {
                                 openTokens('color');
                             }}
@@ -3052,8 +3034,13 @@
                                 </Select.Root>
                                 <Select.Root bind:value={selectedMono}>
                                     <SelectFieldTrigger label="Code">
-                                        <span class="font-mono text-xs">
-                                            {monoFonts.find((font) => font.key === selectedMono)?.label}
+                                        <span
+                                            style:font-family={codeFonts.find(
+                                                (font) => font.key === selectedMono
+                                            )?.value}
+                                            class="text-xs"
+                                        >
+                                            {codeFonts.find((font) => font.key === selectedMono)?.label}
                                         </span>
                                     </SelectFieldTrigger>
                                     <Select.Content
@@ -3062,7 +3049,25 @@
                                         <Select.Label>Mono</Select.Label>
                                         {#each monoFonts as font (font.key)}
                                             <Select.Item value={font.key} label={font.label}>
-                                                {font.label}
+                                                <span style:font-family={font.value}>
+                                                    {font.label}
+                                                </span>
+                                            </Select.Item>
+                                        {/each}
+                                        <Select.Label>Sans serif</Select.Label>
+                                        {#each sansFonts as font (font.key)}
+                                            <Select.Item value={font.key} label={font.label}>
+                                                <span style:font-family={font.value}>
+                                                    {font.label}
+                                                </span>
+                                            </Select.Item>
+                                        {/each}
+                                        <Select.Label>Serif</Select.Label>
+                                        {#each serifFonts as font (font.key)}
+                                            <Select.Item value={font.key} label={font.label}>
+                                                <span style:font-family={font.value}>
+                                                    {font.label}
+                                                </span>
                                             </Select.Item>
                                         {/each}
                                     </Select.Content>
@@ -3080,13 +3085,16 @@
                                 step={1}
                                 label="Heading size"
                                 format={formatPixels}
-                                class="min-h-[34px] text-[13px]"
+                                class="min-h-[var(--size-control-md)] text-[length:var(--font-size-label)]"
                             >
                                 <Slider.Range />
                                 <Slider.Thumb />
                                 <Slider.Label>Headings</Slider.Label>
                                 <Slider.Value class="text-xs" />
                             </Slider.Root>
+                            {#each textSizeRows as field (field.row.definition.name)}
+                                {@render tokenRow(field.row, `${field.label} size`)}
+                            {/each}
                         </section>
 
                         <section class="flex flex-col gap-2">
@@ -3130,16 +3138,15 @@
                                 {#if densityRow}
                                     {@render tokenRow(densityRow, 'Density')}
                                 {/if}
-                                {@render feelSelect(
-                                    'Movement',
-                                    theme.motion,
-                                    movementPresets,
-                                    (value) => {
-                                        if (isMotionFeel(value)) {
-                                            theme = { ...theme, motion: value };
-                                        }
-                                    }
-                                )}
+                            </div>
+                        </section>
+
+                        <section class="flex flex-col gap-2">
+                            {@render sectionHeading('Buttons')}
+                            <div class="flex flex-col gap-1.5">
+                                {#each buttonShapeRows as field (field.row.definition.name)}
+                                    {@render tokenRow(field.row, field.label)}
+                                {/each}
                             </div>
                         </section>
 
@@ -3272,7 +3279,9 @@
                                     </section>
                                 {/each}
                             {:else}
-                                <p class="m-0 py-6 text-center text-[13px] text-foreground-muted">
+                                <p
+                                    class="m-0 py-6 text-center text-[length:var(--font-size-label)] text-foreground-muted"
+                                >
                                     No tokens match “{tokenQuery.trim()}”.
                                 </p>
                             {/each}
@@ -3340,7 +3349,7 @@
                 </div>
             {:else}
                 <div class="mx-auto flex w-full max-w-4xl flex-col gap-8 px-6 pt-2 pb-8">
-                    <Toolbar class="gap-2 p-0">
+                    <div role="toolbar" class="flex flex-wrap items-center justify-between gap-2">
                         <DropdownMenu.Root>
                             <DropdownMenu.Trigger
                                 variant="quiet"
@@ -3510,7 +3519,7 @@
                                 </DropdownMenu.Content>
                             </DropdownMenu.Root>
                         </div>
-                    </Toolbar>
+                    </div>
 
                     <Tabs.Root bind:value={studioView} variant="segmented">
                         <div class="flex flex-wrap items-center gap-2">
@@ -3710,7 +3719,10 @@
                                     </Modal.Content>
                                 </Modal.Root>
                             </div>
-                            <Toolbar class="gap-2 p-0">
+                            <div
+                                role="toolbar"
+                                class="flex flex-wrap items-center justify-between gap-2"
+                            >
                                 <Combobox.Root bind:value={invoiceQuery}>
                                     <Combobox.Trigger
                                         appearance="input"
@@ -3748,7 +3760,7 @@
                                         >
                                     </Select.Content>
                                 </Select.Root>
-                            </Toolbar>
+                            </div>
                             {#if pagedInvoices.length > 0}
                                 <Checkbox
                                     checked={allVisibleSelected}
@@ -3859,12 +3871,15 @@
                                     </Alert.Description>
                                 </Alert.Root>
                             {/each}
-                            <Toolbar class="p-0">
+                            <div
+                                role="toolbar"
+                                class="flex flex-wrap items-center justify-between gap-1"
+                            >
                                 <Typography.Metadata>
                                     Showing {pagedInvoices.length} of {visibleInvoices.length}
                                 </Typography.Metadata>
                                 <Pagination bind:page={invoicePage} total={invoicePageCount} />
-                            </Toolbar>
+                            </div>
                         </Tabs.Content>
 
                         <Tabs.Content value="settings" class="flex flex-col gap-6 pt-6">
@@ -3944,154 +3959,160 @@
     {/if}
 {/snippet}
 
-<div data-docs-page class="flex min-h-0 min-w-0 flex-1 flex-col bg-background text-foreground">
-    <div class="relative z-20 shrink-0">
-        <header
-            aria-label="Studio"
-            class="flex min-w-0 items-center gap-1 px-3 pt-1 pb-3 min-[1100px]:px-4"
+{#snippet presetControls()}
+    <Select.Root bind:value={selectedPreset}>
+        <Select.Trigger
+            variant="ghost"
+            class="h-8 w-auto max-w-56 min-w-0 gap-2 px-2 font-medium"
+            aria-label="Preset"
         >
-            <Select.Root bind:value={selectedPreset}>
-                <Select.Trigger
-                    variant="ghost"
-                    class="h-8 w-auto max-w-56 min-w-0 gap-2 px-2 font-medium"
-                    aria-label="Preset"
-                >
-                    {@render presetDots(baseTheme)}
-                    <span class="truncate">{activePresetName}</span>
-                    {#if dirty}
-                        <span class="text-xs font-normal text-foreground-muted max-sm:hidden">
-                            Edited
-                        </span>
-                    {/if}
-                </Select.Trigger>
-                <Select.Content class="max-h-72 min-w-56">
-                    <Select.Label>Built-in presets</Select.Label>
-                    {#each builtInThemePresets as preset (preset.slug)}
-                        <Select.Item value={preset.slug} label={preset.name}>
-                            <span class="flex min-w-0 items-center gap-2">
-                                {@render presetDots(preset)}
-                                <span class="truncate">{preset.name}</span>
-                            </span>
-                        </Select.Item>
-                    {/each}
-                </Select.Content>
-            </Select.Root>
-            <Button
-                variant={presetsOpen ? 'secondary' : 'ghost'}
-                size="sm"
-                aria-expanded={presetsOpen}
-                aria-controls="studio-preset-gallery"
-                onclick={() => {
-                    previewPresetSlug = null;
-                    presetsOpen = !presetsOpen;
-                }}
-            >
-                <Blend size={14} />
-                <span class="max-sm:sr-only">Presets</span>
-            </Button>
+            {@render presetDots(baseTheme)}
+            <span class="truncate">{activePresetName}</span>
+            {#if dirty}
+                <span class="text-xs font-normal text-foreground-muted max-sm:hidden">
+                    Edited
+                </span>
+            {/if}
+        </Select.Trigger>
+        <Select.Content class="max-h-72 min-w-56">
+            <Select.Label>Built-in presets</Select.Label>
+            {#each builtInThemePresets as preset (preset.slug)}
+                <Select.Item value={preset.slug} label={preset.name}>
+                    <span class="flex min-w-0 items-center gap-2">
+                        {@render presetDots(preset)}
+                        <span class="truncate">{preset.name}</span>
+                    </span>
+                </Select.Item>
+            {/each}
+        </Select.Content>
+    </Select.Root>
+    <Button
+        variant={presetsOpen ? 'secondary' : 'ghost'}
+        size="sm"
+        aria-expanded={presetsOpen}
+        aria-controls="studio-preset-gallery"
+        onclick={() => {
+            previewPresetSlug = null;
+            presetsOpen = !presetsOpen;
+        }}
+    >
+        <Blend size={14} />
+        <span class="max-sm:sr-only">Presets</span>
+    </Button>
+{/snippet}
 
-            <div class="ml-auto flex shrink-0 items-center gap-1">
-                <Tooltip.Root>
-                    <Tooltip.Trigger>
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            disabled={!canUndo}
-                            onclick={undo}
-                            aria-label="Undo"
-                        >
-                            <Undo2 size={15} />
-                        </Button>
-                    </Tooltip.Trigger>
-                    <Tooltip.Content>
-                        Undo
-                        <Shortcut shortcut="cmd+Z" />
-                    </Tooltip.Content>
-                </Tooltip.Root>
-                <Tooltip.Root>
-                    <Tooltip.Trigger>
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            disabled={!canRedo}
-                            onclick={redo}
-                            aria-label="Redo"
-                        >
-                            <Redo2 size={15} />
-                        </Button>
-                    </Tooltip.Trigger>
-                    <Tooltip.Content>
-                        Redo
-                        <Shortcut shortcut="shift+cmd+Z" />
-                    </Tooltip.Content>
-                </Tooltip.Root>
-                <Tooltip.Root>
-                    <Tooltip.Trigger>
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            disabled={!dirty}
-                            onclick={requestReset}
-                            aria-label="Reset to preset"
-                        >
-                            <RotateCcw size={15} />
-                        </Button>
-                    </Tooltip.Trigger>
-                    <Tooltip.Content>Reset</Tooltip.Content>
-                </Tooltip.Root>
-                <Tooltip.Root>
-                    <Tooltip.Trigger>
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            onclick={openTokenPalette}
-                            aria-label="Search tokens"
-                        >
-                            <Search size={15} />
-                        </Button>
-                    </Tooltip.Trigger>
-                    <Tooltip.Content>
-                        Search tokens
-                        <Shortcut shortcut="shift+cmd+K" />
-                    </Tooltip.Content>
-                </Tooltip.Root>
-                <Tooltip.Root>
-                    <Tooltip.Trigger class="max-[1099px]:hidden">
-                        <Button
-                            variant={tokenEditMode ? 'secondary' : 'ghost'}
-                            size="icon"
-                            aria-pressed={tokenEditMode}
-                            aria-label="Edit tokens"
-                            onclick={() => {
-                                setTokenEditMode(!tokenEditMode);
-                            }}
-                        >
-                            <SquareMousePointer size={15} />
-                        </Button>
-                    </Tooltip.Trigger>
-                    <Tooltip.Content>
-                        {tokenEditMode ? 'Stop editing' : 'Edit tokens'}
-                    </Tooltip.Content>
-                </Tooltip.Root>
+{#snippet canvasActions()}
+    <div class="flex shrink-0 items-center gap-1">
+        <Tooltip.Root>
+            <Tooltip.Trigger>
                 <Button
-                    size="sm"
-                    class="ml-1"
+                    variant="ghost"
+                    size="icon"
+                    disabled={!canUndo}
+                    onclick={undo}
+                    aria-label="Undo"
+                >
+                    <Undo2 size={15} />
+                </Button>
+            </Tooltip.Trigger>
+            <Tooltip.Content>
+                Undo
+                <Shortcut shortcut="cmd+Z" />
+            </Tooltip.Content>
+        </Tooltip.Root>
+        <Tooltip.Root>
+            <Tooltip.Trigger>
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    disabled={!canRedo}
+                    onclick={redo}
+                    aria-label="Redo"
+                >
+                    <Redo2 size={15} />
+                </Button>
+            </Tooltip.Trigger>
+            <Tooltip.Content>
+                Redo
+                <Shortcut shortcut="shift+cmd+Z" />
+            </Tooltip.Content>
+        </Tooltip.Root>
+        <Tooltip.Root>
+            <Tooltip.Trigger>
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    disabled={!dirty}
+                    onclick={requestReset}
+                    aria-label="Reset to preset"
+                >
+                    <RotateCcw size={15} />
+                </Button>
+            </Tooltip.Trigger>
+            <Tooltip.Content>Reset</Tooltip.Content>
+        </Tooltip.Root>
+        <Tooltip.Root>
+            <Tooltip.Trigger>
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    onclick={openTokenPalette}
+                    aria-label="Search tokens"
+                >
+                    <Search size={15} />
+                </Button>
+            </Tooltip.Trigger>
+            <Tooltip.Content>
+                Search tokens
+                <Shortcut shortcut="shift+cmd+K" />
+            </Tooltip.Content>
+        </Tooltip.Root>
+        <Tooltip.Root>
+            <Tooltip.Trigger class="max-[1099px]:hidden">
+                <Button
+                    variant={tokenEditMode ? 'secondary' : 'ghost'}
+                    size="icon"
+                    aria-pressed={tokenEditMode}
+                    aria-label="Edit tokens"
                     onclick={() => {
-                        exportOpen = true;
+                        setTokenEditMode(!tokenEditMode);
                     }}
                 >
-                    Export
-                    {#if changeCount > 0}
-                        <span class="tabular-nums opacity-70">{changeCount}</span>
-                    {/if}
+                    <SquareMousePointer size={15} />
                 </Button>
-            </div>
-        </header>
+            </Tooltip.Trigger>
+            <Tooltip.Content>
+                {tokenEditMode ? 'Stop editing' : 'Edit tokens'}
+            </Tooltip.Content>
+        </Tooltip.Root>
+        <Button
+            size="sm"
+            class="ml-1"
+            onclick={() => {
+                exportOpen = true;
+            }}
+        >
+            Export
+            {#if changeCount > 0}
+                <span class="tabular-nums opacity-70">{changeCount}</span>
+            {/if}
+        </Button>
+    </div>
+{/snippet}
 
+<div data-docs-page class="flex min-h-0 min-w-0 flex-1 flex-col bg-background text-foreground">
+    <div class="flex shrink-0 items-center gap-1 px-3 pb-1 min-[1100px]:hidden">
+        {@render presetControls()}
+        <div class="ml-auto">
+            {@render canvasActions()}
+        </div>
+    </div>
+
+    <section aria-label="Theme workspace" class="relative flex min-h-0 flex-1 bg-background">
         {#if presetsOpen}
             <div
                 id="studio-preset-gallery"
-                class="absolute inset-x-3 top-full z-40 origin-top min-[1100px]:inset-x-4"
+                class="absolute inset-x-3 top-0 z-40 origin-top min-[1100px]:inset-x-4 min-[1100px]:top-11"
                 in:surfaceTransition
                 out:surfaceTransition={{ direction: 'out' }}
             >
@@ -4108,13 +4129,14 @@
                 />
             </div>
         {/if}
-    </div>
 
-    <section aria-label="Theme workspace" class="flex min-h-0 flex-1 bg-background">
         <aside
             aria-label="Theme configuration"
-            class="hidden min-h-0 w-[344px] shrink-0 px-4 pt-1 pb-3 min-[1100px]:flex min-[1100px]:flex-col"
+            class="hidden min-h-0 w-[344px] shrink-0 px-4 pt-0 pb-3 min-[1100px]:flex min-[1100px]:flex-col"
         >
+            <div class="mb-2 flex min-w-0 shrink-0 items-center gap-1">
+                {@render presetControls()}
+            </div>
             {@render inspector()}
         </aside>
 
@@ -4138,7 +4160,7 @@
                     </ToggleGroup.Root>
                     {#if tokenEditMode}
                         <div
-                            class="ml-auto flex min-w-0 items-center gap-2"
+                            class="flex min-w-0 items-center gap-2"
                             transition:fade={{ duration: 120 }}
                         >
                             <span
@@ -4160,6 +4182,9 @@
                             </Button>
                         </div>
                     {/if}
+                    <div class="ml-auto max-[1099px]:hidden">
+                        {@render canvasActions()}
+                    </div>
                 </div>
                 <div
                     bind:this={previewFrame}
@@ -4375,8 +4400,8 @@
                                             <div
                                                 id={`palette-editor-${row.definition.name}`}
                                                 data-palette-editor
-                                                in:slide={paletteEditorMotion(240)}
-                                                out:slide={paletteEditorMotion(180)}
+                                                in:slide={paletteEditorMotion(160)}
+                                                out:slide={paletteEditorMotion(120)}
                                                 onintroend={(event) => {
                                                 event.currentTarget.scrollIntoView({
                                                     block: 'nearest',
@@ -4386,8 +4411,8 @@
                                             >
                                                 <div
                                                     class="flex flex-col gap-2 px-2.5 pt-1 pb-2.5"
-                                                    in:fade={paletteEditorMotion(180)}
-                                                    out:fade={paletteEditorMotion(100)}
+                                                    in:fade={paletteEditorMotion(120)}
+                                                    out:fade={paletteEditorMotion(80)}
                                                 >
                                                     {@render tokenRow(row)}
                                                     <span

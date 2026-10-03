@@ -14,7 +14,7 @@
 
     const _TITLE = 'Context Menu';
 
-    const installCommand = 'bunx --package @sivir-ui/svelte sivir add context-menu';
+    const installCommand = 'bunx @sivir-ui/svelte add context-menu';
 </script>
 
 <svelte:head>

@@ -8,6 +8,7 @@
     import * as Sheet from '@sivir-ui/svelte/components/sheet';
     import Shortcut from '@sivir-ui/svelte/components/shortcut';
     import { Switch } from '@sivir-ui/svelte/components/switch';
+    import * as Typography from '@sivir-ui/svelte/components/typography';
 
     let open = $state(false);
     let status = $state('all');
@@ -22,7 +23,7 @@
         { value: 'closed', label: 'Closed' }
     ];
 
-    const statusLabel = $derived(statuses.find((s) => s.value === status)?.label ?? 'Status');
+    const statusLabel = $derived(statuses.find((item) => item.value === status)?.label ?? 'Status');
     const activeCount = $derived(
         (status !== 'all' ? 1 : 0) +
             (onlyMine ? 1 : 0) +
@@ -37,10 +38,6 @@
         includeArchived = false;
         hasAssignee = true;
         hasLabels = true;
-    }
-
-    function apply() {
-        open = false;
     }
 </script>
 
@@ -58,13 +55,13 @@
             <Sheet.Description>Narrow the issue list.</Sheet.Description>
         </Sheet.Header>
 
-        <div class="flex flex-col gap-4">
+        <div class="flex flex-col gap-6">
             <div class="flex flex-col gap-1.5">
                 <Label>Status</Label>
                 <Select.Root bind:value={status}>
-                    <Select.Trigger class="w-full" variant="outline" size="md"
-                        >{statusLabel}</Select.Trigger
-                    >
+                    <Select.Trigger class="w-full" variant="outline" size="md">
+                        {statusLabel}
+                    </Select.Trigger>
                     <Select.Content>
                         {#each statuses as item (item.value)}
                             <Select.Item value={item.value}>{item.label}</Select.Item>
@@ -73,38 +70,31 @@
                 </Select.Root>
             </div>
 
-            <div class="h-px w-full bg-border" role="separator"></div>
-
-            <div class="flex flex-col gap-3">
+            <div class="flex flex-col gap-1">
+                <Typography.Metadata class="pb-1">Show</Typography.Metadata>
                 <Switch bind:checked={onlyMine} label="Only my issues" />
                 <Switch bind:checked={includeArchived} label="Include archived" />
             </div>
 
-            <div class="h-px w-full bg-border" role="separator"></div>
-
-            <fieldset class="flex flex-col gap-3">
-                <legend
-                    class="pb-3 text-sm [font-weight:var(--font-weight-label,500)] text-foreground"
-                >
-                    Fields
+            <fieldset class="m-0 flex min-w-0 flex-col gap-1 border-0 p-0">
+                <legend class="mb-2 p-0">
+                    <Typography.Metadata>Must have</Typography.Metadata>
                 </legend>
-                <Checkbox bind:checked={hasAssignee} label="Has assignee" />
-                <Checkbox bind:checked={hasLabels} label="Has labels" />
+                <Checkbox bind:checked={hasAssignee} label="Assignee" />
+                <Checkbox bind:checked={hasLabels} label="Labels" />
             </fieldset>
         </div>
 
         <Sheet.Footer>
-            <Sheet.Close
-                variant="ghost"
-                onclick={() => {
-                    reset();
-                    open = false;
-                }}
-            >
+            <Sheet.Close variant="ghost" onclick={reset}>
                 Reset
                 <Shortcut shortcut="esc" />
             </Sheet.Close>
-            <Button onclick={() => apply()}>
+            <Button
+                onclick={() => {
+                    open = false;
+                }}
+            >
                 Apply filters
                 {#if activeCount > 0}
                     <Badge variant="secondary">{activeCount}</Badge>

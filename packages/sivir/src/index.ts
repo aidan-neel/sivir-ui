@@ -326,8 +326,6 @@ export type {
     ToolTriggerState
 } from './components/tool';
 export * as Tool from './components/tool';
-export type { ToolbarProps } from './components/toolbar';
-export { Toolbar } from './components/toolbar';
 export type {
     TooltipContentProps,
     TooltipPlacement,

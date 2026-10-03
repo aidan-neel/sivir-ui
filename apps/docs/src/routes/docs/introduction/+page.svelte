@@ -9,8 +9,8 @@
 # then in your CSS:
 # @import '@sivir-ui/svelte/ui.css';`;
 
-    const cliQuick = `bunx --package @sivir-ui/svelte sivir init -y
-bunx --package @sivir-ui/svelte sivir add button`;
+    const cliQuick = `bunx @sivir-ui/svelte init -y
+bunx @sivir-ui/svelte add button`;
 </script>
 
 <svelte:head>
@@ -54,7 +54,7 @@ bunx --package @sivir-ui/svelte sivir add button`;
     <section id="requirements" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading">Requirements</Typography.H2>
         <ul
-            class="m-0 flex list-disc flex-col gap-1.5 pl-5 text-[1rem] text-foreground leading-relaxed"
+            class="m-0 flex list-disc flex-col gap-1.5 pl-5 [font-size:var(--font-size-body)] text-foreground leading-relaxed"
         >
             <li>Svelte 5 (the CLI defaults assume SvelteKit)</li>
             <li>Tailwind CSS v4</li>

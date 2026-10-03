@@ -3,7 +3,7 @@ import { track } from '@vercel/analytics';
 type ThemeExportFormat = 'css' | 'json';
 
 type AnalyticsEvents = {
-    install_command_copied: { source: 'home' | 'themes' };
+    install_command_copied: { source: 'home' | 'themes' | 'skill' };
     theme_exported: { format: ThemeExportFormat; source: 'studio' | 'themes' };
     component_viewed: { component: string };
     studio_viewed: undefined;

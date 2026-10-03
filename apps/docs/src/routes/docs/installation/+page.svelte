@@ -19,8 +19,8 @@
     const cliCss = `/* src/routes/layout.css */
 @import '../lib/sivir/ui.css';`;
 
-    const cliAdd = `bunx --package @sivir-ui/svelte sivir add button
-bunx --package @sivir-ui/svelte sivir list`;
+    const cliAdd = `bunx @sivir-ui/svelte add button
+bunx @sivir-ui/svelte list`;
 
     const cliUse = `<script>
   import { Button } from '$lib/sivir/components/button';
@@ -49,7 +49,7 @@ bunx --package @sivir-ui/svelte sivir list`;
     <section id="prerequisites" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading">Prerequisites</Typography.H2>
         <ul
-            class="m-0 flex list-disc flex-col gap-1.5 pl-5 text-[1rem] text-foreground leading-relaxed"
+            class="m-0 flex list-disc flex-col gap-1.5 pl-5 [font-size:var(--font-size-body)] text-foreground leading-relaxed"
         >
             <li>Svelte 5 (the CLI defaults assume SvelteKit)</li>
             <li>Tailwind CSS v4</li>
@@ -88,8 +88,10 @@ bunx --package @sivir-ui/svelte sivir list`;
             binary ships in
             <Typography.InlineCode>@sivir-ui/svelte</Typography.InlineCode>, so these commands run
             it with
-            <Typography.InlineCode>bunx --package</Typography.InlineCode>. It copies component
-            source into your project.
+            <Typography.InlineCode>bunx @sivir-ui/svelte</Typography.InlineCode>. It copies
+            component source into your project. These commands need Bun 1.3.14 or later. With npm,
+            use
+            <Typography.InlineCode>npx @sivir-ui/svelte</Typography.InlineCode>.
         </Typography.Text>
 
         <Typography.H3 class="m-0 docs-subsection-heading">
@@ -110,11 +112,7 @@ bunx --package @sivir-ui/svelte sivir list`;
             accepts the default directory and import alias and skips the confirmations for
             installing dependencies and editing your stylesheet.
         </Typography.Text>
-        <CodeBlock
-            code="bunx --package @sivir-ui/svelte sivir init -y"
-            lang="shell"
-            copy="overlay"
-        />
+        <CodeBlock code="bunx @sivir-ui/svelte init -y" lang="shell" copy="overlay" />
 
         <Typography.H3 class="m-0 docs-subsection-heading">
             4. Import the stylesheet
@@ -146,7 +144,7 @@ bunx --package @sivir-ui/svelte sivir list`;
     <section id="notes" class="scroll-mt-20 flex flex-col gap-4">
         <Typography.H2 class="docs-section-heading">Notes</Typography.H2>
         <ul
-            class="m-0 flex list-disc flex-col gap-1.5 pl-5 text-[1rem] text-foreground leading-relaxed"
+            class="m-0 flex list-disc flex-col gap-1.5 pl-5 [font-size:var(--font-size-body)] text-foreground leading-relaxed"
         >
             <li>
                 Tailwind v3 is not supported. Sivir needs v4
@@ -164,7 +162,7 @@ bunx --package @sivir-ui/svelte sivir list`;
             <li>
                 In a CLI project, install a built-in theme preset with
                 <Typography.InlineCode
-                    >bunx --package @sivir-ui/svelte sivir add theme &lt;slug&gt;</Typography.InlineCode
+                    >bunx @sivir-ui/svelte add theme &lt;slug&gt;</Typography.InlineCode
                 >
                 (for example <Typography.InlineCode>raven</Typography.InlineCode>). It writes
                 <Typography.InlineCode>theme.css</Typography.InlineCode>

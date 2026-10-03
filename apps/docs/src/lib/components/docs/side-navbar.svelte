@@ -28,6 +28,7 @@
         { href: '/docs/introduction', label: 'Introduction' },
         { href: '/docs/installation', label: 'Installation' },
         { href: '/docs/theming', label: 'Theming' },
+        { href: '/docs/skill', label: 'Skill' },
         { href: '/docs/changelog', label: 'Changelog' },
         { href: '/studio', label: 'Studio' }
     ];

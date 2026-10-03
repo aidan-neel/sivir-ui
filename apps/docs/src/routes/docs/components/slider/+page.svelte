@@ -15,7 +15,7 @@
     const TITLE = 'Slider';
     const SLUG = 'slider';
 
-    const installCommand = `bunx --package @sivir-ui/svelte sivir add ${SLUG}`;
+    const installCommand = `bunx @sivir-ui/svelte add ${SLUG}`;
 
     const usage = `import { Slider } from '@sivir-ui/svelte/components/slider';
 

@@ -13,7 +13,7 @@
     import TextRoles from './examples/text-roles.svelte';
     import TextRolesSrc from './examples/text-roles.svelte?raw';
 
-    const installCommand = 'bunx --package @sivir-ui/svelte sivir add typography';
+    const installCommand = 'bunx @sivir-ui/svelte add typography';
     const usage = `import * as Typography from '@sivir-ui/svelte/components/typography';
 
 <Typography.H2>Account settings</Typography.H2>

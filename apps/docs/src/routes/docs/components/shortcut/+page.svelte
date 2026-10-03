@@ -14,7 +14,7 @@
 
     const TITLE = 'Shortcut';
 
-    const installCommand = 'bunx --package @sivir-ui/svelte sivir add shortcut';
+    const installCommand = 'bunx @sivir-ui/svelte add shortcut';
 </script>
 
 <svelte:head>

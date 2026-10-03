@@ -14,7 +14,7 @@
 
     const TITLE = 'Tooltip';
 
-    const installCommand = 'bunx --package @sivir-ui/svelte sivir add tooltip';
+    const installCommand = 'bunx @sivir-ui/svelte add tooltip';
 </script>
 
 <svelte:head>

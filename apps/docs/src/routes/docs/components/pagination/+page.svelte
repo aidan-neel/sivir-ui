@@ -9,7 +9,7 @@
     import Siblings from './examples/siblings.svelte';
     import SiblingsSrc from './examples/siblings.svelte?raw';
 
-    const installCommand = 'bunx --package @sivir-ui/svelte sivir add pagination';
+    const installCommand = 'bunx @sivir-ui/svelte add pagination';
 </script>
 
 <svelte:head>

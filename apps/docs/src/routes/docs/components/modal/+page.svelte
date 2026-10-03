@@ -5,6 +5,8 @@
     import DocsPager from '$lib/components/docs/docs-pager.svelte';
     import Basic from './examples/basic.svelte';
     import BasicSrc from './examples/basic.svelte?raw';
+    import DeeplyNested from './examples/deeply-nested.svelte';
+    import DeeplyNestedSrc from './examples/deeply-nested.svelte?raw';
     import Hero from './examples/hero.svelte';
     import HeroSrc from './examples/hero.svelte?raw';
     import Nested from './examples/nested.svelte';
@@ -18,7 +20,7 @@
     import WithSelect from './examples/with-select.svelte';
     import WithSelectSrc from './examples/with-select.svelte?raw';
 
-    const installCommand = 'bunx --package @sivir-ui/svelte sivir add modal';
+    const installCommand = 'bunx @sivir-ui/svelte add modal';
 </script>
 
 <svelte:head>
@@ -91,6 +93,17 @@
             <Typography.H3 class="docs-subsection-heading"> Nested </Typography.H3>
             <ComponentPreview code={NestedSrc}>
                 <Nested />
+            </ComponentPreview>
+        </div>
+
+        <div id="deeply-nested" class="scroll-mt-20 flex flex-col gap-3">
+            <Typography.H3 class="docs-subsection-heading"> Deeply nested </Typography.H3>
+            <Typography.Text variant="supporting">
+                Modals stack to any depth. Each earlier panel recedes behind the next, and Escape
+                closes one level at a time.
+            </Typography.Text>
+            <ComponentPreview code={DeeplyNestedSrc}>
+                <DeeplyNested />
             </ComponentPreview>
         </div>
 

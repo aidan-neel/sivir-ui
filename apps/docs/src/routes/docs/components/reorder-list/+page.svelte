@@ -6,7 +6,7 @@
     import Hero from './examples/hero.svelte';
     import HeroSrc from './examples/hero.svelte?raw';
 
-    const installCommand = 'bunx --package @sivir-ui/svelte sivir add reorder-list';
+    const installCommand = 'bunx @sivir-ui/svelte add reorder-list';
 </script>
 
 <svelte:head>

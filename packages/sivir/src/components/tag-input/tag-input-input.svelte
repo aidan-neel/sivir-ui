@@ -165,6 +165,6 @@
     class={cn(
         className,
         'min-w-24 flex-1 self-stretch bg-transparent py-1 text-[var(--color-field-foreground)] [font-size:var(--font-size-body)] outline-none placeholder:text-foreground-muted disabled:cursor-not-allowed',
-        context.tags.length > 0 ? 'pl-0' : 'pl-2'
+        context.tags.length > 0 ? 'pl-1.5' : 'pl-2'
     )}
 />

@@ -14,7 +14,7 @@
 
     const TITLE = 'Switch';
 
-    const installCommand = 'bunx --package @sivir-ui/svelte sivir add switch';
+    const installCommand = 'bunx @sivir-ui/svelte add switch';
 </script>
 
 <svelte:head>

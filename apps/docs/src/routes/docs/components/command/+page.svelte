@@ -6,13 +6,15 @@
 
     import Hero from './examples/hero.svelte';
     import HeroSrc from './examples/hero.svelte?raw';
+    import InModal from './examples/in-modal.svelte';
+    import InModalSrc from './examples/in-modal.svelte?raw';
     import WithGroups from './examples/with-groups.svelte';
     import WithGroupsSrc from './examples/with-groups.svelte?raw';
 
     const TITLE = 'Command';
     const SLUG = 'command';
 
-    const installCommand = `bunx --package @sivir-ui/svelte sivir add ${SLUG}`;
+    const installCommand = `bunx @sivir-ui/svelte add ${SLUG}`;
 </script>
 
 <svelte:head>
@@ -85,6 +87,18 @@
             <Typography.H3 class="docs-subsection-heading"> With groups </Typography.H3>
             <ComponentPreview code={WithGroupsSrc}>
                 <WithGroups />
+            </ComponentPreview>
+        </div>
+
+        <!-- In a modal -->
+        <div id="in-modal" class="scroll-mt-20 flex flex-col gap-3">
+            <Typography.H3 class="docs-subsection-heading"> In a modal </Typography.H3>
+            <Typography.Text variant="supporting">
+                Command can open from inside a Modal, for example as a searchable picker. Escape
+                closes the palette first and a second press closes the modal.
+            </Typography.Text>
+            <ComponentPreview code={InModalSrc}>
+                <InModal />
             </ComponentPreview>
         </div>
     </section>

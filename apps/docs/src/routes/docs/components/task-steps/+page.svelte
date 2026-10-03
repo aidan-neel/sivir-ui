@@ -8,7 +8,7 @@
     import Hero from './examples/hero.svelte';
     import HeroSrc from './examples/hero.svelte?raw';
 
-    const installCommand = 'bunx --package @sivir-ui/svelte sivir add task-steps';
+    const installCommand = 'bunx @sivir-ui/svelte add task-steps';
 </script>
 
 <svelte:head>

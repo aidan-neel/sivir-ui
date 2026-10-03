@@ -10,7 +10,7 @@
     import WithRequired from './examples/with-required.svelte';
     import WithRequiredSrc from './examples/with-required.svelte?raw';
 
-    const installCommand = 'bunx --package @sivir-ui/svelte sivir add label';
+    const installCommand = 'bunx @sivir-ui/svelte add label';
 </script>
 
 <svelte:head>

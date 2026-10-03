@@ -15,7 +15,7 @@
     import Vertical from './examples/vertical.svelte';
     import VerticalSrc from './examples/vertical.svelte?raw';
 
-    const installCommand = 'bunx --package @sivir-ui/svelte sivir add tabs';
+    const installCommand = 'bunx @sivir-ui/svelte add tabs';
 </script>
 
 <svelte:head>

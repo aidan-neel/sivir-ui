@@ -16,7 +16,7 @@
     import Panel from './examples/panel.svelte';
     import PanelSrc from './examples/panel.svelte?raw';
 
-    const installCommand = 'bunx --package @sivir-ui/svelte sivir add card';
+    const installCommand = 'bunx @sivir-ui/svelte add card';
 </script>
 
 <svelte:head>

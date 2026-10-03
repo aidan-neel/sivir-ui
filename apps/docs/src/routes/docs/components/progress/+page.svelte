@@ -12,7 +12,7 @@
     import WithLabel from './examples/with-label.svelte';
     import WithLabelSrc from './examples/with-label.svelte?raw';
 
-    const installCommand = 'bunx --package @sivir-ui/svelte sivir add progress';
+    const installCommand = 'bunx @sivir-ui/svelte add progress';
 </script>
 
 <svelte:head>

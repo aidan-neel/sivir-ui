@@ -12,7 +12,7 @@
     import WithoutLineNumbers from './examples/without-line-numbers.svelte';
     import WithoutLineNumbersSrc from './examples/without-line-numbers.svelte?raw';
 
-    const installCommand = 'bunx --package @sivir-ui/svelte sivir add file-diff';
+    const installCommand = 'bunx @sivir-ui/svelte add file-diff';
 
     const usageSnippet = `import * as FileDiff from '@sivir-ui/svelte/components/file-diff';
 

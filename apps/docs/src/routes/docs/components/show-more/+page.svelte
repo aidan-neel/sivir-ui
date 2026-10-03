@@ -9,7 +9,7 @@
     import HeroSrc from './examples/hero.svelte?raw';
 
     const TITLE = 'Show More';
-    const installCommand = 'bunx --package @sivir-ui/svelte sivir add show-more';
+    const installCommand = 'bunx @sivir-ui/svelte add show-more';
 </script>
 
 <svelte:head>

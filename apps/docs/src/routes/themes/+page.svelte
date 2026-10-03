@@ -260,12 +260,12 @@
     />
 </svelte:head>
 
-<div class="flex min-h-[100svh] bg-background p-2">
-    <div
-        class="flex min-w-0 flex-1 flex-col rounded-[var(--radius-xl)] border-[length:var(--border-size)] border-border bg-card min-[900px]:flex-row"
-    >
-        <HomeNav starCount={data.starCount ?? null} />
+<div class="flex min-h-[100svh] flex-col bg-background">
+    <HomeNav starCount={data.starCount ?? null} />
 
+    <div
+        class="mx-2 mb-2 flex min-w-0 flex-1 flex-col rounded-[var(--radius-xl)] border-[length:var(--border-size)] border-border bg-card sm:mx-6 sm:mb-6"
+    >
         <main
             class="mx-auto flex w-full max-w-[80rem] min-w-0 flex-1 flex-col gap-10 px-4 pt-8 pb-6 sm:px-10 sm:pt-14 sm:pb-12"
         >

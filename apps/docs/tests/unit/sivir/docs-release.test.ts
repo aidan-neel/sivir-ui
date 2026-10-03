@@ -17,7 +17,7 @@ import { GET as getRobots } from '../../../src/routes/robots.txt/+server';
 import { GET as getSitemap } from '../../../src/routes/sitemap.xml/+server';
 
 const root = resolve(process.cwd(), '../..');
-const removedComponents = ['approval-request', 'marquee', 'panel', 'separator'];
+const removedComponents = ['approval-request', 'marquee', 'panel', 'separator', 'toolbar'];
 
 function directoryNames(path: string): string[] {
     return readdirSync(path, { withFileTypes: true })
@@ -41,7 +41,7 @@ describe('docs release contracts', () => {
         const homepage = readFileSync(resolve(root, 'apps/docs/src/routes/+page.svelte'), 'utf8');
         const readme = readFileSync(resolve(root, 'README.md'), 'utf8');
         // biome-ignore lint/suspicious/noTemplateCurlyInString: matches the template literal in the homepage source
-        expect(homepage).toContain('all ${components.length} components follow');
+        expect(homepage).toContain('${components.length} Svelte components for apps');
         expect(homepage).not.toMatch(/\b\d+ (?:Svelte )?components\b/);
         expect(readme).toContain(`badge/Components-${components.length}-`);
     });
@@ -69,12 +69,13 @@ describe('docs release contracts', () => {
         }
         expect(body).toContain('<loc>https://preview.example/docs/components</loc>');
         expect(body.match(/<url>/g)).toHaveLength(
-            components.length * 2 + 17 + changelogVersions.length + changelogLlmVersions.length
+            components.length * 2 + 18 + changelogVersions.length + changelogLlmVersions.length
         );
         expect(body).toContain('<loc>https://preview.example/docs/changelog</loc>');
         expect(body).toContain('<loc>https://preview.example/docs/changelog.md</loc>');
         expect(body).toContain('<loc>https://preview.example/llms.txt</loc>');
         expect(body).toContain('<loc>https://preview.example/docs/skill.md</loc>');
+        expect(body).toContain('<loc>https://preview.example/docs/skill</loc>');
         expect(body).toContain('<loc>https://preview.example/docs/component-selection.md</loc>');
         expect(body).toContain('<loc>https://preview.example/docs/design-language.md</loc>');
         expect(body).toContain('<loc>https://preview.example/studio</loc>');
@@ -139,14 +140,10 @@ describe('docs release contracts', () => {
 
     it('documents package-only and removed component contracts accurately', () => {
         const brandMark = brandMarkMarkdown();
-        const toolbar = componentMarkdown('toolbar');
         const componentIndex = componentsMarkdown();
 
         expect(brandMark).toContain("import { BrandMark } from '@sivir-ui/svelte'");
         expect(brandMark).toContain('`label?: string`');
-        expect(toolbar).toContain('not a standalone CLI registry target');
-        expect(toolbar).toContain('bun add @sivir-ui/svelte');
-        expect(toolbar).not.toContain('sivir add toolbar');
         expect(componentIndex).toContain('**Approval Request:**');
         expect(componentIndex).toContain('Compose `AlertDialog` directly');
         expect(componentIndex).toContain('Card.Root variant="panel"');
@@ -162,11 +159,7 @@ describe('docs release contracts', () => {
     it('uses CLI installation only for registry-public components', () => {
         for (const component of components) {
             const reference = componentMarkdown(component);
-            if (component === 'toolbar') {
-                expect(reference).not.toContain(`sivir add ${component}`);
-                continue;
-            }
-            expect(reference).toContain(`sivir add ${component}`);
+            expect(reference).toContain(`bunx @sivir-ui/svelte add ${component}`);
         }
     });
 
@@ -215,8 +208,7 @@ describe('docs release contracts', () => {
         ];
         for (const page of pages) {
             const source = readFileSync(resolve(root, page), 'utf8');
-            expect(source, page).not.toContain('bunx @sivir-ui/svelte init');
-            expect(source, page).not.toContain('bunx @sivir-ui/svelte add');
+            expect(source, page).not.toContain('--package @sivir-ui/svelte sivir');
             expect(source, page).not.toContain('/docs/styling');
         }
         // The theming guide documents the visual theme builder; the install
@@ -229,7 +221,7 @@ describe('docs release contracts', () => {
             resolve(root, 'apps/docs/src/routes/docs/installation/+page.svelte'),
             'utf8'
         );
-        expect(install).toContain('bunx --package @sivir-ui/svelte sivir init');
+        expect(install).toContain('bunx @sivir-ui/svelte init');
         expect(install).toContain('bun add @sivir-ui/svelte');
         const stylingRedirect = readFileSync(
             resolve(root, 'apps/docs/src/routes/docs/styling/+page.ts'),
@@ -247,7 +239,7 @@ describe('docs release contracts', () => {
 
         // Compose still wires registry for local full-stack dev; v1 public docs do not require it.
         expect(compose).toContain("THEME_REGISTRY_URL: 'http://registry:4100'");
-        expect(dockerfile).toContain('FROM oven/bun:1.3.11');
+        expect(dockerfile).toContain('FROM oven/bun:1.3.14');
         expect(dockerfile).toContain('ENV DOCS_ADAPTER=node');
         expect(dockerfile).toContain('ENV LEFTHOOK=0');
         expect(dockerfile).toContain('bun install --frozen-lockfile --ignore-scripts');
@@ -258,7 +250,7 @@ describe('docs release contracts', () => {
             "noExternal: ['@floating-ui/dom', 'clsx', 'tailwind-variants']"
         );
         expect(registryDockerfile).toContain('COPY packages/sivir ./packages/sivir');
-        expect(registryDockerfile).toContain('FROM oven/bun:1.3.11');
+        expect(registryDockerfile).toContain('FROM oven/bun:1.3.14');
         expect(registryDockerfile).toContain('ENV LEFTHOOK=0');
         expect(registryDockerfile).toContain('bun install --frozen-lockfile --ignore-scripts');
         expect(registryDockerfile).toContain("--filter='registry' --filter='@sivir-ui/svelte'");
