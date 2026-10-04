@@ -1,0 +1,1 @@
+- The traveling highlight now stays on the hovered or keyboard-focused item when an item's open, selected, or disabled state changes, instead of snapping to the resting item or disappearing.

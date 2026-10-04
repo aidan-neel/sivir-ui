@@ -83,7 +83,14 @@
         {
             id: 'navigation',
             heading: 'Navigation',
-            items: ['breadcrumb', 'fullscreen-nav', 'pagination', 'tabs']
+            items: [
+                'breadcrumb',
+                'fullscreen-nav',
+                'navigation-menu',
+                'pagination',
+                'sidebar',
+                'tabs'
+            ]
         },
         {
             id: 'layout',

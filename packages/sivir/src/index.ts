@@ -207,6 +207,18 @@ export type {
     ModalTriggerProps
 } from './components/modal';
 export * as Modal from './components/modal';
+export type {
+    NavigationMenuContentProps,
+    NavigationMenuItemProps,
+    NavigationMenuLinkDescriptionProps,
+    NavigationMenuLinkProps,
+    NavigationMenuLinkTitleProps,
+    NavigationMenuListProps,
+    NavigationMenuProps,
+    NavigationMenuTriggerProps,
+    NavigationMenuViewportProps
+} from './components/navigation-menu';
+export * as NavigationMenu from './components/navigation-menu';
 export type { PaginationProps } from './components/pagination';
 export { Pagination } from './components/pagination';
 export type {
@@ -266,6 +278,25 @@ export type { ShortcutProps } from './components/shortcut';
 export { Shortcut } from './components/shortcut';
 export type { ShowMoreProps } from './components/show-more';
 export { ShowMore } from './components/show-more';
+export type {
+    SidebarContentProps,
+    SidebarFooterProps,
+    SidebarGroupContentProps,
+    SidebarGroupLabelProps,
+    SidebarGroupProps,
+    SidebarHeaderProps,
+    SidebarInsetProps,
+    SidebarItemActionProps,
+    SidebarItemBadgeProps,
+    SidebarItemButtonProps,
+    SidebarItemLabelProps,
+    SidebarItemProps,
+    SidebarMenuProps,
+    SidebarPanelProps,
+    SidebarProps,
+    SidebarTriggerProps
+} from './components/sidebar';
+export * as Sidebar from './components/sidebar';
 export type { SkeletonProps, SkeletonSwapProps } from './components/skeleton';
 export { Skeleton, SkeletonSwap } from './components/skeleton';
 export type {

@@ -215,6 +215,26 @@ export const componentAnatomy = {
         { name: 'Modal.Close', description: 'Closes the modal.' },
         { name: 'Modal.Confirm', description: 'Confirms and closes the modal.' }
     ],
+    'navigation-menu': [
+        { name: 'NavigationMenu.Root', description: 'Owns the open item and hover intent.' },
+        { name: 'NavigationMenu.List', description: 'Lays out the top-level items in a row.' },
+        { name: 'NavigationMenu.Item', description: 'Pairs a trigger with its panel.' },
+        { name: 'NavigationMenu.Trigger', description: 'Opens the item panel on hover or click.' },
+        {
+            name: 'NavigationMenu.Content',
+            description: 'Declares the panel shown in the viewport.'
+        },
+        {
+            name: 'NavigationMenu.Viewport',
+            description: 'Renders the open panel and morphs between panel sizes.'
+        },
+        { name: 'NavigationMenu.Link', description: 'Renders a top-level or panel link.' },
+        { name: 'NavigationMenu.LinkTitle', description: 'Renders the title of a rich link.' },
+        {
+            name: 'NavigationMenu.LinkDescription',
+            description: 'Renders the supporting line of a rich link.'
+        }
+    ],
     pagination: [{ name: 'Pagination', description: 'Navigates paginated content.' }],
     popover: [
         { name: 'Popover.Root', description: 'Controls popover state.' },
@@ -297,6 +317,33 @@ export const componentAnatomy = {
         { name: 'Sheet.Description', description: 'Renders the sheet description.' },
         { name: 'Sheet.Footer', description: 'Groups sheet actions.' },
         { name: 'Sheet.Close', description: 'Closes the sheet.' }
+    ],
+    sidebar: [
+        { name: 'Sidebar.Root', description: 'Owns collapse and mobile drawer state.' },
+        {
+            name: 'Sidebar.Panel',
+            description: 'Renders the navigation column, or a drawer on small screens.'
+        },
+        { name: 'Sidebar.Inset', description: 'Renders the main content area beside the panel.' },
+        { name: 'Sidebar.Trigger', description: 'Collapses the panel or opens the drawer.' },
+        { name: 'Sidebar.Header', description: 'Holds content pinned to the top of the panel.' },
+        { name: 'Sidebar.Content', description: 'Scrolls the groups between header and footer.' },
+        { name: 'Sidebar.Footer', description: 'Holds content pinned to the bottom of the panel.' },
+        { name: 'Sidebar.Group', description: 'Groups related items, optionally collapsible.' },
+        {
+            name: 'Sidebar.GroupLabel',
+            description: 'Labels a group and toggles it when collapsible.'
+        },
+        { name: 'Sidebar.GroupContent', description: 'Wraps the items of a group.' },
+        { name: 'Sidebar.Menu', description: 'Lists items. Nested inside an item, it indents.' },
+        {
+            name: 'Sidebar.Item',
+            description: 'Positions a row with its badge, action, and sub-menu.'
+        },
+        { name: 'Sidebar.ItemButton', description: 'Renders the row as a link or a button.' },
+        { name: 'Sidebar.ItemLabel', description: 'Renders the truncating row label.' },
+        { name: 'Sidebar.ItemBadge', description: 'Shows a trailing count.' },
+        { name: 'Sidebar.ItemAction', description: 'Shows a secondary button on hover or focus.' }
     ],
     shortcut: [
         {
