@@ -16,7 +16,7 @@
     import HomeFrame from './home-frame.svelte';
     import HomeIssueDemo from './home-issue-demo.svelte';
 
-    const DEFAULT_PRESET = 'default';
+    const DEFAULT_PRESET = 'sivir';
 
     let selection = $state<string | undefined>(DEFAULT_PRESET);
     let appliedSelection: string | undefined = DEFAULT_PRESET;

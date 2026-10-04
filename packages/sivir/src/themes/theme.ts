@@ -111,9 +111,9 @@ export type ThemeRecord = Theme & {
 /** Matches the public axes baked into ui.css exactly. */
 export const DEFAULT_THEME: Theme = {
     version: THEME_VERSION,
-    slug: 'default',
-    name: 'Default',
-    description: 'Sivir default — a calm, warm-neutral interface system.',
+    slug: 'legacy',
+    name: 'Legacy',
+    description: 'Original Sivir defaults — a calm, warm-neutral interface system.',
     publisher: 'Sivir UI',
     brand: '#1e78e6',
     neutral: 'warm',

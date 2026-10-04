@@ -289,6 +289,120 @@ export const ravenTheme: Theme = {
     }
 };
 
+export const sivirTheme: Theme = {
+    version: THEME_VERSION,
+    slug: 'sivir',
+    name: 'Sivir',
+    description: 'Compact warm workspace with a blue accent, flat chrome, and tight radii.',
+    publisher: 'Sivir UI',
+    brand: '#1c68ff',
+    neutral: 'warm',
+    radius: 'default',
+    density: 'compact',
+    motion: 'subtle',
+    fontSans: "'Inter', sans-serif",
+    fontMono: "'Roboto Mono', monospace",
+    fontHeader: 'var(--font-sans)',
+    foundation: {
+        light: {
+            base: '#fffefb',
+            border: '#d9d5c4',
+            background: '#faf9f5',
+            secondary: '#f0eee6',
+            foreground: '#141413',
+            foregroundMuted: '#73726c',
+            onPrimary: '#ffffff',
+            buttonForeground: '#141413'
+        },
+        dark: {
+            base: '#222220',
+            border: '#3c3c39',
+            background: '#111112',
+            secondary: '#30302e',
+            foreground: '#faf9f5',
+            foregroundMuted: '#a1a09a',
+            onPrimary: '#ffffff',
+            buttonForeground: '#faf9f5'
+        }
+    },
+    tokens: {
+        light: {
+            '--color-input': '#dcd9cc',
+            ...codeTokens({
+                comment: '#8c8779',
+                keyword: '#b5452a',
+                string: '#5a7a3a',
+                number: '#a5651b',
+                function: '#7a5a9e',
+                property: '#3f6b8c',
+                builtin: '#c26a2c',
+                entity: '#5a7a3a',
+                meta: '#8c8779'
+            })
+        },
+        dark: {
+            '--color-input': '#3d3d3a'
+        },
+        shared: {
+            '--sivir-space-unit': '3.4px',
+            '--radius-sm': '5px',
+            '--radius-md': '7px',
+            '--radius-lg': '9px',
+            '--radius-xl': '13px',
+            '--size-button-md': '32px',
+            '--padding-button-x': '9px',
+            '--motion-duration-step-in': '30ms',
+            '--motion-duration-step-out': '60ms',
+            '--motion-duration-panel-in': '160ms',
+            '--motion-duration-panel-out': '110ms',
+            '--motion-duration-modal-in': '200ms',
+            '--motion-duration-modal-out': '110ms',
+            '--motion-duration-press': '40ms',
+            '--motion-duration-item': '0ms',
+            '--motion-menu-y': '3px',
+            '--motion-menu-blur': '0px',
+            '--motion-modal-x': '2px',
+            '--motion-modal-y': '2px',
+            '--motion-modal-scale-start': '0.96',
+            '--motion-modal-blur': '1px',
+            '--motion-panel-y': '2px',
+            '--motion-panel-scale-start': '0.98',
+            '--motion-step-x': '0px',
+            '--motion-step-blur': '0px',
+            '--motion-press-px': '1px',
+            '--motion-duration-switch': '150ms',
+            '--motion-menu-x': '2px',
+            '--motion-menu-scale-start': '0.97',
+            '--motion-duration-swap': '100ms',
+            '--motion-switch-stretch': '0.5',
+            '--motion-duration-hover': '100ms',
+            '--motion-slider-stretch': '0',
+            '--motion-menu-origin': 'top left'
+        }
+    },
+    typography: {
+        headerSize: 16,
+        headerWeight: '600',
+        roleWeights: {
+            body: '500',
+            label: '500',
+            button: '600',
+            badge: '500',
+            description: '500'
+        }
+    },
+    chrome: {
+        surfaceShadows: true,
+        controlShadows: true,
+        dialogShadows: true,
+        fancySwap: false,
+        menuPaneling: false,
+        surfacePaneling: false,
+        primaryStroke: true,
+        interactiveCursor: 'default'
+    }
+};
+
 export const clawdTheme: Theme = {
     version: THEME_VERSION,
     slug: 'clawd',
@@ -583,6 +697,7 @@ export const governmentTheme: Theme = {
 };
 
 export const builtInThemePresets: readonly Theme[] = [
+    sivirTheme,
     DEFAULT_THEME,
     magicTheme,
     profitableTheme,

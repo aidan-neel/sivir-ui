@@ -230,7 +230,7 @@ Sivir components read CSS custom properties from \`ui.css\` (\`@sivir-ui/svelte/
 
 Dark mode applies when \`<html>\` has the \`.dark\` class; some components also read the class there. Sivir does not toggle it.
 
-Built-in presets: \`default\`, \`magic\`, \`profitable\`, \`raven\`, \`clawd\`, and \`inspiration\`. In a CLI project, \`sivir add theme <slug>\` writes \`theme.css\` next to \`ui.css\`; import it after \`ui.css\`.
+Built-in presets: \`sivir\`, \`legacy\`, \`magic\`, \`profitable\`, \`raven\`, \`clawd\`, and \`inspiration\`. In a CLI project, \`sivir add theme <slug>\` writes \`theme.css\` next to \`ui.css\`; import it after \`ui.css\`.
 
 See the rendered guide at [/docs/theming](/docs/theming) for the token list and theme JSON.
 `

@@ -152,6 +152,15 @@ describe('add command', () => {
 describe('theme command', () => {
     test('writes a bundled preset without network access', async () => {
         const cwd = await initializedProject();
+        await addTheme('legacy', { cwd });
+
+        const css = await readFile(path.join(cwd, DEFAULT_CONFIG.dir, 'theme.css'), 'utf8');
+        expect(css).toStartWith('/* sivir theme: legacy */');
+        expect(css).toContain(':root');
+    });
+
+    test('resolves the renamed default slug to legacy', async () => {
+        const cwd = await initializedProject();
         await addTheme('default', { cwd });
 
         const css = await readFile(path.join(cwd, DEFAULT_CONFIG.dir, 'theme.css'), 'utf8');
