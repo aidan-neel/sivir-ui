@@ -83,7 +83,7 @@ export type SidebarItemButtonProps = SidebarItemButtonBaseProps &
 export type SidebarItemLabelProps = DefaultProps;
 export type SidebarItemBadgeProps = DefaultProps;
 
-export type SidebarItemActionProps = Omit<ButtonProps, 'aria-label'> & {
+export type SidebarItemActionProps = ButtonProps & {
     'aria-label': string;
 };
 
