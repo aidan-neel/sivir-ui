@@ -76,7 +76,7 @@ let open = $state(true);
     </header>
 
     <section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-        <ComponentPreview code={HeroSrc}>
+        <ComponentPreview code={HeroSrc} fill>
             <Hero />
         </ComponentPreview>
     </section>
@@ -131,7 +131,7 @@ let open = $state(true);
                 slides the panel out of view. Hover and keyboard focus share one highlight that
                 travels between rows across groups, the same one menus use.
             </Typography.Text>
-            <ComponentPreview code={DefaultSrc}>
+            <ComponentPreview code={DefaultSrc} fill>
                 <Default />
             </ComponentPreview>
         </div>
@@ -147,7 +147,7 @@ let open = $state(true);
                 shows them on hover. Group labels, badges, actions, and sub-menus hide, and
                 collapsible groups stay open.
             </Typography.Text>
-            <ComponentPreview code={IconRailSrc}>
+            <ComponentPreview code={IconRailSrc} fill>
                 <IconRail />
             </ComponentPreview>
         </div>
@@ -161,7 +161,7 @@ let open = $state(true);
                 <Typography.InlineCode>open</Typography.InlineCode>
                 to control it.
             </Typography.Text>
-            <ComponentPreview code={CollapsibleGroupsSrc}>
+            <ComponentPreview code={CollapsibleGroupsSrc} fill>
                 <CollapsibleGroups />
             </ComponentPreview>
         </div>
@@ -176,7 +176,7 @@ let open = $state(true);
                 <Typography.InlineCode>aria-label</Typography.InlineCode>. On touch screens it is
                 always visible.
             </Typography.Text>
-            <ComponentPreview code={BadgesActionsSrc}>
+            <ComponentPreview code={BadgesActionsSrc} fill>
                 <BadgesActions />
             </ComponentPreview>
         </div>
@@ -192,7 +192,7 @@ let open = $state(true);
                 <Typography.InlineCode>active</Typography.InlineCode>
                 to mark the current page.
             </Typography.Text>
-            <ComponentPreview code={NestedSrc}>
+            <ComponentPreview code={NestedSrc} fill>
                 <Nested />
             </ComponentPreview>
         </div>
@@ -204,7 +204,7 @@ let open = $state(true);
                 <Typography.InlineCode>Sidebar.Panel</Typography.InlineCode>. The panel moves to the
                 end of the row in either source order, and the drawer slides in from the right.
             </Typography.Text>
-            <ComponentPreview code={RightSideSrc}>
+            <ComponentPreview code={RightSideSrc} fill>
                 <RightSide />
             </ComponentPreview>
         </div>

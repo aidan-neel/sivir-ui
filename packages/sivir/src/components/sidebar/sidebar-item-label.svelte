@@ -12,8 +12,8 @@
     data-ui="sidebar-item-label"
     class={cn(
         className,
-        sidebar.rail ? 'opacity-0' : 'delay-[var(--motion-duration-hover)]',
-        'min-w-0 flex-1 truncate leading-normal transition-opacity [transition-duration:var(--motion-duration-hover)] motion-reduce:transition-none'
+        sidebar.rail ? 'text-clip opacity-0' : 'text-ellipsis',
+        'min-w-0 flex-1 overflow-hidden leading-normal whitespace-nowrap transition-opacity [transition-duration:var(--motion-duration-hover)] motion-reduce:transition-none'
     )}
     {...rest}
 >

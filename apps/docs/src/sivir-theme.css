@@ -110,7 +110,7 @@
     --motion-modal-y: 2px;
     --motion-panel-scale-start: 0.98;
     --motion-panel-y: 2px;
-    --motion-press-px: 1px;
+    --motion-press-px: 0px;
     --motion-slider-stretch: 0;
     --motion-step-blur: 0px;
     --motion-step-x: 0px;
