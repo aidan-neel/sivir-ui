@@ -363,7 +363,7 @@ describe('GET /themes', () => {
 
 describe('GET /themes/:slug', () => {
     it('returns a built-in theme', async () => {
-        const res = await request('/themes/default');
+        const res = await request('/themes/legacy');
         expect(res.status).toBe(200);
 
         const body = (await res.json()) as {
@@ -371,8 +371,8 @@ describe('GET /themes/:slug', () => {
             id: string;
             source: string;
         };
-        expect(body.slug).toBe('default');
-        expect(body.id).toBe('sivir:default');
+        expect(body.slug).toBe('legacy');
+        expect(body.id).toBe('sivir:legacy');
         expect(body.source).toBe('sivir');
     });
 
@@ -492,7 +492,7 @@ describe('POST /themes', () => {
     });
 
     it('reserves built-in slugs', async () => {
-        const res = await publish(communityTheme('default'));
+        const res = await publish(communityTheme('legacy'));
         expect(res.status).toBe(409);
     });
 
@@ -586,7 +586,7 @@ describe('PUT /themes/:slug', () => {
     });
 
     it('refuses to change built-in themes', async () => {
-        const res = await write('PUT', '/themes/default', communityTheme('default'), {
+        const res = await write('PUT', '/themes/legacy', communityTheme('legacy'), {
             authorization: 'Bearer anything'
         });
 

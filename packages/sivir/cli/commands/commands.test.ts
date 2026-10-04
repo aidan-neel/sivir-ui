@@ -57,9 +57,12 @@ describe('init command', () => {
         expect(await loadConfig(cwd)).toEqual(DEFAULT_CONFIG);
         expect(existsSync(path.join(cwd, DEFAULT_CONFIG.dir, 'ui.css'))).toBe(true);
         expect(existsSync(path.join(cwd, DEFAULT_CONFIG.dir, 'utils.ts'))).toBe(true);
+
+        const theme = await readFile(path.join(cwd, DEFAULT_CONFIG.dir, 'theme.css'), 'utf8');
+        expect(theme).toStartWith('/* sivir theme: sivir */');
     });
 
-    test('points the sv root stylesheet at ui.css instead of a second Tailwind import', async () => {
+    test('points the sv root stylesheet at ui.css and theme.css instead of a second Tailwind import', async () => {
         const cwd = await tempProject();
         const stylesheet = path.join(cwd, 'src/routes/layout.css');
         await mkdir(path.dirname(stylesheet), { recursive: true });
@@ -68,7 +71,7 @@ describe('init command', () => {
         await init({ cwd, yes: true });
 
         expect(await readFile(stylesheet, 'utf8')).toBe(
-            "@import '../lib/sivir/ui.css';\n@plugin '@tailwindcss/typography';\n"
+            "@import '../lib/sivir/ui.css';\n@import '../lib/sivir/theme.css';\n@plugin '@tailwindcss/typography';\n"
         );
     });
 
@@ -182,24 +185,28 @@ describe('theme command', () => {
         expect(css).toContain('--color-primary: #0066cc');
     });
 
-    test('reports registry failures without writing theme.css', async () => {
+    test('reports registry failures without changing theme.css', async () => {
         const cwd = await initializedProject();
+        const themePath = path.join(cwd, DEFAULT_CONFIG.dir, 'theme.css');
+        const initialTheme = await readFile(themePath, 'utf8');
         await saveConfig(cwd, { ...DEFAULT_CONFIG, registry: 'https://registry.example' });
         globalThis.fetch = (() =>
             Promise.resolve(new Response(null, { status: 404 }))) as unknown as typeof fetch;
 
         await addTheme('missing', { cwd });
         expect(process.exitCode).toBe(1);
-        expect(existsSync(path.join(cwd, DEFAULT_CONFIG.dir, 'theme.css'))).toBe(false);
+        expect(await readFile(themePath, 'utf8')).toBe(initialTheme);
     });
 
-    test('reports network failures without writing theme.css', async () => {
+    test('reports network failures without changing theme.css', async () => {
         const cwd = await initializedProject();
+        const themePath = path.join(cwd, DEFAULT_CONFIG.dir, 'theme.css');
+        const initialTheme = await readFile(themePath, 'utf8');
         await saveConfig(cwd, { ...DEFAULT_CONFIG, registry: 'https://registry.example' });
         globalThis.fetch = (() => Promise.reject(new Error('offline'))) as unknown as typeof fetch;
 
         await addTheme('remote', { cwd });
         expect(process.exitCode).toBe(1);
-        expect(existsSync(path.join(cwd, DEFAULT_CONFIG.dir, 'theme.css'))).toBe(false);
+        expect(await readFile(themePath, 'utf8')).toBe(initialTheme);
     });
 });

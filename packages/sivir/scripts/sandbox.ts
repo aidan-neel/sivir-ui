@@ -224,8 +224,11 @@ const CHECKS: Check[] = [
             writeFileSync(path.join(appDir, 'src/app.css'), "@import 'tailwindcss';\n");
             const r = sivir(['init', '-y']);
             if (r.status !== 0) f.push(`init exited ${r.status}`);
-            if (read('src/app.css') !== "@import './lib/sivir/ui.css';\n") {
-                f.push('src/app.css not rewired to ui.css');
+            if (
+                read('src/app.css') !==
+                "@import './lib/sivir/ui.css';\n@import './lib/sivir/theme.css';\n"
+            ) {
+                f.push('src/app.css not rewired to ui.css and theme.css');
             }
             return f;
         }
