@@ -1,2 +1,0 @@
-- Adds the Sivir theme preset and makes it the default on the docs site. New `sivir init` projects get it as `theme.css`; existing projects and `ui.css` are unchanged.
-- Renames the original default theme preset to Legacy (slug `legacy`). `sivir add theme default` still works.
