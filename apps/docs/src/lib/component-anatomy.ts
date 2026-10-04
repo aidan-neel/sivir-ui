@@ -215,6 +215,26 @@ export const componentAnatomy = {
         { name: 'Modal.Close', description: 'Closes the modal.' },
         { name: 'Modal.Confirm', description: 'Confirms and closes the modal.' }
     ],
+    'navigation-menu': [
+        { name: 'NavigationMenu.Root', description: 'Owns the open item and hover intent.' },
+        { name: 'NavigationMenu.List', description: 'Lays out the top-level items in a row.' },
+        { name: 'NavigationMenu.Item', description: 'Pairs a trigger with its panel.' },
+        { name: 'NavigationMenu.Trigger', description: 'Opens the item panel on hover or click.' },
+        {
+            name: 'NavigationMenu.Content',
+            description: 'Declares the panel shown in the viewport.'
+        },
+        {
+            name: 'NavigationMenu.Viewport',
+            description: 'Renders the open panel and morphs between panel sizes.'
+        },
+        { name: 'NavigationMenu.Link', description: 'Renders a top-level or panel link.' },
+        { name: 'NavigationMenu.LinkTitle', description: 'Renders the title of a rich link.' },
+        {
+            name: 'NavigationMenu.LinkDescription',
+            description: 'Renders the supporting line of a rich link.'
+        }
+    ],
     pagination: [{ name: 'Pagination', description: 'Navigates paginated content.' }],
     popover: [
         { name: 'Popover.Root', description: 'Controls popover state.' },

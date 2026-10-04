@@ -1,1 +1,2 @@
 - Adds the Sidebar component: an app-shell navigation column with `sidebar` and `inset` variants, offcanvas or icon-rail collapse, collapsible groups, nested items, trailing badges, hover actions, a traveling hover highlight, and a drawer below 768px.
+- Adds the NavigationMenu component: a site header menu whose panels open on hover or click and share one viewport that floats above the page and slides and resizes between them, with arrow-key navigation, a traveling highlight, and a top-level link part.

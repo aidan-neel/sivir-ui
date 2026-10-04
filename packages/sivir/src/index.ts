@@ -207,6 +207,18 @@ export type {
     ModalTriggerProps
 } from './components/modal';
 export * as Modal from './components/modal';
+export type {
+    NavigationMenuContentProps,
+    NavigationMenuItemProps,
+    NavigationMenuLinkDescriptionProps,
+    NavigationMenuLinkProps,
+    NavigationMenuLinkTitleProps,
+    NavigationMenuListProps,
+    NavigationMenuProps,
+    NavigationMenuTriggerProps,
+    NavigationMenuViewportProps
+} from './components/navigation-menu';
+export * as NavigationMenu from './components/navigation-menu';
 export type { PaginationProps } from './components/pagination';
 export { Pagination } from './components/pagination';
 export type {

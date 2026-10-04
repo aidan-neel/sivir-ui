@@ -917,8 +917,41 @@ export function travelingHighlight(node: HTMLElement, options: TravelingHighligh
         schedule(restingTarget());
     }
 
-    const mutationObserver = new MutationObserver(() => {
-        schedule(restingTarget());
+    function liveTarget() {
+        const hovered = pointer
+            ? usableItem(document.elementFromPoint(pointer.x, pointer.y))
+            : undefined;
+        if (hovered) {
+            return hovered;
+        }
+        const focused = usableItem(document.activeElement);
+        if (focused?.matches(':focus-visible')) {
+            return focused;
+        }
+        return restingTarget();
+    }
+
+    function activatedItem(records: MutationRecord[]) {
+        return records.some((record) => {
+            if (!(record.target instanceof HTMLElement)) {
+                return false;
+            }
+            if (record.attributeName === 'data-collection-active') {
+                return record.target.getAttribute('data-collection-active') === 'true';
+            }
+            if (record.attributeName === 'aria-selected') {
+                return record.target.getAttribute('aria-selected') === 'true';
+            }
+            return false;
+        });
+    }
+
+    const mutationObserver = new MutationObserver((records) => {
+        if (activatedItem(records)) {
+            schedule(restingTarget());
+            return;
+        }
+        schedule(liveTarget());
     });
     mutationObserver.observe(node, {
         subtree: true,
