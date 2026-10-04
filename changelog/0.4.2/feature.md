@@ -1,0 +1,1 @@
+- Set the Sivir theme button press scale to 0px so buttons no longer shrink when pressed.

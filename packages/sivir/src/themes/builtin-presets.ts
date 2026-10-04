@@ -369,7 +369,7 @@ export const sivirTheme: Theme = {
             '--motion-panel-scale-start': '0.98',
             '--motion-step-x': '0px',
             '--motion-step-blur': '0px',
-            '--motion-press-px': '1px',
+            '--motion-press-px': '0px',
             '--motion-duration-switch': '150ms',
             '--motion-menu-x': '2px',
             '--motion-menu-scale-start': '0.97',
