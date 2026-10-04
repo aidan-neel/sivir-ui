@@ -28,6 +28,7 @@ export const components = [
     'markdown',
     'message',
     'modal',
+    'navigation-menu',
     'pagination',
     'popover',
     'progress',

@@ -30,6 +30,7 @@ export const componentSummaries = {
     markdown: 'Renders model Markdown with raw HTML shown as text.',
     message: 'One chat turn, aligned by role, with actions.',
     modal: 'A centered dialog for forms and confirmations.',
+    'navigation-menu': 'A site header menu whose panels share one morphing viewport.',
     pagination: 'Moves between pages of a long list.',
     popover: 'A floating panel anchored to a trigger.',
     progress: 'How far along a task is, or that it is running.',

@@ -1,7 +1,7 @@
 /**
  * Phase 2 §1 — lock the public API.
  *
- * Frozen catalog: 57 components. Named exports hang off the package root as
+ * Frozen catalog: 58 components. Named exports hang off the package root as
  * identifiers; namespace exports hang off a PascalCase object (AlertDialog.Root).
  * Every public component is also reachable at @sivir-ui/svelte/components/<slug>.
  */
@@ -130,6 +130,17 @@ const NAMESPACED = {
         'Cancel',
         'Submit'
     ],
+    'navigation-menu': [
+        'Root',
+        'List',
+        'Item',
+        'Trigger',
+        'Content',
+        'Viewport',
+        'Link',
+        'LinkTitle',
+        'LinkDescription'
+    ],
     'radio-group': ['Root', 'Item'],
     reasoning: ['Root', 'Trigger', 'Content'],
     select: ['Root', 'Trigger', 'Value', 'Label', 'Item', 'Content'],
@@ -222,9 +233,9 @@ function parseExportedNames(source: string): string[] {
 }
 
 describe('public API contract (v1 freeze)', () => {
-    test('frozen catalog is exactly 57 components with no overlap', () => {
-        expect(FROZEN).toHaveLength(57);
-        expect(new Set(FROZEN).size).toBe(57);
+    test('frozen catalog is exactly 58 components with no overlap', () => {
+        expect(FROZEN).toHaveLength(58);
+        expect(new Set(FROZEN).size).toBe(58);
         for (const slug of Object.keys(NAMED)) {
             expect(NAMESPACED).not.toHaveProperty(slug);
         }
