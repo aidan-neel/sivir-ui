@@ -21,3 +21,7 @@ The Viewport moves itself to `<body>` and uses fixed positioning under Root, so 
 Open state is one string on Root. `bind:value` holds the open Item's `value`, and `''` means closed. Set `value` on each Item when you control the menu or need stable ids. Hovering a trigger opens its panel after `openDelay` (150ms). Once a panel is open, hovering another trigger switches immediately. Leaving the trigger and viewport closes the panel after `closeDelay` (200ms). A click pins the panel open until an outside press, Escape, a second click, or a followed link closes it. ArrowDown on a trigger opens the panel and focuses its first link.
 
 Hover and focus feedback come from the shared traveling highlight on the List and in each panel. Do not add `hover:bg-*` to Links or Triggers. Use `active` on a Link to mark the current page. The menu does not collapse on small screens. Hide it below `md` and pair it with `FullscreenNav` there, as the docs "Small screens" example shows.
+
+## Sivir theme is the default for new projects
+
+`ui.css` and `DEFAULT_THEME` are unchanged, so existing installs, package upgrades, and `sivir add --overwrite` keep the original look. The new `sivir` preset (first in `builtInThemePresets`) is applied only by `sivir init`, which writes `theme.css` next to `ui.css` and imports it after `ui.css`. Do not edit the baked values in `ui.css` to restyle a project. Import a theme after it instead. The original defaults are available as the `Legacy` preset (slug `legacy`; `sivir add theme default` still resolves to it).
