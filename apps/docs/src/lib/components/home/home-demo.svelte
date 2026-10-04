@@ -202,8 +202,8 @@
     const headingClass =
         'm-0 [font-size:var(--font-size-body)] [font-weight:var(--font-weight-label)] text-foreground';
 
-    let themeSlug = $state<string | undefined>('default');
-    let appliedSlug: string | undefined = 'default';
+    let themeSlug = $state<string | undefined>('sivir');
+    let appliedSlug: string | undefined = 'sivir';
     let activeId = $state('rate-limit');
     let prompt = $state('');
     let model = $state(models[0]);
@@ -267,7 +267,7 @@
 
         appliedSlug = preset.slug;
 
-        if (preset.slug === 'default') {
+        if (preset.slug === 'sivir') {
             clearLiveThemeCss();
             return;
         }

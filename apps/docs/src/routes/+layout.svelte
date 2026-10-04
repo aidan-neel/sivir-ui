@@ -7,6 +7,7 @@
     import HomeNav from '$lib/components/home/home-nav.svelte';
     import '@sivir-ui/svelte/ui.css';
     import '../app.css';
+    import '../sivir-theme.css';
     import { injectAnalytics } from '@vercel/analytics/sveltekit';
     import { injectSpeedInsights } from '@vercel/speed-insights/sveltekit';
     import { onMount, type Snippet } from 'svelte';

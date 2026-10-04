@@ -224,8 +224,11 @@ const CHECKS: Check[] = [
             writeFileSync(path.join(appDir, 'src/app.css'), "@import 'tailwindcss';\n");
             const r = sivir(['init', '-y']);
             if (r.status !== 0) f.push(`init exited ${r.status}`);
-            if (read('src/app.css') !== "@import './lib/sivir/ui.css';\n") {
-                f.push('src/app.css not rewired to ui.css');
+            if (
+                read('src/app.css') !==
+                "@import './lib/sivir/ui.css';\n@import './lib/sivir/theme.css';\n"
+            ) {
+                f.push('src/app.css not rewired to ui.css and theme.css');
             }
             return f;
         }
@@ -380,11 +383,11 @@ const CHECKS: Check[] = [
         }
     },
     {
-        label: 'add theme default resolves offline',
+        label: 'add theme legacy resolves offline',
         run: () => {
             const f: string[] = [];
             initApp();
-            const r = sivir(['add', 'theme', 'default']);
+            const r = sivir(['add', 'theme', 'legacy']);
             if (r.status !== 0) f.push(`add theme exited ${r.status}`);
             if (!exists(`${SIVIR}/theme.css`)) f.push('theme.css not written');
             else if (!read(`${SIVIR}/theme.css`).includes(':root'))
@@ -399,7 +402,7 @@ const CHECKS: Check[] = [
             const r = sivir(['list']);
             if (r.status !== 0) f.push(`list exited ${r.status}`);
             if (!r.out.includes('button')) f.push('list missing "button"');
-            if (!r.out.includes('default')) f.push('list missing "default" theme');
+            if (!r.out.includes('legacy')) f.push('list missing "legacy" theme');
             return f;
         }
     },

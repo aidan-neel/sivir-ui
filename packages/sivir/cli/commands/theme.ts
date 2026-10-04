@@ -11,8 +11,14 @@ export type ThemeOptions = {
     cwd: string;
 };
 
+/** Slugs renamed after release; keeps old `sivir add theme <slug>` calls working. */
+const RENAMED_THEMES: Record<string, string> = {
+    default: 'legacy'
+};
+
 /** Resolves a slug to theme CSS -- built-in presets first, registry after. */
-export async function resolveThemeCss(slug: string, registry: string) {
+export async function resolveThemeCss(requested: string, registry: string) {
+    const slug = RENAMED_THEMES[requested] ?? requested;
     const builtin = (await loadRegistryThemes()).find((theme) => theme.slug === slug);
     if (builtin) return { css: builtin.css, source: 'built-in preset' };
 

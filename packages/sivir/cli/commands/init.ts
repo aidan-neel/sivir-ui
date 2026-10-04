@@ -1,7 +1,10 @@
 import { existsSync } from 'node:fs';
+import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import * as clack from '@clack/prompts';
 import pc from 'picocolors';
+import { sivirTheme } from '../../src/themes/builtin-presets';
+import { themeToCss } from '../../src/themes/theme';
 import { CONFIG_FILE, DEFAULT_CONFIG, loadConfig, saveConfig } from '../config';
 import { BASE_PEER_DEPENDENCIES, loadRegistryIndex } from '../registry';
 import { installFile, installMissingDependencies } from '../utils/project';
@@ -26,23 +29,43 @@ export async function baseFiles() {
 }
 
 /**
+ * Writes the Sivir theme next to `ui.css` for new projects. `ui.css` keeps the
+ * original defaults, so existing installs never change. An existing
+ * `theme.css` is left alone.
+ */
+async function writeDefaultTheme(cwd: string, dir: string) {
+    const target = path.join(cwd, dir, 'theme.css');
+    if (existsSync(target)) {
+        return;
+    }
+
+    await mkdir(path.dirname(target), { recursive: true });
+    await writeFile(target, `/* sivir theme: ${sivirTheme.slug} */\n${themeToCss(sivirTheme)}\n`);
+}
+
+/**
  * Points the root stylesheet at `ui.css`, which already includes Tailwind, or
  * explains how to when the stylesheet is not one `sv add tailwindcss` writes.
  */
 async function wireStylesheet(cwd: string, dir: string, yes: boolean) {
     const plan = await planStylesheet(cwd, dir);
     const uiCss = pc.cyan(`${dir}/ui.css`);
+    const themeCss = pc.cyan(`${dir}/theme.css`);
     const tailwindImport = pc.cyan("@import 'tailwindcss';");
 
     if (plan.status === 'imported') {
         ok(`${pc.cyan(plan.file)} already imports ${uiCss}.`);
+        warn(`import ${themeCss} after ${uiCss} to apply the Sivir theme`);
         return;
     }
     if (plan.status === 'unknown') {
-        warn(`import ${uiCss} in your root stylesheet, in place of ${tailwindImport}`);
+        warn(
+            `import ${uiCss} in your root stylesheet, in place of ${tailwindImport}, then import ${themeCss} after it`
+        );
         return;
     }
 
+    const statement = `${plan.statement}\n${plan.statement.replace('ui.css', 'theme.css')}`;
     let apply = yes;
     if (!yes && process.stdout.isTTY) {
         const answer = await clack.confirm({
@@ -51,12 +74,14 @@ async function wireStylesheet(cwd: string, dir: string, yes: boolean) {
         apply = answer === true;
     }
     if (!apply) {
-        warn(`replace ${tailwindImport} in ${pc.cyan(plan.file)} with ${pc.cyan(plan.statement)}`);
+        warn(
+            `replace ${tailwindImport} in ${pc.cyan(plan.file)} with ${pc.cyan(plan.statement)}, then import ${themeCss} after it`
+        );
         return;
     }
 
-    await applyStylesheet(cwd, plan.file, plan.statement);
-    ok(`${pc.cyan(plan.file)} now imports ${uiCss}.`);
+    await applyStylesheet(cwd, plan.file, statement);
+    ok(`${pc.cyan(plan.file)} now imports ${uiCss} and ${themeCss}.`);
 }
 
 export async function init(options: InitOptions) {
@@ -113,9 +138,10 @@ export async function init(options: InitOptions) {
     for (const file of await baseFiles()) {
         await installFile(cwd, dir, file, alias, false);
     }
+    await writeDefaultTheme(cwd, dir);
     await saveConfig(cwd, config);
     spinner.stop(
-        `Installed ${pc.cyan(`${dir}/ui.css`)}, utils, shared modules, and ${CONFIG_FILE}`
+        `Installed ${pc.cyan(`${dir}/ui.css`)}, ${pc.cyan(`${dir}/theme.css`)}, utils, shared modules, and ${CONFIG_FILE}`
     );
 
     await installMissingDependencies(cwd, BASE_PEER_DEPENDENCIES, yes);

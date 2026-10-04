@@ -194,8 +194,8 @@ try {
 
     runSivir(consumer, ['init', '--yes']);
     const appCss = await readFile(path.join(consumer, 'src/app.css'), 'utf8');
-    if (appCss !== "@import './lib/sivir/ui.css';\n") {
-        throw new Error(`sivir init did not point src/app.css at ui.css:\n${appCss}`);
+    if (appCss !== "@import './lib/sivir/ui.css';\n@import './lib/sivir/theme.css';\n") {
+        throw new Error(`sivir init did not point src/app.css at ui.css and theme.css:\n${appCss}`);
     }
     runSivir(consumer, ['list']);
     runSivir(consumer, ['add', 'button', '--yes']);
