@@ -1,0 +1,1 @@
+- Adds the Sidebar component: an app-shell navigation column with `sidebar` and `inset` variants, offcanvas or icon-rail collapse, collapsible groups, nested items, trailing badges, hover actions, a traveling hover highlight, and a drawer below 768px.

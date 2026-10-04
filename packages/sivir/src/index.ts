@@ -266,6 +266,25 @@ export type { ShortcutProps } from './components/shortcut';
 export { Shortcut } from './components/shortcut';
 export type { ShowMoreProps } from './components/show-more';
 export { ShowMore } from './components/show-more';
+export type {
+    SidebarContentProps,
+    SidebarFooterProps,
+    SidebarGroupContentProps,
+    SidebarGroupLabelProps,
+    SidebarGroupProps,
+    SidebarHeaderProps,
+    SidebarInsetProps,
+    SidebarItemActionProps,
+    SidebarItemBadgeProps,
+    SidebarItemButtonProps,
+    SidebarItemLabelProps,
+    SidebarItemProps,
+    SidebarMenuProps,
+    SidebarPanelProps,
+    SidebarProps,
+    SidebarTriggerProps
+} from './components/sidebar';
+export * as Sidebar from './components/sidebar';
 export type { SkeletonProps, SkeletonSwapProps } from './components/skeleton';
 export { Skeleton, SkeletonSwap } from './components/skeleton';
 export type {

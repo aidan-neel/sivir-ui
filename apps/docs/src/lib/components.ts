@@ -41,6 +41,7 @@ export const components = [
     'sheet',
     'shortcut',
     'show-more',
+    'sidebar',
     'skeleton',
     'slider',
     'spinner',

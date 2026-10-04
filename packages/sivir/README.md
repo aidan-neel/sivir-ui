@@ -114,7 +114,7 @@ import * as AlertDialog from '@sivir-ui/svelte/components/alert-dialog';
   `Breadcrumb`, `Card` (includes `variant="panel"`), `Collapsible`, `ColorPicker`,
   `Combobox`, `Command`, `Composer`, `ContextMenu`, `Conversation`, `DropdownMenu`,
   `FileDiff`, `FullscreenNav`, `HoverCard`, `Message`, `Modal`, `Popover`,
-  `Question`, `RadioGroup`, `Reasoning`, `Select`, `Sheet`, `Tabs`, `TagInput`, `ToggleGroup`, `Tool`, `Tooltip`, `Typography`.
+  `Question`, `RadioGroup`, `Reasoning`, `Select`, `Sheet`, `Sidebar`, `Tabs`, `TagInput`, `ToggleGroup`, `Tool`, `Tooltip`, `Typography`.
 
 ## License
 

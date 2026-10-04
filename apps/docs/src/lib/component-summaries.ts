@@ -43,6 +43,7 @@ export const componentSummaries = {
     sheet: 'A panel that slides in from the left or right edge.',
     shortcut: 'Shows a keyboard shortcut and runs it on keypress.',
     'show-more': 'Clamps long content until it is expanded.',
+    sidebar: 'A collapsible app-shell navigation column with an inset layout.',
     skeleton: 'Placeholders that hold layout while loading.',
     slider: 'Scrubs a number with its label inside the field.',
     spinner: 'Signals indeterminate work.',
