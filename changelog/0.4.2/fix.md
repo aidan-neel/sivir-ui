@@ -1,0 +1,2 @@
+- Sidebar now collapses to and expands from its icon rail as one motion: nested items fold away on the panel's curve instead of popping in and out, and item labels clip instead of showing an ellipsis mid-animation.
+- Sidebar item labels fade in as soon as the panel starts expanding instead of waiting for a delay.
