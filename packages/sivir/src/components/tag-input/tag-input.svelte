@@ -49,8 +49,8 @@
     const atMax = $derived(max !== undefined && safeTags.length >= max);
     const controlClass = $derived(
         variant === 'secondary'
-            ? 'border-transparent bg-secondary focus-within:border-[color-mix(in_srgb,var(--color-secondary)_45%,var(--color-primary))]'
-            : 'border-border bg-[var(--color-field)] focus-within:border-primary'
+            ? 'border-transparent bg-secondary [--tag-input-chip:var(--color-card)] [--tag-input-chip-shadow:var(--elevation-1),inset_0_0_0_var(--border-size)_color-mix(in_oklab,var(--color-foreground)_6%,transparent)] focus-within:border-[color-mix(in_srgb,var(--color-secondary)_45%,var(--color-primary))] dark:[--tag-input-chip:color-mix(in_oklab,var(--color-foreground)_10%,var(--color-secondary))] dark:[--tag-input-chip-shadow:var(--elevation-1),inset_0_1px_0_0_rgb(255_255_255/0.05)]'
+            : 'border-border bg-[var(--color-field)] [--tag-input-chip:color-mix(in_oklab,var(--color-foreground)_5%,var(--color-field))] [--tag-input-chip-shadow:inset_0_0_0_var(--border-size)_color-mix(in_oklab,var(--color-foreground)_7%,transparent)] focus-within:border-primary'
     );
 
     function toCandidate(raw: string) {
@@ -251,9 +251,9 @@
         onclick={handleFieldClick}
         class={cn(
             className,
+            error && 'border-[var(--color-error)] focus-within:border-[var(--color-error)]',
             'flex min-h-[var(--size-control-md)] w-full cursor-text flex-wrap items-center gap-1 rounded-[var(--radius-lg)] border-[length:var(--border-size)] p-1 transition-[background-color,border-color,box-shadow] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-out)] motion-reduce:transition-none focus-within:shadow-[var(--focus-ring)] has-[input:disabled]:cursor-not-allowed has-[input:disabled]:opacity-[var(--opacity-disabled)]',
-            controlClass,
-            error && 'border-[var(--color-error)] focus-within:border-[var(--color-error)]'
+            controlClass
         )}
     >
         {@render children?.()}

@@ -121,18 +121,11 @@
     --radius-sm: 5px;
     --radius-xl: 13px;
     --sivir-space-unit: 3.4px;
+    --size-button-sm: 28px;
     --size-button-md: 32px;
+    --size-button-lg: 40px;
 }
 :root:not(.dark) {
-    --color-code-builtin: #c26a2c;
-    --color-code-comment: #8c8779;
-    --color-code-entity: #5a7a3a;
-    --color-code-function: #7a5a9e;
-    --color-code-keyword: #b5452a;
-    --color-code-meta: #8c8779;
-    --color-code-number: #a5651b;
-    --color-code-property: #3f6b8c;
-    --color-code-string: #5a7a3a;
     --color-input: #dcd9cc;
 }
 .dark {

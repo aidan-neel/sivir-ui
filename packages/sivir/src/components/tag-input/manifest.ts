@@ -7,10 +7,13 @@ import type { Manifest } from '@sivir-ui/svelte/_manifest/types';
  *        tags + draft state, List renders the tokens, Tag renders one token
  *        with its remove control, Input handles entry, delimiters, paste
  *        splitting, and Backspace removal.
+ * 1.1.0 -- chips read a per-variant surface instead of the input stroke, so
+ *        they stay legible on the secondary tray and in dark mode. Default
+ *        List animates tags in and out, keyed by value.
  */
 export const manifest: Manifest = {
     name: 'tag-input',
-    version: '1.0.0',
+    version: '1.1.0',
     visibility: 'public',
     description:
         'Tokenized tag entry field with keyboard, paste, and validation support. Compound: Root / List / Tag / Input.',
@@ -24,7 +27,7 @@ export const manifest: Manifest = {
         'components/tag-input/manifest.ts'
     ],
     components: ['button'],
-    shared: ['utils.cn', 'utils.createContext'],
+    shared: ['utils.cn', 'utils.createContext', 'transition'],
     peerDependencies: {
         '@lucide/svelte': '^1.0.0',
         cnfast: '^0.0.8',

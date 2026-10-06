@@ -1,20 +1,71 @@
 <script lang="ts">
     import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
+    import type { ToolState } from '@sivir-ui/svelte/components/tool';
     import * as Typography from '@sivir-ui/svelte/components/typography';
-    import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+    import {
+        ComponentPreview,
+        InstallCommand,
+        PropGroup,
+        PropRow,
+        PropSegmented,
+        PropSwitch
+    } from '$lib/components/docs';
     import DocsPager from '$lib/components/docs/docs-pager.svelte';
 
     import Failed from './examples/failed.svelte';
     import FailedSrc from './examples/failed.svelte?raw';
     import Hero from './examples/hero.svelte';
-    import HeroSrc from './examples/hero.svelte?raw';
     import Live from './examples/live.svelte';
     import LiveSrc from './examples/live.svelte?raw';
+    import {
+        changedToolProps,
+        type ToolSettings,
+        toolCode,
+        toolDefaults
+    } from './playground/playground';
 
     const TITLE = 'Tool';
     const SLUG = 'tool';
     const installCommand = `bunx @sivir-ui/svelte add ${SLUG}`;
+
+    const stateOptions: {
+        value: ToolState;
+        label: string;
+    }[] = [
+        {
+            value: 'running',
+            label: 'Running'
+        },
+        {
+            value: 'complete',
+            label: 'Complete'
+        },
+        {
+            value: 'error',
+            label: 'Error'
+        }
+    ];
+
+    let settings = $state<ToolSettings>({
+        ...toolDefaults
+    });
+
+    const heroCode = $derived(toolCode(settings));
+    const changed = $derived(changedToolProps(settings));
+    const codingAgentCode = toolCode(toolDefaults);
 </script>
+
+{#snippet heroProps()}
+    <PropGroup title="State">
+        <PropRow label="State">
+            <PropSegmented label="State" options={stateOptions} bind:value={settings.state} />
+        </PropRow>
+        <PropSwitch label="Open" bind:checked={settings.open} />
+    </PropGroup>
+    <PropGroup title="Content">
+        <PropSwitch label="Durations" bind:checked={settings.durations} />
+    </PropGroup>
+{/snippet}
 
 <svelte:head>
     <title>Sivir · {TITLE}</title>
@@ -37,7 +88,9 @@
     </header>
 
     <section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-        <ComponentPreview code={HeroSrc}><Hero /></ComponentPreview>
+        <ComponentPreview code={heroCode} props={heroProps} {changed}>
+            <Hero state={settings.state} durations={settings.durations} bind:open={settings.open} />
+        </ComponentPreview>
     </section>
 
     <section id="installation" class="scroll-mt-20 flex flex-col gap-4">
@@ -124,30 +177,47 @@
         />
     </section>
 
+    <!-- ─── Example Descriptions ──────────────────────────────────── -->
+    {#snippet liveCallsDescription()}
+        <Typography.Text variant="supporting">
+            Tool does not time calls. Update
+            <Typography.InlineCode>duration</Typography.InlineCode>
+            from your own timer. Give a running call a present-tense
+            <Typography.InlineCode>action</Typography.InlineCode>, such as “Reading file”, and
+            change it to “Read file” when the call finishes. Set the trigger
+            <Typography.InlineCode>title</Typography.InlineCode>
+            to the current step, then to a summary of the group when it completes.
+        </Typography.Text>
+    {/snippet}
+
+    <!-- ─── Examples ──────────────────────────────────────────────── -->
     <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
         <div>
-            <Typography.H2 class="docs-section-heading">Examples</Typography.H2>
+            <Typography.H2 class="docs-section-heading"> Examples </Typography.H2>
         </div>
+
         <div id="coding-agent" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading">Coding agent</Typography.H3>
-            <ComponentPreview code={HeroSrc}><Hero /></ComponentPreview>
+            <Typography.H3 class="docs-subsection-heading"> Coding agent </Typography.H3>
+            <ComponentPreview code={codingAgentCode}>
+                <Hero />
+            </ComponentPreview>
         </div>
+
         <div id="live-calls" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading">Live calls</Typography.H3>
-            <Typography.Text variant="supporting">
-                Tool does not time calls. Update
-                <Typography.InlineCode>duration</Typography.InlineCode>
-                from your own timer. Give a running call a present-tense
-                <Typography.InlineCode>action</Typography.InlineCode>, such as “Reading file”, and
-                change it to “Read file” when the call finishes. Set the trigger
-                <Typography.InlineCode>title</Typography.InlineCode>
-                to the current step, then to a summary of the group when it completes.
-            </Typography.Text>
-            <ComponentPreview code={LiveSrc}><Live /></ComponentPreview>
+            <Typography.H3 class="docs-subsection-heading"> Live calls </Typography.H3>
+            <ComponentPreview code={LiveSrc}>
+                <Live />
+            </ComponentPreview>
+            <div class="flex max-w-2xl flex-col gap-2">
+                {@render liveCallsDescription()}
+            </div>
         </div>
+
         <div id="failed-call" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading">Failed call</Typography.H3>
-            <ComponentPreview code={FailedSrc}><Failed /></ComponentPreview>
+            <Typography.H3 class="docs-subsection-heading"> Failed call </Typography.H3>
+            <ComponentPreview code={FailedSrc}>
+                <Failed />
+            </ComponentPreview>
         </div>
     </section>
 </div>

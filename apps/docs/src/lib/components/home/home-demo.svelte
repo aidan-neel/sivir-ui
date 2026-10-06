@@ -426,7 +426,7 @@
                             {active.branch}
                         </span>
                     </div>
-                    <Button variant="outline" size="sm">Share</Button>
+                    <Button variant="outline">Share</Button>
                 </header>
 
                 <Conversation.Root class="min-h-0 flex-1">

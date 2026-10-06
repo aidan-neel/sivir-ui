@@ -7,6 +7,14 @@
     import * as Popover from '@sivir-ui/svelte/components/popover';
     import * as Select from '@sivir-ui/svelte/components/select';
 
+    let {
+        placement = 'bottom',
+        hoverable = false
+    }: {
+        placement?: Popover.Placement;
+        hoverable?: boolean;
+    } = $props();
+
     type Role = 'edit' | 'comment' | 'view';
 
     type Collaborator = {
@@ -44,7 +52,9 @@
         return name
             .split(/[\s@.]+/)
             .slice(0, 2)
-            .map((part) => part.charAt(0).toUpperCase())
+            .map((part) => {
+                return part.charAt(0).toUpperCase();
+            })
             .join('');
     }
 
@@ -70,9 +80,9 @@
 </script>
 
 <div class="flex w-full max-w-md justify-center">
-    <Popover.Root placement="bottom">
+    <Popover.Root {placement} {hoverable}>
         <Popover.Trigger variant="outline" size="md">Share</Popover.Trigger>
-        <Popover.Content aria-label="Share" class="w-[24rem] max-w-[calc(100vw-2rem)]">
+        <Popover.Content aria-label="Share" class="w-[28rem] max-w-[calc(100vw-2rem)]">
             <div class="flex flex-col gap-4">
                 <form class="flex items-center gap-2" onsubmit={addCollaborator}>
                     <div class="min-w-0 flex-1">
@@ -95,7 +105,9 @@
                             <p class="m-0 truncate text-sm">Seth (you)</p>
                             <p class="m-0 truncate text-xs text-foreground-muted">seth@sivir.dev</p>
                         </div>
-                        <p class="m-0 text-sm text-foreground-muted">Owner</p>
+                        <p class="m-0 w-40 shrink-0 pr-3 text-right text-sm text-foreground-muted">
+                            Owner
+                        </p>
                     </li>
 
                     {#each collaborators as collaborator (collaborator.email)}
@@ -114,7 +126,7 @@
                                     variant="ghost"
                                     size="sm"
                                     aria-label={`Access for ${collaborator.name}`}
-                                    class="gap-1"
+                                    class="w-40 shrink-0 justify-between"
                                 >
                                     {roleLabels[collaborator.role]}
                                 </Select.Trigger>
@@ -139,7 +151,7 @@
                         label="Copy link"
                         copiedLabel="Copied"
                         variant="outline"
-                        size="sm"
+                        class="shrink-0 whitespace-nowrap"
                     >
                         Copy link
                     </CopyButton>

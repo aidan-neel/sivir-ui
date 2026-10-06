@@ -9,11 +9,11 @@
 </script>
 
 <DropdownMenu.Root>
-    <DropdownMenu.Trigger variant="outline" size="md" class="min-w-[11rem] justify-between">
+    <DropdownMenu.Trigger variant="outline" size="md" class="w-44 justify-between">
         <span>Configuration</span>
         <ChevronDown size={15} class="text-foreground-muted" />
     </DropdownMenu.Trigger>
-    <DropdownMenu.Content class="min-w-[11rem]">
+    <DropdownMenu.Content class="w-44">
         <DropdownMenu.Label>Configuration</DropdownMenu.Label>
         <DropdownMenu.Sub>
             <DropdownMenu.SubTrigger>Model</DropdownMenu.SubTrigger>

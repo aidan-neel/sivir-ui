@@ -47,7 +47,9 @@ let follow = $state(true);
     </header>
 
     <section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-        <ComponentPreview code={HeroSrc}><Hero /></ComponentPreview>
+        <ComponentPreview code={HeroSrc}>
+            <Hero />
+        </ComponentPreview>
     </section>
 
     <section id="installation" class="scroll-mt-20 flex flex-col gap-4">
@@ -70,6 +72,7 @@ let follow = $state(true);
         <CodeBlock code={usageSnippet} lang="svelte" copy="overlay" />
     </section>
 
+    <!-- ─── Examples ──────────────────────────────────────────────── -->
     <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
         <div>
             <Typography.H2 class="docs-section-heading"> Examples </Typography.H2>
@@ -77,12 +80,16 @@ let follow = $state(true);
 
         <div id="empty-state" class="scroll-mt-20 flex flex-col gap-3">
             <Typography.H3 class="docs-subsection-heading"> Empty state </Typography.H3>
-            <ComponentPreview code={EmptyStateSrc}><EmptyState /></ComponentPreview>
+            <ComponentPreview code={EmptyStateSrc}>
+                <EmptyState />
+            </ComponentPreview>
         </div>
 
         <div id="follow-output" class="scroll-mt-20 flex flex-col gap-3">
             <Typography.H3 class="docs-subsection-heading"> Follow live output </Typography.H3>
-            <ComponentPreview code={FollowOutputSrc}><FollowOutput /></ComponentPreview>
+            <ComponentPreview code={FollowOutputSrc}>
+                <FollowOutput />
+            </ComponentPreview>
         </div>
     </section>
 </div>

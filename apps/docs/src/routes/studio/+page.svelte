@@ -37,7 +37,7 @@
     import * as ContextMenu from '@sivir-ui/svelte/components/context-menu';
     import { CopyButton } from '@sivir-ui/svelte/components/copy-button';
     import * as DropdownMenu from '@sivir-ui/svelte/components/dropdown-menu';
-    import { Gauge } from '@sivir-ui/svelte/components/gauge';
+    import * as Gauge from '@sivir-ui/svelte/components/gauge';
     import { Input } from '@sivir-ui/svelte/components/input';
     import * as Modal from '@sivir-ui/svelte/components/modal';
     import { Pagination } from '@sivir-ui/svelte/components/pagination';
@@ -108,6 +108,7 @@
         clampHeaderSize,
         DEFAULT_FOUNDATION_COLORS,
         DEFAULT_ROLE_WEIGHTS,
+        DEFAULT_TRIGGER_DISTANCE,
         draftToTheme,
         emptyAdvancedTokens,
         type FoundationColors,
@@ -611,6 +612,7 @@
     let surfacePaneling = $state(true);
     let primaryStroke = $state(false);
     let interactiveCursor = $state<InteractiveCursor>('default');
+    let triggerDistance = $state(DEFAULT_TRIGGER_DISTANCE);
     let editTokens = $state<Record<string, string>>({});
     let pendingRegistryTheme = $state<Theme | null>(null);
     let tokenQuery = $state('');
@@ -776,11 +778,13 @@
             menuPaneling,
             surfacePaneling,
             primaryStroke,
-            interactiveCursor
+            interactiveCursor,
+            triggerDistance
         }
     });
     const portableTheme = $derived(draftToTheme(studioDraft));
-    const baseDesign = $derived(draftToTheme(themeToDraft(baseTheme)));
+    const baseDraft = $derived(themeToDraft(baseTheme));
+    const baseDesign = $derived(draftToTheme(baseDraft));
     const dirty = $derived(!sameThemeDesign(portableTheme, baseDesign));
     const generatedCss = $derived(themeToCss(portableTheme));
     const generatedJson = $derived(JSON.stringify(portableTheme, null, 2));
@@ -892,6 +896,7 @@
         surfacePaneling = draft.chrome.surfacePaneling;
         primaryStroke = draft.chrome.primaryStroke;
         interactiveCursor = draft.chrome.interactiveCursor;
+        triggerDistance = draft.chrome.triggerDistance;
         previousRadius = theme.radius;
         previousDensity = theme.density;
         previousMotion = theme.motion;
@@ -1017,7 +1022,8 @@
                 menuPaneling: draft.chrome.menuPaneling,
                 surfacePaneling: draft.chrome.surfacePaneling,
                 primaryStroke: value.primaryStroke ?? draft.chrome.primaryStroke,
-                interactiveCursor: value.interactiveCursor ?? draft.chrome.interactiveCursor
+                interactiveCursor: value.interactiveCursor ?? draft.chrome.interactiveCursor,
+                triggerDistance: draft.chrome.triggerDistance
             }
         };
     }
@@ -2860,6 +2866,7 @@
     fields: {
         label: string;
         value: string;
+        base: string;
         options: { label: string; value: string }[];
         onChange: (value: string) => void;
     }[]
@@ -2868,12 +2875,29 @@
         {@render sectionHeading(title)}
         <div class="flex flex-col gap-1.5">
             {#each fields as field (field.label)}
-                <ColorField
-                    label={field.label}
-                    value={field.value}
-                    options={field.options}
-                    onChange={field.onChange}
-                />
+                {@const changed = field.value.toLowerCase() !== field.base.toLowerCase()}
+                <div class="relative flex min-w-0 flex-col">
+                    <ColorField
+                        label={field.label}
+                        value={field.value}
+                        options={field.options}
+                        onChange={field.onChange}
+                        {changed}
+                    />
+                    {#if changed}
+                        <button
+                            type="button"
+                            class="absolute -top-2 right-2 z-10 rounded-full border-[length:var(--border-size)] border-[var(--color-border)] bg-[var(--color-card)] px-2 text-[length:var(--font-size-meta)] leading-4 text-foreground-muted transition-colors [transition-duration:var(--motion-duration-hover)] hover:cursor-[var(--ui-cursor-interactive)] hover:text-foreground focus-visible:shadow-[var(--focus-ring)] focus-visible:outline-none"
+                            aria-label={`Reset ${field.label}`}
+                            transition:fade={{ duration: 120 }}
+                            onclick={() => {
+                                field.onChange(field.base);
+                            }}
+                        >
+                            Reset
+                        </button>
+                    {/if}
+                </div>
             {/each}
         </div>
     </section>
@@ -2896,12 +2920,14 @@
                             {
                                 label: 'Brand',
                                 value: brandColors[appMode],
+                                base: baseDraft.brandColors[appMode],
                                 options: brandSwatches,
                                 onChange: updateBrand
                             },
                             {
                                 label: 'On brand',
                                 value: foundationColors[appMode].onPrimary,
+                                base: baseDraft.foundationColors[appMode].onPrimary,
                                 options: onPrimarySwatches,
                                 onChange: (value) => {
                                     updateFoundationColor('onPrimary', value);
@@ -2912,6 +2938,7 @@
                             {
                                 label: 'Background',
                                 value: foundationColors[appMode].background,
+                                base: baseDraft.foundationColors[appMode].background,
                                 options: backgroundSwatches,
                                 onChange: (value) => {
                                     updateFoundationColor('background', value);
@@ -2920,6 +2947,7 @@
                             {
                                 label: 'Base',
                                 value: foundationColors[appMode].base,
+                                base: baseDraft.foundationColors[appMode].base,
                                 options: baseSwatches,
                                 onChange: (value) => {
                                     updateFoundationColor('base', value);
@@ -2928,6 +2956,7 @@
                             {
                                 label: 'Secondary',
                                 value: foundationColors[appMode].secondary,
+                                base: baseDraft.foundationColors[appMode].secondary,
                                 options: secondarySwatches,
                                 onChange: (value) => {
                                     updateFoundationColor('secondary', value);
@@ -2936,6 +2965,7 @@
                             {
                                 label: 'Border',
                                 value: foundationColors[appMode].border,
+                                base: baseDraft.foundationColors[appMode].border,
                                 options: borderSwatches,
                                 onChange: (value) => {
                                     updateFoundationColor('border', value);
@@ -2946,6 +2976,7 @@
                             {
                                 label: 'Foreground',
                                 value: foundationColors[appMode].foreground,
+                                base: baseDraft.foundationColors[appMode].foreground,
                                 options: foregroundSwatches,
                                 onChange: (value) => {
                                     updateFoundationColor('foreground', value);
@@ -2954,6 +2985,7 @@
                             {
                                 label: 'Muted text',
                                 value: foundationColors[appMode].foregroundMuted,
+                                base: baseDraft.foundationColors[appMode].foregroundMuted,
                                 options: foregroundSwatches,
                                 onChange: (value) => {
                                     updateFoundationColor('foregroundMuted', value);
@@ -3194,6 +3226,24 @@
                                     label="Primary stroke"
                                     description="A light inset edge on primary buttons."
                                 />
+                                <Slider.Root
+                                    editable
+                                    value={triggerDistance}
+                                    min={0}
+                                    max={16}
+                                    step={1}
+                                    label="Trigger distance"
+                                    format={(value) => `${value}px`}
+                                    onValueChange={(value) => {
+                                        triggerDistance = value;
+                                    }}
+                                    class="min-h-[var(--size-control-md)] text-[length:var(--font-size-label)]"
+                                >
+                                    <Slider.Range />
+                                    <Slider.Thumb />
+                                    <Slider.Label>Trigger distance</Slider.Label>
+                                    <Slider.Value class="text-xs" />
+                                </Slider.Root>
                             </div>
                         </section>
 
@@ -3370,7 +3420,6 @@
                                 <DropdownMenu.Label>Workspace</DropdownMenu.Label>
                                 <DropdownMenu.Item>Northstar Ledger</DropdownMenu.Item>
                                 <DropdownMenu.Item>Personal books</DropdownMenu.Item>
-                                <DropdownMenu.Separator />
                                 <DropdownMenu.Item
                                     callback={() =>
                                 runDashboardAction(
@@ -3491,7 +3540,6 @@
                                         </span>
                                         <Shortcut shortcut="cmd+B" />
                                     </DropdownMenu.Item>
-                                    <DropdownMenu.Separator />
                                     <DropdownMenu.Item
                                         callback={() =>
                                     runDashboardAction(
@@ -3577,7 +3625,6 @@
                                                 Settings
                                             </Command.Item>
                                         </Command.Group>
-                                        <Command.Separator />
                                         <Command.Group heading="Actions">
                                             <Command.Item
                                                 name="New invoice"
@@ -3647,14 +3694,20 @@
                                     </Typography.Description>
                                 </Card.Header>
                                 <Card.Content class="flex flex-col gap-4">
-                                    <Gauge
+                                    <Gauge.Root
                                         value={coverageValue}
                                         label="Cash coverage"
                                         tone="success"
-                                        size={72}
+                                        size="lg"
                                     >
-                                        {coverageValue}%
-                                    </Gauge>
+                                        <Gauge.Track />
+                                        <Gauge.Indicator />
+                                        <Gauge.Value>
+                                            {#snippet children({ percent })}
+                                                {percent}%
+                                            {/snippet}
+                                        </Gauge.Value>
+                                    </Gauge.Root>
                                     <Progress {...progressProps(coverageValue)} />
                                     <Switch
                                         bind:checked={autoReconcile}
@@ -3822,7 +3875,6 @@
                                                     >
                                                         Record payment
                                                     </DropdownMenu.Item>
-                                                    <DropdownMenu.Separator />
                                                     <DropdownMenu.Item
                                                         callback={() =>
                                                     runDashboardAction(
@@ -3851,7 +3903,6 @@
                                         >
                                             Record payment
                                         </ContextMenu.Item>
-                                        <ContextMenu.Separator />
                                         <ContextMenu.Item
                                             callback={() =>
                                         runDashboardAction(

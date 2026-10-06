@@ -1,7 +1,7 @@
 <script lang="ts">
     import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
     import * as Typography from '@sivir-ui/svelte/components/typography';
-    import { InstallCommand, PreviewGallery } from '$lib/components/docs';
+    import { ComponentPreview, InstallCommand } from '$lib/components/docs';
     import DocsPager from '$lib/components/docs/docs-pager.svelte';
     import Disabled from './examples/disabled.svelte';
     import DisabledSrc from './examples/disabled.svelte?raw';
@@ -37,28 +37,9 @@
 
     <!-- ─── Hero Example ──────────────────────────────────────────── -->
     <section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-        <PreviewGallery
-            examples={[
-                {
-                    value: 'overview',
-                    label: 'Overview',
-                    component: Hero,
-                    code: HeroSrc
-                },
-                {
-                    value: 'required',
-                    label: 'With required indicator',
-                    component: WithRequired,
-                    code: WithRequiredSrc
-                },
-                {
-                    value: 'disabled',
-                    label: 'Disabled field',
-                    component: Disabled,
-                    code: DisabledSrc
-                }
-            ]}
-        />
+        <ComponentPreview code={HeroSrc}>
+            <Hero />
+        </ComponentPreview>
     </section>
 
     <!-- ─── Installation ──────────────────────────────────────────── -->
@@ -81,5 +62,26 @@
             lang="svelte"
             copy="overlay"
         />
+    </section>
+
+    <!-- ─── Examples ──────────────────────────────────────────────── -->
+    <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
+        <div>
+            <Typography.H2 class="docs-section-heading"> Examples </Typography.H2>
+        </div>
+
+        <div id="required" class="scroll-mt-20 flex flex-col gap-3">
+            <Typography.H3 class="docs-subsection-heading"> With required indicator </Typography.H3>
+            <ComponentPreview code={WithRequiredSrc}>
+                <WithRequired />
+            </ComponentPreview>
+        </div>
+
+        <div id="disabled" class="scroll-mt-20 flex flex-col gap-3">
+            <Typography.H3 class="docs-subsection-heading"> Disabled field </Typography.H3>
+            <ComponentPreview code={DisabledSrc}>
+                <Disabled />
+            </ComponentPreview>
+        </div>
     </section>
 </div>

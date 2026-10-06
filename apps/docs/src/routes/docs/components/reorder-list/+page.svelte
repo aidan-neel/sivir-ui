@@ -1,13 +1,31 @@
 <script lang="ts">
     import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
     import * as Typography from '@sivir-ui/svelte/components/typography';
-    import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+    import { ComponentPreview, InstallCommand, PropGroup, PropSwitch } from '$lib/components/docs';
     import DocsPager from '$lib/components/docs/docs-pager.svelte';
     import Hero from './examples/hero.svelte';
-    import HeroSrc from './examples/hero.svelte?raw';
+    import {
+        changedReorderListProps,
+        type ReorderListSettings,
+        reorderListCode,
+        reorderListDefaults
+    } from './playground/playground';
 
     const installCommand = 'bunx @sivir-ui/svelte add reorder-list';
+
+    let settings = $state<ReorderListSettings>({
+        ...reorderListDefaults
+    });
+
+    const heroCode = $derived(reorderListCode(settings));
+    const changed = $derived(changedReorderListProps(settings));
 </script>
+
+{#snippet heroProps()}
+    <PropGroup title="State">
+        <PropSwitch label="Disabled" bind:checked={settings.disabled} />
+    </PropGroup>
+{/snippet}
 
 <svelte:head>
     <title>Sivir · Reorder List</title>
@@ -31,7 +49,9 @@
     </header>
 
     <section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-        <ComponentPreview code={HeroSrc}><Hero /></ComponentPreview>
+        <ComponentPreview code={heroCode} props={heroProps} {changed}>
+            <Hero disabled={settings.disabled} />
+        </ComponentPreview>
     </section>
 
     <section id="installation" class="scroll-mt-20 flex flex-col gap-4">

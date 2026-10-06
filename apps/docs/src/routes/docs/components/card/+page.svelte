@@ -1,7 +1,13 @@
 <script lang="ts">
     import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
     import * as Typography from '@sivir-ui/svelte/components/typography';
-    import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+    import {
+        ComponentPreview,
+        InstallCommand,
+        PreviewOptions,
+        PropGroup,
+        PropSwitch
+    } from '$lib/components/docs';
     import DocsPager from '$lib/components/docs/docs-pager.svelte';
     import ContentOnly from './examples/content-only.svelte';
     import ContentOnlySrc from './examples/content-only.svelte?raw';
@@ -10,14 +16,40 @@
     import HeaderFooter from './examples/header-footer.svelte';
     import HeaderFooterSrc from './examples/header-footer.svelte?raw';
     import Hero from './examples/hero.svelte';
-    import HeroSrc from './examples/hero.svelte?raw';
     import Inset from './examples/inset.svelte';
     import InsetSrc from './examples/inset.svelte?raw';
     import Panel from './examples/panel.svelte';
     import PanelSrc from './examples/panel.svelte?raw';
 
+    import {
+        type CardSettings,
+        cardCode,
+        cardDefaults,
+        cardVariants,
+        changedCardProps
+    } from './playground/playground';
+
     const installCommand = 'bunx @sivir-ui/svelte add card';
+
+    let settings = $state<CardSettings>({
+        ...cardDefaults
+    });
+
+    const heroCode = $derived(cardCode(settings));
+    const changed = $derived(changedCardProps(settings));
 </script>
+
+{#snippet heroControls()}
+    <PreviewOptions label="Variant" options={cardVariants} bind:value={settings.variant} />
+{/snippet}
+
+{#snippet heroProps()}
+    <PropGroup title="Parts">
+        <PropSwitch label="Header" bind:checked={settings.header} />
+        <PropSwitch label="Content" bind:checked={settings.content} />
+        <PropSwitch label="Footer" bind:checked={settings.footer} />
+    </PropGroup>
+{/snippet}
 
 <svelte:head>
     <title>Sivir · Card</title>
@@ -43,8 +75,13 @@
 
     <!-- ─── Hero Example ──────────────────────────────────────────── -->
     <section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-        <ComponentPreview code={HeroSrc}>
-            <Hero />
+        <ComponentPreview code={heroCode} controls={heroControls} props={heroProps} {changed}>
+            <Hero
+                variant={settings.variant}
+                header={settings.header}
+                content={settings.content}
+                footer={settings.footer}
+            />
         </ComponentPreview>
     </section>
 

@@ -170,8 +170,16 @@ export type {
     FullscreenNavTriggerProps
 } from './components/fullscreen-nav';
 export * as FullscreenNav from './components/fullscreen-nav';
-export type { GaugeProps, GaugeTone } from './components/gauge';
-export { Gauge } from './components/gauge';
+export type {
+    GaugeIndicatorProps,
+    GaugeRootProps,
+    GaugeSize,
+    GaugeTone,
+    GaugeTrackProps,
+    GaugeValueProps,
+    GaugeValueState
+} from './components/gauge';
+export * as Gauge from './components/gauge';
 export type {
     HoverCardContentProps,
     HoverCardProps,

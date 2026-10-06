@@ -814,6 +814,16 @@ export const animationTokenDefinitions = [
         step: 10
     },
     {
+        name: '--motion-duration-gauge',
+        label: 'Gauge duration',
+        group: 'Speed',
+        fallback: '480ms',
+        kind: 'duration',
+        min: 0,
+        max: 1200,
+        step: 20
+    },
+    {
         name: '--motion-duration-press',
         label: 'Press duration',
         group: 'Speed',

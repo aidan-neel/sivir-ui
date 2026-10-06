@@ -1,9 +1,17 @@
 <script lang="ts">
     import * as Reasoning from '@sivir-ui/svelte/components/reasoning';
+
+    let {
+        streaming = false,
+        title
+    }: {
+        streaming?: boolean;
+        title?: string;
+    } = $props();
 </script>
 
-<Reasoning.Root class="w-full max-w-xl">
-    <Reasoning.Trigger duration="4.8s" />
+<Reasoning.Root {streaming} class="w-full max-w-xl">
+    <Reasoning.Trigger duration="4.8s" {title} />
     <Reasoning.Content>
         <div class="space-y-3">
             <p>Compared the incident timeline with the last five production deployments.</p>

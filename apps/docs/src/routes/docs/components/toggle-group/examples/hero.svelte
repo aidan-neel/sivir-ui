@@ -3,11 +3,18 @@
     import AlignLeft from '@lucide/svelte/icons/align-left';
     import AlignRight from '@lucide/svelte/icons/align-right';
     import * as ToggleGroup from '@sivir-ui/svelte/components/toggle-group';
+    import type { ToggleGroupSettings } from '../playground/playground';
 
-    let alignment = $state('center');
+    let {
+        type,
+        disabled,
+        value = $bindable()
+    }: ToggleGroupSettings & {
+        value: string | string[] | undefined;
+    } = $props();
 </script>
 
-<ToggleGroup.Root type="single" bind:value={alignment}>
+<ToggleGroup.Root {type} {disabled} bind:value>
     <ToggleGroup.Item value="left" aria-label="Align left">
         <AlignLeft size={14} />
     </ToggleGroup.Item>

@@ -106,14 +106,14 @@ import * as AlertDialog from '@sivir-ui/svelte/components/alert-dialog';
 ## What's exported
 
 - **Named:** `Badge`, `BrandMark`, `Button`, `Checkbox`, `CodeBlock`,
-  `CopyButton`, `Gauge`, `Input`, `Label`, `Markdown`, `Pagination`, `Progress`,
+  `CopyButton`, `Input`, `Label`, `Markdown`, `Pagination`, `Progress`,
   `ReorderList`, `ResponseStream`, `ScrollArea`, `Shortcut`, `ShowMore`, `Skeleton`, `SkeletonSwap`,
   `Slider`, `Spinner`, `Switch`, `TaskSteps`, `Textarea`, `Toggle`, and the toast API (`Toast`, `Toaster`,
   `toast`, `getToastUIState`).
 - **Namespaced:** `Accordion`, `Alert`, `AlertDialog`, `Attachment`, `Avatar`,
   `Breadcrumb`, `Card` (includes `variant="panel"`), `Collapsible`, `ColorPicker`,
   `Combobox`, `Command`, `Composer`, `ContextMenu`, `Conversation`, `DropdownMenu`,
-  `FileDiff`, `FullscreenNav`, `HoverCard`, `Message`, `Modal`, `NavigationMenu`, `Popover`,
+  `FileDiff`, `FullscreenNav`, `Gauge`, `HoverCard`, `Message`, `Modal`, `NavigationMenu`, `Popover`,
   `Question`, `RadioGroup`, `Reasoning`, `Select`, `Sheet`, `Sidebar`, `Tabs`, `TagInput`, `ToggleGroup`, `Tool`, `Tooltip`, `Typography`.
 
 ## License

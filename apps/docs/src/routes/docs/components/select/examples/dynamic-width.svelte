@@ -14,7 +14,7 @@
 <div class="flex flex-col gap-2">
     <span class="text-sm [font-weight:var(--font-weight-label,500)] text-foreground">Role</span>
     <Select.Root bind:value={role}>
-        <Select.Trigger class="w-40" variant="outline">
+        <Select.Trigger class="w-48" variant="outline">
             {selected?.label ?? 'Select role'}
         </Select.Trigger>
         <Select.Content dynamic>

@@ -1,18 +1,107 @@
 <script lang="ts">
     import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
     import * as Typography from '@sivir-ui/svelte/components/typography';
-    import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+    import {
+        ComponentPreview,
+        InstallCommand,
+        PreviewMorph,
+        PropGroup,
+        PropRow,
+        PropSegmented,
+        PropSwitch
+    } from '$lib/components/docs';
     import DocsPager from '$lib/components/docs/docs-pager.svelte';
 
     import Hero from './examples/hero.svelte';
-    import HeroSrc from './examples/hero.svelte?raw';
     import Pace from './examples/pace.svelte';
     import PaceSrc from './examples/pace.svelte?raw';
     import ReadyState from './examples/ready-state.svelte';
     import ReadyStateSrc from './examples/ready-state.svelte?raw';
+    import {
+        changedSpinnerProps,
+        type SpinnerSettings,
+        type SpinnerSize,
+        type SpinnerSpeed,
+        spinnerCode,
+        spinnerDefaults
+    } from './playground/playground';
 
     const installCommand = 'bunx @sivir-ui/svelte add spinner';
+
+    const sizeOptions: {
+        value: SpinnerSize;
+        label: string;
+    }[] = [
+        {
+            value: '12',
+            label: '12'
+        },
+        {
+            value: '16',
+            label: '16'
+        },
+        {
+            value: '20',
+            label: '20'
+        },
+        {
+            value: '24',
+            label: '24'
+        }
+    ];
+
+    const speedOptions: {
+        value: SpinnerSpeed;
+        label: string;
+    }[] = [
+        {
+            value: '0.5',
+            label: '0.5×'
+        },
+        {
+            value: '1',
+            label: '1×'
+        },
+        {
+            value: '2',
+            label: '2×'
+        }
+    ];
+
+    let settings = $state<SpinnerSettings>({
+        ...spinnerDefaults
+    });
+
+    const heroCode = $derived(spinnerCode(settings));
+    const changed = $derived(changedSpinnerProps(settings));
 </script>
+
+{#snippet heroProps()}
+    <PropGroup title="Appearance">
+        <PropRow label="Size">
+            <PropSegmented
+                label="Size"
+                size="sm"
+                options={sizeOptions}
+                bind:value={settings.size}
+            />
+        </PropRow>
+    </PropGroup>
+    <PropGroup title="Motion">
+        <PropRow label="Speed">
+            <PropSegmented
+                label="Speed"
+                size="sm"
+                options={speedOptions}
+                bind:value={settings.speed}
+            />
+        </PropRow>
+        <PropSwitch label="Curved" bind:checked={settings.curved} />
+    </PropGroup>
+    <PropGroup title="State">
+        <PropSwitch label="Ready" bind:checked={settings.ready} />
+    </PropGroup>
+{/snippet}
 
 <svelte:head>
     <title>Sivir · Spinner</title>
@@ -35,7 +124,16 @@
     </header>
 
     <section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-        <ComponentPreview code={HeroSrc}><Hero /></ComponentPreview>
+        <ComponentPreview code={heroCode} props={heroProps} {changed}>
+            <PreviewMorph key={settings.size}>
+                <Hero
+                    size={Number(settings.size)}
+                    speed={Number(settings.speed)}
+                    curved={settings.curved}
+                    ready={settings.ready}
+                />
+            </PreviewMorph>
+        </ComponentPreview>
     </section>
 
     <section id="installation" class="scroll-mt-20 flex flex-col gap-4">

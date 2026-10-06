@@ -6,8 +6,6 @@
 
     import Hero from './examples/hero.svelte';
     import HeroSrc from './examples/hero.svelte?raw';
-    import SafeHtml from './examples/safe-html.svelte';
-    import SafeHtmlSrc from './examples/safe-html.svelte?raw';
     import Streaming from './examples/streaming.svelte';
     import StreamingSrc from './examples/streaming.svelte?raw';
 
@@ -49,7 +47,9 @@ const content = [
     </header>
 
     <section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-        <ComponentPreview code={HeroSrc}><Hero /></ComponentPreview>
+        <ComponentPreview code={HeroSrc}>
+            <Hero />
+        </ComponentPreview>
     </section>
 
     <section id="installation" class="scroll-mt-20 flex flex-col gap-4">
@@ -69,6 +69,7 @@ const content = [
         <CodeBlock code={usageSnippet} lang="svelte" copy="overlay" />
     </section>
 
+    <!-- ─── Examples ──────────────────────────────────────────────── -->
     <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
         <div>
             <Typography.H2 class="docs-section-heading"> Examples </Typography.H2>
@@ -76,12 +77,9 @@ const content = [
 
         <div id="streaming" class="scroll-mt-20 flex flex-col gap-3">
             <Typography.H3 class="docs-subsection-heading"> Streaming response </Typography.H3>
-            <ComponentPreview code={StreamingSrc}><Streaming /></ComponentPreview>
-        </div>
-
-        <div id="safe-html" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading"> Raw HTML safety </Typography.H3>
-            <ComponentPreview code={SafeHtmlSrc}><SafeHtml /></ComponentPreview>
+            <ComponentPreview code={StreamingSrc}>
+                <Streaming />
+            </ComponentPreview>
         </div>
     </section>
 </div>

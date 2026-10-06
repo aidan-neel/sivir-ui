@@ -23,7 +23,6 @@
         <DropdownMenu.Item>
             <span class="flex items-center gap-2"><Archive size={13} /> Archive</span>
         </DropdownMenu.Item>
-        <DropdownMenu.Separator />
         <DropdownMenu.Item>
             <span class="flex items-center gap-2 text-[var(--color-error)]">
                 <Trash size={13} />

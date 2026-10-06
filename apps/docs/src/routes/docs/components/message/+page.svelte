@@ -1,15 +1,24 @@
 <script lang="ts">
     import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
     import * as Typography from '@sivir-ui/svelte/components/typography';
-    import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+    import {
+        ComponentPreview,
+        InstallCommand,
+        PreviewMorph,
+        PropGroup,
+        PropRow,
+        PropSegmented,
+        PropSwitch
+    } from '$lib/components/docs';
     import DocsPager from '$lib/components/docs/docs-pager.svelte';
-
-    import Hero from './examples/hero.svelte';
-    import HeroSrc from './examples/hero.svelte?raw';
-    import RoleVariants from './examples/role-variants.svelte';
-    import RoleVariantsSrc from './examples/role-variants.svelte?raw';
-    import States from './examples/states.svelte';
-    import StatesSrc from './examples/states.svelte?raw';
+    import {
+        changedMessageProps,
+        type MessagePlaygroundStatus,
+        type MessageSettings,
+        messageCode,
+        messageDefaults
+    } from './playground/playground';
+    import Preview from './playground/preview.svelte';
 
     const installCommand = 'bunx @sivir-ui/svelte add message';
     const usageSnippet = `import * as Message from '@sivir-ui/svelte/components/message';
@@ -22,7 +31,49 @@
     <!-- Add labeled actions such as copy or rate -->
   </Message.Actions>
 </Message.Root>`;
+
+    const statusOptions: {
+        value: MessagePlaygroundStatus;
+        label: string;
+    }[] = [
+        {
+            value: 'idle',
+            label: 'Idle'
+        },
+        {
+            value: 'error',
+            label: 'Error'
+        }
+    ];
+
+    let settings = $state<MessageSettings>({
+        ...messageDefaults
+    });
+
+    const heroCode = $derived(messageCode(settings));
+    const changed = $derived(changedMessageProps(settings));
+    const morphKey = $derived(
+        [settings.status, settings.name, settings.timestamp, settings.avatar].join('-')
+    );
 </script>
+
+{#snippet messageProps()}
+    <PropGroup title="Metadata">
+        <PropSwitch label="Name" bind:checked={settings.name} />
+        <PropSwitch label="Timestamp" bind:checked={settings.timestamp} />
+        <PropSwitch label="Avatar" bind:checked={settings.avatar} />
+    </PropGroup>
+    <PropGroup title="Assistant">
+        <PropRow label="Status">
+            <PropSegmented
+                label="Status"
+                size="sm"
+                options={statusOptions}
+                bind:value={settings.status}
+            />
+        </PropRow>
+    </PropGroup>
+{/snippet}
 
 <svelte:head>
     <title>Sivir · Message</title>
@@ -45,7 +96,11 @@
     </header>
 
     <section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-        <ComponentPreview code={HeroSrc}><Hero /></ComponentPreview>
+        <ComponentPreview code={heroCode} props={messageProps} {changed}>
+            <PreviewMorph key={morphKey}>
+                <Preview {settings} />
+            </PreviewMorph>
+        </ComponentPreview>
     </section>
 
     <section id="installation" class="scroll-mt-20 flex flex-col gap-4">
@@ -68,23 +123,5 @@
             <Typography.InlineCode>aria-label</Typography.InlineCode>.
         </Typography.Text>
         <CodeBlock code={usageSnippet} lang="svelte" copy="overlay" />
-    </section>
-
-    <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
-        <div>
-            <Typography.H2 class="docs-section-heading"> Examples </Typography.H2>
-        </div>
-
-        <div id="role-variants" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading"> Role variants </Typography.H3>
-            <ComponentPreview code={RoleVariantsSrc}><RoleVariants /></ComponentPreview>
-        </div>
-
-        <div id="message-states" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading">
-                Streaming and error states
-            </Typography.H3>
-            <ComponentPreview code={StatesSrc}><States /></ComponentPreview>
-        </div>
     </section>
 </div>

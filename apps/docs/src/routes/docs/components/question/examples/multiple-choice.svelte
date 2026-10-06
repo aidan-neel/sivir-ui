@@ -4,6 +4,29 @@
 
     let answer = $state<QuestionAnswer>([]);
     let summary = $state('');
+
+    const capabilities = [
+        {
+            value: 'voice',
+            label: 'Voice input',
+            description: 'Users can speak commands and questions aloud.'
+        },
+        {
+            value: 'video',
+            label: 'Video output',
+            description: 'Responses include visual demos and annotated screenshots.'
+        },
+        {
+            value: 'offline',
+            label: 'Offline mode',
+            description: 'Cache conversations locally; sync when reconnected.'
+        },
+        {
+            value: 'sharing',
+            label: 'Share conversations',
+            description: 'Generate shareable links with optional access controls.'
+        }
+    ];
 </script>
 
 <div class="flex w-full max-w-2xl flex-col gap-3">
@@ -16,23 +39,24 @@
         }}
     >
         <Question.Content>
-            <Question.Title
-                >Which checks should I run before opening the pull request?</Question.Title
-            >
-            <Question.Description>Select every check you want included.</Question.Description>
+            <Question.Title>Which features should I build first?</Question.Title>
+            <Question.Description>
+                Select each feature to include in the 0.2.0 release.
+            </Question.Description>
             <Question.Options>
-                <Question.Option value="tests" label="Test suite" />
-                <Question.Option value="types" label="Type checking" />
-                <Question.Option value="build" label="Production build" />
-                <Question.Option value="browser" label="Browser smoke test" />
+                {#each capabilities as capability (capability.value)}
+                    <Question.Option {...capability} />
+                {/each}
             </Question.Options>
         </Question.Content>
         <Question.Actions>
-            <Question.Submit label="Run selected checks" />
+            <Question.Submit
+                label={`Add ${Array.isArray(answer) ? answer.length : 0} feature${Array.isArray(answer) && answer.length !== 1 ? 's' : ''}`}
+            />
         </Question.Actions>
     </Question.Root>
 
     <p class="min-h-5 text-sm text-foreground-muted" role="status">
-        {summary ? `Queued: ${summary}` : 'No checks queued'}
+        {summary ? `Selected: ${summary}` : 'No features selected'}
     </p>
 </div>

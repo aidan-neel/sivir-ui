@@ -78,7 +78,6 @@
             <Command.Results>
                 {#each groups as group, index (group.heading)}
                     {#if index > 0}
-                        <Command.Separator />
                     {/if}
                     <Command.Group heading={group.heading}>
                         {#each group.actions as action (action.name)}

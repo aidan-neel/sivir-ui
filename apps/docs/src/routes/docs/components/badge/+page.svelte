@@ -1,34 +1,58 @@
 <script lang="ts">
     import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
     import * as Typography from '@sivir-ui/svelte/components/typography';
-    import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+    import {
+        ComponentPreview,
+        InstallCommand,
+        PreviewMorph,
+        PreviewOptions,
+        PropGroup,
+        PropSwitch
+    } from '$lib/components/docs';
     import DocsPager from '$lib/components/docs/docs-pager.svelte';
 
     import Hero from './examples/hero.svelte';
-    import HeroSrc from './examples/hero.svelte?raw';
-    import Shapes from './examples/shapes.svelte';
-    import ShapesSrc from './examples/shapes.svelte?raw';
-    import VariantDestructive from './examples/variant-destructive.svelte';
-    import VariantDestructiveSrc from './examples/variant-destructive.svelte?raw';
-    import VariantError from './examples/variant-error.svelte';
-    import VariantErrorSrc from './examples/variant-error.svelte?raw';
-    import VariantGhost from './examples/variant-ghost.svelte';
-    import VariantGhostSrc from './examples/variant-ghost.svelte?raw';
-    import VariantInfo from './examples/variant-info.svelte';
-    import VariantInfoSrc from './examples/variant-info.svelte?raw';
-    import VariantOutline from './examples/variant-outline.svelte';
-    import VariantOutlineSrc from './examples/variant-outline.svelte?raw';
-    import VariantPrimary from './examples/variant-primary.svelte';
-    import VariantPrimarySrc from './examples/variant-primary.svelte?raw';
-    import VariantSecondary from './examples/variant-secondary.svelte';
-    import VariantSecondarySrc from './examples/variant-secondary.svelte?raw';
-    import VariantSuccess from './examples/variant-success.svelte';
-    import VariantSuccessSrc from './examples/variant-success.svelte?raw';
-    import VariantWarning from './examples/variant-warning.svelte';
-    import VariantWarningSrc from './examples/variant-warning.svelte?raw';
+    import WithDot from './examples/with-dot.svelte';
+    import WithDotSrc from './examples/with-dot.svelte?raw';
+    import WithHref from './examples/with-href.svelte';
+    import WithHrefSrc from './examples/with-href.svelte?raw';
+    import WithIcon from './examples/with-icon.svelte';
+    import WithIconSrc from './examples/with-icon.svelte?raw';
+    import {
+        type BadgeSettings,
+        badgeCode,
+        badgeDefaults,
+        badgeText,
+        badgeVariants,
+        changedBadgeProps
+    } from './playground/playground';
 
     const installCommand = 'bunx @sivir-ui/svelte add badge';
+
+    let settings = $state<BadgeSettings>({
+        ...badgeDefaults
+    });
+
+    const heroCode = $derived(badgeCode(settings));
+    const changed = $derived(changedBadgeProps(settings));
+    const morphKey = $derived(
+        [settings.variant, settings.dot, settings.withIcon, settings.asLink].join('-')
+    );
 </script>
+
+{#snippet heroControls()}
+    <PreviewOptions label="Variant" options={badgeVariants} bind:value={settings.variant} />
+{/snippet}
+
+{#snippet heroProps()}
+    <PropGroup title="Content">
+        <PropSwitch label="Dot" bind:checked={settings.dot} />
+        <PropSwitch label="Icon" bind:checked={settings.withIcon} />
+    </PropGroup>
+    <PropGroup title="Behavior">
+        <PropSwitch label="Link" bind:checked={settings.asLink} />
+    </PropGroup>
+{/snippet}
 
 <svelte:head>
     <title>Sivir · Badge</title>
@@ -53,8 +77,16 @@
 
     <!-- ─── Hero Example ──────────────────────────────────────────── -->
     <section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-        <ComponentPreview code={HeroSrc}>
-            <Hero />
+        <ComponentPreview code={heroCode} controls={heroControls} props={heroProps} {changed}>
+            <PreviewMorph key={morphKey}>
+                <Hero
+                    variant={settings.variant}
+                    label={badgeText(settings.variant)}
+                    dot={settings.dot}
+                    withIcon={settings.withIcon}
+                    asLink={settings.asLink}
+                />
+            </PreviewMorph>
         </ComponentPreview>
     </section>
 
@@ -84,76 +116,24 @@
             <Typography.H2 class="docs-section-heading"> Examples </Typography.H2>
         </div>
 
-        <div id="shapes" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading"> Shapes </Typography.H3>
-            <Typography.Text variant="supporting">
-                Badge has no shape prop. Change the radius and padding with class.
-            </Typography.Text>
-            <ComponentPreview code={ShapesSrc}>
-                <Shapes />
+        <div id="with-dot" class="scroll-mt-20 flex flex-col gap-3">
+            <Typography.H3 class="docs-subsection-heading"> With dot </Typography.H3>
+            <ComponentPreview code={WithDotSrc}>
+                <WithDot />
             </ComponentPreview>
         </div>
 
-        <div id="variant-primary" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading"> Primary </Typography.H3>
-            <ComponentPreview code={VariantPrimarySrc}>
-                <VariantPrimary />
+        <div id="with-icon" class="scroll-mt-20 flex flex-col gap-3">
+            <Typography.H3 class="docs-subsection-heading"> With icon </Typography.H3>
+            <ComponentPreview code={WithIconSrc}>
+                <WithIcon />
             </ComponentPreview>
         </div>
 
-        <div id="variant-secondary" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading"> Secondary </Typography.H3>
-            <ComponentPreview code={VariantSecondarySrc}>
-                <VariantSecondary />
-            </ComponentPreview>
-        </div>
-
-        <div id="variant-ghost" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading"> Ghost </Typography.H3>
-            <ComponentPreview code={VariantGhostSrc}>
-                <VariantGhost />
-            </ComponentPreview>
-        </div>
-
-        <div id="variant-outline" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading"> Outline </Typography.H3>
-            <ComponentPreview code={VariantOutlineSrc}>
-                <VariantOutline />
-            </ComponentPreview>
-        </div>
-
-        <div id="variant-destructive" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading"> Destructive </Typography.H3>
-            <ComponentPreview code={VariantDestructiveSrc}>
-                <VariantDestructive />
-            </ComponentPreview>
-        </div>
-
-        <div id="variant-info" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading"> Info </Typography.H3>
-            <ComponentPreview code={VariantInfoSrc}>
-                <VariantInfo />
-            </ComponentPreview>
-        </div>
-
-        <div id="variant-success" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading"> Success </Typography.H3>
-            <ComponentPreview code={VariantSuccessSrc}>
-                <VariantSuccess />
-            </ComponentPreview>
-        </div>
-
-        <div id="variant-warning" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading"> Warning </Typography.H3>
-            <ComponentPreview code={VariantWarningSrc}>
-                <VariantWarning />
-            </ComponentPreview>
-        </div>
-
-        <div id="variant-error" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading"> Error </Typography.H3>
-            <ComponentPreview code={VariantErrorSrc}>
-                <VariantError />
+        <div id="with-href" class="scroll-mt-20 flex flex-col gap-3">
+            <Typography.H3 class="docs-subsection-heading"> As link </Typography.H3>
+            <ComponentPreview code={WithHrefSrc}>
+                <WithHref />
             </ComponentPreview>
         </div>
     </section>

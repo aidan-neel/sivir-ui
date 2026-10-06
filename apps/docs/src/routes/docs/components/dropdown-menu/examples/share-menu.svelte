@@ -23,7 +23,6 @@
             <span class="flex items-center gap-2"><Copy2 size={13} /> Copy link</span>
             <Shortcut shortcut="shift+cmd+C" />
         </DropdownMenu.Item>
-        <DropdownMenu.Separator />
         <DropdownMenu.Label>Public</DropdownMenu.Label>
         <DropdownMenu.Item>
             <span class="flex items-center gap-2"><EyeOff size={13} /> Make private</span>

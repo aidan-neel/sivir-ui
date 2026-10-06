@@ -1,21 +1,75 @@
 <script lang="ts">
     import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
     import * as Typography from '@sivir-ui/svelte/components/typography';
-    import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+    import {
+        ComponentPreview,
+        InstallCommand,
+        PreviewMorph,
+        PreviewOptions,
+        PropGroup,
+        PropSwitch
+    } from '$lib/components/docs';
     import DocsPager from '$lib/components/docs/docs-pager.svelte';
     import Basic from './examples/basic.svelte';
     import BasicSrc from './examples/basic.svelte?raw';
     import Disabled from './examples/disabled.svelte';
     import DisabledSrc from './examples/disabled.svelte?raw';
     import Hero from './examples/hero.svelte';
-    import HeroSrc from './examples/hero.svelte?raw';
     import Labeled from './examples/labeled.svelte';
     import LabeledSrc from './examples/labeled.svelte?raw';
+    import {
+        changedTextareaProps,
+        type TextareaSettings,
+        type TextareaVariant,
+        textareaCode,
+        textareaContent,
+        textareaDefaults
+    } from './playground/playground';
 
     const TITLE = 'Textarea';
 
     const installCommand = 'bunx @sivir-ui/svelte add textarea';
+
+    const variantOptions: {
+        value: TextareaVariant;
+        label: string;
+    }[] = [
+        {
+            value: 'outline',
+            label: 'Outline'
+        },
+        {
+            value: 'secondary',
+            label: 'Secondary'
+        }
+    ];
+
+    let settings = $state<TextareaSettings>({
+        ...textareaDefaults
+    });
+    let message = $state(textareaContent.value);
+
+    const heroCode = $derived(textareaCode(settings));
+    const changed = $derived(changedTextareaProps(settings));
+    const morphKey = $derived(
+        [settings.label, settings.description, settings.autoresize].join('-')
+    );
 </script>
+
+{#snippet heroControls()}
+    <PreviewOptions label="Variant" options={variantOptions} bind:value={settings.variant} />
+{/snippet}
+
+{#snippet heroProps()}
+    <PropGroup title="Content">
+        <PropSwitch label="Label" bind:checked={settings.label} />
+        <PropSwitch label="Description" bind:checked={settings.description} />
+    </PropGroup>
+    <PropGroup title="Behavior">
+        <PropSwitch label="Autoresize" bind:checked={settings.autoresize} />
+        <PropSwitch label="Disabled" bind:checked={settings.disabled} />
+    </PropGroup>
+{/snippet}
 
 <svelte:head>
     <title>Sivir · {TITLE}</title>
@@ -40,8 +94,19 @@
 
     <!-- ─── Hero Example ──────────────────────────────────────────── -->
     <section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-        <ComponentPreview code={HeroSrc}>
-            <Hero />
+        <ComponentPreview code={heroCode} controls={heroControls} props={heroProps} {changed}>
+            <PreviewMorph key={morphKey}>
+                <div class="w-96 max-w-full">
+                    <Hero
+                        bind:value={message}
+                        variant={settings.variant}
+                        label={settings.label}
+                        description={settings.description}
+                        autoresize={settings.autoresize}
+                        disabled={settings.disabled}
+                    />
+                </div>
+            </PreviewMorph>
         </ComponentPreview>
     </section>
 
@@ -70,18 +135,16 @@
     <!-- ─── Examples ──────────────────────────────────────────────── -->
     <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
         <div>
-            <Typography.H2 class="docs-section-heading">Examples</Typography.H2>
+            <Typography.H2 class="docs-section-heading"> Examples </Typography.H2>
         </div>
 
-        <!-- Basic -->
         <div id="basic" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading">Basic</Typography.H3>
+            <Typography.H3 class="docs-subsection-heading"> Basic </Typography.H3>
             <ComponentPreview code={BasicSrc}>
                 <Basic />
             </ComponentPreview>
         </div>
 
-        <!-- With label and description -->
         <div id="labeled" class="scroll-mt-20 flex flex-col gap-3">
             <Typography.H3 class="docs-subsection-heading">
                 With label and description
@@ -91,9 +154,8 @@
             </ComponentPreview>
         </div>
 
-        <!-- Disabled -->
         <div id="disabled" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading">Disabled</Typography.H3>
+            <Typography.H3 class="docs-subsection-heading"> Disabled </Typography.H3>
             <ComponentPreview code={DisabledSrc}>
                 <Disabled />
             </ComponentPreview>

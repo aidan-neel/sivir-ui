@@ -7,6 +7,9 @@
     import Type from '@lucide/svelte/icons/type';
     import Shortcut from '@sivir-ui/svelte/components/shortcut';
     import * as Tooltip from '@sivir-ui/svelte/components/tooltip';
+    import type { TooltipSettings } from '../playground/playground';
+
+    let { placement, delay, showOnClick, shortcut }: TooltipSettings = $props();
 
     let activeTool = $state<string>('move');
 
@@ -24,8 +27,8 @@
     <div class="flex gap-1 rounded-[var(--radius-lg)] border border-border bg-card p-1">
         {#each tools as tool (tool.id)}
             {@const Icon = tool.icon}
-            <Tooltip.Root placement="top" delay={300}>
-                <Tooltip.Trigger>
+            <Tooltip.Root {placement} delay={Number(delay)}>
+                <Tooltip.Trigger {showOnClick}>
                     <button
                         type="button"
                         class="inline-flex size-8 items-center justify-center rounded-[var(--radius-md)] transition-colors"
@@ -34,18 +37,24 @@
                         class:text-foreground-muted={activeTool !== tool.id}
                         class:hover:bg-secondary={activeTool !== tool.id}
                         class:hover:text-foreground={activeTool !== tool.id}
-                        onclick={() => (activeTool = tool.id)}
+                        onclick={() => {
+                            activeTool = tool.id;
+                        }}
                         aria-label={tool.label}
                     >
                         <Icon size={16} />
                     </button>
                 </Tooltip.Trigger>
-                <Tooltip.Content>
-                    <div class="flex items-center gap-2">
-                        <span>{tool.label}</span>
-                        <Shortcut shortcut={tool.shortcut} />
-                    </div>
-                </Tooltip.Content>
+                {#if shortcut}
+                    <Tooltip.Content>
+                        <div class="flex items-center gap-2">
+                            <span>{tool.label}</span>
+                            <Shortcut shortcut={tool.shortcut} />
+                        </div>
+                    </Tooltip.Content>
+                {:else}
+                    <Tooltip.Content>{tool.label}</Tooltip.Content>
+                {/if}
             </Tooltip.Root>
         {/each}
     </div>

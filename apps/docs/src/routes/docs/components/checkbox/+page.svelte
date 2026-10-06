@@ -1,24 +1,56 @@
 <script lang="ts">
     import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
     import * as Typography from '@sivir-ui/svelte/components/typography';
-    import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+    import {
+        ComponentPreview,
+        InstallCommand,
+        PreviewOptions,
+        PropGroup,
+        PropSwitch
+    } from '$lib/components/docs';
     import DocsPager from '$lib/components/docs/docs-pager.svelte';
     import Checked from './examples/checked.svelte';
     import CheckedSrc from './examples/checked.svelte?raw';
     import Disabled from './examples/disabled.svelte';
     import DisabledSrc from './examples/disabled.svelte?raw';
     import Hero from './examples/hero.svelte';
-    import HeroSrc from './examples/hero.svelte?raw';
-    import LabelOnly from './examples/label-only.svelte';
-    import LabelOnlySrc from './examples/label-only.svelte?raw';
     import WithDescription from './examples/with-description.svelte';
     import WithDescriptionSrc from './examples/with-description.svelte?raw';
 
     const TITLE = 'Checkbox';
     const SLUG = 'checkbox';
 
+    import {
+        type CheckboxSettings,
+        changedCheckboxProps,
+        checkboxCode,
+        checkboxDefaults,
+        checkboxVariants
+    } from './playground/playground';
+
     const installCommand = `bunx @sivir-ui/svelte add ${SLUG}`;
+
+    let settings = $state<CheckboxSettings>({
+        ...checkboxDefaults
+    });
+
+    const heroCode = $derived(checkboxCode(settings));
+    const changed = $derived(changedCheckboxProps(settings));
 </script>
+
+{#snippet heroControls()}
+    <PreviewOptions label="Variant" options={checkboxVariants} bind:value={settings.variant} />
+{/snippet}
+
+{#snippet heroProps()}
+    <PropGroup title="State">
+        <PropSwitch label="Checked" bind:checked={settings.checked} />
+        <PropSwitch label="Disabled" bind:checked={settings.disabled} />
+    </PropGroup>
+    <PropGroup title="Content">
+        <PropSwitch label="Description" bind:checked={settings.description} />
+    </PropGroup>
+{/snippet}
 
 <svelte:head>
     <title>Sivir · {TITLE}</title>
@@ -45,8 +77,13 @@
 
     <!-- ─── Hero Example ──────────────────────────────────────────── -->
     <section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-        <ComponentPreview code={HeroSrc}>
-            <Hero />
+        <ComponentPreview code={heroCode} controls={heroControls} props={heroProps} {changed}>
+            <Hero
+                variant={settings.variant}
+                bind:checked={settings.checked}
+                description={settings.description}
+                disabled={settings.disabled}
+            />
         </ComponentPreview>
     </section>
 
@@ -79,33 +116,24 @@
             <Typography.H2 class="docs-section-heading"> Examples </Typography.H2>
         </div>
 
-        <!-- Label only -->
-        <div id="label-only" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading"> Label only </Typography.H3>
-            <ComponentPreview code={LabelOnlySrc}>
-                <LabelOnly />
-            </ComponentPreview>
-        </div>
-
-        <!-- With description -->
-        <div id="with-description" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading"> With description </Typography.H3>
+        <div id="preferences" class="scroll-mt-20 flex flex-col gap-3">
+            <Typography.H3 class="docs-subsection-heading">
+                Notification preferences
+            </Typography.H3>
             <ComponentPreview code={WithDescriptionSrc}>
                 <WithDescription />
             </ComponentPreview>
         </div>
 
-        <!-- Disabled -->
-        <div id="disabled" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading"> Disabled </Typography.H3>
+        <div id="permissions" class="scroll-mt-20 flex flex-col gap-3">
+            <Typography.H3 class="docs-subsection-heading"> Disabled by policy </Typography.H3>
             <ComponentPreview code={DisabledSrc}>
                 <Disabled />
             </ComponentPreview>
         </div>
 
-        <!-- Checked -->
-        <div id="checked" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading"> Checked </Typography.H3>
+        <div id="controlled" class="scroll-mt-20 flex flex-col gap-3">
+            <Typography.H3 class="docs-subsection-heading"> Controlled state </Typography.H3>
             <ComponentPreview code={CheckedSrc}>
                 <Checked />
             </ComponentPreview>

@@ -1,17 +1,98 @@
 <script lang="ts">
     import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
+    import type { ModalOrientation, ModalSize } from '@sivir-ui/svelte/components/modal';
     import * as Typography from '@sivir-ui/svelte/components/typography';
-    import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+    import {
+        ComponentPreview,
+        InstallCommand,
+        PropGroup,
+        PropRow,
+        PropSegmented,
+        PropSwitch
+    } from '$lib/components/docs';
     import DocsPager from '$lib/components/docs/docs-pager.svelte';
     import Destructive from './examples/destructive.svelte';
     import DestructiveSrc from './examples/destructive.svelte?raw';
     import Hero from './examples/hero.svelte';
-    import HeroSrc from './examples/hero.svelte?raw';
     import SignOut from './examples/sign-out.svelte';
     import SignOutSrc from './examples/sign-out.svelte?raw';
+    import {
+        type AlertDialogSettings,
+        alertDialogCode,
+        alertDialogDefaults,
+        changedAlertDialogProps
+    } from './playground/playground';
 
     const installCommand = 'bunx @sivir-ui/svelte add alert-dialog';
+
+    const sizeOptions: {
+        value: ModalSize;
+        label: string;
+    }[] = [
+        {
+            value: 'sm',
+            label: 'Small'
+        },
+        {
+            value: 'md',
+            label: 'Medium'
+        },
+        {
+            value: 'lg',
+            label: 'Large'
+        },
+        {
+            value: 'xl',
+            label: 'XL'
+        }
+    ];
+
+    const orientationOptions: {
+        value: ModalOrientation;
+        label: string;
+    }[] = [
+        {
+            value: 'vertical',
+            label: 'Vertical'
+        },
+        {
+            value: 'horizontal',
+            label: 'Horizontal'
+        }
+    ];
+
+    let settings = $state<AlertDialogSettings>({
+        ...alertDialogDefaults
+    });
+
+    const heroCode = $derived(alertDialogCode(settings));
+    const changed = $derived(changedAlertDialogProps(settings));
 </script>
+
+{#snippet heroProps()}
+    <PropGroup title="Appearance">
+        <PropRow label="Size">
+            <PropSegmented
+                label="Size"
+                size="sm"
+                options={sizeOptions}
+                bind:value={settings.size}
+            />
+        </PropRow>
+        <PropRow label="Orientation">
+            <PropSegmented
+                label="Orientation"
+                size="sm"
+                options={orientationOptions}
+                bind:value={settings.orientation}
+            />
+        </PropRow>
+        <PropSwitch label="Error" bind:checked={settings.error} />
+    </PropGroup>
+    <PropGroup title="Behavior">
+        <PropSwitch label="Allow Escape" bind:checked={settings.allowEscape} />
+    </PropGroup>
+{/snippet}
 
 <svelte:head>
     <title>Sivir · Alert Dialog</title>
@@ -36,8 +117,13 @@
 
     <!-- ─── Hero Example ──────────────────────────────────────────── -->
     <section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-        <ComponentPreview code={HeroSrc}>
-            <Hero />
+        <ComponentPreview code={heroCode} props={heroProps} {changed}>
+            <Hero
+                error={settings.error}
+                orientation={settings.orientation}
+                size={settings.size}
+                allowEscape={settings.allowEscape}
+            />
         </ComponentPreview>
     </section>
 
@@ -70,7 +156,6 @@
             <Typography.H2 class="docs-section-heading"> Examples </Typography.H2>
         </div>
 
-        <!-- Destructive confirmation -->
         <div id="destructive" class="scroll-mt-20 flex flex-col gap-3">
             <Typography.H3 class="docs-subsection-heading">
                 Destructive confirmation
@@ -80,7 +165,6 @@
             </ComponentPreview>
         </div>
 
-        <!-- Sign out -->
         <div id="sign-out" class="scroll-mt-20 flex flex-col gap-3">
             <Typography.H3 class="docs-subsection-heading"> Sign out confirmation </Typography.H3>
             <ComponentPreview code={SignOutSrc}>

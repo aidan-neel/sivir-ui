@@ -40,7 +40,6 @@
                         Roadmap
                     </Command.Item>
                 </Command.Group>
-                <Command.Separator />
                 <Command.Group heading="Create">
                     <Command.Item name="New issue">
                         <SquarePen size={16} />
@@ -52,7 +51,6 @@
                         New project
                     </Command.Item>
                 </Command.Group>
-                <Command.Separator />
                 <Command.Group heading="Settings">
                     <Command.Item name="Switch team">
                         <Users size={16} />

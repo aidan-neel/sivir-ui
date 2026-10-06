@@ -1,42 +1,43 @@
 <script lang="ts">
-    import GitBranch from '@lucide/svelte/icons/git-branch';
-    import { Badge } from '@sivir-ui/svelte/components/badge';
     import { Button } from '@sivir-ui/svelte/components/button';
     import * as Card from '@sivir-ui/svelte/components/card';
 </script>
 
 <Card.Root variant="inset" class="w-full max-w-[28rem]">
     <Card.Header>
-        <div class="mb-2 flex items-center justify-between">
+        <div class="flex items-start justify-between gap-4">
             <Card.Title>sivir-ui</Card.Title>
-            <Badge variant="info">Next.js</Badge>
+            <span
+                class="flex shrink-0 items-center gap-2 py-1 text-[length:var(--font-size-body)] font-medium text-foreground"
+            >
+                <span
+                    class="size-2 rounded-full bg-[var(--color-success)]"
+                    aria-hidden="true"
+                ></span>
+                Ready
+            </span>
         </div>
-        <Card.Description>vercel.com/aidan-neel/sivir-ui</Card.Description>
+        <Card.Description class="font-mono text-[0.875em]">sivir-ui.vercel.app</Card.Description>
     </Card.Header>
     <Card.Content>
-        <div class="space-y-4">
-            <!-- Status Row -->
-            <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                    <div class="h-2 w-2 rounded-full bg-emerald-500"></div>
-                    <span class="text-sm font-medium text-foreground">Ready</span>
-                </div>
-                <div class="flex items-center gap-3">
-                    <span class="text-xs text-foreground-muted">Production</span>
-                    <span class="text-xs text-foreground-muted">Deployed 2h ago</span>
-                </div>
-            </div>
-
-            <!-- Commit Row -->
-            <div class="flex items-center gap-2 rounded-[var(--radius-md)] bg-secondary px-3 py-2">
-                <GitBranch class="h-4 w-4 shrink-0 text-foreground-muted" />
-                <span class="text-sm font-medium text-foreground">main</span>
-                <span class="truncate text-xs text-foreground-muted"
-                    >feat(studio): restore original styling</span
-                >
-                <span class="ml-auto shrink-0 text-xs text-foreground-muted">aidan-neel</span>
-            </div>
-        </div>
+        <dl
+            class="m-0 grid grid-cols-[auto_minmax(0,1fr)] items-baseline gap-x-6 gap-y-3 text-[length:var(--font-size-body)]"
+        >
+            <dt class="text-foreground-muted">Environment</dt>
+            <dd class="m-0 text-foreground">Production</dd>
+            <dt class="text-foreground-muted">Branch</dt>
+            <dd class="m-0 font-mono text-[0.875em] text-foreground">main</dd>
+            <dt class="text-foreground-muted">Commit</dt>
+            <dd class="m-0 flex min-w-0 items-baseline gap-2 text-foreground">
+                <span class="shrink-0 font-mono text-[0.875em] text-foreground-muted">4f2a9c1</span>
+                <span class="truncate">feat(studio): restore original styling</span>
+            </dd>
+            <dt class="text-foreground-muted">Deployed</dt>
+            <dd class="m-0 text-foreground">
+                <time datetime="2026-10-05T10:00:00Z">2 hours ago</time>
+                by aidan-neel
+            </dd>
+        </dl>
     </Card.Content>
     <Card.Footer>
         <Button variant="outline" size="md">Visit</Button>

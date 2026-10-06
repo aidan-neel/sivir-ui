@@ -73,7 +73,7 @@
                 class={`mt-8 flex flex-wrap items-center justify-center gap-2 ${riseClass}`}
                 style={riseDelay(3)}
             >
-                <Button href={resolve('/docs/components')} size="lg" class="group">
+                <Button href={resolve('/docs/components')} class="group">
                     Browse components
                     <ArrowRight
                         size={14}
@@ -81,7 +81,7 @@
                         class={`${nudgeClass} group-hover:translate-x-0.5`}
                     />
                 </Button>
-                <Button href={resolve('/docs/skill')} size="lg" variant="outline" class="group">
+                <Button href={resolve('/docs/skill')} variant="outline" class="group">
                     Give Sivir to your AI
                     <ArrowRight
                         size={14}

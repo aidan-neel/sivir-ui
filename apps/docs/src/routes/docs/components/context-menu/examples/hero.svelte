@@ -27,8 +27,6 @@
                 <Shortcut shortcut="cmd+D" />
             </ContextMenu.Item>
 
-            <ContextMenu.Separator />
-
             <ContextMenu.Sub>
                 <ContextMenu.SubTrigger>Arrange</ContextMenu.SubTrigger>
                 <ContextMenu.SubContent class="min-w-[12rem]">
@@ -42,8 +40,6 @@
                     </ContextMenu.Item>
                 </ContextMenu.SubContent>
             </ContextMenu.Sub>
-
-            <ContextMenu.Separator />
 
             <ContextMenu.Item callback={() => {}}>
                 <span class="text-[var(--color-error)]">Delete</span>

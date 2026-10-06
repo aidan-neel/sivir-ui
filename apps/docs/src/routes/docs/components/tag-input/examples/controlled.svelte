@@ -27,7 +27,6 @@
         <Typography.Metadata aria-live="polite">{lastChange}</Typography.Metadata>
         <Button
             variant="ghost"
-            size="sm"
             disabled={tags.length === 0}
             onclick={() => {
                 tags = [];

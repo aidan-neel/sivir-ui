@@ -76,7 +76,6 @@
             <Typography.H2 class="docs-section-heading"> Examples </Typography.H2>
         </div>
 
-        <!-- Separator styles -->
         <div id="separators" class="scroll-mt-20 flex flex-col gap-3">
             <Typography.H3 class="docs-subsection-heading"> Separator styles </Typography.H3>
             <ComponentPreview code={SeparatorsSrc}>
@@ -84,7 +83,6 @@
             </ComponentPreview>
         </div>
 
-        <!-- With home icon -->
         <div id="with-icon" class="scroll-mt-20 flex flex-col gap-3">
             <Typography.H3 class="docs-subsection-heading"> With home icon </Typography.H3>
             <ComponentPreview code={WithIconSrc}>

@@ -1,0 +1,6 @@
+- Themes gain `chrome.triggerDistance` (0–16px, default 8) to set the gap between a trigger and its menu or popover, with a Trigger distance slider in Studio.
+- Studio's Color tab now shows a Reset button and changed dot on any color you've edited, restoring the preset's value for the current light or dark mode.
+- Collapsible is now styled by default: the trigger is a full-width row with a chevron that turns when open, hover underline, focus ring, and disabled state, and the content is indented to line up with the trigger label.
+- Radio Group was redesigned: a selected option's ring fills from the center with a solid primary dot while the previous choice collapses, unselected rings use the field surface and input border, and labels match Checkbox's type size.
+- Gauge was redesigned as an open 270° arc with a stronger track. When the value changes, the arc sweeps and the center number counts to it together, timed by the new `--motion-duration-gauge` token (480ms by default). Changes snap with reduced motion or the None movement preset.
+- Gauge.Value's children snippet receives the animated `value`, `max`, and whole `percent`. The percent reads 0 or 100 only at the bounds.

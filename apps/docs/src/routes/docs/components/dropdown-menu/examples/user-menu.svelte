@@ -27,8 +27,6 @@
             <span class="flex items-center gap-2"><CreditCard size={13} /> Billing</span>
         </DropdownMenu.Item>
 
-        <DropdownMenu.Separator />
-
         <DropdownMenu.Label>Settings</DropdownMenu.Label>
         <DropdownMenu.Item>
             <span class="flex items-center gap-2"><Settings size={13} /> Preferences</span>

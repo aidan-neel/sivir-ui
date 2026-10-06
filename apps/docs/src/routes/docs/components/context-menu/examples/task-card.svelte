@@ -21,7 +21,6 @@
             <ContextMenu.Item callback={() => {}}>
                 <span class="flex items-center gap-2"><Share size={14} /> Share</span>
             </ContextMenu.Item>
-            <ContextMenu.Separator />
             <ContextMenu.Item callback={() => {}}>
                 <span class="flex items-center gap-2"><Check size={14} /> Mark complete</span>
             </ContextMenu.Item>

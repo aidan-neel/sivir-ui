@@ -5,12 +5,11 @@
     import DocsPager from '$lib/components/docs/docs-pager.svelte';
     import Controlled from './examples/controlled.svelte';
     import ControlledSrc from './examples/controlled.svelte?raw';
-    import Hero from './examples/hero.svelte';
-    import HeroSrc from './examples/hero.svelte?raw';
     import MaxTags from './examples/max-tags.svelte';
     import MaxTagsSrc from './examples/max-tags.svelte?raw';
     import Validation from './examples/validation.svelte';
     import ValidationSrc from './examples/validation.svelte?raw';
+    import PlaygroundPreview from './playground/preview.svelte';
 
     const installCommand = 'bunx @sivir-ui/svelte add tag-input';
 
@@ -48,9 +47,7 @@ let tags = $state(['svelte']);
 
     <!-- ─── Hero Example ──────────────────────────────────────────── -->
     <section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-        <ComponentPreview code={HeroSrc}>
-            <Hero />
-        </ComponentPreview>
+        <PlaygroundPreview />
     </section>
 
     <!-- ─── Installation ──────────────────────────────────────────── -->

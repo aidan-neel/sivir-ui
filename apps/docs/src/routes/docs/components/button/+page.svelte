@@ -1,41 +1,137 @@
 <script lang="ts">
+    import type { ButtonVariant } from '@sivir-ui/svelte/components/button';
     import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
     import * as Typography from '@sivir-ui/svelte/components/typography';
-    import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+    import {
+        ComponentPreview,
+        InstallCommand,
+        PreviewMorph,
+        PreviewOptions,
+        PropGroup,
+        PropRow,
+        PropSegmented
+    } from '$lib/components/docs';
     import DocsPager from '$lib/components/docs/docs-pager.svelte';
-    import AsLink from './examples/as-link.svelte';
-    import AsLinkSrc from './examples/as-link.svelte?raw';
-    import Disabled from './examples/disabled.svelte';
-    import DisabledSrc from './examples/disabled.svelte?raw';
-    import Hero from './examples/hero.svelte';
-    import HeroSrc from './examples/hero.svelte?raw';
     import IconGroup from './examples/icon-group.svelte';
     import IconGroupSrc from './examples/icon-group.svelte?raw';
-    import LeadingIcon from './examples/leading-icon.svelte';
-    import LeadingIconSrc from './examples/leading-icon.svelte?raw';
-    import Loading from './examples/loading.svelte';
-    import LoadingSrc from './examples/loading.svelte?raw';
-    import Sizes from './examples/sizes.svelte';
-    import SizesSrc from './examples/sizes.svelte?raw';
-    import TrailingIcon from './examples/trailing-icon.svelte';
-    import TrailingIconSrc from './examples/trailing-icon.svelte?raw';
-    import VariantDestructive from './examples/variant-destructive.svelte';
-    import VariantDestructiveSrc from './examples/variant-destructive.svelte?raw';
-    import VariantGhost from './examples/variant-ghost.svelte';
-    import VariantGhostSrc from './examples/variant-ghost.svelte?raw';
-    import VariantOutline from './examples/variant-outline.svelte';
-    import VariantOutlineSrc from './examples/variant-outline.svelte?raw';
-    import VariantPanel from './examples/variant-panel.svelte';
-    import VariantPanelSrc from './examples/variant-panel.svelte?raw';
-    import VariantPrimary from './examples/variant-primary.svelte';
-    import VariantPrimarySrc from './examples/variant-primary.svelte?raw';
-    import VariantQuiet from './examples/variant-quiet.svelte';
-    import VariantQuietSrc from './examples/variant-quiet.svelte?raw';
-    import VariantSecondary from './examples/variant-secondary.svelte';
-    import VariantSecondarySrc from './examples/variant-secondary.svelte?raw';
+    import {
+        type PlaygroundExample,
+        type PlaygroundSize,
+        playgroundCode
+    } from './playground/playground';
+    import Playground from './playground/playground.svelte';
 
     const installCommand = 'bunx @sivir-ui/svelte add button';
+
+    const variantOptions: {
+        value: ButtonVariant;
+        label: string;
+    }[] = [
+        {
+            value: 'primary',
+            label: 'Primary'
+        },
+        {
+            value: 'secondary',
+            label: 'Secondary'
+        },
+        {
+            value: 'outline',
+            label: 'Outline'
+        },
+        {
+            value: 'ghost',
+            label: 'Ghost'
+        },
+        {
+            value: 'quiet',
+            label: 'Quiet'
+        },
+        {
+            value: 'destructive',
+            label: 'Destructive'
+        },
+        {
+            value: 'panel',
+            label: 'Panel'
+        }
+    ];
+
+    const sizeOptions: {
+        value: PlaygroundSize;
+        label: string;
+    }[] = [
+        {
+            value: 'sm',
+            label: 'Small'
+        },
+        {
+            value: 'md',
+            label: 'Default'
+        },
+        {
+            value: 'lg',
+            label: 'Large'
+        }
+    ];
+
+    let variant = $state<ButtonVariant>('primary');
+    let size = $state<PlaygroundSize>('md');
+
+    const heroCode = $derived(
+        playgroundCode({
+            example: 'default',
+            variant,
+            size
+        })
+    );
+
+    const examples: {
+        value: PlaygroundExample;
+        label: string;
+    }[] = [
+        {
+            value: 'leading',
+            label: 'Leading icon'
+        },
+        {
+            value: 'trailing',
+            label: 'Trailing icon'
+        },
+        {
+            value: 'status',
+            label: 'Status'
+        },
+        {
+            value: 'link',
+            label: 'As link'
+        },
+        {
+            value: 'disabled',
+            label: 'Disabled'
+        }
+    ];
+
+    function exampleCode(example: PlaygroundExample) {
+        return playgroundCode({
+            example,
+            variant: 'primary',
+            size: 'md'
+        });
+    }
 </script>
+
+{#snippet playgroundControls()}
+    <PreviewOptions label="Variant" options={variantOptions} bind:value={variant} />
+{/snippet}
+
+{#snippet playgroundProps()}
+    <PropGroup title="Appearance">
+        <PropRow label="Size">
+            <PropSegmented label="Size" options={sizeOptions} bind:value={size} />
+        </PropRow>
+    </PropGroup>
+{/snippet}
 
 <svelte:head>
     <title>Sivir · Button</title>
@@ -60,8 +156,15 @@
 
     <!-- ─── Hero Example ──────────────────────────────────────────── -->
     <section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-        <ComponentPreview code={HeroSrc}>
-            <Hero />
+        <ComponentPreview
+            code={heroCode}
+            controls={playgroundControls}
+            props={playgroundProps}
+            changed={size === 'md' ? 0 : 1}
+        >
+            <PreviewMorph key={`${variant}-${size}`}>
+                <Playground example="default" {variant} {size} />
+            </PreviewMorph>
         </ComponentPreview>
     </section>
 
@@ -80,9 +183,9 @@
             <Typography.InlineCode>success</Typography.InlineCode>, or
             <Typography.InlineCode>error</Typography.InlineCode>
             for async feedback, then back to
-            <Typography.InlineCode>idle</Typography.InlineCode>. All labels share one grid cell, so
-            the button keeps its width. Clicks are ignored while loading. The default labels are
-            Loading…, Done, and Try again.
+            <Typography.InlineCode>idle</Typography.InlineCode>. The button resizes to fit each
+            label and animates between widths, and status labels fade in letter by letter. Clicks
+            are ignored while loading. The default labels are Loading…, Done, and Try again.
         </Typography.Text>
         <CodeBlock
             code={`import { Button } from '@sivir-ui/svelte/components/button';
@@ -97,113 +200,21 @@ let status: 'idle' | 'loading' | 'success' | 'error' = $state('idle');
         />
     </section>
 
-    <!-- ─── Examples ──────────────────────────────────────────────── -->
     <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
         <div>
             <Typography.H2 class="docs-section-heading"> Examples </Typography.H2>
         </div>
 
-        <!-- Variants — each its own example piece -->
-        <div id="variant-primary" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading"> Primary </Typography.H3>
-            <ComponentPreview code={VariantPrimarySrc}>
-                <VariantPrimary />
-            </ComponentPreview>
-        </div>
+        {#each examples as item (item.value)}
+            <div id={item.value} class="scroll-mt-20 flex flex-col gap-3">
+                <Typography.H3 class="docs-subsection-heading"> {item.label} </Typography.H3>
+                <ComponentPreview code={exampleCode(item.value)}>
+                    <Playground example={item.value} variant="primary" size="md" />
+                </ComponentPreview>
+            </div>
+        {/each}
 
-        <div id="variant-secondary" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading"> Secondary </Typography.H3>
-            <ComponentPreview code={VariantSecondarySrc}>
-                <VariantSecondary />
-            </ComponentPreview>
-        </div>
-
-        <div id="variant-outline" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading"> Outline </Typography.H3>
-            <ComponentPreview code={VariantOutlineSrc}>
-                <VariantOutline />
-            </ComponentPreview>
-        </div>
-
-        <div id="variant-ghost" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading"> Ghost </Typography.H3>
-            <ComponentPreview code={VariantGhostSrc}>
-                <VariantGhost />
-            </ComponentPreview>
-        </div>
-
-        <div id="variant-quiet" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading"> Quiet </Typography.H3>
-            <ComponentPreview code={VariantQuietSrc}>
-                <VariantQuiet />
-            </ComponentPreview>
-        </div>
-
-        <div id="variant-destructive" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading"> Destructive </Typography.H3>
-            <ComponentPreview code={VariantDestructiveSrc}>
-                <VariantDestructive />
-            </ComponentPreview>
-        </div>
-
-        <div id="variant-panel" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading"> Panel </Typography.H3>
-            <ComponentPreview code={VariantPanelSrc}>
-                <VariantPanel />
-            </ComponentPreview>
-        </div>
-
-        <!-- Sizes (consolidated) -->
-        <div id="sizes" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading"> Sizes </Typography.H3>
-            <ComponentPreview code={SizesSrc}>
-                <Sizes />
-            </ComponentPreview>
-        </div>
-
-        <!-- Disabled -->
-        <div id="disabled" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading"> Disabled </Typography.H3>
-            <ComponentPreview code={DisabledSrc}>
-                <Disabled />
-            </ComponentPreview>
-        </div>
-
-        <!-- Composition -->
-        <!-- Leading icon -->
-        <div id="comp-leading" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading"> Leading icon </Typography.H3>
-            <ComponentPreview code={LeadingIconSrc}>
-                <LeadingIcon />
-            </ComponentPreview>
-        </div>
-
-        <!-- Trailing icon -->
-        <div id="comp-trailing" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading"> Trailing icon </Typography.H3>
-            <ComponentPreview code={TrailingIconSrc}>
-                <TrailingIcon />
-            </ComponentPreview>
-        </div>
-
-        <!-- Loading -->
-        <div id="comp-loading" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading"> Status </Typography.H3>
-            <ComponentPreview code={LoadingSrc}>
-                <Loading />
-            </ComponentPreview>
-        </div>
-
-        <!-- As link -->
-        <div id="comp-link" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading"> As link </Typography.H3>
-            <ComponentPreview code={AsLinkSrc}>
-                <AsLink />
-            </ComponentPreview>
-        </div>
-
-        <!-- Icon group -->
-        <div id="comp-group" class="scroll-mt-20 flex flex-col gap-3">
+        <div id="icon-group" class="scroll-mt-20 flex flex-col gap-3">
             <Typography.H3 class="docs-subsection-heading"> Icon group </Typography.H3>
             <ComponentPreview code={IconGroupSrc}>
                 <IconGroup />

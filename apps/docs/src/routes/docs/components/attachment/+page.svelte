@@ -1,21 +1,60 @@
 <script lang="ts">
     import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
     import * as Typography from '@sivir-ui/svelte/components/typography';
-    import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+    import {
+        ComponentPreview,
+        InstallCommand,
+        PropGroup,
+        PropRow,
+        PropSegmented,
+        PropSwitch
+    } from '$lib/components/docs';
     import DocsPager from '$lib/components/docs/docs-pager.svelte';
 
     import ComposerExample from './examples/composer.svelte';
     import ComposerExampleSrc from './examples/composer.svelte?raw';
     import Hero from './examples/hero.svelte';
-    import HeroSrc from './examples/hero.svelte?raw';
     import Rejections from './examples/rejections.svelte';
     import RejectionsSrc from './examples/rejections.svelte?raw';
     import StatusVariants from './examples/status-variants.svelte';
     import StatusVariantsSrc from './examples/status-variants.svelte?raw';
     import UploadProgress from './examples/upload-progress.svelte';
     import UploadProgressSrc from './examples/upload-progress.svelte?raw';
+    import {
+        type AttachmentMaxFiles,
+        type AttachmentSettings,
+        attachmentCode,
+        attachmentDefaults,
+        attachmentMaxFiles,
+        changedAttachmentProps
+    } from './playground/playground';
 
     const installCommand = 'bunx @sivir-ui/svelte add attachment';
+
+    const maxFilesOptions: {
+        value: AttachmentMaxFiles;
+        label: string;
+    }[] = [
+        {
+            value: '3',
+            label: '3'
+        },
+        {
+            value: '5',
+            label: '5'
+        },
+        {
+            value: 'none',
+            label: 'None'
+        }
+    ];
+
+    let settings = $state<AttachmentSettings>({
+        ...attachmentDefaults
+    });
+
+    const heroCode = $derived(attachmentCode(settings));
+    const changed = $derived(changedAttachmentProps(settings));
     const usageSnippet = `import * as Attachment from '@sivir-ui/svelte/components/attachment';
 import type { AttachmentRejection } from '@sivir-ui/svelte/components/attachment';
 
@@ -53,6 +92,26 @@ function handleReject(rejections: AttachmentRejection[]) {
 </Attachment.List>`;
 </script>
 
+{#snippet heroProps()}
+    <PropGroup title="Limits">
+        <PropSwitch label="Multiple" bind:checked={settings.multiple} />
+        {#if settings.multiple}
+            <PropRow label="Max files">
+                <PropSegmented
+                    label="Max files"
+                    size="sm"
+                    options={maxFilesOptions}
+                    bind:value={settings.maxFiles}
+                />
+            </PropRow>
+        {/if}
+    </PropGroup>
+    <PropGroup title="Behavior">
+        <PropSwitch label="Add on paste" bind:checked={settings.addOnPaste} />
+        <PropSwitch label="Disabled" bind:checked={settings.disabled} />
+    </PropGroup>
+{/snippet}
+
 <svelte:head>
     <title>Sivir · Attachment</title>
     <meta
@@ -74,7 +133,14 @@ function handleReject(rejections: AttachmentRejection[]) {
     </header>
 
     <section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-        <ComponentPreview code={HeroSrc}><Hero /></ComponentPreview>
+        <ComponentPreview code={heroCode} props={heroProps} {changed}>
+            <Hero
+                multiple={settings.multiple}
+                maxFiles={attachmentMaxFiles(settings)}
+                disabled={settings.disabled}
+                addOnPaste={settings.addOnPaste}
+            />
+        </ComponentPreview>
     </section>
 
     <section id="installation" class="scroll-mt-20 flex flex-col gap-4">
@@ -142,6 +208,44 @@ function handleReject(rejections: AttachmentRejection[]) {
         </Typography.Text>
     </section>
 
+    <!-- ─── Example Descriptions ──────────────────────────────────── -->
+    {#snippet uploadProgressDescription()}
+        <Typography.Text variant="supporting">
+            Keep upload state in a map keyed by file and pass it to each item. In this demo the
+            second file fails its first attempt, and a retry button is composed beside
+            <Typography.InlineCode>Remove</Typography.InlineCode>
+            only while the item is in error.
+        </Typography.Text>
+    {/snippet}
+
+    {#snippet rejectionsDescription()}
+        <Typography.Text variant="supporting">
+            Each rejection carries a typed
+            <Typography.InlineCode>code</Typography.InlineCode>
+            and a
+            <Typography.InlineCode>reason</Typography.InlineCode>
+            sentence such as “This file is larger than the 1.0 MB limit.” Show the reason next to
+            the trigger. Root also announces added, removed, and rejected files to screen readers.
+        </Typography.Text>
+    {/snippet}
+
+    {#snippet composerDescription()}
+        <Typography.Text variant="supporting">
+            Wrap the composer in Root so files can be dropped anywhere on it and screenshots can be
+            pasted into the prompt. Place List directly before Composer.Input: inside a composer,
+            attachments render as slim chips on the prompt's first line, and the text moves below
+            them once it wraps.
+        </Typography.Text>
+    {/snippet}
+
+    {#snippet statusVariantsDescription()}
+        <Typography.Text variant="supporting">
+            Render standalone items outside a root when another part of your interface owns the file
+            list.
+        </Typography.Text>
+    {/snippet}
+
+    <!-- ─── Examples ──────────────────────────────────────────────── -->
     <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
         <div>
             <Typography.H2 class="docs-section-heading"> Examples </Typography.H2>
@@ -149,47 +253,42 @@ function handleReject(rejections: AttachmentRejection[]) {
 
         <div id="upload-progress" class="scroll-mt-20 flex flex-col gap-3">
             <Typography.H3 class="docs-subsection-heading"> Upload progress </Typography.H3>
-            <Typography.Text variant="supporting">
-                Keep upload state in a map keyed by file and pass it to each item. In this demo the
-                second file fails its first attempt, and a retry button is composed beside
-                <Typography.InlineCode>Remove</Typography.InlineCode>
-                only while the item is in error.
-            </Typography.Text>
-            <ComponentPreview code={UploadProgressSrc}><UploadProgress /></ComponentPreview>
+            <ComponentPreview code={UploadProgressSrc}>
+                <UploadProgress />
+            </ComponentPreview>
+            <div class="flex max-w-2xl flex-col gap-2">
+                {@render uploadProgressDescription()}
+            </div>
         </div>
 
         <div id="rejections" class="scroll-mt-20 flex flex-col gap-3">
             <Typography.H3 class="docs-subsection-heading"> Rejections </Typography.H3>
-            <Typography.Text variant="supporting">
-                Each rejection carries a typed
-                <Typography.InlineCode>code</Typography.InlineCode>
-                and a
-                <Typography.InlineCode>reason</Typography.InlineCode>
-                sentence such as “This file is larger than the 1.0 MB limit.” Show the reason next
-                to the trigger. Root also announces added, removed, and rejected files to screen
-                readers.
-            </Typography.Text>
-            <ComponentPreview code={RejectionsSrc}><Rejections /></ComponentPreview>
+            <ComponentPreview code={RejectionsSrc}>
+                <Rejections />
+            </ComponentPreview>
+            <div class="flex max-w-2xl flex-col gap-2">
+                {@render rejectionsDescription()}
+            </div>
         </div>
 
         <div id="composer" class="scroll-mt-20 flex flex-col gap-3">
             <Typography.H3 class="docs-subsection-heading"> In a composer </Typography.H3>
-            <Typography.Text variant="supporting">
-                Wrap the composer in Root so files can be dropped anywhere on it and screenshots can
-                be pasted into the prompt. Place List directly before Composer.Input: inside a
-                composer, attachments render as slim chips on the prompt's first line, and the text
-                moves below them once it wraps.
-            </Typography.Text>
-            <ComponentPreview code={ComposerExampleSrc}><ComposerExample /></ComponentPreview>
+            <ComponentPreview code={ComposerExampleSrc}>
+                <ComposerExample />
+            </ComponentPreview>
+            <div class="flex max-w-2xl flex-col gap-2">
+                {@render composerDescription()}
+            </div>
         </div>
 
         <div id="status-variants" class="scroll-mt-20 flex flex-col gap-3">
             <Typography.H3 class="docs-subsection-heading"> Upload status </Typography.H3>
-            <Typography.Text variant="supporting">
-                Render standalone items outside a root when another part of your interface owns the
-                file list.
-            </Typography.Text>
-            <ComponentPreview code={StatusVariantsSrc}><StatusVariants /></ComponentPreview>
+            <ComponentPreview code={StatusVariantsSrc}>
+                <StatusVariants />
+            </ComponentPreview>
+            <div class="flex max-w-2xl flex-col gap-2">
+                {@render statusVariantsDescription()}
+            </div>
         </div>
     </section>
 </div>

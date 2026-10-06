@@ -9,12 +9,12 @@
 </script>
 
 <DropdownMenu.Root>
-    <DropdownMenu.Trigger variant="ghost" size="md">
+    <DropdownMenu.Trigger variant="ghost" size="md" class="w-48 justify-between">
         <Star size={13} />
         {selected}
         <ChevronDown size={11} class="text-foreground-muted" />
     </DropdownMenu.Trigger>
-    <DropdownMenu.Content class="min-w-[12rem]">
+    <DropdownMenu.Content class="w-48">
         {#each options as option (option)}
             <DropdownMenu.Item callback={() => (selected = option)}>
                 <span>{option}</span>

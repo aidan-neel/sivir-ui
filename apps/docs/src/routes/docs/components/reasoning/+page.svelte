@@ -1,18 +1,40 @@
 <script lang="ts">
     import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
     import * as Typography from '@sivir-ui/svelte/components/typography';
-    import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+    import { ComponentPreview, InstallCommand, PropGroup, PropSwitch } from '$lib/components/docs';
     import DocsPager from '$lib/components/docs/docs-pager.svelte';
 
     import Hero from './examples/hero.svelte';
-    import HeroSrc from './examples/hero.svelte?raw';
     import Streaming from './examples/streaming.svelte';
     import StreamingSrc from './examples/streaming.svelte?raw';
+    import {
+        changedReasoningProps,
+        type ReasoningSettings,
+        reasoningCode,
+        reasoningDefaults,
+        reasoningTitle
+    } from './playground/playground';
 
     const TITLE = 'Reasoning';
     const SLUG = 'reasoning';
     const installCommand = `bunx @sivir-ui/svelte add ${SLUG}`;
+
+    let settings = $state<ReasoningSettings>({
+        ...reasoningDefaults
+    });
+
+    const heroCode = $derived(reasoningCode(settings));
+    const changed = $derived(changedReasoningProps(settings));
 </script>
+
+{#snippet heroProps()}
+    <PropGroup title="State">
+        <PropSwitch label="Streaming" bind:checked={settings.streaming} />
+    </PropGroup>
+    <PropGroup title="Trigger">
+        <PropSwitch label="Title" bind:checked={settings.title} />
+    </PropGroup>
+{/snippet}
 
 <svelte:head>
     <title>Sivir · {TITLE}</title>
@@ -35,7 +57,12 @@
     </header>
 
     <section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-        <ComponentPreview code={HeroSrc}><Hero /></ComponentPreview>
+        <ComponentPreview code={heroCode} props={heroProps} {changed}>
+            <Hero
+                streaming={settings.streaming}
+                title={settings.title ? reasoningTitle : undefined}
+            />
+        </ComponentPreview>
     </section>
 
     <section id="installation" class="scroll-mt-20 flex flex-col gap-4">
@@ -74,17 +101,17 @@
         />
     </section>
 
+    <!-- ─── Examples ──────────────────────────────────────────────── -->
     <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
         <div>
-            <Typography.H2 class="docs-section-heading">Examples</Typography.H2>
+            <Typography.H2 class="docs-section-heading"> Examples </Typography.H2>
         </div>
-        <div id="incident-investigation" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading">Incident investigation</Typography.H3>
-            <ComponentPreview code={HeroSrc}><Hero /></ComponentPreview>
-        </div>
+
         <div id="live-reasoning" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading">Live reasoning</Typography.H3>
-            <ComponentPreview code={StreamingSrc}><Streaming /></ComponentPreview>
+            <Typography.H3 class="docs-subsection-heading"> Live reasoning </Typography.H3>
+            <ComponentPreview code={StreamingSrc}>
+                <Streaming />
+            </ComponentPreview>
         </div>
     </section>
 </div>

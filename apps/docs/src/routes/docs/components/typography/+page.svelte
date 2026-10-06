@@ -139,46 +139,66 @@
         </div>
     </section>
 
+    <!-- ─── Example Descriptions ──────────────────────────────────── -->
+    {#snippet headingLevelsDescription()}
+        <Typography.Text variant="supporting" class="m-0 max-w-2xl">
+            Pick the level from the document outline. For a heading inside a component, use
+            <Typography.InlineCode>Typography.Title</Typography.InlineCode>
+            with a
+            <Typography.InlineCode>level</Typography.InlineCode>
+            instead.
+        </Typography.Text>
+    {/snippet}
+
+    {#snippet textRolesDescription()}
+        <Typography.Text variant="supporting" class="m-0 max-w-2xl">
+            Text renders a <Typography.InlineCode>p</Typography.InlineCode>. Pick the variant from
+            the paragraph's job: lead opens a page or section, body is long-form prose, and
+            supporting is secondary context.
+        </Typography.Text>
+    {/snippet}
+
+    {#snippet numericMetadataDescription()}
+        <Typography.Text variant="supporting" class="m-0 max-w-2xl">
+            Add <Typography.InlineCode>tabular-nums</Typography.InlineCode> when readers compare
+            values in a column.
+        </Typography.Text>
+    {/snippet}
+
+    <!-- ─── Examples ──────────────────────────────────────────────── -->
     <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
         <div>
-            <Typography.H2 class="docs-section-heading">Examples</Typography.H2>
+            <Typography.H2 class="docs-section-heading"> Examples </Typography.H2>
         </div>
 
         <div id="heading-levels" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading">Heading levels</Typography.H3>
-            <Typography.Text variant="supporting" class="m-0 max-w-2xl">
-                Pick the level from the document outline. For a heading inside a component, use
-                <Typography.InlineCode>Typography.Title</Typography.InlineCode>
-                with a
-                <Typography.InlineCode>level</Typography.InlineCode>
-                instead.
-            </Typography.Text>
+            <Typography.H3 class="docs-subsection-heading"> Heading levels </Typography.H3>
             <ComponentPreview code={HeadingLevelsSrc}>
                 <HeadingLevels />
             </ComponentPreview>
+            <div class="flex max-w-2xl flex-col gap-2">
+                {@render headingLevelsDescription()}
+            </div>
         </div>
 
         <div id="text-roles" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading">Text roles</Typography.H3>
-            <Typography.Text variant="supporting" class="m-0 max-w-2xl">
-                Text renders a <Typography.InlineCode>p</Typography.InlineCode>. Pick the variant
-                from the paragraph's job: lead opens a page or section, body is long-form prose, and
-                supporting is secondary context.
-            </Typography.Text>
+            <Typography.H3 class="docs-subsection-heading"> Text roles </Typography.H3>
             <ComponentPreview code={TextRolesSrc}>
                 <TextRoles />
             </ComponentPreview>
+            <div class="flex max-w-2xl flex-col gap-2">
+                {@render textRolesDescription()}
+            </div>
         </div>
 
         <div id="numeric-metadata" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading">Numeric metadata</Typography.H3>
-            <Typography.Text variant="supporting" class="m-0 max-w-2xl">
-                Add <Typography.InlineCode>tabular-nums</Typography.InlineCode> when readers compare
-                values in a column.
-            </Typography.Text>
+            <Typography.H3 class="docs-subsection-heading"> Numeric metadata </Typography.H3>
             <ComponentPreview code={MetadataSrc}>
                 <Metadata />
             </ComponentPreview>
+            <div class="flex max-w-2xl flex-col gap-2">
+                {@render numericMetadataDescription()}
+            </div>
         </div>
     </section>
 </div>

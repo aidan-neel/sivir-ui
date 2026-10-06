@@ -294,15 +294,15 @@ export const sivirTheme: Theme = {
     slug: 'sivir',
     name: 'Sivir',
     description: 'Compact warm workspace with a blue accent, flat chrome, and tight radii.',
-    publisher: 'Sivir UI',
     brand: '#1c68ff',
     neutral: 'warm',
     radius: 'default',
     density: 'compact',
     motion: 'subtle',
-    fontSans: "'Inter', sans-serif",
+    fontSans: "'DM Sans', sans-serif",
     fontMono: "'Roboto Mono', monospace",
     fontHeader: 'var(--font-sans)',
+    publisher: 'Sivir UI',
     foundation: {
         light: {
             base: '#fffefb',
@@ -327,18 +327,7 @@ export const sivirTheme: Theme = {
     },
     tokens: {
         light: {
-            '--color-input': '#dcd9cc',
-            ...codeTokens({
-                comment: '#8c8779',
-                keyword: '#b5452a',
-                string: '#5a7a3a',
-                number: '#a5651b',
-                function: '#7a5a9e',
-                property: '#3f6b8c',
-                builtin: '#c26a2c',
-                entity: '#5a7a3a',
-                meta: '#8c8779'
-            })
+            '--color-input': '#dcd9cc'
         },
         dark: {
             '--color-input': '#3d3d3a'
@@ -494,7 +483,8 @@ export const clawdTheme: Theme = {
             '--motion-step-blur': '0px',
             '--motion-press-px': '0px',
             '--motion-duration-switch': '0ms',
-            '--motion-switch-stretch': '0'
+            '--motion-switch-stretch': '0',
+            '--motion-duration-gauge': '0ms'
         }
     },
     typography: {

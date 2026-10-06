@@ -23,7 +23,7 @@ export const componentSummaries = {
     'dropdown-menu': 'A menu of actions anchored to a button.',
     'file-diff': 'A unified diff with gutters and change counts.',
     'fullscreen-nav': 'A mobile menu that fills the screen.',
-    gauge: 'A circular meter for usage and limits.',
+    gauge: 'An arc meter for usage and limits.',
     'hover-card': 'A preview that opens on hover or focus.',
     input: 'Single-line text entry with labels and adornments.',
     label: 'A styled native label for a form control.',

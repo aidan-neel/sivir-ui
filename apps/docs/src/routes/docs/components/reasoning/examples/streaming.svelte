@@ -51,5 +51,5 @@
             {/key}
         </Reasoning.Content>
     </Reasoning.Root>
-    <Button variant="ghost" size="sm" disabled={streaming} onclick={replay}>Replay</Button>
+    <Button variant="ghost" disabled={streaming} onclick={replay}>Replay</Button>
 </div>

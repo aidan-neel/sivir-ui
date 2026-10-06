@@ -4,6 +4,16 @@
     import type { QuestionAnswer } from '@sivir-ui/svelte/components/question';
     import * as Question from '@sivir-ui/svelte/components/question';
 
+    let {
+        variant = 'inset',
+        status = 'idle',
+        disabled = false
+    }: {
+        variant?: 'default' | 'inset';
+        status?: Question.QuestionStatus;
+        disabled?: boolean;
+    } = $props();
+
     const questions = [
         {
             title: 'Which orders should the export include?',
@@ -87,7 +97,14 @@
 </script>
 
 <div class="w-full max-w-xl">
-    <Question.Root variant="inset" bind:value={answers[step]} required={!complete} onSubmit={next}>
+    <Question.Root
+        {variant}
+        bind:value={answers[step]}
+        required={!complete}
+        {status}
+        {disabled}
+        onSubmit={next}
+    >
         <Question.Content {step}>
             {#if complete}
                 <Question.Title>Ready to export</Question.Title>

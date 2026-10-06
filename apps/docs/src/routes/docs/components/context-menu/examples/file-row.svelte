@@ -21,7 +21,6 @@
             <ContextMenu.Item callback={() => {}}>
                 <span class="flex items-center gap-2"><Pencil size={14} /> Rename</span>
             </ContextMenu.Item>
-            <ContextMenu.Separator />
             <ContextMenu.Item callback={() => {}}>
                 <span class="flex items-center gap-2 text-[var(--color-error)]">
                     <Trash size={14} />

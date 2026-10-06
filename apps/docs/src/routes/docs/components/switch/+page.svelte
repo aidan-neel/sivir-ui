@@ -1,7 +1,13 @@
 <script lang="ts">
     import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
     import * as Typography from '@sivir-ui/svelte/components/typography';
-    import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+    import {
+        ComponentPreview,
+        InstallCommand,
+        PreviewMorph,
+        PropGroup,
+        PropSwitch
+    } from '$lib/components/docs';
     import DocsPager from '$lib/components/docs/docs-pager.svelte';
     import Basic from './examples/basic.svelte';
     import BasicSrc from './examples/basic.svelte?raw';
@@ -10,12 +16,35 @@
     import Disabled from './examples/disabled.svelte';
     import DisabledSrc from './examples/disabled.svelte?raw';
     import Hero from './examples/hero.svelte';
-    import HeroSrc from './examples/hero.svelte?raw';
+    import {
+        changedSwitchProps,
+        type SwitchSettings,
+        switchCode,
+        switchDefaults
+    } from './playground/playground';
 
     const TITLE = 'Switch';
 
     const installCommand = 'bunx @sivir-ui/svelte add switch';
+
+    let settings = $state<SwitchSettings>({
+        ...switchDefaults
+    });
+
+    const heroCode = $derived(switchCode(settings));
+    const changed = $derived(changedSwitchProps(settings));
+    const morphKey = $derived(`${settings.label}-${settings.description}`);
 </script>
+
+{#snippet heroProps()}
+    <PropGroup title="Content">
+        <PropSwitch label="Label" bind:checked={settings.label} />
+        <PropSwitch label="Description" bind:checked={settings.description} />
+    </PropGroup>
+    <PropGroup title="State">
+        <PropSwitch label="Disabled" bind:checked={settings.disabled} />
+    </PropGroup>
+{/snippet}
 
 <svelte:head>
     <title>Sivir · {TITLE}</title>
@@ -40,8 +69,14 @@
 
     <!-- ─── Hero Example ──────────────────────────────────────────── -->
     <section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-        <ComponentPreview code={HeroSrc}>
-            <Hero />
+        <ComponentPreview code={heroCode} props={heroProps} {changed}>
+            <PreviewMorph key={morphKey}>
+                <Hero
+                    label={settings.label}
+                    description={settings.description}
+                    disabled={settings.disabled}
+                />
+            </PreviewMorph>
         </ComponentPreview>
     </section>
 
@@ -86,28 +121,25 @@
     <!-- ─── Examples ──────────────────────────────────────────────── -->
     <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
         <div>
-            <Typography.H2 class="docs-section-heading">Examples</Typography.H2>
+            <Typography.H2 class="docs-section-heading"> Examples </Typography.H2>
         </div>
 
-        <!-- Basic -->
         <div id="basic" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading">Basic</Typography.H3>
+            <Typography.H3 class="docs-subsection-heading"> Basic </Typography.H3>
             <ComponentPreview code={BasicSrc}>
                 <Basic />
             </ComponentPreview>
         </div>
 
-        <!-- With description -->
         <div id="description" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading">With description</Typography.H3>
+            <Typography.H3 class="docs-subsection-heading"> With description </Typography.H3>
             <ComponentPreview code={DescriptionSrc}>
                 <Description />
             </ComponentPreview>
         </div>
 
-        <!-- Disabled -->
         <div id="disabled" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading">Disabled</Typography.H3>
+            <Typography.H3 class="docs-subsection-heading"> Disabled </Typography.H3>
             <ComponentPreview code={DisabledSrc}>
                 <Disabled />
             </ComponentPreview>

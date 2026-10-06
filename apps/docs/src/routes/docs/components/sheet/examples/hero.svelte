@@ -17,6 +17,14 @@
     import Shortcut from '@sivir-ui/svelte/components/shortcut';
     import { Textarea } from '@sivir-ui/svelte/components/textarea';
 
+    let {
+        side = 'right',
+        allowClickOutside = true
+    }: {
+        side?: 'left' | 'right';
+        allowClickOutside?: boolean;
+    } = $props();
+
     let open = $state(false);
     let title = $state('');
     let description = $state('');
@@ -74,7 +82,7 @@
         <SquarePen size={14} />
         New issue
     </Sheet.Trigger>
-    <Sheet.Content side="right">
+    <Sheet.Content {side} {allowClickOutside}>
         <Sheet.Header>
             <Sheet.Title>New issue</Sheet.Title>
             <Sheet.Description>Create a new issue in Engineering.</Sheet.Description>

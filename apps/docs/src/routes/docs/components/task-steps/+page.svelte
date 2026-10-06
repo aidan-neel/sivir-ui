@@ -1,15 +1,75 @@
 <script lang="ts">
     import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
     import * as Typography from '@sivir-ui/svelte/components/typography';
-    import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+    import {
+        ComponentPreview,
+        InstallCommand,
+        PropGroup,
+        PropRow,
+        PropSegmented,
+        PropSwitch
+    } from '$lib/components/docs';
     import DocsPager from '$lib/components/docs/docs-pager.svelte';
     import Bare from './examples/bare.svelte';
     import BareSrc from './examples/bare.svelte?raw';
     import Hero from './examples/hero.svelte';
-    import HeroSrc from './examples/hero.svelte?raw';
+    import {
+        changedTaskStepsProps,
+        type TaskStepsCurrent,
+        type TaskStepsSettings,
+        taskStepsCode,
+        taskStepsDefaults
+    } from './playground/playground';
 
     const installCommand = 'bunx @sivir-ui/svelte add task-steps';
+
+    const currentOptions: {
+        value: TaskStepsCurrent;
+        label: string;
+    }[] = [
+        {
+            value: '0',
+            label: '0'
+        },
+        {
+            value: '1',
+            label: '1'
+        },
+        {
+            value: '2',
+            label: '2'
+        },
+        {
+            value: '3',
+            label: '3'
+        },
+        {
+            value: '4',
+            label: '4'
+        }
+    ];
+
+    let settings = $state<TaskStepsSettings>({
+        ...taskStepsDefaults
+    });
+
+    const heroCode = $derived(taskStepsCode(settings));
+    const changed = $derived(changedTaskStepsProps(settings));
 </script>
+
+{#snippet heroProps()}
+    <PropGroup title="Progress">
+        <PropRow label="Current">
+            <PropSegmented
+                label="Current"
+                size="sm"
+                options={currentOptions}
+                bind:value={settings.current}
+            />
+        </PropRow>
+        <PropSwitch label="Failed" bind:checked={settings.failed} />
+    </PropGroup>
+{/snippet}
 
 <svelte:head>
     <title>Sivir · Task Steps</title>
@@ -33,7 +93,9 @@
     </header>
 
     <section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-        <ComponentPreview code={HeroSrc} refreshable><Hero /></ComponentPreview>
+        <ComponentPreview code={heroCode} props={heroProps} {changed} refreshable>
+            <Hero current={Number(settings.current)} failed={settings.failed} />
+        </ComponentPreview>
     </section>
 
     <section id="installation" class="scroll-mt-20 flex flex-col gap-4">
@@ -66,13 +128,14 @@
         />
     </section>
 
+    <!-- ─── Examples ──────────────────────────────────────────────── -->
     <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
         <div>
-            <Typography.H2 class="docs-section-heading">Examples</Typography.H2>
+            <Typography.H2 class="docs-section-heading"> Examples </Typography.H2>
         </div>
 
         <div id="bare" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading">Bare</Typography.H3>
+            <Typography.H3 class="docs-subsection-heading"> Bare </Typography.H3>
             <ComponentPreview code={BareSrc}>
                 <Bare />
             </ComponentPreview>

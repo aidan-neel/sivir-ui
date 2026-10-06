@@ -1,21 +1,114 @@
 <script lang="ts">
     import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
+    import type { TooltipPlacement } from '@sivir-ui/svelte/components/tooltip';
     import * as Typography from '@sivir-ui/svelte/components/typography';
-    import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+    import {
+        ComponentPreview,
+        InstallCommand,
+        PreviewExamples,
+        PropGroup,
+        PropRow,
+        PropSegmented,
+        PropSwitch
+    } from '$lib/components/docs';
     import DocsPager from '$lib/components/docs/docs-pager.svelte';
     import Bottom from './examples/bottom.svelte';
     import BottomSrc from './examples/bottom.svelte?raw';
     import Hero from './examples/hero.svelte';
-    import HeroSrc from './examples/hero.svelte?raw';
     import Right from './examples/right.svelte';
     import RightSrc from './examples/right.svelte?raw';
     import Top from './examples/top.svelte';
     import TopSrc from './examples/top.svelte?raw';
+    import {
+        changedTooltipProps,
+        type TooltipDelay,
+        type TooltipSettings,
+        tooltipCode,
+        tooltipDefaults
+    } from './playground/playground';
 
     const TITLE = 'Tooltip';
 
     const installCommand = 'bunx @sivir-ui/svelte add tooltip';
+
+    const placementOptions: {
+        value: TooltipPlacement;
+        label: string;
+    }[] = [
+        {
+            value: 'top',
+            label: 'Top'
+        },
+        {
+            value: 'right',
+            label: 'Right'
+        },
+        {
+            value: 'bottom',
+            label: 'Bottom'
+        },
+        {
+            value: 'left',
+            label: 'Left'
+        }
+    ];
+
+    const delayOptions: {
+        value: TooltipDelay;
+        label: string;
+    }[] = [
+        {
+            value: '0',
+            label: '0ms'
+        },
+        {
+            value: '125',
+            label: '125ms'
+        },
+        {
+            value: '300',
+            label: '300ms'
+        },
+        {
+            value: '700',
+            label: '700ms'
+        }
+    ];
+
+    let settings = $state<TooltipSettings>({
+        ...tooltipDefaults
+    });
+
+    const heroCode = $derived(tooltipCode(settings));
+    const changed = $derived(changedTooltipProps(settings));
 </script>
+
+{#snippet heroProps()}
+    <PropGroup title="Position">
+        <PropRow label="Placement">
+            <PropSegmented
+                label="Placement"
+                size="sm"
+                options={placementOptions}
+                bind:value={settings.placement}
+            />
+        </PropRow>
+    </PropGroup>
+    <PropGroup title="Behavior">
+        <PropRow label="Delay">
+            <PreviewExamples
+                label="Delay"
+                size="sm"
+                options={delayOptions}
+                bind:value={settings.delay}
+            />
+        </PropRow>
+        <PropSwitch label="Show on click" bind:checked={settings.showOnClick} />
+    </PropGroup>
+    <PropGroup title="Content">
+        <PropSwitch label="Shortcut" bind:checked={settings.shortcut} />
+    </PropGroup>
+{/snippet}
 
 <svelte:head>
     <title>Sivir · {TITLE}</title>
@@ -40,8 +133,13 @@
 
     <!-- ─── Hero Example ──────────────────────────────────────────── -->
     <section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-        <ComponentPreview code={HeroSrc}>
-            <Hero />
+        <ComponentPreview code={heroCode} props={heroProps} {changed}>
+            <Hero
+                placement={settings.placement}
+                delay={settings.delay}
+                showOnClick={settings.showOnClick}
+                shortcut={settings.shortcut}
+            />
         </ComponentPreview>
     </section>
 
@@ -82,28 +180,25 @@
     <!-- ─── Examples ──────────────────────────────────────────────── -->
     <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
         <div>
-            <Typography.H2 class="docs-section-heading">Examples</Typography.H2>
+            <Typography.H2 class="docs-section-heading"> Examples </Typography.H2>
         </div>
 
-        <!-- Top placement -->
         <div id="top" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading">Top placement</Typography.H3>
+            <Typography.H3 class="docs-subsection-heading"> Top placement </Typography.H3>
             <ComponentPreview code={TopSrc}>
                 <Top />
             </ComponentPreview>
         </div>
 
-        <!-- Right placement -->
         <div id="right" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading">Right placement</Typography.H3>
+            <Typography.H3 class="docs-subsection-heading"> Right placement </Typography.H3>
             <ComponentPreview code={RightSrc}>
                 <Right />
             </ComponentPreview>
         </div>
 
-        <!-- Bottom placement -->
         <div id="bottom" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading">Bottom placement</Typography.H3>
+            <Typography.H3 class="docs-subsection-heading"> Bottom placement </Typography.H3>
             <ComponentPreview code={BottomSrc}>
                 <Bottom />
             </ComponentPreview>

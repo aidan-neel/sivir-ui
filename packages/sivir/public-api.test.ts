@@ -23,7 +23,6 @@ const NAMED = {
     checkbox: ['Checkbox'],
     'code-block': ['CodeBlock'],
     'copy-button': ['CopyButton'],
-    gauge: ['Gauge'],
     input: ['Input'],
     label: ['Label'],
     markdown: ['Markdown'],
@@ -103,6 +102,7 @@ const NAMESPACED = {
     ], // cone: Root → Sub → nested Sub
     'fullscreen-nav': ['Root', 'Trigger', 'Content', 'Close', 'Group', 'Link'],
     'file-diff': ['Root', 'TopBar', 'Content', 'Row', 'LineNumber'],
+    gauge: ['Root', 'Track', 'Indicator', 'Value'],
     'hover-card': ['Root', 'Trigger', 'Content', 'Title', 'Description'],
     message: ['Root', 'Content', 'Actions'],
     modal: [

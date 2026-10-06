@@ -4,9 +4,9 @@
 
 <div class="w-full max-w-md">
     <Alert.Root variant="error">
-        <Alert.Title>Build failed</Alert.Title>
-        <Alert.Description
-            >The build exited with code 1. Check the logs for details.</Alert.Description
-        >
+        <Alert.Title>Connection lost</Alert.Title>
+        <Alert.Description>
+            Unable to reach the server. Please check your network connection.
+        </Alert.Description>
     </Alert.Root>
 </div>

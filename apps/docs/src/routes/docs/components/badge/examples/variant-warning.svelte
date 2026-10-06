@@ -2,4 +2,4 @@
     import { Badge } from '@sivir-ui/svelte/components/badge';
 </script>
 
-<Badge variant="warning">Warning</Badge>
+<Badge variant="warning">Deprecated</Badge>

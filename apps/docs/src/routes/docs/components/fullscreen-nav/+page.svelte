@@ -94,6 +94,22 @@
         </ul>
     </section>
 
+    <!-- ─── Example Descriptions ──────────────────────────────────── -->
+    {#snippet groupedNavigationDescription()}
+        <Typography.Text variant="supporting">
+            Use one <Typography.InlineCode>Group</Typography.InlineCode> per section. Its heading
+            labels the links below it.
+        </Typography.Text>
+    {/snippet}
+
+    {#snippet customTriggerDescription()}
+        <Typography.Text variant="supporting">
+            Children passed to <Typography.InlineCode>Trigger</Typography.InlineCode> replace the
+            default icon, so you can add a visible label.
+        </Typography.Text>
+    {/snippet}
+
+    <!-- ─── Examples ──────────────────────────────────────────────── -->
     <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
         <div>
             <Typography.H2 class="docs-section-heading"> Examples </Typography.H2>
@@ -101,24 +117,22 @@
 
         <div id="grouped-navigation" class="scroll-mt-20 flex flex-col gap-3">
             <Typography.H3 class="docs-subsection-heading"> Grouped navigation </Typography.H3>
-            <Typography.Text variant="supporting">
-                Use one <Typography.InlineCode>Group</Typography.InlineCode> per section. Its
-                heading labels the links below it.
-            </Typography.Text>
             <ComponentPreview code={GroupedSrc}>
                 <Grouped />
             </ComponentPreview>
+            <div class="flex max-w-2xl flex-col gap-2">
+                {@render groupedNavigationDescription()}
+            </div>
         </div>
 
         <div id="custom-trigger" class="scroll-mt-20 flex flex-col gap-3">
             <Typography.H3 class="docs-subsection-heading"> Custom trigger </Typography.H3>
-            <Typography.Text variant="supporting">
-                Children passed to <Typography.InlineCode>Trigger</Typography.InlineCode> replace
-                the default icon, so you can add a visible label.
-            </Typography.Text>
             <ComponentPreview code={CustomTriggerSrc}>
                 <CustomTrigger />
             </ComponentPreview>
+            <div class="flex max-w-2xl flex-col gap-2">
+                {@render customTriggerDescription()}
+            </div>
         </div>
     </section>
 </div>

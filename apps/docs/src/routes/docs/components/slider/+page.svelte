@@ -1,21 +1,59 @@
 <script lang="ts">
     import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
     import * as Typography from '@sivir-ui/svelte/components/typography';
-    import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+    import {
+        ComponentPreview,
+        InstallCommand,
+        PropGroup,
+        PropRow,
+        PropSegmented,
+        PropSwitch
+    } from '$lib/components/docs';
     import DocsPager from '$lib/components/docs/docs-pager.svelte';
     import Composed from './examples/composed.svelte';
     import ComposedSrc from './examples/composed.svelte?raw';
     import Disabled from './examples/disabled.svelte';
     import DisabledSrc from './examples/disabled.svelte?raw';
     import Hero from './examples/hero.svelte';
-    import HeroSrc from './examples/hero.svelte?raw';
     import Stepped from './examples/stepped.svelte';
     import SteppedSrc from './examples/stepped.svelte?raw';
+    import {
+        changedSliderProps,
+        type SliderSettings,
+        type SliderStep,
+        sliderCode,
+        sliderDefaults
+    } from './playground/playground';
 
     const TITLE = 'Slider';
     const SLUG = 'slider';
 
     const installCommand = `bunx @sivir-ui/svelte add ${SLUG}`;
+
+    const stepOptions: {
+        value: SliderStep;
+        label: string;
+    }[] = [
+        {
+            value: '1',
+            label: '1'
+        },
+        {
+            value: '5',
+            label: '5'
+        },
+        {
+            value: '10',
+            label: '10'
+        }
+    ];
+
+    let settings = $state<SliderSettings>({
+        ...sliderDefaults
+    });
+
+    const heroCode = $derived(sliderCode(settings));
+    const changed = $derived(changedSliderProps(settings));
 
     const usage = `import { Slider } from '@sivir-ui/svelte/components/slider';
 
@@ -41,6 +79,22 @@ const format = (value) => \`\${value.toFixed(1)} EV\`;
 </Slider.Root>`;
 </script>
 
+{#snippet heroProps()}
+    <PropGroup title="Behavior">
+        <PropRow label="Step">
+            <PropSegmented
+                label="Step"
+                size="sm"
+                options={stepOptions}
+                bind:value={settings.step}
+            />
+        </PropRow>
+    </PropGroup>
+    <PropGroup title="State">
+        <PropSwitch label="Disabled" bind:checked={settings.disabled} />
+    </PropGroup>
+{/snippet}
+
 <svelte:head>
     <title>Sivir · {TITLE}</title>
     <meta
@@ -62,8 +116,8 @@ const format = (value) => \`\${value.toFixed(1)} EV\`;
     </header>
 
     <section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-        <ComponentPreview code={HeroSrc}>
-            <Hero />
+        <ComponentPreview code={heroCode} props={heroProps} {changed}>
+            <Hero step={Number(settings.step)} disabled={settings.disabled} />
         </ComponentPreview>
     </section>
 

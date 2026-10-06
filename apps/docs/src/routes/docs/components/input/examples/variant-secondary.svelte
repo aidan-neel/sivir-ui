@@ -1,7 +1,0 @@
-<script lang="ts">
-    import { Input } from '@sivir-ui/svelte/components/input';
-</script>
-
-<div class="w-full max-w-xs">
-    <Input variant="secondary" label="Display name" placeholder="Ada Lovelace" />
-</div>

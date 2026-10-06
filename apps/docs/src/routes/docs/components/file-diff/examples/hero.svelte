@@ -1,6 +1,14 @@
 <script lang="ts">
-    import type { FileDiffLine } from '@sivir-ui/svelte/components/file-diff';
+    import type { FileDiffLine, FileDiffTheme } from '@sivir-ui/svelte/components/file-diff';
     import * as FileDiff from '@sivir-ui/svelte/components/file-diff';
+
+    let {
+        showLineNumbers = true,
+        theme = 'sivir'
+    }: {
+        showLineNumbers?: boolean;
+        theme?: FileDiffTheme;
+    } = $props();
 
     const diff: FileDiffLine[] = [
         {
@@ -38,4 +46,4 @@
     ];
 </script>
 
-<FileDiff.Root file="src/auth.ts" lang="ts" {diff} class="max-w-2xl" />
+<FileDiff.Root file="src/auth.ts" lang="ts" {diff} {showLineNumbers} {theme} class="max-w-2xl" />

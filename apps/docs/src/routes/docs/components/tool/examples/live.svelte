@@ -114,5 +114,5 @@
             {/each}
         </Tool.Content>
     </Tool.Root>
-    <Button variant="secondary" size="sm" disabled={running} onclick={replay}>Replay</Button>
+    <Button variant="secondary" disabled={running} onclick={replay}>Replay</Button>
 </div>

@@ -184,7 +184,12 @@ export const componentAnatomy = {
         { name: 'FullscreenNav.Group', description: 'Groups navigation links.' },
         { name: 'FullscreenNav.Link', description: 'Renders a navigation link.' }
     ],
-    gauge: [{ name: 'Gauge', description: 'Displays a value as a filled arc.' }],
+    gauge: [
+        { name: 'Gauge.Root', description: 'Sets the value, max, tone, and size of the meter.' },
+        { name: 'Gauge.Track', description: 'Draws the full arc behind the reading.' },
+        { name: 'Gauge.Indicator', description: 'Fills the arc up to the value.' },
+        { name: 'Gauge.Value', description: 'Shows the reading in the center of the arc.' }
+    ],
     'hover-card': [
         { name: 'HoverCard.Root', description: 'Controls hover card state.' },
         { name: 'HoverCard.Trigger', description: 'Opens the hover card.' },

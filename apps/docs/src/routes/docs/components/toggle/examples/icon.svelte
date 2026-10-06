@@ -1,8 +1,10 @@
 <script lang="ts">
-    import Bold from '@lucide/svelte/icons/bold';
+    import Bell from '@lucide/svelte/icons/bell';
     import { Toggle } from '@sivir-ui/svelte/components/toggle';
+
+    let notifications = $state(true);
 </script>
 
-<Toggle aria-label="Bold">
-    <Bold size={14} />
+<Toggle bind:pressed={notifications} aria-label="Notifications">
+    <Bell size={14} />
 </Toggle>
