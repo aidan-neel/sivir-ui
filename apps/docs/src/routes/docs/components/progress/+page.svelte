@@ -1,7 +1,7 @@
 <script lang="ts">
     import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
     import * as Typography from '@sivir-ui/svelte/components/typography';
-    import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+    import { InstallCommand, PreviewGallery } from '$lib/components/docs';
     import DocsPager from '$lib/components/docs/docs-pager.svelte';
     import Determinate from './examples/determinate.svelte';
     import DeterminateSrc from './examples/determinate.svelte?raw';
@@ -38,9 +38,34 @@
 
     <!-- ─── Hero Example ──────────────────────────────────────────── -->
     <section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-        <ComponentPreview code={HeroSrc}>
-            <Hero />
-        </ComponentPreview>
+        <PreviewGallery
+            examples={[
+                {
+                    value: 'overview',
+                    label: 'Overview',
+                    component: Hero,
+                    code: HeroSrc
+                },
+                {
+                    value: 'determinate',
+                    label: 'Determinate',
+                    component: Determinate,
+                    code: DeterminateSrc
+                },
+                {
+                    value: 'indeterminate',
+                    label: 'Indeterminate',
+                    component: Indeterminate,
+                    code: IndeterminateSrc
+                },
+                {
+                    value: 'with-label',
+                    label: 'With label',
+                    component: WithLabel,
+                    code: WithLabelSrc
+                }
+            ]}
+        />
     </section>
 
     <!-- ─── Installation ──────────────────────────────────────────── -->
@@ -61,36 +86,5 @@
             lang="svelte"
             copy="overlay"
         />
-    </section>
-
-    <!-- ─── Examples ──────────────────────────────────────────────── -->
-    <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
-        <div>
-            <Typography.H2 class="docs-section-heading">Examples</Typography.H2>
-        </div>
-
-        <!-- Determinate -->
-        <div id="determinate" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading">Determinate</Typography.H3>
-            <ComponentPreview code={DeterminateSrc}>
-                <Determinate />
-            </ComponentPreview>
-        </div>
-
-        <!-- Indeterminate -->
-        <div id="indeterminate" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading">Indeterminate</Typography.H3>
-            <ComponentPreview code={IndeterminateSrc}>
-                <Indeterminate />
-            </ComponentPreview>
-        </div>
-
-        <!-- With label -->
-        <div id="with-label" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading">With label</Typography.H3>
-            <ComponentPreview code={WithLabelSrc}>
-                <WithLabel />
-            </ComponentPreview>
-        </div>
     </section>
 </div>
