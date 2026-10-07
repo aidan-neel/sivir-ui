@@ -65,7 +65,7 @@
     onblur={hide}
     class={cn(
         className,
-        'inline-flex h-6 max-w-full min-w-0 items-center gap-1.5 rounded-full bg-secondary px-2 align-[0.0625em] text-xs leading-none whitespace-nowrap text-foreground-muted no-underline transition-colors [transition-duration:var(--motion-duration-hover)] in-[p]:mx-0.5 in-[p]:h-5 in-[p]:max-w-48 in-[p]:gap-1 in-[p]:px-1.5 hover:bg-[color-mix(in_oklab,var(--color-secondary),var(--color-foreground)_7%)] hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-ring)]'
+        'inline-flex h-6 max-w-full min-w-0 items-center gap-1.5 rounded-full bg-secondary px-2 align-[calc(var(--spacing)/4)] text-xs leading-none whitespace-nowrap text-foreground-muted no-underline transition-colors [transition-duration:var(--motion-duration-hover)] in-[p]:mx-0.5 in-[p]:h-5 in-[p]:max-w-48 in-[p]:gap-1 in-[p]:px-1.5 hover:bg-[color-mix(in_oklab,var(--color-secondary),var(--color-foreground)_7%)] hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-ring)]'
     )}
 >
     {@render children?.()}

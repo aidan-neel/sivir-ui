@@ -32,7 +32,7 @@
         />
     {:else if initial}
         <span
-            class="flex size-full items-center justify-center bg-foreground/10 text-[0.5625rem] leading-none font-[var(--font-weight-label)] text-foreground"
+            class="flex size-full items-center justify-center bg-foreground/10 text-[calc(var(--spacing)*2.25)] leading-none font-[var(--font-weight-label)] text-foreground"
         >
             {initial}
         </span>

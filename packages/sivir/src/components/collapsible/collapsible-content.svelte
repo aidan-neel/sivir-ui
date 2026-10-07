@@ -22,7 +22,7 @@
         )}
         {...rest}
     >
-        <div class="ps-[calc(16px+--spacing(2))] pb-3">
+        <div class="ps-[calc(--spacing(4)+--spacing(2))] pb-3">
             {@render children?.()}
         </div>
     </div>

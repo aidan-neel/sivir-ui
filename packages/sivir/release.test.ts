@@ -44,7 +44,7 @@ describe('publishable package contract', () => {
      * out of shared TypeScript class strings. The collection highlight adds one
      * more shared contract instead of repeating geometry CSS in five families.
      * Independent menu/modal movement controls and the code/file-diff syntax
-     * theme are token contracts too, as are the swap and Switch motion tokens
+     * theme are token contracts too, as are the swap, Switch, and Gauge motion tokens
      * and the item highlight used when the traveling highlight is off. Treat
      * further growth as a signal that private styling is leaking here.
      */
@@ -54,7 +54,7 @@ describe('publishable package contract', () => {
         const privatePrefix =
             /^\s*--(?:button|badge|field|panel|card|menu|command|tooltip|switch|checkbox|toast|tabs|progress|modal|sheet|textarea|breadcrumb|toggle|shortcut|slider)-/m;
 
-        expect(css.split('\n').length).toBeLessThanOrEqual(580);
+        expect(css.split('\n').length).toBeLessThanOrEqual(582);
         expect(Buffer.byteLength(normalizedCss)).toBeLessThanOrEqual(19 * 1024);
         expect(css).not.toMatch(privatePrefix);
         expect(css).not.toMatch(/(^|})\s*\*\s*\{/);
@@ -69,7 +69,6 @@ describe('publishable package contract', () => {
 
     test('keeps component animations colocated and reduced-motion safe', async () => {
         const animationFiles = [
-            './src/components/button/button.svelte',
             './src/components/progress/progress.svelte',
             './src/components/task-steps/task-steps.svelte',
             './src/components/toast/toast.svelte'
@@ -80,12 +79,7 @@ describe('publishable package contract', () => {
             )
         ).join('\n');
 
-        for (const name of [
-            'sivir-button-spin',
-            'sivir-progress-slide',
-            'sivir-task-spin',
-            'sivir-toast-progress'
-        ]) {
+        for (const name of ['sivir-progress-slide', 'sivir-task-spin', 'sivir-toast-progress']) {
             expect(source.match(new RegExp(`@keyframes\\s+${name}\\b`, 'g'))).toHaveLength(1);
             expect(source.split(name).length).toBeGreaterThanOrEqual(3);
         }

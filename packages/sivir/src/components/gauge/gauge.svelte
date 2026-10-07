@@ -22,9 +22,9 @@
 
     const DEFAULT_DURATION = 480;
     const sizeClasses: Record<GaugeSize, string> = {
-        sm: 'size-[20px]',
-        md: 'size-[32px]',
-        lg: 'size-[56px]'
+        sm: 'size-5',
+        md: 'size-8',
+        lg: 'size-14'
     };
 
     let element = $state<HTMLDivElement>();

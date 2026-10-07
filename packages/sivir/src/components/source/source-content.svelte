@@ -18,7 +18,7 @@
         {...rest}
         align="start"
         data-ui="source-content"
-        class={cn(className, 'w-[20rem]')}
+        class={cn(className, 'w-80')}
     >
         <div class="flex flex-col gap-3">
             {@render children?.()}

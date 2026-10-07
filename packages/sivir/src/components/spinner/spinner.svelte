@@ -28,7 +28,7 @@
 
     const faceClass =
         'absolute inset-0 flex items-center justify-center transition-[opacity,scale,rotate,filter] duration-[var(--motion-duration-swap)] ease-[var(--ease-out)] starting:scale-[var(--motion-swap-scale)] starting:opacity-0 starting:blur-[var(--motion-swap-blur)] motion-reduce:transition-none';
-    const shownFaceClass = 'rotate-0 scale-100 opacity-100 blur-[0px]';
+    const shownFaceClass = 'rotate-0 scale-100 opacity-100 blur-[0]';
     const hiddenFaceClass =
         'scale-[var(--motion-swap-scale)] opacity-0 blur-[var(--motion-swap-blur)]';
 

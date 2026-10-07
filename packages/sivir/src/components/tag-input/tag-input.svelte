@@ -49,7 +49,7 @@
     const atMax = $derived(max !== undefined && safeTags.length >= max);
     const controlClass = $derived(
         variant === 'secondary'
-            ? 'border-transparent bg-secondary [--tag-input-chip:var(--color-card)] [--tag-input-chip-shadow:var(--elevation-1),inset_0_0_0_var(--border-size)_color-mix(in_oklab,var(--color-foreground)_6%,transparent)] focus-within:border-[color-mix(in_srgb,var(--color-secondary)_45%,var(--color-primary))] dark:[--tag-input-chip:color-mix(in_oklab,var(--color-foreground)_10%,var(--color-secondary))] dark:[--tag-input-chip-shadow:var(--elevation-1),inset_0_1px_0_0_rgb(255_255_255/0.05)]'
+            ? 'border-transparent bg-secondary [--tag-input-chip:var(--color-card)] [--tag-input-chip-shadow:var(--elevation-1),inset_0_0_0_var(--border-size)_color-mix(in_oklab,var(--color-foreground)_6%,transparent)] focus-within:border-[color-mix(in_srgb,var(--color-secondary)_45%,var(--color-primary))] dark:[--tag-input-chip:color-mix(in_oklab,var(--color-foreground)_10%,var(--color-secondary))] dark:[--tag-input-chip-shadow:var(--elevation-1),inset_0_var(--border-size)_0_0_rgb(255_255_255/0.05)]'
             : 'border-border bg-[var(--color-field)] [--tag-input-chip:color-mix(in_oklab,var(--color-foreground)_5%,var(--color-field))] [--tag-input-chip-shadow:inset_0_0_0_var(--border-size)_color-mix(in_oklab,var(--color-foreground)_7%,transparent)] focus-within:border-primary'
     );
 

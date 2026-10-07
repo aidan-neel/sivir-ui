@@ -59,7 +59,7 @@
         <span
             data-ui="tag-input-tag-remove"
             aria-hidden="true"
-            class="grid size-[18px] shrink-0 place-items-center rounded-[calc(var(--radius-md)-3px)] text-foreground-muted transition-[background-color,color] [transition-duration:var(--motion-duration-hover)] ease-[var(--ease-out)] group-hover:bg-[color-mix(in_oklab,var(--color-foreground)_9%,transparent)] group-hover:text-foreground group-focus-visible:text-foreground motion-reduce:transition-none"
+            class="grid size-4.5 shrink-0 place-items-center rounded-[calc(var(--radius-md)-var(--spacing)*0.75)] text-foreground-muted transition-[background-color,color] [transition-duration:var(--motion-duration-hover)] ease-[var(--ease-out)] group-hover:bg-[color-mix(in_oklab,var(--color-foreground)_9%,transparent)] group-hover:text-foreground group-focus-visible:text-foreground motion-reduce:transition-none"
         >
             <X size={12} strokeWidth={2.25} aria-hidden="true" class="size-3" />
         </span>

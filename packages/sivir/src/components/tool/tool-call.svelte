@@ -63,7 +63,7 @@
     aria-busy={running}
     class={cn(
         className,
-        'group/call relative grid grid-cols-[0.875rem_minmax(0,1fr)] gap-x-2.5 pb-3 last:pb-0'
+        'group/call relative grid grid-cols-[--spacing(3.5)_minmax(0,1fr)] gap-x-2.5 pb-3 last:pb-0'
     )}
 >
     <span
@@ -81,7 +81,7 @@
     </span>
     <span
         aria-hidden="true"
-        class="absolute top-[1lh] bottom-0 left-[calc(0.4375rem-var(--border-size)/2)] w-[length:var(--border-size)] bg-border group-last/call:hidden"
+        class="absolute top-[1lh] bottom-0 left-[calc(--spacing(1.75)-var(--border-size)/2)] w-[length:var(--border-size)] bg-border group-last/call:hidden"
     ></span>
 
     {#if children}
