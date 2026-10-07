@@ -51,7 +51,7 @@
         <span class="flex pl-1.5">
             <span
                 class={cn(
-                    'grid h-4 min-w-4 place-items-center overflow-hidden rounded-full bg-foreground px-1 text-[0.6875rem] font-semibold text-background tabular-nums transition-[opacity,scale,filter] [transition-duration:var(--motion-duration-panel)] ease-[var(--ease-out)] motion-reduce:transition-none',
+                    'grid h-4 min-w-4 place-items-center overflow-hidden rounded-full bg-foreground px-1 text-[0.6875rem] leading-none font-semibold text-background transition-[opacity,scale,filter] [transition-duration:var(--motion-duration-panel)] ease-[var(--ease-out)] motion-reduce:transition-none',
                     visible ? 'scale-100 opacity-100 blur-none' : 'scale-50 opacity-0 blur-[2px]'
                 )}
             >
