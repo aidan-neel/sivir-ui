@@ -1,3 +1,4 @@
 - New Source page, and the Reasoning page now covers live status, steps, the trigger icon, saved transcripts, and searched sources.
 - The Tool page covers the redesigned API with running, failed, and icon props, plus a live example that streams calls in order.
 - The Textarea basic example counts characters as you type and flags text over the limit.
+- The changed-props count on the Props button is centered in its badge instead of sitting low and clipped.
