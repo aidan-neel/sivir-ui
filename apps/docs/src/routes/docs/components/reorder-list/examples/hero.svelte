@@ -1,43 +1,37 @@
 <script lang="ts">
+    import { Button } from '@sivir-ui/svelte/components/button';
     import { ReorderList } from '@sivir-ui/svelte/components/reorder-list';
 
-    type Item = {
-        id: string;
-        label: string;
-    };
-
-    let {
-        disabled = false
-    }: {
-        disabled?: boolean;
-    } = $props();
-
-    let items = $state<Item[]>([
-        {
-            id: '1',
-            label: 'Item one'
-        },
-        {
-            id: '2',
-            label: 'Item two'
-        },
-        {
-            id: '3',
-            label: 'Item three'
-        }
-    ]);
-
-    function getId(item: Item) {
-        return item.id;
-    }
-
-    function getLabel(item: Item) {
-        return item.label;
-    }
+    type AgendaItem = { id: string; name: string; duration: string };
+    const initial: AgendaItem[] = [
+        { id: 'opening', name: 'Opening remarks', duration: '5 min' },
+        { id: 'roadmap', name: 'Roadmap review', duration: '15 min' },
+        { id: 'critique', name: 'Design critique', duration: '20 min' },
+        { id: 'questions', name: 'Open questions', duration: '10 min' }
+    ];
+    let items = $state([...initial]);
 </script>
 
-<ReorderList bind:items {getId} {getLabel} label="List" {disabled}>
-    {#snippet children(item)}
-        <span class="truncate text-sm font-medium">{item.label}</span>
-    {/snippet}
-</ReorderList>
+<div class="w-full max-w-md">
+    <div class="mb-3 flex justify-end">
+        <Button size="md" variant="ghost" onclick={() => (items = [...initial])}>Reset</Button>
+    </div>
+    <ReorderList
+        bind:items
+        getId={(item) => item.id}
+        getLabel={(item) => item.name}
+        label="Meeting agenda"
+    >
+        {#snippet children(item)}
+            <span class="flex min-w-0 items-center justify-between gap-4">
+                <span class="truncate text-sm font-medium">{item.name}</span>
+                <span class="shrink-0 text-xs tabular-nums text-foreground-muted"
+                    >{item.duration}</span
+                >
+            </span>
+        {/snippet}
+    </ReorderList>
+    <p class="mt-3 text-xs leading-relaxed text-foreground-muted">
+        Drag a row, or focus it and press Space to grab it. Arrow keys move; Escape cancels.
+    </p>
+</div>
