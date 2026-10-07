@@ -1,23 +1,106 @@
 <script lang="ts">
     import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
     import * as Typography from '@sivir-ui/svelte/components/typography';
-    import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+    import {
+        ComponentPreview,
+        InstallCommand,
+        PreviewMorph,
+        PropGroup,
+        PropRow,
+        PropSegmented,
+        PropSwitch
+    } from '$lib/components/docs';
     import DocsPager from '$lib/components/docs/docs-pager.svelte';
 
     import Hero from './examples/hero.svelte';
-    import HeroSrc from './examples/hero.svelte?raw';
     import Shapes from './examples/shapes.svelte';
     import ShapesSrc from './examples/shapes.svelte?raw';
     import Sizes from './examples/sizes.svelte';
     import SizesSrc from './examples/sizes.svelte?raw';
     import WithImage from './examples/with-image.svelte';
     import WithImageSrc from './examples/with-image.svelte?raw';
+    import {
+        type AvatarSettings,
+        type AvatarShape,
+        type AvatarSize,
+        avatarCode,
+        avatarDefaults,
+        changedAvatarProps
+    } from './playground/playground';
 
     const TITLE = 'Avatar';
     const SLUG = 'avatar';
 
     const installCommand = `bunx @sivir-ui/svelte add ${SLUG}`;
+
+    const sizeOptions: {
+        value: AvatarSize;
+        label: string;
+    }[] = [
+        {
+            value: 'sm',
+            label: 'Small'
+        },
+        {
+            value: 'md',
+            label: 'Medium'
+        },
+        {
+            value: 'lg',
+            label: 'Large'
+        },
+        {
+            value: 'xl',
+            label: 'XL'
+        }
+    ];
+
+    const shapeOptions: {
+        value: AvatarShape;
+        label: string;
+    }[] = [
+        {
+            value: 'circle',
+            label: 'Circle'
+        },
+        {
+            value: 'square',
+            label: 'Square'
+        }
+    ];
+
+    let settings = $state<AvatarSettings>({
+        ...avatarDefaults
+    });
+
+    const heroCode = $derived(avatarCode(settings));
+    const changed = $derived(changedAvatarProps(settings));
+    const morphKey = $derived(`${settings.size}-${settings.shape}-${settings.image}`);
 </script>
+
+{#snippet heroProps()}
+    <PropGroup title="Appearance">
+        <PropRow label="Size">
+            <PropSegmented
+                label="Size"
+                size="sm"
+                options={sizeOptions}
+                bind:value={settings.size}
+            />
+        </PropRow>
+        <PropRow label="Shape">
+            <PropSegmented
+                label="Shape"
+                size="sm"
+                options={shapeOptions}
+                bind:value={settings.shape}
+            />
+        </PropRow>
+    </PropGroup>
+    <PropGroup title="Content">
+        <PropSwitch label="Image" bind:checked={settings.image} />
+    </PropGroup>
+{/snippet}
 
 <svelte:head>
     <title>Sivir · {TITLE}</title>
@@ -44,8 +127,10 @@
 
     <!-- ─── Hero Example ──────────────────────────────────────────── -->
     <section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-        <ComponentPreview code={HeroSrc}>
-            <Hero />
+        <ComponentPreview code={heroCode} props={heroProps} {changed}>
+            <PreviewMorph key={morphKey}>
+                <Hero size={settings.size} shape={settings.shape} image={settings.image} />
+            </PreviewMorph>
         </ComponentPreview>
     </section>
 
@@ -75,7 +160,6 @@
             <Typography.H2 class="docs-section-heading"> Examples </Typography.H2>
         </div>
 
-        <!-- Sizes -->
         <div id="sizes" class="scroll-mt-20 flex flex-col gap-3">
             <Typography.H3 class="docs-subsection-heading"> Sizes </Typography.H3>
             <ComponentPreview code={SizesSrc}>
@@ -83,7 +167,6 @@
             </ComponentPreview>
         </div>
 
-        <!-- Shapes -->
         <div id="shapes" class="scroll-mt-20 flex flex-col gap-3">
             <Typography.H3 class="docs-subsection-heading"> Shapes </Typography.H3>
             <ComponentPreview code={ShapesSrc}>
@@ -91,7 +174,6 @@
             </ComponentPreview>
         </div>
 
-        <!-- With image -->
         <div id="with-image" class="scroll-mt-20 flex flex-col gap-3">
             <Typography.H3 class="docs-subsection-heading"> With image </Typography.H3>
             <ComponentPreview code={WithImageSrc}>

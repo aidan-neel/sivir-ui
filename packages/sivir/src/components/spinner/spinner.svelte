@@ -3,6 +3,7 @@
     import LoaderCircle from '@lucide/svelte/icons/loader-circle';
     import { getCssDuration } from '@sivir-ui/svelte/transition';
     import { cn } from '@sivir-ui/svelte/utils';
+    import { untrack } from 'svelte';
 
     import type { SpinnerProps } from '.';
 
@@ -21,34 +22,23 @@
     }: SpinnerProps = $props();
 
     let indicator = $state<HTMLSpanElement>();
-    let phase = $state<SpinnerPhase>('loading');
-    let entered = $state(false);
+    let phase = $state<SpinnerPhase>(untrack(() => ready) ? 'success' : 'loading');
     const spinDuration = $derived(`${850 / (speed > 0 ? speed : 1)}ms`);
     const showCheckmark = $derived(phase === 'success' || phase === 'exiting');
-    const collapsed = $derived(!entered || phase === 'exiting');
-    const loaderBlur = $derived(
-        showCheckmark || !entered ? 'blur(var(--motion-swap-blur))' : 'blur(0px)'
-    );
-    const checkBlur = $derived(
-        phase === 'exiting' || !entered || !showCheckmark
-            ? 'blur(var(--motion-swap-blur))'
-            : 'blur(0px)'
-    );
+
+    const faceClass =
+        'absolute inset-0 flex items-center justify-center transition-[opacity,scale,rotate,filter] duration-[var(--motion-duration-swap)] ease-[var(--ease-out)] starting:scale-[var(--motion-swap-scale)] starting:opacity-0 starting:blur-[var(--motion-swap-blur)] motion-reduce:transition-none';
+    const shownFaceClass = 'rotate-0 scale-100 opacity-100 blur-[0]';
+    const hiddenFaceClass =
+        'scale-[var(--motion-swap-scale)] opacity-0 blur-[var(--motion-swap-blur)]';
 
     $effect(() => {
         if (!ready) {
             phase = 'loading';
-            entered = false;
-            const frame = requestAnimationFrame(() => {
-                entered = true;
-            });
 
-            return () => {
-                cancelAnimationFrame(frame);
-            };
+            return;
         }
 
-        entered = true;
         phase = 'success';
         const timer = setTimeout(() => {
             phase = 'exiting';
@@ -89,30 +79,38 @@
             'relative inline-flex shrink-0 overflow-hidden transition-[width] duration-[var(--motion-duration-panel)] ease-[var(--ease-out)] motion-reduce:transition-none'
         )}
         style:height={`${size}px`}
-        style:width={collapsed ? '0px' : `${size}px`}
+        style:width={phase === 'exiting' ? '0px' : `${size}px`}
     >
-        <LoaderCircle
-            {size}
-            aria-hidden="true"
-            class={`absolute inset-0 m-auto ${curved ? 'animate-[sivir-spinner-spin_linear_infinite]' : 'animate-spin'} transition-[filter,opacity,scale,rotate] duration-[var(--motion-duration-swap)] ease-[var(--ease-out)] motion-reduce:animate-none motion-reduce:transition-none ${
-                showCheckmark || !entered
-                    ? '-rotate-[var(--motion-swap-rotate)] scale-[var(--motion-swap-scale)] opacity-0'
-                    : 'rotate-0 scale-100 opacity-100'
-            }`}
-            style={`filter: ${loaderBlur}; animation-duration: ${spinDuration};`}
-        />
-        <Check
-            {size}
-            aria-hidden="true"
-            class={`absolute inset-0 m-auto transition-[filter,opacity,scale,rotate] duration-[var(--motion-duration-swap)] ease-[var(--ease-out)] motion-reduce:transition-none ${
-                phase === 'exiting' || !entered
-                    ? 'scale-[var(--motion-swap-scale)] opacity-0'
+        <span
+            class={cn(
+                faceClass,
+                showCheckmark
+                    ? cn(hiddenFaceClass, '-rotate-[var(--motion-swap-rotate)]')
+                    : shownFaceClass
+            )}
+        >
+            <LoaderCircle
+                {size}
+                aria-hidden="true"
+                class={cn(
+                    curved ? 'animate-[sivir-spinner-spin_linear_infinite]' : 'animate-spin',
+                    'motion-reduce:animate-none'
+                )}
+                style={`animation-duration: ${spinDuration};`}
+            />
+        </span>
+        <span
+            class={cn(
+                faceClass,
+                phase === 'exiting'
+                    ? hiddenFaceClass
                     : showCheckmark
-                      ? 'rotate-0 scale-100 opacity-100'
-                      : 'rotate-[var(--motion-swap-rotate)] scale-[var(--motion-swap-scale)] opacity-0'
-            }`}
-            style={`filter: ${checkBlur};`}
-        />
+                      ? shownFaceClass
+                      : cn(hiddenFaceClass, 'rotate-[var(--motion-swap-rotate)]')
+            )}
+        >
+            <Check {size} aria-hidden="true" />
+        </span>
     </span>
 {/if}
 

@@ -49,7 +49,7 @@
     class={cn(
         'group relative flex w-full flex-col overflow-hidden',
         'rounded-[var(--radius-lg)] border-[length:var(--border-size)] border-border',
-        'bg-panel shadow-[var(--elevation-float)] backdrop-blur-md',
+        'bg-panel shadow-[var(--elevation-float)]',
         'ring-1 ring-[color-mix(in_srgb,var(--color-foreground)_4%,transparent)] sm:ring-0',
         'text-foreground'
     )}
@@ -133,7 +133,7 @@
                     'mt-0.5 inline-flex size-5 shrink-0 items-center justify-center rounded-md',
                     'text-foreground-muted opacity-0 transition-[opacity,background-color,color] [transition-duration:var(--motion-duration-hover)] ease-[var(--ease-out)] motion-reduce:transition-none',
                     'hover:bg-secondary/50 hover:text-foreground',
-                    'group-hover:opacity-100'
+                    'group-hover:opacity-100 focus-visible:opacity-100'
                 )}
                 aria-label="Dismiss notification"
             >

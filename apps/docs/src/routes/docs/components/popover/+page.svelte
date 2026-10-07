@@ -1,19 +1,104 @@
 <script lang="ts">
     import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
     import * as Typography from '@sivir-ui/svelte/components/typography';
-    import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+    import {
+        ComponentPreview,
+        InstallCommand,
+        PropGroup,
+        PropRow,
+        PropSegmented,
+        PropSwitch
+    } from '$lib/components/docs';
     import DocsPager from '$lib/components/docs/docs-pager.svelte';
-    import Basic from './examples/basic.svelte';
-    import BasicSrc from './examples/basic.svelte?raw';
     import Hero from './examples/hero.svelte';
     import HeroSrc from './examples/hero.svelte?raw';
     import Placements from './examples/placements.svelte';
     import PlacementsSrc from './examples/placements.svelte?raw';
+    import {
+        changedPopoverProps,
+        type PopoverAlign,
+        type PopoverSettings,
+        type PopoverSide,
+        popoverCode,
+        popoverDefaults,
+        popoverPlacement
+    } from './playground/playground';
 
     const _TITLE = 'Popover';
 
     const installCommand = 'bunx @sivir-ui/svelte add popover';
+
+    const sideOptions: {
+        value: PopoverSide;
+        label: string;
+    }[] = [
+        {
+            value: 'top',
+            label: 'Top'
+        },
+        {
+            value: 'right',
+            label: 'Right'
+        },
+        {
+            value: 'bottom',
+            label: 'Bottom'
+        },
+        {
+            value: 'left',
+            label: 'Left'
+        }
+    ];
+
+    const alignOptions: {
+        value: PopoverAlign;
+        label: string;
+    }[] = [
+        {
+            value: 'start',
+            label: 'Start'
+        },
+        {
+            value: 'center',
+            label: 'Center'
+        },
+        {
+            value: 'end',
+            label: 'End'
+        }
+    ];
+
+    let settings = $state<PopoverSettings>({
+        ...popoverDefaults
+    });
+
+    const heroCode = $derived(popoverCode(HeroSrc, settings));
+    const changed = $derived(changedPopoverProps(settings));
 </script>
+
+{#snippet heroProps()}
+    <PropGroup title="Placement">
+        <PropRow label="Side">
+            <PropSegmented
+                label="Side"
+                size="sm"
+                options={sideOptions}
+                bind:value={settings.side}
+            />
+        </PropRow>
+        <PropRow label="Align">
+            <PropSegmented
+                label="Align"
+                size="sm"
+                options={alignOptions}
+                bind:value={settings.align}
+            />
+        </PropRow>
+    </PropGroup>
+    <PropGroup title="Behavior">
+        <PropSwitch label="Open on hover" bind:checked={settings.hoverable} />
+    </PropGroup>
+{/snippet}
 
 <svelte:head>
     <title>Sivir · Popover</title>
@@ -37,8 +122,8 @@
 
     <!-- ─── Hero Example ──────────────────────────────────────────── -->
     <section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-        <ComponentPreview code={HeroSrc}>
-            <Hero />
+        <ComponentPreview code={heroCode} props={heroProps} {changed}>
+            <Hero placement={popoverPlacement(settings)} hoverable={settings.hoverable} />
         </ComponentPreview>
     </section>
 
@@ -77,20 +162,11 @@
     <!-- ─── Examples ──────────────────────────────────────────────── -->
     <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
         <div>
-            <Typography.H2 class="docs-section-heading">Examples</Typography.H2>
+            <Typography.H2 class="docs-section-heading"> Examples </Typography.H2>
         </div>
 
-        <!-- Basic popover -->
-        <div id="basic" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading">Basic popover</Typography.H3>
-            <ComponentPreview code={BasicSrc}>
-                <Basic />
-            </ComponentPreview>
-        </div>
-
-        <!-- Placement variants -->
         <div id="placements" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading">Placement variants</Typography.H3>
+            <Typography.H3 class="docs-subsection-heading"> Placement variants </Typography.H3>
             <ComponentPreview code={PlacementsSrc}>
                 <Placements />
             </ComponentPreview>

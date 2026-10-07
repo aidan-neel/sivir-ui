@@ -1,7 +1,7 @@
 /**
  * Phase 2 §1 — lock the public API.
  *
- * Frozen catalog: 58 components. Named exports hang off the package root as
+ * Frozen catalog: 59 components. Named exports hang off the package root as
  * identifiers; namespace exports hang off a PascalCase object (AlertDialog.Root).
  * Every public component is also reachable at @sivir-ui/svelte/components/<slug>.
  */
@@ -23,7 +23,6 @@ const NAMED = {
     checkbox: ['Checkbox'],
     'code-block': ['CodeBlock'],
     'copy-button': ['CopyButton'],
-    gauge: ['Gauge'],
     input: ['Input'],
     label: ['Label'],
     markdown: ['Markdown'],
@@ -103,6 +102,7 @@ const NAMESPACED = {
     ], // cone: Root → Sub → nested Sub
     'fullscreen-nav': ['Root', 'Trigger', 'Content', 'Close', 'Group', 'Link'],
     'file-diff': ['Root', 'TopBar', 'Content', 'Row', 'LineNumber'],
+    gauge: ['Root', 'Track', 'Indicator', 'Value'],
     'hover-card': ['Root', 'Trigger', 'Content', 'Title', 'Description'],
     message: ['Root', 'Content', 'Actions'],
     modal: [
@@ -142,8 +142,9 @@ const NAMESPACED = {
         'LinkDescription'
     ],
     'radio-group': ['Root', 'Item'],
-    reasoning: ['Root', 'Trigger', 'Content'],
+    reasoning: ['Root', 'Trigger', 'Orb', 'Content', 'Steps', 'Step'],
     select: ['Root', 'Trigger', 'Value', 'Label', 'Item', 'Content'],
+    source: ['Root', 'Icon', 'Label', 'Count', 'Content', 'Item', 'Title', 'Description'],
     sheet: ['Root', 'Trigger', 'Title', 'Header', 'Footer', 'Description', 'Content', 'Close'],
     sidebar: [
         'Root',
@@ -233,9 +234,9 @@ function parseExportedNames(source: string): string[] {
 }
 
 describe('public API contract (v1 freeze)', () => {
-    test('frozen catalog is exactly 58 components with no overlap', () => {
-        expect(FROZEN).toHaveLength(58);
-        expect(new Set(FROZEN).size).toBe(58);
+    test('frozen catalog is exactly 59 components with no overlap', () => {
+        expect(FROZEN).toHaveLength(59);
+        expect(new Set(FROZEN).size).toBe(59);
         for (const slug of Object.keys(NAMED)) {
             expect(NAMESPACED).not.toHaveProperty(slug);
         }

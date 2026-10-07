@@ -426,7 +426,7 @@
                             {active.branch}
                         </span>
                     </div>
-                    <Button variant="outline" size="sm">Share</Button>
+                    <Button variant="outline">Share</Button>
                 </header>
 
                 <Conversation.Root class="min-h-0 flex-1">
@@ -441,62 +441,36 @@
 
                             <Message.Root from="assistant">
                                 <Message.Content class="space-y-4">
-                                    <Tool.Root state="complete">
-                                        <Tool.Trigger
-                                            title="Searched twice, read 3 files"
-                                            duration="1.9s"
-                                        />
+                                    <Tool.Root>
+                                        <Tool.Trigger summary="Searched twice, read 3 files" />
                                         <Tool.Content>
+                                            <Tool.Call action="Searched" target="authenticate(" />
                                             <Tool.Call
-                                                action="Search"
-                                                target="authenticate("
-                                                duration="48ms"
-                                            />
-                                            <Tool.Call
-                                                action="Search"
+                                                action="Searched"
                                                 target="redis.createClient"
-                                                duration="52ms"
                                             />
+                                            <Tool.Call action="Read" target="src/app.ts" />
                                             <Tool.Call
-                                                action="Read file"
-                                                target="src/app.ts"
-                                                duration="9ms"
-                                            />
-                                            <Tool.Call
-                                                action="Read file"
+                                                action="Read"
                                                 target="src/middleware/auth.ts"
-                                                duration="11ms"
                                             />
-                                            <Tool.Call
-                                                action="Read file"
-                                                target="src/lib/redis.ts"
-                                                duration="8ms"
-                                            />
+                                            <Tool.Call action="Read" target="src/lib/redis.ts" />
                                         </Tool.Content>
                                     </Tool.Root>
                                     <Markdown content={findings} />
                                     <FileDiff.Root file="src/app.ts" lang="ts" {diff} />
-                                    <Tool.Root state="complete">
-                                        <Tool.Trigger
-                                            title="Created 2 files, ran 1 command"
-                                            duration="3.2s"
-                                        />
+                                    <Tool.Root>
+                                        <Tool.Trigger summary="Created 2 files, ran 1 command" />
                                         <Tool.Content>
                                             <Tool.Call
-                                                action="Create file"
+                                                action="Created"
                                                 target="src/middleware/rate-limit.ts"
-                                                duration="14ms"
                                             />
                                             <Tool.Call
-                                                action="Create file"
+                                                action="Created"
                                                 target="test/rate-limit.test.ts"
-                                                duration="12ms"
                                             />
-                                            <Tool.Call
-                                                action="Run"
-                                                target="bun test api"
-                                                duration="2.4s"
-                                            >
+                                            <Tool.Call action="Ran" target="bun test api">
                                                 <Tool.Output>
                                                     <pre
                                                         class="font-mono text-xs leading-5"
@@ -538,16 +512,14 @@
                                 status={followUp.done ? 'idle' : 'streaming'}
                             >
                                 <Message.Content class="space-y-4">
-                                    <Tool.Root state={followUp.done ? 'complete' : 'running'}>
+                                    <Tool.Root running={!followUp.done}>
                                         <Tool.Trigger
-                                            title={followUp.done
-                                                ? 'Edited 1 file, ran 1 command'
-                                                : 'Editing files'}
-                                            duration={followUp.done ? '2.2s' : undefined}
+                                            status="Running tests"
+                                            summary="Edited 1 file, ran 1 command"
                                         />
                                         <Tool.Content>
                                             <Tool.Call
-                                                action={followUp.done ? 'Run' : 'Running'}
+                                                action={followUp.done ? 'Ran' : 'Running'}
                                                 target={`bun test ${active.repo.split('/')[1]}`}
                                                 state={followUp.done ? 'complete' : 'running'}
                                             />

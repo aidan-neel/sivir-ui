@@ -1,16 +1,105 @@
 <script lang="ts">
     import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
     import * as Typography from '@sivir-ui/svelte/components/typography';
-    import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+    import {
+        ComponentPreview,
+        InstallCommand,
+        PreviewMorph,
+        PropGroup,
+        PropRow,
+        PropSegmented,
+        PropSwitch
+    } from '$lib/components/docs';
     import DocsPager from '$lib/components/docs/docs-pager.svelte';
     import Capped from './examples/capped.svelte';
     import CappedSrc from './examples/capped.svelte?raw';
     import Hero from './examples/hero.svelte';
-    import HeroSrc from './examples/hero.svelte?raw';
+    import {
+        changedShowMoreProps,
+        type ShowMoreLines,
+        type ShowMoreMaxHeight,
+        type ShowMoreSettings,
+        showMoreCode,
+        showMoreDefaults
+    } from './playground/playground';
 
     const TITLE = 'Show More';
     const installCommand = 'bunx @sivir-ui/svelte add show-more';
+
+    const lineOptions: {
+        value: ShowMoreLines;
+        label: string;
+    }[] = [
+        {
+            value: '1',
+            label: '1'
+        },
+        {
+            value: '2',
+            label: '2'
+        },
+        {
+            value: '3',
+            label: '3'
+        },
+        {
+            value: '4',
+            label: '4'
+        }
+    ];
+
+    const maxHeightOptions: {
+        value: ShowMoreMaxHeight;
+        label: string;
+    }[] = [
+        {
+            value: '96',
+            label: '96'
+        },
+        {
+            value: '160',
+            label: '160'
+        },
+        {
+            value: '320',
+            label: '320'
+        }
+    ];
+
+    let settings = $state<ShowMoreSettings>({
+        ...showMoreDefaults
+    });
+
+    const heroCode = $derived(showMoreCode(settings));
+    const changed = $derived(changedShowMoreProps(settings));
+    const morphKey = $derived(
+        `${settings.lines}-${settings.maxHeight}-${settings.defaultExpanded}`
+    );
 </script>
+
+{#snippet heroProps()}
+    <PropGroup title="Layout">
+        <PropRow label="Lines">
+            <PropSegmented
+                label="Lines"
+                size="sm"
+                options={lineOptions}
+                bind:value={settings.lines}
+            />
+        </PropRow>
+        <PropRow label="Max height">
+            <PropSegmented
+                label="Max height"
+                size="sm"
+                options={maxHeightOptions}
+                bind:value={settings.maxHeight}
+            />
+        </PropRow>
+    </PropGroup>
+    <PropGroup title="State">
+        <PropSwitch label="Expanded by default" bind:checked={settings.defaultExpanded} />
+    </PropGroup>
+{/snippet}
 
 <svelte:head>
     <title>Sivir · {TITLE}</title>
@@ -30,8 +119,14 @@
     </header>
 
     <section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-        <ComponentPreview code={HeroSrc}>
-            <Hero />
+        <ComponentPreview code={heroCode} props={heroProps} {changed}>
+            <PreviewMorph key={morphKey}>
+                <Hero
+                    lines={Number(settings.lines)}
+                    maxHeight={Number(settings.maxHeight)}
+                    defaultExpanded={settings.defaultExpanded}
+                />
+            </PreviewMorph>
         </ComponentPreview>
     </section>
 

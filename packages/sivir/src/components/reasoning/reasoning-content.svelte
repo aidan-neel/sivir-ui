@@ -66,7 +66,7 @@
             {...rest}
             class={cn(
                 className,
-                'mt-1.5 mb-1 ml-1.5 border-l-[length:var(--border-size)] border-border pl-3.5 text-sm leading-body text-foreground-muted'
+                'mt-2 mb-1 text-sm leading-body text-foreground-muted'
             )}
         >
             {#if mounted}

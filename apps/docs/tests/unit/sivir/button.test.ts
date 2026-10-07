@@ -201,8 +201,8 @@ describe('Button -- async status', () => {
         expect(onclick).not.toHaveBeenCalled();
     });
 
-    it('reserves every supplied face in the same grid cell', () => {
-        const { container } = render(Button, {
+    it('keeps only the active face in flow so the button fits its label', () => {
+        render(Button, {
             props: {
                 status: 'success',
                 loadingLabel: 'Publishing…',
@@ -211,12 +211,16 @@ describe('Button -- async status', () => {
                 children: textSnippet('Publish')
             }
         });
-        const faces = container.querySelectorAll('.sivir-button-face');
+        const button = screen.getByRole('button', { name: 'Published' });
+        const faces = Array.from(button.querySelectorAll(':scope > span > span'));
+        const facesInFlow = faces.filter((face) => {
+            return !face.classList.contains('absolute');
+        });
+
         expect(faces).toHaveLength(4);
-        expect(Array.from(faces).every((face) => face.classList.contains('col-start-1'))).toBe(
-            true
-        );
-        expect(screen.getByRole('button', { name: 'Published' })).not.toHaveAttribute('aria-busy');
+        expect(facesInFlow).toHaveLength(1);
+        expect(facesInFlow[0]).toHaveTextContent('Published');
+        expect(button).not.toHaveAttribute('aria-busy');
         expect(screen.getByRole('status')).toHaveTextContent('Published');
     });
 

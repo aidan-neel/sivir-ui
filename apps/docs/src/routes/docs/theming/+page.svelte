@@ -262,7 +262,10 @@ src/lib/sivir/components/button/
             adds an inset stroke to primary buttons, and
             <Typography.InlineCode>interactiveCursor</Typography.InlineCode>
             is <Typography.InlineCode>'default'</Typography.InlineCode> or
-            <Typography.InlineCode>'pointer'</Typography.InlineCode>. Setting
+            <Typography.InlineCode>'pointer'</Typography.InlineCode>.
+            <Typography.InlineCode>triggerDistance</Typography.InlineCode>
+            sets the gap in pixels, from 0 to 16, between a trigger and the menu or popover it opens
+            (default 8). Setting
             <Typography.InlineCode>motion: "none"</Typography.InlineCode>
             disables every animation, including dialogs, menus, and the traveling highlight.
         </Typography.Text>

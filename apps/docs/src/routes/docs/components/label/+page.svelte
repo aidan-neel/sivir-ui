@@ -70,15 +70,6 @@
             <Typography.H2 class="docs-section-heading"> Examples </Typography.H2>
         </div>
 
-        <!-- Basic -->
-        <div id="basic" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading"> With email input </Typography.H3>
-            <ComponentPreview code={HeroSrc}>
-                <Hero />
-            </ComponentPreview>
-        </div>
-
-        <!-- Required indicator -->
         <div id="required" class="scroll-mt-20 flex flex-col gap-3">
             <Typography.H3 class="docs-subsection-heading"> With required indicator </Typography.H3>
             <ComponentPreview code={WithRequiredSrc}>
@@ -86,7 +77,6 @@
             </ComponentPreview>
         </div>
 
-        <!-- Disabled state -->
         <div id="disabled" class="scroll-mt-20 flex flex-col gap-3">
             <Typography.H3 class="docs-subsection-heading"> Disabled field </Typography.H3>
             <ComponentPreview code={DisabledSrc}>

@@ -1,5 +1,8 @@
 <script lang="ts">
-    import { Gauge } from '@sivir-ui/svelte/components/gauge';
+    import * as Gauge from '@sivir-ui/svelte/components/gauge';
 </script>
 
-<Gauge value={85} max={100} label="Context remaining" tone="muted" size={32}>85</Gauge>
+<div class="flex items-center gap-2 text-sm text-foreground-muted">
+    <Gauge.Root value={38} size="sm" label="Context used" />
+    <span class="tabular-nums">38% of context used</span>
+</div>

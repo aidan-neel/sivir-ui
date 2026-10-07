@@ -1,21 +1,69 @@
 <script lang="ts">
     import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
     import * as Typography from '@sivir-ui/svelte/components/typography';
-    import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+    import {
+        ComponentPreview,
+        InstallCommand,
+        PropGroup,
+        PropRow,
+        PropSegmented,
+        PropSwitch
+    } from '$lib/components/docs';
     import DocsPager from '$lib/components/docs/docs-pager.svelte';
 
     import Hero from './examples/hero.svelte';
-    import HeroSrc from './examples/hero.svelte?raw';
     import MultipleMode from './examples/multiple-mode.svelte';
     import MultipleModeSrc from './examples/multiple-mode.svelte?raw';
     import SingleMode from './examples/single-mode.svelte';
     import SingleModeSrc from './examples/single-mode.svelte?raw';
+    import {
+        type AccordionSettings,
+        type AccordionType,
+        accordionCode,
+        accordionDefaults,
+        changedAccordionProps
+    } from './playground/playground';
 
     const TITLE = 'Accordion';
     const SLUG = 'accordion';
 
     const installCommand = `bunx @sivir-ui/svelte add ${SLUG}`;
+
+    const typeOptions: {
+        value: AccordionType;
+        label: string;
+    }[] = [
+        {
+            value: 'single',
+            label: 'Single'
+        },
+        {
+            value: 'multiple',
+            label: 'Multiple'
+        }
+    ];
+
+    let settings = $state<AccordionSettings>({
+        ...accordionDefaults
+    });
+
+    const heroCode = $derived(accordionCode(settings));
+    const changed = $derived(changedAccordionProps(settings));
 </script>
+
+{#snippet heroProps()}
+    <PropGroup title="Behavior">
+        <PropRow label="Type">
+            <PropSegmented label="Type" options={typeOptions} bind:value={settings.type} />
+        </PropRow>
+        {#if settings.type === 'single'}
+            <PropSwitch label="Collapsible" bind:checked={settings.collapsible} />
+        {/if}
+    </PropGroup>
+    <PropGroup title="State">
+        <PropSwitch label="Disable last item" bind:checked={settings.disabled} />
+    </PropGroup>
+{/snippet}
 
 <svelte:head>
     <title>Sivir · {TITLE}</title>
@@ -45,8 +93,12 @@
 
     <!-- ─── Hero Example ──────────────────────────────────────────── -->
     <section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-        <ComponentPreview code={HeroSrc}>
-            <Hero />
+        <ComponentPreview code={heroCode} props={heroProps} {changed}>
+            <Hero
+                type={settings.type}
+                collapsible={settings.collapsible}
+                disabled={settings.disabled}
+            />
         </ComponentPreview>
     </section>
 
@@ -79,7 +131,6 @@
             <Typography.H2 class="docs-section-heading"> Examples </Typography.H2>
         </div>
 
-        <!-- Single mode -->
         <div id="single-mode" class="scroll-mt-20 flex flex-col gap-3">
             <Typography.H3 class="docs-subsection-heading"> Single mode </Typography.H3>
             <ComponentPreview code={SingleModeSrc}>
@@ -87,7 +138,6 @@
             </ComponentPreview>
         </div>
 
-        <!-- Multiple mode -->
         <div id="multiple-mode" class="scroll-mt-20 flex flex-col gap-3">
             <Typography.H3 class="docs-subsection-heading"> Multiple mode </Typography.H3>
             <ComponentPreview code={MultipleModeSrc}>

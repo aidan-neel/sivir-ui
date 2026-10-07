@@ -1,20 +1,142 @@
 <script lang="ts">
     import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
     import * as Typography from '@sivir-ui/svelte/components/typography';
-    import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+    import {
+        ComponentPreview,
+        InstallCommand,
+        PropGroup,
+        PropRow,
+        PropSegmented
+    } from '$lib/components/docs';
     import DocsPager from '$lib/components/docs/docs-pager.svelte';
-    import Definition from './examples/definition.svelte';
-    import DefinitionSrc from './examples/definition.svelte?raw';
-    import LinkPreview from './examples/link-preview.svelte';
-    import LinkPreviewSrc from './examples/link-preview.svelte?raw';
-    import UserPreview from './examples/user-preview.svelte';
-    import UserPreviewSrc from './examples/user-preview.svelte?raw';
+    import {
+        changedHoverCardProps,
+        type HoverCardAlign,
+        type HoverCardCloseDelay,
+        type HoverCardOpenDelay,
+        type HoverCardSettings,
+        type HoverCardSide,
+        hoverCardCode,
+        hoverCardDefaults
+    } from './playground/playground';
+    import Preview from './playground/preview.svelte';
 
-    const _TITLE = 'Hover Card';
+    type Option<T extends string> = {
+        value: T;
+        label: string;
+    };
+
     const SLUG = 'hover-card';
 
     const installCommand = `bunx @sivir-ui/svelte add ${SLUG}`;
+
+    const sideOptions: Option<HoverCardSide>[] = [
+        {
+            value: 'top',
+            label: 'Top'
+        },
+        {
+            value: 'right',
+            label: 'Right'
+        },
+        {
+            value: 'bottom',
+            label: 'Bottom'
+        },
+        {
+            value: 'left',
+            label: 'Left'
+        }
+    ];
+    const alignOptions: Option<HoverCardAlign>[] = [
+        {
+            value: 'start',
+            label: 'Start'
+        },
+        {
+            value: 'center',
+            label: 'Center'
+        },
+        {
+            value: 'end',
+            label: 'End'
+        }
+    ];
+    const openDelayOptions: Option<HoverCardOpenDelay>[] = [
+        {
+            value: '0',
+            label: '0 ms'
+        },
+        {
+            value: '200',
+            label: '200 ms'
+        },
+        {
+            value: '500',
+            label: '500 ms'
+        }
+    ];
+    const closeDelayOptions: Option<HoverCardCloseDelay>[] = [
+        {
+            value: '0',
+            label: '0 ms'
+        },
+        {
+            value: '150',
+            label: '150 ms'
+        },
+        {
+            value: '500',
+            label: '500 ms'
+        }
+    ];
+
+    let settings = $state<HoverCardSettings>({
+        ...hoverCardDefaults
+    });
+
+    const heroCode = $derived(hoverCardCode(settings));
+    const changed = $derived(changedHoverCardProps(settings));
 </script>
+
+{#snippet hoverCardProps()}
+    <PropGroup title="Placement">
+        <PropRow label="Side">
+            <PropSegmented
+                label="Side"
+                size="sm"
+                options={sideOptions}
+                bind:value={settings.side}
+            />
+        </PropRow>
+        <PropRow label="Align">
+            <PropSegmented
+                label="Align"
+                size="sm"
+                options={alignOptions}
+                bind:value={settings.align}
+            />
+        </PropRow>
+    </PropGroup>
+    <PropGroup title="Timing">
+        <PropRow label="Open delay">
+            <PropSegmented
+                label="Open delay"
+                size="sm"
+                options={openDelayOptions}
+                bind:value={settings.openDelay}
+            />
+        </PropRow>
+        <PropRow label="Close delay">
+            <PropSegmented
+                label="Close delay"
+                size="sm"
+                options={closeDelayOptions}
+                bind:value={settings.closeDelay}
+            />
+        </PropRow>
+    </PropGroup>
+{/snippet}
 
 <svelte:head>
     <title>Sivir · Hover Card</title>
@@ -41,8 +163,8 @@
 
     <!-- ─── Hero Example ──────────────────────────────────────────── -->
     <section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-        <ComponentPreview code={UserPreviewSrc}>
-            <UserPreview />
+        <ComponentPreview code={heroCode} props={hoverCardProps} {changed}>
+            <Preview {settings} />
         </ComponentPreview>
     </section>
 
@@ -72,36 +194,5 @@
             lang="svelte"
             copy="overlay"
         />
-    </section>
-
-    <!-- ─── Examples ──────────────────────────────────────────────── -->
-    <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
-        <div>
-            <Typography.H2 class="docs-section-heading"> Examples </Typography.H2>
-        </div>
-
-        <!-- User mention preview -->
-        <div id="user-preview" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading"> User mention preview </Typography.H3>
-            <ComponentPreview code={UserPreviewSrc}>
-                <UserPreview />
-            </ComponentPreview>
-        </div>
-
-        <!-- Link preview -->
-        <div id="link-preview" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading"> Link preview </Typography.H3>
-            <ComponentPreview code={LinkPreviewSrc}>
-                <LinkPreview />
-            </ComponentPreview>
-        </div>
-
-        <!-- Simple definition -->
-        <div id="definition" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading"> Definition </Typography.H3>
-            <ComponentPreview code={DefinitionSrc}>
-                <Definition />
-            </ComponentPreview>
-        </div>
     </section>
 </div>

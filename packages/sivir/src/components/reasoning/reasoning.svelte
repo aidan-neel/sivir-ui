@@ -7,6 +7,7 @@
     let {
         streaming = false,
         open = $bindable(false),
+        duration,
         onOpenChange,
         onOpenChangeComplete,
         children,
@@ -16,6 +17,14 @@
 
     const id = $props.id();
     let contentRegistered = false;
+    let previousStreaming = untrack(() => streaming);
+    let elapsed = $state(0);
+    const seconds = $derived(duration ?? elapsed);
+
+    if (previousStreaming) {
+        open = true;
+    }
+
     let previousOpen = untrack(() => open);
 
     function settle(value: boolean) {
@@ -36,6 +45,9 @@
         get streaming() {
             return streaming;
         },
+        get seconds() {
+            return seconds;
+        },
         registerContent() {
             if (contentRegistered) {
                 throw new Error('Reasoning.Root supports exactly one Reasoning.Content.');
@@ -47,6 +59,37 @@
             };
         },
         settle
+    });
+
+    $effect(() => {
+        const next = streaming;
+
+        if (next === previousStreaming) {
+            return;
+        }
+        previousStreaming = next;
+
+        if (next) {
+            open = true;
+        }
+    });
+
+    $effect(() => {
+        if (!streaming) {
+            return;
+        }
+
+        const startedAt = performance.now();
+        elapsed = 0;
+
+        const timer = setInterval(() => {
+            elapsed = Math.floor((performance.now() - startedAt) / 1000);
+        }, 250);
+
+        return () => {
+            elapsed = Math.floor((performance.now() - startedAt) / 1000);
+            clearInterval(timer);
+        };
     });
 
     $effect(() => {

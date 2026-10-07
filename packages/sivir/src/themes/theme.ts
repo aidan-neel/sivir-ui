@@ -73,6 +73,8 @@ export type ThemeChrome = {
     surfacePaneling?: boolean;
     primaryStroke?: boolean;
     interactiveCursor?: InteractiveCursor;
+    /** Gap in pixels between a trigger and the menu or popover it opens, from 0 to 16. Defaults to 8. */
+    triggerDistance?: number;
 };
 
 /** The single, versioned public authoring contract for Sivir themes. */
@@ -436,6 +438,9 @@ export function surfacePanelingOffCss(): string {
                 'background-color: color-mix(in oklab, var(--color-foreground) 3%, var(--color-card));'
             ]
         ) +
+        block(".sivir-inset-frame > [data-ui='file-diff-top-bar']:last-child", [
+            'border-bottom: 0;'
+        ]) +
         block(".sivir-inset-frame:where([data-ui='code-block'])", ['position: relative;']) +
         block(".sivir-inset-frame [data-ui='code-block-header']:not(:has([role='tablist']))", [
             'position: absolute;',
@@ -555,6 +560,9 @@ function chromeBlocks(chrome: ThemeChrome | undefined): string {
         );
     }
     const shared = [`--ui-cursor-interactive: ${chrome.interactiveCursor ?? 'default'};`];
+    if (chrome.triggerDistance !== undefined) {
+        shared.push(`--menu-trigger-distance: ${chrome.triggerDistance}px;`);
+    }
     if (chrome.travelingHighlight === false) {
         shared.push('--sivir-traveling-highlight: none;');
     }
@@ -589,7 +597,8 @@ function chromeBlocks(chrome: ThemeChrome | undefined): string {
         chrome.menuPaneling === false ||
         chrome.surfacePaneling === false ||
         chrome.primaryStroke === true ||
-        chrome.interactiveCursor === 'pointer';
+        chrome.interactiveCursor === 'pointer' ||
+        chrome.triggerDistance !== undefined;
     if (!hasChromeWork) {
         return '';
     }
@@ -634,7 +643,8 @@ export function themeToCss(themeInput: Theme): string {
             '--motion-duration-modal-out: 0ms;',
             '--motion-duration-press: 0ms;',
             '--motion-duration-item: 0ms;',
-            '--motion-duration-switch: 0ms;'
+            '--motion-duration-switch: 0ms;',
+            '--motion-duration-gauge: 0ms;'
         );
     }
 
@@ -893,6 +903,19 @@ function optionalChrome(value: unknown): ThemeChrome | undefined {
             throw new TypeError('Invalid theme: chrome.primaryStroke must be a boolean.');
         }
         chrome.primaryStroke = value.primaryStroke;
+    }
+    if (value.triggerDistance !== undefined) {
+        if (
+            typeof value.triggerDistance !== 'number' ||
+            !Number.isFinite(value.triggerDistance) ||
+            value.triggerDistance < 0 ||
+            value.triggerDistance > 16
+        ) {
+            throw new TypeError(
+                'Invalid theme: chrome.triggerDistance must be a number from 0 to 16.'
+            );
+        }
+        chrome.triggerDistance = value.triggerDistance;
     }
     if (value.interactiveCursor !== undefined) {
         chrome.interactiveCursor = enumValue(

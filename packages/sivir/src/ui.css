@@ -133,6 +133,7 @@
     --motion-duration-press: 160ms;
     --motion-duration-item: 160ms;
     --motion-duration-switch: 280ms;
+    --motion-duration-gauge: 480ms;
     --motion-switch-stretch: 1;
     --motion-slider-stretch: 1;
     --motion-duration-swap: var(--motion-duration-panel);
@@ -561,6 +562,7 @@
         --motion-duration-press: 0ms;
         --motion-duration-item: 0ms;
         --motion-duration-switch: 0ms;
+        --motion-duration-gauge: 0ms;
     }
 
     .sivir-press:active,

@@ -22,6 +22,22 @@
     import * as Sidebar from '@sivir-ui/svelte/components/sidebar';
     import { Switch } from '@sivir-ui/svelte/components/switch';
     import { cn } from '@sivir-ui/svelte/utils';
+    import {
+        type SidebarCollapsible,
+        type SidebarSide,
+        type SidebarVariant,
+        sidebarHint
+    } from '../playground/playground';
+
+    let {
+        variant = 'inset',
+        collapsible = 'icon',
+        side = 'left'
+    }: {
+        variant?: SidebarVariant;
+        collapsible?: SidebarCollapsible;
+        side?: SidebarSide;
+    } = $props();
 
     type Page = {
         id: number;
@@ -50,6 +66,8 @@
     let inviteEmail = $state('');
     let displayName = $state('Aidan');
     let notifications = $state(true);
+
+    const hint = $derived(sidebarHint(collapsible));
 
     const parentTitle = $derived(parentId === null ? undefined : findPage(pages, parentId)?.title);
 
@@ -148,11 +166,11 @@
 
 <Sidebar.Root
     bind:open
-    collapsible="icon"
-    variant="inset"
+    {collapsible}
+    {variant}
     class="h-120 rounded-[var(--radius-xl)] border border-border"
 >
-    <Sidebar.Panel aria-label="Workspace">
+    <Sidebar.Panel {side} aria-label="Workspace">
         <Sidebar.Header
             class={cn(!open && 'gap-0', 'flex-row items-center justify-between transition-[gap] [transition-duration:var(--motion-duration-sheet)] ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none')}
         >
@@ -183,7 +201,6 @@
                             </span>
                         </DropdownMenu.Item>
                     {/each}
-                    <DropdownMenu.Separator />
                     <DropdownMenu.Label>Account</DropdownMenu.Label>
                     <DropdownMenu.Item callback={() => (inviteOpen = true)}>
                         <span class="flex items-center gap-2"
@@ -203,7 +220,6 @@
                             Billing</span
                         >
                     </DropdownMenu.Item>
-                    <DropdownMenu.Separator />
                     <DropdownMenu.Item>
                         <span class="flex items-center gap-2"><LogOut size={13} /> Log out</span>
                     </DropdownMenu.Item>
@@ -328,7 +344,7 @@
                     <p>Moved to trash: {trashed.join(', ')}.</p>
                 {/if}
             {:else}
-                <p>Collapse the panel to an icon rail with the button in this header.</p>
+                <p>{hint}</p>
                 <p>
                     Press the + beside a page to nest a new one, or search to jump anywhere in
                     {workspace}.
@@ -358,7 +374,6 @@
                     </Command.Item>
                 {/each}
             </Command.Group>
-            <Command.Separator />
             <Command.Group heading="Actions">
                 <Command.Item name="New page" callback={() => openCreate(null)}>
                     <SquarePen size={16} />

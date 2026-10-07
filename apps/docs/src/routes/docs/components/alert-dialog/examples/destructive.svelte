@@ -5,21 +5,21 @@
 
 <div class="grid place-items-center">
     <AlertDialog.Root error>
-        <AlertDialog.Trigger variant="destructive">Delete project</AlertDialog.Trigger>
+        <AlertDialog.Trigger variant="destructive">Discard changes</AlertDialog.Trigger>
         <AlertDialog.Content size="lg">
             <AlertDialog.Header>
-                <AlertDialog.Title>Delete this project?</AlertDialog.Title>
+                <AlertDialog.Title>Discard unsaved changes?</AlertDialog.Title>
                 <AlertDialog.Description>
-                    All branches, issues, and deploy history will be permanently removed.
+                    You have 3 unsaved changes that will be lost if you leave this page.
                 </AlertDialog.Description>
             </AlertDialog.Header>
             <AlertDialog.Footer>
                 <AlertDialog.Exit>
-                    Cancel
+                    Keep editing
                     <Shortcut shortcut="esc" />
                 </AlertDialog.Exit>
                 <AlertDialog.Confirm>
-                    Delete project
+                    Discard
                     <Shortcut shortcut="enter" />
                 </AlertDialog.Confirm>
             </AlertDialog.Footer>

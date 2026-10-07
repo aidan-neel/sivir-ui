@@ -1,22 +1,22 @@
 <script lang="ts">
     import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
     import * as Typography from '@sivir-ui/svelte/components/typography';
-    import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+    import {
+        ComponentPreview,
+        InstallCommand,
+        PropGroup,
+        PropRow,
+        PropSegmented,
+        PropSwitch
+    } from '$lib/components/docs';
     import DocsPager from '$lib/components/docs/docs-pager.svelte';
-    import Compound from './examples/compound.svelte';
-    import CompoundSrc from './examples/compound.svelte?raw';
     import CopyInline from './examples/copy-inline.svelte';
     import CopyInlineSrc from './examples/copy-inline.svelte?raw';
     import CopyOverlay from './examples/copy-overlay.svelte';
     import CopyOverlaySrc from './examples/copy-overlay.svelte?raw';
     import CustomActions from './examples/custom-actions.svelte';
     import CustomActionsSrc from './examples/custom-actions.svelte?raw';
-    import CustomThemeStylesheet from './examples/custom-theme-stylesheet.svelte';
-    import CustomThemeStylesheetSrc from './examples/custom-theme-stylesheet.svelte?raw';
-    import CustomThemeVariables from './examples/custom-theme-variables.svelte';
-    import CustomThemeVariablesSrc from './examples/custom-theme-variables.svelte?raw';
     import Hero from './examples/hero.svelte';
-    import HeroSrc from './examples/hero.svelte?raw';
     import LineNumbers from './examples/line-numbers.svelte';
     import LineNumbersSrc from './examples/line-numbers.svelte?raw';
     import MultiLanguage from './examples/multi-language.svelte';
@@ -24,7 +24,22 @@
     import Single from './examples/single.svelte';
     import SingleSrc from './examples/single.svelte?raw';
 
+    import {
+        type CodeBlockSettings,
+        changedCodeBlockProps,
+        codeBlockCode,
+        codeBlockCopyOptions,
+        codeBlockDefaults
+    } from './playground/playground';
+
     const installCommand = 'bunx @sivir-ui/svelte add code-block';
+
+    let settings = $state<CodeBlockSettings>({
+        ...codeBlockDefaults
+    });
+
+    const heroCode = $derived(codeBlockCode(settings));
+    const changed = $derived(changedCodeBlockProps(settings));
 
     const usageSnippet = `import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
 
@@ -41,6 +56,22 @@ import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
 
 <CodeBlock code={code} lang="typescript" theme="custom" />`;
 </script>
+
+{#snippet heroProps()}
+    <PropGroup title="Content">
+        <PropSwitch label="Line numbers" bind:checked={settings.showLineNumbers} />
+    </PropGroup>
+    <PropGroup title="Copy">
+        <PropRow label="Placement">
+            <PropSegmented
+                label="Copy placement"
+                options={codeBlockCopyOptions}
+                bind:value={settings.copy}
+                size="sm"
+            />
+        </PropRow>
+    </PropGroup>
+{/snippet}
 
 <svelte:head>
     <title>Sivir · Code Block</title>
@@ -66,8 +97,8 @@ import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
 
     <!-- ─── Hero Example ──────────────────────────────────────────── -->
     <section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-        <ComponentPreview code={HeroSrc}>
-            <Hero />
+        <ComponentPreview code={heroCode} props={heroProps} {changed}>
+            <Hero showLineNumbers={settings.showLineNumbers} copy={settings.copy} />
         </ComponentPreview>
     </section>
 
@@ -153,45 +184,6 @@ import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
             <Typography.H3 class="docs-subsection-heading"> Copy placement: inline </Typography.H3>
             <ComponentPreview code={CopyInlineSrc}>
                 <CopyInline />
-            </ComponentPreview>
-        </div>
-
-        <div id="compound" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading"> Compound API </Typography.H3>
-            <ComponentPreview code={CompoundSrc}>
-                <Compound />
-            </ComponentPreview>
-        </div>
-
-        <div id="custom-theme-stylesheet" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading">
-                Custom theme: stylesheet
-            </Typography.H3>
-            <Typography.Text variant="supporting">
-                With
-                <Typography.InlineCode>theme="custom"</Typography.InlineCode>
-                the block paints no token colors itself, so a stock
-                <Typography.InlineCode>highlight.js</Typography.InlineCode>
-                stylesheet or your own
-                <Typography.InlineCode>hljs-*</Typography.InlineCode>
-                rules take over. This example uses One Dark and One Light rules.
-            </Typography.Text>
-            <ComponentPreview code={CustomThemeStylesheetSrc}>
-                <CustomThemeStylesheet />
-            </ComponentPreview>
-        </div>
-
-        <div id="custom-theme-variables" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading"> Custom theme: variables </Typography.H3>
-            <Typography.Text variant="supporting">
-                To recolor tokens without a stylesheet, set the nine
-                <Typography.InlineCode>--code-block-token-*</Typography.InlineCode>
-                variables on a wrapper, then set them again under
-                <Typography.InlineCode>.dark</Typography.InlineCode>
-                for dark mode.
-            </Typography.Text>
-            <ComponentPreview code={CustomThemeVariablesSrc}>
-                <CustomThemeVariables />
             </ComponentPreview>
         </div>
     </section>

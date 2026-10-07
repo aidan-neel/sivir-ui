@@ -1,0 +1,10 @@
+- Reasoning Trigger takes a `status` for the live activity label, such as Searching the web, and crossfades between labels as it changes.
+- Reasoning Trigger shows elapsed seconds while streaming.
+- `Reasoning.Steps` and `Reasoning.Step` lay out a trace as titled steps joined by a rail, with a custom icon, a shimmering active state, and an optional collapsible body.
+- New Source component: a link chip with a favicon and a label for a page the model searched or read, with a letter or globe fallback when the icon is missing.
+- Source chips can cite a claim inline: add a hover card listing each cited page with its title and description, and a +N count for extra sources.
+- Reasoning Trigger takes an optional `icon` snippet that receives the trigger state, and `Reasoning.Orb` is a filling orb to pass to it. The trigger shows no icon by default.
+- New Reasoning steps blur and grow into the trace instead of appearing at once.
+- The Sivir theme now uses Geist for its sans font.
+- Tool now matches Reasoning: the trigger shimmers a live `status` and counts elapsed seconds while running, takes an optional `icon` snippet, and opens when `running` turns on.
+- Tool Calls sit on a rail with an optional `icon` snippet, shimmer while running, show Failed in the error tone, and blur and grow in as they arrive. A Call with children becomes a toggle for its details.

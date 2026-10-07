@@ -9,7 +9,7 @@
     import * as Card from '@sivir-ui/svelte/components/card';
     import { Checkbox } from '@sivir-ui/svelte/components/checkbox';
     import * as DropdownMenu from '@sivir-ui/svelte/components/dropdown-menu';
-    import { Gauge } from '@sivir-ui/svelte/components/gauge';
+    import * as Gauge from '@sivir-ui/svelte/components/gauge';
     import { Input } from '@sivir-ui/svelte/components/input';
     import * as Message from '@sivir-ui/svelte/components/message';
     import { Progress } from '@sivir-ui/svelte/components/progress';
@@ -420,7 +420,6 @@
                         <DropdownMenu.Content>
                             <DropdownMenu.Item>Copy payment ID</DropdownMenu.Item>
                             <DropdownMenu.Item>View customer</DropdownMenu.Item>
-                            <DropdownMenu.Separator />
                             <DropdownMenu.Item>Refund</DropdownMenu.Item>
                         </DropdownMenu.Content>
                     </DropdownMenu.Root>
@@ -469,7 +468,15 @@
         </Card.Header>
         <Card.Content>
             <div class="flex items-center gap-4">
-                <Gauge value={72} label="Storage used" tone="warning" size={56}>72%</Gauge>
+                <Gauge.Root value={72} label="Storage used" tone="warning" size="lg">
+                    <Gauge.Track />
+                    <Gauge.Indicator />
+                    <Gauge.Value>
+                        {#snippet children({ percent })}
+                            {percent}%
+                        {/snippet}
+                    </Gauge.Value>
+                </Gauge.Root>
                 <div class="flex min-w-0 flex-col gap-0.5">
                     <Typography.Text>72 GB of 100 GB</Typography.Text>
                     <Typography.Metadata>Clear old builds to free space.</Typography.Metadata>

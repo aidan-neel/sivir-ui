@@ -2,4 +2,4 @@
     import { Badge } from '@sivir-ui/svelte/components/badge';
 </script>
 
-<Badge variant="error">Error</Badge>
+<Badge variant="error">Failed</Badge>

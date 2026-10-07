@@ -1,21 +1,129 @@
 <script lang="ts">
     import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
     import * as Typography from '@sivir-ui/svelte/components/typography';
-    import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+    import {
+        ComponentPreview,
+        InstallCommand,
+        PreviewMorph,
+        PropGroup,
+        PropRow,
+        PropSegmented
+    } from '$lib/components/docs';
     import DocsPager from '$lib/components/docs/docs-pager.svelte';
     import Card from './examples/card.svelte';
     import CardSrc from './examples/card.svelte?raw';
     import Circle from './examples/circle.svelte';
     import CircleSrc from './examples/circle.svelte?raw';
     import Hero from './examples/hero.svelte';
-    import HeroSrc from './examples/hero.svelte?raw';
     import Rectangle from './examples/rectangle.svelte';
     import RectangleSrc from './examples/rectangle.svelte?raw';
+    import {
+        changedSkeletonProps,
+        type SkeletonBarHeight,
+        type SkeletonDelay,
+        type SkeletonLines,
+        type SkeletonSettings,
+        skeletonCode,
+        skeletonDefaults
+    } from './playground/playground';
 
     const TITLE = 'Skeleton';
 
     const installCommand = 'bunx @sivir-ui/svelte add skeleton';
+
+    const lineOptions: {
+        value: SkeletonLines;
+        label: string;
+    }[] = [
+        {
+            value: '2',
+            label: '2'
+        },
+        {
+            value: '3',
+            label: '3'
+        },
+        {
+            value: '4',
+            label: '4'
+        }
+    ];
+
+    const barHeightOptions: {
+        value: SkeletonBarHeight;
+        label: string;
+    }[] = [
+        {
+            value: '6',
+            label: '6'
+        },
+        {
+            value: '9',
+            label: '9'
+        },
+        {
+            value: '12',
+            label: '12'
+        }
+    ];
+
+    const delayOptions: {
+        value: SkeletonDelay;
+        label: string;
+    }[] = [
+        {
+            value: '0',
+            label: '0ms'
+        },
+        {
+            value: '120',
+            label: '120ms'
+        },
+        {
+            value: '1000',
+            label: '1s'
+        }
+    ];
+
+    let settings = $state<SkeletonSettings>({
+        ...skeletonDefaults
+    });
+
+    const heroCode = $derived(skeletonCode(settings));
+    const changed = $derived(changedSkeletonProps(settings));
+    const morphKey = $derived(`${settings.lines}-${settings.barHeight}-${settings.delay}`);
 </script>
+
+{#snippet heroProps()}
+    <PropGroup title="Layout">
+        <PropRow label="Lines">
+            <PropSegmented
+                label="Lines"
+                size="sm"
+                options={lineOptions}
+                bind:value={settings.lines}
+            />
+        </PropRow>
+        <PropRow label="Bar height">
+            <PropSegmented
+                label="Bar height"
+                size="sm"
+                options={barHeightOptions}
+                bind:value={settings.barHeight}
+            />
+        </PropRow>
+    </PropGroup>
+    <PropGroup title="Timing">
+        <PropRow label="Delay">
+            <PropSegmented
+                label="Delay"
+                size="sm"
+                options={delayOptions}
+                bind:value={settings.delay}
+            />
+        </PropRow>
+    </PropGroup>
+{/snippet}
 
 <svelte:head>
     <title>Sivir · {TITLE}</title>
@@ -41,8 +149,16 @@
 
     <!-- ─── Hero Example ──────────────────────────────────────────── -->
     <section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-        <ComponentPreview code={HeroSrc} refreshable>
-            <Hero />
+        <ComponentPreview code={heroCode} props={heroProps} {changed} refreshable>
+            <PreviewMorph key={morphKey}>
+                <div class="w-96 max-w-full">
+                    <Hero
+                        lines={Number(settings.lines)}
+                        barHeight={Number(settings.barHeight)}
+                        delay={Number(settings.delay)}
+                    />
+                </div>
+            </PreviewMorph>
         </ComponentPreview>
     </section>
 

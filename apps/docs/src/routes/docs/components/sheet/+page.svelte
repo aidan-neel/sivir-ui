@@ -1,20 +1,65 @@
 <script lang="ts">
     import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
     import * as Typography from '@sivir-ui/svelte/components/typography';
-    import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+    import {
+        ComponentPreview,
+        InstallCommand,
+        PropGroup,
+        PropRow,
+        PropSegmented,
+        PropSwitch
+    } from '$lib/components/docs';
     import DocsPager from '$lib/components/docs/docs-pager.svelte';
 
     import Hero from './examples/hero.svelte';
     import HeroSrc from './examples/hero.svelte?raw';
-    import Left from './examples/left.svelte';
-    import LeftSrc from './examples/left.svelte?raw';
-    import Right from './examples/right.svelte';
-    import RightSrc from './examples/right.svelte?raw';
+    import {
+        changedSheetProps,
+        type SheetSettings,
+        type SheetSide,
+        sheetCode,
+        sheetDefaults
+    } from './playground/playground';
 
     const TITLE = 'Sheet';
 
     const installCommand = 'bunx @sivir-ui/svelte add sheet';
+
+    const sideOptions: {
+        value: SheetSide;
+        label: string;
+    }[] = [
+        {
+            value: 'left',
+            label: 'Left'
+        },
+        {
+            value: 'right',
+            label: 'Right'
+        }
+    ];
+
+    let settings = $state<SheetSettings>({
+        ...sheetDefaults
+    });
+
+    const heroCode = $derived(sheetCode(HeroSrc, settings));
+    const changed = $derived(changedSheetProps(settings));
 </script>
+
+{#snippet heroProps()}
+    <PropGroup title="Content">
+        <PropRow label="Side">
+            <PropSegmented
+                label="Side"
+                size="sm"
+                options={sideOptions}
+                bind:value={settings.side}
+            />
+        </PropRow>
+        <PropSwitch label="Close on outside click" bind:checked={settings.allowClickOutside} />
+    </PropGroup>
+{/snippet}
 
 <svelte:head>
     <title>Sivir · Sheet</title>
@@ -39,8 +84,8 @@
 
     <!-- ─── Hero Example ──────────────────────────────────────────── -->
     <section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-        <ComponentPreview code={HeroSrc}>
-            <Hero />
+        <ComponentPreview code={heroCode} props={heroProps} {changed}>
+            <Hero side={settings.side} allowClickOutside={settings.allowClickOutside} />
         </ComponentPreview>
     </section>
 
@@ -60,7 +105,9 @@
             <Typography.InlineCode>left</Typography.InlineCode>
             or
             <Typography.InlineCode>right</Typography.InlineCode>
-            (the default). A custom
+            (the default). Pass
+            <Typography.InlineCode>{'allowClickOutside={false}'}</Typography.InlineCode>
+            to keep it open when someone clicks outside. A custom
             <Typography.InlineCode>onclick</Typography.InlineCode>
             on
             <Typography.InlineCode>Sheet.Close</Typography.InlineCode>
@@ -73,28 +120,5 @@
             lang="svelte"
             copy="overlay"
         />
-    </section>
-
-    <!-- ─── Examples ──────────────────────────────────────────────── -->
-    <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
-        <div>
-            <Typography.H2 class="docs-section-heading">Examples</Typography.H2>
-        </div>
-
-        <!-- Left side -->
-        <div id="left" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading">Left side</Typography.H3>
-            <ComponentPreview code={LeftSrc}>
-                <Left />
-            </ComponentPreview>
-        </div>
-
-        <!-- Right side -->
-        <div id="right" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading">Right side</Typography.H3>
-            <ComponentPreview code={RightSrc}>
-                <Right />
-            </ComponentPreview>
-        </div>
     </section>
 </div>

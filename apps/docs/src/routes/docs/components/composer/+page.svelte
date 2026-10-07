@@ -1,8 +1,16 @@
 <script lang="ts">
     import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
+    import type { ComposerStatus } from '@sivir-ui/svelte/components/composer';
     import Shortcut from '@sivir-ui/svelte/components/shortcut';
     import * as Typography from '@sivir-ui/svelte/components/typography';
-    import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+    import {
+        ComponentPreview,
+        InstallCommand,
+        PropGroup,
+        PropRow,
+        PropSegmented,
+        PropSwitch
+    } from '$lib/components/docs';
     import DocsPager from '$lib/components/docs/docs-pager.svelte';
 
     import Hero from './examples/hero.svelte';
@@ -13,11 +21,78 @@
     import ErrorSrc from './examples/state-error.svelte?raw';
     import Submitting from './examples/submitting.svelte';
     import SubmittingSrc from './examples/submitting.svelte?raw';
-    import ToolbarInset from './examples/toolbar-inset.svelte';
-    import ToolbarInsetSrc from './examples/toolbar-inset.svelte?raw';
+    import {
+        type ComposerSettings,
+        type ComposerToolbarVariant,
+        changedComposerProps,
+        composerCode,
+        composerDefaults
+    } from './playground/playground';
+
+    type Option<T extends string> = {
+        value: T;
+        label: string;
+    };
 
     const installCommand = 'bunx @sivir-ui/svelte add composer';
+
+    const statusOptions: Option<ComposerStatus>[] = [
+        {
+            value: 'idle',
+            label: 'Idle'
+        },
+        {
+            value: 'submitting',
+            label: 'Submitting'
+        },
+        {
+            value: 'error',
+            label: 'Error'
+        }
+    ];
+
+    const toolbarOptions: Option<ComposerToolbarVariant>[] = [
+        {
+            value: 'chrome',
+            label: 'Chrome'
+        },
+        {
+            value: 'inset',
+            label: 'Inset'
+        }
+    ];
+
+    let settings = $state<ComposerSettings>({
+        ...composerDefaults
+    });
+
+    const heroCode = $derived(composerCode(HeroSrc, settings));
+    const changed = $derived(changedComposerProps(settings));
 </script>
+
+{#snippet heroProps()}
+    <PropGroup title="Appearance">
+        <PropRow label="Toolbar">
+            <PropSegmented label="Toolbar" options={toolbarOptions} bind:value={settings.toolbar} />
+        </PropRow>
+    </PropGroup>
+    <PropGroup title="State">
+        <PropRow label="Status">
+            <PropSegmented
+                label="Status"
+                size="sm"
+                options={statusOptions}
+                bind:value={settings.status}
+            />
+        </PropRow>
+        <PropSwitch label="Generating" bind:checked={settings.generating} />
+        <PropSwitch label="Disabled" bind:checked={settings.disabled} />
+    </PropGroup>
+    <PropGroup title="Behavior">
+        <PropSwitch label="Allow empty" bind:checked={settings.allowEmpty} />
+        <PropSwitch label="Submit on Enter" bind:checked={settings.submitOnEnter} />
+    </PropGroup>
+{/snippet}
 
 <svelte:head>
     <title>Sivir · Composer</title>
@@ -41,7 +116,16 @@
     </header>
 
     <section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-        <ComponentPreview code={HeroSrc}><Hero /></ComponentPreview>
+        <ComponentPreview code={heroCode} props={heroProps} {changed}>
+            <Hero
+                bind:generating={settings.generating}
+                status={settings.status}
+                disabled={settings.disabled}
+                allowEmpty={settings.allowEmpty}
+                submitOnEnter={settings.submitOnEnter}
+                toolbar={settings.toolbar}
+            />
+        </ComponentPreview>
     </section>
 
     <section id="installation" class="scroll-mt-20 flex flex-col gap-4">
@@ -104,40 +188,43 @@ async function sendPrompt(prompt: string) {
         </Typography.Text>
     </section>
 
+    <!-- ─── Example Descriptions ─────────────────────────────────────── -->
+    {#snippet errorDescription()}
+        <Typography.Text variant="supporting">
+            Set <Typography.InlineCode>status</Typography.InlineCode> when your app tracks
+            submission itself. <Typography.InlineCode>"error"</Typography.InlineCode> shows “Message
+            could not be sent.” above the form.
+        </Typography.Text>
+    {/snippet}
+
+    <!-- ─── Examples ──────────────────────────────────────────────── -->
     <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
         <div>
-            <Typography.H2 class="docs-section-heading">Examples</Typography.H2>
-            <Typography.Text variant="supporting" class="mt-2">
-                Set <Typography.InlineCode>status</Typography.InlineCode> when your app tracks
-                submission itself. <Typography.InlineCode>"error"</Typography.InlineCode> shows
-                “Message could not be sent.” above the form.
-            </Typography.Text>
+            <Typography.H2 class="docs-section-heading"> Examples </Typography.H2>
         </div>
 
         <div id="idle" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading">Idle</Typography.H3>
-            <ComponentPreview code={IdleSrc}><Idle /></ComponentPreview>
+            <Typography.H3 class="docs-subsection-heading"> Idle </Typography.H3>
+            <ComponentPreview code={IdleSrc}>
+                <Idle />
+            </ComponentPreview>
         </div>
 
         <div id="submitting" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading">Submitting</Typography.H3>
-            <ComponentPreview code={SubmittingSrc}><Submitting /></ComponentPreview>
+            <Typography.H3 class="docs-subsection-heading"> Submitting </Typography.H3>
+            <ComponentPreview code={SubmittingSrc}>
+                <Submitting />
+            </ComponentPreview>
         </div>
 
         <div id="error" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading">Error</Typography.H3>
-            <ComponentPreview code={ErrorSrc} refreshable><ErrorExample /></ComponentPreview>
-        </div>
-
-        <div id="toolbar-inset" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading">Toolbar inset</Typography.H3>
-            <Typography.Text variant="supporting">
-                By default the toolbar shares the input's surface. Set
-                <Typography.InlineCode>variant="inset"</Typography.InlineCode>
-                on <Typography.InlineCode>Toolbar</Typography.InlineCode> to place it in a recessed
-                tray along the bottom edge.
-            </Typography.Text>
-            <ComponentPreview code={ToolbarInsetSrc}><ToolbarInset /></ComponentPreview>
+            <Typography.H3 class="docs-subsection-heading"> Error </Typography.H3>
+            <ComponentPreview code={ErrorSrc} refreshable>
+                <ErrorExample />
+            </ComponentPreview>
+            <div class="flex max-w-2xl flex-col gap-2">
+                {@render errorDescription()}
+            </div>
         </div>
     </section>
 </div>

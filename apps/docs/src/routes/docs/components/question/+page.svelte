@@ -1,7 +1,16 @@
 <script lang="ts">
     import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
+    import type { QuestionStatus } from '@sivir-ui/svelte/components/question';
     import * as Typography from '@sivir-ui/svelte/components/typography';
-    import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+    import {
+        ComponentPreview,
+        InstallCommand,
+        PreviewOptions,
+        PropGroup,
+        PropRow,
+        PropSegmented,
+        PropSwitch
+    } from '$lib/components/docs';
     import DocsPager from '$lib/components/docs/docs-pager.svelte';
     import ComposerTakeover from './examples/composer-takeover.svelte';
     import ComposerTakeoverSrc from './examples/composer-takeover.svelte?raw';
@@ -11,6 +20,13 @@
     import HeroSrc from './examples/hero.svelte?raw';
     import MultipleChoice from './examples/multiple-choice.svelte';
     import MultipleChoiceSrc from './examples/multiple-choice.svelte?raw';
+    import {
+        changedQuestionProps,
+        type QuestionSettings,
+        type QuestionVariant,
+        questionCode,
+        questionDefaults
+    } from './playground/playground';
 
     const installCommand = 'bunx @sivir-ui/svelte add question';
     const usageSnippet = `import * as Question from '@sivir-ui/svelte/components/question';
@@ -37,7 +53,64 @@ let answer: QuestionAnswer | undefined = $state();
     <Question.Submit />
   </Question.Actions>
 </Question.Root>`;
+
+    const variantOptions: {
+        value: QuestionVariant;
+        label: string;
+    }[] = [
+        {
+            value: 'default',
+            label: 'Default'
+        },
+        {
+            value: 'inset',
+            label: 'Inset'
+        }
+    ];
+
+    const statusOptions: {
+        value: QuestionStatus;
+        label: string;
+    }[] = [
+        {
+            value: 'idle',
+            label: 'Idle'
+        },
+        {
+            value: 'submitting',
+            label: 'Submitting'
+        },
+        {
+            value: 'error',
+            label: 'Error'
+        }
+    ];
+
+    let settings = $state<QuestionSettings>({
+        ...questionDefaults
+    });
+
+    const heroCode = $derived(questionCode(HeroSrc, settings));
+    const changed = $derived(changedQuestionProps(settings));
 </script>
+
+{#snippet heroControls()}
+    <PreviewOptions label="Variant" options={variantOptions} bind:value={settings.variant} />
+{/snippet}
+
+{#snippet heroProps()}
+    <PropGroup title="State">
+        <PropRow label="Status">
+            <PropSegmented
+                label="Status"
+                size="sm"
+                options={statusOptions}
+                bind:value={settings.status}
+            />
+        </PropRow>
+        <PropSwitch label="Disabled" bind:checked={settings.disabled} />
+    </PropGroup>
+{/snippet}
 
 <svelte:head>
     <title>Sivir · Question</title>
@@ -60,7 +133,13 @@ let answer: QuestionAnswer | undefined = $state();
     </header>
 
     <section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-        <ComponentPreview code={HeroSrc}><Hero /></ComponentPreview>
+        <ComponentPreview code={heroCode} controls={heroControls} props={heroProps} {changed}>
+            <Hero
+                variant={settings.variant}
+                status={settings.status}
+                disabled={settings.disabled}
+            />
+        </ComponentPreview>
     </section>
 
     <section id="installation" class="scroll-mt-20 flex flex-col gap-4">
@@ -176,29 +255,41 @@ let answer: QuestionAnswer | undefined = $state();
         </Typography.Text>
     </section>
 
+    <!-- ─── Example Descriptions ──────────────────────────────────── -->
+    {#snippet composerTakeoverDescription()}
+        <Typography.Text variant="supporting">
+            Answer or skip the question to restore the composer with its draft intact.
+        </Typography.Text>
+    {/snippet}
+
+    <!-- ─── Examples ──────────────────────────────────────────────── -->
     <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
         <div>
-            <Typography.H2 class="docs-section-heading">Examples</Typography.H2>
+            <Typography.H2 class="docs-section-heading"> Examples </Typography.H2>
         </div>
 
         <div id="multiple-choice" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading">Multiple choice</Typography.H3>
-            <ComponentPreview code={MultipleChoiceSrc}><MultipleChoice /></ComponentPreview>
+            <Typography.H3 class="docs-subsection-heading"> Multiple choice </Typography.H3>
+            <ComponentPreview code={MultipleChoiceSrc}>
+                <MultipleChoice />
+            </ComponentPreview>
         </div>
 
         <div id="free-text" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading">Free text</Typography.H3>
-            <ComponentPreview code={FreeTextSrc}><FreeText /></ComponentPreview>
+            <Typography.H3 class="docs-subsection-heading"> Free text </Typography.H3>
+            <ComponentPreview code={FreeTextSrc}>
+                <FreeText />
+            </ComponentPreview>
         </div>
 
         <div id="composer-takeover" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading">Conversation takeover</Typography.H3>
-            <Typography.Text variant="supporting">
-                Answer or skip the question to restore the composer with its draft intact.
-            </Typography.Text>
+            <Typography.H3 class="docs-subsection-heading"> Conversation takeover </Typography.H3>
             <ComponentPreview code={ComposerTakeoverSrc}>
                 <ComposerTakeover />
             </ComponentPreview>
+            <div class="flex max-w-2xl flex-col gap-2">
+                {@render composerTakeoverDescription()}
+            </div>
         </div>
     </section>
 </div>

@@ -52,6 +52,8 @@ export type AdvancedTokens = {
     details: Record<'light' | 'dark' | 'shared', Partial<Record<DetailTokenName, string>>>;
 };
 
+export const DEFAULT_TRIGGER_DISTANCE = 8;
+
 export type StudioChrome = {
     surfaceShadows: boolean;
     controlShadows: boolean;
@@ -62,6 +64,7 @@ export type StudioChrome = {
     surfacePaneling: boolean;
     primaryStroke: boolean;
     interactiveCursor: InteractiveCursor;
+    triggerDistance: number;
 };
 
 /** Every Studio control, projected from (and serialized back to) one portable Theme. */
@@ -213,7 +216,12 @@ function toChrome(chrome: StudioChrome): ThemeChrome {
                   surfacePaneling: false
               }),
         primaryStroke: chrome.primaryStroke,
-        interactiveCursor: chrome.interactiveCursor
+        interactiveCursor: chrome.interactiveCursor,
+        ...(chrome.triggerDistance === DEFAULT_TRIGGER_DISTANCE
+            ? {}
+            : {
+                  triggerDistance: chrome.triggerDistance
+              })
     };
 }
 
@@ -229,7 +237,8 @@ function fromChrome(chrome: ThemeChrome | undefined): StudioChrome {
         menuPaneling: chrome?.menuPaneling !== false,
         surfacePaneling: chrome?.surfacePaneling !== false,
         primaryStroke: chrome?.primaryStroke === true,
-        interactiveCursor: chrome?.interactiveCursor ?? 'default'
+        interactiveCursor: chrome?.interactiveCursor ?? 'default',
+        triggerDistance: chrome?.triggerDistance ?? DEFAULT_TRIGGER_DISTANCE
     };
 }
 

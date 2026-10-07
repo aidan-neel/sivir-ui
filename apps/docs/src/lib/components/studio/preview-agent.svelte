@@ -20,7 +20,6 @@
         value: string;
         label: string;
         reply: string;
-        action: string;
         target: string;
         result: string;
     };
@@ -96,7 +95,6 @@
             value: 'pull-request',
             label: 'Open a pull request',
             reply: 'Open a pull request.',
-            action: 'Run',
             target: 'gh pr create --base main --head fix/defer-address-check',
             result: 'Opened pull request #482 and requested review from the checkout team.'
         },
@@ -104,7 +102,6 @@
             value: 'staging',
             label: 'Deploy to staging',
             reply: 'Deploy it to staging.',
-            action: 'Run',
             target: 'bun run deploy --env staging',
             result: 'Deployed to staging. I will report back if p95 rises above 900 ms.'
         },
@@ -112,7 +109,6 @@
             value: 'local',
             label: 'Keep it local',
             reply: 'Keep it local for now.',
-            action: 'Run',
             target: 'git commit -m "Defer address checks"',
             result: 'Committed to fix/defer-address-check. Nothing was pushed.'
         }
@@ -190,11 +186,8 @@
 
             <Message.Root from="assistant">
                 <Message.Content class="space-y-4">
-                    <Reasoning.Root>
-                        <Reasoning.Trigger
-                            title="Compared traces with the release timeline"
-                            duration="4.8s"
-                        />
+                    <Reasoning.Root duration={5}>
+                        <Reasoning.Trigger summary="Compared traces with the release timeline" />
                         <Reasoning.Content>
                             <p>
                                 Pulled checkout traces for the last six hours and split them by
@@ -203,37 +196,20 @@
                             </p>
                         </Reasoning.Content>
                     </Reasoning.Root>
-                    <Tool.Root state="complete">
+                    <Tool.Root>
                         <Tool.Trigger
-                            title="Queried traces, searched once, read 2 files, ran 1 command"
-                            duration="5.6s"
+                            summary="Queried traces, searched once, read 2 files, ran 1 command"
                         />
                         <Tool.Content>
-                            <Tool.Call
-                                action="Query traces"
-                                target="service:checkout last 6h"
-                                duration="2.3s"
-                            >
+                            <Tool.Call action="Queried traces" target="service:checkout last 6h">
                                 <Tool.Output>
                                     <pre class="font-mono text-xs leading-5">{traceOutput}</pre>
                                 </Tool.Output>
                             </Tool.Call>
-                            <Tool.Call action="Search" target="verifyAddress(" duration="61ms" />
-                            <Tool.Call
-                                action="Read file"
-                                target="src/checkout/place-order.ts"
-                                duration="11ms"
-                            />
-                            <Tool.Call
-                                action="Read file"
-                                target="src/queue/review.ts"
-                                duration="9ms"
-                            />
-                            <Tool.Call
-                                action="Run"
-                                target="git log --oneline web-2417..web-2418"
-                                duration="140ms"
-                            >
+                            <Tool.Call action="Searched" target="verifyAddress(" />
+                            <Tool.Call action="Read" target="src/checkout/place-order.ts" />
+                            <Tool.Call action="Read" target="src/queue/review.ts" />
+                            <Tool.Call action="Ran" target="git log --oneline web-2417..web-2418">
                                 <Tool.Output>
                                     <pre class="font-mono text-xs leading-5">{gitOutput}</pre>
                                 </Tool.Output>
@@ -253,35 +229,18 @@
             <Message.Root from="assistant">
                 <Message.Content class="space-y-4">
                     <TaskSteps steps={patchSteps} current={patchSteps.length} label="Patch plan" />
-                    <Tool.Root state="complete">
-                        <Tool.Trigger title="Edited 2 files, ran tests twice" duration="9.4s" />
+                    <Tool.Root>
+                        <Tool.Trigger summary="Edited 2 files, ran tests twice" />
                         <Tool.Content>
-                            <Tool.Call
-                                action="Edit file"
-                                target="src/checkout/place-order.ts"
-                                duration="18ms"
-                            />
-                            <Tool.Call
-                                action="Edit file"
-                                target="src/queue/review.ts"
-                                duration="14ms"
-                            />
-                            <Tool.Call
-                                action="Run"
-                                target="bun test checkout"
-                                duration="1.6s"
-                                state="error"
-                            >
+                            <Tool.Call action="Edited" target="src/checkout/place-order.ts" />
+                            <Tool.Call action="Edited" target="src/queue/review.ts" />
+                            <Tool.Call action="Ran" target="bun test checkout" state="error">
                                 <Tool.Output>
                                     <pre class="font-mono text-xs leading-5">{failedTest}</pre>
                                 </Tool.Output>
                             </Tool.Call>
-                            <Tool.Call
-                                action="Edit file"
-                                target="src/queue/review.ts"
-                                duration="12ms"
-                            />
-                            <Tool.Call action="Run" target="bun test checkout" duration="1.8s">
+                            <Tool.Call action="Edited" target="src/queue/review.ts" />
+                            <Tool.Call action="Ran" target="bun test checkout">
                                 <Tool.Output>
                                     <pre class="font-mono text-xs leading-5">{passedTest}</pre>
                                 </Tool.Output>
@@ -375,14 +334,11 @@
 
                 <Message.Root from="assistant">
                     <Message.Content class="space-y-4">
-                        <Tool.Root state={shipping ? 'running' : 'complete'}>
-                            <Tool.Trigger
-                                title={shipping ? 'Running 1 command' : 'Ran 1 command'}
-                                duration={shipping ? undefined : '1.8s'}
-                            />
+                        <Tool.Root running={shipping}>
+                            <Tool.Trigger status="Running 1 command" summary="Ran 1 command" />
                             <Tool.Content>
                                 <Tool.Call
-                                    action={shipChoice.action}
+                                    action={shipping ? 'Running' : 'Ran'}
                                     target={shipChoice.target}
                                     state={shipping ? 'running' : 'complete'}
                                 />

@@ -20,7 +20,6 @@
             <ContextMenu.Item callback={() => {}}>
                 <span class="flex items-center gap-2"><Copy size={14} /> Copy image</span>
             </ContextMenu.Item>
-            <ContextMenu.Separator />
             <ContextMenu.Item callback={() => {}}>Open in new tab</ContextMenu.Item>
         </ContextMenu.Content>
     </ContextMenu.Root>

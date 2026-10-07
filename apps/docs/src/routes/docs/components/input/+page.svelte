@@ -1,22 +1,69 @@
 <script lang="ts">
     import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
     import * as Typography from '@sivir-ui/svelte/components/typography';
-    import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+    import {
+        ComponentPreview,
+        InstallCommand,
+        PreviewMorph,
+        PreviewOptions,
+        PropGroup,
+        PropSwitch
+    } from '$lib/components/docs';
     import DocsPager from '$lib/components/docs/docs-pager.svelte';
 
     import Adornments from './examples/adornments.svelte';
     import AdornmentsSrc from './examples/adornments.svelte?raw';
-    import Hero from './examples/hero.svelte';
-    import HeroSrc from './examples/hero.svelte?raw';
     import Validation from './examples/validation.svelte';
     import ValidationSrc from './examples/validation.svelte?raw';
-    import VariantOutline from './examples/variant-outline.svelte';
-    import VariantOutlineSrc from './examples/variant-outline.svelte?raw';
-    import VariantSecondary from './examples/variant-secondary.svelte';
-    import VariantSecondarySrc from './examples/variant-secondary.svelte?raw';
+    import {
+        changedInputProps,
+        type InputSettings,
+        type InputVariant,
+        inputCode,
+        inputDefaults
+    } from './playground/playground';
+    import Preview from './playground/preview.svelte';
 
     const installCommand = 'bunx @sivir-ui/svelte add input';
+
+    const variantOptions: {
+        value: InputVariant;
+        label: string;
+    }[] = [
+        {
+            value: 'outline',
+            label: 'Outline'
+        },
+        {
+            value: 'secondary',
+            label: 'Secondary'
+        }
+    ];
+
+    let settings = $state<InputSettings>({
+        ...inputDefaults
+    });
+    let email = $state('');
+
+    const heroCode = $derived(inputCode(settings));
+    const changed = $derived(changedInputProps(settings));
+    const morphKey = $derived([settings.label, settings.description, settings.leading].join('-'));
 </script>
+
+{#snippet variantControl()}
+    <PreviewOptions label="Variant" options={variantOptions} bind:value={settings.variant} />
+{/snippet}
+
+{#snippet inputProps()}
+    <PropGroup title="Content">
+        <PropSwitch label="Label" bind:checked={settings.label} />
+        <PropSwitch label="Description" bind:checked={settings.description} />
+        <PropSwitch label="Leading icon" bind:checked={settings.leading} />
+    </PropGroup>
+    <PropGroup title="State">
+        <PropSwitch label="Disabled" bind:checked={settings.disabled} />
+    </PropGroup>
+{/snippet}
 
 <svelte:head>
     <title>Sivir · Input</title>
@@ -41,8 +88,10 @@
 
     <!-- ─── Hero Example ──────────────────────────────────────────── -->
     <section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-        <ComponentPreview code={HeroSrc}>
-            <Hero />
+        <ComponentPreview code={heroCode} controls={variantControl} props={inputProps} {changed}>
+            <PreviewMorph key={morphKey}>
+                <Preview {settings} bind:value={email} />
+            </PreviewMorph>
         </ComponentPreview>
     </section>
 
@@ -69,6 +118,25 @@
         />
     </section>
 
+    <!-- ─── Example Descriptions ──────────────────────────────────── -->
+    {#snippet adornmentsDescription()}
+        <Typography.Text variant="supporting">
+            The <Typography.InlineCode>leading</Typography.InlineCode> and
+            <Typography.InlineCode>trailing</Typography.InlineCode>
+            snippets render inside the field border and ignore pointer events. Use them for icons,
+            units, or a fixed suffix. They are ignored for checkbox, file, range, and other non-text
+            types.
+        </Typography.Text>
+    {/snippet}
+
+    {#snippet validationDescription()}
+        <Typography.Text variant="supporting">
+            Input has no error prop. This example sets native constraints, reads validity through
+            <Typography.InlineCode>bind:element</Typography.InlineCode>, and shows messages after
+            blur or submit.
+        </Typography.Text>
+    {/snippet}
+
     <!-- ─── Examples ──────────────────────────────────────────────── -->
     <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
         <div>
@@ -77,43 +145,22 @@
 
         <div id="adornments" class="scroll-mt-20 flex flex-col gap-3">
             <Typography.H3 class="docs-subsection-heading"> Adornments </Typography.H3>
-            <Typography.Text variant="supporting">
-                The <Typography.InlineCode>leading</Typography.InlineCode> and
-                <Typography.InlineCode>trailing</Typography.InlineCode>
-                snippets render inside the field border and ignore pointer events. Use them for
-                icons, units, or a fixed suffix. They are ignored for checkbox, file, range, and
-                other non-text types.
-            </Typography.Text>
             <ComponentPreview code={AdornmentsSrc}>
                 <Adornments />
             </ComponentPreview>
-        </div>
-
-        <!-- Variants -->
-        <div id="variant-outline" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading"> Outline </Typography.H3>
-            <ComponentPreview code={VariantOutlineSrc}>
-                <VariantOutline />
-            </ComponentPreview>
-        </div>
-
-        <div id="variant-secondary" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading"> Secondary </Typography.H3>
-            <ComponentPreview code={VariantSecondarySrc}>
-                <VariantSecondary />
-            </ComponentPreview>
+            <div class="flex max-w-2xl flex-col gap-2">
+                {@render adornmentsDescription()}
+            </div>
         </div>
 
         <div id="validation" class="scroll-mt-20 flex flex-col gap-3">
             <Typography.H3 class="docs-subsection-heading"> Validation </Typography.H3>
-            <Typography.Text variant="supporting">
-                Input has no error prop. This example sets native constraints, reads validity
-                through <Typography.InlineCode>bind:element</Typography.InlineCode>, and shows
-                messages after blur or submit.
-            </Typography.Text>
             <ComponentPreview code={ValidationSrc}>
                 <Validation />
             </ComponentPreview>
+            <div class="flex max-w-2xl flex-col gap-2">
+                {@render validationDescription()}
+            </div>
         </div>
     </section>
 </div>

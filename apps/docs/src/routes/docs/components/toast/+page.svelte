@@ -1,15 +1,107 @@
 <script lang="ts">
     import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
     import * as Typography from '@sivir-ui/svelte/components/typography';
-    import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+    import {
+        ComponentPreview,
+        InstallCommand,
+        PreviewExamples,
+        PreviewOptions,
+        PropGroup,
+        PropRow,
+        PropSwitch
+    } from '$lib/components/docs';
     import DocsPager from '$lib/components/docs/docs-pager.svelte';
     import AllTypes from './examples/all-types.svelte';
     import AllTypesSrc from './examples/all-types.svelte?raw';
     import Hero from './examples/hero.svelte';
-    import HeroSrc from './examples/hero.svelte?raw';
+    import {
+        changedToastProps,
+        type ToastPlaygroundDuration,
+        type ToastPlaygroundType,
+        type ToastSettings,
+        toastCode,
+        toastDefaults
+    } from './playground/playground';
 
     const installCommand = 'bunx @sivir-ui/svelte add toast';
+
+    const typeOptions: {
+        value: ToastPlaygroundType;
+        label: string;
+    }[] = [
+        {
+            value: 'default',
+            label: 'Default'
+        },
+        {
+            value: 'success',
+            label: 'Success'
+        },
+        {
+            value: 'info',
+            label: 'Info'
+        },
+        {
+            value: 'warning',
+            label: 'Warning'
+        },
+        {
+            value: 'error',
+            label: 'Error'
+        }
+    ];
+
+    const durationOptions: {
+        value: ToastPlaygroundDuration;
+        label: string;
+    }[] = [
+        {
+            value: '2000',
+            label: '2s'
+        },
+        {
+            value: '5600',
+            label: '5.6s'
+        },
+        {
+            value: '10000',
+            label: '10s'
+        },
+        {
+            value: 'persistent',
+            label: 'Never'
+        }
+    ];
+
+    let settings = $state<ToastSettings>({
+        ...toastDefaults
+    });
+
+    const heroCode = $derived(toastCode(settings));
+    const changed = $derived(changedToastProps(settings));
 </script>
+
+{#snippet heroControls()}
+    <PreviewOptions label="Type" options={typeOptions} bind:value={settings.type} />
+{/snippet}
+
+{#snippet heroProps()}
+    <PropGroup title="Content">
+        <PropSwitch label="Description" bind:checked={settings.description} />
+        <PropSwitch label="Action" bind:checked={settings.action} />
+    </PropGroup>
+    <PropGroup title="Behavior">
+        <PropRow label="Duration">
+            <PreviewExamples
+                label="Duration"
+                size="sm"
+                options={durationOptions}
+                bind:value={settings.duration}
+            />
+        </PropRow>
+        <PropSwitch label="Close button" bind:checked={settings.closeButton} />
+    </PropGroup>
+{/snippet}
 
 <svelte:head>
     <title>Sivir · Toast</title>
@@ -35,8 +127,14 @@
 
     <!-- ─── Hero Example ──────────────────────────────────────────── -->
     <section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-        <ComponentPreview code={HeroSrc}>
-            <Hero />
+        <ComponentPreview code={heroCode} controls={heroControls} props={heroProps} {changed}>
+            <Hero
+                type={settings.type}
+                description={settings.description}
+                action={settings.action}
+                duration={settings.duration}
+                closeButton={settings.closeButton}
+            />
         </ComponentPreview>
     </section>
 
@@ -65,11 +163,11 @@
     <!-- ─── Examples ──────────────────────────────────────────────── -->
     <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
         <div>
-            <Typography.H2 class="docs-section-heading">Examples</Typography.H2>
+            <Typography.H2 class="docs-section-heading"> Examples </Typography.H2>
         </div>
 
         <div id="types" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading">All types</Typography.H3>
+            <Typography.H3 class="docs-subsection-heading"> All types </Typography.H3>
             <ComponentPreview code={AllTypesSrc}>
                 <AllTypes />
             </ComponentPreview>

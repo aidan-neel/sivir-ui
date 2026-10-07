@@ -1,27 +1,109 @@
 <script lang="ts">
     import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
+    import type { ModalOrientation } from '@sivir-ui/svelte/components/modal';
     import * as Typography from '@sivir-ui/svelte/components/typography';
-    import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+    import {
+        ComponentPreview,
+        InstallCommand,
+        PropGroup,
+        PropRow,
+        PropSegmented,
+        PropSwitch
+    } from '$lib/components/docs';
     import DocsPager from '$lib/components/docs/docs-pager.svelte';
     import Basic from './examples/basic.svelte';
     import BasicSrc from './examples/basic.svelte?raw';
     import DeeplyNested from './examples/deeply-nested.svelte';
     import DeeplyNestedSrc from './examples/deeply-nested.svelte?raw';
-    import Hero from './examples/hero.svelte';
-    import HeroSrc from './examples/hero.svelte?raw';
     import Nested from './examples/nested.svelte';
     import NestedSrc from './examples/nested.svelte?raw';
     import Compact from './examples/size-compact.svelte';
     import CompactSrc from './examples/size-compact.svelte?raw';
-    import Large from './examples/size-large.svelte';
-    import LargeSrc from './examples/size-large.svelte?raw';
     import Wide from './examples/size-wide.svelte';
     import WideSrc from './examples/size-wide.svelte?raw';
     import WithSelect from './examples/with-select.svelte';
     import WithSelectSrc from './examples/with-select.svelte?raw';
+    import {
+        changedModalProps,
+        type ModalPlaygroundSize,
+        type ModalSettings,
+        modalCode,
+        modalDefaults
+    } from './playground/playground';
+    import Preview from './playground/preview.svelte';
+
+    type Option<T extends string> = {
+        value: T;
+        label: string;
+    };
 
     const installCommand = 'bunx @sivir-ui/svelte add modal';
+
+    const orientationOptions: Option<ModalOrientation>[] = [
+        {
+            value: 'vertical',
+            label: 'Vertical'
+        },
+        {
+            value: 'horizontal',
+            label: 'Horizontal'
+        }
+    ];
+    const sizeOptions: Option<ModalPlaygroundSize>[] = [
+        {
+            value: 'auto',
+            label: 'Auto'
+        },
+        {
+            value: 'sm',
+            label: 'sm'
+        },
+        {
+            value: 'md',
+            label: 'md'
+        },
+        {
+            value: 'lg',
+            label: 'lg'
+        },
+        {
+            value: 'xl',
+            label: 'xl'
+        }
+    ];
+
+    let settings = $state<ModalSettings>({
+        ...modalDefaults
+    });
+
+    const heroCode = $derived(modalCode(settings));
+    const changed = $derived(changedModalProps(settings));
 </script>
+
+{#snippet modalProps()}
+    <PropGroup title="Layout">
+        <PropRow label="Orientation">
+            <PropSegmented
+                label="Orientation"
+                size="sm"
+                options={orientationOptions}
+                bind:value={settings.orientation}
+            />
+        </PropRow>
+        <PropRow label="Size">
+            <PropSegmented
+                label="Size"
+                size="sm"
+                options={sizeOptions}
+                bind:value={settings.size}
+            />
+        </PropRow>
+    </PropGroup>
+    <PropGroup title="Dismissal">
+        <PropSwitch label="Close button" bind:checked={settings.showClose} />
+        <PropSwitch label="Close on outside click" bind:checked={settings.allowClickOutside} />
+    </PropGroup>
+{/snippet}
 
 <svelte:head>
     <title>Sivir · Modal</title>
@@ -46,8 +128,8 @@
 
     <!-- ─── Hero Example ──────────────────────────────────────────── -->
     <section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-        <ComponentPreview code={HeroSrc}>
-            <Hero />
+        <ComponentPreview code={heroCode} props={modalProps} {changed}>
+            <Preview {settings} />
         </ComponentPreview>
     </section>
 
@@ -76,6 +158,20 @@
         />
     </section>
 
+    <!-- ─── Example Descriptions ──────────────────────────────────── -->
+    {#snippet deeplyNestedDescription()}
+        <Typography.Text variant="supporting">
+            Modals stack to any depth. Each earlier panel recedes behind the next, and Escape closes
+            one level at a time.
+        </Typography.Text>
+    {/snippet}
+
+    {#snippet withSelectDescription()}
+        <Typography.Text variant="supporting">
+            Escape closes an open Select first. Press it again to close the modal.
+        </Typography.Text>
+    {/snippet}
+
     <!-- ─── Examples ──────────────────────────────────────────────── -->
     <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
         <div>
@@ -98,36 +194,28 @@
 
         <div id="deeply-nested" class="scroll-mt-20 flex flex-col gap-3">
             <Typography.H3 class="docs-subsection-heading"> Deeply nested </Typography.H3>
-            <Typography.Text variant="supporting">
-                Modals stack to any depth. Each earlier panel recedes behind the next, and Escape
-                closes one level at a time.
-            </Typography.Text>
             <ComponentPreview code={DeeplyNestedSrc}>
                 <DeeplyNested />
             </ComponentPreview>
+            <div class="flex max-w-2xl flex-col gap-2">
+                {@render deeplyNestedDescription()}
+            </div>
         </div>
 
         <div id="with-select" class="scroll-mt-20 flex flex-col gap-3">
             <Typography.H3 class="docs-subsection-heading"> With select </Typography.H3>
-            <Typography.Text variant="supporting">
-                Escape closes an open Select first. Press it again to close the modal.
-            </Typography.Text>
             <ComponentPreview code={WithSelectSrc}>
                 <WithSelect />
             </ComponentPreview>
+            <div class="flex max-w-2xl flex-col gap-2">
+                {@render withSelectDescription()}
+            </div>
         </div>
 
         <div id="size-compact" class="scroll-mt-20 flex flex-col gap-3">
             <Typography.H3 class="docs-subsection-heading"> Compact </Typography.H3>
             <ComponentPreview code={CompactSrc}>
                 <Compact />
-            </ComponentPreview>
-        </div>
-
-        <div id="size-large" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading"> Large </Typography.H3>
-            <ComponentPreview code={LargeSrc}>
-                <Large />
             </ComponentPreview>
         </div>
 

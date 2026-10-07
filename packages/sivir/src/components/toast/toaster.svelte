@@ -8,7 +8,9 @@
     const { state: toastState, hostId } = setToastUIState();
     const isPrimary = $derived(getToastPrimaryHostId() === hostId);
 
-    let expanded = $state(false);
+    let hovered = $state(false);
+    let focused = $state(false);
+    const expanded = $derived(hovered || focused);
     let heights = $state<Record<number, number>>({} as Record<number, number>);
     let entered = $state<Record<number, boolean>>({} as Record<number, boolean>);
     let portalEl = $state<HTMLDivElement>();
@@ -30,11 +32,10 @@
 
     const COLLAPSED_OFFSET = 14;
     const COLLAPSED_SCALE_STEP = 0.05;
-    const COLLAPSED_OPACITY_STEP = 0.16;
     const MAX_VISIBLE = 3;
     const EXPANDED_GAP = 10;
     const FALLBACK_HEIGHT = 72;
-    const OPEN_CLIP = 'inset(-48px -48px -48px -48px round var(--radius-lg))';
+    const CLIP_BLEED = 48;
 
     const reversedToasts = $derived([...toastState.data.toasts].reverse());
     const activeToasts = $derived(reversedToasts.filter((toast) => !toast.leaving));
@@ -62,7 +63,7 @@
         'pointer-events-none fixed inset-x-0 top-[var(--sivir-viewport-top)] z-200 flex h-[var(--sivir-viewport-height)] items-end justify-center px-[max(1rem,env(safe-area-inset-right))] pb-[max(1rem,env(safe-area-inset-bottom))] pt-[max(1.5rem,env(safe-area-inset-top))] sm:justify-end sm:p-6';
     const stackClass =
         // token-lint-disable-next-line no-literal-length: toast stack max width
-        'pointer-events-auto relative w-full max-w-[min(100%,26rem)] transition-[height] [transition-duration:var(--motion-duration-toast-in)] ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none sm:max-w-90';
+        'pointer-events-auto relative w-full max-w-[min(100%,26rem)] sm:max-w-90';
 
     function heightOf(toast: ToastData | undefined): number {
         if (toast?.id === undefined) {
@@ -122,24 +123,37 @@
         if (isEntering || toast.leaving) {
             return 0;
         }
-        if (expanded) {
-            return 1;
-        }
-        if (slot >= MAX_VISIBLE) {
+        if (!expanded && slot >= MAX_VISIBLE) {
             return 0;
         }
 
-        return Math.max(1 - slot * COLLAPSED_OPACITY_STEP, 0);
+        return 1;
     }
 
     function getClipPath(toast: ToastData): string {
-        if (!isCollapsedBack(toast)) {
-            return OPEN_CLIP;
+        const overflow = heightOf(toast) - frontHeight;
+        const bottom = isCollapsedBack(toast) && overflow > 0 ? overflow : -CLIP_BLEED;
+
+        return `inset(-${CLIP_BLEED}px -${CLIP_BLEED}px ${bottom}px -${CLIP_BLEED}px round var(--radius-lg))`;
+    }
+
+    function getZIndex(toast: ToastData, index: number): number {
+        if (toast.leaving && (expanded || slotOf(toast) > 0)) {
+            return 0;
         }
 
-        const hidden = Math.max(heightOf(toast) - frontHeight, 0);
+        return reversedToasts.length - index;
+    }
 
-        return `inset(0 0 ${hidden}px 0 round var(--radius-lg))`;
+    function handleFocusOut(event: FocusEvent) {
+        const region = event.currentTarget;
+        const next = event.relatedTarget;
+
+        if (region instanceof Node && next instanceof Node && region.contains(next)) {
+            return;
+        }
+
+        focused = false;
     }
 
     function enter(id: number): Attachment<HTMLElement> {
@@ -179,8 +193,10 @@
             aria-label="Notifications"
             class={stackClass}
             style:height={`${containerHeight}px`}
-            onmouseenter={() => (expanded = true)}
-            onmouseleave={() => (expanded = false)}
+            onmouseenter={() => (hovered = true)}
+            onmouseleave={() => (hovered = false)}
+            onfocusin={() => (focused = true)}
+            onfocusout={handleFocusOut}
         >
             {#each reversedToasts as toast, i (toast.id)}
                 <div
@@ -188,17 +204,17 @@
                     data-leaving={toast.leaving || undefined}
                     data-collapsed-back={isCollapsedBack(toast) || undefined}
                     class={cn(
-                        'absolute bottom-0 w-full origin-top transition-[transform,opacity,clip-path] ease-[cubic-bezier(0.32,0.72,0,1)] will-change-transform motion-reduce:transition-none',
-                        '[&_[data-ui=toast]>*]:transition-opacity [&_[data-ui=toast]>*]:[transition-duration:var(--motion-duration-toast-in)] [&_[data-ui=toast]>*]:ease-[cubic-bezier(0.32,0.72,0,1)]',
+                        'absolute bottom-0 w-full origin-top transition-[transform,opacity,clip-path] ease-[ease] will-change-[transform,opacity] motion-reduce:transition-none',
+                        '[&_[data-ui=toast]>*]:transition-opacity [&_[data-ui=toast]>*]:[transition-duration:var(--motion-duration-toast-out)] [&_[data-ui=toast]>*]:ease-[ease] motion-reduce:[&_[data-ui=toast]>*]:transition-none',
                         'data-[collapsed-back]:[&_[data-ui=toast]>*]:opacity-0',
                         toast.leaving
                             ? '[transition-duration:var(--motion-duration-toast-out)]'
-                            : '[transition-duration:var(--motion-duration-toast-in)]'
+                            : '[transition-duration:var(--motion-duration-toast-in),var(--motion-duration-toast-out),var(--motion-duration-toast-in)]'
                     )}
                     style:transform={getTransform(toast)}
                     style:opacity={getOpacity(toast)}
                     style:clip-path={getClipPath(toast)}
-                    style:z-index={reversedToasts.length - i}
+                    style:z-index={getZIndex(toast, i)}
                     style:pointer-events={!toast.leaving && (slotOf(toast) < MAX_VISIBLE || expanded)
                         ? 'auto'
                         : 'none'}

@@ -184,7 +184,12 @@ export const componentAnatomy = {
         { name: 'FullscreenNav.Group', description: 'Groups navigation links.' },
         { name: 'FullscreenNav.Link', description: 'Renders a navigation link.' }
     ],
-    gauge: [{ name: 'Gauge', description: 'Displays a value as a filled arc.' }],
+    gauge: [
+        { name: 'Gauge.Root', description: 'Sets the value, max, tone, and size of the meter.' },
+        { name: 'Gauge.Track', description: 'Draws the full arc behind the reading.' },
+        { name: 'Gauge.Indicator', description: 'Fills the arc up to the value.' },
+        { name: 'Gauge.Value', description: 'Shows the reading in the center of the arc.' }
+    ],
     'hover-card': [
         { name: 'HoverCard.Root', description: 'Controls hover card state.' },
         { name: 'HoverCard.Trigger', description: 'Opens the hover card.' },
@@ -273,12 +278,25 @@ export const componentAnatomy = {
         { name: 'RadioGroup.Item', description: 'Defines a radio option.' }
     ],
     reasoning: [
-        { name: 'Reasoning.Root', description: 'Holds the open and streaming state.' },
+        {
+            name: 'Reasoning.Root',
+            description: 'Holds the open and streaming state and measures elapsed time.'
+        },
         {
             name: 'Reasoning.Trigger',
-            description: 'Shows Thinking or the duration and toggles the trace.'
+            description:
+                'Shows an optional icon, the live status, and timer, then the settled summary.'
         },
-        { name: 'Reasoning.Content', description: 'Holds the reasoning trace.' }
+        {
+            name: 'Reasoning.Orb',
+            description: 'A liquid orb for the trigger icon that waves while active.'
+        },
+        { name: 'Reasoning.Content', description: 'Holds the reasoning trace.' },
+        { name: 'Reasoning.Steps', description: 'Lists the steps of the trace.' },
+        {
+            name: 'Reasoning.Step',
+            description: 'Shows one step with its icon, title, and body on a connecting rail.'
+        }
     ],
     'response-stream': [
         {
@@ -365,6 +383,19 @@ export const componentAnatomy = {
         { name: 'Slider.Label', description: 'Names the value inside the field.' },
         { name: 'Slider.Value', description: 'Shows the formatted value.' }
     ],
+    source: [
+        {
+            name: 'Source.Root',
+            description: 'Links to the page as a compact chip and holds the hover state and count.'
+        },
+        { name: 'Source.Icon', description: 'Shows the favicon or a fallback.' },
+        { name: 'Source.Label', description: 'Renders the truncated site name.' },
+        { name: 'Source.Count', description: 'Shows how many sources follow the first.' },
+        { name: 'Source.Content', description: 'Opens a hover card of the cited pages.' },
+        { name: 'Source.Item', description: 'Links one cited page and lays out its parts.' },
+        { name: 'Source.Title', description: 'Renders the page title.' },
+        { name: 'Source.Description', description: 'Renders a two-line excerpt.' }
+    ],
     spinner: [{ name: 'Spinner', description: 'Spins while loading and resolves to a checkmark.' }],
     switch: [{ name: 'Switch', description: 'Toggles a boolean value.' }],
     'task-steps': [
@@ -396,10 +427,16 @@ export const componentAnatomy = {
         { name: 'ToggleGroup.Item', description: 'Defines a toggle group option.' }
     ],
     tool: [
-        { name: 'Tool.Root', description: 'Controls tool group visibility and state.' },
-        { name: 'Tool.Trigger', description: 'Summarizes the group and toggles it.' },
-        { name: 'Tool.Content', description: 'Aligns tool call rows behind a rail.' },
-        { name: 'Tool.Call', description: 'Displays one tool call.' },
+        {
+            name: 'Tool.Root',
+            description: 'Times the group while running and controls visibility.'
+        },
+        {
+            name: 'Tool.Trigger',
+            description: 'Shows an optional icon, the live status, and timer, then the summary.'
+        },
+        { name: 'Tool.Content', description: 'Lists the calls on a rail.' },
+        { name: 'Tool.Call', description: 'Shows one call with its icon, action, and target.' },
         { name: 'Tool.Input', description: 'Shows the arguments a call was made with.' },
         { name: 'Tool.Output', description: 'Shows what a call returned.' }
     ],

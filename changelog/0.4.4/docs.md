@@ -1,0 +1,29 @@
+- Docs previews now show the demo and its code together in one card, replacing the Preview and Code tabs. Code starts collapsed and opens in a smooth drawer from the code button, and long code collapses to a short excerpt with an Expand code button.
+- Docs previews have a toolbar above the card with example tabs, inline options, full screen, replay and code toggles.
+- The Button and Tag input pages open with an interactive playground: switch examples, change variants and tweak props from a Props popover that counts your changes.
+- Component pages no longer have a separate Examples section. Every example is now a tab in the preview at the top of the page, variants are picked from a Variant select, and each example's notes appear under the preview.
+- Docs preview cards put Props, Replay, Full screen, and Code as icon-only ghost buttons in the card's top-right corner, with example and variant selects in the top-left.
+- Component pages keep titled example sections with their own preview cards, and the main preview's top-left Variant select starts on the default variant.
+- Improved component examples for Shortcut, Skeleton, Switch, Tabs, and Show More to show realistic, distinct scenarios instead of minimal variations of the default example.
+- Docs examples were rewritten across most components to show distinct, realistic scenarios instead of near-copies of the default.
+- Docs: Select, Dropdown Menu and Combobox examples now keep a fixed trigger width, so the trigger and menu no longer resize each time you pick a new item.
+- The 404 and error page was redesigned and now shows the address that failed.
+- Mistyped component URLs now get Did you mean links to the closest matching components.
+- The error page offers a Try again button for errors other than 404.
+- The Props popover now uses the inline segmented control for short option sets such as Button size.
+- The Card default and Inset frame examples now show a deployment summary as aligned label and value rows, with a status dot instead of a colored framework pill.
+- Collapsible examples were rewritten to show a changed-files list, bound advanced settings, a divided FAQ list, and a disabled entry using the new default styling.
+- Docs theme sets distinct small, default and large button heights, so Large is visibly larger; the Size option "Medium" is now "Default".
+- Docs examples use default-size buttons instead of small ones except in dense toolbars.
+- Docs pages dropped redundant examples (Badge shapes, Checkbox actions, Code Block compound and custom themes, Command groups and modal, Composer toolbar inset, Hover Card link and definition, Markdown raw HTML, Message streaming and roles, Popover basic, Reasoning incident, Sheet left and right) and restored the earlier default previews for Command, Composer, Navigation Menu, Popover, Question, Reasoning, Select, Sheet, Shortcut, Show More, Sidebar, Skeleton, Slider, and Spinner. Message, Modal, and Pagination now lead with their fuller examples, and Tabs variants differ only by the `variant` prop.
+- The landing page hero buttons use the default Button size instead of large.
+- Docs: Command, Dropdown Menu and Context Menu examples no longer include separators, and the Variant dropdowns above previews keep a fixed width as you change options.
+- Docs: the Popover share example now aligns its role column and Copy link button, and "Can comment" is no longer clipped.
+- Docs: the Tabs previews now show only the tab buttons, without the panels they switch between.
+- Docs: the Tag Input page lists Responding to changes, Validation and Limiting tags as titled examples on the page instead of options in the preview select.
+- Docs: the Message hero no longer shows the system context-compacted line.
+- Docs: previews now have a Props popover on every component page with impactful props, including Accordion, Alert Dialog, Attachment, Avatar, Badge, Card, Checkbox, Code Block, Collapsible, Color Picker, Combobox, Composer, Copy Button, Dropdown Menu, File Diff, Gauge, Hover Card, Input, Message, Modal, Navigation Menu, Pagination, Popover, Progress, Question, Radio Group, Reasoning, Response Stream, Scroll Area, Select, Sheet, Sidebar, Skeleton, Slider, Spinner, Switch, Tabs, Task Steps, Textarea, Toast, Toggle, Toggle Group, Tool and Tooltip. The code panel updates with your choices.
+- Docs: the Tag Input preview no longer has an Example select; it always shows the Topics field.
+- Gauge: the percentage text is slightly faded, and the docs preview now defaults to the medium size.
+- Docs: the Variant and other preview selects now size to their current label and animate smoothly when the width changes.
+- The install command copy tooltip now centers over the whole bar instead of the copy icon.

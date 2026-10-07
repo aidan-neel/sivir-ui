@@ -4,7 +4,7 @@
     let value = $state('#5e6ad2');
 </script>
 
-<div class="flex items-center justify-center">
+<div class="w-full max-w-sm">
     <ColorPicker.Root {value} onValueChange={(v) => (value = v)} label="Accent color">
         <ColorPicker.Trigger />
         <ColorPicker.Content />

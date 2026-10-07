@@ -4,7 +4,7 @@ export const manifest: Manifest = {
     name: 'collapsible',
     version: '1.0.0',
     visibility: 'public',
-    description: 'Single-item disclosure panel with bindable open state.',
+    description: 'Single-item disclosure panel with a chevron trigger and bindable open state.',
     files: [
         'components/collapsible/collapsible.svelte',
         'components/collapsible/collapsible-trigger.svelte',
@@ -16,6 +16,7 @@ export const manifest: Manifest = {
     components: [],
     shared: ['utils.cn', 'utils.createContext', 'transition'],
     peerDependencies: {
+        '@lucide/svelte': '^1.0.0',
         cnfast: '^0.0.8',
         svelte: '^5.0.0'
     }

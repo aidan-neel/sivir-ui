@@ -1,7 +1,9 @@
 <script lang="ts">
     import { Button } from '@sivir-ui/svelte/components/button';
     import { travelingHighlight } from '@sivir-ui/svelte/utils';
+    import { dev } from '$app/environment';
     import { page } from '$app/stores';
+    import { blocks } from '$lib/blocks';
     import { components, sanitizeComponent } from '$lib/components';
     import Logo from '$lib/components/logo.svelte';
     import GitHubLink from './github-link.svelte';
@@ -31,6 +33,14 @@
         { href: '/docs/skill', label: 'Skill' },
         { href: '/docs/changelog', label: 'Changelog' },
         { href: '/studio', label: 'Studio' }
+    ];
+
+    const blockItems: NavItem[] = [
+        { href: '/docs/blocks', label: 'Overview' },
+        ...blocks.map((block) => ({
+            href: `/docs/blocks/${block.slug}`,
+            label: block.title
+        }))
     ];
 
     const componentItems: NavItem[] = [
@@ -119,6 +129,23 @@
                 {/each}
             </div>
         </section>
+
+        {#if dev}
+            <section aria-labelledby="nav-blocks" class="flex flex-col gap-1">
+                <h3
+                    id="nav-blocks"
+                    class="flex items-baseline gap-2 px-3 pb-1 text-[13px] text-foreground-muted [font-weight:var(--font-weight-body,400)]"
+                >
+                    Blocks
+                    <span class="text-foreground-muted/70">Dev only</span>
+                </h3>
+                <div use:travelingHighlight class="flex flex-col">
+                    {#each blockItems as item (item.href)}
+                        {@render navLink(item)}
+                    {/each}
+                </div>
+            </section>
+        {/if}
 
         <section aria-labelledby="nav-components" class="flex flex-col gap-1">
             <h3

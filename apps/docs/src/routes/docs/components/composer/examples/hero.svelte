@@ -2,10 +2,27 @@
     import Check from '@lucide/svelte/icons/check';
     import ChevronDown from '@lucide/svelte/icons/chevron-down';
     import * as Attachment from '@sivir-ui/svelte/components/attachment';
+    import type { ComposerStatus } from '@sivir-ui/svelte/components/composer';
     import * as Composer from '@sivir-ui/svelte/components/composer';
     import * as DropdownMenu from '@sivir-ui/svelte/components/dropdown-menu';
     import * as Select from '@sivir-ui/svelte/components/select';
     import { onDestroy } from 'svelte';
+
+    let {
+        generating = $bindable(false),
+        status = 'idle',
+        disabled = false,
+        allowEmpty = false,
+        submitOnEnter = true,
+        toolbar = 'chrome'
+    }: {
+        generating?: boolean;
+        status?: ComposerStatus;
+        disabled?: boolean;
+        allowEmpty?: boolean;
+        submitOnEnter?: boolean;
+        toolbar?: 'chrome' | 'inset';
+    } = $props();
 
     const models = ['Sivir 3.1', 'Sivir Mini'];
     const modes = ['Plan', 'Build'];
@@ -18,7 +35,6 @@
     let mode = $state(modes[0]);
     let permission = $state(permissions[0]);
     let effort = $state(efforts[2]);
-    let generating = $state(false);
     let timer: ReturnType<typeof setTimeout> | undefined;
 
     function clearTimer() {
@@ -51,11 +67,19 @@
 </script>
 
 <Attachment.Root bind:files class="@container flex w-full max-w-2xl flex-col">
-    <Composer.Root bind:value {generating} onSubmit={submitPrompt} onStop={stopResponse}>
+    <Composer.Root
+        bind:value
+        {generating}
+        {status}
+        {disabled}
+        {allowEmpty}
+        onSubmit={submitPrompt}
+        onStop={stopResponse}
+    >
         <Attachment.List />
-        <Composer.Input aria-label="Prompt" placeholder="Ask the agent..." />
+        <Composer.Input aria-label="Prompt" placeholder="Ask the agent..." {submitOnEnter} />
 
-        <Composer.Toolbar>
+        <Composer.Toolbar variant={toolbar}>
             <Composer.Actions>
                 <Attachment.Trigger class="rounded-full" />
 

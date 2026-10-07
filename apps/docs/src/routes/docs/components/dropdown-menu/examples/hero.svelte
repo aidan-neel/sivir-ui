@@ -7,10 +7,20 @@
     import User from '@lucide/svelte/icons/user';
     import * as DropdownMenu from '@sivir-ui/svelte/components/dropdown-menu';
     import Shortcut from '@sivir-ui/svelte/components/shortcut';
+
+    let {
+        variant = 'outline',
+        size = 'md',
+        disabled = false
+    }: {
+        variant?: 'outline' | 'secondary' | 'ghost';
+        size?: 'sm' | 'md' | 'lg';
+        disabled?: boolean;
+    } = $props();
 </script>
 
 <DropdownMenu.Root>
-    <DropdownMenu.Trigger variant="outline" size="md">
+    <DropdownMenu.Trigger {variant} {size} {disabled}>
         My account
         <ChevronDown size={16} class="text-foreground-muted" />
     </DropdownMenu.Trigger>
@@ -30,7 +40,6 @@
             <span class="flex items-center gap-2"><Settings size={13} /> Settings</span>
             <Shortcut shortcut="cmd+," />
         </DropdownMenu.Item>
-        <DropdownMenu.Separator />
         <DropdownMenu.Item>
             <span class="flex items-center gap-2"><LifeBuoy size={13} /> Help & feedback</span>
         </DropdownMenu.Item>

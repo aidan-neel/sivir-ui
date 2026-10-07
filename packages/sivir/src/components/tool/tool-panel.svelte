@@ -65,13 +65,7 @@
     class="grid w-full grid-rows-[0fr] opacity-0 transition-[grid-template-rows,opacity] [transition-duration:calc(var(--motion-duration-panel)*1.5),var(--motion-duration-panel)] ease-[cubic-bezier(0.4,0,0.2,1)] data-[state=open]:grid-rows-[1fr] data-[state=open]:opacity-100"
 >
     <div class="min-h-0 overflow-hidden">
-        <div
-            {...rest}
-            class={cn(
-                className,
-                'mt-1 mb-1 ml-1.5 border-l-[length:var(--border-size)] border-border pl-3.5 text-sm leading-body text-foreground-muted'
-            )}
-        >
+        <div {...rest} class={cn(className, 'text-sm leading-body text-foreground-muted')}>
             {#if mounted}
                 {@render children?.()}
             {/if}

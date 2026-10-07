@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { cn } from '@sivir-ui/svelte/utils';
     import { onDestroy } from 'svelte';
     import type { ToolContentProps } from '.';
     import { getToolContext } from './context.svelte';
@@ -11,15 +12,13 @@
 </script>
 
 <Panel
-    {...rest}
     id={`tool-${tool.id}`}
     open={tool.open}
     onsettle={tool.settle}
     data-ui="tool-content"
-    class={[
-        'grid grid-cols-[auto_minmax(0,1fr)_auto_auto_auto] content-start gap-x-3 *:col-span-full',
-        className
-    ]}
+    class="mt-2 mb-1"
 >
-    {@render children?.()}
+    <ol {...rest} class={cn(className, 'm-0 flex list-none flex-col p-0 text-sm leading-body')}>
+        {@render children?.()}
+    </ol>
 </Panel>

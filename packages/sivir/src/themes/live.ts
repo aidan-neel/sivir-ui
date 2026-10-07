@@ -1,5 +1,11 @@
 import { browser } from '$app/environment';
-import { parseTheme, THEME_VERSION, type Theme } from './theme';
+import {
+    menuPanelingOffCss,
+    parseTheme,
+    surfacePanelingOffCss,
+    THEME_VERSION,
+    type Theme
+} from './theme';
 
 const STORAGE_KEY = 'sivir-live-theme-css';
 const STYLE_ID = 'sivir-live-theme-style';
@@ -23,6 +29,18 @@ function getStyleTag() {
     return tag;
 }
 
+function revertPanelingCss(offCss: string) {
+    return offCss.replace(/^(\t[^:\n]+): .*;$/gm, '$1: revert-layer;');
+}
+
+function withPanelingRestored(css: string) {
+    const restored = [menuPanelingOffCss(), surfacePanelingOffCss()]
+        .filter((offCss) => !css.includes(offCss))
+        .map(revertPanelingCss);
+
+    return css + restored.join('');
+}
+
 export function applyLiveThemeCss(css: string) {
     if (!browser) {
         return;
@@ -31,8 +49,10 @@ export function applyLiveThemeCss(css: string) {
     if (!tag) {
         return;
     }
-    tag.textContent = css;
-    localStorage.setItem(STORAGE_KEY, css);
+    const liveCss = withPanelingRestored(css);
+
+    tag.textContent = liveCss;
+    localStorage.setItem(STORAGE_KEY, liveCss);
 }
 
 export function hydrateLiveThemeCss() {

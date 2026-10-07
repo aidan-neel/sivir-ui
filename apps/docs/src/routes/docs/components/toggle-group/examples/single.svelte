@@ -1,18 +1,16 @@
 <script lang="ts">
-    import AlignCenter from '@lucide/svelte/icons/align-center';
-    import AlignLeft from '@lucide/svelte/icons/align-left';
-    import AlignRight from '@lucide/svelte/icons/align-right';
+    import LayoutGrid from '@lucide/svelte/icons/layout-grid';
+    import List from '@lucide/svelte/icons/list';
     import * as ToggleGroup from '@sivir-ui/svelte/components/toggle-group';
+
+    let view = $state('list');
 </script>
 
-<ToggleGroup.Root type="single" value="center">
-    <ToggleGroup.Item value="left" aria-label="Align left">
-        <AlignLeft size={14} />
+<ToggleGroup.Root type="single" bind:value={view}>
+    <ToggleGroup.Item value="list" aria-label="List view">
+        <List size={14} />
     </ToggleGroup.Item>
-    <ToggleGroup.Item value="center" aria-label="Align center">
-        <AlignCenter size={14} />
-    </ToggleGroup.Item>
-    <ToggleGroup.Item value="right" aria-label="Align right">
-        <AlignRight size={14} />
+    <ToggleGroup.Item value="grid" aria-label="Grid view">
+        <LayoutGrid size={14} />
     </ToggleGroup.Item>
 </ToggleGroup.Root>

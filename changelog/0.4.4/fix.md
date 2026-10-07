@@ -1,0 +1,12 @@
+- Studio and theme previews: turning Menu paneling or Surface paneling back on now restores the framed look instead of leaving menus, modals and sheets flat.
+- Button: `status="success"` and `status="error"` now turn the button solid green or red with white text. Previously the variant's own colors overrode the status colors, so `Published` stayed on the primary fill.
+- Menus and Select: the traveling highlight now stays on the item you chose while the menu closes, instead of snapping back to the previously selected item.
+- Radio Group: keyboard focus now shows a focus ring on the radio, hovering anywhere on an option's row highlights its ring, and an item's description is announced by screen readers with the option.
+- Radio Group: a consumer `class` on Root or Item now overrides the default styles, and an `onchange` passed to Item no longer replaces the selection handler.
+- Spinner now fades in at full size instead of growing from a zero-width box, so the ring is never clipped and nearby text no longer shifts when it appears.
+- Spinner keeps rotating continuously through its fade-in and the swap to the checkmark.
+- Tag Input: tags now sit on their own surface in each variant, so they read clearly in dark mode, and the secondary variant shows raised chips instead of gray-on-gray. The outline and secondary variants now also look different in dark mode.
+- Tag Input: the `error` prop now turns the field border red. Previously only the message appeared.
+- Tag Input: tags now animate in and out, and the input and neighboring tags slide over smoothly instead of jumping. Reduced-motion settings turn this off.
+- Toasts now enter, exit, stack and expand with one smooth easing curve on transform and opacity only, and stacked toasts no longer show through each other or jump when the stack opens or a toast leaves.
+- Keyboard focus inside the toast stack now expands it the same way hover does, and the toast dismiss button is visible while focused.

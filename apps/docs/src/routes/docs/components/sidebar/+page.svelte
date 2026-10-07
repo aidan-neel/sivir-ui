@@ -1,7 +1,14 @@
 <script lang="ts">
     import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
     import * as Typography from '@sivir-ui/svelte/components/typography';
-    import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+    import {
+        ComponentPreview,
+        InstallCommand,
+        PreviewOptions,
+        PropGroup,
+        PropRow,
+        PropSegmented
+    } from '$lib/components/docs';
     import DocsPager from '$lib/components/docs/docs-pager.svelte';
 
     import BadgesActions from './examples/badges-actions.svelte';
@@ -18,10 +25,72 @@
     import NestedSrc from './examples/nested.svelte?raw';
     import RightSide from './examples/right-side.svelte';
     import RightSideSrc from './examples/right-side.svelte?raw';
+    import {
+        changedSidebarProps,
+        type SidebarCollapsible,
+        type SidebarSettings,
+        type SidebarSide,
+        type SidebarVariant,
+        sidebarCode,
+        sidebarDefaults
+    } from './playground/playground';
 
     const TITLE = 'Sidebar';
 
     const installCommand = 'bunx @sivir-ui/svelte add sidebar';
+
+    const variantOptions: {
+        value: SidebarVariant;
+        label: string;
+    }[] = [
+        {
+            value: 'sidebar',
+            label: 'Sidebar'
+        },
+        {
+            value: 'inset',
+            label: 'Inset'
+        }
+    ];
+
+    const collapsibleOptions: {
+        value: SidebarCollapsible;
+        label: string;
+    }[] = [
+        {
+            value: 'offcanvas',
+            label: 'Offcanvas'
+        },
+        {
+            value: 'icon',
+            label: 'Icon'
+        },
+        {
+            value: 'none',
+            label: 'None'
+        }
+    ];
+
+    const sideOptions: {
+        value: SidebarSide;
+        label: string;
+    }[] = [
+        {
+            value: 'left',
+            label: 'Left'
+        },
+        {
+            value: 'right',
+            label: 'Right'
+        }
+    ];
+
+    let settings = $state<SidebarSettings>({
+        ...sidebarDefaults
+    });
+
+    const heroCode = $derived(sidebarCode(HeroSrc, settings));
+    const changed = $derived(changedSidebarProps(settings));
 
     const usageSnippet = `import * as Sidebar from '@sivir-ui/svelte/components/sidebar';
 
@@ -55,6 +124,31 @@ let open = $state(true);
 </Sidebar.Root>`;
 </script>
 
+{#snippet heroControls()}
+    <PreviewOptions label="Variant" options={variantOptions} bind:value={settings.variant} />
+{/snippet}
+
+{#snippet heroProps()}
+    <PropGroup title="Layout">
+        <PropRow label="Collapsible">
+            <PropSegmented
+                label="Collapsible"
+                size="sm"
+                options={collapsibleOptions}
+                bind:value={settings.collapsible}
+            />
+        </PropRow>
+        <PropRow label="Side">
+            <PropSegmented
+                label="Side"
+                size="sm"
+                options={sideOptions}
+                bind:value={settings.side}
+            />
+        </PropRow>
+    </PropGroup>
+{/snippet}
+
 <svelte:head>
     <title>Sivir · Sidebar</title>
     <meta
@@ -76,8 +170,12 @@ let open = $state(true);
     </header>
 
     <section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-        <ComponentPreview code={HeroSrc} fill>
-            <Hero />
+        <ComponentPreview code={heroCode} controls={heroControls} props={heroProps} {changed} fill>
+            <Hero
+                variant={settings.variant}
+                collapsible={settings.collapsible}
+                side={settings.side}
+            />
         </ComponentPreview>
     </section>
 

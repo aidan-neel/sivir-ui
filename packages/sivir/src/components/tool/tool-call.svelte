@@ -1,125 +1,114 @@
 <script lang="ts">
-    import ChevronRight from '@lucide/svelte/icons/chevron-right';
-    import { Spinner } from '@sivir-ui/svelte/components/spinner';
+    import ChevronDown from '@lucide/svelte/icons/chevron-down';
+    import { getCssDuration, themedSlide } from '@sivir-ui/svelte/transition';
     import { cn } from '@sivir-ui/svelte/utils';
+    import { cubicOut } from 'svelte/easing';
+    import type { TransitionConfig } from 'svelte/transition';
     import type { ToolCallProps } from '.';
+    import ToolLabel from './tool-label.svelte';
     import Panel from './tool-panel.svelte';
 
     let {
         action,
         target,
         state = 'complete',
-        duration,
         open = $bindable(false),
+        icon,
         children,
         class: className,
         ...rest
     }: ToolCallProps = $props();
 
     const id = $props.id();
-    const rowClass =
-        'col-span-full grid min-h-7 grid-cols-subgrid items-center text-left text-foreground-muted';
+    const running = $derived(state === 'running');
+    const failed = $derived(state === 'error');
+
+    function enter(node: Element): TransitionConfig {
+        const duration = getCssDuration(node, '--motion-duration-panel', 180) * 2;
+        const slide = themedSlide(node, {
+            durationVar: '--motion-duration-panel'
+        });
+
+        return {
+            duration,
+            easing: cubicOut,
+            css: (t, u) => {
+                const geometry = slide.css?.(t, u) ?? '';
+
+                return `${geometry} opacity: ${t}; filter: blur(${u * 3}px); transform: translateY(${u * 4}px);`;
+            }
+        };
+    }
 </script>
 
 {#snippet row()}
-    <span
-        class={cn(
-            'whitespace-nowrap',
-            state === 'running' && 'sivir-tool-call-shimmer',
-            state === 'error' && 'text-error'
-        )}
-        >{action}</span
-    >
-    <span
-        class="min-w-0 truncate font-mono text-xs text-foreground-muted transition-colors [transition-duration:var(--motion-duration-hover)] group-hover:text-foreground"
-        >{target}</span
-    >
-    {#if state === 'running'}
-        <Spinner size={12} aria-hidden="true" class="col-start-3 text-foreground-muted" />
-    {:else if state === 'error'}
-        <span class="col-start-3 text-error">Failed</span>
-    {/if}
-    {#if duration}
+    <ToolLabel text={action} shimmer={running} class={cn('shrink-0', failed && 'text-error')} />
+    {#if target}
         <span
-            class="col-start-4 justify-self-end font-mono text-xs tabular-nums text-foreground-muted opacity-70"
-            >{duration}</span
+            class="min-w-0 truncate font-mono text-xs text-foreground-muted transition-colors [transition-duration:var(--motion-duration-hover)] group-hover/call-row:text-foreground"
+            >{target}</span
         >
     {/if}
-    {#if children}
-        <ChevronRight
-            aria-hidden="true"
-            class={cn(
-                'col-start-5 size-3.5 shrink-0 transition-[transform,opacity] [transition-duration:var(--motion-duration-panel)] ease-[var(--ease-out)]',
-                open
-                    ? 'rotate-90 opacity-70'
-                    : 'opacity-0 group-hover:opacity-70 group-focus-visible:opacity-70'
-            )}
-        />
+    {#if failed}
+        <span class="shrink-0 text-xs text-error">Failed</span>
     {/if}
 {/snippet}
 
-<div
+<li
     {...rest}
+    in:enter
     data-ui="tool-call"
     data-state={state}
     data-open={children ? open : undefined}
-    aria-busy={state === 'running'}
+    aria-busy={running}
     class={cn(
         className,
-        'col-span-full grid grid-cols-subgrid transition-opacity [transition-duration:var(--motion-duration-panel)] ease-[var(--ease-out)] *:col-span-full starting:opacity-0 motion-reduce:transition-none'
+        'group/call relative grid grid-cols-[--spacing(3.5)_minmax(0,1fr)] gap-x-2.5 pb-3 last:pb-0'
     )}
 >
+    <span
+        aria-hidden="true"
+        class={cn(
+            'flex h-[1lh] items-center justify-center [&_svg]:size-3.5',
+            failed ? 'text-error' : 'text-foreground-muted'
+        )}
+    >
+        {#if icon}
+            {@render icon()}
+        {:else}
+            <span class="size-1.5 rounded-full bg-current opacity-60"></span>
+        {/if}
+    </span>
+    <span
+        aria-hidden="true"
+        class="absolute top-[1lh] bottom-0 left-[calc(--spacing(1.75)-var(--border-size)/2)] w-[length:var(--border-size)] bg-border group-last/call:hidden"
+    ></span>
+
     {#if children}
         <button
             type="button"
             aria-expanded={open}
             aria-controls={`tool-call-${id}`}
             onclick={() => (open = !open)}
-            class={cn(
-                rowClass,
-                'group rounded-[var(--radius-sm)] focus-visible:outline-none focus-visible:shadow-[var(--focus-ring)]'
-            )}
+            class="group/call-row flex max-w-full min-w-0 cursor-pointer items-center gap-2 justify-self-start rounded-sm text-left text-foreground-muted transition-colors [transition-duration:var(--motion-duration-hover)] hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-ring)]"
         >
             {@render row()}
+            <ChevronDown
+                aria-hidden="true"
+                class={cn(
+                    '-ml-0.5 size-3.5 shrink-0 opacity-70 transition-transform [transition-duration:var(--motion-duration-panel)] ease-[var(--ease-out)]',
+                    open && 'rotate-180'
+                )}
+            />
         </button>
-        <Panel id={`tool-call-${id}`} {open} class="flex flex-col gap-2">
-            {@render children()}
-        </Panel>
-    {:else}
-        <div class={rowClass}>
-            {@render row()}
+        <div class="col-start-2 min-w-0">
+            <Panel id={`tool-call-${id}`} {open} class="flex flex-col gap-2 pt-1.5">
+                {@render children()}
+            </Panel>
         </div>
+    {:else}
+        <span class="flex max-w-full min-w-0 items-center gap-2 text-foreground-muted">
+            {@render row()}
+        </span>
     {/if}
-</div>
-
-<style>
-    .sivir-tool-call-shimmer {
-        background: linear-gradient(
-            100deg,
-            var(--color-foreground-muted) 35%,
-            var(--color-foreground) 50%,
-            var(--color-foreground-muted) 65%
-        );
-        background-size: 200% 100%;
-        background-clip: text;
-        color: transparent;
-        animation: sivir-tool-call-shimmer 1.6s linear infinite;
-    }
-
-    @keyframes sivir-tool-call-shimmer {
-        from {
-            background-position: 200% 0;
-        }
-        to {
-            background-position: -200% 0;
-        }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-        .sivir-tool-call-shimmer {
-            animation: none;
-            background: none;
-            color: var(--color-foreground-muted);
-        }
-    }
-</style>
+</li>

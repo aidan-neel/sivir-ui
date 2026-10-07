@@ -1,0 +1,3 @@
+- Gauge is now a compound component: `Gauge.Root`, `Gauge.Track`, `Gauge.Indicator`, and `Gauge.Value` replace the single `Gauge` export.
+- Gauge's pixel `size` and `strokeWidth` props are replaced by `size="sm" | "md" | "lg"` (20, 32, and 56px).
+- Gauge's center now shows a whole percent by default instead of the raw value, so `value={72000} max={100000}` reads 72 rather than 72000.

@@ -1,0 +1,27 @@
+# Reasoning v3
+
+`Reasoning.Trigger` no longer takes `title` or a string `duration`. Both now fail type checking, including `title`, which Trigger no longer accepts even as a native button attribute. Rename `title` to `summary`. Move timing to `Reasoning.Root`: while `streaming` is true, Root measures elapsed seconds itself, so delete any interval that formatted `"4.8s"` strings for the trigger. For a saved or restored transcript, pass the recorded time as `duration={42}`. It is a number of seconds, not a string, and it overrides the measured time.
+
+Pass the model's current activity as `status` on Trigger, such as `status="Reading 2 of 3 sources"`. It defaults to Thinking and crossfades when it changes, so update it as the work moves. Do not render your own label, timer, or spinner beside the trigger. Once streaming ends the trigger reads `summary`, or Worked for and the elapsed time, or Finished under one second.
+
+The trigger renders no icon by default; the old dot grid is gone. To show one, pass an `icon` snippet to Trigger. It receives `{ open, streaming, seconds }`. `Reasoning.Orb` is the built-in choice: `{#snippet icon({ streaming })}<Reasoning.Orb active={streaming} />{/snippet}` fills and waves while active. Any 14px icon also works. Do not place an icon beside the Trigger yourself, because it will not align with the label or share the hover color.
+
+Turning `streaming` on opens the trace. Turning it off settles the trigger label but leaves `open` alone, so the trail stays visible under the answer until the user collapses it. If a turn should close itself when it finishes, bind `open` and set it to `false` yourself.
+
+`Reasoning.Content` no longer draws a left rail or adds its own spacing, so plain paragraphs inside it read as supporting text. For a structured trace, compose `Reasoning.Steps` with one `Reasoning.Step` per step inside Content. Set `status="active"` on the step in progress to shimmer its title, pass an `icon` snippet to replace the dot (a 14px Lucide icon or `Spinner size={14}`), and set `collapsible` to make the title a toggle for its body. The rail joins steps automatically and stops at the last one. Do not draw your own borders or connectors.
+
+# Source
+
+`Source.Root` is a link chip. It requires `href`, and absolute http(s) links open in a new tab. Compose `Source.Icon` with a favicon `src` and a `fallback` string, plus `Source.Label`. Use Source chips inside a Reasoning step to show pages the model searched. There is no separate Citation component: a citation is the same chip with a hover card.
+
+To cite a claim, place `Source.Root` inside the same `<p>`, right after the sentence it supports. Inside a paragraph the chip tightens to sit on the text line, so do not shrink it yourself. Give Root the first page's `href`, a short publisher name in `Source.Label`, and a `Source.Content` as the last child. Content is the hover card. It renders only on the client and is moved to the document body, so it is safe inside a paragraph and inside the chip's link. Put one `Source.Item` per page in it, each with `Source.Icon`, `Source.Label` for the domain, `Source.Title`, and an optional `Source.Description`. For several pages, set `count` on Root to the total and add `Source.Count` after the label to show +N. Count reads Root's `count`, not the number of Items, because the card's content is not mounted until it opens. A chip without Content is a plain link and never shows a card.
+
+# Tool v3
+
+Tool now follows the same contract as Reasoning, so a turn that thinks and then calls tools reads as one trace. `Tool.Root` no longer takes `state`. Pass `running={busy}` instead: while it is true, Root measures elapsed seconds, the trigger label shimmers, and turning it on opens the calls. Turning it off settles the label and leaves `open` alone. For a saved transcript, pass the recorded time as `duration={6}`, a number of seconds.
+
+`Tool.Trigger` no longer takes `title` or a string `duration`, and both now fail type checking. Rename `title` to `summary`, the settled sentence such as `summary="Read 2 files, ran tests twice"`. Pass the live activity as `status`, such as `status="Running tests"`, which defaults to Working. Without a summary the settled label reads Worked for and the elapsed time. Delete any interval that formatted time strings for the trigger. Trigger takes an optional `icon` snippet that receives `{ open, running, seconds }`, like Reasoning's.
+
+Failure lives on the call, not the group. The trigger has no error tone. Set `state="error"` on the `Tool.Call` that failed, and it shows its action and a Failed label in the error tone. Set `state="running"` on the call in progress to shimmer its action. `Tool.Call` no longer takes `duration`. Give it a short verb as `action`, such as Read or Reading while it runs, and the file, query, or command as `target`, which renders in monospace. Pass an `icon` snippet with a 14px icon, or `Spinner size={14}` while it runs, to replace the rail dot. Do not draw your own rail, borders, or status badges.
+
+`Tool.Content` is now an `<ol>` and each `Tool.Call` is an `<li>`, so place calls directly inside Content, not inside a wrapper element. A call with children becomes a toggle for its details. Put `Tool.Output` and `Tool.Input` inside it, or any other content such as `FileDiff.Root` for an edit. Bind or set `open` on the call to show its details. Calls blur and grow in when they mount, so append calls to the list as they start rather than rendering them all and hiding some.

@@ -1,22 +1,97 @@
 <script lang="ts">
     import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
+    import type { ColorFormat } from '@sivir-ui/svelte/components/color-picker';
     import * as Typography from '@sivir-ui/svelte/components/typography';
-    import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+    import {
+        ComponentPreview,
+        InstallCommand,
+        PreviewMorph,
+        PreviewOptions,
+        PropGroup,
+        PropRow,
+        PropSegmented,
+        PropSwitch
+    } from '$lib/components/docs';
     import DocsPager from '$lib/components/docs/docs-pager.svelte';
     import Default from './examples/default.svelte';
     import DefaultSrc from './examples/default.svelte?raw';
     import Formats from './examples/formats.svelte';
     import FormatsSrc from './examples/formats.svelte?raw';
     import Hero from './examples/hero.svelte';
-    import HeroSrc from './examples/hero.svelte?raw';
     import WithPresets from './examples/with-presets.svelte';
     import WithPresetsSrc from './examples/with-presets.svelte?raw';
+    import {
+        type ColorPickerSettings,
+        type ColorPickerTriggerVariant,
+        changedColorPickerProps,
+        colorPickerCode,
+        colorPickerDefaults
+    } from './playground/playground';
+
+    type Option<T extends string> = {
+        value: T;
+        label: string;
+    };
 
     const TITLE = 'Color Picker';
     const SLUG = 'color-picker';
 
     const installCommand = `bunx @sivir-ui/svelte add ${SLUG}`;
+
+    const variantOptions: Option<ColorPickerTriggerVariant>[] = [
+        {
+            value: 'outline',
+            label: 'Outline'
+        },
+        {
+            value: 'secondary',
+            label: 'Secondary'
+        },
+        {
+            value: 'ghost',
+            label: 'Ghost'
+        }
+    ];
+
+    const formatOptions: Option<ColorFormat>[] = [
+        {
+            value: 'hsl',
+            label: 'HSL'
+        },
+        {
+            value: 'rgb',
+            label: 'RGB'
+        },
+        {
+            value: 'hsv',
+            label: 'HSV'
+        }
+    ];
+
+    let settings = $state<ColorPickerSettings>({
+        ...colorPickerDefaults
+    });
+    let color = $state('#5e6ad2');
+
+    const heroCode = $derived(colorPickerCode(settings));
+    const changed = $derived(changedColorPickerProps(settings));
 </script>
+
+{#snippet heroControls()}
+    <PreviewOptions label="Variant" options={variantOptions} bind:value={settings.variant} />
+{/snippet}
+
+{#snippet heroProps()}
+    <PropGroup title="Content">
+        <PropSwitch label="Label" bind:checked={settings.label} />
+        <PropSwitch label="Preset swatches" bind:checked={settings.presets} />
+    </PropGroup>
+    <PropGroup title="Behavior">
+        <PropRow label="Format">
+            <PropSegmented label="Format" options={formatOptions} bind:value={settings.format} />
+        </PropRow>
+    </PropGroup>
+{/snippet}
 
 <svelte:head>
     <title>Sivir · {TITLE}</title>
@@ -43,8 +118,16 @@
 
     <!-- ─── Hero Example ──────────────────────────────────────────── -->
     <section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-        <ComponentPreview code={HeroSrc}>
-            <Hero />
+        <ComponentPreview code={heroCode} controls={heroControls} props={heroProps} {changed}>
+            <PreviewMorph key={`${settings.variant}-${settings.label}`}>
+                <Hero
+                    bind:color
+                    variant={settings.variant}
+                    format={settings.format}
+                    label={settings.label}
+                    presets={settings.presets}
+                />
+            </PreviewMorph>
         </ComponentPreview>
     </section>
 
@@ -88,7 +171,6 @@
             <Typography.H2 class="docs-section-heading"> Examples </Typography.H2>
         </div>
 
-        <!-- Default -->
         <div id="default" class="scroll-mt-20 flex flex-col gap-3">
             <Typography.H3 class="docs-subsection-heading"> Default </Typography.H3>
             <ComponentPreview code={DefaultSrc}>
@@ -96,7 +178,6 @@
             </ComponentPreview>
         </div>
 
-        <!-- Channel formats -->
         <div id="formats" class="scroll-mt-20 flex flex-col gap-3">
             <Typography.H3 class="docs-subsection-heading"> Channel formats </Typography.H3>
             <ComponentPreview code={FormatsSrc}>
@@ -104,7 +185,6 @@
             </ComponentPreview>
         </div>
 
-        <!-- With presets -->
         <div id="with-presets" class="scroll-mt-20 flex flex-col gap-3">
             <Typography.H3 class="docs-subsection-heading"> With preset swatches </Typography.H3>
             <ComponentPreview code={WithPresetsSrc}>

@@ -1,48 +1,68 @@
 <script lang="ts">
-    import GitBranch from '@lucide/svelte/icons/git-branch';
     import { Button } from '@sivir-ui/svelte/components/button';
     import * as Card from '@sivir-ui/svelte/components/card';
+
+    let {
+        variant = 'default',
+        header = true,
+        content = true,
+        footer = true
+    }: {
+        variant?: 'default' | 'panel' | 'inset';
+        header?: boolean;
+        content?: boolean;
+        footer?: boolean;
+    } = $props();
 </script>
 
-<Card.Root class="w-full max-w-[28rem]">
-    <Card.Header>
-        <div class="flex items-center justify-between mb-2">
-            <Card.Title>sivir-ui</Card.Title>
-            <span
-                class="inline-flex items-center rounded-full bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700"
-            >
-                Next.js
-            </span>
-        </div>
-        <Card.Description>vercel.com/aidan-neel/sivir-ui</Card.Description>
-    </Card.Header>
-    <Card.Content>
-        <div class="space-y-4">
-            <!-- Status Row -->
-            <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                    <div class="h-2 w-2 rounded-full bg-emerald-500"></div>
-                    <span class="text-sm font-medium text-foreground">Ready</span>
-                </div>
-                <div class="flex items-center gap-3">
-                    <span class="text-xs text-foreground-muted">Production</span>
-                    <span class="text-xs text-foreground-muted">Deployed 2h ago</span>
-                </div>
-            </div>
-
-            <!-- Commit Row -->
-            <div class="flex items-center gap-2 rounded-sm bg-secondary px-3 py-2">
-                <GitBranch class="h-4 w-4 text-foreground-muted flex-shrink-0" />
-                <span class="text-sm font-medium text-foreground">main</span>
-                <span class="text-xs text-foreground-muted truncate"
-                    >feat(studio): restore original styling</span
+<Card.Root {variant} class="w-full max-w-[28rem]">
+    {#if header}
+        <Card.Header>
+            <div class="flex items-start justify-between gap-4">
+                <Card.Title>sivir-ui</Card.Title>
+                <span
+                    class="flex shrink-0 items-center gap-2 py-1 text-[length:var(--font-size-body)] font-medium text-foreground"
                 >
-                <span class="ml-auto text-xs text-foreground-muted flex-shrink-0">aidan-neel</span>
+                    <span
+                        class="size-2 rounded-full bg-[var(--color-success)]"
+                        aria-hidden="true"
+                    ></span>
+                    Ready
+                </span>
             </div>
-        </div>
-    </Card.Content>
-    <Card.Footer class="flex-col sm:flex-row">
-        <Button variant="outline" class="w-full sm:w-auto">Visit</Button>
-        <Button class="w-full sm:w-auto">View deployment</Button>
-    </Card.Footer>
+            <Card.Description class="font-mono text-[0.875em]">
+                sivir-ui.vercel.app
+            </Card.Description>
+        </Card.Header>
+    {/if}
+    {#if content}
+        <Card.Content>
+            <dl
+                class="m-0 grid grid-cols-[auto_minmax(0,1fr)] items-baseline gap-x-6 gap-y-3 text-[length:var(--font-size-body)]"
+            >
+                <dt class="text-foreground-muted">Environment</dt>
+                <dd class="m-0 text-foreground">Production</dd>
+                <dt class="text-foreground-muted">Branch</dt>
+                <dd class="m-0 font-mono text-[0.875em] text-foreground">main</dd>
+                <dt class="text-foreground-muted">Commit</dt>
+                <dd class="m-0 flex min-w-0 items-baseline gap-2 text-foreground">
+                    <span class="shrink-0 font-mono text-[0.875em] text-foreground-muted">
+                        4f2a9c1
+                    </span>
+                    <span class="truncate">feat(studio): restore original styling</span>
+                </dd>
+                <dt class="text-foreground-muted">Deployed</dt>
+                <dd class="m-0 text-foreground">
+                    <time datetime="2026-10-05T10:00:00Z">2 hours ago</time>
+                    by aidan-neel
+                </dd>
+            </dl>
+        </Card.Content>
+    {/if}
+    {#if footer}
+        <Card.Footer>
+            <Button variant="outline" size="md">Visit</Button>
+            <Button size="md">View deployment</Button>
+        </Card.Footer>
+    {/if}
 </Card.Root>

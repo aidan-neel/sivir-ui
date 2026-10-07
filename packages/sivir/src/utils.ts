@@ -782,6 +782,9 @@ export function travelingHighlight(node: HTMLElement, options: TravelingHighligh
     }
 
     function restingTarget() {
+        if (current?.isConnected && node.closest('[inert]')) {
+            return current;
+        }
         for (const selector of restingSelector.split(',').map((part) => part.trim())) {
             const target = Array.from(node.querySelectorAll<HTMLElement>(selector)).find(
                 (item) => item.closest('.sivir-collection-surface') === node
@@ -859,6 +862,11 @@ export function travelingHighlight(node: HTMLElement, options: TravelingHighligh
         frame = requestAnimationFrame(() => measure(target, instant));
     }
 
+    function scheduleResting() {
+        cancelAnimationFrame(frame);
+        frame = requestAnimationFrame(() => measure(restingTarget()));
+    }
+
     function onPointerMove(event: PointerEvent) {
         if (event.pointerType === 'touch') {
             return;
@@ -889,7 +897,7 @@ export function travelingHighlight(node: HTMLElement, options: TravelingHighligh
 
     function onPointerLeave() {
         pointer = undefined;
-        schedule(restingTarget());
+        scheduleResting();
     }
 
     function onScroll() {
@@ -914,7 +922,7 @@ export function travelingHighlight(node: HTMLElement, options: TravelingHighligh
         if (event.relatedTarget instanceof Node && node.contains(event.relatedTarget)) {
             return;
         }
-        schedule(restingTarget());
+        scheduleResting();
     }
 
     function liveTarget() {
@@ -1278,7 +1286,7 @@ export function clickOutside(node: Node, callback: () => void, exclude: Node[] =
 
 export function submenuPanelOffset(placement: Placement, hoverable: boolean) {
     if (!hoverable) {
-        return 8;
+        return undefined;
     }
 
     const side = placement.split('-')[0];
@@ -1286,7 +1294,14 @@ export function submenuPanelOffset(placement: Placement, hoverable: boolean) {
         return -2;
     }
 
-    return 8;
+    return undefined;
+}
+
+function readTriggerDistance(floating: HTMLElement) {
+    const raw = getComputedStyle(floating).getPropertyValue('--menu-trigger-distance');
+    const distance = Number.parseFloat(raw);
+
+    return Number.isFinite(distance) ? distance : 8;
 }
 
 /**
@@ -1300,14 +1315,15 @@ export function positionFloatingPanel(
     reference: ReferenceElement,
     floating: HTMLElement,
     placement: Placement,
-    offsetPx = 8
+    offsetPx?: number
 ) {
     floating.dataset.placement ??= placement;
+    const distance = offsetPx ?? readTriggerDistance(floating);
     return computePosition(reference, floating, {
         strategy: 'fixed',
         placement,
         middleware: [
-            offset(offsetPx),
+            offset(distance),
             flip({ padding: 8, fallbackAxisSideDirection: 'end', fallbackStrategy: 'bestFit' }),
             shift({ padding: 8, crossAxis: true }),
             size({

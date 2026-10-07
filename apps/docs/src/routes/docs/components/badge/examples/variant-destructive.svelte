@@ -2,4 +2,4 @@
     import { Badge } from '@sivir-ui/svelte/components/badge';
 </script>
 
-<Badge variant="destructive">Destructive</Badge>
+<Badge variant="destructive">Blocked</Badge>

@@ -170,8 +170,16 @@ export type {
     FullscreenNavTriggerProps
 } from './components/fullscreen-nav';
 export * as FullscreenNav from './components/fullscreen-nav';
-export type { GaugeProps, GaugeTone } from './components/gauge';
-export { Gauge } from './components/gauge';
+export type {
+    GaugeIndicatorProps,
+    GaugeRootProps,
+    GaugeSize,
+    GaugeTone,
+    GaugeTrackProps,
+    GaugeValueProps,
+    GaugeValueState
+} from './components/gauge';
+export * as Gauge from './components/gauge';
 export type {
     HoverCardContentProps,
     HoverCardProps,
@@ -250,7 +258,11 @@ export type { RadioGroupItemProps, RadioGroupProps } from './components/radio-gr
 export * as RadioGroup from './components/radio-group';
 export type {
     ReasoningContentProps,
+    ReasoningOrbProps,
     ReasoningRootProps,
+    ReasoningStepProps,
+    ReasoningStepStatus,
+    ReasoningStepsProps,
     ReasoningTriggerProps,
     ReasoningTriggerState
 } from './components/reasoning';
@@ -307,6 +319,17 @@ export type {
     SliderValueProps
 } from './components/slider';
 export { Slider } from './components/slider';
+export type {
+    SourceContentProps,
+    SourceCountProps,
+    SourceDescriptionProps,
+    SourceIconProps,
+    SourceItemProps,
+    SourceLabelProps,
+    SourceRootProps,
+    SourceTitleProps
+} from './components/source';
+export * as Source from './components/source';
 export type { SpinnerProps } from './components/spinner';
 export { Spinner } from './components/spinner';
 export type { SwitchProps } from './components/switch';

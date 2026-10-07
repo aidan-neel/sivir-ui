@@ -20,6 +20,10 @@ const SCRIPTED_USAGE: UsageRule[] = [
     {
         selector: '[data-ui="switch"]',
         tokens: new Set(['--motion-duration-switch', '--motion-switch-stretch'])
+    },
+    {
+        selector: '[data-ui="gauge"]',
+        tokens: new Set(['--motion-duration-gauge'])
     }
 ];
 const MAX_ALIAS_DEPTH = 8;

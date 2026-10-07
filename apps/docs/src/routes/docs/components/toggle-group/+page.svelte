@@ -1,21 +1,68 @@
 <script lang="ts">
     import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
     import * as Typography from '@sivir-ui/svelte/components/typography';
-    import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+    import {
+        ComponentPreview,
+        InstallCommand,
+        PropGroup,
+        PropRow,
+        PropSegmented,
+        PropSwitch
+    } from '$lib/components/docs';
     import DocsPager from '$lib/components/docs/docs-pager.svelte';
 
     import Hero from './examples/hero.svelte';
-    import HeroSrc from './examples/hero.svelte?raw';
     import Multiple from './examples/multiple.svelte';
     import MultipleSrc from './examples/multiple.svelte?raw';
     import Single from './examples/single.svelte';
     import SingleSrc from './examples/single.svelte?raw';
+    import {
+        changedToggleGroupProps,
+        type ToggleGroupSettings,
+        type ToggleGroupType,
+        toggleGroupCode,
+        toggleGroupDefaults
+    } from './playground/playground';
 
     const TITLE = 'Toggle Group';
     const SLUG = 'toggle-group';
 
     const installCommand = `bunx @sivir-ui/svelte add ${SLUG}`;
+
+    const typeOptions: {
+        value: ToggleGroupType;
+        label: string;
+    }[] = [
+        {
+            value: 'single',
+            label: 'Single'
+        },
+        {
+            value: 'multiple',
+            label: 'Multiple'
+        }
+    ];
+
+    let settings = $state<ToggleGroupSettings>({
+        ...toggleGroupDefaults
+    });
+    let singleValue = $state<string | string[] | undefined>('center');
+    let multipleValue = $state<string | string[] | undefined>(['center']);
+
+    const heroCode = $derived(toggleGroupCode(settings));
+    const changed = $derived(changedToggleGroupProps(settings));
 </script>
+
+{#snippet heroProps()}
+    <PropGroup title="Behavior">
+        <PropRow label="Type">
+            <PropSegmented label="Type" options={typeOptions} bind:value={settings.type} />
+        </PropRow>
+    </PropGroup>
+    <PropGroup title="State">
+        <PropSwitch label="Disabled" bind:checked={settings.disabled} />
+    </PropGroup>
+{/snippet}
 
 <svelte:head>
     <title>Sivir · {TITLE}</title>
@@ -37,8 +84,12 @@
 
     <!-- ─── Hero Example ──────────────────────────────────────────── -->
     <section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-        <ComponentPreview code={HeroSrc}>
-            <Hero />
+        <ComponentPreview code={heroCode} props={heroProps} {changed}>
+            {#if settings.type === 'multiple'}
+                <Hero type="multiple" disabled={settings.disabled} bind:value={multipleValue} />
+            {:else}
+                <Hero type="single" disabled={settings.disabled} bind:value={singleValue} />
+            {/if}
         </ComponentPreview>
     </section>
 
@@ -70,20 +121,18 @@
     <!-- ─── Examples ──────────────────────────────────────────────── -->
     <section id="examples" class="scroll-mt-20 flex flex-col gap-10">
         <div>
-            <Typography.H2 class="docs-section-heading">Examples</Typography.H2>
+            <Typography.H2 class="docs-section-heading"> Examples </Typography.H2>
         </div>
 
-        <!-- Single select -->
         <div id="single" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading">Single select</Typography.H3>
+            <Typography.H3 class="docs-subsection-heading"> Single select </Typography.H3>
             <ComponentPreview code={SingleSrc}>
                 <Single />
             </ComponentPreview>
         </div>
 
-        <!-- Multiple select -->
         <div id="multiple" class="scroll-mt-20 flex flex-col gap-3">
-            <Typography.H3 class="docs-subsection-heading">Multiple select</Typography.H3>
+            <Typography.H3 class="docs-subsection-heading"> Multiple select </Typography.H3>
             <ComponentPreview code={MultipleSrc}>
                 <Multiple />
             </ComponentPreview>

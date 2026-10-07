@@ -1,16 +1,94 @@
 <script lang="ts">
     import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
     import * as Typography from '@sivir-ui/svelte/components/typography';
-    import { ComponentPreview, InstallCommand } from '$lib/components/docs';
+    import {
+        ComponentPreview,
+        InstallCommand,
+        PropGroup,
+        PropRow,
+        PropSegmented
+    } from '$lib/components/docs';
     import DocsPager from '$lib/components/docs/docs-pager.svelte';
 
     import Hero from './examples/hero.svelte';
-    import HeroSrc from './examples/hero.svelte?raw';
+    import {
+        changedResponseStreamProps,
+        type ResponseStreamSettings,
+        type ResponseStreamSource,
+        type ResponseStreamSpeed,
+        responseStreamCode,
+        responseStreamDefaults
+    } from './playground/playground';
 
     const TITLE = 'Response Stream';
     const SLUG = 'response-stream';
     const installCommand = `bunx @sivir-ui/svelte add ${SLUG}`;
+
+    const sourceOptions: {
+        value: ResponseStreamSource;
+        label: string;
+    }[] = [
+        {
+            value: 'stream',
+            label: 'Async stream'
+        },
+        {
+            value: 'text',
+            label: 'Complete text'
+        }
+    ];
+
+    const speedOptions: {
+        value: ResponseStreamSpeed;
+        label: string;
+    }[] = [
+        {
+            value: '5',
+            label: '5'
+        },
+        {
+            value: '10',
+            label: '10'
+        },
+        {
+            value: '20',
+            label: '20'
+        },
+        {
+            value: '50',
+            label: '50'
+        }
+    ];
+
+    let settings = $state<ResponseStreamSettings>({
+        ...responseStreamDefaults
+    });
+
+    const heroCode = $derived(responseStreamCode(settings));
+    const changed = $derived(changedResponseStreamProps(settings));
+    const replayKey = $derived(`${settings.source}-${settings.speed}`);
 </script>
+
+{#snippet heroProps()}
+    <PropGroup title="Reveal">
+        <PropRow label="Source">
+            <PropSegmented
+                label="Source"
+                size="sm"
+                options={sourceOptions}
+                bind:value={settings.source}
+            />
+        </PropRow>
+        <PropRow label="Speed">
+            <PropSegmented
+                label="Speed"
+                size="sm"
+                options={speedOptions}
+                bind:value={settings.speed}
+            />
+        </PropRow>
+    </PropGroup>
+{/snippet}
 
 <svelte:head>
     <title>Sivir · {TITLE}</title>
@@ -34,7 +112,11 @@
     </header>
 
     <section id="hero" class="scroll-mt-20 flex flex-col gap-4">
-        <ComponentPreview code={HeroSrc} refreshable><Hero /></ComponentPreview>
+        <ComponentPreview code={heroCode} props={heroProps} {changed} refreshable>
+            {#key replayKey}
+                <Hero source={settings.source} speed={Number(settings.speed)} />
+            {/key}
+        </ComponentPreview>
     </section>
 
     <section id="installation" class="scroll-mt-20 flex flex-col gap-4">

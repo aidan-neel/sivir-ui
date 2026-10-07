@@ -3,6 +3,26 @@ import { cleanup } from '@testing-library/svelte';
 import { afterEach, beforeAll } from 'vitest';
 
 /*
+ * jsdom does not implement matchMedia, and `svelte/motion` creates its
+ * reduced-motion MediaQuery when the module loads, before `beforeAll` runs.
+ * Stub it at module scope so components that import Tween or Spring mount.
+ */
+if (typeof window !== 'undefined' && typeof window.matchMedia !== 'function') {
+    window.matchMedia = (query: string) => {
+        return {
+            matches: false,
+            media: query,
+            onchange: null,
+            addListener: () => undefined,
+            removeListener: () => undefined,
+            addEventListener: () => undefined,
+            removeEventListener: () => undefined,
+            dispatchEvent: () => false
+        } as MediaQueryList;
+    };
+}
+
+/*
  * jsdom does not implement the Web Animations API. Svelte 5's transition
  * runtime calls `element.animate(...)` for declarative transitions. We
  * stub it to a no-op that returns the minimal Animation surface Svelte
