@@ -1,6 +1,6 @@
 :root,
 .dark {
-    --font-sans: 'Inter', sans-serif;
+    --font-sans: 'Geist', sans-serif;
     --font-mono: 'Roboto Mono', monospace;
     --font-header: var(--font-sans);
     --radius-sm: 6px;
@@ -187,6 +187,9 @@
 .sivir-inset-frame > [data-ui='file-diff-top-bar'] {
     border-bottom: var(--border-size) solid var(--color-border);
     background-color: color-mix(in oklab, var(--color-foreground) 3%, var(--color-card));
+}
+.sivir-inset-frame > [data-ui='file-diff-top-bar']:last-child {
+    border-bottom: 0;
 }
 .sivir-inset-frame:where([data-ui='code-block']) {
     position: relative;

@@ -1,0 +1,8 @@
+- Reasoning Trigger's `title` prop is renamed `summary`, and its string `duration` prop is gone. Root now measures elapsed time while `streaming`, or takes `duration` as a number of seconds for a saved transcript.
+- Reasoning Trigger reads Worked for and the elapsed time once streaming ends, instead of Thought for, and no longer shows the dot indicator.
+- Reasoning Root opens when `streaming` turns on.
+- Reasoning Content no longer draws a left rail. Use `Reasoning.Steps` for a railed trace.
+- Tool Root's `state` prop is replaced by `running`. Root measures elapsed time while running, or takes `duration` as a number of seconds for a saved transcript.
+- Tool Trigger's `title` prop is renamed `summary`, and its string `duration` prop is gone. Trigger reads Worked for and the elapsed time when no summary is given.
+- Tool Call no longer takes `duration`. Pass a short verb as `action`, such as Read, and the file or command as `target`.
+- Tool Content now renders a list, and each Tool Call renders a list item, so place calls directly inside Content.

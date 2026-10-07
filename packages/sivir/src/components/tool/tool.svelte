@@ -5,8 +5,9 @@
     import { setToolContext } from './context.svelte';
 
     let {
-        state = 'running',
+        running = false,
         open = $bindable(false),
+        duration,
         onOpenChange,
         onOpenChangeComplete,
         children,
@@ -16,6 +17,14 @@
 
     const id = $props.id();
     let contentRegistered = false;
+    let previousRunning = untrack(() => running);
+    let elapsed = $state(0);
+    const seconds = $derived(duration ?? elapsed);
+
+    if (previousRunning) {
+        open = true;
+    }
+
     let previousOpen = untrack(() => open);
 
     function settle(value: boolean) {
@@ -33,8 +42,11 @@
         set open(value) {
             open = value;
         },
-        get state() {
-            return state;
+        get running() {
+            return running;
+        },
+        get seconds() {
+            return seconds;
         },
         registerContent() {
             if (contentRegistered) {
@@ -47,6 +59,37 @@
             };
         },
         settle
+    });
+
+    $effect(() => {
+        const next = running;
+
+        if (next === previousRunning) {
+            return;
+        }
+        previousRunning = next;
+
+        if (next) {
+            open = true;
+        }
+    });
+
+    $effect(() => {
+        if (!running) {
+            return;
+        }
+
+        const startedAt = performance.now();
+        elapsed = 0;
+
+        const timer = setInterval(() => {
+            elapsed = Math.floor((performance.now() - startedAt) / 1000);
+        }, 250);
+
+        return () => {
+            elapsed = Math.floor((performance.now() - startedAt) / 1000);
+            clearInterval(timer);
+        };
     });
 
     $effect(() => {
@@ -72,9 +115,9 @@
 <section
     {...rest}
     data-ui="tool"
-    data-state={state}
-    data-open={open}
-    aria-busy={state === 'running'}
+    data-state={open ? 'open' : 'closed'}
+    data-running={running}
+    aria-busy={running}
     class={cn(className, 'flex w-full max-w-full flex-col items-start text-sm text-foreground')}
 >
     {@render children?.()}

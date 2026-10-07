@@ -2,27 +2,27 @@
     import * as Tool from '@sivir-ui/svelte/components/tool';
 
     let {
-        state = 'running',
+        running = false,
         open = false,
         callState = 'complete',
         withDetails = false
     }: {
-        state?: Tool.ToolState;
+        running?: boolean;
         open?: boolean;
         callState?: Tool.ToolState;
         withDetails?: boolean;
     } = $props();
 </script>
 
-<Tool.Root {state} {open}>
-    <Tool.Trigger title="Checked the deployment" duration="6s" />
+<Tool.Root {running} {open} duration={6}>
+    <Tool.Trigger status="Checking the deployment" summary="Checked the deployment" />
     <Tool.Content>
         {#if withDetails}
-            <Tool.Call action="Run" target="vercel inspect" state={callState} duration="2s">
+            <Tool.Call action="Ran" target="vercel inspect" state={callState}>
                 <Tool.Output>Ready</Tool.Output>
             </Tool.Call>
         {:else}
-            <Tool.Call action="Run" target="vercel inspect" state={callState} duration="2s" />
+            <Tool.Call action="Ran" target="vercel inspect" state={callState} />
         {/if}
     </Tool.Content>
 </Tool.Root>

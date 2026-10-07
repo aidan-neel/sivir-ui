@@ -28,7 +28,8 @@
                 'question',
                 'reasoning',
                 'tool',
-                'response-stream'
+                'response-stream',
+                'source'
             ]
         },
         {

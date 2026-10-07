@@ -1,46 +1,60 @@
 export type ReasoningSettings = {
     streaming: boolean;
-    title: boolean;
+    summary: boolean;
+    orb: boolean;
 };
 
 export const reasoningDefaults: ReasoningSettings = {
     streaming: false,
-    title: false
+    summary: false,
+    orb: false
 };
 
-export const reasoningTitle = 'Traced the payment errors to a new verification rule';
+export const reasoningSummary = 'Traced the payment errors to a new verification rule';
 
 export function reasoningCode(settings: ReasoningSettings) {
     const rootProps: string[] = [];
-    const triggerProps = ['duration="4.8s"'];
+    const triggerProps = ['status="Matching the first failing request"'];
+    const activeStatus = settings.streaming ? ' status="active"' : '';
 
     if (settings.streaming) {
         rootProps.push('streaming');
+    } else {
+        rootProps.push('duration={6}');
     }
+    rootProps.push('open');
     rootProps.push('class="w-full max-w-xl"');
 
-    if (settings.title) {
-        triggerProps.push(`title="${reasoningTitle}"`);
+    if (settings.summary) {
+        triggerProps.push(`summary="${reasoningSummary}"`);
     }
+
+    const trigger = settings.orb
+        ? `<Reasoning.Trigger ${triggerProps.join(' ')}>
+        {#snippet icon({ streaming })}
+            <Reasoning.Orb active={streaming} />
+        {/snippet}
+    </Reasoning.Trigger>`
+        : `<Reasoning.Trigger ${triggerProps.join(' ')} />`;
 
     return `<script lang="ts">
     import * as Reasoning from '@sivir-ui/svelte/components/reasoning';
 </script>
 
 <Reasoning.Root ${rootProps.join(' ')}>
-    <Reasoning.Trigger ${triggerProps.join(' ')} />
+    ${trigger}
     <Reasoning.Content>
-        <div class="space-y-3">
-            <p>Compared the incident timeline with the last five production deployments.</p>
-            <p>
-                Filtered payment errors by issuer country and found the regression only affects
-                non-US cards.
-            </p>
-            <p>
-                Matched the first failing request to the new address-verification rule shipped by
-                the provider.
-            </p>
-        </div>
+        <Reasoning.Steps>
+            <Reasoning.Step title="Compared the incident with recent deployments">
+                The errors start two minutes after the last production deploy.
+            </Reasoning.Step>
+            <Reasoning.Step title="Filtered payment errors by issuer country">
+                Only non-US cards fail, so the regression sits in address verification.
+            </Reasoning.Step>
+            <Reasoning.Step title="Matching the first failing request"${activeStatus}>
+                The first failure lines up with the provider’s new verification rule.
+            </Reasoning.Step>
+        </Reasoning.Steps>
     </Reasoning.Content>
 </Reasoning.Root>
 `;

@@ -1,0 +1,2 @@
+- New Source page, and the Reasoning page now covers live status, steps, the trigger icon, saved transcripts, and searched sources.
+- The Tool page covers the redesigned API with running, failed, and icon props, plus a live example that streams calls in order.

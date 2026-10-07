@@ -45,6 +45,7 @@ export const components = [
     'sidebar',
     'skeleton',
     'slider',
+    'source',
     'spinner',
     'switch',
     'tabs',

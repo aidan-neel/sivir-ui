@@ -136,7 +136,7 @@
             <Message.Root from="assistant">
                 <Message.Content class="space-y-3">
                     <Reasoning.Root>
-                        <Reasoning.Trigger title="Checked the subscription and seat usage" />
+                        <Reasoning.Trigger summary="Checked the subscription and seat usage" />
                         <Reasoning.Content>
                             <p>
                                 Read the Team plan, its renewal date, and who used a seat this
@@ -154,8 +154,8 @@
 
             <Message.Root from="assistant">
                 <Message.Content class="space-y-3">
-                    <Reasoning.Root>
-                        <Reasoning.Trigger duration="1.2s" />
+                    <Reasoning.Root duration={1}>
+                        <Reasoning.Trigger />
                     </Reasoning.Root>
                     <Markdown content={seatsReply} />
                 </Message.Content>
@@ -169,7 +169,10 @@
                 <Message.Root from="assistant" status={turn.done ? 'idle' : 'streaming'}>
                     <Message.Content class="space-y-3">
                         <Reasoning.Root streaming={!turn.thought}>
-                            <Reasoning.Trigger duration={turn.thought} />
+                            <Reasoning.Trigger />
+                            <Reasoning.Content>
+                                <p>Checked the billing settings this request touches.</p>
+                            </Reasoning.Content>
                         </Reasoning.Root>
                         {#if turn.thought}
                             <ResponseStream

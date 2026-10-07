@@ -42,7 +42,7 @@
         <Message.Root from="assistant">
             <Message.Content class="space-y-4">
                 <Reasoning.Root open>
-                    <Reasoning.Trigger title="Compared traces with the release timeline" />
+                    <Reasoning.Trigger summary="Compared traces with the release timeline" />
                     <Reasoning.Content>
                         <p>
                             Separated provider, database, and inventory spans, then matched the

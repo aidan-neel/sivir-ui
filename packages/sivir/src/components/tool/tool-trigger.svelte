@@ -1,20 +1,32 @@
 <script lang="ts">
-    import Check from '@lucide/svelte/icons/check';
-    import ChevronRight from '@lucide/svelte/icons/chevron-right';
-    import CircleAlert from '@lucide/svelte/icons/circle-alert';
+    import ChevronDown from '@lucide/svelte/icons/chevron-down';
     import { Button } from '@sivir-ui/svelte/components/button';
-    import { Spinner } from '@sivir-ui/svelte/components/spinner';
     import { cn } from '@sivir-ui/svelte/utils';
     import type { ToolTriggerProps } from '.';
-    import { getToolContext } from './context.svelte';
+    import { formatSeconds, getToolContext } from './context.svelte';
+    import ToolLabel from './tool-label.svelte';
 
-    let { title, duration, children, class: className, ...rest }: ToolTriggerProps = $props();
+    let { status, summary, icon, children, class: className, ...rest }: ToolTriggerProps = $props();
 
     const tool = getToolContext();
-    const glyphClass =
-        'col-start-1 row-start-1 inline-flex items-center justify-center transition-[opacity,filter,scale] [transition-duration:var(--motion-duration-swap)] ease-[var(--ease-out)]';
-    const hiddenGlyphClass =
-        'scale-[var(--motion-swap-scale)] opacity-0 blur-[var(--motion-swap-blur)]';
+
+    const settledLabel = $derived.by(() => {
+        if (summary) {
+            return summary;
+        }
+        if (tool.seconds < 1) {
+            return 'Finished';
+        }
+
+        return `Worked for ${formatSeconds(tool.seconds)}`;
+    });
+    const label = $derived(tool.running ? (status ?? 'Working') : settledLabel);
+    const showTimer = $derived(tool.running && tool.seconds >= 1);
+    const triggerState = $derived({
+        open: tool.open,
+        running: tool.running,
+        seconds: tool.seconds
+    });
 </script>
 
 <Button
@@ -31,87 +43,35 @@
     )}
 >
     {#if children}
-        {@render children({ open: tool.open, state: tool.state })}
+        {@render children(triggerState)}
     {:else}
         <span
-            class={cn(
-                'flex max-w-full min-w-0 items-center gap-2 whitespace-nowrap transition-colors [transition-duration:var(--motion-duration-hover)]',
-                tool.state === 'error'
-                    ? 'text-error'
-                    : 'text-foreground-muted group-hover:text-foreground'
-            )}
+            class="flex max-w-full min-w-0 items-center gap-2 whitespace-nowrap text-foreground-muted transition-colors [transition-duration:var(--motion-duration-hover)] group-hover:text-foreground"
         >
-            <span aria-hidden="true" class="grid size-3.5 shrink-0 place-items-center">
-                {#if tool.state === 'running'}
-                    <span class={glyphClass}>
-                        <Spinner size={13} aria-hidden="true" />
-                    </span>
-                {/if}
+            {@render icon?.(triggerState)}
+            <span class="flex min-w-0 items-center gap-1.5">
+                <ToolLabel
+                    text={label}
+                    shimmer={tool.running}
+                    class="font-[var(--font-weight-label)]"
+                />
                 <span
-                    class={cn(
-                        glyphClass,
-                        'text-success',
-                        tool.state !== 'complete' && hiddenGlyphClass
-                    )}
+                    aria-hidden={!showTimer}
+                    data-state={showTimer ? 'open' : 'closed'}
+                    class="-ml-1.5 grid grid-cols-[0fr] opacity-0 transition-[grid-template-columns,margin-left,opacity] [transition-duration:var(--motion-duration-swap)] ease-[var(--ease-out)] data-[state=open]:ml-0 data-[state=open]:grid-cols-[1fr] data-[state=open]:opacity-100"
                 >
-                    <Check class="size-3.5" />
+                    <span class="min-w-0 overflow-hidden text-xs tabular-nums opacity-70">
+                        {formatSeconds(tool.seconds)}
+                    </span>
                 </span>
-                <span class={cn(glyphClass, tool.state !== 'error' && hiddenGlyphClass)}>
-                    <CircleAlert class="size-3.5" />
-                </span>
+                <ChevronDown
+                    aria-hidden="true"
+                    class={cn(
+                        'size-3.5 shrink-0 opacity-70 transition-transform [transition-duration:var(--motion-duration-panel)] ease-[var(--ease-out)]',
+                        tool.open && 'rotate-180'
+                    )}
+                />
             </span>
-            {#if tool.state !== 'complete'}
-                <span class="sr-only">{tool.state === 'running' ? 'Running:' : 'Failed:'}</span>
-            {/if}
-            <span
-                class={cn(
-                    'min-w-0 truncate font-[var(--font-weight-label)]',
-                    tool.state === 'running' && 'sivir-tool-shimmer'
-                )}
-                >{title}</span
-            >
-            {#if duration}
-                <span class="-ml-1 shrink-0 tabular-nums opacity-70">{duration}</span>
-            {/if}
-            <ChevronRight
-                aria-hidden="true"
-                class={cn(
-                    '-ml-1 size-3.5 shrink-0 opacity-70 transition-transform [transition-duration:var(--motion-duration-panel)] ease-[var(--ease-out)]',
-                    tool.open && 'rotate-90'
-                )}
-            />
         </span>
     {/if}
 </Button>
-
-<style>
-    .sivir-tool-shimmer {
-        background: linear-gradient(
-            100deg,
-            var(--color-foreground-muted) 35%,
-            var(--color-foreground) 50%,
-            var(--color-foreground-muted) 65%
-        );
-        background-size: 200% 100%;
-        background-clip: text;
-        color: transparent;
-        animation: sivir-tool-shimmer 1.6s linear infinite;
-    }
-
-    @keyframes sivir-tool-shimmer {
-        from {
-            background-position: 200% 0;
-        }
-        to {
-            background-position: -200% 0;
-        }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-        .sivir-tool-shimmer {
-            animation: none;
-            background: none;
-            color: var(--color-foreground-muted);
-        }
-    }
-</style>

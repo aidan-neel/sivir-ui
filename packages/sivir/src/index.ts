@@ -258,7 +258,11 @@ export type { RadioGroupItemProps, RadioGroupProps } from './components/radio-gr
 export * as RadioGroup from './components/radio-group';
 export type {
     ReasoningContentProps,
+    ReasoningOrbProps,
     ReasoningRootProps,
+    ReasoningStepProps,
+    ReasoningStepStatus,
+    ReasoningStepsProps,
     ReasoningTriggerProps,
     ReasoningTriggerState
 } from './components/reasoning';
@@ -315,6 +319,17 @@ export type {
     SliderValueProps
 } from './components/slider';
 export { Slider } from './components/slider';
+export type {
+    SourceContentProps,
+    SourceCountProps,
+    SourceDescriptionProps,
+    SourceIconProps,
+    SourceItemProps,
+    SourceLabelProps,
+    SourceRootProps,
+    SourceTitleProps
+} from './components/source';
+export * as Source from './components/source';
 export type { SpinnerProps } from './components/spinner';
 export { Spinner } from './components/spinner';
 export type { SwitchProps } from './components/switch';

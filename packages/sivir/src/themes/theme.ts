@@ -438,6 +438,9 @@ export function surfacePanelingOffCss(): string {
                 'background-color: color-mix(in oklab, var(--color-foreground) 3%, var(--color-card));'
             ]
         ) +
+        block(".sivir-inset-frame > [data-ui='file-diff-top-bar']:last-child", [
+            'border-bottom: 0;'
+        ]) +
         block(".sivir-inset-frame:where([data-ui='code-block'])", ['position: relative;']) +
         block(".sivir-inset-frame [data-ui='code-block-header']:not(:has([role='tablist']))", [
             'position: absolute;',

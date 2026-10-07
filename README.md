@@ -2,7 +2,7 @@
 
 Svelte 5 and Tailwind CSS v4 components. Install them as a package, or copy their source into your project with the `sivir` CLI and edit it.
 
-![Components](https://img.shields.io/badge/Components-58-1f9be6) [![npm version](https://img.shields.io/npm/v/@sivir-ui/svelte)](https://www.npmjs.com/package/@sivir-ui/svelte)
+![Components](https://img.shields.io/badge/Components-60-1f9be6) [![npm version](https://img.shields.io/npm/v/@sivir-ui/svelte)](https://www.npmjs.com/package/@sivir-ui/svelte)
 
 <img
   src="apps/docs/static/og-default.png"

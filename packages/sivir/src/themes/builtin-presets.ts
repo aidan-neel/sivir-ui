@@ -299,7 +299,7 @@ export const sivirTheme: Theme = {
     radius: 'default',
     density: 'compact',
     motion: 'subtle',
-    fontSans: "'DM Sans', sans-serif",
+    fontSans: "'Geist', sans-serif",
     fontMono: "'Roboto Mono', monospace",
     fontHeader: 'var(--font-sans)',
     publisher: 'Sivir UI',

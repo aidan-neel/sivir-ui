@@ -1,0 +1,1 @@
+- File Diff no longer draws a doubled bottom border when the top bar is the only part, such as a changed-files summary.

@@ -1,118 +1,116 @@
 <script lang="ts">
+    import FileText from '@lucide/svelte/icons/file-text';
+    import RotateCcw from '@lucide/svelte/icons/rotate-ccw';
+    import Search from '@lucide/svelte/icons/search';
+    import Terminal from '@lucide/svelte/icons/terminal';
     import { Button } from '@sivir-ui/svelte/components/button';
+    import { Spinner } from '@sivir-ui/svelte/components/spinner';
     import * as Tool from '@sivir-ui/svelte/components/tool';
-    import { onMount } from 'svelte';
+    import { onDestroy, onMount } from 'svelte';
 
     type Step = {
         id: string;
-        title: string;
+        status: string;
         liveAction: string;
         doneAction: string;
         target: string;
+        kind: 'search' | 'read' | 'run';
         ms: number;
     };
 
     const steps: Step[] = [
         {
             id: 'search',
-            title: 'Searching the codebase',
+            status: 'Searching the codebase',
             liveAction: 'Searching',
-            doneAction: 'Search',
+            doneAction: 'Searched',
             target: 'refund_status',
+            kind: 'search',
             ms: 1200
         },
         {
             id: 'read',
-            title: 'Reading 1 file',
-            liveAction: 'Reading file',
-            doneAction: 'Read file',
+            status: 'Reading 1 file',
+            liveAction: 'Reading',
+            doneAction: 'Read',
             target: 'src/billing/refunds.ts',
+            kind: 'read',
             ms: 900
         },
         {
             id: 'test',
-            title: 'Running 1 command',
+            status: 'Running tests',
             liveAction: 'Running',
-            doneAction: 'Run',
+            doneAction: 'Ran',
             target: 'bun test refunds',
+            kind: 'run',
             ms: 2100
         }
     ];
-    const total = steps.reduce((sum, step) => {
-        return sum + step.ms;
-    }, 0);
 
-    let elapsed = $state(0);
+    let started = $state(0);
+    let finished = $state(0);
+    let timer: ReturnType<typeof setTimeout> | undefined;
 
-    const calls = $derived.by(() => {
-        let start = 0;
+    const running = $derived(finished < steps.length);
+    const status = $derived(steps[Math.min(started, steps.length) - 1]?.status ?? 'Working');
 
-        return steps.flatMap((step) => {
-            const end = start + step.ms;
-            const begun = elapsed >= start;
-            const active = elapsed < end;
-            const spent = Math.min(elapsed, end) - start;
-            start = end;
+    function next() {
+        if (started > finished) {
+            finished += 1;
+        }
+        if (started === steps.length) {
+            return;
+        }
 
-            if (!begun) {
-                return [];
-            }
-
-            return [
-                {
-                    id: step.id,
-                    title: step.title,
-                    action: active ? step.liveAction : step.doneAction,
-                    target: step.target,
-                    running: active,
-                    duration: formatSeconds(spent)
-                }
-            ];
-        });
-    });
-    const running = $derived(elapsed < total);
-    const title = $derived.by(() => {
-        const current = calls.find((call) => {
-            return call.running;
-        });
-
-        return current?.title ?? 'Searched once, read 1 file, ran 1 command';
-    });
-
-    function formatSeconds(ms: number) {
-        return `${(ms / 1000).toFixed(1)}s`;
+        started += 1;
+        timer = setTimeout(next, steps[started - 1].ms);
     }
 
     function replay() {
-        elapsed = 0;
+        clearTimeout(timer);
+        started = 0;
+        finished = 0;
+        timer = setTimeout(next, 300);
     }
 
     onMount(() => {
-        const id = setInterval(() => {
-            if (elapsed < total) {
-                elapsed = Math.min(total, elapsed + 100);
-            }
-        }, 100);
+        timer = setTimeout(next, 300);
+    });
 
-        return () => {
-            clearInterval(id);
-        };
+    onDestroy(() => {
+        clearTimeout(timer);
     });
 </script>
 
 <div class="flex w-full max-w-xl flex-col items-start gap-4">
-    <Tool.Root state={running ? 'running' : 'complete'} open class="w-full">
-        <Tool.Trigger {title} duration={formatSeconds(elapsed)} />
+    <Tool.Root {running} class="w-full">
+        <Tool.Trigger {status} summary="Searched once, read 1 file, ran tests" />
         <Tool.Content>
-            {#each calls as call (call.id)}
+            {#each steps.slice(0, started) as step, index (step.id)}
+                {@const live = index >= finished}
                 <Tool.Call
-                    action={call.action}
-                    target={call.target}
-                    state={call.running ? 'running' : 'complete'}
-                    duration={call.duration}
-                />
+                    action={live ? step.liveAction : step.doneAction}
+                    target={step.target}
+                    state={live ? 'running' : 'complete'}
+                >
+                    {#snippet icon()}
+                        {#if live}
+                            <Spinner size={14} aria-hidden="true" />
+                        {:else if step.kind === 'search'}
+                            <Search />
+                        {:else if step.kind === 'read'}
+                            <FileText />
+                        {:else}
+                            <Terminal />
+                        {/if}
+                    {/snippet}
+                </Tool.Call>
             {/each}
         </Tool.Content>
     </Tool.Root>
-    <Button variant="secondary" disabled={running} onclick={replay}>Replay</Button>
+    <Button variant="outline" size="sm" disabled={running} onclick={replay}>
+        <RotateCcw aria-hidden="true" />
+        Replay
+    </Button>
 </div>
