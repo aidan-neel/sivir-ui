@@ -3,30 +3,7 @@
     import * as Typography from '@sivir-ui/svelte/components/typography';
     import DocsPager from '#lib/components/docs/docs-pager.svelte';
     import { resolve } from '$app/paths';
-
-    const packageInstall = `bun add @sivir-ui/svelte
-# npm i @sivir-ui/svelte
-# pnpm add @sivir-ui/svelte`;
-
-    const packageCss = `@import '@sivir-ui/svelte/ui.css';`;
-
-    const packageUse = `<script>
-  import { Button } from '@sivir-ui/svelte';
-<${'/'}script>
-
-<Button>Get started</Button>`;
-
-    const cliCss = `/* src/routes/layout.css */
-@import '../lib/sivir/ui.css';`;
-
-    const cliAdd = `bunx @sivir-ui/svelte add button
-bunx @sivir-ui/svelte list`;
-
-    const cliUse = `<script>
-  import { Button } from '$lib/sivir/components/button';
-<${'/'}script>
-
-<Button>Get started</Button>`;
+    import { cliAdd, cliCss, cliUse, packageCss, packageInstall, packageUse } from './samples';
 </script>
 
 <svelte:head>

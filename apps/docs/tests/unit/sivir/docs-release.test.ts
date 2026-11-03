@@ -204,6 +204,7 @@ describe('docs release contracts', () => {
         const pages = [
             'apps/docs/src/routes/docs/introduction/+page.svelte',
             'apps/docs/src/routes/docs/installation/+page.svelte',
+            'apps/docs/src/routes/docs/installation/samples.ts',
             'apps/docs/src/routes/docs/theming/+page.svelte'
         ];
         for (const page of pages) {
@@ -213,14 +214,16 @@ describe('docs release contracts', () => {
         }
         // The theming guide documents the visual theme builder; the install
         // path pages stay free of it.
-        for (const page of pages.slice(0, 2)) {
+        for (const page of pages.slice(0, 3)) {
             const source = readFileSync(resolve(root, page), 'utf8');
             expect(source, page).not.toMatch(/\bStudio\b|\/studio\b/);
         }
-        const install = readFileSync(
-            resolve(root, 'apps/docs/src/routes/docs/installation/+page.svelte'),
-            'utf8'
-        );
+        const install = pages
+            .slice(1, 3)
+            .map((page) => {
+                return readFileSync(resolve(root, page), 'utf8');
+            })
+            .join('\n');
         expect(install).toContain('bunx @sivir-ui/svelte init');
         expect(install).toContain('bun add @sivir-ui/svelte');
         const stylingRedirect = readFileSync(
