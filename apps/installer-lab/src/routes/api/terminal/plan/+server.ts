@@ -1,8 +1,8 @@
-import { error, json } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
+import { isInstallPath, isRunSource } from '#lib/run-types.js';
+import { assertLocalRequest } from '#lib/server/local-only.js';
+import { buildManualPlan } from '#lib/server/manual-plan.js';
 import type { RequestHandler } from './$types';
-import { isInstallPath, isRunSource } from '$lib/run-types';
-import { assertLocalRequest } from '$lib/server/local-only';
-import { buildManualPlan } from '$lib/server/manual-plan';
 
 export const GET: RequestHandler = async (event) => {
     assertLocalRequest(event);
@@ -11,5 +11,5 @@ export const GET: RequestHandler = async (event) => {
     if (!isRunSource(source) || !isInstallPath(installPath)) {
         error(400, 'source and installPath must be supported enum values.');
     }
-    return json({ plan: await buildManualPlan(source, installPath) });
+    return Response.json({ plan: await buildManualPlan(source, installPath) });
 };

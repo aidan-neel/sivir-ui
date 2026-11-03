@@ -1,5 +1,5 @@
-import { changelogDocsMarkdown } from '$lib/changelog';
-import { markdownResponse } from '$lib/markdown-response';
+import { changelogDocsMarkdown } from '#lib/changelog.js';
+import { markdownResponse } from '#lib/markdown-response.js';
 import type { RequestHandler } from './$types';
 
 export const prerender = true;

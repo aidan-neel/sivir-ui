@@ -1,8 +1,8 @@
 <script lang="ts">
     import { Markdown } from '@sivir-ui/svelte/components/markdown';
     import * as Typography from '@sivir-ui/svelte/components/typography';
-    import { changelogDocsMarkdown } from '$lib/changelog';
-    import DocsPager from '$lib/components/docs/docs-pager.svelte';
+    import { changelogDocsMarkdown } from '#lib/changelog.js';
+    import DocsPager from '#lib/components/docs/docs-pager.svelte';
 
     const content = changelogDocsMarkdown();
 </script>

@@ -3,8 +3,8 @@ import { existsSync } from 'node:fs';
 import { appendFile, mkdir, readFile, realpath, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { stripVTControlCharacters } from 'node:util';
-import type { InstallPath, RunSource } from '$lib/run-types';
-import type { TerminalEvent, TerminalSnapshot } from '$lib/terminal-types';
+import type { InstallPath, RunSource } from '#lib/run-types.js';
+import type { TerminalEvent, TerminalSnapshot } from '#lib/terminal-types.js';
 import {
     type CommandSpec,
     commandLabel,

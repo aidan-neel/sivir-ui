@@ -1,8 +1,8 @@
 <script lang="ts">
     import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
     import * as Typography from '@sivir-ui/svelte/components/typography';
+    import DocsPager from '#lib/components/docs/docs-pager.svelte';
     import { resolve } from '$app/paths';
-    import DocsPager from '$lib/components/docs/docs-pager.svelte';
 
     const overrideCss = `@theme {
   --color-primary: #155eef;

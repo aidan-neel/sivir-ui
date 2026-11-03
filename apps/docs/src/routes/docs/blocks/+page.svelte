@@ -1,7 +1,7 @@
 <script lang="ts">
     import * as Typography from '@sivir-ui/svelte/components/typography';
+    import { blocks } from '#lib/blocks.js';
     import { resolve } from '$app/paths';
-    import { blocks } from '$lib/blocks';
 </script>
 
 <svelte:head>

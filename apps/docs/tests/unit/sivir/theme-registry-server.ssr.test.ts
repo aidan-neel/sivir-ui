@@ -1,11 +1,10 @@
 import { describe, expect, it, vi } from 'vitest';
-import { getRegistryTheme, RegistryRequestError } from '$lib/server/theme-registry';
+import { getRegistryTheme, RegistryRequestError } from '#lib/server/theme-registry.js';
 
-vi.mock('$env/dynamic/private', () => {
+vi.mock('$app/env/private', () => {
     return {
-        env: {
-            THEME_REGISTRY_URL: 'http://registry.test'
-        }
+        THEME_REGISTRY_URL: 'http://registry.test',
+        THEME_REGISTRY_SECRET: ''
     };
 });
 

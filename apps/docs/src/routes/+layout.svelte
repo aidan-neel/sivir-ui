@@ -2,33 +2,32 @@
     import { Toaster } from '@sivir-ui/svelte/components/toast';
     import { getStoredLiveThemeCss, hydrateLiveThemeCss } from '@sivir-ui/svelte/themes/live';
     import { ModeWatcher } from 'mode-watcher';
-    import DocsToolbar from '$lib/components/docs/docs-toolbar.svelte';
-    import SideNavbar from '$lib/components/docs/side-navbar.svelte';
-    import HomeNav from '$lib/components/home/home-nav.svelte';
+    import DocsToolbar from '#lib/components/docs/docs-toolbar.svelte';
+    import SideNavbar from '#lib/components/docs/side-navbar.svelte';
+    import HomeNav from '#lib/components/home/home-nav.svelte';
     import '@sivir-ui/svelte/ui.css';
     import '../app.css';
     import '../sivir-theme.css';
-    import { injectAnalytics } from '@vercel/analytics/sveltekit';
-    import { injectSpeedInsights } from '@vercel/speed-insights/sveltekit';
     import { onMount, type Snippet } from 'svelte';
-    import { dev } from '$app/environment';
+    import { trackGitHubClick, trackPageView } from '#lib/analytics.js';
+    import { DEFAULT_FONT, fonts, selectedFont } from '#lib/fonts.svelte.js';
+    import {
+        startVercelObservability,
+        type VercelObservability
+    } from '#lib/vercel-observability.js';
+    import { dev } from '$app/env';
     import { afterNavigate } from '$app/navigation';
-    import { page } from '$app/stores';
-    import { trackGitHubClick, trackPageView } from '$lib/analytics';
-    import { DEFAULT_FONT, fonts, selectedFont } from '$lib/fonts.svelte';
+    import { page } from '$app/state';
 
     import type { LayoutData } from './$types';
-
-    injectAnalytics({ mode: dev ? 'development' : 'production' });
-    injectSpeedInsights();
 
     const { children, data }: { children: Snippet; data: LayoutData } = $props();
 
     const isShellPage = $derived(
-        $page.url.pathname === '/' || $page.url.pathname.startsWith('/themes')
+        page.url.pathname === '/' || page.url.pathname.startsWith('/themes')
     );
-    const isDocs = $derived($page.url.pathname.startsWith('/docs'));
-    const isThemeStudio = $derived($page.url.pathname.startsWith('/studio'));
+    const isDocs = $derived(page.url.pathname.startsWith('/docs'));
+    const isThemeStudio = $derived(page.url.pathname.startsWith('/studio'));
 
     // `--font-header` defaults to `var(--font-sans)`, so one custom property re-skins every page.
     $effect(() => {
@@ -42,14 +41,26 @@
         if (font) document.documentElement.style.setProperty('--font-sans', font.family);
     });
 
+    let observability: VercelObservability | undefined;
+
     onMount(() => {
         hydrateLiveThemeCss();
+        observability = startVercelObservability({
+            isDevelopment: dev,
+            route: page.route.id
+        });
     });
 
     let docsScrollEl = $state<HTMLDivElement>();
 
-    afterNavigate(() => {
-        trackPageView($page.url.pathname);
+    afterNavigate(({ shallow, type }) => {
+        // SvelteKit 3 runs this for shallow routing too, which only updates query parameters.
+        if (shallow && type === 'goto') {
+            return;
+        }
+
+        trackPageView(page.url.pathname);
+        observability?.recordPageView(page.route.id, page.url.pathname);
         docsScrollEl?.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
         window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
     });
@@ -59,10 +70,10 @@
 
 <svelte:head>
     <title>{dev ? 'Sivir UI - Dev' : 'Sivir UI'}</title>
-    <link rel="canonical" href={`${data.origin}${$page.url.pathname}`} />
+    <link rel="canonical" href={`${data.origin}${page.url.pathname}`} />
     <meta property="og:site_name" content="Sivir UI" />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content={`${data.origin}${$page.url.pathname}`} />
+    <meta property="og:url" content={`${data.origin}${page.url.pathname}`} />
     <meta property="og:image" content={`${data.origin}/og-default.png`} />
     <meta property="og:image:secure_url" content={`${data.origin}/og-default.png`} />
     <meta property="og:image:type" content="image/png" />

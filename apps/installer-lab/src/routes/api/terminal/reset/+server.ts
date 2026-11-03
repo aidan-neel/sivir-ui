@@ -1,9 +1,9 @@
-import { error, json } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
+import { isActivePhase, isInstallPath, isRunSource } from '#lib/run-types.js';
+import { assertLocalRequest } from '#lib/server/local-only.js';
+import { runManager } from '#lib/server/run-manager.js';
+import { terminalManager } from '#lib/server/terminal-manager.js';
 import type { RequestHandler } from './$types';
-import { isActivePhase, isInstallPath, isRunSource } from '$lib/run-types';
-import { assertLocalRequest } from '$lib/server/local-only';
-import { runManager } from '$lib/server/run-manager';
-import { terminalManager } from '$lib/server/terminal-manager';
 
 export const POST: RequestHandler = async (event) => {
     assertLocalRequest(event);
@@ -21,7 +21,7 @@ export const POST: RequestHandler = async (event) => {
     if (!isRunSource(source) || !isInstallPath(installPath)) {
         error(400, 'source and installPath must be supported enum values.');
     }
-    return json(
+    return Response.json(
         { snapshot: await terminalManager.prepare(source, installPath, true) },
         { status: 202 }
     );

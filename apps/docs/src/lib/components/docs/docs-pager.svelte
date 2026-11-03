@@ -2,8 +2,8 @@
     import ChevronLeft from '@lucide/svelte/icons/chevron-left';
     import ChevronRight from '@lucide/svelte/icons/chevron-right';
     import { Button } from '@sivir-ui/svelte/components/button';
-    import { page } from '$app/stores';
-    import { components, sanitizeComponent } from '$lib/components';
+    import { components, sanitizeComponent } from '#lib/components.js';
+    import { page } from '$app/state';
 
     type Page = { href: string; label: string };
 
@@ -23,7 +23,7 @@
             label: sanitizeComponent(component)
         }))
     ]);
-    const pageIndex = $derived(pages.findIndex((item) => item.href === $page.url.pathname));
+    const pageIndex = $derived(pages.findIndex((item) => item.href === page.url.pathname));
     const prevPage = $derived<Page | undefined>(pageIndex > 0 ? pages[pageIndex - 1] : undefined);
     const nextPage = $derived<Page | undefined>(pageIndex >= 0 ? pages[pageIndex + 1] : undefined);
 </script>

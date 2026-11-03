@@ -12,12 +12,10 @@
     import { cn } from '@sivir-ui/svelte/utils';
     import { mode } from 'mode-watcher';
     import { onMount } from 'svelte';
-    import { afterNavigate, goto, replaceState } from '$app/navigation';
-    import { resolve } from '$app/paths';
-    import { trackEvent } from '$lib/analytics';
-    import HomeDemo from '$lib/components/home/home-demo.svelte';
-    import HomeNav from '$lib/components/home/home-nav.svelte';
-    import { themeToDraft } from '$lib/studio/theme-draft';
+    import { trackEvent } from '#lib/analytics.js';
+    import HomeDemo from '#lib/components/home/home-demo.svelte';
+    import HomeNav from '#lib/components/home/home-nav.svelte';
+    import { themeToDraft } from '#lib/studio/theme-draft.js';
     import {
         type RegistryTheme,
         THEMES_PAGE_SIZE,
@@ -25,7 +23,9 @@
         themeInstallCommand,
         themePreviewCss,
         themeStylesheetPath
-    } from '$lib/theme-registry';
+    } from '#lib/theme-registry.js';
+    import { afterNavigate, goto } from '$app/navigation';
+    import { resolve } from '$app/paths';
     import type { PageData } from './$types';
 
     const PREVIEW_STYLE_ID = 'sivir-theme-preview-style';
@@ -154,9 +154,8 @@
         }
 
         goto(url, {
-            keepFocus: true,
-            noScroll: true,
-            replaceState: true
+            reset: false,
+            replace: true
         });
     }
 
@@ -173,7 +172,10 @@
 
         const url = new URL(window.location.href);
         url.searchParams.set('theme', theme.slug);
-        replaceState(url, {});
+        goto(url, {
+            shallow: true,
+            replace: true
+        });
     }
 
     function useOnSite() {

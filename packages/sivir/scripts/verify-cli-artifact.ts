@@ -11,6 +11,10 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+// Sivir supports SvelteKit 2: the CLI installs into $lib, which SvelteKit 3 removed. The docs
+// app runs on SvelteKit 3, so the consumer pins Kit 2 instead of copying the docs version.
+const CONSUMER_KIT_VERSION = '^2.70.3';
+
 const packageRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const workspaceRoot = path.resolve(packageRoot, '../..');
 const releaseDir = path.join(packageRoot, '.release');
@@ -74,7 +78,7 @@ async function writeCliConsumer(cwd: string, tarball: string) {
                     'tailwind-variants': '^3.2.2'
                 },
                 devDependencies: {
-                    '@sveltejs/kit': versions['@sveltejs/kit'],
+                    '@sveltejs/kit': CONSUMER_KIT_VERSION,
                     '@sveltejs/vite-plugin-svelte': versions['@sveltejs/vite-plugin-svelte'],
                     '@tailwindcss/vite': versions['@tailwindcss/vite'],
                     '@types/node': versions['@types/node'],

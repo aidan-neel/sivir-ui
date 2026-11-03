@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import type { InstallPath, RunSource } from '$lib/run-types';
+import type { InstallPath, RunSource } from '#lib/run-types.js';
 import { buildManualPlan } from './manual-plan';
 import { manualConsumerRoot, manualRoot } from './paths';
 

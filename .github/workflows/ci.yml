@@ -48,8 +48,10 @@ jobs:
             - name: Setup workspace
               uses: ./.github/actions/setup-workspace
 
+            # `bun run audit` ignores GHSA-gcqx-w48m-w2h4: deepmerge has no fixed release, and only
+            # @sveltejs/vite-plugin-svelte uses it, at build time, on trusted config objects.
             - name: Dependency audit
-              run: bun audit
+              run: bun run audit
 
             - name: Verify release tag matches package version
               if: inputs.release-tag != ''
@@ -186,7 +188,8 @@ jobs:
 
     test-browser:
         name: Test (browser)
-        runs-on: ubuntu-latest
+        # The pinned Playwright cannot install Chromium on Ubuntu 26.04, which ubuntu-latest now is.
+        runs-on: ubuntu-24.04
         timeout-minutes: 20
         steps:
             - name: Checkout

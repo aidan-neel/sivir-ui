@@ -2,6 +2,7 @@
     import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
     import type { FileDiffTheme } from '@sivir-ui/svelte/components/file-diff';
     import * as Typography from '@sivir-ui/svelte/components/typography';
+    import DocsPager from '#lib/components/docs/docs-pager.svelte';
     import {
         ComponentPreview,
         InstallCommand,
@@ -9,8 +10,7 @@
         PropRow,
         PropSegmented,
         PropSwitch
-    } from '$lib/components/docs';
-    import DocsPager from '$lib/components/docs/docs-pager.svelte';
+    } from '#lib/components/docs/index.js';
     import Compound from './examples/compound.svelte';
     import CompoundSrc from './examples/compound.svelte?raw';
     import Hero from './examples/hero.svelte';

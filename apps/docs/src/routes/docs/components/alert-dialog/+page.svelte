@@ -2,6 +2,7 @@
     import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
     import type { ModalOrientation, ModalSize } from '@sivir-ui/svelte/components/modal';
     import * as Typography from '@sivir-ui/svelte/components/typography';
+    import DocsPager from '#lib/components/docs/docs-pager.svelte';
     import {
         ComponentPreview,
         InstallCommand,
@@ -9,8 +10,7 @@
         PropRow,
         PropSegmented,
         PropSwitch
-    } from '$lib/components/docs';
-    import DocsPager from '$lib/components/docs/docs-pager.svelte';
+    } from '#lib/components/docs/index.js';
     import Destructive from './examples/destructive.svelte';
     import DestructiveSrc from './examples/destructive.svelte?raw';
     import Hero from './examples/hero.svelte';

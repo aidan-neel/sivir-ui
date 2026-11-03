@@ -1,5 +1,5 @@
-import { markdownResponse } from '$lib/markdown-response';
-import { componentSelectionMarkdown } from '$lib/skill';
+import { markdownResponse } from '#lib/markdown-response.js';
+import { componentSelectionMarkdown } from '#lib/skill.js';
 import type { RequestHandler } from './$types';
 
 export const prerender = true;

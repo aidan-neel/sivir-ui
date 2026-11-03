@@ -1,13 +1,13 @@
-import { error, json } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
+import { isInstallPath, isRunSource } from '#lib/run-types.js';
+import { assertLocalRequest } from '#lib/server/local-only.js';
+import { runManager } from '#lib/server/run-manager.js';
+import { terminalManager } from '#lib/server/terminal-manager.js';
 import type { RequestHandler } from './$types';
-import { isInstallPath, isRunSource } from '$lib/run-types';
-import { assertLocalRequest } from '$lib/server/local-only';
-import { runManager } from '$lib/server/run-manager';
-import { terminalManager } from '$lib/server/terminal-manager';
 
 export const GET: RequestHandler = async (event) => {
     assertLocalRequest(event);
-    return json({ snapshot: await runManager.getSnapshot(), log: runManager.getLog() });
+    return Response.json({ snapshot: await runManager.getSnapshot(), log: runManager.getLog() });
 };
 
 export const POST: RequestHandler = async (event) => {
@@ -27,5 +27,8 @@ export const POST: RequestHandler = async (event) => {
     if (terminal.running || terminal.preparing) {
         error(409, 'Cancel the manual terminal command before starting an automatic run.');
     }
-    return json({ snapshot: await runManager.start(source, installPath) }, { status: 202 });
+    return Response.json(
+        { snapshot: await runManager.start(source, installPath) },
+        { status: 202 }
+    );
 };

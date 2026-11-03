@@ -2,10 +2,6 @@ import { applyLiveThemeCss } from '@sivir-ui/svelte/themes/live';
 import { menuPanelingOffCss, surfacePanelingOffCss } from '@sivir-ui/svelte/themes/theme';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-vi.mock('$app/environment', () => {
-    return { browser: true };
-});
-
 describe('applyLiveThemeCss paneling', () => {
     let styleTag: { id: string; textContent: string };
     let storage: Map<string, string>;

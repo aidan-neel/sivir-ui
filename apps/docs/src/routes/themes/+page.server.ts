@@ -1,11 +1,15 @@
 import { redirect } from '@sveltejs/kit';
-import { builtInThemePage, getRegistryTheme, listRegistryThemes } from '$lib/server/theme-registry';
+import {
+    builtInThemePage,
+    getRegistryTheme,
+    listRegistryThemes
+} from '#lib/server/theme-registry.js';
 import {
     type RegistryListOptions,
     type RegistryTheme,
     THEMES_PAGE_SIZE,
     type ThemeSourceFilter
-} from '$lib/theme-registry';
+} from '#lib/theme-registry.js';
 import type { PageServerLoad } from './$types';
 
 const SOURCE_FILTERS: readonly ThemeSourceFilter[] = ['all', 'sivir', 'community'];

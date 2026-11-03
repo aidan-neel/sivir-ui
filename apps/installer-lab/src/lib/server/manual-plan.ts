@@ -1,5 +1,5 @@
-import type { InstallPath, RunSource } from '$lib/run-types';
-import type { ManualPlan, ManualStep } from '$lib/terminal-types';
+import type { InstallPath, RunSource } from '#lib/run-types.js';
+import type { ManualPlan, ManualStep } from '#lib/terminal-types.js';
 import { manualConsumerRoot } from './paths';
 
 const quote = (value: string) =>

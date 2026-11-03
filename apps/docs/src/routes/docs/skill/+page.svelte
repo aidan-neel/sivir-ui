@@ -1,8 +1,8 @@
 <script lang="ts">
     import * as Typography from '@sivir-ui/svelte/components/typography';
+    import DocsPager from '#lib/components/docs/docs-pager.svelte';
+    import InstallCommand from '#lib/components/install-command.svelte';
     import { resolve } from '$app/paths';
-    import DocsPager from '$lib/components/docs/docs-pager.svelte';
-    import InstallCommand from '$lib/components/install-command.svelte';
 
     const install = 'npx skills add aidan-neel/sivir-ui --skill sivir';
 

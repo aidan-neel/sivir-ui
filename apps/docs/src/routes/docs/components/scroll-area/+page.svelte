@@ -1,8 +1,13 @@
 <script lang="ts">
     import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
     import * as Typography from '@sivir-ui/svelte/components/typography';
-    import { ComponentPreview, InstallCommand, PropGroup, PropSwitch } from '$lib/components/docs';
-    import DocsPager from '$lib/components/docs/docs-pager.svelte';
+    import DocsPager from '#lib/components/docs/docs-pager.svelte';
+    import {
+        ComponentPreview,
+        InstallCommand,
+        PropGroup,
+        PropSwitch
+    } from '#lib/components/docs/index.js';
     import Hero from './examples/hero.svelte';
     import Horizontal from './examples/horizontal.svelte';
     import HorizontalSrc from './examples/horizontal.svelte?raw';

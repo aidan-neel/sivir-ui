@@ -3,7 +3,6 @@
         "target": "ES2021",
         "module": "ES2022",
         "moduleResolution": "bundler",
-        "baseUrl": ".",
         "paths": {
             "@lib/*": ["./src/lib/*"],
             "@root/*": ["./*"],

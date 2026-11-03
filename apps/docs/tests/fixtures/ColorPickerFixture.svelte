@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { ColorFormat, ColorOption } from '@sivir-ui/svelte/components/color-picker';
-    import ColorPicker from '$lib/components/color-picker.svelte';
+    import ColorPicker from '#lib/components/color-picker.svelte';
 
     const defaultOptions: ColorOption[] = [
         { label: 'Red', value: '#ff0000' },

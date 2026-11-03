@@ -1,7 +1,7 @@
-import { componentMarkdown } from '$lib/llms';
-import { markdownResponse } from '$lib/markdown-response';
-import { components } from '$lib/components';
 import { error } from '@sveltejs/kit';
+import { components } from '#lib/components.js';
+import { componentMarkdown } from '#lib/llms.js';
+import { markdownResponse } from '#lib/markdown-response.js';
 import type { EntryGenerator, RequestHandler } from './$types';
 
 export const prerender = true;

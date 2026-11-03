@@ -6,8 +6,8 @@
     import * as Typography from '@sivir-ui/svelte/components/typography';
     import type { Snippet } from 'svelte';
     // biome-ignore lint/correctness/noUnusedImports: referenced by the generics attribute
-    import type { NamedTokenRow } from '$lib/studio/studio-chrome';
-    import { surfaceTransition } from '$lib/studio/studio-chrome';
+    import type { NamedTokenRow } from '#lib/studio/studio-chrome.js';
+    import { surfaceTransition } from '#lib/studio/studio-chrome.js';
 
     type Section = {
         id: string;

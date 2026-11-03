@@ -1,6 +1,6 @@
-import { changelogLlmVersions, changelogVersions } from '$lib/changelog';
-import { components, sanitizeComponent } from '$lib/components';
-import { sivirGuideMarkdown } from '$lib/skill';
+import { changelogLlmVersions, changelogVersions } from '#lib/changelog.js';
+import { components, sanitizeComponent } from '#lib/components.js';
+import { sivirGuideMarkdown } from '#lib/skill.js';
 
 type ComponentManifest = {
     name: string;

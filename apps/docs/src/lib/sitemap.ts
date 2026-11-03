@@ -1,5 +1,5 @@
-import { changelogLlmVersions, changelogVersions } from '$lib/changelog';
-import { components } from '$lib/components';
+import { changelogLlmVersions, changelogVersions } from '#lib/changelog.js';
+import { components } from '#lib/components.js';
 
 export const htmlDocPaths = [
     '/',

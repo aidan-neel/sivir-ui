@@ -1,9 +1,9 @@
 <script lang="ts">
     import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
     import * as Typography from '@sivir-ui/svelte/components/typography';
+    import DocsPager from '#lib/components/docs/docs-pager.svelte';
+    import { components } from '#lib/components.js';
     import { resolve } from '$app/paths';
-    import { components } from '$lib/components';
-    import DocsPager from '$lib/components/docs/docs-pager.svelte';
 
     const packageQuick = `bun add @sivir-ui/svelte
 # then in your CSS:

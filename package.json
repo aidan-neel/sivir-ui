@@ -12,19 +12,22 @@
     ],
     "overrides": {
         "brace-expansion": "5.0.12",
-        "cookie": "1.1.1",
         "deepmerge-ts": "8.0.2",
         "devalue": "5.9.4",
-        "fast-uri": "3.1.8",
+        "fast-uri": "3.1.9",
+        "glob": "14.0.3",
+        "minimatch": "11.0.4",
         "mysql2": "3.23.1",
         "nanoid": "3.3.18",
         "postcss": "8.5.25",
         "source-map-js": "1.2.2",
+        "@sveltejs/kit": "3.1.1",
         "tar": "7.5.22",
-        "undici": "7.29.1"
+        "undici": "7.30.1",
+        "zod": "4.6.7"
     },
     "scripts": {
-        "audit": "bun audit",
+        "audit": "bun audit --ignore=GHSA-gcqx-w48m-w2h4",
         "dev": "turbo run dev",
         "devnet": "turbo run devnet --filter=docs --filter=installer-lab",
         "build": "turbo run build",

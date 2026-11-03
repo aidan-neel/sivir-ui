@@ -1,4 +1,4 @@
-import type { TerminalEvent, TerminalSnapshot } from '$lib/terminal-types';
+import type { TerminalEvent, TerminalSnapshot } from '#lib/terminal-types.js';
 
 export class TerminalEventHub {
     private subscribers = new Set<(event: TerminalEvent) => void>();

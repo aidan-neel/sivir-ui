@@ -5,7 +5,7 @@
     import * as Popover from '@sivir-ui/svelte/components/popover';
     import { cn } from '@sivir-ui/svelte/utils';
     import type { Snippet } from 'svelte';
-    import { PreviewMorph } from '$lib/components/docs';
+    import { PreviewMorph } from '#lib/components/docs/index.js';
     import CodePanel from './code-panel.svelte';
     import CountBadge from './count-badge.svelte';
 

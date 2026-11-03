@@ -6,7 +6,7 @@
     import * as Slider from '@sivir-ui/svelte/components/slider';
     import { Toggle } from '@sivir-ui/svelte/components/toggle';
     import { cn } from '@sivir-ui/svelte/utils';
-    import { formatCssColor, parseCssColor, parsePxLength } from '$lib/studio-advanced-tokens';
+    import { formatCssColor, parseCssColor, parsePxLength } from '#lib/studio-advanced-tokens.js';
     import ColorAlphaField from './color-alpha-field.svelte';
     import { defaultShadowLayer, parseShadow, type ShadowLayer, serializeShadow } from './shadow';
 

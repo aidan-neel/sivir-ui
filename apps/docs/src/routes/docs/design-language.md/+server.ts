@@ -1,5 +1,5 @@
-import { markdownResponse } from '$lib/markdown-response';
-import { designLanguageMarkdown } from '$lib/skill';
+import { markdownResponse } from '#lib/markdown-response.js';
+import { designLanguageMarkdown } from '#lib/skill.js';
 import type { RequestHandler } from './$types';
 
 export const prerender = true;

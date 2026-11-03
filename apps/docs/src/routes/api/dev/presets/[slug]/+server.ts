@@ -1,6 +1,6 @@
 import { parseTheme, type Theme } from '@sivir-ui/svelte/themes/theme';
-import { error, json } from '@sveltejs/kit';
-import { dev } from '$app/environment';
+import { error } from '@sveltejs/kit';
+import { dev } from '$app/env';
 import type { RequestHandler } from './$types';
 
 export const PUT: RequestHandler = async ({ params, request }) => {
@@ -20,7 +20,7 @@ export const PUT: RequestHandler = async ({ params, request }) => {
         error(400, 'The theme slug does not match the preset.');
     }
 
-    const { PresetSourceError, savePresetSource } = await import('$lib/server/preset-source');
+    const { PresetSourceError, savePresetSource } = await import('#lib/server/preset-source.js');
 
     try {
         await savePresetSource(theme);
@@ -32,7 +32,7 @@ export const PUT: RequestHandler = async ({ params, request }) => {
         throw cause;
     }
 
-    return json({
+    return Response.json({
         slug: theme.slug
     });
 };
