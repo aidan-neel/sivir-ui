@@ -4,10 +4,6 @@ on:
     issue_comment:
         types: [created]
 
-concurrency:
-    group: claude-review-${{ github.event.issue.number }}
-    cancel-in-progress: true
-
 # The job holds the Anthropic key and a token that can comment, so it never runs code from
 # the pull request: no installs, no local actions, no hooks or MCP servers from its tree.
 # The pull request is checked out beside the trusted default branch as files to read.
@@ -17,6 +13,11 @@ jobs:
             github.event.issue.pull_request &&
             contains(github.event.comment.body, '@claude review') &&
             contains(fromJSON('["OWNER", "MEMBER", "COLLABORATOR"]'), github.event.comment.author_association)
+
+        # Job-level, so only comments that pass the `if` above can cancel a running review.
+        concurrency:
+            group: claude-review-${{ github.event.issue.number }}
+            cancel-in-progress: true
 
         runs-on: ubuntu-latest
         timeout-minutes: 60
@@ -57,6 +58,10 @@ jobs:
                   path: pull-request
                   persist-credentials: false
 
+            # A symlink in the pull request could point the review at files outside its checkout.
+            - name: Remove symlinks from the pull request checkout
+              run: find pull-request -type l -delete
+
             # The marketplace URL input takes no ref, so the plugin comes from a pinned local copy.
             - name: Checkout the code-review plugin
               uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
@@ -82,6 +87,13 @@ jobs:
                   settings: |
                       {
                           "permissions": {
+                              "deny": [
+                                  "Read(//proc/**)",
+                                  "Read(//sys/**)",
+                                  "Read(//home/runner/work/_temp/**)",
+                                  "Read(//home/runner/.claude/**)",
+                                  "Read(~/.config/**)"
+                              ],
                               "allow": [
                                   "Read",
                                   "Glob",

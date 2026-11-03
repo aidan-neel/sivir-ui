@@ -1,8 +1,10 @@
 name: PR labels
 
 # Labels every pull request with its size, counted by scripts/pr-size.mjs.
+# pull_request_target gives fork pull requests a token that can label. That is safe here because
+# the job never checks out or runs code from the pull request, only the base branch's script.
 on:
-    pull_request:
+    pull_request_target:
         types: [opened, reopened, synchronize, ready_for_review]
 
 concurrency:

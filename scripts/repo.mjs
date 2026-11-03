@@ -14,6 +14,9 @@ const BIOME_FILE = /\.(js|mjs|cjs|ts|svelte|json|jsonc|css|md|html|ya?ml)$/;
 const RELEASED_SOURCE = /^(packages\/sivir\/(src|cli)|apps\/docs\/src)\//;
 const COMPONENT_SOURCE = /^(packages\/sivir\/src|apps\/docs\/src)\//;
 
+/** Root files that change what every workspace installs or runs, so they check all of them. */
+const ROOT_DEPENDENCY_FILES = new Set(['bun.lock', 'package.json', 'turbo.json']);
+
 /** Workspaces by folder. A change in one type checks it and every workspace that depends on it. */
 const WORKSPACES = [
     {
@@ -61,8 +64,9 @@ const USAGE = `Usage: bun repo <command>
   check [--all] [--fix] [--browser] [--base <ref>]
       Runs the checks the changed files need, in parallel, and exits non-zero if any fails.
       Changed files are those that differ from the merge base with --base (default ${DEFAULT_BASE}),
-      plus uncommitted and untracked files. --all checks everything, --fix lets Biome write, and
-      --browser runs the docs browser tests when component or docs source changed.
+      plus uncommitted and untracked files. --all checks everything, browser tests included.
+      --fix lets Biome write, and --browser runs the docs browser tests when component or docs
+      source changed.
   worktrees [--prune]
       Lists this repository's worktrees and whether each is safe to remove. --prune removes those
       whose pull request merged and that hold no uncommitted, unpushed or ignored work.
@@ -124,9 +128,13 @@ function checkTasks(flags) {
         {
             name: 'Types',
             select: (file) => {
-                return workspaceOf(file) !== null;
+                return workspaceOf(file) !== null || isRootDependencyFile(file);
             },
             command: (files) => {
+                if (files.some(isRootDependencyFile)) {
+                    return [TURBO, ['run', 'check']];
+                }
+
                 return [TURBO, ['run', 'check', ...dependentFilters(files)]];
             },
             runAll: () => {
@@ -136,7 +144,7 @@ function checkTasks(flags) {
         {
             name: 'Tests (sivir)',
             select: (file) => {
-                return file.startsWith('packages/sivir/');
+                return file.startsWith('packages/sivir/') || isRootDependencyFile(file);
             },
             command: () => {
                 return ['bun', ['run', '--cwd', 'packages/sivir', 'test']];
@@ -145,7 +153,11 @@ function checkTasks(flags) {
         {
             name: 'Tests (docs)',
             select: (file) => {
-                return file.startsWith('apps/docs/') || file.startsWith('packages/sivir/src/');
+                return (
+                    file.startsWith('apps/docs/') ||
+                    file.startsWith('packages/sivir/src/') ||
+                    isRootDependencyFile(file)
+                );
             },
             command: () => {
                 return ['bun', ['run', '--cwd', 'apps/docs', 'test:ci']];
@@ -154,7 +166,7 @@ function checkTasks(flags) {
         {
             name: 'Tests (registry)',
             select: (file) => {
-                return file.startsWith('apps/registry/');
+                return file.startsWith('apps/registry/') || isRootDependencyFile(file);
             },
             command: () => {
                 return [TURBO, ['run', 'test', '--filter=registry']];
@@ -163,7 +175,7 @@ function checkTasks(flags) {
         {
             name: 'Tests (installer)',
             select: (file) => {
-                return file.startsWith('apps/installer-lab/');
+                return file.startsWith('apps/installer-lab/') || isRootDependencyFile(file);
             },
             command: () => {
                 return ['bun', ['run', '--cwd', 'apps/installer-lab', 'test']];
@@ -184,7 +196,7 @@ function checkTasks(flags) {
                 return COMPONENT_SOURCE.test(file);
             },
             command: () => {
-                if (flags.browser !== true) {
+                if (flags.browser !== true && flags.all !== true) {
                     return null;
                 }
 
@@ -360,6 +372,10 @@ function dependentFilters(files) {
     });
 }
 
+function isRootDependencyFile(file) {
+    return ROOT_DEPENDENCY_FILES.has(file);
+}
+
 function workspaceOf(file) {
     const workspace = WORKSPACES.find((candidate) => {
         return file.startsWith(candidate.folder);
@@ -372,13 +388,13 @@ function workspaceOf(file) {
 function changedFiles(base) {
     const mergeBase = git(['merge-base', base, 'HEAD']).trim();
     const lists = [
-        git(['diff', '--name-only', '--no-renames', mergeBase]),
-        git(['ls-files', '--others', '--exclude-standard'])
+        git(['diff', '--name-only', '--no-renames', '-z', mergeBase]),
+        git(['ls-files', '--others', '--exclude-standard', '-z'])
     ];
     const files = new Set(
         lists
             .flatMap((list) => {
-                return list.split('\n');
+                return list.split('\0');
             })
             .filter(Boolean)
     );
