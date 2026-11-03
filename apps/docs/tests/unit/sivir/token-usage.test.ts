@@ -6,7 +6,7 @@ import {
     extractVarNames,
     stripStateSelector,
     tokensForElement
-} from '$lib/studio/token-usage';
+} from '#lib/studio/token-usage.js';
 
 describe('extractVarNames', () => {
     it('collects nested and spaced variable references once', () => {

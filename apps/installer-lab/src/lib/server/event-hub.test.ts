@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import type { RunSnapshot } from '$lib/run-types';
+import type { RunSnapshot } from '#lib/run-types.js';
 import { RunEventHub } from './event-hub';
 
 const snapshot: RunSnapshot = {

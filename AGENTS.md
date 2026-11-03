@@ -1,28 +1,30 @@
 # Verification
 
-Before reporting a change complete, run only the lightweight repository-level
-gates from the repository root:
+Before reporting a change complete, run from the repository root:
 
 ```sh
-bun run format:check
-bun run lint
+bun repo check
 ```
 
-Do not run formatting in write mode unless formatting files is part of the
-task. Tests, type checks, builds, and package artifact verification are manual
-verification only. Run them only when the user explicitly requests them,
-including before a push or release:
+It runs, in parallel, only the checks the changed files need: Biome on the
+changed files, type checks for each touched workspace and the workspaces that
+depend on it, that workspace's tests, the repository script tests, and a
+changelog check. It exits non-zero when any check fails. Judge it by its own
+exit code, never by piped output.
+
+- `--fix` lets Biome write. Use it only on files you changed.
+- `--browser` also runs the docs browser tests. Run it when you changed a
+  component or docs source; the check lists them as not run until you do.
+- `--all` checks everything, and `--base <ref>` compares with another branch.
+
+Builds and package artifact verification stay manual. Run them only when the
+user asks, including before a push or release:
 
 ```sh
-bun run check
-bun run test
 bun run build
 bun --cwd=packages/sivir run verify:artifact
 bun --cwd=packages/sivir run verify:cli-artifact
 ```
-
-When manual verification has not been requested, state that the full gates were
-not run instead of running them automatically.
 
 For a pre-release, invoke the `release-gate` skill or run:
 
@@ -231,3 +233,100 @@ async account() {
   };
 }
 ```
+
+# Worktrees
+
+Other sessions often work in the main checkout, and two sessions in one checkout
+share one git index. Do branch work in a worktree under `.claude/worktrees/`
+(`git worktree add -b <branch> .claude/worktrees/<name> origin/main`), then run
+`bun install` in it.
+
+- Commit with paths (`git commit -m "..." -- <files>`) and read
+  `git show --stat HEAD` before pushing, so you never commit someone else's
+  staged work.
+- `bun repo worktrees` lists worktrees and whether each is safe to remove.
+  Remove them only with `bun repo worktrees --prune`, which keeps any with
+  uncommitted, unpushed, or ignored work, or an unmerged pull request.
+
+# Pull Requests
+
+The repository is `aidan-neel/sivir-ui`. Use `gh`. Open a pull request only
+when the user asks. Agents never approve or merge directly; they queue
+auto-merge, which lands after a human approval and green checks.
+
+## Branches and titles
+
+- Branch from an up-to-date `main` as `<type>/<short-kebab-name>`.
+- `main` squash-merges, so the pull request title becomes the commit. Write it
+  as `type(scope): outcome`, in plain words, under 72 characters:
+  `fix(select): the menu keeps its width when an item is picked`.
+  - Types: `fix`, `feat`, `perf`, `refactor`, `test`, `docs`, `ci`, `chore`,
+    `revert`.
+  - Scope: a component (`select`, `sidebar`), or an area (`cli`, `docs`,
+    `studio`, `registry`, `themes`, `ci`, `agents`).
+- One logical change per commit. Never commit generated output you did not
+  regenerate, screenshots, secrets, or debugging leftovers.
+
+## Body
+
+Fill `.github/pull_request_template.md`: **Problem** in a sentence or two,
+**Change** and why each area it touches is needed, and **Verification** with
+what you ran and saw. Name the tests that fail without the fix and anything you
+could not check; "tests pass" alone is not verification. Delete every section
+that does not apply. No bullet per file.
+
+UI changes show screenshots of the running docs in light and dark, one
+collapsed `<details>` block per design change.
+
+## Labels
+
+- Area labels (`component`, `cli`, `registry`, `docs`, `ci`, `a11y`) and `bug`
+  or `feature` where they apply. `v1` marks a v1.0.0 release blocker.
+- **`DO NOT MERGE`** when a person must do something first (a secret, a
+  settings change, a product decision), and say what in Problem. The
+  `Merge guard` check fails while it is set.
+- `size:XS` to `size:XXL` are added automatically. `bun.lock` and the built
+  registry never count, and tests count only in a test-only pull request.
+- Status labels belong to the loop below. Set them with
+  `bun repo pr <number> <in-progress|ready|needs-human>`.
+
+## The pull request loop
+
+1. **Open and queue.** Open the pull request, run `bun repo pr <n> in-progress`,
+   then `gh pr merge <n> --auto --squash` unless it is a draft or depends on an
+   unmerged pull request.
+2. **Watch it.** In T3, `watch_pull_request` and end the turn; otherwise run
+   `gh pr checks <n> --watch` in the background. Never poll or sleep.
+3. **Fix what comes back.** On a failed check, read the log
+   (`gh run view <id> --log-failed`), reproduce it, and fix the cause. Never
+   rerun to get green. Comment `@claude review` for the Claude review. Check
+   each finding against the source: fix real ones, reply with evidence to the
+   rest, and resolve the thread.
+4. **Mark it ready** with `bun repo pr <n> ready` once every check is green on
+   the latest commit and every thread is resolved. A human approves; auto-merge
+   lands it.
+5. **Hand off when stuck.** When it needs a product decision, a human step, or
+   something you cannot verify, run `bun repo pr <n> needs-human`, comment
+   exactly what is needed, and stop.
+6. **Keep it current.** When `main` moves and the branch is behind or
+   conflicts, rebase, rerun `bun repo check`, and push with
+   `--force-with-lease` on your own branch only.
+7. **Stop watching** once it merges, or when only a human step remains. Report
+   the URL, check status, and open threads.
+
+One pull request holds the task and every follow-up found while doing it. Size
+alone is never a reason to split. Finish local fixes and checks before pushing,
+so each push is one CI run.
+
+## CI
+
+`.github/workflows/ci.yml` runs every job on pull requests, pushes to `main`,
+and releases. `All checks` fails unless every job passed. Branch protection
+requires only it and `Merge guard`, so adding a job never needs a settings
+change.
+
+# Known Mistakes
+
+When a mistake breaks CI, loses work, needs a revert, or draws a user
+correction, add the rule that prevents it to the section it belongs in. One or
+two lines: the rule, then what broke.

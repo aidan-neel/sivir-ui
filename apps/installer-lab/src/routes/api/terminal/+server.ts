@@ -1,13 +1,13 @@
-import { error, json } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
+import { isActivePhase } from '#lib/run-types.js';
+import { assertLocalRequest } from '#lib/server/local-only.js';
+import { runManager } from '#lib/server/run-manager.js';
+import { terminalManager } from '#lib/server/terminal-manager.js';
 import type { RequestHandler } from './$types';
-import { isActivePhase } from '$lib/run-types';
-import { assertLocalRequest } from '$lib/server/local-only';
-import { runManager } from '$lib/server/run-manager';
-import { terminalManager } from '$lib/server/terminal-manager';
 
 export const GET: RequestHandler = async (event) => {
     assertLocalRequest(event);
-    return json({ snapshot: await terminalManager.getSnapshot() });
+    return Response.json({ snapshot: await terminalManager.getSnapshot() });
 };
 
 export const POST: RequestHandler = async (event) => {
@@ -24,7 +24,7 @@ export const POST: RequestHandler = async (event) => {
         error(409, 'Cancel the automatic installer run before using the manual terminal.');
     }
     try {
-        return json({ snapshot: await terminalManager.execute(command) }, { status: 202 });
+        return Response.json({ snapshot: await terminalManager.execute(command) }, { status: 202 });
     } catch (cause) {
         error(409, cause instanceof Error ? cause.message : String(cause));
     }

@@ -1,6 +1,6 @@
 <script lang="ts">
     import * as Typography from '@sivir-ui/svelte/components/typography';
-    import type { ComponentPart } from '$lib/component-anatomy';
+    import type { ComponentPart } from '#lib/component-anatomy.js';
 
     let { items }: { items: readonly ComponentPart[] } = $props();
 </script>

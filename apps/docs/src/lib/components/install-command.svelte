@@ -5,7 +5,7 @@
     import * as Tooltip from '@sivir-ui/svelte/components/tooltip';
     import { cn } from '@sivir-ui/svelte/utils';
     import { onDestroy } from 'svelte';
-    import { trackEvent } from '$lib/analytics';
+    import { trackEvent } from '#lib/analytics.js';
 
     let {
         command,

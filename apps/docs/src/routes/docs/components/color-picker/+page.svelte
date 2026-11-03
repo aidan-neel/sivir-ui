@@ -2,6 +2,7 @@
     import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
     import type { ColorFormat } from '@sivir-ui/svelte/components/color-picker';
     import * as Typography from '@sivir-ui/svelte/components/typography';
+    import DocsPager from '#lib/components/docs/docs-pager.svelte';
     import {
         ComponentPreview,
         InstallCommand,
@@ -11,8 +12,7 @@
         PropRow,
         PropSegmented,
         PropSwitch
-    } from '$lib/components/docs';
-    import DocsPager from '$lib/components/docs/docs-pager.svelte';
+    } from '#lib/components/docs/index.js';
     import Default from './examples/default.svelte';
     import DefaultSrc from './examples/default.svelte?raw';
     import Formats from './examples/formats.svelte';

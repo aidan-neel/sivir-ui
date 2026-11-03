@@ -77,22 +77,19 @@
     import { quintOut } from 'svelte/easing';
     import { prefersReducedMotion } from 'svelte/motion';
     import { fade, slide } from 'svelte/transition';
-    import { dev } from '$app/environment';
-    import { replaceState } from '$app/navigation';
-    import { page } from '$app/state';
-    import ChangedDot from '$lib/components/studio/changed-dot.svelte';
-    import ColorAlphaField from '$lib/components/studio/color-alpha-field.svelte';
-    import ColorField from '$lib/components/studio/color-field.svelte';
-    import ElementOutline from '$lib/components/studio/element-outline.svelte';
-    import ElementTokenPopover from '$lib/components/studio/element-token-popover.svelte';
-    import ExportDialog from '$lib/components/studio/export-dialog.svelte';
-    import PresetGallery from '$lib/components/studio/preset-gallery.svelte';
-    import PreviewAgent from '$lib/components/studio/preview-agent.svelte';
-    import PreviewCards from '$lib/components/studio/preview-cards.svelte';
-    import SelectFieldTrigger from '$lib/components/studio/select-field-trigger.svelte';
-    import ShadowField from '$lib/components/studio/shadow-field.svelte';
-    import SwitchField from '$lib/components/studio/switch-field.svelte';
-    import { fonts } from '$lib/fonts.svelte';
+    import ChangedDot from '#lib/components/studio/changed-dot.svelte';
+    import ColorAlphaField from '#lib/components/studio/color-alpha-field.svelte';
+    import ColorField from '#lib/components/studio/color-field.svelte';
+    import ElementOutline from '#lib/components/studio/element-outline.svelte';
+    import ElementTokenPopover from '#lib/components/studio/element-token-popover.svelte';
+    import ExportDialog from '#lib/components/studio/export-dialog.svelte';
+    import PresetGallery from '#lib/components/studio/preset-gallery.svelte';
+    import PreviewAgent from '#lib/components/studio/preview-agent.svelte';
+    import PreviewCards from '#lib/components/studio/preview-cards.svelte';
+    import SelectFieldTrigger from '#lib/components/studio/select-field-trigger.svelte';
+    import ShadowField from '#lib/components/studio/shadow-field.svelte';
+    import SwitchField from '#lib/components/studio/switch-field.svelte';
+    import { fonts } from '#lib/fonts.svelte.js';
     import {
         commitSnapshot,
         createHistory,
@@ -100,8 +97,8 @@
         type DraftSnapshot,
         redoHistory,
         undoHistory
-    } from '$lib/studio/draft-history';
-    import { cssChanges, presetSwatch, surfaceTransition } from '$lib/studio/studio-chrome';
+    } from '#lib/studio/draft-history.js';
+    import { cssChanges, presetSwatch, surfaceTransition } from '#lib/studio/studio-chrome.js';
     import {
         type AdvancedTokens,
         type BrandColors,
@@ -119,14 +116,14 @@
         sameThemeDesign,
         themeAxes,
         themeToDraft
-    } from '$lib/studio/theme-draft';
+    } from '#lib/studio/theme-draft.js';
     import {
         buildTokenIndex,
         collectRuleInputs,
         elementsUsingToken,
         type TokenIndex,
         tokensForElement
-    } from '$lib/studio/token-usage';
+    } from '#lib/studio/token-usage.js';
     import {
         type AnimationTokenDefinition,
         type AnimationTokenName,
@@ -157,7 +154,10 @@
         type SpacingTokenName,
         spacingTokenDefinitions,
         spacingTokenGroups
-    } from '$lib/studio-advanced-tokens';
+    } from '#lib/studio-advanced-tokens.js';
+    import { dev } from '$app/env';
+    import { goto } from '$app/navigation';
+    import { page } from '$app/state';
 
     type FontWeight = ThemeFontWeight;
 
@@ -1215,9 +1215,12 @@
             });
         }
 
-        const url = new URL(page.url);
+        const url = new URL(page.url.href);
         url.searchParams.delete('theme');
-        replaceState(url, {});
+        goto(url, {
+            shallow: true,
+            replace: true
+        });
 
         if (!response.ok) {
             toast({

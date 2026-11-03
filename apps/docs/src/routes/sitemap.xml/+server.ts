@@ -1,4 +1,4 @@
-import { sitemapPaths } from '$lib/sitemap';
+import { sitemapPaths } from '#lib/sitemap.js';
 import type { RequestHandler } from './$types';
 
 export const prerender = true;

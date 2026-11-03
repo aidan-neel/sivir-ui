@@ -3,6 +3,7 @@
     import type { ComposerStatus } from '@sivir-ui/svelte/components/composer';
     import Shortcut from '@sivir-ui/svelte/components/shortcut';
     import * as Typography from '@sivir-ui/svelte/components/typography';
+    import DocsPager from '#lib/components/docs/docs-pager.svelte';
     import {
         ComponentPreview,
         InstallCommand,
@@ -10,8 +11,7 @@
         PropRow,
         PropSegmented,
         PropSwitch
-    } from '$lib/components/docs';
-    import DocsPager from '$lib/components/docs/docs-pager.svelte';
+    } from '#lib/components/docs/index.js';
 
     import Hero from './examples/hero.svelte';
     import HeroSrc from './examples/hero.svelte?raw';

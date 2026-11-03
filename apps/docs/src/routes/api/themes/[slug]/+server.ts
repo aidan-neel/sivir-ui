@@ -1,12 +1,11 @@
 import { parseTheme, type Theme } from '@sivir-ui/svelte/themes/theme';
-import { json } from '@sveltejs/kit';
 import {
     deleteRegistryTheme,
     getRegistryTheme,
     RegistryRequestError,
     registryErrorResponse,
     updateRegistryTheme
-} from '$lib/server/theme-registry';
+} from '#lib/server/theme-registry.js';
 import type { RequestHandler } from './$types';
 
 function readEditToken(request: Request): string {
@@ -38,7 +37,7 @@ async function readTheme(request: Request, slug: string): Promise<Theme> {
 
 export const GET: RequestHandler = async ({ fetch, params }) => {
     try {
-        return json(await getRegistryTheme(fetch, params.slug));
+        return Response.json(await getRegistryTheme(fetch, params.slug));
     } catch (error) {
         return registryErrorResponse(error, 'Failed to fetch the theme.');
     }
@@ -49,7 +48,7 @@ export const PUT: RequestHandler = async ({ fetch, params, request }) => {
         const editToken = readEditToken(request);
         const theme = await readTheme(request, params.slug);
 
-        return json(await updateRegistryTheme(fetch, theme, editToken));
+        return Response.json(await updateRegistryTheme(fetch, theme, editToken));
     } catch (error) {
         return registryErrorResponse(error, 'Failed to update the theme.');
     }

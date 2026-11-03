@@ -1,0 +1,1 @@
+- The live theme helpers in `@sivir-ui/svelte/themes/live` no longer import SvelteKit's `$app/environment`, so they also load in apps that do not run SvelteKit.

@@ -1,4 +1,4 @@
-import type { RunPhase } from '$lib/run-types';
+import type { RunPhase } from '#lib/run-types.js';
 
 export const allowedTransitions: Record<RunPhase, readonly RunPhase[]> = {
     idle: ['cleaning'],

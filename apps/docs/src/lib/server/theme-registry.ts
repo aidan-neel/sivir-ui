@@ -1,8 +1,6 @@
 import { createHash } from 'node:crypto';
 import { builtInThemePresets } from '@sivir-ui/svelte/themes/builtin-presets';
 import { parseTheme, type Theme } from '@sivir-ui/svelte/themes/theme';
-import { dev } from '$app/environment';
-import { env } from '$env/dynamic/private';
 import {
     type PublishedTheme,
     type RegistryListOptions,
@@ -10,7 +8,9 @@ import {
     type RegistryThemePage,
     THEME_SLUG_PATTERN,
     themeSources
-} from '$lib/theme-registry';
+} from '#lib/theme-registry.js';
+import { dev } from '$app/env';
+import { THEME_REGISTRY_SECRET, THEME_REGISTRY_URL } from '$app/env/private';
 
 const LOCAL_REGISTRY_URL = 'http://localhost:4100';
 const BUILT_IN_TIMESTAMP = '2026-07-14T00:00:00.000Z';
@@ -26,7 +26,7 @@ export class RegistryRequestError extends Error {
 }
 
 function registryBaseUrl(): string {
-    const configured = env.THEME_REGISTRY_URL?.trim();
+    const configured = THEME_REGISTRY_URL?.trim();
     if (configured) {
         return configured.replace(/\/+$/, '');
     }
@@ -39,7 +39,7 @@ function registryBaseUrl(): string {
 }
 
 function registrySecret(): string {
-    const secret = env.THEME_REGISTRY_SECRET?.trim();
+    const secret = THEME_REGISTRY_SECRET?.trim();
     if (!secret) {
         throw new RegistryRequestError(503, 'Theme publishing is not configured.');
     }

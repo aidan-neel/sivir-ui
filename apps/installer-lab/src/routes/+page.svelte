@@ -14,8 +14,8 @@
         type RunPhase,
         type RunSnapshot,
         type RunSource
-    } from '$lib/run-types';
-    import type { ManualPlan, TerminalSnapshot } from '$lib/terminal-types';
+    } from '#lib/run-types.js';
+    import type { ManualPlan, TerminalSnapshot } from '#lib/terminal-types.js';
 
     type LabMode = 'automatic' | 'manual';
 

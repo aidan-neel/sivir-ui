@@ -11,8 +11,8 @@ import type {
     RunPhase,
     RunSnapshot,
     RunSource
-} from '$lib/run-types';
-import { isActivePhase } from '$lib/run-types';
+} from '#lib/run-types.js';
+import { isActivePhase } from '#lib/run-types.js';
 import {
     type CommandSpec,
     cliCommands,

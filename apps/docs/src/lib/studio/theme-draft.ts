@@ -14,7 +14,7 @@ import {
     detailTokenDefinitions,
     type SpacingTokenName,
     spacingTokenDefinitions
-} from '$lib/studio-advanced-tokens';
+} from '#lib/studio-advanced-tokens.js';
 
 export type FoundationPalette = {
     base: string;

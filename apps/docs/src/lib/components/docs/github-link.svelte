@@ -1,8 +1,8 @@
 <script lang="ts">
     import { Button, type ButtonVariant } from '@sivir-ui/svelte/components/button';
 
-    import GitHubBlack from '$lib/assets/GitHub_Invertocat_Black.svg';
-    import GitHubWhite from '$lib/assets/GitHub_Invertocat_White.svg';
+    import GitHubBlack from '#lib/assets/GitHub_Invertocat_Black.svg';
+    import GitHubWhite from '#lib/assets/GitHub_Invertocat_White.svg';
 
     let {
         starCount = null,

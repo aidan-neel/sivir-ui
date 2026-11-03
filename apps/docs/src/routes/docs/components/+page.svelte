@@ -3,12 +3,12 @@
     import { Button } from '@sivir-ui/svelte/components/button';
     import { Input } from '@sivir-ui/svelte/components/input';
     import * as Typography from '@sivir-ui/svelte/components/typography';
+    import type { ComponentSlug } from '#lib/component-anatomy.js';
+    import { componentSummaries } from '#lib/component-summaries.js';
+    import DocsPager from '#lib/components/docs/docs-pager.svelte';
+    import { components, sanitizeComponent } from '#lib/components.js';
     import { goto } from '$app/navigation';
     import { resolve } from '$app/paths';
-    import type { ComponentSlug } from '$lib/component-anatomy';
-    import { componentSummaries } from '$lib/component-summaries';
-    import { components, sanitizeComponent } from '$lib/components';
-    import DocsPager from '$lib/components/docs/docs-pager.svelte';
 
     type Group = {
         id: string;

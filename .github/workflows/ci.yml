@@ -48,8 +48,10 @@ jobs:
             - name: Setup workspace
               uses: ./.github/actions/setup-workspace
 
+            # `bun run audit` ignores GHSA-gcqx-w48m-w2h4: deepmerge has no fixed release, and only
+            # @sveltejs/vite-plugin-svelte uses it, at build time, on trusted config objects.
             - name: Dependency audit
-              run: bun audit
+              run: bun run audit
 
             - name: Verify release tag matches package version
               if: inputs.release-tag != ''
@@ -168,9 +170,26 @@ jobs:
             - name: Test (sivir package)
               run: bun --filter='@sivir-ui/svelte' run test
 
+    test-scripts:
+        name: Test (repo scripts)
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+              with:
+                  ref: ${{ inputs.ref || github.sha }}
+
+            - name: Setup workspace
+              uses: ./.github/actions/setup-workspace
+
+            - name: Test (repo scripts)
+              run: bun test ./scripts
+
     test-browser:
         name: Test (browser)
-        runs-on: ubuntu-latest
+        # The pinned Playwright cannot install Chromium on Ubuntu 26.04, which ubuntu-latest now is.
+        runs-on: ubuntu-24.04
         timeout-minutes: 20
         steps:
             - name: Checkout
@@ -253,3 +272,31 @@ jobs:
                   if-no-files-found: error
                   include-hidden-files: true
                   retention-days: 1
+
+    # The one check branch protection requires, so adding or renaming a job never needs a
+    # settings change. It fails unless every job above succeeded.
+    all-checks:
+        name: All checks
+        if: ${{ always() }}
+        needs:
+            - audit
+            - format
+            - lint
+            - typecheck
+            - test-unit
+            - test-registry
+            - test-sivir
+            - test-scripts
+            - test-browser
+            - build
+            - verify-release-artifact
+        runs-on: ubuntu-latest
+        timeout-minutes: 2
+        steps:
+            - name: Require every job to pass
+              env:
+                  RESULTS: ${{ toJSON(needs) }}
+              run: |
+                  set -euo pipefail
+                  echo "$RESULTS" | jq -r 'to_entries[] | "\(.key): \(.value.result)"'
+                  echo "$RESULTS" | jq -e 'all(.[]; .result == "success")' > /dev/null

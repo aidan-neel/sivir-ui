@@ -6,11 +6,11 @@
     import * as FullscreenNav from '@sivir-ui/svelte/components/fullscreen-nav';
     import { cn } from '@sivir-ui/svelte/utils';
     import { mode, toggleMode } from 'mode-watcher';
+    import GitHubBlack from '#lib/assets/GitHub_Invertocat_Black.svg';
+    import GitHubWhite from '#lib/assets/GitHub_Invertocat_White.svg';
+    import Logo from '#lib/components/logo.svelte';
     import { resolve } from '$app/paths';
     import { page } from '$app/state';
-    import GitHubBlack from '$lib/assets/GitHub_Invertocat_Black.svg';
-    import GitHubWhite from '$lib/assets/GitHub_Invertocat_White.svg';
-    import Logo from '$lib/components/logo.svelte';
 
     let {
         starCount

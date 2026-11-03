@@ -8,8 +8,8 @@
     } from '@sivir-ui/svelte/themes/live';
     import { themeToCss } from '@sivir-ui/svelte/themes/theme';
     import { onMount } from 'svelte';
+    import { DEFAULT_FONT, fonts, selectedFont } from '#lib/fonts.svelte.js';
     import { resolve } from '$app/paths';
-    import { DEFAULT_FONT, fonts, selectedFont } from '$lib/fonts.svelte';
     import HomeChatDemo from './home-chat-demo.svelte';
     import HomeCommandDemo from './home-command-demo.svelte';
     import HomeDemo from './home-demo.svelte';

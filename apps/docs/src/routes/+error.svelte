@@ -1,11 +1,11 @@
 <script lang="ts">
     import { Button } from '@sivir-ui/svelte/components/button';
     import * as Typography from '@sivir-ui/svelte/components/typography';
+    import { componentSummaries } from '#lib/component-summaries.js';
+    import { components, sanitizeComponent } from '#lib/components.js';
     import { invalidateAll } from '$app/navigation';
     import { resolve } from '$app/paths';
     import { page } from '$app/state';
-    import { componentSummaries } from '$lib/component-summaries';
-    import { components, sanitizeComponent } from '$lib/components';
 
     type Suggestion = {
         slug: (typeof components)[number];

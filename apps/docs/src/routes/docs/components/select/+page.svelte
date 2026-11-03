@@ -2,6 +2,7 @@
     import type { ButtonVariant } from '@sivir-ui/svelte/components/button';
     import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
     import * as Typography from '@sivir-ui/svelte/components/typography';
+    import DocsPager from '#lib/components/docs/docs-pager.svelte';
     import {
         ComponentPreview,
         InstallCommand,
@@ -11,8 +12,7 @@
         PropRow,
         PropSegmented,
         PropSwitch
-    } from '$lib/components/docs';
-    import DocsPager from '$lib/components/docs/docs-pager.svelte';
+    } from '#lib/components/docs/index.js';
     import DynamicWidth from './examples/dynamic-width.svelte';
     import DynamicWidthSrc from './examples/dynamic-width.svelte?raw';
     import Hero from './examples/hero.svelte';

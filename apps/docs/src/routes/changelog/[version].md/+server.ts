@@ -1,6 +1,6 @@
 import { error } from '@sveltejs/kit';
-import { changelogMarkdown, changelogVersions } from '$lib/changelog';
-import { markdownResponse } from '$lib/markdown-response';
+import { changelogMarkdown, changelogVersions } from '#lib/changelog.js';
+import { markdownResponse } from '#lib/markdown-response.js';
 import type { EntryGenerator, RequestHandler } from './$types';
 
 export const prerender = true;

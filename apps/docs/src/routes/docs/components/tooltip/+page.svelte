@@ -2,6 +2,7 @@
     import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
     import type { TooltipPlacement } from '@sivir-ui/svelte/components/tooltip';
     import * as Typography from '@sivir-ui/svelte/components/typography';
+    import DocsPager from '#lib/components/docs/docs-pager.svelte';
     import {
         ComponentPreview,
         InstallCommand,
@@ -10,8 +11,7 @@
         PropRow,
         PropSegmented,
         PropSwitch
-    } from '$lib/components/docs';
-    import DocsPager from '$lib/components/docs/docs-pager.svelte';
+    } from '#lib/components/docs/index.js';
     import Bottom from './examples/bottom.svelte';
     import BottomSrc from './examples/bottom.svelte?raw';
     import Hero from './examples/hero.svelte';

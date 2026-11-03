@@ -7,8 +7,8 @@ import {
     HEADER_SIZE_RANGE,
     sameThemeDesign,
     themeToDraft
-} from '$lib/studio/theme-draft';
-import { themePreviewCss } from '$lib/theme-registry';
+} from '#lib/studio/theme-draft.js';
+import { themePreviewCss } from '#lib/theme-registry.js';
 
 describe('Studio draft', () => {
     it('exports a portable theme that parseTheme accepts for every preset', () => {

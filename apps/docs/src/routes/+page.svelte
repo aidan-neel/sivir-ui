@@ -1,12 +1,12 @@
 <script lang="ts">
     import ArrowRight from '@lucide/svelte/icons/arrow-right';
     import { Button } from '@sivir-ui/svelte/components/button';
+    import { changelogVersions } from '#lib/changelog.js';
+    import HomeNav from '#lib/components/home/home-nav.svelte';
+    import HomeShowcase from '#lib/components/home/home-showcase.svelte';
+    import InstallCommand from '#lib/components/install-command.svelte';
+    import { components } from '#lib/components.js';
     import { resolve } from '$app/paths';
-    import { changelogVersions } from '$lib/changelog';
-    import { components } from '$lib/components';
-    import HomeNav from '$lib/components/home/home-nav.svelte';
-    import HomeShowcase from '$lib/components/home/home-showcase.svelte';
-    import InstallCommand from '$lib/components/install-command.svelte';
 
     import type { PageData } from './$types';
 

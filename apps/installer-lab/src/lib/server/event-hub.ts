@@ -1,4 +1,4 @@
-import type { RunEvent, RunSnapshot } from '$lib/run-types';
+import type { RunEvent, RunSnapshot } from '#lib/run-types.js';
 
 export class RunEventHub {
     private subscribers = new Set<(event: RunEvent) => void>();

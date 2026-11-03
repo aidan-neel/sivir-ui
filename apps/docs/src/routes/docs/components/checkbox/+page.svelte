@@ -1,14 +1,14 @@
 <script lang="ts">
     import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
     import * as Typography from '@sivir-ui/svelte/components/typography';
+    import DocsPager from '#lib/components/docs/docs-pager.svelte';
     import {
         ComponentPreview,
         InstallCommand,
         PreviewOptions,
         PropGroup,
         PropSwitch
-    } from '$lib/components/docs';
-    import DocsPager from '$lib/components/docs/docs-pager.svelte';
+    } from '#lib/components/docs/index.js';
     import Checked from './examples/checked.svelte';
     import CheckedSrc from './examples/checked.svelte?raw';
     import Disabled from './examples/disabled.svelte';

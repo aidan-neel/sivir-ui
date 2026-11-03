@@ -1,5 +1,5 @@
 import { type ChildProcess, spawn } from 'node:child_process';
-import type { CommandSummary, InstallPath, RunSource } from '$lib/run-types';
+import type { CommandSummary, InstallPath, RunSource } from '#lib/run-types.js';
 
 export type CommandSpec = CommandSummary & {
     env?: NodeJS.ProcessEnv;

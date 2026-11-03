@@ -1,8 +1,8 @@
 <script lang="ts">
     import { CodeBlock } from '@sivir-ui/svelte/components/code-block';
     import * as Typography from '@sivir-ui/svelte/components/typography';
-    import { ComponentPreview, InstallCommand } from '$lib/components/docs';
-    import DocsPager from '$lib/components/docs/docs-pager.svelte';
+    import DocsPager from '#lib/components/docs/docs-pager.svelte';
+    import { ComponentPreview, InstallCommand } from '#lib/components/docs/index.js';
     import FileRow from './examples/file-row.svelte';
     import FileRowSrc from './examples/file-row.svelte?raw';
     import Hero from './examples/hero.svelte';

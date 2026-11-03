@@ -4,8 +4,8 @@
     import { CopyButton } from '@sivir-ui/svelte/components/copy-button';
     import * as Sheet from '@sivir-ui/svelte/components/sheet';
     import * as Typography from '@sivir-ui/svelte/components/typography';
-    import { trackEvent } from '$lib/analytics';
-    import { cssChanges } from '$lib/studio/studio-chrome';
+    import { trackEvent } from '#lib/analytics.js';
+    import { cssChanges } from '#lib/studio/studio-chrome.js';
 
     type Props = {
         open: boolean;

@@ -1,11 +1,11 @@
 <script lang="ts">
     import { Button } from '@sivir-ui/svelte/components/button';
     import { travelingHighlight } from '@sivir-ui/svelte/utils';
-    import { dev } from '$app/environment';
-    import { page } from '$app/stores';
-    import { blocks } from '$lib/blocks';
-    import { components, sanitizeComponent } from '$lib/components';
-    import Logo from '$lib/components/logo.svelte';
+    import { blocks } from '#lib/blocks.js';
+    import Logo from '#lib/components/logo.svelte';
+    import { components, sanitizeComponent } from '#lib/components.js';
+    import { dev } from '$app/env';
+    import { page } from '$app/state';
     import GitHubLink from './github-link.svelte';
     import ThemeToggle from './theme-toggle.svelte';
 
@@ -23,7 +23,7 @@
         starCount?: number | null;
         onNavigate?: () => void;
     } = $props();
-    const pageName = $derived($page.url.pathname);
+    const pageName = $derived(page.url.pathname);
     let asideEl = $state<HTMLElement>();
 
     const gettingStartedItems: NavItem[] = [

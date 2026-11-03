@@ -1,72 +1,74 @@
-import { sveltekit } from '@sveltejs/kit/vite';
-import tailwindcss from '@tailwindcss/vite';
 import { playwright } from '@vitest/browser-playwright';
-import { defineConfig } from 'vitest/config';
+import { defineConfig, mergeConfig } from 'vitest/config';
+import viteConfig from './vite.config';
 
-export default defineConfig({
-    plugins: [tailwindcss(), sveltekit()],
-    test: {
-        projects: [
-            {
-                extends: true,
-                resolve: {
-                    conditions: ['browser']
+// SvelteKit 3 reads its options from the plugin call, so tests reuse the app's plugins and aliases.
+export default mergeConfig(
+    viteConfig,
+    defineConfig({
+        test: {
+            projects: [
+                {
+                    extends: true,
+                    resolve: {
+                        conditions: ['browser']
+                    },
+                    test: {
+                        name: 'unit',
+                        include: ['tests/unit/**/*.test.ts'],
+                        exclude: [
+                            'tests/unit/**/*.browser.test.ts',
+                            'tests/unit/**/*.ssr.test.ts',
+                            'tests/unit/sivir/ssr.test.ts'
+                        ],
+                        environment: 'jsdom',
+                        setupFiles: ['tests/setup.ts']
+                    }
                 },
-                test: {
-                    name: 'unit',
-                    include: ['tests/unit/**/*.test.ts'],
-                    exclude: [
-                        'tests/unit/**/*.browser.test.ts',
-                        'tests/unit/**/*.ssr.test.ts',
-                        'tests/unit/sivir/ssr.test.ts'
-                    ],
-                    environment: 'jsdom',
-                    setupFiles: ['tests/setup.ts']
-                }
-            },
-            {
-                extends: true,
-                test: {
-                    name: 'ssr',
-                    include: ['tests/unit/sivir/ssr.test.ts', 'tests/unit/**/*.ssr.test.ts'],
-                    environment: 'node'
-                }
-            },
-            {
-                extends: true,
-                resolve: {
-                    conditions: ['browser']
+                {
+                    extends: true,
+                    test: {
+                        name: 'ssr',
+                        include: ['tests/unit/sivir/ssr.test.ts', 'tests/unit/**/*.ssr.test.ts'],
+                        environment: 'node'
+                    }
                 },
-                test: {
-                    name: 'browser',
-                    include: ['tests/unit/**/*.browser.test.ts'],
-                    exclude: ['tests/unit/**/*.reduced.browser.test.ts'],
-                    setupFiles: ['tests/browser.setup.ts'],
-                    browser: {
-                        enabled: true,
-                        provider: playwright(),
-                        headless: true,
-                        instances: [{ browser: 'chromium' }]
+                {
+                    extends: true,
+                    resolve: {
+                        conditions: ['browser']
+                    },
+                    test: {
+                        name: 'browser',
+                        include: ['tests/unit/**/*.browser.test.ts'],
+                        exclude: ['tests/unit/**/*.reduced.browser.test.ts'],
+                        setupFiles: ['tests/browser.setup.ts'],
+                        browser: {
+                            enabled: true,
+                            provider: playwright(),
+                            headless: true,
+                            instances: [{ browser: 'chromium' }]
+                        }
+                    }
+                },
+                {
+                    extends: true,
+                    resolve: {
+                        conditions: ['browser']
+                    },
+                    test: {
+                        name: 'browser-reduced',
+                        include: ['tests/unit/**/*.reduced.browser.test.ts'],
+                        setupFiles: ['tests/browser.setup.ts'],
+                        browser: {
+                            enabled: true,
+                            provider: playwright({ contextOptions: { reducedMotion: 'reduce' } }),
+                            headless: true,
+                            instances: [{ browser: 'chromium' }]
+                        }
                     }
                 }
-            },
-            {
-                extends: true,
-                resolve: {
-                    conditions: ['browser']
-                },
-                test: {
-                    name: 'browser-reduced',
-                    include: ['tests/unit/**/*.reduced.browser.test.ts'],
-                    setupFiles: ['tests/browser.setup.ts'],
-                    browser: {
-                        enabled: true,
-                        provider: playwright({ contextOptions: { reducedMotion: 'reduce' } }),
-                        headless: true,
-                        instances: [{ browser: 'chromium' }]
-                    }
-                }
-            }
-        ]
-    }
-});
+            ]
+        }
+    })
+);

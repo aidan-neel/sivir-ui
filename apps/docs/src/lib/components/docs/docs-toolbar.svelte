@@ -2,10 +2,9 @@
     import ChevronRight from '@lucide/svelte/icons/chevron-right';
     import { Button } from '@sivir-ui/svelte/components/button';
     import * as FullscreenNav from '@sivir-ui/svelte/components/fullscreen-nav';
+    import { components, sanitizeComponent } from '#lib/components.js';
     import { resolve } from '$app/paths';
     import { page } from '$app/state';
-
-    import { components, sanitizeComponent } from '$lib/components';
     import Logo from '../logo.svelte';
     import GitHubLink from './github-link.svelte';
     import ThemeToggle from './theme-toggle.svelte';

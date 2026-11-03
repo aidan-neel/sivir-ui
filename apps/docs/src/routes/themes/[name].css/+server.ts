@@ -1,6 +1,6 @@
 import { themeToCss } from '@sivir-ui/svelte/themes/theme';
 import { error } from '@sveltejs/kit';
-import { getRegistryTheme, RegistryRequestError } from '$lib/server/theme-registry';
+import { getRegistryTheme, RegistryRequestError } from '#lib/server/theme-registry.js';
 import type { RequestHandler } from './$types';
 
 const CACHE_CONTROL = {

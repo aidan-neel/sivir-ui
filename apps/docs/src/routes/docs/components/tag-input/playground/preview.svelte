@@ -8,7 +8,7 @@
         PropGroup,
         PropRow,
         PropSwitch
-    } from '$lib/components/docs';
+    } from '#lib/components/docs/index.js';
     import {
         changedTagInputProps,
         type TagInputDelimiters,

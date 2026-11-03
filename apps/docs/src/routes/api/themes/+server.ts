@@ -1,12 +1,11 @@
 import { parseTheme, type Theme } from '@sivir-ui/svelte/themes/theme';
-import { json } from '@sveltejs/kit';
 import {
     listRegistryThemes,
     publishRegistryTheme,
     RegistryRequestError,
     registryErrorResponse
-} from '$lib/server/theme-registry';
-import type { ThemeSourceFilter } from '$lib/theme-registry';
+} from '#lib/server/theme-registry.js';
+import type { ThemeSourceFilter } from '#lib/theme-registry.js';
 import type { RequestHandler } from './$types';
 
 const SOURCE_FILTERS: readonly ThemeSourceFilter[] = ['all', 'sivir', 'community'];
@@ -30,7 +29,7 @@ export const GET: RequestHandler = async ({ fetch, url }) => {
             offset: optionalInteger(url.searchParams.get('offset'))
         });
 
-        return json(page);
+        return Response.json(page);
     } catch (error) {
         return registryErrorResponse(error, 'Failed to fetch the theme catalog.');
     }
@@ -52,7 +51,7 @@ export const POST: RequestHandler = async ({ fetch, getClientAddress, request })
         const theme = await readTheme(request);
         const published = await publishRegistryTheme(fetch, theme, getClientAddress());
 
-        return json(published, {
+        return Response.json(published, {
             status: 201
         });
     } catch (error) {

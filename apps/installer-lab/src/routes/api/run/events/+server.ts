@@ -1,6 +1,6 @@
+import { assertLocalRequest } from '#lib/server/local-only.js';
+import { runManager } from '#lib/server/run-manager.js';
 import type { RequestHandler } from './$types';
-import { assertLocalRequest } from '$lib/server/local-only';
-import { runManager } from '$lib/server/run-manager';
 
 const encoder = new TextEncoder();
 

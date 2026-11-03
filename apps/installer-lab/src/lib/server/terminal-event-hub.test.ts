@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import type { TerminalEvent, TerminalSnapshot } from '$lib/terminal-types';
+import type { TerminalEvent, TerminalSnapshot } from '#lib/terminal-types.js';
 import { TerminalEventHub } from './terminal-event-hub';
 
 const snapshot: TerminalSnapshot = {

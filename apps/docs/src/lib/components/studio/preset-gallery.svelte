@@ -4,7 +4,7 @@
     import Shortcut from '@sivir-ui/svelte/components/shortcut';
     import * as Typography from '@sivir-ui/svelte/components/typography';
     import type { Theme } from '@sivir-ui/svelte/themes/theme';
-    import { presetSwatch, type StudioMode, surfaceTransition } from '$lib/studio/studio-chrome';
+    import { presetSwatch, type StudioMode, surfaceTransition } from '#lib/studio/studio-chrome.js';
 
     type Props = {
         presets: readonly Theme[];
