@@ -1,0 +1,30 @@
+name: Merge guard
+
+# A required check that fails while a pull request carries the DO NOT MERGE label, so neither
+# auto-merge nor a person can land it. Removing the label reruns this check and clears it.
+on:
+    pull_request:
+        types: [opened, reopened, synchronize, ready_for_review, labeled, unlabeled]
+    # A required check must also report on merge queue runs, which carry no labels.
+    merge_group:
+
+concurrency:
+    group: merge-guard-${{ github.event.pull_request.number || github.ref }}
+    cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+    merge-guard:
+        name: Merge guard
+        runs-on: ubuntu-latest
+        timeout-minutes: 2
+        steps:
+            - name: Fail while the DO NOT MERGE label is set
+              if: contains(github.event.pull_request.labels.*.name, 'DO NOT MERGE')
+              run: |
+                  echo "::error::This pull request has the DO NOT MERGE label. Remove it when it may land."
+                  exit 1
+
+            - name: Pass
+              run: echo "No DO NOT MERGE label."

@@ -1,0 +1,67 @@
+name: PR labels
+
+# Labels every pull request with its size, counted by scripts/pr-size.mjs.
+on:
+    pull_request:
+        types: [opened, reopened, synchronize, ready_for_review]
+
+concurrency:
+    group: pr-labels-${{ github.event.pull_request.number }}
+    cancel-in-progress: true
+
+permissions:
+    contents: read
+    issues: write
+    pull-requests: write
+
+jobs:
+    size:
+        runs-on: ubuntu-latest
+        timeout-minutes: 5
+        steps:
+            # The script comes from the base branch, so a pull request cannot change how it is labelled.
+            - name: Checkout the size script from the base branch
+              uses: actions/checkout@v4
+              with:
+                  ref: ${{ github.event.pull_request.base.sha }}
+                  sparse-checkout: scripts/pr-size.mjs
+                  sparse-checkout-cone-mode: false
+                  persist-credentials: false
+
+            - name: Set the size label
+              env:
+                  GH_TOKEN: ${{ github.token }}
+                  PR_NUMBER: ${{ github.event.pull_request.number }}
+              run: |
+                  set -euo pipefail
+
+                  # The pull request that adds the script runs before its base branch has it.
+                  if [[ ! -f scripts/pr-size.mjs ]]; then
+                    echo "::notice::The base branch has no size script yet, so no size label."
+                    exit 0
+                  fi
+
+                  files=$(gh api --paginate "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER/files" --jq '.[]')
+                  label=$(node scripts/pr-size.mjs <<< "$files")
+                  echo "Pull request #$PR_NUMBER is $label"
+
+                  case "$label" in
+                    size:XS) color=0e8a16; lines="0-9" ;;
+                    size:S) color=5ebd3e; lines="10-29" ;;
+                    size:M) color=fbca04; lines="30-99" ;;
+                    size:L) color=fe7d37; lines="100-499" ;;
+                    size:XL) color=d93f0b; lines="500-999" ;;
+                    size:XXL) color=b60205; lines="1,000+" ;;
+                    *) echo "::error::scripts/pr-size.mjs printed an unknown label: $label"; exit 1 ;;
+                  esac
+                  description="$lines changed lines, not counting generated files, or tests unless only tests changed."
+                  gh label create "$label" --force --color "$color" --description "$description"
+
+                  current=$(gh api "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/labels" --jq '.[].name')
+                  while IFS= read -r name; do
+                    if [[ "$name" == size:* && "$name" != "$label" ]]; then
+                      gh api --method DELETE "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/labels/$name" > /dev/null
+                    fi
+                  done <<< "$current"
+                  gh api --method POST "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/labels" \
+                    -f "labels[]=$label" > /dev/null

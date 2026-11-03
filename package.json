@@ -35,6 +35,7 @@
         "format": "biome format --write .",
         "format:check": "biome format .",
         "release-gate": "bash scripts/release-gate.sh",
+        "repo": "bun scripts/repo.mjs",
         "prepare": "lefthook install"
     },
     "devDependencies": {
