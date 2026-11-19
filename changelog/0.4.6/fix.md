@@ -1,1 +1,3 @@
 - The live theme helpers in `@sivir-ui/svelte/themes/live` no longer import SvelteKit's `$app/environment`, so they also load in apps that do not run SvelteKit.
+- Pressing Escape in an open Select returns focus to its trigger.
+- With reduced motion, menus, popovers, tooltips, modals, and sheets fade in and out instead of appearing at once, and they no longer move, scale, or blur.

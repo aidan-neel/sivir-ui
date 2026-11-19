@@ -1,0 +1,5 @@
+- Modals use one surface: a 12px corner, a 20px inset, and a full-width footer with a hairline above it. Footer actions sit together at the end, so `Modal.Close` and `AlertDialog.Exit` no longer push to the left.
+- Buttons no longer scale when pressed.
+- The outline Button is transparent with an edge, and fills its background only on hover and press.
+- Fields mark the invalid state from `aria-invalid` with the `--shadow-field-invalid` recipe instead of a border colour.
+- Buttons, fields, cards, and overlays no longer read `--elevation-control` or `--elevation-button-outline`, and they draw no CSS border, so a `border-*` class no longer changes their edge.

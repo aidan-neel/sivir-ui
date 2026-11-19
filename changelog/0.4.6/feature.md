@@ -1,0 +1,7 @@
+- Themes ship surface recipes: `--shadow-raised`, `--shadow-edge`, `--shadow-field`, `--shadow-well`, `--shadow-card`, `--shadow-menu`, `--shadow-modal`, `--shadow-composer`, and `--shadow-primary`, with their hover, press, focus, and invalid forms and the matching `--fill-*` gradients. Buttons, fields, tabs, badges, tag inputs, cards, menus, sheets, and the composer read them.
+- Dark themes draw a Mac-style black outline and a soft top highlight around raised controls, cards, menus, and modals, from the new `--color-edge-outline` and `--color-edge-highlight` tokens.
+- Secondary and primary buttons get a raised, shaded fill and a pressed state that sinks instead of shrinking.
+- `Modal.Title` takes a `context` snippet that renders a breadcrumb before the title, with the separator hidden from assistive technology.
+- `Modal.Footer` and `AlertDialog.Footer` take a `start` snippet for content pinned to the start of the footer, such as a checkbox or a hint.
+- Menus, submenus, context menus, selects, comboboxes, hover cards, and tooltips grow from the side that faces their trigger, and follow it when they flip.
+- Pressing Enter, Space, or the Down arrow on a dropdown menu trigger focuses the first item, and the arrow, Home, and End keys move between items. The right arrow moves into a submenu and the left arrow moves back to its trigger.
