@@ -89,6 +89,10 @@
     }
 
     function handleLeave(event: MouseEvent | FocusEvent) {
+        const focusTarget = event instanceof FocusEvent ? event.relatedTarget : null;
+        if (focusTarget instanceof Node && popoverState.popoverRef?.contains(focusTarget)) {
+            return;
+        }
         if (popoverState.hoverable) {
             if (popoverState.hoverTimeout) {
                 clearTimeout(popoverState.hoverTimeout);

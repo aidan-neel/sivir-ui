@@ -44,6 +44,20 @@ describe('Select -- open and close', () => {
         await expect.element(page.getByTestId('opt-apple')).not.toBeInTheDocument();
     });
 
+    it('returns focus to the trigger on Escape', async () => {
+        render(SelectFixture, {});
+        await flush();
+        await openSelect();
+
+        await userEvent.keyboard('{ArrowDown}');
+        await flush();
+        await userEvent.keyboard('{Escape}');
+        await flush();
+
+        const trigger = page.getByTestId('select-trigger').element().closest('button');
+        expect(document.activeElement).toBe(trigger);
+    });
+
     it('closes on click outside', async () => {
         render(SelectFixture, {});
         await flush();

@@ -238,3 +238,29 @@ describe('ContextMenu submenu cone', () => {
         await expect.element(page.getByTestId('ctx-more')).toBeInTheDocument();
     });
 });
+
+describe('DropdownMenu submenu -- keyboard', () => {
+    it('moves into a submenu with ArrowRight and back with ArrowLeft', async () => {
+        render(DropdownMenuSubFixture, {});
+        await flush();
+        await openDropdown();
+
+        const share = page.getByTestId('dd-share').element().closest('button') as HTMLElement;
+        share.focus();
+        await flush();
+        await settleAnimations();
+
+        await userEvent.keyboard('{ArrowRight}');
+        await flush();
+        await settleAnimations();
+        await new Promise((r) => setTimeout(r, 250));
+
+        expect(document.activeElement?.textContent?.trim()).toBe('Social');
+        await expect.element(page.getByTestId('dd-email')).toBeInTheDocument();
+
+        await userEvent.keyboard('{ArrowLeft}');
+        await flush();
+
+        expect(document.activeElement).toBe(share);
+    });
+});

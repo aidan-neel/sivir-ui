@@ -288,6 +288,32 @@
     });
 
     /**
+     * Returns focus to the trigger when a click-to-open panel closes while focus
+     * is inside it or inside a layer it opened, such as Escape on a select or
+     * picking a menu item. Without this the focused row unmounts and focus
+     * falls to the document body. A pointer that closed the panel by clicking
+     * elsewhere has already moved focus out, so it is left where it landed.
+     * Hover-driven layers reopen on focus, so they keep the browser's default.
+     */
+    let wasOpen = false;
+    $effect(() => {
+        const open = popoverState.open;
+        const closed = wasOpen && !open;
+        wasOpen = open;
+        if (!closed || popoverState.hoverable || !popover) {
+            return;
+        }
+        const active = document.activeElement;
+        const focusInLayer =
+            active instanceof Element &&
+            (popover.contains(active) || active.closest('[data-floating-content]') !== null);
+        const trigger = popoverState.buttonRef;
+        if (focusInLayer && trigger?.isConnected) {
+            trigger.focus({ preventScroll: true });
+        }
+    });
+
+    /**
      * Positions the panel the moment it opens, before the browser paints.
      *
      * This sets left/top *and* `--popover-trigger-width` synchronously, so the

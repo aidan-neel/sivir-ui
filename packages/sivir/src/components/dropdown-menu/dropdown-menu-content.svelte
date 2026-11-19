@@ -4,6 +4,7 @@
     import { cn, dynamicWidth, travelingHighlight } from '@sivir-ui/svelte/utils';
     import type { Snippet } from 'svelte';
     import { getDropdownMenuContext } from './context.svelte';
+    import { moveMenuFocus } from './focus';
 
     getDropdownMenuContext();
 
@@ -13,13 +14,28 @@
         dynamic?: boolean;
     } & Omit<Popover.PopoverContentProps, 'children' | 'class' | 'surfaceClass'>;
 
-    let { children, class: className, dynamic = false, role = 'menu', ...rest }: Props = $props();
+    let {
+        children,
+        class: className,
+        dynamic = false,
+        role = 'menu',
+        onkeydown,
+        ...rest
+    }: Props = $props();
+
+    function handleKeydown(event: KeyboardEvent & { currentTarget: EventTarget & HTMLElement }) {
+        onkeydown?.(event);
+        if (!event.defaultPrevented && moveMenuFocus(event, event.currentTarget)) {
+            event.preventDefault();
+        }
+    }
 </script>
 
 <Popover.Content
     {...rest}
     {role}
     tabindex={-1}
+    onkeydown={handleKeydown}
     focusTrap={false}
     lockScroll={false}
     data-ui="dropdown-menu-content"

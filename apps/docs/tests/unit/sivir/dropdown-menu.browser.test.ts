@@ -101,3 +101,45 @@ describe('DropdownMenu -- item activation', () => {
         expect(onItem3).not.toHaveBeenCalled();
     });
 });
+
+describe('DropdownMenu -- keyboard focus', () => {
+    function focusedText() {
+        return document.activeElement?.textContent?.trim();
+    }
+
+    it('focuses the first item when the trigger opens it with Enter', async () => {
+        render(DropdownMenuFixture, {});
+        await flush();
+
+        const trigger = page.getByTestId('dropdown-trigger').element().closest('button');
+        trigger?.focus();
+        await userEvent.keyboard('{Enter}');
+        await flush();
+        await new Promise((r) => requestAnimationFrame(r));
+
+        expect(document.activeElement?.getAttribute('role')).toBe('menuitem');
+        expect(focusedText()).toBe('Item one');
+    });
+
+    it('walks items with the arrow keys, Home, and End', async () => {
+        render(DropdownMenuFixture, {});
+        await flush();
+
+        const trigger = page.getByTestId('dropdown-trigger').element().closest('button');
+        trigger?.focus();
+        await userEvent.keyboard('{ArrowDown}');
+        await flush();
+        await new Promise((r) => requestAnimationFrame(r));
+
+        await userEvent.keyboard('{ArrowDown}');
+        expect(focusedText()).toBe('Item two');
+        await userEvent.keyboard('{End}');
+        expect(focusedText()).toBe('Item three');
+        await userEvent.keyboard('{ArrowDown}');
+        expect(focusedText()).toBe('Item one');
+        await userEvent.keyboard('{ArrowUp}');
+        expect(focusedText()).toBe('Item three');
+        await userEvent.keyboard('{Home}');
+        expect(focusedText()).toBe('Item one');
+    });
+});

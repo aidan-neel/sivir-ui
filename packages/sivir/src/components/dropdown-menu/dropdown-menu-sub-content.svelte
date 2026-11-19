@@ -2,6 +2,8 @@
     import * as Popover from '@sivir-ui/svelte/components/popover';
     import { cn, dynamicWidth, travelingHighlight } from '@sivir-ui/svelte/utils';
     import type { Snippet } from 'svelte';
+    import { getPopoverContext } from '../popover/context.svelte';
+    import { moveMenuFocus } from './focus';
 
     type Props = {
         children: Snippet;
@@ -10,11 +12,25 @@
     };
 
     let props: Props = $props();
+    const { state } = getPopoverContext();
+
+    function handleKeydown(event: KeyboardEvent & { currentTarget: EventTarget & HTMLElement }) {
+        if (event.key === 'ArrowLeft' && state.buttonRef) {
+            event.preventDefault();
+            event.stopPropagation();
+            state.buttonRef.focus();
+            return;
+        }
+        if (moveMenuFocus(event, event.currentTarget)) {
+            event.preventDefault();
+        }
+    }
 </script>
 
 <Popover.Content
     role="menu"
     tabindex={-1}
+    onkeydown={handleKeydown}
     data-ui="dropdown-submenu-content"
     class={cn(props.class, 'sivir-menu-panel')}
     surfaceClass="p-0"
