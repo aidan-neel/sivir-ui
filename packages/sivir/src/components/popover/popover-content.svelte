@@ -351,7 +351,7 @@
             class={cn(
                 classProp,
                 'm-auto flex origin-(--motion-menu-origin) flex-col overflow-hidden text-sm text-[var(--color-foreground)]',
-                'sivir-modal-frame shadow-[var(--elevation-float)] [--sivir-modal-inset:calc(var(--spacing)*0.5)]',
+                'sivir-modal-frame shadow-[var(--shadow-menu)] [--sivir-modal-inset:calc(var(--spacing)*0.5)]',
                 'max-w-[min(var(--popover-available-width,calc(100vw-2*var(--popover-viewport-margin))),calc(100vw-2*var(--popover-viewport-margin)))] max-h-[min(var(--popover-available-height,calc(100vh-2*var(--popover-viewport-margin))),calc(100vh-2*var(--popover-viewport-margin)))]'
             )}
         >

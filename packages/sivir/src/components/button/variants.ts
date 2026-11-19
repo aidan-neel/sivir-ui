@@ -1,34 +1,33 @@
 import { tv } from 'tailwind-variants';
 
 export const button = tv({
-    base: 'sivir-press inline-flex h-[calc(var(--size-button-md,var(--size-control-md))-var(--size-hairline))] hover:cursor-[var(--ui-cursor-interactive)] items-center justify-center gap-2 whitespace-nowrap select-none rounded-[var(--radius-lg)] px-[var(--padding-button-x,calc(var(--spacing)*3+var(--size-hairline)))] [font-size:var(--font-size-button)] [font-weight:var(--font-weight-button)] [letter-spacing:var(--tracking-button)] leading-none antialiased transition-[background-color,border-color,color,box-shadow,transform,scale] [transition-duration:var(--motion-duration-hover),var(--motion-duration-hover),var(--motion-duration-hover),var(--motion-duration-press),var(--motion-duration-press),var(--motion-duration-press)] ease-[var(--ease-press)] motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-0 focus-visible:shadow-[var(--focus-ring)] disabled:pointer-events-none disabled:opacity-[var(--opacity-disabled)] aria-disabled:cursor-default [&_svg]:pointer-events-none [&_svg:not([class*="size-"])]:size-4 [&_svg]:shrink-0 [&_.truncate]:leading-normal',
+    base: 'inline-flex h-[calc(var(--size-button-md,var(--size-control-md))-var(--size-hairline))] hover:cursor-[var(--ui-cursor-interactive)] items-center justify-center gap-2 whitespace-nowrap select-none rounded-[var(--radius-lg)] px-[var(--padding-button-x,calc(var(--spacing)*3+var(--size-hairline)))] [font-size:var(--font-size-button)] [font-weight:var(--font-weight-button)] [letter-spacing:var(--tracking-button)] leading-none antialiased shadow-[var(--sivir-button-shadow)] [--sivir-button-shadow:0_0_transparent] transition-[background-color,border-color,color,box-shadow] [transition-duration:var(--motion-duration-hover)] ease-[var(--ease-press)] motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-0 focus-visible:shadow-[var(--focus-ring),var(--sivir-button-shadow)] disabled:pointer-events-none disabled:opacity-[var(--opacity-disabled)] aria-disabled:cursor-default [&_svg]:pointer-events-none [&_svg:not([class*="size-"])]:size-4 [&_svg]:shrink-0 [&_.truncate]:leading-normal',
     variants: {
         variant: {
             /**
-             * `data-[state=open]` mirrors the hover fill on every variant so a
+             * Each variant names its surface recipe through `--sivir-button-shadow`,
+             * so the base can draw the focus ring over the recipe instead of in
+             * place of it. Fills are background images over a solid fallback.
+             * A press shades the button; it never changes size.
+             * `data-[state=open]` mirrors the hover form on every variant so a
              * popover or menu trigger reads as hovered for as long as its surface
              * is open.
              */
             primary:
-                'bg-primary text-[var(--color-on-primary)] shadow-[inset_0_0_0_var(--border-size)_var(--color-primary-stroke)] hover:bg-[var(--color-primary-hover)] data-[state=open]:bg-[var(--color-primary-hover)]',
+                'bg-primary bg-[image:var(--fill-primary)] text-[var(--color-on-primary)] [--sivir-button-shadow:var(--shadow-primary)] hover:bg-[image:var(--fill-primary-hover)] active:bg-none data-[state=open]:bg-[image:var(--fill-primary-hover)]',
             secondary:
-                'bg-secondary text-[var(--color-button-foreground)] hover:bg-[color-mix(in_srgb,var(--color-secondary)_92%,var(--color-foreground))] data-[state=open]:bg-[color-mix(in_srgb,var(--color-secondary)_92%,var(--color-foreground))]',
-            ghost: 'bg-transparent text-[var(--color-button-foreground)] hover:bg-foreground/[0.08] data-[state=open]:bg-foreground/[0.08]',
+                'bg-transparent bg-[image:var(--fill-raised)] text-[var(--color-button-foreground)] [--sivir-button-shadow:var(--shadow-raised)] hover:bg-[image:var(--fill-raised-hover)] hover:[--sivir-button-shadow:var(--shadow-raised-hover)] active:bg-[image:var(--fill-raised-press)] data-[state=open]:bg-[image:var(--fill-raised-hover)] data-[state=open]:[--sivir-button-shadow:var(--shadow-raised-hover)]',
+            ghost: 'bg-transparent text-[var(--color-button-foreground)] hover:bg-foreground/[0.08] active:bg-foreground/[0.12] data-[state=open]:bg-foreground/[0.08]',
             quiet: 'bg-transparent text-[var(--color-button-foreground)]',
-            /**
-             * Outline keeps the soft raised shadow. Focus composes the ring on top
-             * of the lift so the raised look survives focus.
-             */
             outline:
-                'bg-card text-[var(--color-button-foreground)] shadow-[var(--elevation-button-outline)] hover:bg-secondary data-[state=open]:bg-secondary focus-visible:shadow-[var(--focus-ring),var(--elevation-button-outline)]',
+                'bg-transparent text-[var(--color-button-foreground)] [--sivir-button-shadow:var(--shadow-edge)] hover:bg-foreground/[0.06] hover:[--sivir-button-shadow:var(--shadow-edge-hover)] active:bg-foreground/[0.1] data-[state=open]:bg-foreground/[0.06] data-[state=open]:[--sivir-button-shadow:var(--shadow-edge-hover)]',
             destructive:
-                'bg-error-soft text-[var(--color-error)] hover:bg-[color-mix(in_srgb,var(--color-error)_20%,transparent)] data-[state=open]:bg-[color-mix(in_srgb,var(--color-error)_20%,transparent)]',
+                'bg-error-soft text-[var(--color-error)] hover:bg-[color-mix(in_srgb,var(--color-error)_20%,transparent)] active:bg-[color-mix(in_srgb,var(--color-error)_26%,transparent)] data-[state=open]:bg-[color-mix(in_srgb,var(--color-error)_20%,transparent)]',
             /**
-             * A clickable Panel: the same interaction as `outline` wearing Panel's
-             * concentric frame -- the semantic border outside and the inset surface
-             * ring inside read as Panel's double edge.
+             * A clickable Panel: the same interaction as `outline` wearing the
+             * card recipe on Panel's card fill.
              */
-            panel: 'border-[length:var(--border-size)] border-border bg-card text-[var(--color-button-foreground)] shadow-[var(--elevation-1)] ring-1 ring-inset ring-[color-mix(in_oklab,var(--color-border)_50%,transparent)] hover:bg-secondary data-[state=open]:bg-secondary focus-visible:shadow-[var(--focus-ring),var(--elevation-1)]'
+            panel: 'bg-card text-[var(--color-button-foreground)] [--sivir-button-shadow:var(--shadow-card)] hover:bg-secondary hover:[--sivir-button-shadow:var(--shadow-card-hover)] data-[state=open]:bg-secondary'
         },
         size: {
             sm: 'h-[calc(var(--size-button-sm,var(--size-control-sm))-var(--size-hairline))] px-[calc(var(--padding-button-x,calc(var(--spacing)*3+var(--size-hairline)))-var(--size-hairline)*3/4)]',

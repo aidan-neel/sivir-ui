@@ -182,7 +182,8 @@
         className,
         'relative inline-flex',
         vertical ? 'flex-col items-stretch' : 'items-center',
-        variant === 'segmented' && 'rounded-[var(--radius-xl)] bg-secondary p-1',
+        variant === 'segmented' &&
+            'rounded-[var(--radius-xl)] bg-[var(--fill-well)] p-1 shadow-[var(--shadow-well)]',
         variant === 'ghost' && 'gap-1',
         variant === 'default' && (vertical ? 'gap-1 pe-1' : 'gap-1 pb-1')
     )}
@@ -241,10 +242,10 @@
                 style:transition={ready ? undefined : 'none'}
             ></div>
         {:else if variant === 'segmented'}
-            <!-- elevated white pill on the muted track (iOS-style segmented control) -->
+            <!-- The checked thumb: a raised plate inside the sunken well. -->
             <div
                 aria-hidden="true"
-                class="pointer-events-none absolute rounded-[calc(var(--radius-xl)-var(--spacing))] bg-card ring-1 ring-border/50 transition-[left,top,width,height] [transition-duration:var(--motion-duration-panel)] ease-[var(--ease-out)] motion-reduce:transition-none"
+                class="pointer-events-none absolute rounded-[calc(var(--radius-xl)-var(--spacing))] bg-[image:var(--fill-raised)] shadow-[var(--shadow-raised)] transition-[left,top,width,height] [transition-duration:var(--motion-duration-panel)] ease-[var(--ease-out)] motion-reduce:transition-none"
                 style:left={`${indicator.left}px`}
                 style:top={`${indicator.top}px`}
                 style:width={`${indicator.width}px`}

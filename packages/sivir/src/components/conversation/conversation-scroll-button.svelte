@@ -33,7 +33,7 @@
         tabindex={visible ? undefined : -1}
         class={cn(
             className,
-            'sivir-press pointer-events-auto inline-flex size-9 items-center justify-center rounded-full border-[length:var(--border-size)] border-border bg-panel text-foreground shadow-[var(--elevation-control)] transition-[background-color,color,opacity,translate,transform,scale] [transition-duration:var(--motion-duration-hover)] ease-[var(--ease-out)] hover:bg-secondary focus-visible:outline-none focus-visible:shadow-[var(--focus-ring)] motion-reduce:translate-y-0 motion-reduce:transition-none',
+            'pointer-events-auto inline-flex size-9 items-center justify-center rounded-full bg-panel bg-[image:var(--fill-raised)] text-foreground shadow-[var(--shadow-raised)] transition-[background-color,box-shadow,color,opacity,translate] [transition-duration:var(--motion-duration-hover)] ease-[var(--ease-out)] hover:bg-[image:var(--fill-raised-hover)] hover:shadow-[var(--shadow-raised-hover)] active:bg-[image:var(--fill-raised-press)] focus-visible:outline-none focus-visible:shadow-[var(--focus-ring),var(--shadow-raised)] motion-reduce:translate-y-0 motion-reduce:transition-none',
             visible ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-1.5 opacity-0'
         )}
         onclick={(event) => {

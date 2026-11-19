@@ -3257,7 +3257,7 @@
                                     {@render tokenRow(hoverSpeedRow, 'Hover speed')}
                                 {/if}
                                 {#if buttonPressRow}
-                                    {@render tokenRow(buttonPressRow, 'Button press')}
+                                    {@render tokenRow(buttonPressRow, 'Press distance')}
                                 {/if}
                                 <SwitchField
                                     bind:checked={travelingHighlight}

@@ -70,7 +70,7 @@
                 class={cn(
                     className,
                     // token-lint-disable-next-line no-literal-length
-                    `fixed top-[calc(var(--sivir-viewport-top)+0.5rem)] bottom-auto z-50 flex h-[calc(var(--sivir-viewport-height)-1rem)] w-[calc(100%-1rem)] max-w-sm flex-col overflow-hidden text-foreground shadow-[var(--elevation-float)] will-change-transform [backface-visibility:hidden] ${
+                    `fixed top-[calc(var(--sivir-viewport-top)+0.5rem)] bottom-auto z-50 flex h-[calc(var(--sivir-viewport-height)-1rem)] w-[calc(100%-1rem)] max-w-sm flex-col overflow-hidden text-foreground shadow-[var(--shadow-menu)] will-change-transform [backface-visibility:hidden] ${
                         side === 'left' ? 'left-2' : 'right-2'
                     }`,
                     'sivir-modal-frame [--sivir-modal-inset:calc(var(--spacing)*0.5)]'

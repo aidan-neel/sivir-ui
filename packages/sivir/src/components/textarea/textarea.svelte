@@ -34,8 +34,8 @@
 
     const composerClass = $derived(
         variant === 'secondary'
-            ? 'border-transparent bg-secondary focus-within:border-[color-mix(in_srgb,var(--color-secondary)_45%,var(--color-primary))]'
-            : 'border-border bg-[var(--color-field)] focus-within:border-primary'
+            ? 'bg-secondary shadow-[var(--shadow-well)] hover:shadow-[var(--shadow-well)]'
+            : 'bg-[var(--color-field)] shadow-[var(--shadow-field)] hover:shadow-[var(--shadow-field-hover)]'
     );
 </script>
 
@@ -51,7 +51,8 @@
         data-variant={variant}
         class={cn(
             classProp,
-            children && 'rounded-none border-0 bg-transparent focus-visible:shadow-none',
+            children &&
+                'rounded-none bg-transparent shadow-none hover:shadow-none focus-visible:shadow-none aria-[invalid=true]:shadow-none aria-[invalid=true]:hover:shadow-none aria-[invalid=true]:focus-visible:shadow-none',
             autoresize && 'resize-none overflow-y-hidden',
             'min-h-16 resize-y py-2.5 leading-body',
             input({ variant })
@@ -67,7 +68,7 @@
             data-ui="textarea-composer"
             data-variant={variant}
             class={cn(
-                'overflow-hidden rounded-[var(--radius-xl)] border-[length:var(--border-size)] transition-[border-color,box-shadow] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-out)] focus-within:shadow-[var(--focus-ring)]',
+                'overflow-hidden rounded-[var(--radius-xl)] transition-[box-shadow] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-out)] focus-within:shadow-[var(--focus-ring),var(--shadow-field-focus)] has-[textarea[aria-invalid=true]]:shadow-[var(--shadow-field-invalid)] has-[textarea[aria-invalid=true]]:focus-within:shadow-[var(--focus-ring),var(--shadow-field-invalid)]',
                 composerClass
             )}
         >

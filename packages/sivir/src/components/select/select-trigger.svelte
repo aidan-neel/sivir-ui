@@ -23,7 +23,7 @@
 <Popover.Trigger
     class={cn(
         className,
-        'flex flex-row items-center justify-between focus-visible:shadow-[var(--focus-ring)]'
+        'flex flex-row items-center justify-between'
     )}
     role="combobox"
     aria-haspopup="listbox"

@@ -40,8 +40,8 @@
     );
     const controlClass = $derived(
         variant === 'secondary'
-            ? 'border-transparent bg-secondary has-[:focus-visible]:border-[color-mix(in_srgb,var(--color-secondary)_45%,var(--color-primary))]'
-            : 'border-border bg-[var(--color-field)] has-[:focus-visible]:border-primary'
+            ? 'bg-secondary shadow-[var(--shadow-well)] hover:shadow-[var(--shadow-well)]'
+            : 'bg-[var(--color-field)] shadow-[var(--shadow-field)] hover:shadow-[var(--shadow-field-hover)]'
     );
 </script>
 
@@ -51,7 +51,7 @@
             data-ui="input-control"
             data-variant={variant}
             class={cn(
-                'flex min-h-[var(--size-control-md)] w-full items-center gap-2 rounded-[var(--radius-lg)] border-[length:var(--border-size)] px-3 text-[var(--color-field-foreground)] transition-[background-color,border-color,box-shadow] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-out)] motion-reduce:transition-none has-[:focus-visible]:shadow-[var(--focus-ring)] has-[input:disabled]:cursor-not-allowed has-[input:disabled]:opacity-[var(--opacity-disabled)]',
+                'flex min-h-[var(--size-control-md)] w-full items-center gap-2 rounded-[var(--radius-lg)] px-3 text-[var(--color-field-foreground)] transition-[background-color,box-shadow] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-out)] motion-reduce:transition-none has-[:focus-visible]:shadow-[var(--focus-ring),var(--shadow-field-focus)] has-[input[aria-invalid=true]]:shadow-[var(--shadow-field-invalid)] has-[input[aria-invalid=true]:focus-visible]:shadow-[var(--focus-ring),var(--shadow-field-invalid)] has-[input:disabled]:cursor-not-allowed has-[input:disabled]:opacity-[var(--opacity-disabled)]',
                 controlClass
             )}
         >

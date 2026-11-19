@@ -9,8 +9,6 @@
     let emailTouched = $state(false);
     let workspaceSlugTouched = $state(false);
     let submitted = $state(false);
-    const errorInputClass =
-        'border-[color-mix(in_srgb,var(--color-error)_70%,transparent)] shadow-[0_0_0_calc(var(--border-size)*2)_color-mix(in_srgb,var(--color-error)_25%,transparent)]';
 
     function emailValidationMessage(
         value: string,
@@ -81,7 +79,6 @@
             aria-invalid={emailError ? 'true' : undefined}
             aria-describedby={emailError ? 'email-error email-description' : 'email-description'}
             aria-errormessage={emailError ? 'email-error' : undefined}
-            class={emailError ? errorInputClass : undefined}
         />
         <div
             data-state={emailError ? 'error' : undefined}
@@ -120,7 +117,6 @@
                 ? 'workspace-slug-error workspace-slug-description'
                 : 'workspace-slug-description'}
             aria-errormessage={workspaceSlugError ? 'workspace-slug-error' : undefined}
-            class={workspaceSlugError ? errorInputClass : undefined}
         />
         <div
             data-state={workspaceSlugError ? 'error' : undefined}

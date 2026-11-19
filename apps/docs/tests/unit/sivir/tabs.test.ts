@@ -125,11 +125,12 @@ describe('Tabs -- variants', () => {
         expect(list.getAttribute('data-variant')).toBe('default');
     });
 
-    it('segmented renders a muted track container', () => {
+    it('segmented renders a sunken well as the track', () => {
         render(TabsFixture, { props: { value: 'one', variant: 'segmented' } });
         const list = queryRequired(document, '[data-ui="tabs-list"]');
         expect(list.getAttribute('data-variant')).toBe('segmented');
-        expect(list.className).toContain('bg-secondary');
+        expect(list.className).toContain('bg-[var(--fill-well)]');
+        expect(list.className).toContain('shadow-[var(--shadow-well)]');
     });
 
     it('segmented triggers render taller (min-height token) from first paint', () => {
@@ -154,12 +155,13 @@ describe('Tabs -- variants', () => {
         });
     });
 
-    it('segmented renders an elevated pill as the active indicator', async () => {
+    it('segmented renders a raised plate as the active indicator', async () => {
         render(TabsFixture, { props: { value: 'one', variant: 'segmented' } });
         await waitFor(() => {
             const list = queryRequired(document, '[data-ui="tabs-list"]');
             const indicator = list.querySelector('div[aria-hidden="true"]');
-            expect(indicator?.className).toContain('bg-card');
+            expect(indicator?.className).toContain('bg-[image:var(--fill-raised)]');
+            expect(indicator?.className).toContain('shadow-[var(--shadow-raised)]');
         });
     });
 

@@ -22,7 +22,7 @@
         {...rest}
         class={cn(
             classProp,
-            'sivir-modal-frame flex flex-col overflow-hidden shadow-[var(--elevation-1)]'
+            'sivir-modal-frame flex flex-col overflow-hidden shadow-[var(--shadow-card)]'
         )}
     >
         <div
@@ -65,7 +65,7 @@
         {...rest}
         class={cn(
             classProp,
-            'flex flex-col rounded-[var(--radius-lg)] border-[length:var(--border-size)] border-border bg-card p-6'
+            'flex flex-col rounded-[var(--radius-lg)] bg-card p-6 shadow-[var(--shadow-card)]'
         )}
     >
         {@render children?.()}

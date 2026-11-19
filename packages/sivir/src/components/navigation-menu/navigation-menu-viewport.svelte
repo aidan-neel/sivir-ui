@@ -233,7 +233,7 @@
             class={cn(
                 className,
                 'pointer-events-auto mt-2 origin-top text-sm text-foreground',
-                'sivir-modal-frame shadow-[var(--elevation-float)] [--sivir-modal-inset:calc(var(--spacing)*0.5)]'
+                'sivir-modal-frame shadow-[var(--shadow-menu)] [--sivir-modal-inset:calc(var(--spacing)*0.5)]'
             )}
             {...rest}
         >

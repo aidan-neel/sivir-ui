@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { cn, pressable } from '@sivir-ui/svelte/utils';
+    import { cn } from '@sivir-ui/svelte/utils';
     import type { HTMLAnchorAttributes, HTMLButtonAttributes } from 'svelte/elements';
     import type { ButtonProps, ButtonStatus } from '.';
     import { button } from './variants';
@@ -24,13 +24,14 @@
     }: ButtonProps = $props();
 
     const visualStatus = $derived(status ?? (loading ? 'loading' : 'idle'));
+    const statusSurface = 'bg-none hover:bg-none active:bg-none data-[state=open]:bg-none';
     const statusClasses = $derived(
         unstyled
             ? undefined
             : visualStatus === 'success'
-              ? 'bg-[color-mix(in_srgb,var(--color-success)_85%,black)] text-white shadow-[inset_0_0_0_var(--border-size)_color-mix(in_srgb,var(--color-success)_65%,black)] hover:bg-[color-mix(in_srgb,var(--color-success)_78%,black)] data-[state=open]:bg-[color-mix(in_srgb,var(--color-success)_78%,black)] dark:bg-[color-mix(in_srgb,var(--color-success)_75%,black)] dark:shadow-[inset_0_0_0_var(--border-size)_color-mix(in_srgb,var(--color-success)_55%,black)] dark:hover:bg-[color-mix(in_srgb,var(--color-success)_68%,black)] dark:data-[state=open]:bg-[color-mix(in_srgb,var(--color-success)_68%,black)]'
+              ? `${statusSurface} bg-[color-mix(in_srgb,var(--color-success)_85%,black)] text-white [--sivir-button-shadow:inset_0_0_0_var(--border-size)_color-mix(in_srgb,var(--color-success)_65%,black)] hover:[--sivir-button-shadow:inset_0_0_0_var(--border-size)_color-mix(in_srgb,var(--color-success)_65%,black)] hover:bg-[color-mix(in_srgb,var(--color-success)_78%,black)] data-[state=open]:bg-[color-mix(in_srgb,var(--color-success)_78%,black)] dark:bg-[color-mix(in_srgb,var(--color-success)_75%,black)] dark:[--sivir-button-shadow:inset_0_0_0_var(--border-size)_color-mix(in_srgb,var(--color-success)_55%,black)] dark:hover:[--sivir-button-shadow:inset_0_0_0_var(--border-size)_color-mix(in_srgb,var(--color-success)_55%,black)] dark:hover:bg-[color-mix(in_srgb,var(--color-success)_68%,black)] dark:data-[state=open]:bg-[color-mix(in_srgb,var(--color-success)_68%,black)]`
               : visualStatus === 'error'
-                ? 'bg-[color-mix(in_srgb,var(--color-error)_80%,black)] text-white shadow-[inset_0_0_0_var(--border-size)_color-mix(in_srgb,var(--color-error)_60%,black)] hover:bg-[color-mix(in_srgb,var(--color-error)_72%,black)] data-[state=open]:bg-[color-mix(in_srgb,var(--color-error)_72%,black)]'
+                ? `${statusSurface} bg-[color-mix(in_srgb,var(--color-error)_80%,black)] text-white [--sivir-button-shadow:inset_0_0_0_var(--border-size)_color-mix(in_srgb,var(--color-error)_60%,black)] hover:[--sivir-button-shadow:inset_0_0_0_var(--border-size)_color-mix(in_srgb,var(--color-error)_60%,black)] hover:bg-[color-mix(in_srgb,var(--color-error)_72%,black)] data-[state=open]:bg-[color-mix(in_srgb,var(--color-error)_72%,black)]`
                 : undefined
     );
     const stateful = $derived(
@@ -222,7 +223,6 @@
 {#if href}
     <a
         bind:this={element as HTMLAnchorElement}
-        use:pressable
         href={pending ? undefined : href}
         role={pending ? 'link' : undefined}
         tabindex={pending ? 0 : (rest as HTMLAnchorAttributes).tabindex}
@@ -250,7 +250,6 @@
 {:else}
     <button
         bind:this={element as HTMLButtonElement}
-        use:pressable
         type={(rest as HTMLButtonAttributes).type ?? 'button'}
         data-ui="button"
         data-variant={unstyled ? undefined : variant}

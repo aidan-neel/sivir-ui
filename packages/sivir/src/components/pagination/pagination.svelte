@@ -77,7 +77,7 @@
                 class={cn(
                     'inline-flex size-[var(--size-icon-md)] items-center justify-center rounded-[var(--radius-md)] text-[length:var(--font-size-label)] tabular-nums [font-weight:var(--font-weight-button)] [letter-spacing:var(--tracking-button)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)]',
                     p === page
-                        ? 'bg-card text-foreground shadow-[var(--elevation-control)] hover:bg-secondary'
+                        ? 'bg-[image:var(--fill-raised)] text-foreground shadow-[var(--shadow-raised)] hover:bg-[image:var(--fill-raised-hover)] hover:shadow-[var(--shadow-raised-hover)]'
                         : 'text-foreground-muted hover:bg-secondary hover:text-foreground'
                 )}
             >

@@ -8,8 +8,7 @@ export const badge = tv({
             primary: 'bg-primary text-[var(--color-on-primary)]',
             secondary: 'bg-secondary text-foreground',
             ghost: 'bg-transparent text-foreground hover:bg-[color-mix(in_srgb,var(--color-foreground)_6%,transparent)]',
-            outline:
-                'border-[length:var(--border-size)] border-border bg-transparent text-foreground',
+            outline: 'bg-transparent text-foreground shadow-[var(--shadow-edge)]',
             destructive: 'bg-error-soft text-[var(--color-error)]',
             info: 'bg-info-soft text-[var(--color-info)]',
             success: 'bg-success-soft text-[var(--color-success)]',

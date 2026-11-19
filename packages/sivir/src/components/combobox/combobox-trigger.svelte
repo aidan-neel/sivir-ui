@@ -221,8 +221,8 @@
             : button({ variant, size }),
         'relative select-none',
         isInputAppearance
-            ? 'items-center gap-2 focus-within:shadow-[var(--focus-ring)]'
-            : 'focus-within:shadow-[var(--focus-ring),var(--elevation-button-outline)]',
+            ? 'items-center gap-2 focus-within:shadow-[var(--focus-ring),var(--shadow-field-focus)]'
+            : 'focus-within:shadow-[var(--focus-ring),var(--sivir-button-shadow)]',
         disabled && 'pointer-events-none opacity-40'
     )}
 >
