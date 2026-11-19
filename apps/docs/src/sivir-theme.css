@@ -162,11 +162,9 @@
 .sivir-modal-frame > [data-ui='modal-frame-header'] + [data-ui='modal-surface'] {
     padding-top: calc(var(--spacing) * 3);
 }
-.sivir-modal-frame > [data-ui='modal-footer'],
 .sivir-modal-frame > [data-ui='card-footer'] {
     padding: 0 calc(var(--spacing) * 5) calc(var(--spacing) * 5);
 }
-.sivir-modal-frame > [data-ui='modal-surface']:has(+ [data-ui='modal-footer']),
 .sivir-modal-frame > [data-ui='card-surface']:has(+ [data-ui='card-footer']) {
     padding-bottom: calc(var(--spacing) * 4);
 }
@@ -208,7 +206,7 @@
     border-radius: 0;
 }
 .sivir-card-frame {
-    padding: 0;
+    padding: var(--border-size);
     background-color: var(--color-card);
 }
 .sivir-card-surface {

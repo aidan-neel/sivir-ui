@@ -57,9 +57,9 @@ export type ThemeTypography = {
 
 export type ThemeChrome = {
     shadows?: boolean;
-    /** Shadows on cards, floating menus, and other surfaces (`--elevation-1`, `--elevation-float`). */
+    /** Shadows on cards, floating menus, the composer, and other surfaces (`--elevation-1`, `--elevation-float`, `--elevation-composer`). Edges and outlines stay. */
     surfaceShadows?: boolean;
-    /** Shadows on inputs, buttons, and similar controls (`--elevation-control`, `--elevation-button-outline`). */
+    /** Lift and top highlight on buttons and similar controls (`--elevation-contact`, `--elevation-primary`, `--color-edge-highlight`, `--color-primary-sheen`). Edges and outlines stay. */
     controlShadows?: boolean;
     /** Shadows on dialogs and sheets (`--elevation-modal`). */
     dialogShadows?: boolean;
@@ -410,14 +410,12 @@ export function surfacePanelingOffCss(): string {
         block(".sivir-modal-frame > [data-ui='modal-frame-header'] + [data-ui='modal-surface']", [
             'padding-top: calc(var(--spacing) * 3);'
         ]) +
-        block(
-            ".sivir-modal-frame > [data-ui='modal-footer'],\n.sivir-modal-frame > [data-ui='card-footer']",
-            ['padding: 0 calc(var(--spacing) * 5) calc(var(--spacing) * 5);']
-        ) +
-        block(
-            ".sivir-modal-frame > [data-ui='modal-surface']:has(+ [data-ui='modal-footer']),\n.sivir-modal-frame > [data-ui='card-surface']:has(+ [data-ui='card-footer'])",
-            ['padding-bottom: calc(var(--spacing) * 4);']
-        ) +
+        block(".sivir-modal-frame > [data-ui='card-footer']", [
+            'padding: 0 calc(var(--spacing) * 5) calc(var(--spacing) * 5);'
+        ]) +
+        block(".sivir-modal-frame > [data-ui='card-surface']:has(+ [data-ui='card-footer'])", [
+            'padding-bottom: calc(var(--spacing) * 4);'
+        ]) +
         block(
             ".sivir-modal-frame > [data-ui='card-surface']:has(+ [data-ui='card-footer'] > [data-ui='question-actions'])",
             ['padding-bottom: 0;']
@@ -453,7 +451,10 @@ export function surfacePanelingOffCss(): string {
             'background-color: transparent;'
         ]) +
         block('.sivir-inset-frame .sivir-inset-surface', ['border-radius: 0;']) +
-        block('.sivir-card-frame', ['padding: 0;', 'background-color: var(--color-card);']) +
+        block('.sivir-card-frame', [
+            'padding: var(--border-size);',
+            'background-color: var(--color-card);'
+        ]) +
         block('.sivir-card-surface', ['box-shadow: var(--elevation-1);']) +
         commandPanelingOffCss()
     );
@@ -538,6 +539,13 @@ function commandPanelingOffCss(): string {
     );
 }
 
+/**
+ * An invisible shadow. The surface recipes list their lift after their edges,
+ * and `none` is not valid inside a shadow list, so a switched-off lift must
+ * still be a shadow.
+ */
+const NO_SHADOW = '0 0 #0000';
+
 function chromeBlocks(chrome: ThemeChrome | undefined): string {
     if (!chrome) {
         return '';
@@ -548,15 +556,23 @@ function chromeBlocks(chrome: ThemeChrome | undefined): string {
     const dialogShadows = masterShadows && chrome.dialogShadows !== false;
     const elevationOff: string[] = [];
     if (!surfaceShadows) {
-        elevationOff.push('--elevation-1: none;', '--elevation-float: none;');
+        elevationOff.push(
+            `--elevation-1: ${NO_SHADOW};`,
+            `--elevation-float: ${NO_SHADOW};`,
+            `--elevation-composer: ${NO_SHADOW};`
+        );
     }
     if (!dialogShadows) {
-        elevationOff.push('--elevation-modal: none;');
+        elevationOff.push(`--elevation-modal: ${NO_SHADOW};`);
     }
     if (!controlShadows) {
         elevationOff.push(
             '--elevation-control: inset 0 0 0 var(--border-size) var(--color-border);',
-            '--elevation-button-outline: inset 0 0 0 var(--border-size) var(--color-border);'
+            '--elevation-button-outline: inset 0 0 0 var(--border-size) var(--color-border);',
+            `--elevation-contact: ${NO_SHADOW};`,
+            `--elevation-primary: ${NO_SHADOW};`,
+            '--color-edge-highlight: transparent;',
+            '--color-primary-sheen: transparent;'
         );
     }
     const shared = [`--ui-cursor-interactive: ${chrome.interactiveCursor ?? 'default'};`];

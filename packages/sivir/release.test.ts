@@ -45,8 +45,11 @@ describe('publishable package contract', () => {
      * more shared contract instead of repeating geometry CSS in five families.
      * Independent menu/modal movement controls and the code/file-diff syntax
      * theme are token contracts too, as are the swap, Switch, and Gauge motion tokens
-     * and the item highlight used when the traveling highlight is off. Treat
-     * further growth as a signal that private styling is leaking here.
+     * and the item highlight used when the traveling highlight is off. The
+     * surface recipes (`--shadow-*`, `--fill-*`) and the edge and lift parts
+     * they are built from are public token contracts every control, field,
+     * card, and overlay reads. Treat further growth as a signal that private
+     * styling is leaking here.
      */
     test('keeps distributable CSS within the public-token budget', async () => {
         const css = await readFile(new URL('./src/ui.css', import.meta.url), 'utf8');
@@ -54,8 +57,8 @@ describe('publishable package contract', () => {
         const privatePrefix =
             /^\s*--(?:button|badge|field|panel|card|menu|command|tooltip|switch|checkbox|toast|tabs|progress|modal|sheet|textarea|breadcrumb|toggle|shortcut|slider)-/m;
 
-        expect(css.split('\n').length).toBeLessThanOrEqual(582);
-        expect(Buffer.byteLength(normalizedCss)).toBeLessThanOrEqual(19 * 1024);
+        expect(css.split('\n').length).toBeLessThanOrEqual(710);
+        expect(Buffer.byteLength(normalizedCss)).toBeLessThanOrEqual(24 * 1024);
         expect(css).not.toMatch(privatePrefix);
         expect(css).not.toMatch(/(^|})\s*\*\s*\{/);
         expect(css).not.toContain('@layer base');

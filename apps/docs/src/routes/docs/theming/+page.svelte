@@ -166,11 +166,42 @@ src/lib/sivir/components/button/
                 <Typography.InlineCode>--motion-duration-sheet</Typography.InlineCode>
             </li>
             <li>
-                Elevation:
+                Elevation, the lift of each layer:
                 <Typography.InlineCode>--elevation-1</Typography.InlineCode>,
+                <Typography.InlineCode>--elevation-contact</Typography.InlineCode>,
                 <Typography.InlineCode>--elevation-float</Typography.InlineCode>,
-                <Typography.InlineCode>--elevation-control</Typography.InlineCode>,
-                <Typography.InlineCode>--elevation-modal</Typography.InlineCode>
+                <Typography.InlineCode>--elevation-modal</Typography.InlineCode>,
+                <Typography.InlineCode>--elevation-composer</Typography.InlineCode>,
+                <Typography.InlineCode>--elevation-primary</Typography.InlineCode>
+            </li>
+            <li>
+                Edges:
+                <Typography.InlineCode>--color-edge</Typography.InlineCode>,
+                <Typography.InlineCode>--color-edge-strong</Typography.InlineCode>,
+                <Typography.InlineCode>--color-edge-focus</Typography.InlineCode>, the top
+                <Typography.InlineCode>--color-edge-highlight</Typography.InlineCode>, and the dark
+                <Typography.InlineCode>--color-edge-outline</Typography.InlineCode>
+                drawn outside raised and bordered things in dark mode
+            </li>
+            <li>
+                Surface recipes, built once from the parts above and read by every control, field,
+                card, and overlay:
+                <Typography.InlineCode>--shadow-raised</Typography.InlineCode>,
+                <Typography.InlineCode>--shadow-edge</Typography.InlineCode>,
+                <Typography.InlineCode>--shadow-field</Typography.InlineCode>,
+                <Typography.InlineCode>--shadow-well</Typography.InlineCode>,
+                <Typography.InlineCode>--shadow-card</Typography.InlineCode>,
+                <Typography.InlineCode>--shadow-menu</Typography.InlineCode>,
+                <Typography.InlineCode>--shadow-modal</Typography.InlineCode>,
+                <Typography.InlineCode>--shadow-composer</Typography.InlineCode>,
+                <Typography.InlineCode>--shadow-primary</Typography.InlineCode>, with their
+                <Typography.InlineCode>-hover</Typography.InlineCode>
+                and
+                <Typography.InlineCode>-focus</Typography.InlineCode>
+                forms, and the fills
+                <Typography.InlineCode>--fill-raised</Typography.InlineCode>,
+                <Typography.InlineCode>--fill-well</Typography.InlineCode>, and
+                <Typography.InlineCode>--fill-primary</Typography.InlineCode>
             </li>
         </ul>
     </section>
