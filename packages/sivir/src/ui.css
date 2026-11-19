@@ -544,7 +544,7 @@
     .sivir-tooltip {
         z-index: 140;
         max-width: calc(var(--spacing) * 72);
-        transform-origin: center;
+        transform-origin: var(--sivir-placement-origin, center);
         border-radius: var(--radius-lg);
         background-color: var(--color-tooltip);
         color: var(--color-tooltip-foreground);
@@ -657,22 +657,22 @@
     }
 }
 
+/*
+ * Reduced motion. Menus, popovers, tooltips, and dialogs keep their fade
+ * (`--motion-duration-panel-*`, `--motion-duration-modal-*`, and the scrim's
+ * `--motion-duration-overlay`) and drop their movement, scale, and blur, which
+ * the transitions in transition.ts skip under this query. Everything else
+ * settles at once.
+ */
 @media (prefers-reduced-motion: reduce) {
     :root {
         --motion-duration-hover: 0ms;
         --motion-duration-menu: 0ms;
         --motion-duration-panel: 0ms;
-        --motion-duration-panel-in: 0ms;
-        --motion-duration-panel-out: 0ms;
-        --motion-duration-modal-in: 0ms;
-        --motion-duration-modal-out: 0ms;
-        --motion-duration-modal-stack-in: 0ms;
-        --motion-duration-modal-stack-out: 0ms;
         --motion-duration-step-in: 0ms;
         --motion-duration-step-out: 0ms;
         --motion-duration-sheet: 0ms;
         --motion-duration-sheet-out: 0ms;
-        --motion-duration-overlay: 0ms;
         --motion-duration-toast-in: 0ms;
         --motion-duration-toast-out: 0ms;
         --motion-duration-press: 0ms;
@@ -688,9 +688,12 @@
 
     .sivir-menu-item,
     .sivir-item-highlight,
-    .sivir-tooltip,
     .sivir-error-notice,
     [data-ui='modal-panel'] {
         transition: none;
+    }
+
+    .sivir-tooltip {
+        transition: opacity var(--motion-duration-panel-out) var(--ease-out);
     }
 }

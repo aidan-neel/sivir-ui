@@ -1305,7 +1305,34 @@ function readTriggerDistance(floating: HTMLElement) {
 }
 
 /**
+ * The transform origin for each placement: the edge of the panel that faces
+ * its trigger, so the panel scales from the trigger rather than its center.
+ */
+const PLACEMENT_ORIGIN: Record<Placement, string> = {
+    bottom: 'top',
+    'bottom-start': 'top left',
+    'bottom-end': 'top right',
+    top: 'bottom',
+    'top-start': 'bottom left',
+    'top-end': 'bottom right',
+    right: 'left',
+    'right-start': 'left top',
+    'right-end': 'left bottom',
+    left: 'right',
+    'left-start': 'right top',
+    'left-end': 'right bottom'
+};
+
+function setPlacement(floating: HTMLElement, placement: Placement) {
+    floating.dataset.placement = placement;
+    floating.style.setProperty('--sivir-placement-origin', PLACEMENT_ORIGIN[placement]);
+}
+
+/**
  * Positions a floating panel while keeping it inside the viewport bounds.
+ * It records the placement it settled on, flips included, as
+ * `data-placement` and as the `--sivir-placement-origin` the panel scales
+ * from.
  *
  * Rejections are swallowed: Floating UI rejects when either element is removed
  * during an asynchronous layout pass, and teardown is an expected terminal
@@ -1317,7 +1344,9 @@ export function positionFloatingPanel(
     placement: Placement,
     offsetPx?: number
 ) {
-    floating.dataset.placement ??= placement;
+    if (!floating.dataset.placement) {
+        setPlacement(floating, placement);
+    }
     const distance = offsetPx ?? readTriggerDistance(floating);
     return computePosition(reference, floating, {
         strategy: 'fixed',
@@ -1348,7 +1377,7 @@ export function positionFloatingPanel(
                 left: `${x}px`,
                 top: `${y}px`
             });
-            floating.dataset.placement = resolvedPlacement;
+            setPlacement(floating, resolvedPlacement);
         })
         .catch(() => {});
 }

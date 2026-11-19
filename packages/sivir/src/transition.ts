@@ -76,6 +76,18 @@ function readCssNumber(node: Element, names: string[], fallback: number) {
     return fallback;
 }
 
+/**
+ * Whether the user asked for reduced motion. Menus and dialogs keep their fade
+ * under it and drop their movement, scale, and blur.
+ */
+export function prefersReducedMotion() {
+    return (
+        typeof window !== 'undefined' &&
+        typeof window.matchMedia === 'function' &&
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    );
+}
+
 function panelTransition(
     node: Element,
     durationVariable: string,
@@ -99,24 +111,30 @@ function panelTransition(
     const opacity = Number(style.opacity);
     const baseTransform = style.transform === 'none' ? '' : style.transform;
     const baseFilter = style.filter === 'none' ? '' : style.filter;
+    const fadeOnly = prefersReducedMotion();
     const direction = options?.exit ? -1 : 1;
-    const offsetX = readCssNumber(node, options?.offsetXVars ?? [], 0);
-    const offsetY =
-        direction *
-        readCssNumber(
-            node,
-            options?.offsetVars ?? ['--motion-panel-y'],
-            options?.offsetFallback ?? 2
-        );
-    const startScale = readCssNumber(
-        node,
-        options?.scaleVars ?? ['--motion-panel-scale-start'],
-        options?.scaleFallback ?? 0.97
-    );
+    const offsetX = fadeOnly ? 0 : readCssNumber(node, options?.offsetXVars ?? [], 0);
+    const offsetY = fadeOnly
+        ? 0
+        : direction *
+          readCssNumber(
+              node,
+              options?.offsetVars ?? ['--motion-panel-y'],
+              options?.offsetFallback ?? 2
+          );
+    const startScale = fadeOnly
+        ? 1
+        : readCssNumber(
+              node,
+              options?.scaleVars ?? ['--motion-panel-scale-start'],
+              options?.scaleFallback ?? 0.97
+          );
     // Exits shrink a quarter as far as enters grow, so the shared start-scale
     // token keeps close animations subtle while open animations stay expressive.
     const endScale = options?.exit ? 1 - (1 - startScale) * 0.25 : startScale;
-    const blur = readCssNumber(node, options?.blurVars ?? [], options?.blurFallback ?? 2);
+    const blur = fadeOnly
+        ? 0
+        : readCssNumber(node, options?.blurVars ?? [], options?.blurFallback ?? 2);
     const opacityStart = readCssNumber(
         node,
         options?.opacityVars ?? ['--motion-opacity-start'],

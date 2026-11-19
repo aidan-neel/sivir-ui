@@ -14,6 +14,7 @@
 import { autoUpdate, computePosition, flip, offset, type Placement, shift } from '@floating-ui/dom';
 import '@scritto/core';
 import type { Scritto as ScrittoElement } from '@scritto/core';
+import { prefersReducedMotion } from '@sivir-ui/svelte/transition';
 import type { TooltipState } from '.';
 
 export type TooltipRuntimeState = TooltipState & {
@@ -37,11 +38,26 @@ let openTimer: ReturnType<typeof setTimeout> | undefined;
 let closeTimer: ReturnType<typeof setTimeout> | undefined;
 let stopTracking: (() => void) | undefined;
 
+type Side = 'top' | 'bottom' | 'left' | 'right';
+
+/** The bubble's edge that faces its trigger, which it scales from. */
+const TRIGGER_EDGE: Record<Side, string> = {
+    top: 'bottom',
+    bottom: 'top',
+    left: 'right',
+    right: 'left'
+};
+
 const SHOW = 'scale(1)';
 const HIDE = 'scale(0.94)';
 const SHORTCUT_CLASS =
     // token-lint-disable-next-line no-literal-length: optical baseline and keycap tracking match the label text
     'ms-2 inline-block min-w-5 rounded-[var(--radius-sm)] bg-[color-mix(in_oklab,var(--color-tooltip-foreground)_14%,transparent)] px-1 text-center align-[0.0625rem] font-sans text-[length:var(--font-size-meta)] leading-5 tracking-[0.12em] text-[color-mix(in_oklab,var(--color-tooltip-foreground)_72%,transparent)] empty:hidden';
+
+/** The resting scale of a hidden bubble. Under reduced motion it only fades, so it never shrinks. */
+function hiddenScale() {
+    return prefersReducedMotion() ? SHOW : HIDE;
+}
 
 /**
  * Whether this platform can drive a Scritto roll. The unit-test DOM has no
@@ -197,10 +213,15 @@ function reposition(ref: HTMLElement, placement: Placement, animated: boolean) {
         placement,
         middleware: [offset(8), flip({ padding: 8 }), shift({ padding: 8 })]
     })
-        .then(({ x, y }) => {
+        .then(({ x, y, placement: resolvedPlacement }) => {
             if (!bubble || activeRef !== ref) {
                 return;
             }
+            bubble.dataset.placement = resolvedPlacement;
+            bubble.style.setProperty(
+                '--sivir-placement-origin',
+                TRIGGER_EDGE[resolvedPlacement.split('-')[0] as Side]
+            );
             const horizontal = placement === 'top' || placement === 'bottom';
             const center = horizontal ? 'translateX(-50%)' : 'translateY(-50%)';
             lastCenter = center;
@@ -213,7 +234,7 @@ function reposition(ref: HTMLElement, placement: Placement, animated: boolean) {
             } else {
                 const prev = bubble.style.transition;
                 bubble.style.transition = 'none';
-                bubble.style.transform = `${center} ${HIDE}`;
+                bubble.style.transform = `${center} ${hiddenScale()}`;
                 bubble.style.left = `${left}px`;
                 bubble.style.top = `${top}px`;
                 void bubble.offsetHeight;
@@ -348,7 +369,7 @@ function dismiss() {
     visible = false;
     activeRef = null;
     bubble.style.opacity = '0';
-    bubble.style.transform = `${lastCenter} ${HIDE}`;
+    bubble.style.transform = `${lastCenter} ${hiddenScale()}`;
 }
 
 /** Leave/blur a trigger: schedule a hide, ignored if a different trigger took over. */
