@@ -1,9 +1,10 @@
 <script lang="ts">
     import { Button } from '@sivir-ui/svelte/components/button';
-    import { closeMenuLayers, cn } from '@sivir-ui/svelte/utils';
+    import { cn } from '@sivir-ui/svelte/utils';
     import { getPopoverContext } from '../popover/context.svelte';
     import type { DropdownMenuItemProps } from '.';
     import { getDropdownMenuContext } from './context.svelte';
+    import { closeMenuToTrigger } from './focus';
 
     const { state: popoverState } = getPopoverContext();
     const { ancestors } = getDropdownMenuContext();
@@ -24,7 +25,7 @@
     data-collection-item
     {...rest}
     onclick={(event: MouseEvent) => {
-        closeMenuLayers(popoverState, ancestors);
+        closeMenuToTrigger(popoverState, ancestors);
         callback?.();
         userOnclick?.(event);
     }}

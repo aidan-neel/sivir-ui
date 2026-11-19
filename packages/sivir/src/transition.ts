@@ -228,8 +228,14 @@ function sheetSlide(
     node: Element,
     side: SheetSide,
     durationVariable: string,
-    fallbackDuration: number
+    fallbackDuration: number,
+    fadeDurationVariable: string
 ): TransitionConfig {
+    if (prefersReducedMotion()) {
+        return fade(node, {
+            duration: getCssDuration(node, fadeDurationVariable, fallbackDuration)
+        });
+    }
     const dir = side === 'left' ? -1 : 1;
     const style = getComputedStyle(node);
     const baseTransform = style.transform === 'none' ? '' : style.transform;
@@ -243,14 +249,29 @@ function sheetSlide(
     };
 }
 
-/** Sheet enter: slides in from the anchored edge with the drawer curve. */
+/**
+ * Sheet enter: slides in from the anchored edge with the drawer curve. Under
+ * reduced motion it fades in over the panel duration instead.
+ */
 export function sheetIn(node: Element, params: { side?: SheetSide } = {}) {
-    return sheetSlide(node, params.side ?? 'right', '--motion-duration-sheet', 280);
+    return sheetSlide(
+        node,
+        params.side ?? 'right',
+        '--motion-duration-sheet',
+        280,
+        '--motion-duration-panel-in'
+    );
 }
 
 /** Sheet exit: same path, slightly faster so dismiss feels snappy. */
 export function sheetOut(node: Element, params: { side?: SheetSide } = {}) {
-    return sheetSlide(node, params.side ?? 'right', '--motion-duration-sheet-out', 200);
+    return sheetSlide(
+        node,
+        params.side ?? 'right',
+        '--motion-duration-sheet-out',
+        200,
+        '--motion-duration-panel-out'
+    );
 }
 
 type ThemedSlideParams = {

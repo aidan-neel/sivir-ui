@@ -287,6 +287,18 @@
         );
     });
 
+    function layerOpensFrom(root: Element, node: Element) {
+        let layer = node.closest('[data-floating-content]');
+        while (layer && layer !== root) {
+            const panelId = layer.querySelector(':scope > [id]')?.id;
+            const trigger = panelId
+                ? document.querySelector(`[aria-controls="${CSS.escape(panelId)}"]`)
+                : null;
+            layer = trigger?.closest('[data-floating-content]') ?? null;
+        }
+        return layer === root;
+    }
+
     /**
      * Returns focus to the trigger when a click-to-open panel closes while focus
      * is inside it or inside a layer it opened, such as Escape on a select or
@@ -304,9 +316,7 @@
             return;
         }
         const active = document.activeElement;
-        const focusInLayer =
-            active instanceof Element &&
-            (popover.contains(active) || active.closest('[data-floating-content]') !== null);
+        const focusInLayer = active instanceof Element && layerOpensFrom(popover, active);
         const trigger = popoverState.buttonRef;
         if (focusInLayer && trigger?.isConnected) {
             trigger.focus({ preventScroll: true });

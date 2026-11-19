@@ -1,10 +1,11 @@
 <script lang="ts">
     import Check from '@lucide/svelte/icons/check';
     import { Button } from '@sivir-ui/svelte/components/button';
-    import { closeMenuLayers, cn } from '@sivir-ui/svelte/utils';
+    import { cn } from '@sivir-ui/svelte/utils';
     import { getPopoverContext } from '../popover/context.svelte';
     import type { DropdownMenuRadioItemProps } from '.';
     import { getDropdownMenuContext } from './context.svelte';
+    import { closeMenuToTrigger } from './focus';
     import { getDropdownMenuRadioGroupContext } from './radio-group-context.svelte';
 
     let {
@@ -29,7 +30,7 @@
         }
         userOnclick?.(event as MouseEvent & { currentTarget: EventTarget & HTMLButtonElement });
         if (!event.defaultPrevented && !target.disabled) {
-            closeMenuLayers(popoverState, ancestors);
+            closeMenuToTrigger(popoverState, ancestors);
         }
     }
 </script>

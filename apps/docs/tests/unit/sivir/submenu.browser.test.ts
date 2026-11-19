@@ -263,4 +263,30 @@ describe('DropdownMenu submenu -- keyboard', () => {
 
         expect(document.activeElement).toBe(share);
     });
+
+    it('returns focus to the root trigger after picking a submenu item', async () => {
+        const onEmail = vi.fn();
+        render(DropdownMenuSubFixture, { onEmail });
+        await flush();
+        await openDropdown();
+
+        const trigger = page.getByTestId('dd-trigger').element().closest('button');
+        const share = page.getByTestId('dd-share').element().closest('button') as HTMLElement;
+        share.focus();
+        await flush();
+        await settleAnimations();
+        await userEvent.keyboard('{ArrowRight}');
+        await flush();
+        await settleAnimations();
+        await new Promise((r) => setTimeout(r, 250));
+
+        await userEvent.keyboard('{End}');
+        expect(document.activeElement?.textContent?.trim()).toBe('Email');
+        await userEvent.keyboard('{Enter}');
+        await flush();
+        await new Promise((r) => setTimeout(r, 100));
+
+        expect(onEmail).toHaveBeenCalledTimes(1);
+        expect(document.activeElement).toBe(trigger);
+    });
 });

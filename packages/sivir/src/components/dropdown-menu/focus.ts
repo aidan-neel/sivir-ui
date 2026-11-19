@@ -1,3 +1,6 @@
+import type { PopoverState } from '@sivir-ui/svelte/components/popover';
+import { closeMenuLayers } from '@sivir-ui/svelte/utils';
+
 const MENU_ITEM = '[role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"]';
 
 function menuItems(panel: Element) {
@@ -14,6 +17,9 @@ export function focusMenuItem(panel: Element, which: 'first' | 'last') {
 }
 
 function focusSubmenu(trigger: HTMLElement, frames: number) {
+    if (document.activeElement !== trigger) {
+        return;
+    }
     const panelId = trigger.getAttribute('aria-controls');
     const panel = panelId ? document.getElementById(panelId) : null;
     if (panel) {
@@ -56,4 +62,18 @@ export function moveMenuFocus(event: KeyboardEvent, panel: Element) {
         return true;
     }
     return false;
+}
+
+/**
+ * Closes the picked item's menu and every ancestor layer. When focus is inside
+ * the menu, it moves to the root trigger first, so picking from a submenu does
+ * not leave focus on the document body once the submenu unmounts.
+ */
+export function closeMenuToTrigger(current: PopoverState, ancestors: PopoverState[]) {
+    const trigger = (ancestors[0] ?? current).buttonRef;
+    const focusInMenu = document.activeElement?.closest('[data-floating-content]') != null;
+    if (focusInMenu && trigger?.isConnected) {
+        trigger.focus({ preventScroll: true });
+    }
+    closeMenuLayers(current, ancestors);
 }
