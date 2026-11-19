@@ -253,7 +253,7 @@
             className,
             error &&
                 'shadow-[var(--shadow-field-invalid)] focus-within:shadow-[var(--focus-ring),var(--shadow-field-invalid)]',
-            'flex min-h-[var(--size-control-md)] w-full cursor-text flex-wrap items-center gap-1 rounded-[var(--radius-lg)] p-1 transition-[background-color,box-shadow] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-out)] motion-reduce:transition-none focus-within:shadow-[var(--focus-ring),var(--shadow-field-focus)] has-[input:disabled]:cursor-not-allowed has-[input:disabled]:opacity-[var(--opacity-disabled)]',
+            'flex min-h-[var(--size-control-md)] w-full cursor-text flex-wrap items-center gap-1 rounded-[var(--radius-lg)] p-1 forced-colors:border-[length:var(--border-size)] forced-colors:border-solid forced-colors:focus-within:outline-2 forced-colors:focus-within:outline-solid transition-[background-color,box-shadow] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-out)] motion-reduce:transition-none focus-within:shadow-[var(--focus-ring),var(--shadow-field-focus)] has-[input:disabled]:cursor-not-allowed has-[input:disabled]:opacity-[var(--opacity-disabled)]',
             controlClass
         )}
     >
