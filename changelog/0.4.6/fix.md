@@ -2,3 +2,6 @@
 - Pressing Escape in an open Select returns focus to its trigger.
 - With reduced motion, menus, popovers, tooltips, modals, and sheets fade in and out instead of appearing at once, and they no longer move, scale, or blur.
 - Picking an item from a dropdown submenu returns focus to the menu's trigger instead of the page.
+- Fields, the textarea composer, and the selected segmented tab keep a visible edge and focus indicator in forced-colors mode.
+- A focused textarea composer or tag input keeps its focus ring while the pointer is over it.
+- A theme that sets an `--elevation-*` token to `none` no longer drops the edge of the surfaces that read it.

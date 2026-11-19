@@ -245,7 +245,7 @@
             <!-- The checked thumb: a raised plate inside the sunken well. -->
             <div
                 aria-hidden="true"
-                class="pointer-events-none absolute rounded-[calc(var(--radius-xl)-var(--spacing))] bg-[image:var(--fill-raised)] shadow-[var(--shadow-raised)] transition-[left,top,width,height] [transition-duration:var(--motion-duration-panel)] ease-[var(--ease-out)] motion-reduce:transition-none"
+                class="pointer-events-none absolute rounded-[calc(var(--radius-xl)-var(--spacing))] bg-[image:var(--fill-raised)] shadow-[var(--shadow-raised)] forced-colors:border-[length:var(--border-size)] forced-colors:border-solid transition-[left,top,width,height] [transition-duration:var(--motion-duration-panel)] ease-[var(--ease-out)] motion-reduce:transition-none"
                 style:left={`${indicator.left}px`}
                 style:top={`${indicator.top}px`}
                 style:width={`${indicator.width}px`}

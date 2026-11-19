@@ -43,6 +43,22 @@ describe('themeToCss', () => {
         }
     });
 
+    it('emits a switched-off elevation override as a shadow the recipes can list', () => {
+        const custom = themeToCss({
+            ...DEFAULT_THEME,
+            tokens: {
+                light: {
+                    '--elevation-float': 'none',
+                    '--elevation-modal': '0 2px 4px rgb(0 0 0 / 0.2)'
+                }
+            }
+        });
+
+        expect(custom).toContain('--elevation-float: 0 0 #0000;');
+        expect(custom).not.toContain('--elevation-float: none');
+        expect(custom).toContain('--elevation-modal: 0 2px 4px rgb(0 0 0 / 0.2);');
+    });
+
     it('derives custom brand tokens without changing the schema', () => {
         const custom = themeToCss({ ...DEFAULT_THEME, brand: '#22cc88' });
         expect(custom).toContain('--color-primary: #22cc88');

@@ -50,7 +50,7 @@
     const controlClass = $derived(
         variant === 'secondary'
             ? 'bg-secondary shadow-[var(--shadow-well)] [--tag-input-chip:var(--color-card)] [--tag-input-chip-shadow:var(--shadow-raised)] dark:[--tag-input-chip:color-mix(in_oklab,var(--color-foreground)_10%,var(--color-secondary))]'
-            : 'bg-[var(--color-field)] shadow-[var(--shadow-field)] hover:shadow-[var(--shadow-field-hover)] [--tag-input-chip:color-mix(in_oklab,var(--color-foreground)_5%,var(--color-field))] [--tag-input-chip-shadow:var(--shadow-edge)]'
+            : 'bg-[var(--color-field)] shadow-[var(--shadow-field)] hover:not-focus-within:shadow-[var(--shadow-field-hover)] [--tag-input-chip:color-mix(in_oklab,var(--color-foreground)_5%,var(--color-field))] [--tag-input-chip-shadow:var(--shadow-edge)]'
     );
 
     function toCandidate(raw: string) {
@@ -252,7 +252,7 @@
         class={cn(
             className,
             error &&
-                'shadow-[var(--shadow-field-invalid)] hover:shadow-[var(--shadow-field-invalid)] focus-within:shadow-[var(--focus-ring),var(--shadow-field-invalid)]',
+                'shadow-[var(--shadow-field-invalid)] focus-within:shadow-[var(--focus-ring),var(--shadow-field-invalid)]',
             'flex min-h-[var(--size-control-md)] w-full cursor-text flex-wrap items-center gap-1 rounded-[var(--radius-lg)] p-1 transition-[background-color,box-shadow] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-out)] motion-reduce:transition-none focus-within:shadow-[var(--focus-ring),var(--shadow-field-focus)] has-[input:disabled]:cursor-not-allowed has-[input:disabled]:opacity-[var(--opacity-disabled)]',
             controlClass
         )}

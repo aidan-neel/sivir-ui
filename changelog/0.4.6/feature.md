@@ -4,4 +4,4 @@
 - `Modal.Title` takes a `context` snippet that renders a breadcrumb before the title, with the separator hidden from assistive technology.
 - `Modal.Footer` and `AlertDialog.Footer` take a `start` snippet for content pinned to the start of the footer, such as a checkbox or a hint.
 - Menus, submenus, context menus, selects, comboboxes, hover cards, and tooltips grow from the side that faces their trigger, and follow it when they flip.
-- Pressing Enter, Space, or the Down arrow on a dropdown menu trigger focuses the first item, and the arrow, Home, and End keys move between items. The right arrow moves into a submenu and the left arrow moves back to its trigger.
+- Pressing Enter, Space, or the Down arrow on a dropdown menu trigger focuses the first item, and the arrow, Home, and End keys move between items. The right arrow, Enter, or Space on a submenu trigger opens the submenu and focuses its first item, and the left arrow closes it and returns to its trigger.

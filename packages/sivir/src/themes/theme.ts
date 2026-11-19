@@ -362,7 +362,12 @@ function tokenMapDeclarations(map: Record<string, string> | undefined): string[]
     }
     return Object.keys(map)
         .sort()
-        .map((name) => `${name}: ${map[name].trim()};`);
+        .map((name) => {
+            const value = map[name].trim();
+            const switchedOffLift = name.startsWith('--elevation-') && value === 'none';
+
+            return `${name}: ${switchedOffLift ? NO_SHADOW : value};`;
+        });
 }
 
 function typographyDeclarations(typography: ThemeTypography | undefined): string[] {

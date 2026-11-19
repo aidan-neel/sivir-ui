@@ -6,9 +6,14 @@
         allowClickOutside = true,
         error = false,
         orientation = 'horizontal' as 'horizontal' | 'vertical',
-        role = 'dialog' as 'dialog' | 'alertdialog'
+        role = 'dialog' as 'dialog' | 'alertdialog',
+        showBack = false
     } = $props();
 </script>
+
+{#snippet back()}
+    <button type="button" data-testid="back">Back</button>
+{/snippet}
 
 <button type="button" data-testid="trigger" onclick={() => (open = true)}>Open</button>
 
@@ -24,7 +29,7 @@
             <button type="button" data-testid="inside-1">Inside one</button>
             <button type="button" data-testid="inside-2">Inside two</button>
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer start={showBack ? back : undefined}>
             <Modal.Close onclick={() => (open = false)}>Close</Modal.Close>
             <Modal.Confirm onclick={() => (open = false)}>Confirm</Modal.Confirm>
         </Modal.Footer>

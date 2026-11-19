@@ -194,6 +194,20 @@ describe('Modal -- ARIA contract in browser', () => {
         expectAtFooterEnd(page.getByText('Confirm').element() as HTMLElement);
     });
 
+    it('shows and hides the footer start snippet when it changes after mount', async () => {
+        const { rerender } = render(ModalFixture, { open: true });
+        await flush();
+        await expect.element(page.getByTestId('back')).not.toBeInTheDocument();
+
+        await rerender({ open: true, showBack: true });
+        await flush();
+        await expect.element(page.getByTestId('back')).toBeInTheDocument();
+
+        await rerender({ open: true, showBack: false });
+        await flush();
+        await expect.element(page.getByTestId('back')).not.toBeInTheDocument();
+    });
+
     it('uses the dedicated centered dialog motion', async () => {
         render(ModalFixture, { open: true });
         await flush();

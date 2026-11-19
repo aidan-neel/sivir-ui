@@ -34,8 +34,8 @@
 
     const composerClass = $derived(
         variant === 'secondary'
-            ? 'bg-secondary shadow-[var(--shadow-well)] hover:shadow-[var(--shadow-well)]'
-            : 'bg-[var(--color-field)] shadow-[var(--shadow-field)] hover:shadow-[var(--shadow-field-hover)]'
+            ? 'bg-secondary shadow-[var(--shadow-well)]'
+            : 'bg-[var(--color-field)] shadow-[var(--shadow-field)] hover:not-focus-within:shadow-[var(--shadow-field-hover)]'
     );
 </script>
 
@@ -52,7 +52,7 @@
         class={cn(
             classProp,
             children &&
-                'rounded-none bg-transparent shadow-none hover:shadow-none focus-visible:shadow-none aria-[invalid=true]:shadow-none aria-[invalid=true]:hover:shadow-none aria-[invalid=true]:focus-visible:shadow-none',
+                'rounded-none bg-transparent shadow-none forced-colors:border-0 forced-colors:focus-visible:outline-none hover:shadow-none focus-visible:shadow-none aria-[invalid=true]:shadow-none aria-[invalid=true]:hover:shadow-none aria-[invalid=true]:focus-visible:shadow-none',
             autoresize && 'resize-none overflow-y-hidden',
             'min-h-16 resize-y py-2.5 leading-body',
             input({ variant })
@@ -68,7 +68,7 @@
             data-ui="textarea-composer"
             data-variant={variant}
             class={cn(
-                'overflow-hidden rounded-[var(--radius-xl)] transition-[box-shadow] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-out)] focus-within:shadow-[var(--focus-ring),var(--shadow-field-focus)] has-[textarea[aria-invalid=true]]:shadow-[var(--shadow-field-invalid)] has-[textarea[aria-invalid=true]]:focus-within:shadow-[var(--focus-ring),var(--shadow-field-invalid)]',
+                'overflow-hidden rounded-[var(--radius-xl)] forced-colors:border-[length:var(--border-size)] forced-colors:border-solid forced-colors:focus-within:outline-2 forced-colors:focus-within:outline-solid transition-[box-shadow] [transition-duration:var(--motion-duration-press)] ease-[var(--ease-out)] focus-within:shadow-[var(--focus-ring),var(--shadow-field-focus)] has-[textarea[aria-invalid=true]]:shadow-[var(--shadow-field-invalid)] has-[textarea[aria-invalid=true]]:focus-within:shadow-[var(--focus-ring),var(--shadow-field-invalid)]',
                 composerClass
             )}
         >

@@ -19,6 +19,13 @@
             event.preventDefault();
             event.stopPropagation();
             state.buttonRef.focus();
+            setTimeout(() => {
+                if (state.hoverTimeout) {
+                    clearTimeout(state.hoverTimeout);
+                    state.hoverTimeout = undefined;
+                }
+                state.open = false;
+            });
             return;
         }
         if (moveMenuFocus(event, event.currentTarget)) {

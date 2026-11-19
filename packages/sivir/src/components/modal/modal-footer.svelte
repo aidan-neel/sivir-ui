@@ -12,4 +12,13 @@
         className,
         rest
     }));
+
+    $effect.pre(() => {
+        modal.footerSlot = {
+            children,
+            start,
+            className,
+            rest
+        };
+    });
 </script>

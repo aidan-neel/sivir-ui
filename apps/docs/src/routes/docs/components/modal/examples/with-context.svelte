@@ -22,7 +22,7 @@
         <Input aria-label="API key" placeholder="sk-…" />
         <Modal.Footer>
             {#snippet start()}
-                <Button variant="ghost">Back</Button>
+                <Button variant="ghost" onclick={() => (open = false)}>Back</Button>
             {/snippet}
             <Modal.Close variant="secondary">
                 Cancel

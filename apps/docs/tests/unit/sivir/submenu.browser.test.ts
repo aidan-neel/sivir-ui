@@ -260,8 +260,30 @@ describe('DropdownMenu submenu -- keyboard', () => {
 
         await userEvent.keyboard('{ArrowLeft}');
         await flush();
+        await settleAnimations();
 
         expect(document.activeElement).toBe(share);
+        await expect.element(page.getByTestId('dd-email')).not.toBeInTheDocument();
+        await expect.element(page.getByTestId('dd-root-item')).toBeInTheDocument();
+    });
+
+    it('opens a submenu with Enter and focuses its first item', async () => {
+        render(DropdownMenuSubFixture, {});
+        await flush();
+        await openDropdown();
+
+        const share = page.getByTestId('dd-share').element().closest('button') as HTMLElement;
+        share.focus();
+        await flush();
+        await settleAnimations();
+
+        await userEvent.keyboard('{Enter}');
+        await flush();
+        await settleAnimations();
+        await new Promise((r) => setTimeout(r, 250));
+
+        expect(document.activeElement?.textContent?.trim()).toBe('Social');
+        await expect.element(page.getByTestId('dd-email')).toBeInTheDocument();
     });
 
     it('returns focus to the root trigger after picking a submenu item', async () => {

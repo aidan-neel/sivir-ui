@@ -5,11 +5,13 @@ const MENU_ITEM = '[role="menuitem"], [role="menuitemcheckbox"], [role="menuitem
 
 function menuItems(panel: Element) {
     return Array.from(panel.querySelectorAll<HTMLElement>(MENU_ITEM)).filter((item) => {
-        return !item.matches(':disabled, [aria-disabled="true"]');
+        return (
+            !item.matches(':disabled, [aria-disabled="true"]') && item.getClientRects().length > 0
+        );
     });
 }
 
-/** Focuses the first or last enabled item of a menu panel. */
+/** Focuses the first or last enabled, rendered item of a menu panel. */
 export function focusMenuItem(panel: Element, which: 'first' | 'last') {
     const items = menuItems(panel);
     const item = which === 'first' ? items[0] : items[items.length - 1];
@@ -19,6 +21,9 @@ export function focusMenuItem(panel: Element, which: 'first' | 'last') {
 function focusSubmenu(trigger: HTMLElement, frames: number) {
     if (document.activeElement !== trigger) {
         return;
+    }
+    if (trigger.getAttribute('aria-expanded') !== 'true') {
+        trigger.click();
     }
     const panelId = trigger.getAttribute('aria-controls');
     const panel = panelId ? document.getElementById(panelId) : null;
@@ -35,8 +40,8 @@ function focusSubmenu(trigger: HTMLElement, frames: number) {
 
 /**
  * Walks a menu panel's items with the arrow keys, Home, and End, wrapping at
- * either end, and moves into a submenu with the right arrow. Returns whether
- * the key moved focus.
+ * either end. The right arrow, Enter, or Space on a submenu trigger opens the
+ * submenu and focuses its first item. Returns whether the key moved focus.
  */
 export function moveMenuFocus(event: KeyboardEvent, panel: Element) {
     const target = event.target;
@@ -57,7 +62,8 @@ export function moveMenuFocus(event: KeyboardEvent, panel: Element) {
         focusMenuItem(panel, event.key === 'Home' ? 'first' : 'last');
         return true;
     }
-    if (event.key === 'ArrowRight' && target.getAttribute('aria-haspopup') === 'menu') {
+    const opensSubmenu = event.key === 'ArrowRight' || event.key === 'Enter' || event.key === ' ';
+    if (opensSubmenu && target.getAttribute('aria-haspopup') === 'menu') {
         focusSubmenu(target, 10);
         return true;
     }
