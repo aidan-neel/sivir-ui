@@ -11,7 +11,7 @@ describe('publishable package contract', () => {
         expect(packageJson.files).toEqual(expect.arrayContaining(['dist', 'registry']));
         expect(packageJson.bin).toEqual({ sivir: 'dist/index.js' });
         expect(packageJson.peerDependencies).toMatchObject({
-            '@sveltejs/kit': '^2.0.0',
+            '@sveltejs/kit': '^2.0.0 || ^3.0.0',
             svelte: '^5.0.0',
             tailwindcss: '^4.0.0'
         });

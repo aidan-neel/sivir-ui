@@ -1,1 +1,2 @@
 - The live theme helpers in `@sivir-ui/svelte/themes/live` no longer import SvelteKit's `$app/environment`, so they also load in apps that do not run SvelteKit.
+- `@sivir-ui/svelte` now accepts SvelteKit 3 as a peer dependency, so apps on Kit 3 no longer need a package-manager override to install it.
