@@ -98,7 +98,7 @@
                 class={cn(
                     contentClass,
                     className,
-                    'sivir-modal-frame origin-center text-foreground shadow-[var(--elevation-modal)]',
+                    'sivir-modal-frame origin-center gap-0 rounded-[var(--radius-modal)] bg-card text-foreground shadow-[var(--shadow-modal)] [--sivir-modal-inset:calc(var(--spacing)*0)]',
                     // token-lint-disable-next-line no-literal-length
                     'fixed top-[var(--sivir-viewport-center)] left-1/2 z-[120] m-auto flex min-h-20 w-[calc(100%-var(--overlay-gutter))] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden md:top-[calc(var(--sivir-viewport-center)-3rem)] md:w-full max-h-[calc(var(--sivir-viewport-height)-var(--overlay-gutter))]',
                     sizeClass
@@ -130,7 +130,7 @@
                 <div
                     class={cn(
                         surfaceClass,
-                        'relative flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto overscroll-contain p-5',
+                        'relative flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto overscroll-contain p-5.5',
                         showClose && '[&_[data-ui=modal-header]]:pr-8'
                     )}
                     data-ui="modal-surface"
@@ -142,7 +142,7 @@
                                 modal.state.open = false;
                             }}
                             aria-label="Close"
-                            class="absolute top-3 right-3 z-[2] inline-flex size-8 items-center justify-center rounded-[var(--radius-md)] text-foreground-muted transition-colors hover:text-foreground focus-visible:outline-none focus-visible:shadow-[var(--focus-ring)]"
+                            class="absolute top-[calc(var(--spacing)*5.5+(var(--font-size-header)*var(--leading-snug)-var(--spacing)*8)/2)] right-3 z-[2] inline-flex size-8 items-center justify-center rounded-[var(--radius-md)] text-foreground-muted transition-colors hover:bg-foreground/[0.08] hover:text-foreground focus-visible:outline-none focus-visible:shadow-[var(--focus-ring)]"
                         >
                             <X size={16} />
                         </button>
@@ -156,9 +156,17 @@
                         data-orientation={modal.state.orientation}
                         class={cn(
                             modal.footerSlot.className,
-                            'flex w-full flex-row items-center px-1 py-1.5'
+                            'flex w-full flex-row items-center justify-end gap-1.5 border-t-[length:var(--border-size)] border-border px-5.5 py-3.5'
                         )}
                     >
+                        {#if modal.footerSlot.start}
+                            <div
+                                data-ui="modal-footer-start"
+                                class="mr-auto flex items-center gap-1.5"
+                            >
+                                {@render modal.footerSlot.start()}
+                            </div>
+                        {/if}
                         {@render modal.footerSlot.children?.()}
                     </div>
                 {/if}

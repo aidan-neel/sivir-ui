@@ -4,6 +4,7 @@ import type { ModalState } from '.';
 
 export type ModalFooterSlot = {
     children?: Snippet;
+    start?: Snippet;
     className?: string;
     rest: Record<string, unknown>;
 };

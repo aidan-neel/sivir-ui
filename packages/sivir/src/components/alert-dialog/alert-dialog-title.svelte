@@ -1,19 +1,8 @@
 <script lang="ts">
-    import { cn, type DefaultProps } from '@sivir-ui/svelte/utils';
-    import { getModalContext } from '../modal/context.svelte';
+    import * as Modal from '@sivir-ui/svelte/components/modal';
+    import { cn } from '@sivir-ui/svelte/utils';
 
-    let { class: className, children, ...rest }: DefaultProps = $props();
-
-    const modal = getModalContext();
+    let { class: className, children, ...rest }: Modal.ModalTitleProps = $props();
 </script>
 
-<h1
-    {...rest}
-    id={`${modal.id}-title`}
-    class={cn(
-        className,
-        'font-[family-name:var(--font-header)] text-xl font-[var(--font-weight-header)] tracking-[var(--tracking-header)] leading-snug text-balance text-foreground'
-    )}
->
-    {@render children?.()}
-</h1>
+<Modal.Title {...rest} class={cn(className, 'text-xl')}> {@render children?.()} </Modal.Title>

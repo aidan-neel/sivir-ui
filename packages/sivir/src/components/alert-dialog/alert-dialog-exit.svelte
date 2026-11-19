@@ -32,7 +32,7 @@
     onclick={handleClick}
     variant="ghost"
     {...rest}
-    class={cn(className, 'mr-auto flex flex-row items-center justify-center gap-2')}
+    class={cn(className, 'flex flex-row items-center justify-center gap-2')}
 >
     {@render children?.()}
 </Button>

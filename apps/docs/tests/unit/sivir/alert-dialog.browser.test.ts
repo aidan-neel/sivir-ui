@@ -147,6 +147,16 @@ describe('AlertDialog -- non-dismissible backdrop (distinctive from Modal)', () 
     });
 });
 
+function expectAtFooterEnd(button: HTMLElement) {
+    const footer = button.closest('[data-ui="modal-footer"]') as HTMLElement;
+    const footerRight =
+        footer.getBoundingClientRect().right -
+        Number.parseFloat(getComputedStyle(footer).paddingRight);
+
+    expect(footer.className).toContain('justify-end');
+    expect(Math.abs(button.getBoundingClientRect().right - footerRight)).toBeLessThan(1);
+}
+
 describe('AlertDialog -- urgency and layout', () => {
     it('marks the dialog as destructive without adding an error outline', async () => {
         render(AlertDialogFixture, { open: true, error: true });
@@ -155,7 +165,7 @@ describe('AlertDialog -- urgency and layout', () => {
         const dialog = document.querySelector('[role="alertdialog"]') as HTMLElement;
 
         expect(dialog.getAttribute('data-destructive')).toBe('true');
-        expect(dialog.className).toContain('shadow-[var(--elevation-modal)]');
+        expect(dialog.className).toContain('shadow-[var(--shadow-modal)]');
         expect(dialog.className).not.toContain('elevation-alert-error');
     });
 
@@ -169,9 +179,7 @@ describe('AlertDialog -- urgency and layout', () => {
         expect(dialog.getAttribute('data-orientation')).toBe('horizontal');
         expect(dialog.className).toContain('max-w-sm');
         expect(header.className).toContain('flex-col');
-        expect(page.getByRole('button', { name: 'Delete' }).element().className).toContain(
-            'ml-auto'
-        );
+        expectAtFooterEnd(page.getByRole('button', { name: 'Delete' }).element() as HTMLElement);
     });
 });
 

@@ -21,6 +21,8 @@
     import CompactSrc from './examples/size-compact.svelte?raw';
     import Wide from './examples/size-wide.svelte';
     import WideSrc from './examples/size-wide.svelte?raw';
+    import WithContext from './examples/with-context.svelte';
+    import WithContextSrc from './examples/with-context.svelte?raw';
     import WithSelect from './examples/with-select.svelte';
     import WithSelectSrc from './examples/with-select.svelte?raw';
     import {
@@ -151,6 +153,16 @@
             <Typography.InlineCode>Shortcut</Typography.InlineCode>
             inside either one clicks that button when its key is pressed.
         </Typography.Text>
+        <Typography.Text variant="supporting">
+            The footer is the panel's last row, full width under a hairline, with its actions at the
+            end. Pass a <Typography.InlineCode>start</Typography.InlineCode> snippet to
+            <Typography.InlineCode>Modal.Footer</Typography.InlineCode>
+            for Back or another secondary action at the start. A
+            <Typography.InlineCode>context</Typography.InlineCode>
+            snippet on <Typography.InlineCode>Modal.Title</Typography.InlineCode> shows what the
+            dialog belongs to as a breadcrumb before the title; its separator is hidden from
+            assistive technology.
+        </Typography.Text>
         <CodeBlock
             code={`import * as Modal from '@sivir-ui/svelte/components/modal';\nimport Shortcut from '@sivir-ui/svelte/components/shortcut';\n\nlet open = $state(false);\n\n<Modal.Root bind:open>\n  <Modal.Trigger>Rename project</Modal.Trigger>\n  <Modal.Content>\n    <Modal.Header>\n      <Modal.Title>Rename project</Modal.Title>\n      <Modal.Description>The new name appears in URLs and the sidebar.</Modal.Description>\n    </Modal.Header>\n    <Modal.Footer>\n      <Modal.Close>Cancel <Shortcut shortcut="esc" /></Modal.Close>\n      <Modal.Confirm>Save <Shortcut shortcut="enter" /></Modal.Confirm>\n    </Modal.Footer>\n  </Modal.Content>\n</Modal.Root>`}
             lang="svelte"
@@ -200,6 +212,13 @@
             <div class="flex max-w-2xl flex-col gap-2">
                 {@render deeplyNestedDescription()}
             </div>
+        </div>
+
+        <div id="with-context" class="scroll-mt-20 flex flex-col gap-3">
+            <Typography.H3 class="docs-subsection-heading"> Breadcrumb and back </Typography.H3>
+            <ComponentPreview code={WithContextSrc}>
+                <WithContext />
+            </ComponentPreview>
         </div>
 
         <div id="with-select" class="scroll-mt-20 flex flex-col gap-3">

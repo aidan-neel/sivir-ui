@@ -11,7 +11,10 @@
         get children() {
             return children;
         },
-        className: cn(className, 'gap-3 text-[length:var(--font-size-meta)] text-foreground-muted'),
+        className: cn(
+            className,
+            'justify-start gap-3 px-4 py-2.5 text-[length:var(--font-size-meta)] text-foreground-muted'
+        ),
         rest
     }));
 </script>

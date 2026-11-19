@@ -155,6 +155,16 @@ describe('Modal -- close paths actually unmount (P3-F6 disambiguation)', () => {
     });
 });
 
+function expectAtFooterEnd(button: HTMLElement) {
+    const footer = button.closest('[data-ui="modal-footer"]') as HTMLElement;
+    const footerRight =
+        footer.getBoundingClientRect().right -
+        Number.parseFloat(getComputedStyle(footer).paddingRight);
+
+    expect(footer.className).toContain('justify-end');
+    expect(Math.abs(button.getBoundingClientRect().right - footerRight)).toBeLessThan(1);
+}
+
 describe('Modal -- ARIA contract in browser', () => {
     it('uses the vertical layout and compact width when requested', async () => {
         render(ModalFixture, { open: true, orientation: 'vertical' });
@@ -167,7 +177,7 @@ describe('Modal -- ARIA contract in browser', () => {
         expect(dialog.className).toContain('max-w-sm');
         expect(header.getAttribute('data-orientation')).toBe('vertical');
         expect(header.className).toContain('flex-col');
-        expect(page.getByText('Confirm').element().className).toContain('ml-auto');
+        expectAtFooterEnd(page.getByText('Confirm').element() as HTMLElement);
     });
 
     it('uses the horizontal layout and wide width by default', async () => {
@@ -181,7 +191,7 @@ describe('Modal -- ARIA contract in browser', () => {
         expect(dialog.className).toContain('max-w-xl');
         expect(header.getAttribute('data-orientation')).toBe('horizontal');
         expect(header.className).toContain('flex-col');
-        expect(page.getByText('Confirm').element().className).toContain('ml-auto');
+        expectAtFooterEnd(page.getByText('Confirm').element() as HTMLElement);
     });
 
     it('uses the dedicated centered dialog motion', async () => {

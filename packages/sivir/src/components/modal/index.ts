@@ -22,9 +22,15 @@ export type ModalOrientation = 'horizontal' | 'vertical';
 export type ModalSize = 'sm' | 'md' | 'lg' | 'xl';
 
 export type ModalTriggerProps = ButtonProps;
-export type ModalTitleProps = DefaultProps;
+export type ModalTitleProps = {
+    /** What the dialog belongs to, shown before the title as a breadcrumb in quieter ink: Providers › Add provider. */
+    context?: Snippet;
+} & DefaultProps;
 export type ModalHeaderProps = DefaultProps;
-export type ModalFooterProps = DefaultProps;
+export type ModalFooterProps = {
+    /** Secondary actions held at the start of the footer, such as Back. The actions passed as children sit at the end. */
+    start?: Snippet;
+} & DefaultProps;
 export type ModalBodyProps = DefaultProps;
 export type ModalConfirmProps = ButtonProps;
 export type ModalCloseProps = ButtonProps;
