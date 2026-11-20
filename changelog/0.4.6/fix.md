@@ -1,2 +1,3 @@
 - The live theme helpers in `@sivir-ui/svelte/themes/live` no longer import SvelteKit's `$app/environment`, so they also load in apps that do not run SvelteKit.
 - The registry's Prisma dependency now resolves `effect` 3.22.1 instead of 3.20.0, closing the high ReDoS advisory GHSA-7589-6fvf-x4pw that was failing `bun audit`.
+- `@sivir-ui/svelte` now accepts SvelteKit 3 as a peer dependency, so apps on Kit 3 no longer need a package-manager override to install it.
